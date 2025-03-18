@@ -1,0 +1,34 @@
+{
+  "name": "security-tests",
+  "version": "1.0.0",
+  "description": "Security testing suite for the application",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.10",
+    "pnpm": ">=10.5.2"
+  },
+  "packageManager": "pnpm@10.5.2",
+  "scripts": {
+    "test": "node --loader ts-node/esm run-security-tests.ts",
+    "start": "./run-security-tests.sh",
+    "test:endpoint": "ts-node ai-endpoint-scanner.ts",
+    "test:auth": "ts-node ai-auth-bypass-tester.ts",
+    "test:web": "ts-node ai-web-vulnerability-scanner.ts"
+  },
+  "dependencies": {
+    "@types/node": "^22.13.10",
+    "axios": "^1.8.3",
+    "chart.js": "^4.4.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/chart.js": "^2.9.41",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3"
+  }
+}

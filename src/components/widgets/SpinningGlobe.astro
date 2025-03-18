@@ -1,0 +1,48 @@
+---
+interface Props {
+  size?: number;
+  class?: string;
+}
+
+const { size = 300, class: className = '' } = Astro.props;
+---
+
+<div id="globe-container" class={`relative w-${size} h-${size} ${className}`}>
+  <canvas id="globe-canvas" width={size} height={size}></canvas>
+</div>
+
+<script>
+  import * as THREE from 'three';
+
+  // Create scene
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+  camera.position.z = 2;
+
+  // Get canvas
+  const canvas = document.getElementById('globe-canvas') as HTMLCanvasElement;
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha: true,
+    antialias: true,
+  });
+
+  // Create globe
+  const geometry = new THREE.SphereGeometry(1, 64, 64);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x3f51b5,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.8,
+  });
+  const globe = new THREE.Mesh(geometry, material);
+  scene.add(globe);
+
+  // Animation
+  function animate() {
+    requestAnimationFrame(animate);
+    globe.rotation.y += 0.005;
+    renderer.render(scene, camera);
+  }
+  animate();
+</script> 

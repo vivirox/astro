@@ -1,0 +1,56 @@
+---
+import Button from '../components/ui/Button.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StandardLayout from '../layouts/StandardLayout.astro';
+import SpinningGlobe from '../components/widgets/SpinningGlobe.astro';
+---
+
+<BaseLayout
+  title=""
+  description="Welcome to Gradiant Ascent - the premier destination for all things related to the world of AI-assisted emotional intelligence."
+  bgType="plum"
+>
+  <StandardLayout
+    title=""
+    subtitle=""
+    isCentered={true}
+  >
+    <div slot="article" class="flex flex-col items-center mt-0">
+      <SpinningGlobe />
+      <div
+        class="prose text-center slide-enter"
+        style={{ '--enter-stage': 1, 'animationDuration': '1.2s' }}
+      >
+        <p>
+          Gradiant Ascent will become the premier destination for all things
+          related to the world of AI-assisted emotional intelligence.
+        </p>
+        <p>
+          Check out the <a href="/blog">blog</a> for documentation and examples.
+        </p>
+        <p>Coming Soon - 03.31.2025</p>
+      </div>
+    </div>
+  </StandardLayout>
+</BaseLayout>
+
+<style>
+  .slide-enter {
+    --enter-stage: 0;
+    --enter-step: 150ms;
+    --enter-initial: translateY(20px);
+    animation: slide-enter 1s ease both;
+    animation-delay: calc(var(--enter-stage) * var(--enter-step));
+  }
+
+  @keyframes slide-enter {
+    0% {
+      transform: var(--enter-initial);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style> 

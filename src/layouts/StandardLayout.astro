@@ -1,0 +1,32 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  isCentered?: boolean;
+}
+
+const { title, subtitle, isCentered = false } = Astro.props;
+---
+
+<main class="container mx-auto px-4 py-8">
+  {
+    (title || subtitle) && (
+      <header class={`mb-8 ${isCentered ? 'text-center' : ''}`}>
+        {title && <h1 class="text-4xl font-bold mb-2">{title}</h1>}
+        {subtitle && <p class="text-xl text-gray-600">{subtitle}</p>}
+      </header>
+    )
+  }
+  
+  <article class={isCentered ? 'flex flex-col items-center' : ''}>
+    <slot name="article" />
+  </article>
+  
+  <slot />
+</main>
+
+<style>
+  .container {
+    max-width: 1200px;
+  }
+</style> 

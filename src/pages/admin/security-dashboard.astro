@@ -1,0 +1,55 @@
+---
+// Import the Layout component from the correct path
+import BaseLayout from '../../layouts/BaseLayout.astro';
+// Use a different variable name to avoid the conflict
+import { SecurityDashboard as SecurityDashboardComponent } from '../../components/security/SecurityDashboard';
+// Import from the correct file
+import { getCurrentUser } from '../../lib/auth';
+
+// Check for admin access using the correct function name
+const user = await getCurrentUser(Astro.cookies);
+const isAdmin = user?.role === 'admin';
+
+// Redirect non-admin users
+if (!isAdmin) {
+  return Astro.redirect('/login?redirectTo=/admin/security-dashboard');
+}
+---
+
+<BaseLayout title="Security Dashboard | Admin">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Security Monitoring</h1>
+    
+    <div class="mb-8">
+      <p class="text-gray-600 dark:text-gray-300 mb-4">
+        This dashboard provides real-time monitoring of security events and alerts across the application.
+        Use the filters to narrow down events by type, severity, and time range.
+      </p>
+      
+      <div class="flex flex-wrap gap-4">
+        <a 
+          href="/admin" 
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 dark:text-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+        >
+          ← Back to Admin
+        </a>
+        
+        <button 
+          id="refresh-btn"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+        >
+          Refresh Data
+        </button>
+      </div>
+    </div>
+    
+    <SecurityDashboardComponent client:load />
+  </div>
+</BaseLayout>
+
+<script>
+  // Add refresh functionality
+  document.getElementById('refresh-btn')?.addEventListener('click', () => {
+    window.location.reload();
+  });
+</script> 

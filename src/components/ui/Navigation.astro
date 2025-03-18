@@ -1,0 +1,80 @@
+---
+import { SITE, UI } from '../../config';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const navPositionClasses = {
+  fixed: 'fixed top-0 left-0 right-0 z-50',
+  sticky: 'sticky top-0 z-50',
+  static: 'relative',
+};
+
+const navClasses = `${navPositionClasses[UI.nav.position as keyof typeof navPositionClasses]} w-full py-4 ${
+  UI.nav.glassmorphism ? 'backdrop-blur-md bg-white/80 dark:bg-gray-900/80' : 'bg-white dark:bg-gray-900'
+} ${className}`;
+---
+
+<nav class={navClasses}>
+  <div class="container mx-auto px-4 flex justify-between items-center">
+    <a href="/" class="text-xl font-bold flex items-center gap-2">
+      <img src="/favicon.svg" alt="Logo" class="w-8 h-8" />
+      <span>{SITE.name}</span>
+    </a>
+    
+    <div class="hidden md:flex items-center gap-6">
+      {
+        SITE.menu.map((item) => (
+          <a 
+            href={item.link} 
+            class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            {item.text}
+          </a>
+        ))
+      }
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <ThemeToggle />
+      <button id="mobile-menu-toggle" class="md:hidden">
+        <span class="sr-only">Menu</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden hidden">
+    <div class="container mx-auto px-4 py-4 flex flex-col gap-4">
+      {
+        SITE.menu.map((item) => (
+          <a 
+            href={item.link} 
+            class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            {item.text}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Mobile menu toggle
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  mobileMenuToggle?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+</script> 

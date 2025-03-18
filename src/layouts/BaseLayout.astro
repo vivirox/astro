@@ -1,0 +1,188 @@
+---
+import { SITE } from '../config';
+import Navigation from '../components/ui/Navigation.astro';
+import Footer from '../components/ui/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  bgType?: 'default' | 'plum' | 'gradient' | 'dark';
+  showNav?: boolean;
+  showFooter?: boolean;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  image = SITE.ogImage,
+  bgType = 'default',
+  showNav = true,
+  showFooter = true,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.site);
+---
+
+<!DOCTYPE html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImageURL} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={socialImageURL} />
+  </head>
+  <body class={`bg-${bgType}`}>
+    {showNav && <Navigation />}
+    <slot />
+    {showFooter && <Footer />}
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    /* Theme colors */
+    --color-primary: #4f46e5;
+    --color-primary-light: #6366f1;
+    --color-primary-dark: #4338ca;
+    
+    --color-success: #10b981;
+    --color-success-bg: #ecfdf5;
+    --color-warning: #f59e0b;
+    --color-warning-bg: #fffbeb;
+    --color-error: #ef4444;
+    --color-error-bg: #fef2f2;
+    
+    --color-background: #ffffff;
+    --color-background-card: #f9fafb;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-heading: #111827;
+    --color-border: #e5e7eb;
+    
+    --color-sidebar-bg: #1f2937;
+    --color-sidebar-text: #e5e7eb;
+    --color-sidebar-hover: #374151;
+
+    /* Accent colors */
+    --accent: 124, 58, 237;
+    --accent-gradient: linear-gradient(
+      45deg,
+      rgb(var(--accent)),
+      #da62c4 30%,
+      white 60%
+    );
+  }
+  
+  .dark {
+    --color-primary: #6366f1;
+    --color-primary-light: #818cf8;
+    --color-primary-dark: #4f46e5;
+    
+    --color-success: #10b981;
+    --color-success-bg: #064e3b;
+    --color-warning: #f59e0b;
+    --color-warning-bg: #78350f;
+    --color-error: #ef4444;
+    --color-error-bg: #7f1d1d;
+    
+    --color-background: #111827;
+    --color-background-card: #1f2937;
+    --color-text: #f9fafb;
+    --color-text-muted: #9ca3af;
+    --color-heading: #f3f4f6;
+    --color-border: #374151;
+    
+    --color-sidebar-bg: #0f172a;
+    --color-sidebar-text: #e2e8f0;
+    --color-sidebar-hover: #1e293b;
+  }
+  
+  html {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-heading);
+    margin-top: 0;
+  }
+  
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  button {
+    cursor: pointer;
+  }
+  
+  /* Background types */
+  .bg-default {
+    background-color: var(--color-background);
+  }
+  
+  .bg-plum {
+    background-color: #8a4d76;
+    color: white;
+  }
+  
+  .bg-gradient {
+    background-image: var(--accent-gradient);
+    background-size: 400%;
+    background-position: 0%;
+  }
+  
+  .bg-dark {
+    background-color: #121212;
+    color: white;
+  }
+
+  /* Utility classes */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+</style> 

@@ -1,0 +1,205 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { SentimentAnalysisService } from '../../lib/ai/services/sentiment-analysis';
+import type { AIService } from '../../lib/ai/types';
+
+// Mock AI service
+const mockAIService: AIService = {
+  createChatCompletion: vi.fn(),
+  createStreamingChatCompletion: vi.fn(),
+  getModelInfo: vi.fn()
+};
+
+describe('SentimentAnalysisService', () => {
+  let sentimentService: SentimentAnalysisService;
+  
+  beforeEach(() => {
+    vi.resetAllMocks();
+    sentimentService = new SentimentAnalysisService({
+      aiService: mockAIService,
+      model: 'test-model'
+    });
+  });
+  
+  describe('analyzeSentiment', () => {
+    it('should analyze sentiment correctly for positive text', async () => {
+      // Mock the AI service response
+      (mockAIService.createChatCompletion as any).mockResolvedValue({
+        content: JSON.stringify({
+          sentiment: 'positive',
+          score: 0.85,
+          explanation: 'The text expresses happiness and gratitude.'
+        }),
+        model: 'test-model',
+        usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 }
+      });
+      
+      const result = await sentimentService.analyzeSentiment('I am feeling great today! Thank you for your help.');
+      
+      // Verify the result
+      expect(result).toEqual({
+        sentiment: 'positive',
+        score: 0.85,
+        explanation: 'The text expresses happiness and gratitude.',
+        model: 'test-model',
+        processingTime: expect.any(Number)
+      });
+      
+      // Verify the AI service was called with correct parameters
+      expect(mockAIService.createChatCompletion).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ role: 'system' }),
+          expect.objectContaining({ 
+            role: 'user', 
+            content: expect.stringContaining('I am feeling great today! Thank you for your help.')
+          })
+        ]),
+        expect.objectContaining({ model: 'test-model' })
+      );
+    });
+    
+    it('should analyze sentiment correctly for negative text', async () => {
+      // Mock the AI service response
+      (mockAIService.createChatCompletion as any).mockResolvedValue({
+        content: JSON.stringify({
+          sentiment: 'negative',
+          score: 0.75,
+          explanation: 'The text expresses frustration and disappointment.'
+        }),
+        model: 'test-model',
+        usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 }
+      });
+      
+      const result = await sentimentService.analyzeSentiment('I am really frustrated with this situation. Nothing is working.');
+      
+      // Verify the result
+      expect(result).toEqual({
+        sentiment: 'negative',
+        score: 0.75,
+        explanation: 'The text expresses frustration and disappointment.',
+        model: 'test-model',
+        processingTime: expect.any(Number)
+      });
+    });
+    
+    it('should analyze sentiment correctly for neutral text', async () => {
+      // Mock the AI service response
+      (mockAIService.createChatCompletion as any).mockResolvedValue({
+        content: JSON.stringify({
+          sentiment: 'neutral',
+          score: 0.1,
+          explanation: 'The text is factual and doesn\'t express emotion.'
+        }),
+        model: 'test-model',
+        usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 }
+      });
+      
+      const result = await sentimentService.analyzeSentiment('The sky is blue. The temperature is 72 degrees.');
+      
+      // Verify the result
+      expect(result).toEqual({
+        sentiment: 'neutral',
+        score: 0.1,
+        explanation: 'The text is factual and doesn\'t express emotion.',
+        model: 'test-model',
+        processingTime: expect.any(Number)
+      });
+    });
+    
+    it('should handle invalid JSON responses', async () => {
+      // Mock the AI service response with invalid JSON
+      (mockAIService.createChatCompletion as any).mockResolvedValue({
+        content: 'Not a valid JSON response',
+        model: 'test-model',
+        usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 }
+      });
+      
+      await expect(sentimentService.analyzeSentiment('Test text')).rejects.toThrow();
+    });
+    
+    it('should handle AI service errors', async () => {
+      // Mock the AI service to throw an error
+      (mockAIService.createChatCompletion as any).mockRejectedValue(new Error('AI service error'));
+      
+      await expect(sentimentService.analyzeSentiment('Test text')).rejects.toThrow('AI service error');
+    });
+  });
+  
+  describe('analyzeBatch', () => {
+    it('should analyze multiple texts in parallel', async () => {
+      // Mock the AI service response for multiple calls
+      (mockAIService.createChatCompletion as any)
+        .mockResolvedValueOnce({
+          content: JSON.stringify({
+            sentiment: 'positive',
+            score: 0.85,
+            explanation: 'Positive text'
+          }),
+          model: 'test-model',
+          usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 }
+        })
+        .mockResolvedValueOnce({
+          content: JSON.stringify({
+            sentiment: 'negative',
+            score: 0.75,
+            explanation: 'Negative text'
+          }),
+          model: 'test-model',
+          usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 }
+        });
+      
+      const results = await sentimentService.analyzeBatch([
+        'I am happy',
+        'I am sad'
+      ]);
+      
+      // Verify the results
+      expect(results).toHaveLength(2);
+      expect(results[0].sentiment).toBe('positive');
+      expect(results[1].sentiment).toBe('negative');
+      
+      // Verify the AI service was called twice
+      expect(mockAIService.createChatCompletion).toHaveBeenCalledTimes(2);
+    });
+    
+    it('should handle errors in batch processing', async () => {
+      // Mock the AI service to succeed for first call and fail for second
+      (mockAIService.createChatCompletion as any)
+        .mockResolvedValueOnce({
+          content: JSON.stringify({
+            sentiment: 'positive',
+            score: 0.85,
+            explanation: 'Positive text'
+          }),
+          model: 'test-model',
+          usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 }
+        })
+        .mockRejectedValueOnce(new Error('AI service error'));
+      
+      await expect(sentimentService.analyzeBatch([
+        'I am happy',
+        'I am sad'
+      ])).rejects.toThrow();
+    });
+  });
+  
+  describe('constructor', () => {
+    it('should use default model if not provided', () => {
+      const service = new SentimentAnalysisService({
+        aiService: mockAIService
+      });
+      
+      // Use a non-public method to test the model
+      expect((service as any).config.model).toBe('gpt-4o');
+    });
+    
+    it('should use custom system prompt if provided', () => {
+      const customPrompt = 'Custom system prompt';
+      const service = new SentimentAnalysisService({
+        aiService: mockAIService,
+        systemPrompt: customPrompt
+      });
+      
+      expect((service as any).config.systemPrompt).toBe(customPrompt);
+    });
+  });
+}); 

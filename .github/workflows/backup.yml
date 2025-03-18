@@ -1,0 +1,104 @@
+name: Database Backup
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: 22.13.11
+  PNPM_VERSION: 10.5.3
+
+jobs:
+  backup:
+    name: Backup Supabase Database
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+      
+      - name: Create backup
+        id: create-backup
+        run: |
+          timestamp=$(date +%Y%m%d_%H%M%S)
+          backup_file="supabase_backup_${timestamp}.sql"
+          
+          # Create the backup - using environment variables set in GitHub UI
+          PGPASSWORD=${SUPABASE_DB_PASSWORD} pg_dump \
+            -h ${SUPABASE_DB_HOST} \
+            -p 5432 \
+            -U ${SUPABASE_DB_USER} \
+            -d ${SUPABASE_DB_NAME} \
+            -F p > "${backup_file}"
+          
+          # Check if backup was successful
+          if [ -s "${backup_file}" ]; then
+            echo "backup_file=${backup_file}" >> $GITHUB_OUTPUT
+            echo "::notice::Backup created successfully: ${backup_file}"
+          else
+            echo "::error::Backup creation failed or resulted in empty file"
+            exit 1
+          fi
+      
+      - name: Compress backup
+        if: steps.create-backup.outputs.backup_file != ''
+        id: compress-backup
+        run: |
+          compressed_file="${{ steps.create-backup.outputs.backup_file }}.gz"
+          gzip ${{ steps.create-backup.outputs.backup_file }}
+          echo "compressed_file=${compressed_file}" >> $GITHUB_OUTPUT
+      
+      - name: Upload backup to S3
+        if: steps.compress-backup.outputs.compressed_file != ''
+        uses: jakejarvis/s3-sync-action@v0.5.1
+        with:
+          args: --acl private --follow-symlinks
+        # Using environment variables set in GitHub UI
+        env:
+          SOURCE: ${{ steps.compress-backup.outputs.compressed_file }}
+          AWS_S3_BUCKET: ${BACKUP_S3_BUCKET}
+          DEST: 'database-backups/${{ steps.compress-backup.outputs.compressed_file }}'
+      
+      - name: Clean up local backup
+        if: always() && steps.create-backup.outputs.backup_file != ''
+        run: |
+          rm -f ${{ steps.create-backup.outputs.backup_file }}
+          rm -f ${{ steps.compress-backup.outputs.compressed_file }}
+      
+      - name: Rotate backups
+        if: success()
+        run: |
+          # Using AWS CLI to manage backup retention
+          aws s3 ls s3://${BACKUP_S3_BUCKET}/database-backups/ --recursive | \
+            sort | \
+            head -n -20 | \
+            awk '{print $4}' | \
+            xargs -I {} aws s3 rm s3://${BACKUP_S3_BUCKET}/{}
+        # Using environment variables set in GitHub UI
+          
+      - name: Notify backup status
+        if: always()
+        uses: rtCamp/action-slack-notify@v2.2.1
+        env:
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: "Database Backup ${{ job.status }}"
+          SLACK_MESSAGE: "Database backup ${{ job.status }} at $(date). ${{ job.status == 'success' && 'Backup stored in S3.' || 'Backup failed!' }}" 

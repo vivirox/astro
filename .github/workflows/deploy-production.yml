@@ -1,0 +1,124 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: 22.13.11
+  PNPM_VERSION: 10.5.3
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run security tests
+        run: pnpm test:security
+        
+      - name: Run Playwright tests
+        run: |
+          pnpm exec playwright install --with-deps
+          pnpm exec playwright test
+
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Build application
+        run: pnpm build
+        env:
+          LOG_LEVEL: info
+          LOG_CONSOLE: true
+          LOG_AUDIT: true
+          SECURITY_ENABLE_ALERTS: true
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: dist
+          retention-days: 7
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency: 
+      group: production_environment
+      cancel-in-progress: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: Deploy to production
+        run: |
+          npm install -g wrangler
+          wrangler pages deploy dist --project-name=gradiant-astro --branch=main
+      
+      - name: Create deployment tag
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          git tag production-$TIMESTAMP
+          git push origin production-$TIMESTAMP
+          
+      - name: Notify deployment status
+        if: always()
+        uses: rtCamp/action-slack-notify@v2.2.1
+        env:
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: Production Deployment ${{ job.status }}
+          SLACK_MESSAGE: "Deployment to production ${{ job.status }} at $(date)" 

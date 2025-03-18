@@ -1,0 +1,67 @@
+---
+import { SITE } from '../config';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Authentication',
+  description = 'Sign in or register for an account',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+    <title>{title} | {SITE.title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <a href="/">
+            <img src="/logo.svg" alt={SITE.title} width="120" height="40" />
+          </a>
+        </div>
+        <slot />
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  .auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f6f6f6 0%, #e9e9e9 100%);
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .auth-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+</style>

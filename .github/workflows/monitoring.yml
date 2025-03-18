@@ -1,0 +1,143 @@
+name: Health Monitoring
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Every 15 minutes
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to monitor'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+env:
+  NODE_VERSION: 22.13.11
+  PNPM_VERSION: 10.5.3
+  PROD_URL: 'https://app.gradiantastro.com'
+  STAGING_URL: 'https://staging.gradiantastro.com'
+
+jobs:
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "url=${{ github.event.inputs.environment == 'production' && env.PROD_URL || env.STAGING_URL }}" >> $GITHUB_OUTPUT
+            echo "env=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          else
+            # For scheduled runs, check both environments
+            echo "Check both environments for scheduled runs"
+            echo "url=${{ env.PROD_URL }}" >> $GITHUB_OUTPUT
+            echo "env=production" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Run health checks
+        id: health-check
+        run: |
+          # Basic endpoint check
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{ steps.env.outputs.url }})
+          echo "HTTP Status: $HTTP_STATUS"
+          
+          if [[ "$HTTP_STATUS" != "200" ]]; then
+            echo "::error::Site is down or returning errors (HTTP $HTTP_STATUS)"
+            echo "status=failing" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          # API health check
+          API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{ steps.env.outputs.url }}/api/health)
+          echo "API Status: $API_STATUS"
+          
+          if [[ "$API_STATUS" != "200" ]]; then
+            echo "::error::API is down or returning errors (HTTP $API_STATUS)"
+            echo "status=failing" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "status=passing" >> $GITHUB_OUTPUT
+          
+      - name: Run Playwright tests
+        if: steps.health-check.outputs.status == 'passing'
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          BASE_URL=${{ steps.env.outputs.url }} pnpm exec playwright test tests/monitoring --project=chromium
+      
+      - name: Notify failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2.2.1
+        env:
+          SLACK_COLOR: danger
+          SLACK_TITLE: "🚨 ${{ steps.env.outputs.env }} MONITORING FAILED"
+          SLACK_MESSAGE: "Health check for ${{ steps.env.outputs.env }} (${{ steps.env.outputs.url }}) failed at $(date)"
+          SLACK_FOOTER: "Investigate immediately!"
+      
+  check-performance:
+    name: Performance Check
+    runs-on: ubuntu-latest
+    needs: health-check
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.environment == 'production' }}
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "url=${{ github.event.inputs.environment == 'production' && env.PROD_URL || env.STAGING_URL }}" >> $GITHUB_OUTPUT
+            echo "env=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          else
+            # For scheduled runs, check production
+            echo "url=${{ env.PROD_URL }}" >> $GITHUB_OUTPUT
+            echo "env=production" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          urls: |
+            ${{ steps.env.outputs.url }}
+            ${{ steps.env.outputs.url }}/login
+            ${{ steps.env.outputs.url }}/dashboard
+          configPath: './.github/lighthouse-config.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          
+      - name: Check for critical performance issues
+        run: |
+          # This is a placeholder - in a real implementation, you would parse the Lighthouse
+          # results and look for any critical performance issues, then report them
+          echo "Analyzing performance metrics..."
+          
+      - name: Notify performance issues
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2.2.1
+        env:
+          SLACK_COLOR: warning
+          SLACK_TITLE: "⚠️ Performance Issues Detected"
+          SLACK_MESSAGE: "Performance issues detected in ${{ steps.env.outputs.env }} environment. Check the Lighthouse report for details." 

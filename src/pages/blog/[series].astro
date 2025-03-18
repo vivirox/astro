@@ -1,0 +1,115 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StandardLayout from '../../layouts/StandardLayout.astro';
+import Button from '../../components/ui/Button.astro';
+import { formatDate } from '../../utils/date';
+
+export async function getStaticPaths() {
+  const allBlogPosts = await getCollection('blog', ({ data }: { data: any }) => {
+    return import.meta.env.PROD ? !data.draft : true;
+  });
+  
+  // Get all unique series
+  const allSeries = [...new Set(allBlogPosts
+    .filter((post: CollectionEntry<'blog'>) => post.data.series)
+    .map((post: CollectionEntry<'blog'>) => post.data.series)
+  )] as string[];
+  
+  // Create a path for each series
+  return allSeries.map(series => ({
+    params: { series: series.toLowerCase().replace(/\s+/g, '-') },
+    props: { series },
+  }));
+}
+
+const { series } = Astro.props;
+
+// Get all posts in this series
+const allBlogPosts = await getCollection('blog', ({ data }: { data: any }) => {
+  return (import.meta.env.PROD ? !data.draft : true) && 
+         data.series === series;
+});
+
+// Sort by seriesOrder if available, otherwise by date
+const posts = allBlogPosts.sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => {
+  // First try to sort by seriesOrder
+  if (a.data.seriesOrder !== undefined && b.data.seriesOrder !== undefined) {
+    return a.data.seriesOrder - b.data.seriesOrder;
+  }
+  
+  // Fall back to date sorting
+  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+});
+
+// Get the first post for the hero section
+const firstPost = posts[0];
+---
+
+<BaseLayout
+  title={`${series} Series | Blog`}
+  description={`Articles in the ${series} series - Explore insights and guides on this topic.`}
+>
+  <StandardLayout
+    title={`${series} Series`}
+    subtitle={`${posts.length} article${posts.length !== 1 ? 's' : ''} in this series`}
+  >
+    <div slot="article" class="max-w-6xl mx-auto w-full">
+      <!-- Hero Section -->
+      {firstPost && (
+        <div class="mb-12">
+          <div class="relative rounded-lg overflow-hidden">
+            <img 
+              src={firstPost.data.image || 'https://images.unsplash.com/photo-1507146153580-69a1fe6d8aa1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} 
+              alt={firstPost.data.title}
+              class="w-full h-96 object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
+              <h2 class="text-white text-3xl font-bold mb-2">{firstPost.data.title}</h2>
+              <p class="text-gray-200 mb-4">{firstPost.data.description}</p>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-300 text-sm">
+                  {formatDate(firstPost.data.date)} • {firstPost.data.author}
+                </span>
+                <Button href={`/blog/${firstPost.slug}`} variant="primary" size="sm">Read More</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <!-- Series Overview -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">Articles in this Series</h2>
+        <div class="space-y-6">
+          {posts.map((post: CollectionEntry<'blog'>, index: number) => (
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md p-6">
+              <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                  {post.data.seriesOrder || index + 1}
+                </div>
+                <div class="flex-grow">
+                  <a href={`/blog/${post.slug}`} class="block">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 mb-2">{post.data.title}</h3>
+                  </a>
+                  <p class="text-gray-600 dark:text-gray-300 mb-4">{post.data.description}</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                      {formatDate(post.data.date)} • {post.data.readingTime || 'Quick read'}
+                    </span>
+                    <Button href={`/blog/${post.slug}`} variant="outline" size="sm">Read Article</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div class="mt-12 text-center">
+        <Button href="/blog" variant="outline">Back to All Articles</Button>
+      </div>
+    </div>
+  </StandardLayout>
+</BaseLayout> 
