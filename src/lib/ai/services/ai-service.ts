@@ -1,18 +1,30 @@
-import type { 
-  AICompletionRequest, 
-  AICompletionResponse, 
-  AIMessage, 
+import type {
+  AICompletionRequest,
+  AICompletionResponse,
+  AIMessage,
   AIStreamChunk,
   AIError,
   AIProvider,
-  AIUsageRecord
-} from '../models/ai-types';
-import { TogetherAIProvider, type TogetherAIProviderConfig } from '../providers/together';
-import { getModelById, getDefaultModelForCapability } from '../models/registry';
-import { AICacheService, type CacheConfig } from './cache-service';
-import { PromptOptimizerService, type PromptOptimizerConfig } from './prompt-optimizer';
-import { ConnectionPoolManager, type ConnectionPoolConfig } from './connection-pool';
-import { FallbackService, type FallbackServiceConfig } from './fallback-service';
+  AIUsageRecord,
+} from "../models/ai-types";
+import {
+  TogetherAIProvider,
+  type TogetherAIProviderConfig,
+} from "../providers/together";
+import { getModelById, getDefaultModelForCapability } from "../models/registry";
+import { AICacheService, type CacheConfig } from "./cache-service";
+import {
+  PromptOptimizerService,
+  type PromptOptimizerConfig,
+} from "./prompt-optimizer";
+import {
+  ConnectionPoolManager,
+  type ConnectionPoolConfig,
+} from "./connection-pool";
+import {
+  FallbackService,
+  type FallbackServiceConfig,
+} from "./fallback-service";
 
 /**
  * AI Service Configuration
@@ -28,7 +40,7 @@ export interface AIServiceConfig {
 
 /**
  * AI Service Implementation
- * 
+ *
  * This service provides a unified interface to TogetherAI with performance optimizations
  */
 export class AIService {
@@ -45,13 +57,13 @@ export class AIService {
     this.promptOptimizer = new PromptOptimizerService(config.promptOptimizer);
     this.connectionPool = new ConnectionPoolManager(config.connectionPool);
     this.fallbackService = new FallbackService(config.fallback);
-    
+
     // Initialize TogetherAI provider with connection pool
     this.togetherProvider = new TogetherAIProvider({
       ...config.together,
-      connectionPool: this.connectionPool
+      connectionPool: this.connectionPool,
     });
-    
+
     // Set usage callback
     this.onUsage = config.onUsage;
   }
@@ -67,9 +79,9 @@ export class AIService {
       maxTokens?: number;
       stream?: boolean;
       skipCache?: boolean;
-    } = {}
+    } = {},
   ): Promise<AICompletionResponse> {
-    const model = options.model || getDefaultModelForCapability('chat').id;
+    const model = options.model || getDefaultModelForCapability("chat").id;
     const modelInfo = getModelById(model);
 
     if (!modelInfo) {
@@ -82,7 +94,7 @@ export class AIService {
       model: modelInfo.togetherModelId || model,
       temperature: options.temperature,
       maxTokens: options.maxTokens,
-      stream: options.stream
+      stream: options.stream,
     };
 
     try {
@@ -97,10 +109,10 @@ export class AIService {
           // Track usage from cache hit
           this.trackUsage({
             ...cachedResponse.usage,
-            provider: 'cache',
-            timestamp: new Date().toISOString()
+            provider: "cache",
+            timestamp: new Date().toISOString(),
           });
-          
+
           return cachedResponse;
         }
       }
@@ -111,14 +123,16 @@ export class AIService {
           // Use TogetherAI provider for all models
           return this.togetherProvider.createChatCompletion(optimizedMessages, {
             ...options,
-            model: modelInfo.togetherModelId || model
+            model: modelInfo.togetherModelId || model,
           });
         },
         {
           onRetry: (attempt, error) => {
-            console.warn(`Retry attempt ${attempt} for AI request: ${error.message}`);
-          }
-        }
+            console.warn(
+              `Retry attempt ${attempt} for AI request: ${error.message}`,
+            );
+          },
+        },
       );
 
       // Step 4: Cache the response for future use (non-streaming only)
@@ -135,22 +149,25 @@ export class AIService {
     } catch (error) {
       // Generate fallback response if all retries failed
       const aiError = error as AIError;
-      const fallbackResponse = this.fallbackService.generateFallbackResponse(request, aiError);
-      
+      const fallbackResponse = this.fallbackService.generateFallbackResponse(
+        request,
+        aiError,
+      );
+
       if (fallbackResponse) {
         // Track fallback usage
         if (fallbackResponse.usage) {
           this.trackUsage(fallbackResponse.usage);
         }
-        
+
         return fallbackResponse;
       }
-      
+
       // Re-throw if no fallback
       throw error;
     }
   }
-  
+
   /**
    * Create a streaming chat completion
    */
@@ -160,14 +177,14 @@ export class AIService {
       model?: string;
       temperature?: number;
       maxTokens?: number;
-    } = {}
+    } = {},
   ) {
     return this.createChatCompletion(messages, {
       ...options,
-      stream: true
+      stream: true,
     });
   }
-  
+
   /**
    * Track usage statistics
    */
@@ -177,10 +194,10 @@ export class AIService {
         await this.onUsage(usage);
       }
     } catch (error) {
-      console.error('Error tracking AI usage:', error);
+      console.error("Error tracking AI usage:", error);
     }
   }
-  
+
   /**
    * Get performance statistics
    */
@@ -188,14 +205,14 @@ export class AIService {
     return {
       cache: this.cacheService.getStats(),
       connectionPool: this.connectionPool.getStats(),
-      promptOptimizer: this.promptOptimizer.getStats()
+      promptOptimizer: this.promptOptimizer.getStats(),
     };
   }
-  
+
   /**
    * Dispose of resources
    */
   dispose(): void {
     this.connectionPool.dispose();
   }
-} 
+}

@@ -93,14 +93,14 @@ The `AIService` interface defines the core functionality for interacting with AI
 interface AIService {
   createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion>;
-  
+
   createStreamingChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AIStreamingCompletion>;
-  
+
   getModelInfo(model: string): ModelInfo;
 }
 ```
@@ -113,16 +113,16 @@ The `AIProvider` interface defines the functionality for specific AI providers:
 interface AIProvider {
   createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion>;
-  
+
   createStreamingChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AIStreamingCompletion>;
-  
+
   getModelInfo(model: string): ModelInfo;
-  
+
   getSupportedModels(): string[];
 }
 ```
@@ -133,7 +133,7 @@ The `AIMessage` interface defines the structure of messages in a conversation:
 
 ```typescript
 interface AIMessage {
-  role: 'system' | 'user' | 'assistant';
+  role: "system" | "user" | "assistant";
   content: string;
 }
 ```
@@ -164,7 +164,7 @@ class AIError extends Error {
   statusCode: number;
   context?: Record<string, any>;
   cause?: Error;
-  
+
   constructor(message: string, options: AIErrorOptions);
 }
 ```
@@ -176,12 +176,12 @@ class AIError extends Error {
 Use the `createAIService` factory function to create an AI service:
 
 ```typescript
-import { createAIService } from '../lib/ai';
+import { createAIService } from "../lib/ai";
 
 const aiService = createAIService({
-  provider: 'openai', // or 'anthropic'
+  provider: "openai", // or 'anthropic'
   enableErrorHandling: true,
-  enablePerformanceOptimization: true
+  enablePerformanceOptimization: true,
 });
 ```
 
@@ -192,10 +192,10 @@ Use the `createChatCompletion` method to generate a completion:
 ```typescript
 const completion = await aiService.createChatCompletion(
   [
-    { role: 'system', content: 'You are a helpful assistant.' },
-    { role: 'user', content: 'Hello, how are you?' }
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "Hello, how are you?" },
   ],
-  { model: 'gpt-4o' }
+  { model: "gpt-4o" },
 );
 
 console.log(completion.content);
@@ -208,10 +208,10 @@ Use the `createStreamingChatCompletion` method to generate a streaming completio
 ```typescript
 const { stream } = await aiService.createStreamingChatCompletion(
   [
-    { role: 'system', content: 'You are a helpful assistant.' },
-    { role: 'user', content: 'Hello, how are you?' }
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "Hello, how are you?" },
   ],
-  { model: 'gpt-4o' }
+  { model: "gpt-4o" },
 );
 
 for await (const chunk of stream) {
@@ -226,12 +226,14 @@ for await (const chunk of stream) {
 Use the `SentimentAnalysisService` to analyze the sentiment of text:
 
 ```typescript
-import { SentimentAnalysisService, createAIService } from '../lib/ai';
+import { SentimentAnalysisService, createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 const sentimentService = new SentimentAnalysisService({ aiService });
 
-const result = await sentimentService.analyzeSentiment('I am feeling great today!');
+const result = await sentimentService.analyzeSentiment(
+  "I am feeling great today!",
+);
 // { sentiment: 'positive', score: 0.85, explanation: '...', model: '...', processingTime: 123 }
 ```
 
@@ -240,12 +242,14 @@ const result = await sentimentService.analyzeSentiment('I am feeling great today
 Use the `CrisisDetectionService` to detect potential crisis situations:
 
 ```typescript
-import { CrisisDetectionService, createAIService } from '../lib/ai';
+import { CrisisDetectionService, createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 const crisisService = new CrisisDetectionService({ aiService });
 
-const result = await crisisService.detectCrisis('I am feeling really down lately.');
+const result = await crisisService.detectCrisis(
+  "I am feeling really down lately.",
+);
 // { is_crisis: true, risk_level: 'low', crisis_type: 'depression', confidence: 0.65, ... }
 ```
 
@@ -254,13 +258,13 @@ const result = await crisisService.detectCrisis('I am feeling really down lately
 Use the `ResponseGenerationService` to generate therapeutic responses:
 
 ```typescript
-import { ResponseGenerationService, createAIService } from '../lib/ai';
+import { ResponseGenerationService, createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 const responseService = new ResponseGenerationService({ aiService });
 
 const result = await responseService.generateResponse([
-  { role: 'user', content: 'Hello, how are you?' }
+  { role: "user", content: "Hello, how are you?" },
 ]);
 // { response: 'I am doing well, thank you!', model: '...', processingTime: 123 }
 ```
@@ -270,7 +274,7 @@ const result = await responseService.generateResponse([
 Use the `InterventionAnalysisService` to analyze the effectiveness of interventions:
 
 ```typescript
-import { InterventionAnalysisService, createAIService } from '../lib/ai';
+import { InterventionAnalysisService, createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 const interventionService = new InterventionAnalysisService({ aiService });
@@ -278,7 +282,7 @@ const interventionService = new InterventionAnalysisService({ aiService });
 const result = await interventionService.analyzeIntervention(
   conversation,
   interventionMessage,
-  userResponse
+  userResponse,
 );
 // { effectiveness_score: 8, user_receptiveness: 'high', emotional_impact: 'positive', ... }
 ```
@@ -290,20 +294,20 @@ const result = await interventionService.analyzeIntervention(
 Use try-catch blocks to handle AI errors:
 
 ```typescript
-import { createAIService, AIError, AIErrorCodes } from '../lib/ai';
+import { createAIService, AIError, AIErrorCodes } from "../lib/ai";
 
 const aiService = createAIService();
 
 try {
   const completion = await aiService.createChatCompletion(
-    [{ role: 'user', content: 'Hello, how are you?' }],
-    { model: 'invalid-model' }
+    [{ role: "user", content: "Hello, how are you?" }],
+    { model: "invalid-model" },
   );
 } catch (error) {
   if (error instanceof AIError && error.code === AIErrorCodes.INVALID_MODEL) {
-    console.error('Invalid model specified');
+    console.error("Invalid model specified");
   } else {
-    console.error('An unexpected error occurred:', error);
+    console.error("An unexpected error occurred:", error);
   }
 }
 ```
@@ -313,12 +317,12 @@ try {
 Use the error handling utilities for more advanced error handling:
 
 ```typescript
-import { handleAIServiceError, AIErrorCodes } from '../lib/ai';
+import { handleAIServiceError, AIErrorCodes } from "../lib/ai";
 
 try {
   // Call AI service
 } catch (error) {
-  const aiError = handleAIServiceError(error, { model: 'gpt-4o' });
+  const aiError = handleAIServiceError(error, { model: "gpt-4o" });
   console.error(`AI Error: ${aiError.message} (${aiError.code})`);
 }
 ```
@@ -328,14 +332,14 @@ try {
 Use the API error handling utility in API routes:
 
 ```typescript
-import { handleApiError } from '../lib/ai';
+import { handleApiError } from "../lib/ai";
 
 export async function POST({ request }) {
   try {
     // API route logic
     return new Response(JSON.stringify({ result }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     return handleApiError(error);
@@ -350,13 +354,13 @@ export async function POST({ request }) {
 Use the optimized AI service wrapper for better performance:
 
 ```typescript
-import { createOptimizedAIService } from '../lib/ai';
+import { createOptimizedAIService } from "../lib/ai";
 
 const optimizedService = createOptimizedAIService(aiService, {
   logToConsole: true,
   createAuditLogs: true,
   slowRequestThreshold: 3000,
-  highTokenUsageThreshold: 1000
+  highTokenUsageThreshold: 1000,
 });
 ```
 
@@ -365,7 +369,7 @@ const optimizedService = createOptimizedAIService(aiService, {
 Use the token optimization utilities to manage token usage:
 
 ```typescript
-import { truncateMessages, estimateMessagesTokenCount } from '../lib/ai';
+import { truncateMessages, estimateMessagesTokenCount } from "../lib/ai";
 
 const tokenCount = estimateMessagesTokenCount(messages);
 console.log(`Estimated token count: ${tokenCount}`);
@@ -378,19 +382,20 @@ const truncatedMessages = truncateMessages(messages, 4000, 1000);
 Use the retry utility for handling transient errors:
 
 ```typescript
-import { withRetry } from '../lib/ai';
+import { withRetry } from "../lib/ai";
 
 const completion = await withRetry(
-  () => aiService.createChatCompletion(
-    [{ role: 'user', content: 'Hello, how are you?' }],
-    { model: 'gpt-4o' }
-  ),
+  () =>
+    aiService.createChatCompletion(
+      [{ role: "user", content: "Hello, how are you?" }],
+      { model: "gpt-4o" },
+    ),
   {
     maxRetries: 3,
     initialDelay: 500,
     maxDelay: 10000,
-    factor: 2
-  }
+    factor: 2,
+  },
 );
 ```
 
@@ -402,22 +407,24 @@ Create a chat completion API route:
 
 ```typescript
 // src/pages/api/ai/completion.ts
-import { createAIService, handleApiError } from '../../../lib/ai';
+import { createAIService, handleApiError } from "../../../lib/ai";
 
 export async function POST({ request }) {
   try {
-    const { messages, model, temperature, max_tokens, provider } = await request.json();
-    
+    const { messages, model, temperature, max_tokens, provider } =
+      await request.json();
+
     const aiService = createAIService({ provider });
-    
-    const completion = await aiService.createChatCompletion(
-      messages,
-      { model, temperature, max_tokens }
-    );
-    
+
+    const completion = await aiService.createChatCompletion(messages, {
+      model,
+      temperature,
+      max_tokens,
+    });
+
     return new Response(JSON.stringify({ completion }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     return handleApiError(error);
@@ -431,19 +438,21 @@ Create a streaming chat completion API route:
 
 ```typescript
 // src/pages/api/ai/completion/stream.ts
-import { createAIService, handleApiError } from '../../../../lib/ai';
+import { createAIService, handleApiError } from "../../../../lib/ai";
 
 export async function POST({ request }) {
   try {
-    const { messages, model, temperature, max_tokens, provider } = await request.json();
-    
+    const { messages, model, temperature, max_tokens, provider } =
+      await request.json();
+
     const aiService = createAIService({ provider });
-    
-    const { stream } = await aiService.createStreamingChatCompletion(
-      messages,
-      { model, temperature, max_tokens }
-    );
-    
+
+    const { stream } = await aiService.createStreamingChatCompletion(messages, {
+      model,
+      temperature,
+      max_tokens,
+    });
+
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
@@ -452,20 +461,20 @@ export async function POST({ request }) {
             const event = `event: completion\ndata: ${JSON.stringify({ content: chunk.content, model })}\n\n`;
             controller.enqueue(encoder.encode(event));
           }
-          controller.enqueue(encoder.encode('event: done\ndata: {}\n\n'));
+          controller.enqueue(encoder.encode("event: done\ndata: {}\n\n"));
           controller.close();
         } catch (error) {
           controller.error(error);
         }
-      }
+      },
     });
-    
+
     return new Response(readable, {
       headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive'
-      }
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
     });
   } catch (error) {
     return handleApiError(error);
@@ -481,30 +490,34 @@ Use Vitest for unit testing AI components:
 
 ```typescript
 // src/lib/ai/services/sentiment.test.ts
-import { expect, test, vi } from 'vitest';
-import { SentimentAnalysisService } from './sentiment';
+import { expect, test, vi } from "vitest";
+import { SentimentAnalysisService } from "./sentiment";
 
-test('analyzeSentiment returns correct sentiment analysis', async () => {
+test("analyzeSentiment returns correct sentiment analysis", async () => {
   // Mock AI service
   const mockAIService = {
     createChatCompletion: vi.fn().mockResolvedValue({
       content: JSON.stringify({
-        sentiment: 'positive',
+        sentiment: "positive",
         score: 0.85,
-        explanation: 'The text expresses positive emotions.'
+        explanation: "The text expresses positive emotions.",
       }),
-      model: 'gpt-4o'
-    })
+      model: "gpt-4o",
+    }),
   };
-  
-  const sentimentService = new SentimentAnalysisService({ aiService: mockAIService });
-  
-  const result = await sentimentService.analyzeSentiment('I am feeling great today!');
-  
-  expect(result.sentiment).toBe('positive');
+
+  const sentimentService = new SentimentAnalysisService({
+    aiService: mockAIService,
+  });
+
+  const result = await sentimentService.analyzeSentiment(
+    "I am feeling great today!",
+  );
+
+  expect(result.sentiment).toBe("positive");
   expect(result.score).toBe(0.85);
-  expect(result.explanation).toBe('The text expresses positive emotions.');
-  expect(result.model).toBe('gpt-4o');
+  expect(result.explanation).toBe("The text expresses positive emotions.");
+  expect(result.model).toBe("gpt-4o");
   expect(result.processingTime).toBeGreaterThan(0);
 });
 ```
@@ -515,23 +528,25 @@ Use Vitest for integration testing AI components:
 
 ```typescript
 // src/lib/ai/integration.test.ts
-import { expect, test } from 'vitest';
-import { createAIService } from './factory';
-import { SentimentAnalysisService } from './services/sentiment';
+import { expect, test } from "vitest";
+import { createAIService } from "./factory";
+import { SentimentAnalysisService } from "./services/sentiment";
 
-test('SentimentAnalysisService integrates with AIService', async () => {
+test("SentimentAnalysisService integrates with AIService", async () => {
   // Skip test if no API key is available
   if (!process.env.OPENAI_API_KEY) {
-    console.log('Skipping test: No OpenAI API key available');
+    console.log("Skipping test: No OpenAI API key available");
     return;
   }
-  
-  const aiService = createAIService({ provider: 'openai' });
+
+  const aiService = createAIService({ provider: "openai" });
   const sentimentService = new SentimentAnalysisService({ aiService });
-  
-  const result = await sentimentService.analyzeSentiment('I am feeling great today!');
-  
-  expect(result.sentiment).toBe('positive');
+
+  const result = await sentimentService.analyzeSentiment(
+    "I am feeling great today!",
+  );
+
+  expect(result.sentiment).toBe("positive");
   expect(result.score).toBeGreaterThan(0.5);
   expect(result.explanation).toBeTruthy();
   expect(result.model).toBeTruthy();
@@ -545,29 +560,33 @@ Use mocks for testing without API calls:
 
 ```typescript
 // src/lib/ai/mocks/openai.ts
-import { AICompletion, AIMessage, AIServiceOptions } from '../models';
+import { AICompletion, AIMessage, AIServiceOptions } from "../models";
 
 export class MockOpenAIProvider {
   async createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion> {
     // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     const lastMessage = messages[messages.length - 1];
-    
+
     return {
       content: `Mock response to: ${lastMessage.content}`,
-      model: options?.model || 'gpt-4o',
+      model: options?.model || "gpt-4o",
       usage: {
-        prompt_tokens: messages.reduce((acc, msg) => acc + msg.content.length / 4, 0),
+        prompt_tokens: messages.reduce(
+          (acc, msg) => acc + msg.content.length / 4,
+          0,
+        ),
         completion_tokens: 20,
-        total_tokens: messages.reduce((acc, msg) => acc + msg.content.length / 4, 0) + 20
-      }
+        total_tokens:
+          messages.reduce((acc, msg) => acc + msg.content.length / 4, 0) + 20,
+      },
     };
   }
-  
+
   // Implement other methods...
 }
 ```
@@ -619,33 +638,38 @@ To add a new AI provider:
 
 ```typescript
 // src/lib/ai/providers/gemini.ts
-import { AICompletion, AIMessage, AIServiceOptions, AIStreamingCompletion } from '../models';
+import {
+  AICompletion,
+  AIMessage,
+  AIServiceOptions,
+  AIStreamingCompletion,
+} from "../models";
 
 export class GeminiProvider {
   private apiKey: string;
-  
+
   constructor(apiKey: string) {
     this.apiKey = apiKey;
   }
-  
+
   async createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion> {
     // Implementation for Gemini API
   }
-  
+
   async createStreamingChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AIStreamingCompletion> {
     // Implementation for Gemini API streaming
   }
-  
+
   getModelInfo(model: string): ModelInfo {
     // Return model info for Gemini models
   }
-  
+
   getSupportedModels(): string[] {
     // Return list of supported Gemini models
   }
@@ -655,30 +679,31 @@ export class GeminiProvider {
 2. Update the provider factory in `src/lib/ai/factory.ts`:
 
 ```typescript
-import { GeminiProvider } from './providers/gemini';
+import { GeminiProvider } from "./providers/gemini";
 
 export function createAIService(options?: AIServiceOptions): AIService {
-  const provider = options?.provider || process.env.DEFAULT_AI_PROVIDER || 'openai';
-  
+  const provider =
+    options?.provider || process.env.DEFAULT_AI_PROVIDER || "openai";
+
   let aiProvider: AIProvider;
-  
+
   switch (provider) {
-    case 'openai':
+    case "openai":
       aiProvider = new OpenAIProvider(process.env.OPENAI_API_KEY!);
       break;
-    case 'anthropic':
+    case "anthropic":
       aiProvider = new AnthropicProvider(process.env.ANTHROPIC_API_KEY!);
       break;
-    case 'gemini':
+    case "gemini":
       aiProvider = new GeminiProvider(process.env.GEMINI_API_KEY!);
       break;
     default:
       throw new AIError(`Unsupported provider: ${provider}`, {
         code: AIErrorCodes.INVALID_PROVIDER,
-        statusCode: 400
+        statusCode: 400,
       });
   }
-  
+
   // Apply wrappers
   // ...
 }
@@ -692,11 +717,11 @@ To add a new specialized service:
 
 ```typescript
 // src/lib/ai/services/summarization.ts
-import { AIService } from '../models';
+import { AIService } from "../models";
 
 export interface SummarizationOptions {
   maxLength?: number;
-  format?: 'bullet' | 'paragraph';
+  format?: "bullet" | "paragraph";
 }
 
 export interface SummarizationResult {
@@ -708,24 +733,24 @@ export interface SummarizationResult {
 
 export class SummarizationService {
   private aiService: AIService;
-  
+
   constructor(options: { aiService: AIService }) {
     this.aiService = options.aiService;
   }
-  
+
   async summarizeText(
     text: string,
-    options?: SummarizationOptions
+    options?: SummarizationOptions,
   ): Promise<SummarizationResult> {
     const startTime = Date.now();
-    
+
     // Implementation for text summarization
-    
+
     return {
       summary,
       key_points,
       model,
-      processingTime: Date.now() - startTime
+      processingTime: Date.now() - startTime,
     };
   }
 }
@@ -734,23 +759,23 @@ export class SummarizationService {
 2. Export the new service in `src/lib/ai/services/index.ts`:
 
 ```typescript
-export * from './sentiment';
-export * from './crisis';
-export * from './response';
-export * from './intervention';
-export * from './summarization';
+export * from "./sentiment";
+export * from "./crisis";
+export * from "./response";
+export * from "./intervention";
+export * from "./summarization";
 ```
 
 3. Update the main exports in `src/lib/ai/index.ts`:
 
 ```typescript
-export * from './factory';
-export * from './error-handling';
-export * from './performance';
-export * from './analytics';
-export * from './models';
-export * from './providers';
-export * from './services';
+export * from "./factory";
+export * from "./error-handling";
+export * from "./performance";
+export * from "./analytics";
+export * from "./models";
+export * from "./providers";
+export * from "./services";
 ```
 
 ## Troubleshooting
@@ -801,10 +826,10 @@ Enable detailed logging for debugging:
 
 ```typescript
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   enableErrorHandling: true,
   enablePerformanceOptimization: true,
-  logLevel: 'debug'
+  logLevel: "debug",
 });
 ```
 
@@ -813,13 +838,13 @@ const aiService = createAIService({
 Implement request tracing for complex issues:
 
 ```typescript
-import { createAIService, withTracing } from '../lib/ai';
+import { createAIService, withTracing } from "../lib/ai";
 
 const aiService = createAIService();
 const tracedService = withTracing(aiService, {
   logRequests: true,
   logResponses: true,
-  logErrors: true
+  logErrors: true,
 });
 ```
 
@@ -831,15 +856,15 @@ Add context to errors for better debugging:
 try {
   // AI service call
 } catch (error) {
-  throw new AIError('Failed to process request', {
+  throw new AIError("Failed to process request", {
     code: AIErrorCodes.INTERNAL_ERROR,
     statusCode: 500,
     context: {
-      operation: 'sentiment-analysis',
+      operation: "sentiment-analysis",
       input: text,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     },
-    cause: error
+    cause: error,
   });
 }
 ```
@@ -862,4 +887,4 @@ try {
 
 - [Issue Tracker](https://github.com/your-org/your-repo/issues)
 - [Email Support](mailto:support@your-org.com)
-- [Documentation Feedback](https://github.com/your-org/your-repo/discussions) 
+- [Documentation Feedback](https://github.com/your-org/your-repo/discussions)

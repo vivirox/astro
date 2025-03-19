@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import type { AIMessage } from '../../../lib/ai';
+import { useState, useCallback } from "react";
+import type { AIMessage } from "../../../lib/ai";
 
 interface UseResponseGenerationOptions {
   apiEndpoint?: string;
@@ -15,8 +15,14 @@ interface UseResponseGenerationResult {
   isLoading: boolean;
   error: string | null;
   generateResponse: (messages: AIMessage[]) => Promise<string | null>;
-  generateResponseWithContext: (currentMessage: string, previousMessages: AIMessage[]) => Promise<string | null>;
-  generateResponseWithInstructions: (messages: AIMessage[], instructions: string) => Promise<string | null>;
+  generateResponseWithContext: (
+    currentMessage: string,
+    previousMessages: AIMessage[],
+  ) => Promise<string | null>;
+  generateResponseWithInstructions: (
+    messages: AIMessage[],
+    instructions: string,
+  ) => Promise<string | null>;
   reset: () => void;
 }
 
@@ -24,12 +30,12 @@ interface UseResponseGenerationResult {
  * Custom hook for therapeutic response generation
  */
 export function useResponseGeneration({
-  apiEndpoint = '/api/ai/response',
-  model = 'gpt-4o',
+  apiEndpoint = "/api/ai/response",
+  model = "gpt-4o",
   temperature = 0.7,
   maxResponseTokens = 1024,
   onError,
-  onComplete
+  onComplete,
 }: UseResponseGenerationOptions = {}): UseResponseGenerationResult {
   const [response, setResponse] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,177 +49,218 @@ export function useResponseGeneration({
   }, []);
 
   // Generate response from messages
-  const generateResponse = useCallback(async (messages: AIMessage[]) => {
-    if (messages.length === 0 || isLoading) return null;
+  const generateResponse = useCallback(
+    async (messages: AIMessage[]) => {
+      if (messages.length === 0 || isLoading) return null;
 
-    setIsLoading(true);
-    setError(null);
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      // Prepare request body
-      const requestBody = {
-        messages,
-        model,
-        temperature,
-        maxResponseTokens
-      };
+      try {
+        // Prepare request body
+        const requestBody = {
+          messages,
+          model,
+          temperature,
+          maxResponseTokens,
+        };
 
-      // Send request to API
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
+        // Send request to API
+        const response = await fetch(apiEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate response');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to generate response");
+        }
+
+        // Parse response
+        const data = await response.json();
+        const responseContent = data.content;
+
+        setResponse(responseContent);
+
+        // Call onComplete callback
+        if (onComplete) {
+          onComplete(responseContent);
+        }
+
+        return responseContent;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An unknown error occurred";
+        setError(errorMessage);
+
+        // Call onError callback
+        if (onError && err instanceof Error) {
+          onError(err);
+        }
+
+        return null;
+      } finally {
+        setIsLoading(false);
       }
-
-      // Parse response
-      const data = await response.json();
-      const responseContent = data.content;
-      
-      setResponse(responseContent);
-
-      // Call onComplete callback
-      if (onComplete) {
-        onComplete(responseContent);
-      }
-
-      return responseContent;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      setError(errorMessage);
-      
-      // Call onError callback
-      if (onError && err instanceof Error) {
-        onError(err);
-      }
-
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, model, temperature, maxResponseTokens, apiEndpoint, onError, onComplete]);
+    },
+    [
+      isLoading,
+      model,
+      temperature,
+      maxResponseTokens,
+      apiEndpoint,
+      onError,
+      onComplete,
+    ],
+  );
 
   // Generate response with context from previous messages
-  const generateResponseWithContext = useCallback(async (currentMessage: string, previousMessages: AIMessage[]) => {
-    if (!currentMessage.trim() || isLoading) return null;
+  const generateResponseWithContext = useCallback(
+    async (currentMessage: string, previousMessages: AIMessage[]) => {
+      if (!currentMessage.trim() || isLoading) return null;
 
-    setIsLoading(true);
-    setError(null);
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      // Prepare request body
-      const requestBody = {
-        currentMessage,
-        previousMessages,
-        model,
-        temperature,
-        maxResponseTokens
-      };
+      try {
+        // Prepare request body
+        const requestBody = {
+          currentMessage,
+          previousMessages,
+          model,
+          temperature,
+          maxResponseTokens,
+        };
 
-      // Send request to API
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
+        // Send request to API
+        const response = await fetch(apiEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate response with context');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.error || "Failed to generate response with context",
+          );
+        }
+
+        // Parse response
+        const data = await response.json();
+        const responseContent = data.content;
+
+        setResponse(responseContent);
+
+        // Call onComplete callback
+        if (onComplete) {
+          onComplete(responseContent);
+        }
+
+        return responseContent;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An unknown error occurred";
+        setError(errorMessage);
+
+        // Call onError callback
+        if (onError && err instanceof Error) {
+          onError(err);
+        }
+
+        return null;
+      } finally {
+        setIsLoading(false);
       }
-
-      // Parse response
-      const data = await response.json();
-      const responseContent = data.content;
-      
-      setResponse(responseContent);
-
-      // Call onComplete callback
-      if (onComplete) {
-        onComplete(responseContent);
-      }
-
-      return responseContent;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      setError(errorMessage);
-      
-      // Call onError callback
-      if (onError && err instanceof Error) {
-        onError(err);
-      }
-
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, model, temperature, maxResponseTokens, apiEndpoint, onError, onComplete]);
+    },
+    [
+      isLoading,
+      model,
+      temperature,
+      maxResponseTokens,
+      apiEndpoint,
+      onError,
+      onComplete,
+    ],
+  );
 
   // Generate response with additional instructions
-  const generateResponseWithInstructions = useCallback(async (messages: AIMessage[], instructions: string) => {
-    if (messages.length === 0 || !instructions.trim() || isLoading) return null;
+  const generateResponseWithInstructions = useCallback(
+    async (messages: AIMessage[], instructions: string) => {
+      if (messages.length === 0 || !instructions.trim() || isLoading)
+        return null;
 
-    setIsLoading(true);
-    setError(null);
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      // Prepare request body
-      const requestBody = {
-        messages,
-        instructions,
-        model,
-        temperature,
-        maxResponseTokens
-      };
+      try {
+        // Prepare request body
+        const requestBody = {
+          messages,
+          instructions,
+          model,
+          temperature,
+          maxResponseTokens,
+        };
 
-      // Send request to API
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
+        // Send request to API
+        const response = await fetch(apiEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate response with instructions');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.error || "Failed to generate response with instructions",
+          );
+        }
+
+        // Parse response
+        const data = await response.json();
+        const responseContent = data.content;
+
+        setResponse(responseContent);
+
+        // Call onComplete callback
+        if (onComplete) {
+          onComplete(responseContent);
+        }
+
+        return responseContent;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An unknown error occurred";
+        setError(errorMessage);
+
+        // Call onError callback
+        if (onError && err instanceof Error) {
+          onError(err);
+        }
+
+        return null;
+      } finally {
+        setIsLoading(false);
       }
-
-      // Parse response
-      const data = await response.json();
-      const responseContent = data.content;
-      
-      setResponse(responseContent);
-
-      // Call onComplete callback
-      if (onComplete) {
-        onComplete(responseContent);
-      }
-
-      return responseContent;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      setError(errorMessage);
-      
-      // Call onError callback
-      if (onError && err instanceof Error) {
-        onError(err);
-      }
-
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, model, temperature, maxResponseTokens, apiEndpoint, onError, onComplete]);
+    },
+    [
+      isLoading,
+      model,
+      temperature,
+      maxResponseTokens,
+      apiEndpoint,
+      onError,
+      onComplete,
+    ],
+  );
 
   return {
     response,
@@ -222,6 +269,6 @@ export function useResponseGeneration({
     generateResponse,
     generateResponseWithContext,
     generateResponseWithInstructions,
-    reset
+    reset,
   };
-} 
+}

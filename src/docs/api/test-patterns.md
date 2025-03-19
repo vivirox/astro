@@ -49,22 +49,22 @@ src/
 Tests are organized using the `describe` and `it` functions:
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import { Button } from './Button';
+import { describe, it, expect } from "vitest";
+import { Button } from "./Button";
 
-describe('Button', () => {
-  describe('rendering', () => {
-    it('renders correctly with default props', () => {
+describe("Button", () => {
+  describe("rendering", () => {
+    it("renders correctly with default props", () => {
       // Test implementation
     });
 
-    it('renders correctly with custom props', () => {
+    it("renders correctly with custom props", () => {
       // Test implementation
     });
   });
 
-  describe('interactions', () => {
-    it('calls onClick when clicked', () => {
+  describe("interactions", () => {
+    it("calls onClick when clicked", () => {
       // Test implementation
     });
   });
@@ -86,12 +86,12 @@ describe('Button', () => {
 Use Vitest's `vi.fn()` to create function mocks:
 
 ```typescript
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from "vitest";
 
-describe('useUser', () => {
-  it('fetches user data', async () => {
+describe("useUser", () => {
+  it("fetches user data", async () => {
     const mockFetch = vi.fn().mockResolvedValue({
-      json: vi.fn().mockResolvedValue({ id: 1, name: 'John Doe' }),
+      json: vi.fn().mockResolvedValue({ id: 1, name: "John Doe" }),
     });
 
     global.fetch = mockFetch;
@@ -99,10 +99,10 @@ describe('useUser', () => {
     const { result } = renderHook(() => useUser(1));
 
     await waitFor(() => {
-      expect(result.current.data).toEqual({ id: 1, name: 'John Doe' });
+      expect(result.current.data).toEqual({ id: 1, name: "John Doe" });
     });
 
-    expect(mockFetch).toHaveBeenCalledWith('/api/users/1');
+    expect(mockFetch).toHaveBeenCalledWith("/api/users/1");
   });
 });
 ```
@@ -112,17 +112,17 @@ describe('useUser', () => {
 Use Vitest's `vi.mock()` to mock entire modules:
 
 ```typescript
-import { vi, describe, it, expect } from 'vitest';
-import { getUser } from './userService';
+import { vi, describe, it, expect } from "vitest";
+import { getUser } from "./userService";
 
-vi.mock('./api', () => ({
-  fetchUser: vi.fn().mockResolvedValue({ id: 1, name: 'John Doe' }),
+vi.mock("./api", () => ({
+  fetchUser: vi.fn().mockResolvedValue({ id: 1, name: "John Doe" }),
 }));
 
-describe('userService', () => {
-  it('returns user data', async () => {
+describe("userService", () => {
+  it("returns user data", async () => {
     const user = await getUser(1);
-    expect(user).toEqual({ id: 1, name: 'John Doe' });
+    expect(user).toEqual({ id: 1, name: "John Doe" });
   });
 });
 ```
@@ -132,13 +132,13 @@ describe('userService', () => {
 Use Vitest's `vi.mock()` with `vi.importActual()` to partially mock modules:
 
 ```typescript
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from "vitest";
 
-vi.mock('./utils', async (importOriginal) => {
+vi.mock("./utils", async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    formatDate: vi.fn().mockReturnValue('2023-01-01'),
+    formatDate: vi.fn().mockReturnValue("2023-01-01"),
   };
 });
 ```
@@ -148,10 +148,10 @@ vi.mock('./utils', async (importOriginal) => {
 Use Vitest's `vi.useFakeTimers()` to mock timers:
 
 ```typescript
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { debounce } from './utils';
+import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import { debounce } from "./utils";
 
-describe('debounce', () => {
+describe("debounce", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -160,7 +160,7 @@ describe('debounce', () => {
     vi.restoreAllMocks();
   });
 
-  it('debounces function calls', () => {
+  it("debounces function calls", () => {
     const fn = vi.fn();
     const debouncedFn = debounce(fn, 1000);
 
@@ -182,15 +182,15 @@ describe('debounce', () => {
 Use `mockImplementation()` to provide custom mock implementations:
 
 ```typescript
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from "vitest";
 
-describe('useAuth', () => {
-  it('handles login success', async () => {
+describe("useAuth", () => {
+  it("handles login success", async () => {
     const mockLogin = vi.fn().mockImplementation((email, password) => {
-      if (email === 'test@example.com' && password === 'password') {
-        return Promise.resolve({ token: 'abc123' });
+      if (email === "test@example.com" && password === "password") {
+        return Promise.resolve({ token: "abc123" });
       }
-      return Promise.reject(new Error('Invalid credentials'));
+      return Promise.reject(new Error("Invalid credentials"));
     });
 
     // Test implementation
@@ -209,19 +209,19 @@ Use factory functions to create test fixtures:
 export function createUser(overrides = {}) {
   return {
     id: 1,
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'user',
+    name: "John Doe",
+    email: "john@example.com",
+    role: "user",
     ...overrides,
   };
 }
 
 // user.test.ts
-import { createUser } from './factories/user';
+import { createUser } from "./factories/user";
 
-describe('User', () => {
-  it('renders user information', () => {
-    const user = createUser({ name: 'Jane Doe' });
+describe("User", () => {
+  it("renders user information", () => {
+    const user = createUser({ name: "Jane Doe" });
     // Test implementation using the user fixture
   });
 });
@@ -236,23 +236,23 @@ Store complex test data in separate files:
 [
   {
     id: 1,
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'user',
+    name: "John Doe",
+    email: "john@example.com",
+    role: "user",
   },
   {
     id: 2,
-    name: 'Jane Doe',
-    email: 'jane@example.com',
-    role: 'admin',
+    name: "Jane Doe",
+    email: "jane@example.com",
+    role: "admin",
   },
 ];
 
 // users.test.ts
-import users from './fixtures/users.json';
+import users from "./fixtures/users.json";
 
-describe('UserList', () => {
-  it('renders a list of users', () => {
+describe("UserList", () => {
+  it("renders a list of users", () => {
     // Test implementation using the users fixture
   });
 });
@@ -263,10 +263,10 @@ describe('UserList', () => {
 Use `beforeEach` and `afterEach` for setup and teardown:
 
 ```typescript
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { createTestDatabase } from './testUtils';
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { createTestDatabase } from "./testUtils";
 
-describe('UserRepository', () => {
+describe("UserRepository", () => {
   let db;
 
   beforeEach(async () => {
@@ -278,7 +278,7 @@ describe('UserRepository', () => {
     await db.destroy();
   });
 
-  it('creates a user', async () => {
+  it("creates a user", async () => {
     // Test implementation using the database
   });
 });
@@ -290,7 +290,7 @@ Use shared fixtures for common test data:
 
 ```typescript
 // fixtures/shared.ts
-import { vi } from 'vitest';
+import { vi } from "vitest";
 
 export const mockLogger = {
   info: vi.fn(),
@@ -300,15 +300,15 @@ export const mockLogger = {
 };
 
 export const mockConfig = {
-  apiUrl: 'https://api.example.com',
+  apiUrl: "https://api.example.com",
   timeout: 5000,
 };
 
 // service.test.ts
-import { mockLogger, mockConfig } from './fixtures/shared';
+import { mockLogger, mockConfig } from "./fixtures/shared";
 
-describe('Service', () => {
-  it('logs information', () => {
+describe("Service", () => {
+  it("logs information", () => {
     const service = new Service(mockLogger, mockConfig);
     service.doSomething();
     expect(mockLogger.info).toHaveBeenCalled();
@@ -323,17 +323,17 @@ describe('Service', () => {
 Test API endpoints with mock servers:
 
 ```typescript
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createServer } from './testUtils';
-import { getUser } from './userService';
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { createServer } from "./testUtils";
+import { getUser } from "./userService";
 
-describe('userService', () => {
+describe("userService", () => {
   let server;
 
   beforeAll(() => {
     server = createServer();
-    server.get('/api/users/:id', (req, res) => {
-      res.json({ id: req.params.id, name: 'John Doe' });
+    server.get("/api/users/:id", (req, res) => {
+      res.json({ id: req.params.id, name: "John Doe" });
     });
   });
 
@@ -341,9 +341,9 @@ describe('userService', () => {
     server.close();
   });
 
-  it('fetches user data from the API', async () => {
+  it("fetches user data from the API", async () => {
     const user = await getUser(1);
-    expect(user).toEqual({ id: '1', name: 'John Doe' });
+    expect(user).toEqual({ id: "1", name: "John Doe" });
   });
 });
 ```
@@ -391,11 +391,11 @@ describe('UserForm', () => {
 Test database interactions:
 
 ```typescript
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { createTestDatabase } from './testUtils';
-import { UserRepository } from './UserRepository';
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { createTestDatabase } from "./testUtils";
+import { UserRepository } from "./UserRepository";
 
-describe('UserRepository', () => {
+describe("UserRepository", () => {
   let db;
   let repository;
 
@@ -409,8 +409,8 @@ describe('UserRepository', () => {
     await db.destroy();
   });
 
-  it('creates and retrieves a user', async () => {
-    const user = { name: 'John Doe', email: 'john@example.com' };
+  it("creates and retrieves a user", async () => {
+    const user = { name: "John Doe", email: "john@example.com" };
     const id = await repository.create(user);
     const retrievedUser = await repository.getById(id);
 
@@ -426,21 +426,21 @@ describe('UserRepository', () => {
 Use Vitest's `bench` function for benchmarking:
 
 ```typescript
-import { bench, describe } from 'vitest';
-import { sortArray, quickSort, mergeSort } from './sorting';
+import { bench, describe } from "vitest";
+import { sortArray, quickSort, mergeSort } from "./sorting";
 
-describe('Sorting Algorithms', () => {
+describe("Sorting Algorithms", () => {
   const array = Array.from({ length: 1000 }, () => Math.random() * 1000);
 
-  bench('Native sort', () => {
+  bench("Native sort", () => {
     sortArray(array);
   });
 
-  bench('Quick sort', () => {
+  bench("Quick sort", () => {
     quickSort(array);
   });
 
-  bench('Merge sort', () => {
+  bench("Merge sort", () => {
     mergeSort(array);
   });
 });
@@ -451,13 +451,16 @@ describe('Sorting Algorithms', () => {
 Test memory usage with the `memoryUsage` utility:
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import { memoryUsage } from './testUtils';
-import { processLargeData } from './dataProcessor';
+import { describe, it, expect } from "vitest";
+import { memoryUsage } from "./testUtils";
+import { processLargeData } from "./dataProcessor";
 
-describe('dataProcessor', () => {
-  it('processes data efficiently', async () => {
-    const data = Array.from({ length: 10000 }, (_, i) => ({ id: i, value: `Value ${i}` }));
+describe("dataProcessor", () => {
+  it("processes data efficiently", async () => {
+    const data = Array.from({ length: 10000 }, (_, i) => ({
+      id: i,
+      value: `Value ${i}`,
+    }));
 
     const { heapUsed } = await memoryUsage(() => {
       processLargeData(data);
@@ -473,12 +476,12 @@ describe('dataProcessor', () => {
 Test performance under load:
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import { createLoadTest } from './testUtils';
-import { CacheService } from './CacheService';
+import { describe, it, expect } from "vitest";
+import { createLoadTest } from "./testUtils";
+import { CacheService } from "./CacheService";
 
-describe('CacheService', () => {
-  it('handles concurrent requests efficiently', async () => {
+describe("CacheService", () => {
+  it("handles concurrent requests efficiently", async () => {
     const cache = new CacheService();
 
     const results = await createLoadTest({
@@ -504,10 +507,10 @@ describe('CacheService', () => {
 Test circuit breaker behavior:
 
 ```typescript
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CircuitBreaker } from './CircuitBreaker';
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { CircuitBreaker } from "./CircuitBreaker";
 
-describe('CircuitBreaker', () => {
+describe("CircuitBreaker", () => {
   let circuitBreaker;
   let mockFn;
 
@@ -519,11 +522,11 @@ describe('CircuitBreaker', () => {
     });
   });
 
-  it('opens the circuit after consecutive failures', async () => {
+  it("opens the circuit after consecutive failures", async () => {
     mockFn
-      .mockRejectedValueOnce(new Error('Failure 1'))
-      .mockRejectedValueOnce(new Error('Failure 2'))
-      .mockRejectedValueOnce(new Error('Failure 3'));
+      .mockRejectedValueOnce(new Error("Failure 1"))
+      .mockRejectedValueOnce(new Error("Failure 2"))
+      .mockRejectedValueOnce(new Error("Failure 3"));
 
     try {
       await circuitBreaker.execute(mockFn);
@@ -537,9 +540,11 @@ describe('CircuitBreaker', () => {
 
     expect(circuitBreaker.isOpen()).toBe(true);
 
-    mockFn.mockResolvedValueOnce('Success');
+    mockFn.mockResolvedValueOnce("Success");
 
-    await expect(circuitBreaker.execute(mockFn)).rejects.toThrow('Circuit is open');
+    await expect(circuitBreaker.execute(mockFn)).rejects.toThrow(
+      "Circuit is open",
+    );
     expect(mockFn).toHaveBeenCalledTimes(3);
   });
 });
@@ -614,10 +619,10 @@ Optimize test performance:
 #### Using the Debugger
 
 ```typescript
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 
-describe('debugging', () => {
-  it('can be debugged', () => {
+describe("debugging", () => {
+  it("can be debugged", () => {
     const value = 1 + 1;
     debugger; // This will pause execution in the debugger
     expect(value).toBe(2);
@@ -628,12 +633,12 @@ describe('debugging', () => {
 #### Using Console Logs
 
 ```typescript
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 
-describe('debugging', () => {
-  it('can be debugged with console.log', () => {
+describe("debugging", () => {
+  it("can be debugged with console.log", () => {
     const value = complexCalculation();
-    console.log('Value:', value);
+    console.log("Value:", value);
     expect(value).toBe(42);
   });
 });
@@ -642,17 +647,17 @@ describe('debugging', () => {
 #### Using Test Hooks
 
 ```typescript
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from "vitest";
 
-describe('debugging', () => {
+describe("debugging", () => {
   beforeEach(() => {
-    console.log('Test starting');
+    console.log("Test starting");
   });
 
-  it('logs before and after', () => {
-    console.log('Test running');
+  it("logs before and after", () => {
+    console.log("Test running");
     expect(1 + 1).toBe(2);
-    console.log('Test completed');
+    console.log("Test completed");
   });
 });
 ```

@@ -1,6 +1,10 @@
-import { initializeSecurityDatabase } from '../db/security/initialize';
-import { SecurityMonitoringService, SecurityEventType, SecurityEventSeverity } from './monitoring';
-import { getLogger } from '../logging';
+import { initializeSecurityDatabase } from "../db/security/initialize";
+import {
+  SecurityMonitoringService,
+  SecurityEventType,
+  SecurityEventSeverity,
+} from "./monitoring";
+import { getLogger } from "../logging";
 
 const logger = getLogger();
 
@@ -15,17 +19,17 @@ let securityMonitoringService: SecurityMonitoringService | null = null;
  */
 export async function initializeSecurity(): Promise<void> {
   try {
-    logger.info('Initializing security module...');
-    
+    logger.info("Initializing security module...");
+
     // Initialize security database
     await initializeSecurityDatabase();
-    
+
     // Create the security monitoring service
     securityMonitoringService = new SecurityMonitoringService();
-    
-    logger.info('Security module initialized successfully');
+
+    logger.info("Security module initialized successfully");
   } catch (error) {
-    logger.error('Failed to initialize security module', error);
+    logger.error("Failed to initialize security module", error);
     throw error;
   }
 }
@@ -37,7 +41,9 @@ export async function initializeSecurity(): Promise<void> {
 export function getSecurityMonitoring(): SecurityMonitoringService {
   if (!securityMonitoringService) {
     securityMonitoringService = new SecurityMonitoringService();
-    logger.warn('Security monitoring service created without proper initialization');
+    logger.warn(
+      "Security monitoring service created without proper initialization",
+    );
   }
   return securityMonitoringService;
 }
@@ -46,5 +52,5 @@ export function getSecurityMonitoring(): SecurityMonitoringService {
 export {
   SecurityEventType,
   SecurityEventSeverity,
-  SecurityMonitoringService
-} from './monitoring'; 
+  SecurityMonitoringService,
+} from "./monitoring";

@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres';
+import { sql } from "@vercel/postgres";
 
 export async function up() {
   await sql`
@@ -24,14 +24,14 @@ export async function up() {
     CREATE INDEX IF NOT EXISTS idx_ai_perf_user_id ON ai_performance_metrics(user_id);
     CREATE INDEX IF NOT EXISTS idx_ai_perf_success ON ai_performance_metrics(success);
   `;
-  
-  console.log('Created ai_performance_metrics table');
+
+  console.log("Created ai_performance_metrics table");
 }
 
 export async function down() {
   await sql`
     DROP TABLE IF EXISTS ai_performance_metrics;
   `;
-  
-  console.log('Dropped ai_performance_metrics table');
-} 
+
+  console.log("Dropped ai_performance_metrics table");
+}

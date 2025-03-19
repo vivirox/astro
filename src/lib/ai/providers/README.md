@@ -9,16 +9,19 @@ Modal is a cloud platform that provides convenient, on-demand access to serverle
 ## Setup
 
 1. Install Modal CLI:
+
    ```bash
    pip install modal
    ```
 
 2. Set up Modal credentials:
+
    ```bash
    modal setup
    ```
 
 3. Deploy a custom model using the provided script:
+
    ```bash
    python src/scripts/deploy-modal-model.py --model llama3-8b
    ```
@@ -32,7 +35,7 @@ Modal is a cloud platform that provides convenient, on-demand access to serverle
 ## Usage
 
 ```typescript
-import { createAIService } from '../lib/ai';
+import { createAIService } from "../lib/ai";
 
 // Create AI service with Modal provider
 const aiService = createAIService({
@@ -40,26 +43,26 @@ const aiService = createAIService({
     baseUrl: process.env.MODAL_API_URL,
     apiKey: process.env.MODAL_API_KEY,
   },
-  defaultProvider: 'modal'
+  defaultProvider: "modal",
 });
 
 // Use the service
 const response = await aiService.createChatCompletion(
   [
     {
-      role: 'system',
-      content: 'You are a helpful assistant.'
+      role: "system",
+      content: "You are a helpful assistant.",
     },
     {
-      role: 'user',
-      content: 'Hello, how are you?'
-    }
+      role: "user",
+      content: "Hello, how are you?",
+    },
   ],
   {
-    model: 'llama3-8b-modal',
+    model: "llama3-8b-modal",
     temperature: 0.7,
-    maxTokens: 1000
-  }
+    maxTokens: 1000,
+  },
 );
 ```
 
@@ -95,4 +98,4 @@ You can test the Modal provider using the provided test page at `/admin/modal-te
 
 The Modal provider implements the same interface as other providers like OpenAI and Anthropic, making it easy to switch between providers. It supports both streaming and non-streaming responses, and handles errors gracefully.
 
-The provider communicates with the Modal-deployed model using the OpenAI-compatible API, which makes it compatible with the existing AI service infrastructure. 
+The provider communicates with the Modal-deployed model using the OpenAI-compatible API, which makes it compatible with the existing AI service infrastructure.

@@ -1,4 +1,4 @@
-import { zkChat } from '../../../lib/chat';
+import { zkChat } from "../../../lib/chat";
 
 // Update the message sending handler to include ZK proof generation
 export async function POST(request: Request) {
@@ -7,14 +7,14 @@ export async function POST(request: Request) {
 
     // Create message data
     const messageData = {
-      id: 'msg-' + crypto.randomUUID(),
+      id: "msg-" + crypto.randomUUID(),
       conversationId: body.conversationId,
       senderId: body.userId,
       content: body.message,
       timestamp: Date.now(),
       metadata: {
-        ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
-        userAgent: request.headers.get('user-agent') || 'unknown',
+        ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+        userAgent: request.headers.get("user-agent") || "unknown",
       },
     };
 
@@ -48,10 +48,10 @@ export async function POST(request: Request) {
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           // ... other headers ...
         },
-      }
+      },
     );
   } catch (error) {
     // ... existing error handling ...
@@ -62,5 +62,5 @@ export async function POST(request: Request) {
 async function getAuthorizedSenders(conversationId: string): Promise<string[]> {
   // In a real implementation, this would fetch the authorized senders from the database
   // For now, return a mock list
-  return ['user-1', 'user-2', 'ai-assistant'];
-} 
+  return ["user-1", "user-2", "ai-assistant"];
+}

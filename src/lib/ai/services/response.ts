@@ -1,5 +1,5 @@
-import { Message, ResponseGenerationConfig, AIServiceResponse } from '../types';
-import { TogetherAIService } from './together';
+import { Message, ResponseGenerationConfig, AIServiceResponse } from "../types";
+import { TogetherAIService } from "./together";
 
 /**
  * Service for generating therapeutic responses
@@ -16,9 +16,9 @@ export class ResponseGenerationService {
     this.aiService = config.aiService;
     this.config = {
       aiService: config.aiService,
-      model: config.model || 'mistralai/Mixtral-8x7B-Instruct-v0.1',
+      model: config.model || "mistralai/Mixtral-8x7B-Instruct-v0.1",
       temperature: config.temperature || 0.5,
-      maxResponseTokens: config.maxResponseTokens || 1024
+      maxResponseTokens: config.maxResponseTokens || 1024,
     };
   }
 
@@ -31,8 +31,8 @@ export class ResponseGenerationService {
    */
   async generate(
     currentMessage: string,
-    previousMessages: { role: 'user' | 'assistant'; content: string }[] = [],
-    instructions?: string
+    previousMessages: { role: "user" | "assistant"; content: string }[] = [],
+    instructions?: string,
   ): Promise<AIServiceResponse> {
     try {
       // Format messages for the AI service
@@ -41,14 +41,15 @@ export class ResponseGenerationService {
       // Add system instructions if provided
       if (instructions) {
         messages.push({
-          role: 'system',
-          content: instructions
+          role: "system",
+          content: instructions,
         });
       } else {
         // Default system message
         messages.push({
-          role: 'system',
-          content: 'You are a helpful assistant providing thoughtful, accurate, and supportive responses.'
+          role: "system",
+          content:
+            "You are a helpful assistant providing thoughtful, accurate, and supportive responses.",
         });
       }
 
@@ -56,24 +57,24 @@ export class ResponseGenerationService {
       for (const msg of previousMessages) {
         messages.push({
           role: msg.role,
-          content: msg.content
+          content: msg.content,
         });
       }
 
       // Add the current message
       messages.push({
-        role: 'user',
-        content: currentMessage
+        role: "user",
+        content: currentMessage,
       });
 
       // Generate the response
       return await this.aiService.generateCompletion(messages, {
         model: this.config.model,
         temperature: this.config.temperature,
-        maxTokens: this.config.maxResponseTokens
+        maxTokens: this.config.maxResponseTokens,
       });
     } catch (error) {
-      console.error('Error generating response:', error);
+      console.error("Error generating response:", error);
       throw error;
     }
   }
@@ -86,23 +87,27 @@ export class ResponseGenerationService {
    */
   async generateFromMessages(
     messages: Message[],
-    instructions?: string
+    instructions?: string,
   ): Promise<AIServiceResponse> {
     try {
       // Create a copy of the messages
       const formattedMessages = [...messages];
 
       // Add system instructions if provided and not already present
-      if (instructions && !formattedMessages.some(msg => msg.role === 'system')) {
+      if (
+        instructions &&
+        !formattedMessages.some((msg) => msg.role === "system")
+      ) {
         formattedMessages.unshift({
-          role: 'system',
-          content: instructions
+          role: "system",
+          content: instructions,
         });
-      } else if (!formattedMessages.some(msg => msg.role === 'system')) {
+      } else if (!formattedMessages.some((msg) => msg.role === "system")) {
         // Add default system message if none exists
         formattedMessages.unshift({
-          role: 'system',
-          content: 'You are a helpful assistant providing thoughtful, accurate, and supportive responses.'
+          role: "system",
+          content:
+            "You are a helpful assistant providing thoughtful, accurate, and supportive responses.",
         });
       }
 
@@ -110,11 +115,11 @@ export class ResponseGenerationService {
       return await this.aiService.generateCompletion(formattedMessages, {
         model: this.config.model,
         temperature: this.config.temperature,
-        maxTokens: this.config.maxResponseTokens
+        maxTokens: this.config.maxResponseTokens,
       });
     } catch (error) {
-      console.error('Error generating response from messages:', error);
+      console.error("Error generating response from messages:", error);
       throw error;
     }
   }
-} 
+}

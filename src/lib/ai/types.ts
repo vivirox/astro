@@ -3,9 +3,15 @@
 // This file is only kept temporarily for backward compatibility
 
 // Re-export from ai-types.ts to maintain compatibility
-export * from './models/ai-types';
+export * from "./models/ai-types";
 
-export type AIProvider = 'openai' | 'anthropic' | 'google' | 'azure' | 'deepseek' | 'local';
+export type AIProvider =
+  | "openai"
+  | "anthropic"
+  | "google"
+  | "azure"
+  | "deepseek"
+  | "local";
 
 export interface AIModel {
   id: string;
@@ -32,7 +38,7 @@ export interface AIModelResponse {
 
 // Message type for AI conversations
 export interface Message {
-  role: 'system' | 'user' | 'assistant';
+  role: "system" | "user" | "assistant";
   content: string;
 }
 
@@ -71,7 +77,7 @@ export interface ResponseGenerationConfig {
 
 // Sentiment analysis result
 export interface SentimentAnalysisResult {
-  sentiment: 'positive' | 'negative' | 'neutral';
+  sentiment: "positive" | "negative" | "neutral";
   score: number;
   confidence: number;
   content: string;
@@ -81,7 +87,7 @@ export interface SentimentAnalysisResult {
 // Crisis detection result
 export interface CrisisDetectionResult {
   hasCrisis: boolean;
-  riskLevel: 'none' | 'low' | 'medium' | 'high' | 'severe';
+  riskLevel: "none" | "low" | "medium" | "high" | "severe";
   confidence: number;
   categories?: string[];
   explanation?: string;
@@ -97,4 +103,4 @@ export interface InterventionAnalysisResult {
   suggestions: string[];
   content: string;
   usage?: TokenUsage;
-} 
+}

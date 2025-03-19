@@ -1,11 +1,11 @@
 interface AccessibleLoadingIndicatorProps {
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
   message?: string;
 }
 
-export function AccessibleLoadingIndicator({ 
-  size = 'medium', 
-  message = 'Loading...' 
+export function AccessibleLoadingIndicator({
+  size = "medium",
+  message = "Loading...",
 }: AccessibleLoadingIndicatorProps) {
   return (
     <div role="status" aria-live="polite">

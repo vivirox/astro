@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 /**
  * Chat message schema
  */
 export const ChatMessageSchema = z.object({
-  role: z.enum(['system', 'user', 'assistant']),
+  role: z.enum(["system", "user", "assistant"]),
   content: z.string().min(1).max(32768),
   name: z.string().optional(),
 });
@@ -13,7 +13,7 @@ export const ChatMessageSchema = z.object({
  * AI completion request schema
  */
 export const CompletionRequestSchema = z.object({
-  model: z.string().min(1).default('togethercomputer/llama-3-8b-instruct'),
+  model: z.string().min(1).default("togethercomputer/llama-3-8b-instruct"),
   messages: z.array(ChatMessageSchema).min(1).max(100),
   temperature: z.number().min(0).max(2).default(0.7),
   max_tokens: z.number().min(1).max(4096).default(1024),
@@ -27,10 +27,16 @@ export const CompletionRequestSchema = z.object({
  * Usage statistics request schema
  */
 export const UsageStatsRequestSchema = z.object({
-  period: z.enum(['daily', 'weekly', 'monthly']).default('daily'),
+  period: z.enum(["daily", "weekly", "monthly"]).default("daily"),
   allUsers: z.boolean().default(false),
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  startDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
+  endDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
 });
 
 /**
@@ -38,7 +44,7 @@ export const UsageStatsRequestSchema = z.object({
  */
 export const SentimentRequestSchema = z.object({
   text: z.string().min(1).max(5000),
-  model: z.string().default('togethercomputer/llama-3-8b-instruct').optional(),
+  model: z.string().default("togethercomputer/llama-3-8b-instruct").optional(),
   includeReasoning: z.boolean().default(false).optional(),
 });
 
@@ -58,12 +64,14 @@ export const CrisisDetectionRequestSchema = z.object({
 export const ResponseGenerationRequestSchema = z.object({
   messages: z.array(ChatMessageSchema).min(1).max(100),
   userId: z.string().optional(),
-  model: z.string().default('togethercomputer/llama-3-8b-instruct').optional(),
+  model: z.string().default("togethercomputer/llama-3-8b-instruct").optional(),
   includeAnalysis: z.boolean().default(false).optional(),
-  safety: z.object({
-    enabled: z.boolean().default(true),
-    threshold: z.number().min(0).max(1).default(0.7),
-  }).optional(),
+  safety: z
+    .object({
+      enabled: z.boolean().default(true),
+      threshold: z.number().min(0).max(1).default(0.7),
+    })
+    .optional(),
 });
 
 /**
@@ -74,4 +82,4 @@ export const InterventionAnalysisRequestSchema = z.object({
   userId: z.string().optional(),
   interventionTypes: z.array(z.string()).optional(),
   includeTextAnalysis: z.boolean().default(false).optional(),
-}); 
+});

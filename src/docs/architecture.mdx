@@ -34,7 +34,8 @@ Gradiant is built on a modern, secure, and scalable architecture that combines t
     ZKServer --> Queue
     Queue --> Supabase
     API --> Cache
-  ```
+
+````
 </Frame>
 
 ## Core Components
@@ -42,54 +43,54 @@ Gradiant is built on a modern, secure, and scalable architecture that combines t
 ### Frontend Architecture
 
 <Tabs>
-  <Tab title="UI Layer">
-    The UI layer is built using React and Next.js, incorporating design elements from Liftoff's interview platform:
+<Tab title="UI Layer">
+  The UI layer is built using React and Next.js, incorporating design elements from Liftoff's interview platform:
 
-    - **Component Structure**
-      - Atomic Design Principles
-      - Shared Component Library
-      - Theme Provider (Dark/Light modes)
-      - Responsive Layout System
+  - **Component Structure**
+    - Atomic Design Principles
+    - Shared Component Library
+    - Theme Provider (Dark/Light modes)
+    - Responsive Layout System
 
-    - **State Management**
-      - React Context for global state
-      - React Query for server state
-      - Local storage for persistence
-      - Secure credential handling
-  </Tab>
+  - **State Management**
+    - React Context for global state
+    - React Query for server state
+    - Local storage for persistence
+    - Secure credential handling
+</Tab>
 
-  <Tab title="Data Flow">
-    Data flow follows unidirectional principles:
+<Tab title="Data Flow">
+  Data flow follows unidirectional principles:
 
-    1. User actions trigger state changes
-    2. State updates propagate to components
-    3. Side effects handled by middleware
-    4. Server state synchronized via WebSocket
-  </Tab>
+  1. User actions trigger state changes
+  2. State updates propagate to components
+  3. Side effects handled by middleware
+  4. Server state synchronized via WebSocket
+</Tab>
 </Tabs>
 
 ### Backend Architecture
 
 <Cards>
-  <Card title="API Layer">
-    - RESTful endpoints
-    - GraphQL interface
-    - WebSocket connections
-    - Rate limiting
-    - Request validation
-  </Card>
-  <Card title="Authentication">
-    - Supabase Auth integration
-    - JWT token management
-    - Role-based access control
-    - Session handling
-  </Card>
-  <Card title="Zero-Knowledge System">
-    - End-to-end encryption
-    - Client-side key generation
-    - Secure message passing
-    - Zero-knowledge proofs
-  </Card>
+<Card title="API Layer">
+  - RESTful endpoints
+  - GraphQL interface
+  - WebSocket connections
+  - Rate limiting
+  - Request validation
+</Card>
+<Card title="Authentication">
+  - Supabase Auth integration
+  - JWT token management
+  - Role-based access control
+  - Session handling
+</Card>
+<Card title="Zero-Knowledge System">
+  - End-to-end encryption
+  - Client-side key generation
+  - Secure message passing
+  - Zero-knowledge proofs
+</Card>
 </Cards>
 
 ## Database Design
@@ -99,30 +100,30 @@ Gradiant is built on a modern, secure, and scalable architecture that combines t
 ```sql
 -- Core Tables
 CREATE TABLE users (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  email TEXT UNIQUE NOT NULL,
-  encrypted_data JSONB,
-  settings JSONB DEFAULT '{}'::jsonb,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+email TEXT UNIQUE NOT NULL,
+encrypted_data JSONB,
+settings JSONB DEFAULT '{}'::jsonb,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE sessions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES users(id),
-  metadata JSONB,
-  started_at TIMESTAMPTZ DEFAULT NOW(),
-  ended_at TIMESTAMPTZ
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+user_id UUID REFERENCES users(id),
+metadata JSONB,
+started_at TIMESTAMPTZ DEFAULT NOW(),
+ended_at TIMESTAMPTZ
 );
 
 CREATE TABLE messages (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  session_id UUID REFERENCES sessions(id),
-  encrypted_content TEXT NOT NULL,
-  metadata JSONB,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+session_id UUID REFERENCES sessions(id),
+encrypted_content TEXT NOT NULL,
+metadata JSONB,
+created_at TIMESTAMPTZ DEFAULT NOW()
 );
-```
+````
 
 ## Security Architecture
 
@@ -132,16 +133,18 @@ CREATE TABLE messages (
   - JWT token generation and validation
   - Secure session management
 
-  ### 2. Zero-Knowledge Implementation
-  - Client-side key generation
-  - End-to-end encryption of sensitive data
-  - Zero-knowledge proof verification
+### 2. Zero-Knowledge Implementation
 
-  ### 3. Data Protection
-  - Encrypted data storage in Supabase
-  - Secure key management
-  - Regular security audits
-</Steps>
+- Client-side key generation
+- End-to-end encryption of sensitive data
+- Zero-knowledge proof verification
+
+### 3. Data Protection
+
+- Encrypted data storage in Supabase
+- Secure key management
+- Regular security audits
+  </Steps>
 
 ## Integration Points
 
@@ -149,17 +152,12 @@ CREATE TABLE messages (
 
 <AccordionGroup>
   <Accordion title="UI Components">
-    - Chat interface adaptation
-    - Dashboard layouts
-    - Form components
-    - Navigation elements
+    - Chat interface adaptation - Dashboard layouts - Form components -
+    Navigation elements
   </Accordion>
-  
+
   <Accordion title="State Management">
-    - Real-time updates
-    - Cache management
-    - Optimistic updates
-    - Error handling
+    - Real-time updates - Cache management - Optimistic updates - Error handling
   </Accordion>
 </AccordionGroup>
 
@@ -167,15 +165,12 @@ CREATE TABLE messages (
 
 <AccordionGroup>
   <Accordion title="Authentication System">
-    - Adapted for Supabase
-    - Enhanced with ZK principles
-    - Role-based access control
+    - Adapted for Supabase - Enhanced with ZK principles - Role-based access
+    control
   </Accordion>
-  
+
   <Accordion title="API Structure">
-    - RESTful endpoints
-    - Real-time subscriptions
-    - Request validation
+    - RESTful endpoints - Real-time subscriptions - Request validation
   </Accordion>
 </AccordionGroup>
 
@@ -192,6 +187,7 @@ flowchart LR
 ```
 
 - **Client-side caching**
+
   - React Query cache
   - Service Worker cache
   - Local storage cache
@@ -205,16 +201,11 @@ flowchart LR
 
 <Cards>
   <Card title="Frontend Optimization">
-    - Code splitting
-    - Lazy loading
-    - Image optimization
-    - Bundle size reduction
+    - Code splitting - Lazy loading - Image optimization - Bundle size reduction
   </Card>
   <Card title="Backend Optimization">
-    - Query optimization
-    - Connection pooling
-    - Background job processing
-    - Resource scaling
+    - Query optimization - Connection pooling - Background job processing -
+    Resource scaling
   </Card>
 </Cards>
 
@@ -238,44 +229,45 @@ flowchart LR
     App2 --> Cache
     App1 --> DB
     App2 --> DB
-  ```
+
+````
 </Frame>
 
 ### Infrastructure Components
 
 - **Frontend**
-  - Vercel deployment
-  - Edge functions
-  - CDN distribution
+- Vercel deployment
+- Edge functions
+- CDN distribution
 
 - **Backend**
-  - Containerized services
-  - Auto-scaling groups
-  - Load balancing
+- Containerized services
+- Auto-scaling groups
+- Load balancing
 
 - **Database**
-  - Supabase managed instance
-  - Read replicas
-  - Backup strategy
+- Supabase managed instance
+- Read replicas
+- Backup strategy
 
 ## Monitoring & Logging
 
 ### Observability Stack
 
 - **Application Monitoring**
-  - Error tracking
-  - Performance metrics
-  - User analytics
+- Error tracking
+- Performance metrics
+- User analytics
 
 - **Infrastructure Monitoring**
-  - Server metrics
-  - Database metrics
-  - Cache performance
+- Server metrics
+- Database metrics
+- Cache performance
 
 - **Security Monitoring**
-  - Audit logs
-  - Access logs
-  - Security alerts
+- Audit logs
+- Access logs
+- Security alerts
 
 ## Development Workflow
 
@@ -293,7 +285,7 @@ pnpm db:migrate
 
 # Testing
 pnpm test
-```
+````
 
 ### CI/CD Pipeline
 
@@ -306,5 +298,7 @@ graph LR
 ```
 
 <Note>
-  This architecture documentation is maintained alongside the codebase and updated as the system evolves. For implementation details of specific components, refer to the respective documentation sections.
-</Note> 
+  This architecture documentation is maintained alongside the codebase and
+  updated as the system evolves. For implementation details of specific
+  components, refer to the respective documentation sections.
+</Note>

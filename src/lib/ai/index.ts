@@ -1,43 +1,61 @@
 // Export types
-export * from './models/ai-types';
+export * from "./models/ai-types";
 
 // Export model registry
-export * from './models/registry';
+export * from "./models/registry";
 
 // Export providers
-export { TogetherAIProvider } from './providers/together';
+export { TogetherAIProvider } from "./providers/together";
 
 // Export services
-export { AIService, type AIServiceConfig } from './services/ai-service';
-export { SentimentAnalysisService, type SentimentAnalysisConfig } from './services/sentiment-analysis';
-export { CrisisDetectionService, type CrisisDetectionConfig } from './services/crisis-detection';
-export { ResponseGenerationService, type ResponseGenerationConfig } from './services/response-generation';
-export { 
-  InterventionAnalysisService, 
+export { AIService, type AIServiceConfig } from "./services/ai-service";
+export {
+  SentimentAnalysisService,
+  type SentimentAnalysisConfig,
+} from "./services/sentiment-analysis";
+export {
+  CrisisDetectionService,
+  type CrisisDetectionConfig,
+} from "./services/crisis-detection";
+export {
+  ResponseGenerationService,
+  type ResponseGenerationConfig,
+} from "./services/response-generation";
+export {
+  InterventionAnalysisService,
   type InterventionAnalysisConfig,
-  type InterventionAnalysisResult 
-} from './services/intervention-analysis';
+  type InterventionAnalysisResult,
+} from "./services/intervention-analysis";
 
 // Export performance optimization services
-export { AICacheService, type CacheConfig } from './services/cache-service';
-export { PromptOptimizerService, type PromptOptimizerConfig } from './services/prompt-optimizer';
-export { ConnectionPoolManager, type ConnectionPoolConfig } from './services/connection-pool';
-export { FallbackService, type FallbackServiceConfig } from './services/fallback-service';
+export { AICacheService, type CacheConfig } from "./services/cache-service";
+export {
+  PromptOptimizerService,
+  type PromptOptimizerConfig,
+} from "./services/prompt-optimizer";
+export {
+  ConnectionPoolManager,
+  type ConnectionPoolConfig,
+} from "./services/connection-pool";
+export {
+  FallbackService,
+  type FallbackServiceConfig,
+} from "./services/fallback-service";
 
 // Export AI service factory
-export * from './factory';
+export * from "./factory";
 
 // Export AI services
-export * from './services/sentiment-analysis';
-export * from './services/crisis-detection';
-export * from './services/response-generation';
-export * from './services/intervention-analysis';
+export * from "./services/sentiment-analysis";
+export * from "./services/crisis-detection";
+export * from "./services/response-generation";
+export * from "./services/intervention-analysis";
 
 // Export error handling utilities
-export * from './error-handling';
+export * from "./error-handling";
 
 // Export performance optimization utilities
-export * from './performance';
+export * from "./performance";
 
 /**
  * Create a new AI service with the provided configuration
@@ -52,12 +70,12 @@ export function createAIService(config: AIServiceConfig) {
 export function createSentimentAnalysisService(
   aiService: AIService,
   model?: string,
-  defaultPrompt?: string
+  defaultPrompt?: string,
 ) {
   return new SentimentAnalysisService({
     aiService,
     model,
-    defaultPrompt
+    defaultPrompt,
   });
 }
 
@@ -68,13 +86,13 @@ export function createCrisisDetectionService(
   aiService: AIService,
   model?: string,
   defaultPrompt?: string,
-  sensitivityLevel?: 'low' | 'medium' | 'high'
+  sensitivityLevel?: "low" | "medium" | "high",
 ) {
   return new CrisisDetectionService({
     aiService,
     model,
     defaultPrompt,
-    sensitivityLevel
+    sensitivityLevel,
   });
 }
 
@@ -86,14 +104,14 @@ export function createResponseGenerationService(
   model?: string,
   systemPrompt?: string,
   maxResponseTokens?: number,
-  temperature?: number
+  temperature?: number,
 ) {
   return new ResponseGenerationService({
     aiService,
     model,
     systemPrompt,
     maxResponseTokens,
-    temperature
+    temperature,
   });
 }
 
@@ -103,12 +121,12 @@ export function createResponseGenerationService(
 export function createInterventionAnalysisService(
   aiService: AIService,
   model?: string,
-  systemPrompt?: string
+  systemPrompt?: string,
 ) {
   return new InterventionAnalysisService({
     aiService,
     model,
-    systemPrompt
+    systemPrompt,
   });
 }
 
@@ -116,7 +134,7 @@ export function createInterventionAnalysisService(
  * AI Message Types
  */
 export interface AIMessage {
-  role: 'user' | 'assistant' | 'system';
+  role: "user" | "assistant" | "system";
   content: string;
 }
 
@@ -124,9 +142,9 @@ export interface AIMessage {
  * Sentiment Analysis Types
  */
 export interface SentimentResult {
-  score: number;        // -1 to 1, where -1 is very negative, 1 is very positive
-  label: 'negative' | 'neutral' | 'positive';
-  confidence: number;   // 0 to 1
+  score: number; // -1 to 1, where -1 is very negative, 1 is very positive
+  label: "negative" | "neutral" | "positive";
+  confidence: number; // 0 to 1
   emotions?: Record<string, number>; // Optional map of emotions to scores (0-1)
 }
 
@@ -135,9 +153,9 @@ export interface SentimentResult {
  */
 export interface CrisisDetectionResult {
   isCrisis: boolean;
-  confidence: number;   // 0 to 1
-  category?: string;    // Optional category of crisis (e.g., "self-harm", "suicide", "abuse")
-  severity?: 'low' | 'medium' | 'high';
+  confidence: number; // 0 to 1
+  category?: string; // Optional category of crisis (e.g., "self-harm", "suicide", "abuse")
+  severity?: "low" | "medium" | "high";
   recommendedAction?: string;
 }
 
@@ -157,8 +175,8 @@ export interface ResponseGenerationResult {
  * Intervention Effectiveness Types
  */
 export interface InterventionEffectivenessResult {
-  score: number;        // 0 to 1, where 0 is ineffective, 1 is very effective
-  confidence: number;   // 0 to 1
+  score: number; // 0 to 1, where 0 is ineffective, 1 is very effective
+  confidence: number; // 0 to 1
   recommendations?: string[];
   areas?: {
     name: string;
@@ -185,7 +203,7 @@ export interface SentimentAnalysisRequest {
 export interface CrisisDetectionRequest {
   model: string;
   text: string;
-  sensitivityLevel?: 'low' | 'medium' | 'high';
+  sensitivityLevel?: "low" | "medium" | "high";
 }
 
 export interface ResponseGenerationRequest {
@@ -201,4 +219,4 @@ export interface InterventionEffectivenessRequest {
   conversation: AIMessage[];
   interventionMessage: string;
   userResponse: string;
-} 
+}

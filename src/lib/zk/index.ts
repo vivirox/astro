@@ -3,8 +3,8 @@
  * Implements HIPAA-compliant zero-knowledge operations
  */
 
-import { createHash } from 'crypto';
-import { CryptoSystem } from '../crypto';
+import { createHash } from "crypto";
+import { CryptoSystem } from "../crypto";
 
 // Types for session data
 export interface SessionData {
@@ -47,24 +47,28 @@ export interface ZKSystem {
   generateProof: (data: any) => Promise<ProofData>;
   verifyProof: (proofData: ProofData) => Promise<VerificationResult>;
   encryptAndProve: (data: any, context: string) => Promise<EncryptedProofData>;
-  generateRangeProof: (value: number, min: number, max: number) => Promise<ProofData>;
+  generateRangeProof: (
+    value: number,
+    min: number,
+    max: number,
+  ) => Promise<ProofData>;
 }
 
 /**
  * Creates a Zero-Knowledge system with integration to the crypto system
- * 
+ *
  * @param config ZK system configuration
  * @returns ZK system instance
  */
 export function createZKSystem(config: ZKSystemConfig): ZKSystem {
   const { namespace, crypto } = config;
-  
+
   // Mock implementation for testing purposes
   // In a real implementation, this would use actual ZK libraries like snarkjs
   return {
     /**
      * Generates a proof for the provided data
-     * 
+     *
      * @param data Data to generate proof for
      * @returns Proof data
      */
@@ -72,8 +76,8 @@ export function createZKSystem(config: ZKSystemConfig): ZKSystem {
       // In a real implementation, this would use a ZK circuit
       // For now, we'll create a mock proof
       const serializedData = JSON.stringify(data);
-      const hash = createHash('sha256').update(serializedData).digest('hex');
-      
+      const hash = createHash("sha256").update(serializedData).digest("hex");
+
       return {
         proof: `mock-proof-${hash.substring(0, 16)}`,
         publicInputs: [hash],
@@ -81,10 +85,10 @@ export function createZKSystem(config: ZKSystemConfig): ZKSystem {
         timestamp: Date.now(),
       };
     },
-    
+
     /**
      * Verifies a proof
-     * 
+     *
      * @param proofData Proof data to verify
      * @returns Verification result
      */
@@ -96,22 +100,25 @@ export function createZKSystem(config: ZKSystemConfig): ZKSystem {
         verifiedAt: Date.now(),
       };
     },
-    
+
     /**
      * Encrypts data and generates a proof
-     * 
+     *
      * @param data Data to encrypt and prove
      * @param context Context for encryption
      * @returns Encrypted data with proof
      */
-    async encryptAndProve(data: any, context: string): Promise<EncryptedProofData> {
+    async encryptAndProve(
+      data: any,
+      context: string,
+    ): Promise<EncryptedProofData> {
       // Encrypt the data
       const serializedData = JSON.stringify(data);
       const encryptedData = await crypto.encrypt(serializedData, context);
-      
+
       // Generate a proof for the data
       const proof = await this.generateProof(data);
-      
+
       return {
         encryptedData,
         proof,
@@ -121,22 +128,26 @@ export function createZKSystem(config: ZKSystemConfig): ZKSystem {
         },
       };
     },
-    
+
     /**
      * Generates a range proof for a value
-     * 
+     *
      * @param value Value to prove is within range
      * @param min Minimum value of range
      * @param max Maximum value of range
      * @returns Proof data
      */
-    async generateRangeProof(value: number, min: number, max: number): Promise<ProofData> {
+    async generateRangeProof(
+      value: number,
+      min: number,
+      max: number,
+    ): Promise<ProofData> {
       // In a real implementation, this would use a ZK range proof circuit
       // For now, we'll create a mock proof
       const rangeData = { value, min, max };
       const serializedData = JSON.stringify(rangeData);
-      const hash = createHash('sha256').update(serializedData).digest('hex');
-      
+      const hash = createHash("sha256").update(serializedData).digest("hex");
+
       return {
         proof: `mock-range-proof-${hash.substring(0, 16)}`,
         publicInputs: [hash, min.toString(), max.toString()],
@@ -148,8 +159,8 @@ export function createZKSystem(config: ZKSystemConfig): ZKSystem {
 }
 
 // Export the ZK proof service for use in the application
-export * from './zkProofService';
+export * from "./zkProofService";
 
 export default {
-  createZKSystem
-}; 
+  createZKSystem,
+};

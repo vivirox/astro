@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { zkAuth } from '../../lib/auth';
-import type { AuthSessionWithProof } from '../../lib/auth/zkAuth';
+import React, { useState, useEffect } from "react";
+import { zkAuth } from "../../lib/auth";
+import type { AuthSessionWithProof } from "../../lib/auth/zkAuth";
 
 interface ZKAuthStatusProps {
   session: AuthSessionWithProof;
@@ -10,7 +10,10 @@ interface ZKAuthStatusProps {
 /**
  * Component to display the ZK verification status of an authentication session
  */
-export default function ZKAuthStatus({ session, className = '' }: ZKAuthStatusProps) {
+export default function ZKAuthStatus({
+  session,
+  className = "",
+}: ZKAuthStatusProps) {
   const [verificationStatus, setVerificationStatus] = useState<{
     isValid: boolean;
     isVerifying: boolean;
@@ -27,7 +30,7 @@ export default function ZKAuthStatus({ session, className = '' }: ZKAuthStatusPr
       try {
         // Verify the session proof
         const result = await zkAuth.verifySessionProof(session);
-        
+
         if (isMounted) {
           setVerificationStatus({
             isValid: result.isValid,
@@ -39,7 +42,8 @@ export default function ZKAuthStatus({ session, className = '' }: ZKAuthStatusPr
           setVerificationStatus({
             isValid: false,
             isVerifying: false,
-            error: error instanceof Error ? error.message : 'Verification failed',
+            error:
+              error instanceof Error ? error.message : "Verification failed",
           });
         }
       }
@@ -78,4 +82,4 @@ export default function ZKAuthStatus({ session, className = '' }: ZKAuthStatusPr
       )}
     </div>
   );
-} 
+}

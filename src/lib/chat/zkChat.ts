@@ -3,19 +3,19 @@
  * Provides ZK proof verification for chat messages
  */
 
-import { createZKSystem } from '../zk';
-import { createCryptoSystem } from '../crypto';
-import type { ProofData, VerificationResult } from '../zk';
-import { auditLogger } from '../audit';
+import { createZKSystem } from "../zk";
+import { createCryptoSystem } from "../crypto";
+import type { ProofData, VerificationResult } from "../zk";
+import { auditLogger } from "../audit";
 
 // Initialize crypto and ZK systems
 const crypto = createCryptoSystem({
-  namespace: 'chat',
+  namespace: "chat",
   keyRotationDays: 90,
 });
 
 const zkSystem = createZKSystem({
-  namespace: 'chat',
+  namespace: "chat",
   crypto,
 });
 
@@ -51,7 +51,7 @@ export interface EncryptedChatMessage {
 export const zkChat = {
   /**
    * Generate a proof for a chat message
-   * 
+   *
    * @param message Chat message data
    * @returns Message with proof
    */
@@ -75,8 +75,8 @@ export const zkChat = {
 
       // Log the proof generation
       auditLogger.log({
-        action: 'zk_message_proof_generated',
-        category: 'chat',
+        action: "zk_message_proof_generated",
+        category: "chat",
         data: {
           messageId: message.id,
           conversationId: message.conversationId,
@@ -92,8 +92,8 @@ export const zkChat = {
       };
     } catch (error) {
       auditLogger.error({
-        action: 'zk_message_proof_generation_failed',
-        category: 'chat',
+        action: "zk_message_proof_generation_failed",
+        category: "chat",
         data: {
           messageId: message.id,
           conversationId: message.conversationId,
@@ -107,19 +107,21 @@ export const zkChat = {
 
   /**
    * Verify a proof for a chat message
-   * 
+   *
    * @param messageWithProof Message with proof
    * @returns Verification result
    */
-  async verifyMessageProof(messageWithProof: ChatMessageWithProof): Promise<VerificationResult> {
+  async verifyMessageProof(
+    messageWithProof: ChatMessageWithProof,
+  ): Promise<VerificationResult> {
     try {
       // Verify the proof
       const result = await zkSystem.verifyProof(messageWithProof.proof);
 
       // Log the verification result
       auditLogger.log({
-        action: 'zk_message_proof_verified',
-        category: 'chat',
+        action: "zk_message_proof_verified",
+        category: "chat",
         data: {
           messageId: messageWithProof.id,
           conversationId: messageWithProof.conversationId,
@@ -132,8 +134,8 @@ export const zkChat = {
       return result;
     } catch (error) {
       auditLogger.error({
-        action: 'zk_message_proof_verification_failed',
-        category: 'chat',
+        action: "zk_message_proof_verification_failed",
+        category: "chat",
         data: {
           messageId: messageWithProof.id,
           conversationId: messageWithProof.conversationId,
@@ -148,7 +150,7 @@ export const zkChat = {
 
   /**
    * Encrypt a chat message and generate a proof
-   * 
+   *
    * @param message Chat message data
    * @returns Encrypted message with proof
    */
@@ -171,12 +173,15 @@ export const zkChat = {
       };
 
       // Encrypt and generate proof
-      const result = await zkSystem.encryptAndProve(messageData, 'chat-message');
+      const result = await zkSystem.encryptAndProve(
+        messageData,
+        "chat-message",
+      );
 
       // Log the encryption and proof generation
       auditLogger.log({
-        action: 'zk_message_encrypted',
-        category: 'chat',
+        action: "zk_message_encrypted",
+        category: "chat",
         data: {
           messageId: message.id,
           conversationId: message.conversationId,
@@ -197,8 +202,8 @@ export const zkChat = {
       };
     } catch (error) {
       auditLogger.error({
-        action: 'zk_message_encryption_failed',
-        category: 'chat',
+        action: "zk_message_encryption_failed",
+        category: "chat",
         data: {
           messageId: message.id,
           conversationId: message.conversationId,
@@ -212,20 +217,24 @@ export const zkChat = {
 
   /**
    * Decrypt an encrypted chat message
-   * 
+   *
    * @param encryptedMessage Encrypted message
    * @returns Decrypted message
    */
-  async decryptMessage(encryptedMessage: EncryptedChatMessage): Promise<ChatMessageWithProof> {
+  async decryptMessage(
+    encryptedMessage: EncryptedChatMessage,
+  ): Promise<ChatMessageWithProof> {
     try {
       // Decrypt the message content
-      const decryptedContent = await crypto.decrypt(encryptedMessage.encryptedContent);
+      const decryptedContent = await crypto.decrypt(
+        encryptedMessage.encryptedContent,
+      );
       const parsedContent = JSON.parse(decryptedContent);
 
       // Log the decryption
       auditLogger.log({
-        action: 'zk_message_decrypted',
-        category: 'chat',
+        action: "zk_message_decrypted",
+        category: "chat",
         data: {
           messageId: encryptedMessage.id,
           conversationId: encryptedMessage.conversationId,
@@ -245,8 +254,8 @@ export const zkChat = {
       };
     } catch (error) {
       auditLogger.error({
-        action: 'zk_message_decryption_failed',
-        category: 'chat',
+        action: "zk_message_decryption_failed",
+        category: "chat",
         data: {
           messageId: encryptedMessage.id,
           conversationId: encryptedMessage.conversationId,
@@ -260,16 +269,19 @@ export const zkChat = {
 
   /**
    * Verify that a message is from an authorized sender
-   * 
+   *
    * @param senderId Sender ID
    * @param authorizedSenders List of authorized sender IDs
    * @returns Proof data for the verification
    */
-  async verifyAuthorizedSender(senderId: string, authorizedSenders: string[]): Promise<ProofData> {
+  async verifyAuthorizedSender(
+    senderId: string,
+    authorizedSenders: string[],
+  ): Promise<ProofData> {
     try {
       // Check if the sender is in the authorized list
       const isAuthorized = authorizedSenders.includes(senderId);
-      
+
       if (!isAuthorized) {
         throw new Error(`Sender ${senderId} is not authorized`);
       }
@@ -284,8 +296,8 @@ export const zkChat = {
 
       // Log the authorization proof generation
       auditLogger.log({
-        action: 'zk_sender_authorization_verified',
-        category: 'chat',
+        action: "zk_sender_authorization_verified",
+        category: "chat",
         data: {
           senderId,
           proofId: proof.publicHash,
@@ -295,8 +307,8 @@ export const zkChat = {
       return proof;
     } catch (error) {
       auditLogger.error({
-        action: 'zk_sender_authorization_failed',
-        category: 'chat',
+        action: "zk_sender_authorization_failed",
+        category: "chat",
         data: {
           senderId,
           error: error instanceof Error ? error.message : String(error),
@@ -307,4 +319,4 @@ export const zkChat = {
   },
 };
 
-export default zkChat; 
+export default zkChat;

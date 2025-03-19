@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { createAuditLog } from '../audit';
+import { db } from "../db";
+import { createAuditLog } from "../audit";
 
 /**
  * Interface for AI usage statistics
@@ -9,18 +9,21 @@ export interface AIUsageStat {
   totalRequests: number;
   totalTokens: number;
   totalCost: number;
-  modelUsage: Record<string, {
-    requests: number;
-    tokens: number;
-    cost: number;
-  }>;
+  modelUsage: Record<
+    string,
+    {
+      requests: number;
+      tokens: number;
+      cost: number;
+    }
+  >;
 }
 
 /**
  * Options for retrieving AI usage statistics
  */
 export interface AIUsageStatsOptions {
-  period: 'daily' | 'weekly' | 'monthly';
+  period: "daily" | "weekly" | "monthly";
   userId?: string;
   startDate?: Date;
   endDate?: Date;
@@ -30,56 +33,59 @@ export interface AIUsageStatsOptions {
 /**
  * Get AI usage statistics
  */
-export async function getAIUsageStats(options: AIUsageStatsOptions): Promise<AIUsageStat[]> {
+export async function getAIUsageStats(
+  options: AIUsageStatsOptions,
+): Promise<AIUsageStat[]> {
   const {
-    period = 'daily',
+    period = "daily",
     userId,
     startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Default to last 30 days
     endDate = new Date(),
-    limit = 30
+    limit = 30,
   } = options;
 
   try {
     // Log the analytics request
     await createAuditLog({
-      action: 'ai.analytics.request',
-      category: 'ai',
-      status: 'success',
+      action: "ai.analytics.request",
+      category: "ai",
+      status: "success",
       userId: userId,
       details: {
         period,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
-        limit
-      }
+        limit,
+      },
     });
 
     // Query the database for AI usage logs
-    const query = db.query()
+    const query = db
+      .query()
       .select([
         // Select appropriate date grouping based on period
-        period === 'daily' 
-          ? db.sql`DATE(created_at)` 
-          : period === 'weekly' 
-            ? db.sql`DATE_TRUNC('week', created_at)` 
+        period === "daily"
+          ? db.sql`DATE(created_at)`
+          : period === "weekly"
+            ? db.sql`DATE_TRUNC('week', created_at)`
             : db.sql`DATE_TRUNC('month', created_at)`,
-        'model',
+        "model",
         db.sql`COUNT(*) as request_count`,
         db.sql`SUM(input_tokens) as input_tokens`,
         db.sql`SUM(output_tokens) as output_tokens`,
         db.sql`SUM(total_tokens) as total_tokens`,
-        db.sql`SUM(cost) as total_cost`
+        db.sql`SUM(cost) as total_cost`,
       ])
-      .from('ai_usage_logs')
-      .where('created_at', '>=', startDate)
-      .where('created_at', '<=', endDate)
-      .groupBy(['date_trunc', 'model'])
-      .orderBy('date_trunc', 'desc')
+      .from("ai_usage_logs")
+      .where("created_at", ">=", startDate)
+      .where("created_at", "<=", endDate)
+      .groupBy(["date_trunc", "model"])
+      .orderBy("date_trunc", "desc")
       .limit(limit);
 
     // Add user filter if specified
     if (userId) {
-      query.where('user_id', '=', userId);
+      query.where("user_id", "=", userId);
     }
 
     const results = await query.execute();
@@ -101,7 +107,7 @@ export async function getAIUsageStats(options: AIUsageStatsOptions): Promise<AIU
           totalRequests: 0,
           totalTokens: 0,
           totalCost: 0,
-          modelUsage: {}
+          modelUsage: {},
         };
       }
 
@@ -115,7 +121,7 @@ export async function getAIUsageStats(options: AIUsageStatsOptions): Promise<AIU
         statsByDate[date].modelUsage[model] = {
           requests: 0,
           tokens: 0,
-          cost: 0
+          cost: 0,
         };
       }
 
@@ -129,20 +135,20 @@ export async function getAIUsageStats(options: AIUsageStatsOptions): Promise<AIU
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, limit);
   } catch (error) {
-    console.error('Error retrieving AI usage statistics:', error);
-    
+    console.error("Error retrieving AI usage statistics:", error);
+
     // Log the error
     await createAuditLog({
-      action: 'ai.analytics.error',
-      category: 'ai',
-      status: 'error',
+      action: "ai.analytics.error",
+      category: "ai",
+      status: "error",
       details: {
         error: error instanceof Error ? error.message : String(error),
         period,
-        userId
-      }
+        userId,
+      },
     });
-    
+
     throw error;
   }
 }
@@ -150,51 +156,62 @@ export async function getAIUsageStats(options: AIUsageStatsOptions): Promise<AIU
 /**
  * Get model usage breakdown
  */
-export async function getModelUsageBreakdown(options: AIUsageStatsOptions): Promise<Record<string, {
-  requests: number;
-  tokens: number;
-  cost: number;
-  percentage: number;
-}>> {
+export async function getModelUsageBreakdown(
+  options: AIUsageStatsOptions,
+): Promise<
+  Record<
+    string,
+    {
+      requests: number;
+      tokens: number;
+      cost: number;
+      percentage: number;
+    }
+  >
+> {
   const stats = await getAIUsageStats(options);
-  
+
   // Aggregate model usage across all dates
-  const modelUsage: Record<string, {
-    requests: number;
-    tokens: number;
-    cost: number;
-    percentage: number;
-  }> = {};
-  
+  const modelUsage: Record<
+    string,
+    {
+      requests: number;
+      tokens: number;
+      cost: number;
+      percentage: number;
+    }
+  > = {};
+
   let totalRequests = 0;
-  
+
   // First pass: calculate totals
   for (const stat of stats) {
     totalRequests += stat.totalRequests;
-    
+
     for (const [model, usage] of Object.entries(stat.modelUsage)) {
       if (!modelUsage[model]) {
         modelUsage[model] = {
           requests: 0,
           tokens: 0,
           cost: 0,
-          percentage: 0
+          percentage: 0,
         };
       }
-      
+
       modelUsage[model].requests += usage.requests;
       modelUsage[model].tokens += usage.tokens;
       modelUsage[model].cost += usage.cost;
     }
   }
-  
+
   // Second pass: calculate percentages
   if (totalRequests > 0) {
     for (const model of Object.keys(modelUsage)) {
-      modelUsage[model].percentage = (modelUsage[model].requests / totalRequests) * 100;
+      modelUsage[model].percentage =
+        (modelUsage[model].requests / totalRequests) * 100;
     }
   }
-  
+
   return modelUsage;
 }
 
@@ -208,14 +225,14 @@ export async function getUsageTrends(options: AIUsageStatsOptions): Promise<{
   costs: number[];
 }> {
   const stats = await getAIUsageStats(options);
-  
+
   // Sort by date ascending
   stats.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
+
   return {
-    dates: stats.map(stat => stat.date),
-    requests: stats.map(stat => stat.totalRequests),
-    tokens: stats.map(stat => stat.totalTokens),
-    costs: stats.map(stat => stat.totalCost)
+    dates: stats.map((stat) => stat.date),
+    requests: stats.map((stat) => stat.totalRequests),
+    tokens: stats.map((stat) => stat.totalTokens),
+    costs: stats.map((stat) => stat.totalCost),
   };
-} 
+}

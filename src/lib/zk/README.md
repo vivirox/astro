@@ -22,25 +22,25 @@ The system includes the following circuits:
 ### Basic Usage
 
 ```typescript
-import { createZKSystem } from '../lib/zk';
-import { createCryptoSystem } from '../lib/crypto';
+import { createZKSystem } from "../lib/zk";
+import { createCryptoSystem } from "../lib/crypto";
 
 // Create crypto system
 const crypto = createCryptoSystem({
-  namespace: 'app',
+  namespace: "app",
   keyRotationDays: 90,
 });
 
 // Create ZK system with crypto integration
 const zk = createZKSystem({
-  namespace: 'app',
+  namespace: "app",
   crypto,
 });
 
 // Generate a proof for session data
 const sessionData = {
-  sessionId: 'session-123',
-  userId: 'user-456',
+  sessionId: "session-123",
+  userId: "user-456",
   startTime: Date.now(),
 };
 
@@ -49,7 +49,7 @@ const proofData = await zk.generateProof(sessionData);
 // Verify the proof
 const result = await zk.verifyProof(proofData);
 if (result.isValid) {
-  console.log('Proof verified successfully!');
+  console.log("Proof verified successfully!");
 }
 ```
 
@@ -58,11 +58,11 @@ if (result.isValid) {
 ```typescript
 // Encrypt data and generate a proof
 const data = {
-  patientId: 'patient-123',
-  diagnosis: 'Confidential Diagnosis',
+  patientId: "patient-123",
+  diagnosis: "Confidential Diagnosis",
 };
 
-const result = await zk.encryptAndProve(data, 'patient-data');
+const result = await zk.encryptAndProve(data, "patient-data");
 
 // The result contains both encrypted data and a proof
 console.log(result.encryptedData); // Encrypted data
@@ -82,7 +82,7 @@ const proofData = await zk.generateRangeProof(value, min, max);
 // Verify the range proof
 const result = await zk.verifyProof(proofData);
 if (result.isValid) {
-  console.log('Range proof verified successfully!');
+  console.log("Range proof verified successfully!");
 }
 ```
 
@@ -116,4 +116,4 @@ pnpm test src/tests/crypto.test.ts
 - Support for more complex zero-knowledge proofs
 - Integration with blockchain for public verification
 - Performance optimizations for large-scale deployments
-- Support for multi-party computation 
+- Support for multi-party computation

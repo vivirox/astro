@@ -1,4 +1,4 @@
-import { zkAuth } from '../../../lib/auth';
+import { zkAuth } from "../../../lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -6,13 +6,13 @@ export async function POST(request: Request) {
 
     // Create session data
     const sessionData = {
-      sessionId: 'session-' + crypto.randomUUID(),
+      sessionId: "session-" + crypto.randomUUID(),
       userId: user.id,
       startTime: Date.now(),
       expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
       metadata: {
-        ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
-        userAgent: request.headers.get('user-agent') || 'unknown',
+        ipAddress: request.headers.get("x-forwarded-for") || "unknown",
+        userAgent: request.headers.get("user-agent") || "unknown",
       },
     };
 
@@ -34,12 +34,12 @@ export async function POST(request: Request) {
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           // ... other headers ...
         },
-      }
+      },
     );
   } catch (error) {
     // ... existing error handling ...
   }
-} 
+}

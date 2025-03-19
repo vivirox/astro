@@ -1,4 +1,4 @@
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
 /**
  * Encryption utility for handling data encryption and decryption
@@ -18,20 +18,20 @@ export class Encryption {
       v: keyVersion || 1, // Key version
       t: Date.now(), // Timestamp for rotation policies
     };
-    
+
     // Combine data with metadata
     const dataWithMetadata = JSON.stringify({
       data,
       meta: metadata,
     });
-    
+
     // Encrypt the data
     const encrypted = CryptoJS.AES.encrypt(dataWithMetadata, key).toString();
-    
+
     // Return encrypted data with version prefix
     return `v${metadata.v}:${encrypted}`;
   }
-  
+
   /**
    * Decrypts data using AES decryption
    * @param encryptedData - Data to decrypt
@@ -41,20 +41,22 @@ export class Encryption {
   static decrypt(encryptedData: string, key: string): string {
     try {
       // Extract version and encrypted content
-      const [versionPart, encryptedContent] = encryptedData.split(':');
-      
+      const [versionPart, encryptedContent] = encryptedData.split(":");
+
       // Decrypt the data
-      const decrypted = CryptoJS.AES.decrypt(encryptedContent, key).toString(CryptoJS.enc.Utf8);
-      
+      const decrypted = CryptoJS.AES.decrypt(encryptedContent, key).toString(
+        CryptoJS.enc.Utf8,
+      );
+
       // Parse the decrypted data
       const parsed = JSON.parse(decrypted);
-      
+
       // Return the original data
       return parsed.data;
     } catch (error) {
-      throw new Error('Failed to decrypt data');
+      throw new Error("Failed to decrypt data");
     }
   }
 }
 
-export default Encryption; 
+export default Encryption;

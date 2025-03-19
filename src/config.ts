@@ -1,33 +1,33 @@
 export const SITE = {
-  name: 'Gradiant Ascent',
-  title: 'Gradiant Ascent - AI-Assisted Emotional Intelligence',
+  name: "Gradiant Ascent",
+  title: "Gradiant Ascent - AI-Assisted Emotional Intelligence",
   description:
-    'The premier destination for all things related to the world of AI-assisted emotional intelligence.',
-  url: 'https://gradiantascent.com',
-  ogImage: 'https://gradiantascent.com/og-image.png',
-  themeColor: '#3f51b5',
-  lang: 'en-US',
-  base: '',
+    "The premier destination for all things related to the world of AI-assisted emotional intelligence.",
+  url: "https://gradiantascent.com",
+  ogImage: "https://gradiantascent.com/og-image.png",
+  themeColor: "#3f51b5",
+  lang: "en-US",
+  base: "",
   author: {
-    name: 'Gradiant Team',
-    twitter: '@gradiantascent',
+    name: "Gradiant Team",
+    twitter: "@gradiantascent",
   },
   menu: [
     {
-      text: 'Home',
-      link: '/',
+      text: "Home",
+      link: "/",
     },
     {
-      text: 'Blog',
-      link: '/blog',
+      text: "Blog",
+      link: "/blog",
     },
     {
-      text: 'About',
-      link: '/about',
+      text: "About",
+      link: "/about",
     },
     {
-      text: 'Contact',
-      link: '/contact',
+      text: "Contact",
+      link: "/contact",
     },
   ],
 };
@@ -35,20 +35,20 @@ export const SITE = {
 export const UI = {
   // Navigation UI settings
   nav: {
-    position: 'sticky', // 'fixed' | 'sticky' | 'static'
+    position: "sticky", // 'fixed' | 'sticky' | 'static'
     glassmorphism: true,
     blur: 10, // px
   },
   // Theme switching UI settings
   theme: {
-    default: 'system', // 'light' | 'dark' | 'system'
+    default: "system", // 'light' | 'dark' | 'system'
     toggleIcon: true,
   },
   // External link settings
   externalLink: {
     newTab: true,
     icon: true,
-    cursorType: 'pointer', // 'pointer' | 'newtab'
+    cursorType: "pointer", // 'pointer' | 'newtab'
   },
 };
 
@@ -67,9 +67,9 @@ export const FEATURES = {
 
 // API endpoints
 export const API = {
-  base: '/api',
+  base: "/api",
   endpoints: {
-    contact: '/contact',
-    newsletter: '/newsletter',
+    contact: "/contact",
+    newsletter: "/newsletter",
   },
-}; 
+};

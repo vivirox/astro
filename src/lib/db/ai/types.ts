@@ -1,4 +1,4 @@
-import { type User } from '../../auth/types';
+import { type User } from "../../auth/types";
 
 /**
  * Base interface for all AI analysis results
@@ -24,7 +24,7 @@ export interface BaseAnalysisResult {
  */
 export interface SentimentAnalysisResult extends BaseAnalysisResult {
   text: string;
-  sentiment: 'positive' | 'negative' | 'neutral';
+  sentiment: "positive" | "negative" | "neutral";
   score: number;
   confidence: number;
   metadata: Record<string, any>;
@@ -38,7 +38,7 @@ export interface CrisisDetectionResult extends BaseAnalysisResult {
   crisisDetected: boolean;
   crisisType?: string;
   confidence: number;
-  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  riskLevel: "low" | "medium" | "high" | "critical";
   sensitivityLevel: number;
   metadata: Record<string, any>;
 }
@@ -75,14 +75,17 @@ export interface InterventionAnalysisResult extends BaseAnalysisResult {
 export interface AIUsageStats {
   userId: string;
   user?: User;
-  period: 'daily' | 'weekly' | 'monthly';
+  period: "daily" | "weekly" | "monthly";
   date: Date;
   totalRequests: number;
   totalTokens: number;
   totalCost: number;
-  modelUsage: Record<string, {
-    requests: number;
-    tokens: number;
-    cost: number;
-  }>;
-} 
+  modelUsage: Record<
+    string,
+    {
+      requests: number;
+      tokens: number;
+      cost: number;
+    }
+  >;
+}

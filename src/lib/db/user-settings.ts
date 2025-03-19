@@ -1,24 +1,29 @@
-import { supabase } from '../supabase';
-import type { Database } from '../../types/supabase';
-import { logAuditEvent } from '../auth';
+import { supabase } from "../supabase";
+import type { Database } from "../../types/supabase";
+import { logAuditEvent } from "../auth";
 
-export type UserSettings = Database['public']['Tables']['user_settings']['Row'];
-export type NewUserSettings = Database['public']['Tables']['user_settings']['Insert'];
-export type UpdateUserSettings = Database['public']['Tables']['user_settings']['Update'];
+export type UserSettings = Database["public"]["Tables"]["user_settings"]["Row"];
+export type NewUserSettings =
+  Database["public"]["Tables"]["user_settings"]["Insert"];
+export type UpdateUserSettings =
+  Database["public"]["Tables"]["user_settings"]["Update"];
 
 /**
  * Get user settings
  */
-export async function getUserSettings(userId: string): Promise<UserSettings | null> {
+export async function getUserSettings(
+  userId: string,
+): Promise<UserSettings | null> {
   const { data, error } = await supabase
-    .from('user_settings')
-    .select('*')
-    .eq('user_id', userId)
+    .from("user_settings")
+    .select("*")
+    .eq("user_id", userId)
     .single();
 
-  if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
-    console.error('Error fetching user settings:', error);
-    throw new Error('Failed to fetch user settings');
+  if (error && error.code !== "PGRST116") {
+    // PGRST116 is "no rows returned"
+    console.error("Error fetching user settings:", error);
+    throw new Error("Failed to fetch user settings");
   }
 
   return data;
@@ -29,27 +34,27 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
  */
 export async function createUserSettings(
   settings: NewUserSettings,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   const { data, error } = await supabase
-    .from('user_settings')
+    .from("user_settings")
     .insert(settings)
     .select()
     .single();
 
   if (error) {
-    console.error('Error creating user settings:', error);
-    throw new Error('Failed to create user settings');
+    console.error("Error creating user settings:", error);
+    throw new Error("Failed to create user settings");
   }
 
   // Log the event for HIPAA compliance
   await logAuditEvent(
     settings.user_id,
-    'user_settings_created',
-    'user_settings',
+    "user_settings_created",
+    "user_settings",
     data.id,
     null,
-    request
+    request,
   );
 
   return data;
@@ -61,31 +66,31 @@ export async function createUserSettings(
 export async function updateUserSettings(
   userId: string,
   updates: UpdateUserSettings,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   const { data, error } = await supabase
-    .from('user_settings')
+    .from("user_settings")
     .update({
       ...updates,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     })
-    .eq('user_id', userId)
+    .eq("user_id", userId)
     .select()
     .single();
 
   if (error) {
-    console.error('Error updating user settings:', error);
-    throw new Error('Failed to update user settings');
+    console.error("Error updating user settings:", error);
+    throw new Error("Failed to update user settings");
   }
 
   // Log the event for HIPAA compliance
   await logAuditEvent(
     userId,
-    'user_settings_updated',
-    'user_settings',
+    "user_settings_updated",
+    "user_settings",
     data.id,
     { updates },
-    request
+    request,
   );
 
   return data;
@@ -96,30 +101,30 @@ export async function updateUserSettings(
  */
 export async function getOrCreateUserSettings(
   userId: string,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   // Try to get existing settings
   const settings = await getUserSettings(userId);
-  
+
   // If settings exist, return them
   if (settings) {
     return settings;
   }
-  
+
   // Otherwise, create default settings
   const defaultSettings: NewUserSettings = {
     user_id: userId,
-    theme: 'system',
+    theme: "system",
     notifications_enabled: true,
     email_notifications: true,
-    language: 'en',
+    language: "en",
     preferences: {
       showWelcomeScreen: true,
       autoSave: true,
-      fontSize: 'medium'
-    }
+      fontSize: "medium",
+    },
   };
-  
+
   return createUserSettings(defaultSettings, request);
 }
 
@@ -129,7 +134,7 @@ export async function getOrCreateUserSettings(
 export async function updateTheme(
   userId: string,
   theme: string,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   return updateUserSettings(userId, { theme }, request);
 }
@@ -140,7 +145,7 @@ export async function updateTheme(
 export async function updateLanguage(
   userId: string,
   language: string,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   return updateUserSettings(userId, { language }, request);
 }
@@ -151,9 +156,13 @@ export async function updateLanguage(
 export async function toggleNotifications(
   userId: string,
   enabled: boolean,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
-  return updateUserSettings(userId, { notifications_enabled: enabled }, request);
+  return updateUserSettings(
+    userId,
+    { notifications_enabled: enabled },
+    request,
+  );
 }
 
 /**
@@ -162,7 +171,7 @@ export async function toggleNotifications(
 export async function toggleEmailNotifications(
   userId: string,
   enabled: boolean,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   return updateUserSettings(userId, { email_notifications: enabled }, request);
-} 
+}

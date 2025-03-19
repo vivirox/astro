@@ -1,24 +1,28 @@
-import { supabase, supabaseAdmin } from '../supabase';
-import type { Database } from '../../types/supabase';
-import { logAuditEvent } from '../auth';
+import { supabase, supabaseAdmin } from "../supabase";
+import type { Database } from "../../types/supabase";
+import { logAuditEvent } from "../auth";
 
-export type Conversation = Database['public']['Tables']['conversations']['Row'];
-export type NewConversation = Database['public']['Tables']['conversations']['Insert'];
-export type UpdateConversation = Database['public']['Tables']['conversations']['Update'];
+export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
+export type NewConversation =
+  Database["public"]["Tables"]["conversations"]["Insert"];
+export type UpdateConversation =
+  Database["public"]["Tables"]["conversations"]["Update"];
 
 /**
  * Get all conversations for a user
  */
-export async function getConversations(userId: string): Promise<Conversation[]> {
+export async function getConversations(
+  userId: string,
+): Promise<Conversation[]> {
   const { data, error } = await supabase
-    .from('conversations')
-    .select('*')
-    .eq('user_id', userId)
-    .order('last_message_at', { ascending: false });
+    .from("conversations")
+    .select("*")
+    .eq("user_id", userId)
+    .order("last_message_at", { ascending: false });
 
   if (error) {
-    console.error('Error fetching conversations:', error);
-    throw new Error('Failed to fetch conversations');
+    console.error("Error fetching conversations:", error);
+    throw new Error("Failed to fetch conversations");
   }
 
   return data || [];
@@ -27,17 +31,21 @@ export async function getConversations(userId: string): Promise<Conversation[]> 
 /**
  * Get a single conversation by ID
  */
-export async function getConversation(id: string, userId: string): Promise<Conversation | null> {
+export async function getConversation(
+  id: string,
+  userId: string,
+): Promise<Conversation | null> {
   const { data, error } = await supabase
-    .from('conversations')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', userId)
+    .from("conversations")
+    .select("*")
+    .eq("id", id)
+    .eq("user_id", userId)
     .single();
 
-  if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
-    console.error('Error fetching conversation:', error);
-    throw new Error('Failed to fetch conversation');
+  if (error && error.code !== "PGRST116") {
+    // PGRST116 is "no rows returned"
+    console.error("Error fetching conversation:", error);
+    throw new Error("Failed to fetch conversation");
   }
 
   return data;
@@ -48,27 +56,27 @@ export async function getConversation(id: string, userId: string): Promise<Conve
  */
 export async function createConversation(
   conversation: NewConversation,
-  request?: Request
+  request?: Request,
 ): Promise<Conversation> {
   const { data, error } = await supabase
-    .from('conversations')
+    .from("conversations")
     .insert(conversation)
     .select()
     .single();
 
   if (error) {
-    console.error('Error creating conversation:', error);
-    throw new Error('Failed to create conversation');
+    console.error("Error creating conversation:", error);
+    throw new Error("Failed to create conversation");
   }
 
   // Log the event for HIPAA compliance
   await logAuditEvent(
     conversation.user_id,
-    'conversation_created',
-    'conversations',
+    "conversation_created",
+    "conversations",
     data.id,
     { title: conversation.title },
-    request
+    request,
   );
 
   return data;
@@ -81,29 +89,29 @@ export async function updateConversation(
   id: string,
   userId: string,
   updates: UpdateConversation,
-  request?: Request
+  request?: Request,
 ): Promise<Conversation> {
   const { data, error } = await supabase
-    .from('conversations')
+    .from("conversations")
     .update(updates)
-    .eq('id', id)
-    .eq('user_id', userId)
+    .eq("id", id)
+    .eq("user_id", userId)
     .select()
     .single();
 
   if (error) {
-    console.error('Error updating conversation:', error);
-    throw new Error('Failed to update conversation');
+    console.error("Error updating conversation:", error);
+    throw new Error("Failed to update conversation");
   }
 
   // Log the event for HIPAA compliance
   await logAuditEvent(
     userId,
-    'conversation_updated',
-    'conversations',
+    "conversation_updated",
+    "conversations",
     id,
     { updates },
-    request
+    request,
   );
 
   return data;
@@ -115,27 +123,27 @@ export async function updateConversation(
 export async function deleteConversation(
   id: string,
   userId: string,
-  request?: Request
+  request?: Request,
 ): Promise<void> {
   const { error } = await supabase
-    .from('conversations')
+    .from("conversations")
     .delete()
-    .eq('id', id)
-    .eq('user_id', userId);
+    .eq("id", id)
+    .eq("user_id", userId);
 
   if (error) {
-    console.error('Error deleting conversation:', error);
-    throw new Error('Failed to delete conversation');
+    console.error("Error deleting conversation:", error);
+    throw new Error("Failed to delete conversation");
   }
 
   // Log the event for HIPAA compliance
   await logAuditEvent(
     userId,
-    'conversation_deleted',
-    'conversations',
+    "conversation_deleted",
+    "conversations",
     id,
     null,
-    request
+    request,
   );
 }
 
@@ -144,14 +152,14 @@ export async function deleteConversation(
  */
 export async function adminGetAllConversations(): Promise<Conversation[]> {
   const { data, error } = await supabaseAdmin
-    .from('conversations')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .from("conversations")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) {
-    console.error('Error fetching all conversations:', error);
-    throw new Error('Failed to fetch all conversations');
+    console.error("Error fetching all conversations:", error);
+    throw new Error("Failed to fetch all conversations");
   }
 
   return data || [];
-} 
+}

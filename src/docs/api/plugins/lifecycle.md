@@ -9,6 +9,7 @@ This document describes the lifecycle of plugins in the Gradiant EHR Integration
 When a plugin is installed, the following steps occur:
 
 1. **Package Validation**
+
    - Verify package integrity
    - Check digital signatures
    - Validate metadata
@@ -16,6 +17,7 @@ When a plugin is installed, the following steps occur:
    - Check version compatibility
 
 2. **Resource Allocation**
+
    - Create plugin storage space
    - Allocate memory limits
    - Set up CPU quotas
@@ -30,16 +32,16 @@ When a plugin is installed, the following steps occur:
 ```typescript
 // Installation process
 const installation = await pluginService.installPlugin({
-  id: 'appointment-scheduler',
-  version: '1.0.0',
+  id: "appointment-scheduler",
+  version: "1.0.0",
   code: pluginCode,
   metadata: {
-    name: 'Appointment Scheduler',
-    description: 'Advanced scheduling capabilities',
-    permissions: ['read:appointments', 'write:appointments'],
-    author: 'Gradiant',
-    homepage: 'https://example.com/plugins/scheduler'
-  }
+    name: "Appointment Scheduler",
+    description: "Advanced scheduling capabilities",
+    permissions: ["read:appointments", "write:appointments"],
+    author: "Gradiant",
+    homepage: "https://example.com/plugins/scheduler",
+  },
 });
 ```
 
@@ -48,12 +50,14 @@ const installation = await pluginService.installPlugin({
 When a plugin is enabled, these initialization steps occur:
 
 1. **Environment Setup**
+
    - Load plugin configuration
    - Initialize storage
    - Set up event listeners
    - Prepare API interfaces
 
 2. **Dependency Resolution**
+
    - Load required dependencies
    - Check version compatibility
    - Initialize shared resources
@@ -67,15 +71,15 @@ When a plugin is enabled, these initialization steps occur:
 
 ```typescript
 // Initialization process
-await pluginService.enablePlugin('appointment-scheduler', {
+await pluginService.enablePlugin("appointment-scheduler", {
   config: {
     defaultDuration: 60,
-    timezone: 'America/New_York',
+    timezone: "America/New_York",
     workingHours: {
-      start: '09:00',
-      end: '17:00'
-    }
-  }
+      start: "09:00",
+      end: "17:00",
+    },
+  },
 });
 ```
 
@@ -84,12 +88,14 @@ await pluginService.enablePlugin('appointment-scheduler', {
 During plugin execution:
 
 1. **Resource Management**
+
    - Monitor memory usage
    - Track CPU utilization
    - Control network access
    - Manage storage usage
 
 2. **Event Handling**
+
    - Process system events
    - Handle user interactions
    - Manage inter-plugin communication
@@ -103,12 +109,12 @@ During plugin execution:
 
 ```typescript
 // Execution monitoring
-pluginService.on('plugin:resource:usage', ({ pluginId, metrics }) => {
+pluginService.on("plugin:resource:usage", ({ pluginId, metrics }) => {
   console.log(`Plugin ${pluginId} metrics:`, {
     memory: metrics.memory,
     cpu: metrics.cpu,
     storage: metrics.storage,
-    network: metrics.network
+    network: metrics.network,
   });
 });
 ```
@@ -118,12 +124,14 @@ pluginService.on('plugin:resource:usage', ({ pluginId, metrics }) => {
 When a plugin is disabled:
 
 1. **Graceful Shutdown**
+
    - Save current state
    - Complete pending operations
    - Close connections
    - Clear caches
 
 2. **Resource Cleanup**
+
    - Release memory
    - Stop background tasks
    - Remove event listeners
@@ -137,9 +145,9 @@ When a plugin is disabled:
 
 ```typescript
 // Deactivation process
-await pluginService.disablePlugin('appointment-scheduler', {
+await pluginService.disablePlugin("appointment-scheduler", {
   saveState: true,
-  timeout: 5000 // ms
+  timeout: 5000, // ms
 });
 ```
 
@@ -148,12 +156,14 @@ await pluginService.disablePlugin('appointment-scheduler', {
 During plugin removal:
 
 1. **Data Cleanup**
+
    - Archive important data
    - Remove temporary files
    - Clear plugin storage
    - Remove configuration
 
 2. **Resource Release**
+
    - Remove sandbox
    - Release resource quotas
    - Clear security policies
@@ -167,9 +177,9 @@ During plugin removal:
 
 ```typescript
 // Uninstallation process
-await pluginService.uninstallPlugin('appointment-scheduler', {
+await pluginService.uninstallPlugin("appointment-scheduler", {
   preserveData: false,
-  force: false
+  force: false,
 });
 ```
 
@@ -179,47 +189,47 @@ The Plugin System emits events during lifecycle changes:
 
 ```typescript
 // Installation events
-pluginService.on('plugin:installing', ({ pluginId, version }) => {
+pluginService.on("plugin:installing", ({ pluginId, version }) => {
   console.log(`Installing plugin ${pluginId}@${version}`);
 });
 
-pluginService.on('plugin:installed', ({ pluginId, version }) => {
+pluginService.on("plugin:installed", ({ pluginId, version }) => {
   console.log(`Plugin ${pluginId}@${version} installed successfully`);
 });
 
 // Initialization events
-pluginService.on('plugin:enabling', ({ pluginId }) => {
+pluginService.on("plugin:enabling", ({ pluginId }) => {
   console.log(`Enabling plugin ${pluginId}`);
 });
 
-pluginService.on('plugin:enabled', ({ pluginId }) => {
+pluginService.on("plugin:enabled", ({ pluginId }) => {
   console.log(`Plugin ${pluginId} enabled successfully`);
 });
 
 // Execution events
-pluginService.on('plugin:error', ({ pluginId, error }) => {
+pluginService.on("plugin:error", ({ pluginId, error }) => {
   console.error(`Plugin ${pluginId} error:`, error);
 });
 
-pluginService.on('plugin:warning', ({ pluginId, message }) => {
+pluginService.on("plugin:warning", ({ pluginId, message }) => {
   console.warn(`Plugin ${pluginId} warning:`, message);
 });
 
 // Deactivation events
-pluginService.on('plugin:disabling', ({ pluginId }) => {
+pluginService.on("plugin:disabling", ({ pluginId }) => {
   console.log(`Disabling plugin ${pluginId}`);
 });
 
-pluginService.on('plugin:disabled', ({ pluginId }) => {
+pluginService.on("plugin:disabled", ({ pluginId }) => {
   console.log(`Plugin ${pluginId} disabled successfully`);
 });
 
 // Uninstallation events
-pluginService.on('plugin:uninstalling', ({ pluginId }) => {
+pluginService.on("plugin:uninstalling", ({ pluginId }) => {
   console.log(`Uninstalling plugin ${pluginId}`);
 });
 
-pluginService.on('plugin:uninstalled', ({ pluginId }) => {
+pluginService.on("plugin:uninstalled", ({ pluginId }) => {
   console.log(`Plugin ${pluginId} uninstalled successfully`);
 });
 ```
@@ -234,8 +244,8 @@ await plugin.setState({
   lastSync: new Date(),
   preferences: {
     notifications: true,
-    theme: 'dark'
-  }
+    theme: "dark",
+  },
 });
 
 // Load state
@@ -248,20 +258,20 @@ The Plugin System handles various lifecycle errors:
 
 ```typescript
 try {
-  await pluginService.enablePlugin('appointment-scheduler');
+  await pluginService.enablePlugin("appointment-scheduler");
 } catch (error) {
   switch (error.code) {
-    case 'INITIALIZATION_FAILED':
-      console.error('Plugin failed to initialize:', error.message);
+    case "INITIALIZATION_FAILED":
+      console.error("Plugin failed to initialize:", error.message);
       break;
-    case 'DEPENDENCY_MISSING':
-      console.error('Missing dependency:', error.details.dependency);
+    case "DEPENDENCY_MISSING":
+      console.error("Missing dependency:", error.details.dependency);
       break;
-    case 'RESOURCE_EXHAUSTED':
-      console.error('Insufficient resources:', error.details.resource);
+    case "RESOURCE_EXHAUSTED":
+      console.error("Insufficient resources:", error.details.resource);
       break;
     default:
-      console.error('Unknown error:', error);
+      console.error("Unknown error:", error);
   }
 }
 ```
@@ -269,18 +279,21 @@ try {
 ## Best Practices
 
 1. **Installation**
+
    - Validate all dependencies before installation
    - Set appropriate resource limits
    - Implement rollback mechanisms
    - Verify security requirements
 
 2. **Initialization**
+
    - Handle initialization failures gracefully
    - Implement timeout mechanisms
    - Cache frequently used resources
    - Set up proper error handling
 
 3. **Execution**
+
    - Monitor resource usage
    - Implement circuit breakers
    - Handle state changes properly
@@ -297,4 +310,4 @@ try {
 - [Plugin API Reference](api.md)
 - [Security Guidelines](security.md)
 - [Best Practices](best-practices.md)
-- [Plugin Examples](../examples/plugins.md) 
+- [Plugin Examples](../examples/plugins.md)

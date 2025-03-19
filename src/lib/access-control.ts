@@ -1,71 +1,82 @@
-import type { AstroCookies } from 'astro';
-import { getCurrentUser, hasRole } from './auth';
-import { logAuditEvent } from './auth';
+import type { AstroCookies } from "astro";
+import { getCurrentUser, hasRole } from "./auth";
+import { logAuditEvent } from "./auth";
 
 // Define permission types
-export type Resource = 'conversations' | 'messages' | 'users' | 'settings' | 'admin';
-export type Action = 'create' | 'read' | 'update' | 'delete' | 'list' | 'manage';
+export type Resource =
+  | "conversations"
+  | "messages"
+  | "users"
+  | "settings"
+  | "admin";
+export type Action =
+  | "create"
+  | "read"
+  | "update"
+  | "delete"
+  | "list"
+  | "manage";
 export type Permission = `${Action}:${Resource}`;
 
 // Define role hierarchy
 export const ROLES = {
-  USER: 'user',
-  STAFF: 'staff',
-  ADMIN: 'admin',
+  USER: "user",
+  STAFF: "staff",
+  ADMIN: "admin",
 } as const;
 
-export type Role = typeof ROLES[keyof typeof ROLES];
+export type Role = (typeof ROLES)[keyof typeof ROLES];
 
 // Define role-based permissions
 const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   [ROLES.USER]: [
-    'create:conversations',
-    'read:conversations',
-    'update:conversations',
-    'delete:conversations',
-    'list:conversations',
-    'create:messages',
-    'read:messages',
-    'update:messages',
-    'read:users',
-    'update:users',
-    'read:settings',
-    'update:settings',
+    "create:conversations",
+    "read:conversations",
+    "update:conversations",
+    "delete:conversations",
+    "list:conversations",
+    "create:messages",
+    "read:messages",
+    "update:messages",
+    "read:users",
+    "update:users",
+    "read:settings",
+    "update:settings",
   ],
   [ROLES.STAFF]: [
-    'create:conversations',
-    'read:conversations',
-    'update:conversations',
-    'delete:conversations',
-    'list:conversations',
-    'create:messages',
-    'read:messages',
-    'update:messages',
-    'read:users',
-    'update:users',
-    'read:settings',
-    'update:settings',
-    'list:users',
-    'read:admin',
+    "create:conversations",
+    "read:conversations",
+    "update:conversations",
+    "delete:conversations",
+    "list:conversations",
+    "create:messages",
+    "read:messages",
+    "update:messages",
+    "read:users",
+    "update:users",
+    "read:settings",
+    "update:settings",
+    "list:users",
+    "read:admin",
   ],
   [ROLES.ADMIN]: [
-    'create:conversations',
-    'read:conversations',
-    'update:conversations',
-    'delete:conversations',
-    'list:conversations',
-    'create:messages',
-    'read:messages',
-    'update:messages',
-    'delete:messages',
-    'read:users',
-    'update:users',
-    'delete:users',
-    'list:users',
-    'read:settings',
-    'update:settings',
-    'read:admin',
-    'manage:admin',
+    "create:conversations",
+    "read:conversations",
+    "update:conversations",
+    "delete:conversations",
+    "list:conversations",
+    "create:messages",
+    "read:messages",
+    "update:messages",
+    "delete:messages",
+    "read:users",
+    "update:users",
+    "delete:users",
+    "list:users",
+    "read:settings",
+    "update:settings",
+    "read:admin",
+    "manage:admin",
   ],
 };
 
@@ -82,36 +93,36 @@ export function roleHasPermission(role: Role, permission: Permission): boolean {
 export async function hasPermission(
   cookies: AstroCookies,
   permission: Permission,
-  request?: Request
+  request?: Request,
 ): Promise<boolean> {
   const user = await getCurrentUser(cookies);
-  
+
   if (!user) {
     return false;
   }
-  
+
   const userRole = user.role as Role;
   const hasPermission = roleHasPermission(userRole, permission);
-  
+
   // Log access control check for sensitive operations
   if (
-    permission.startsWith('delete:') ||
-    permission.includes(':admin') ||
-    permission.startsWith('manage:')
+    permission.startsWith("delete:") ||
+    permission.includes(":admin") ||
+    permission.startsWith("manage:")
   ) {
     await logAuditEvent(
       user.id,
-      'permission_check',
-      'access_control',
+      "permission_check",
+      "access_control",
       null,
       {
         permission,
         granted: hasPermission,
       },
-      request
+      request,
     );
   }
-  
+
   return hasPermission;
 }
 
@@ -133,37 +144,47 @@ export async function isStaffOrAdmin(cookies: AstroCookies): Promise<boolean> {
  * Create a middleware function that checks for a specific permission
  */
 export function requirePermission(permission: Permission) {
-  return async ({ cookies, redirect, request }: { 
-    cookies: AstroCookies; 
+  return async ({
+    cookies,
+    redirect,
+    request,
+  }: {
+    cookies: AstroCookies;
     redirect: (path: string) => Response;
     request: Request;
   }) => {
     const user = await getCurrentUser(cookies);
-    
+
     if (!user) {
-      return redirect('/signin?error=' + encodeURIComponent('You must be signed in to access this page'));
+      return redirect(
+        "/signin?error=" +
+          encodeURIComponent("You must be signed in to access this page"),
+      );
     }
-    
+
     const userRole = user.role as Role;
     const hasPermission = roleHasPermission(userRole, permission);
-    
+
     // Log access control check
     await logAuditEvent(
       user.id,
-      'permission_check',
-      'access_control',
+      "permission_check",
+      "access_control",
       null,
       {
         permission,
         granted: hasPermission,
       },
-      request
+      request,
     );
-    
+
     if (!hasPermission) {
-      return redirect('/dashboard?error=' + encodeURIComponent('You do not have permission to access this page'));
+      return redirect(
+        "/dashboard?error=" +
+          encodeURIComponent("You do not have permission to access this page"),
+      );
     }
-    
+
     return null; // Continue to the page
   };
-} 
+}

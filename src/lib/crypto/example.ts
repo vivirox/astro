@@ -3,8 +3,8 @@
  * This file demonstrates how to use the encryption, key storage, and rotation features
  */
 
-import { createCryptoSystem, ScheduledKeyRotation } from './index';
-import { KeyStorage } from './keyStorage';
+import { createCryptoSystem, ScheduledKeyRotation } from "./index";
+import { KeyStorage } from "./keyStorage";
 
 /**
  * Example: Basic encryption and decryption
@@ -12,23 +12,23 @@ import { KeyStorage } from './keyStorage';
 async function basicEncryptionExample() {
   // Create a crypto system
   const crypto = createCryptoSystem({
-    namespace: 'example',
+    namespace: "example",
     keyRotationDays: 90,
   });
-  
+
   // Encrypt some data
-  const sensitiveData = 'This is sensitive patient information';
-  const encrypted = await crypto.encrypt(sensitiveData, 'patient-data');
-  
-  console.log('Encrypted data:', encrypted);
-  
+  const sensitiveData = "This is sensitive patient information";
+  const encrypted = await crypto.encrypt(sensitiveData, "patient-data");
+
+  console.log("Encrypted data:", encrypted);
+
   // Decrypt the data
   const decrypted = await crypto.decrypt(encrypted);
-  
-  console.log('Decrypted data:', decrypted);
-  
+
+  console.log("Decrypted data:", decrypted);
+
   // Verify the decryption worked correctly
-  console.log('Decryption successful:', decrypted === sensitiveData);
+  console.log("Decryption successful:", decrypted === sensitiveData);
 }
 
 /**
@@ -36,24 +36,29 @@ async function basicEncryptionExample() {
  */
 async function manualKeyRotationExample() {
   // Create a key storage instance
-  const keyStorage = new KeyStorage({ namespace: 'example' });
-  
+  const keyStorage = new KeyStorage({ namespace: "example" });
+
   // Generate a key
-  const { keyId, keyData } = await keyStorage.generateKey('patient-data');
-  
-  console.log('Generated key:', keyId, 'with version:', keyData.version);
-  
+  const { keyId, keyData } = await keyStorage.generateKey("patient-data");
+
+  console.log("Generated key:", keyId, "with version:", keyData.version);
+
   // Rotate the key
   const rotatedKey = await keyStorage.rotateKey(keyId);
-  
+
   if (rotatedKey) {
-    console.log('Rotated key:', rotatedKey.keyId, 'with version:', rotatedKey.keyData.version);
+    console.log(
+      "Rotated key:",
+      rotatedKey.keyId,
+      "with version:",
+      rotatedKey.keyData.version,
+    );
   }
-  
+
   // List all keys
   const keys = await keyStorage.listKeys();
-  
-  console.log('All keys:', keys);
+
+  console.log("All keys:", keys);
 }
 
 /**
@@ -62,21 +67,21 @@ async function manualKeyRotationExample() {
 function scheduledKeyRotationExample() {
   // Create a scheduled rotation service
   const scheduler = new ScheduledKeyRotation({
-    namespace: 'example',
+    namespace: "example",
     checkIntervalMs: 5 * 60 * 1000, // Check every 5 minutes
     onRotation: (oldKeyId, newKeyId) => {
       console.log(`Key rotated: ${oldKeyId} -> ${newKeyId}`);
     },
     onError: (error) => {
-      console.error('Rotation error:', error);
+      console.error("Rotation error:", error);
     },
   });
-  
+
   // Start the scheduler
   scheduler.start();
-  
-  console.log('Scheduled key rotation started');
-  
+
+  console.log("Scheduled key rotation started");
+
   // To stop the scheduler later:
   // scheduler.stop();
 }
@@ -87,35 +92,35 @@ function scheduledKeyRotationExample() {
 async function reencryptionExample() {
   // Create a crypto system
   const crypto = createCryptoSystem({
-    namespace: 'example',
+    namespace: "example",
     keyRotationDays: 90,
   });
-  
+
   // Encrypt some data
-  const sensitiveData = 'This is sensitive patient information';
-  const encrypted = await crypto.encrypt(sensitiveData, 'patient-data');
-  
-  console.log('Original encrypted data:', encrypted);
-  
+  const sensitiveData = "This is sensitive patient information";
+  const encrypted = await crypto.encrypt(sensitiveData, "patient-data");
+
+  console.log("Original encrypted data:", encrypted);
+
   // Extract key ID from the encrypted data
-  const keyId = encrypted.split(':')[0];
-  
+  const keyId = encrypted.split(":")[0];
+
   // Simulate key rotation
-  const keyStorage = new KeyStorage({ namespace: 'example' });
+  const keyStorage = new KeyStorage({ namespace: "example" });
   const rotatedKey = await keyStorage.rotateKey(keyId);
-  
+
   if (rotatedKey) {
-    console.log('Key rotated to version:', rotatedKey.keyData.version);
-    
+    console.log("Key rotated to version:", rotatedKey.keyData.version);
+
     // Re-encrypt the data with the new key
     const decrypted = await crypto.decrypt(encrypted);
-    const reencrypted = await crypto.encrypt(decrypted, 'patient-data');
-    
-    console.log('Re-encrypted data:', reencrypted);
-    
+    const reencrypted = await crypto.encrypt(decrypted, "patient-data");
+
+    console.log("Re-encrypted data:", reencrypted);
+
     // Verify the re-encryption worked correctly
     const redecrypted = await crypto.decrypt(reencrypted);
-    console.log('Re-decryption successful:', redecrypted === sensitiveData);
+    console.log("Re-decryption successful:", redecrypted === sensitiveData);
   }
 }
 
@@ -123,16 +128,16 @@ async function reencryptionExample() {
  * Run all examples
  */
 async function runExamples() {
-  console.log('=== Basic Encryption Example ===');
+  console.log("=== Basic Encryption Example ===");
   await basicEncryptionExample();
-  
-  console.log('\n=== Manual Key Rotation Example ===');
+
+  console.log("\n=== Manual Key Rotation Example ===");
   await manualKeyRotationExample();
-  
-  console.log('\n=== Scheduled Key Rotation Example ===');
+
+  console.log("\n=== Scheduled Key Rotation Example ===");
   scheduledKeyRotationExample();
-  
-  console.log('\n=== Re-encryption Example ===');
+
+  console.log("\n=== Re-encryption Example ===");
   await reencryptionExample();
 }
 
@@ -145,4 +150,4 @@ export {
   scheduledKeyRotationExample,
   reencryptionExample,
   runExamples,
-}; 
+};

@@ -1,4 +1,4 @@
-import { db } from '../index';
+import { db } from "../index";
 
 /**
  * Initialize security tables in the database
@@ -27,9 +27,9 @@ export async function initializeSecurityTables(): Promise<void> {
       CREATE INDEX IF NOT EXISTS idx_security_events_created_at ON security_events (created_at);
     `);
 
-    console.log('Security tables initialized successfully');
+    console.log("Security tables initialized successfully");
   } catch (error) {
-    console.error('Failed to initialize security tables:', error);
+    console.error("Failed to initialize security tables:", error);
     throw error;
   }
 }
@@ -41,7 +41,7 @@ export async function initializeSecurityDatabase(): Promise<void> {
   try {
     await initializeSecurityTables();
   } catch (error) {
-    console.error('Failed to initialize security database:', error);
+    console.error("Failed to initialize security database:", error);
     throw error;
   }
-} 
+}

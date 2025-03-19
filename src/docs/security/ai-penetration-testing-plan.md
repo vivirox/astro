@@ -15,11 +15,13 @@ This document outlines the penetration testing plan for our AI components to ide
 ### In-Scope Components
 
 1. AI API endpoints
+
    - `/api/ai/completion`
    - `/api/ai/usage`
    - `/api/ai/admin/*`
 
 2. AI Service Components
+
    - Authentication and authorization mechanisms
    - Rate limiting implementation
    - Input validation and sanitization
@@ -116,11 +118,13 @@ This document outlines the penetration testing plan for our AI components to ide
 The penetration testing report will include:
 
 1. Executive Summary
+
    - Overview of findings
    - Risk assessment
    - Recommendations
 
 2. Detailed Findings
+
    - Vulnerability description
    - Severity rating
    - Steps to reproduce
@@ -200,4 +204,4 @@ This penetration testing plan requires approval from:
 - **Security Team**: security@example.com
 - **Development Team**: dev@example.com
 - **Compliance Team**: compliance@example.com
-- **IT Operations**: it-ops@example.com 
+- **IT Operations**: it-ops@example.com

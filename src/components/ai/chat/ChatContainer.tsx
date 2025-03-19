@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
-import { type AIMessage } from '../../../lib/ai';
-import { ChatMessage } from './ChatMessage';
-import { ChatInput } from './ChatInput';
+import { useState, useRef, useEffect } from "react";
+import { type AIMessage } from "../../../lib/ai";
+import { ChatMessage } from "./ChatMessage";
+import { ChatInput } from "./ChatInput";
 
 export interface ChatContainerProps {
   messages: AIMessage[];
@@ -21,16 +21,16 @@ export function ChatContainer({
   onSendMessage,
   isLoading = false,
   error,
-  className = '',
+  className = "",
   inputPlaceholder,
-  disabled = false
+  disabled = false,
 }: ChatContainerProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when messages change or loading state changes
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isLoading]);
 
@@ -46,27 +46,27 @@ export function ChatContainer({
             {messages.map((message, index) => (
               <ChatMessage key={index} message={message} />
             ))}
-            
+
             {isLoading && (
               <ChatMessage
-                message={{ role: 'assistant', content: '' }}
+                message={{ role: "assistant", content: "" }}
                 isLoading={true}
               />
             )}
-            
+
             {error && (
               <ChatMessage
-                message={{ role: 'assistant', content: '' }}
+                message={{ role: "assistant", content: "" }}
                 isError={true}
                 errorMessage={error}
               />
             )}
-            
+
             <div ref={messagesEndRef} />
           </>
         )}
       </div>
-      
+
       <div className="p-4 border-t">
         <ChatInput
           onSendMessage={onSendMessage}
@@ -77,4 +77,4 @@ export function ChatContainer({
       </div>
     </div>
   );
-} 
+}

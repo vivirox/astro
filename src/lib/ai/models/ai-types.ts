@@ -1,7 +1,7 @@
 /**
  * AI Provider types
  */
-export type AIProvider = 'together';
+export type AIProvider = "together";
 
 /**
  * AI Model types
@@ -9,8 +9,15 @@ export type AIProvider = 'together';
 export interface AIModel {
   id: string;
   name: string;
-  provider: 'together';
-  capabilities: ('chat' | 'sentiment' | 'crisis' | 'response' | 'intervention' | 'code')[];
+  provider: "together";
+  capabilities: (
+    | "chat"
+    | "sentiment"
+    | "crisis"
+    | "response"
+    | "intervention"
+    | "code"
+  )[];
   contextWindow: number;
   maxTokens: number;
   togetherModelId: string;
@@ -24,7 +31,7 @@ export interface AIModel {
  * AI Message types
  */
 export interface AIMessage {
-  role: 'system' | 'user' | 'assistant' | 'function';
+  role: "system" | "user" | "assistant" | "function";
   content: string;
   name?: string;
 }
@@ -96,4 +103,4 @@ export interface AIUsageRecord {
   userId?: string;
   requestId?: string;
   cost?: number;
-} 
+}

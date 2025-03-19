@@ -22,11 +22,11 @@ All API endpoints require authentication via the session middleware:
 // Verify session
 const session = await getSession(cookies);
 if (!session?.user) {
-  return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+  return new Response(JSON.stringify({ error: "Unauthorized" }), {
     status: 401,
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   });
 }
 ```
@@ -37,14 +37,17 @@ Request validation is performed using Zod schemas:
 
 ```typescript
 // Validate request body against schema
-const [data, validationError] = await validateRequestBody(request, CompletionRequestSchema);
+const [data, validationError] = await validateRequestBody(
+  request,
+  CompletionRequestSchema,
+);
 
 if (validationError) {
   return new Response(JSON.stringify(validationError), {
     status: validationError.status,
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   });
 }
 ```
@@ -59,15 +62,18 @@ const totalInputSize = JSON.stringify(data).length;
 const maxAllowedSize = 1024 * 50; // 50KB limit
 
 if (totalInputSize > maxAllowedSize) {
-  return new Response(JSON.stringify({
-    error: 'Payload too large',
-    message: 'The request payload exceeds the maximum allowed size'
-  }), {
-    status: 413,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
+  return new Response(
+    JSON.stringify({
+      error: "Payload too large",
+      message: "The request payload exceeds the maximum allowed size",
+    }),
+    {
+      status: 413,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
 }
 ```
 
@@ -79,19 +85,19 @@ A standardized error handling system is implemented:
 try {
   // API logic here
 } catch (error) {
-  console.error('Error in AI completion API:', error);
-  
+  console.error("Error in AI completion API:", error);
+
   // Create audit log for the error
   await createAuditLog({
-    action: 'ai.completion.error',
-    category: 'ai',
-    status: 'error',
+    action: "ai.completion.error",
+    category: "ai",
+    status: "error",
     details: {
       error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined
-    }
+      stack: error instanceof Error ? error.stack : undefined,
+    },
   });
-  
+
   // Use the standardized error handling
   return handleApiError(error);
 }
@@ -102,19 +108,30 @@ try {
 The application implements security headers through middleware:
 
 ```typescript
-const securityHeadersMiddleware: MiddlewareHandler = async ({ locals }, next) => {
+const securityHeadersMiddleware: MiddlewareHandler = async (
+  { locals },
+  next,
+) => {
   const response = await next();
-  
+
   // Set security headers
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('X-XSS-Protection', '1; mode=block');
-  response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-  
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-XSS-Protection", "1; mode=block");
+  response.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains",
+  );
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=()",
+  );
+
   // Content Security Policy
-  response.headers.set('Content-Security-Policy', `
+  response.headers.set(
+    "Content-Security-Policy",
+    `
     default-src 'self';
     script-src 'self' 'unsafe-inline' https://trusted-cdn.com;
     style-src 'self' 'unsafe-inline' https://trusted-cdn.com;
@@ -125,8 +142,11 @@ const securityHeadersMiddleware: MiddlewareHandler = async ({ locals }, next) =>
     form-action 'self';
     base-uri 'self';
     object-src 'none'
-  `.replace(/\s+/g, ' ').trim());
-  
+  `
+      .replace(/\s+/g, " ")
+      .trim(),
+  );
+
   return response;
 };
 ```
@@ -138,34 +158,40 @@ CORS is configured to allow only specific origins:
 ```typescript
 export const corsMiddleware: MiddlewareHandler = async ({ request }, next) => {
   // Get the origin from the request
-  const origin = request.headers.get('Origin') || '';
-  
+  const origin = request.headers.get("Origin") || "";
+
   // List of allowed origins (in production, this would be more restrictive)
-  const allowedOrigins = ['http://localhost:4321', 'https://yourappdomain.com'];
-  
+  const allowedOrigins = ["http://localhost:4321", "https://yourappdomain.com"];
+
   // Check if the origin is allowed
   const isAllowedOrigin = allowedOrigins.includes(origin);
-  
+
   // Create response
   const response = await next();
-  
+
   // Set CORS headers if origin is allowed
   if (isAllowedOrigin) {
-    response.headers.set('Access-Control-Allow-Origin', origin);
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    response.headers.set('Access-Control-Allow-Credentials', 'true');
-    response.headers.set('Access-Control-Max-Age', '86400');
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS",
+    );
+    response.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization",
+    );
+    response.headers.set("Access-Control-Allow-Credentials", "true");
+    response.headers.set("Access-Control-Max-Age", "86400");
   }
-  
+
   // Handle preflight requests
-  if (request.method === 'OPTIONS') {
+  if (request.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
-      headers: response.headers
+      headers: response.headers,
     });
   }
-  
+
   return response;
 };
 ```
@@ -177,45 +203,49 @@ The application implements rate limiting to prevent abuse:
 ```typescript
 export class RateLimiter {
   private limits: Record<string, number> = {
-    'admin': 1000,    // 1000 requests per minute for admins
-    'user': 100,      // 100 requests per minute for regular users
-    'anonymous': 20   // 20 requests per minute for anonymous users
+    admin: 1000, // 1000 requests per minute for admins
+    user: 100, // 100 requests per minute for regular users
+    anonymous: 20, // 20 requests per minute for anonymous users
   };
-  
+
   private windowMs = 60 * 1000; // 1 minute window
-  private requestCounts: Map<string, { count: number, resetTime: number }> = new Map();
-  
+  private requestCounts: Map<string, { count: number; resetTime: number }> =
+    new Map();
+
   // Check if a request should be rate limited
-  public checkLimit(key: string, role: string = 'anonymous'): { limited: boolean, limit: number, remaining: number, resetTime: number } {
+  public checkLimit(
+    key: string,
+    role: string = "anonymous",
+  ): { limited: boolean; limit: number; remaining: number; resetTime: number } {
     const now = Date.now();
     const limit = this.limits[role] || this.limits.anonymous;
-    
+
     // Clean up expired entries first
     this.cleanUp(now);
-    
+
     // Get or create entry for this key
     let entry = this.requestCounts.get(key);
     if (!entry) {
       entry = { count: 0, resetTime: now + this.windowMs };
       this.requestCounts.set(key, entry);
     }
-    
+
     // If reset time has passed, create a new entry
     if (now > entry.resetTime) {
       entry.count = 0;
       entry.resetTime = now + this.windowMs;
     }
-    
+
     // Increment count
     entry.count += 1;
-    
+
     // Check if limit exceeded
     const limited = entry.count > limit;
     const remaining = Math.max(0, limit - entry.count);
-    
+
     return { limited, limit, remaining, resetTime: entry.resetTime };
   }
-  
+
   // Clean up expired entries to prevent memory leaks
   private cleanUp(now: number): void {
     for (const [key, entry] of this.requestCounts.entries()) {
@@ -227,56 +257,68 @@ export class RateLimiter {
 }
 
 // Middleware implementation
-export const rateLimitMiddleware: MiddlewareHandler = async ({ request, locals }, next) => {
+export const rateLimitMiddleware: MiddlewareHandler = async (
+  { request, locals },
+  next,
+) => {
   // Skip rate limiting for non-API routes
-  if (!request.url.includes('/api/ai/')) {
+  if (!request.url.includes("/api/ai/")) {
     return await next();
   }
-  
+
   // Get IP address or user ID for rate limiting key
   const session = locals.session;
   const userId = session?.user?.id;
-  const clientIP = request.headers.get('X-Forwarded-For') || 'unknown';
+  const clientIP = request.headers.get("X-Forwarded-For") || "unknown";
   const key = userId || clientIP;
-  const role = session?.user?.role || 'anonymous';
-  
+  const role = session?.user?.role || "anonymous";
+
   // Skip rate limiting for admins if desired
-  if (role === 'admin' && BYPASS_RATE_LIMIT_FOR_ADMINS) {
+  if (role === "admin" && BYPASS_RATE_LIMIT_FOR_ADMINS) {
     return await next();
   }
-  
+
   // Check rate limit
   const limiter = getLimiter();
-  const { limited, limit, remaining, resetTime } = limiter.checkLimit(key, role);
-  
+  const { limited, limit, remaining, resetTime } = limiter.checkLimit(
+    key,
+    role,
+  );
+
   if (limited) {
     // Calculate retry after in seconds
     const retryAfter = Math.ceil((resetTime - Date.now()) / 1000);
-    
-    return new Response(JSON.stringify({
-      error: 'Too many requests',
-      message: 'Rate limit exceeded',
-      retryAfter
-    }), {
-      status: 429,
-      headers: {
-        'Content-Type': 'application/json',
-        'Retry-After': retryAfter.toString(),
-        'X-RateLimit-Limit': limit.toString(),
-        'X-RateLimit-Remaining': '0',
-        'X-RateLimit-Reset': Math.ceil(resetTime / 1000).toString()
-      }
-    });
+
+    return new Response(
+      JSON.stringify({
+        error: "Too many requests",
+        message: "Rate limit exceeded",
+        retryAfter,
+      }),
+      {
+        status: 429,
+        headers: {
+          "Content-Type": "application/json",
+          "Retry-After": retryAfter.toString(),
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": "0",
+          "X-RateLimit-Reset": Math.ceil(resetTime / 1000).toString(),
+        },
+      },
+    );
   }
-  
+
   // Proceed with the request
   const response = await next();
-  
+
   // Add rate limit headers to the response
-  response.headers.set('X-RateLimit-Limit', limit.toString());
-  response.headers.set('X-RateLimit-Remaining', remaining.toString());
-  response.headers.set('X-RateLimit-Reset', Math.ceil(resetTime / 1000).toString());
-  
+  response.headers.set("X-RateLimit-Limit", limit.toString());
+  response.headers.set("X-RateLimit-Remaining", remaining.toString());
+  response.headers.set(
+    "X-RateLimit-Reset",
+    Math.ceil(resetTime / 1000).toString(),
+  );
+
   return response;
 };
 ```
@@ -295,7 +337,7 @@ export const CompletionRequestSchema = z.object({
   stream: z.boolean().default(false),
   presence_penalty: z.number().min(0).max(2).optional(),
   frequency_penalty: z.number().min(0).max(2).optional(),
-  top_p: z.number().min(0).max(1).optional()
+  top_p: z.number().min(0).max(1).optional(),
 });
 ```
 
@@ -306,15 +348,15 @@ The application implements comprehensive audit logging:
 ```typescript
 // Create audit log for the completion
 await createAuditLog({
-  action: 'ai.completion.response',
-  category: 'ai',
-  status: 'success',
+  action: "ai.completion.response",
+  category: "ai",
+  status: "success",
   userId: session.user?.id,
   details: {
     model: completion.model,
     contentLength: completion.content.length,
-    tokenUsage: completion.usage
-  }
+    tokenUsage: completion.usage,
+  },
 });
 ```
 
@@ -355,4 +397,4 @@ Security is an ongoing process:
 2. **Monitor Security Advisories**: Stay informed about new vulnerabilities
 3. **Review Logs**: Regularly review audit logs for suspicious activity
 4. **Update Security Measures**: Continuously improve security measures
-5. **Conduct Security Training**: Train developers on security best practices 
+5. **Conduct Security Training**: Train developers on security best practices

@@ -1,6 +1,7 @@
 # Security Guide
 
 ## Table of Contents
+
 1. [Overview](#overview)
 2. [Security Architecture](#security-architecture)
 3. [Security Best Practices](#security-best-practices)
@@ -13,28 +14,31 @@
 Our security architecture follows AWS Well-Architected Framework's security pillar and implements defense in depth with multiple security layers:
 
 1. Network Security
-   * VPC with public and private subnets
-   * Security groups with least privilege access
-   * WAF for web application protection
-   * Shield Advanced for DDoS protection
+
+   - VPC with public and private subnets
+   - Security groups with least privilege access
+   - WAF for web application protection
+   - Shield Advanced for DDoS protection
 
 2. Data Security
-   * KMS encryption for data at rest
-   * TLS encryption for data in transit
-   * S3 bucket security with versioning and replication
-   * Secrets management with automatic rotation
+
+   - KMS encryption for data at rest
+   - TLS encryption for data in transit
+   - S3 bucket security with versioning and replication
+   - Secrets management with automatic rotation
 
 3. Identity and Access
-   * IAM policies following least privilege
-   * Resource-based policies with conditions
-   * Code signing for Lambda functions
-   * Multi-factor authentication
+
+   - IAM policies following least privilege
+   - Resource-based policies with conditions
+   - Code signing for Lambda functions
+   - Multi-factor authentication
 
 4. Monitoring and Audit
-   * CloudWatch logs with encryption
-   * CloudTrail for API auditing
-   * GuardDuty for threat detection
-   * OpenSearch for log analysis
+   - CloudWatch logs with encryption
+   - CloudTrail for API auditing
+   - GuardDuty for threat detection
+   - OpenSearch for log analysis
 
 ## Security Architecture
 
@@ -52,96 +56,105 @@ graph TD
 ```
 
 1. VPC Configuration
-   * Public subnets for ALB only
-   * Private subnets for workloads
-   * NAT Gateway for outbound traffic
-   * VPC Flow Logs enabled
+
+   - Public subnets for ALB only
+   - Private subnets for workloads
+   - NAT Gateway for outbound traffic
+   - VPC Flow Logs enabled
 
 2. Security Groups
-   * ALB: HTTPS inbound only
-   * ECS: Traffic from ALB only
-   * Aurora: Traffic from ECS only
-   * OpenSearch: Internal traffic only
+   - ALB: HTTPS inbound only
+   - ECS: Traffic from ALB only
+   - Aurora: Traffic from ECS only
+   - OpenSearch: Internal traffic only
 
 ### Data Protection
 
 1. Encryption at Rest
-   * KMS keys with automatic rotation
-   * S3 bucket encryption with KMS
-   * RDS encryption with KMS
-   * OpenSearch encryption with KMS
+
+   - KMS keys with automatic rotation
+   - S3 bucket encryption with KMS
+   - RDS encryption with KMS
+   - OpenSearch encryption with KMS
 
 2. Encryption in Transit
-   * TLS 1.3 for ALB listeners
-   * VPC endpoints for AWS services
-   * TLS for database connections
-   * HTTPS for API endpoints
+
+   - TLS 1.3 for ALB listeners
+   - VPC endpoints for AWS services
+   - TLS for database connections
+   - HTTPS for API endpoints
 
 3. Data Lifecycle
-   * S3 versioning enabled
-   * Cross-region replication
-   * Lifecycle policies
-   * Backup retention policies
+   - S3 versioning enabled
+   - Cross-region replication
+   - Lifecycle policies
+   - Backup retention policies
 
 ## Security Best Practices
 
 ### Infrastructure Security
 
 1. S3 Bucket Security
-   * Access logging enabled
-   * Public access blocked
-   * Versioning enabled
-   * Cross-region replication
-   * Event notifications
-   * Lifecycle management
+
+   - Access logging enabled
+   - Public access blocked
+   - Versioning enabled
+   - Cross-region replication
+   - Event notifications
+   - Lifecycle management
 
 2. KMS and Secrets
-   * Automatic key rotation
-   * Secrets rotation
-   * Key policies with conditions
-   * Multi-region keys
-   * Audit logging
+
+   - Automatic key rotation
+   - Secrets rotation
+   - Key policies with conditions
+   - Multi-region keys
+   - Audit logging
 
 3. IAM Policies
-   * Resource-level permissions
-   * Condition constraints
-   * Least privilege access
-   * Regular access reviews
-   * Service control policies
+
+   - Resource-level permissions
+   - Condition constraints
+   - Least privilege access
+   - Regular access reviews
+   - Service control policies
 
 4. Security Groups
-   * Specific CIDR blocks
-   * Service-linked rules
-   * Proper descriptions
-   * Regular reviews
-   * Default deny
+
+   - Specific CIDR blocks
+   - Service-linked rules
+   - Proper descriptions
+   - Regular reviews
+   - Default deny
 
 5. Lambda Security
-   * VPC configuration
-   * X-Ray tracing
-   * Code signing
-   * Concurrent limits
-   * Environment encryption
+   - VPC configuration
+   - X-Ray tracing
+   - Code signing
+   - Concurrent limits
+   - Environment encryption
 
 ### Application Security
 
 1. Input Validation
-   * API Gateway validation
-   * WAF rules
-   * Schema validation
-   * Sanitization
+
+   - API Gateway validation
+   - WAF rules
+   - Schema validation
+   - Sanitization
 
 2. Authentication
-   * Multi-factor authentication
-   * Token-based auth
-   * Session management
-   * JWT with rotation
+
+   - Multi-factor authentication
+   - Token-based auth
+   - Session management
+   - JWT with rotation
 
 3. Authorization
-   * Role-based access
-   * Resource policies
-   * Context-based rules
-   * Regular audits
+   - Role-based access
+   - Resource policies
+   - Context-based rules
+   - Regular audits
 
 ## Security Configurations
 
@@ -236,103 +249,114 @@ resource "aws_security_group_rule" "ecs_ingress" {
 ### Monitoring
 
 1. CloudWatch Metrics
-   * Error rates
-   * Request latency
-   * Authentication failures
-   * Authorization failures
-   * WAF blocks
+
+   - Error rates
+   - Request latency
+   - Authentication failures
+   - Authorization failures
+   - WAF blocks
 
 2. CloudWatch Logs
-   * Application logs
-   * Access logs
-   * Audit logs
-   * WAF logs
-   * VPC Flow Logs
+
+   - Application logs
+   - Access logs
+   - Audit logs
+   - WAF logs
+   - VPC Flow Logs
 
 3. GuardDuty Findings
-   * Unauthorized access
-   * Suspicious activity
-   * Data exfiltration
-   * Cryptocurrency mining
+   - Unauthorized access
+   - Suspicious activity
+   - Data exfiltration
+   - Cryptocurrency mining
 
 ### Alerting
 
 1. High Priority
-   * Security group changes
-   * IAM policy changes
-   * Root account usage
-   * KMS key deletion
-   * GuardDuty high severity
+
+   - Security group changes
+   - IAM policy changes
+   - Root account usage
+   - KMS key deletion
+   - GuardDuty high severity
 
 2. Medium Priority
-   * Failed login attempts
-   * WAF blocks
-   * S3 public access
-   * Unusual traffic patterns
-   * API throttling
+
+   - Failed login attempts
+   - WAF blocks
+   - S3 public access
+   - Unusual traffic patterns
+   - API throttling
 
 3. Low Priority
-   * Configuration changes
-   * Resource creation
-   * Tag modifications
-   * Cost anomalies
+   - Configuration changes
+   - Resource creation
+   - Tag modifications
+   - Cost anomalies
 
 ## Incident Response
 
 ### Response Procedures
 
 1. Detection
-   * Monitor alerts
-   * Review logs
-   * Analyze metrics
-   * Check GuardDuty
+
+   - Monitor alerts
+   - Review logs
+   - Analyze metrics
+   - Check GuardDuty
 
 2. Analysis
-   * Identify scope
-   * Determine impact
-   * Review audit logs
-   * Check configurations
+
+   - Identify scope
+   - Determine impact
+   - Review audit logs
+   - Check configurations
 
 3. Containment
-   * Isolate resources
-   * Block access
-   * Rotate credentials
-   * Update policies
+
+   - Isolate resources
+   - Block access
+   - Rotate credentials
+   - Update policies
 
 4. Eradication
-   * Remove threats
-   * Update configurations
-   * Apply patches
-   * Verify removal
+
+   - Remove threats
+   - Update configurations
+   - Apply patches
+   - Verify removal
 
 5. Recovery
-   * Restore services
-   * Verify functionality
-   * Monitor closely
-   * Document changes
+
+   - Restore services
+   - Verify functionality
+   - Monitor closely
+   - Document changes
 
 6. Post-Incident
-   * Review response
-   * Update procedures
-   * Improve detection
-   * Train team
+   - Review response
+   - Update procedures
+   - Improve detection
+   - Train team
 
 ### Contact Information
 
 1. Security Team
-   * Slack: #security-team
-   * Email: security@example.com
-   * Phone: 1-800-xxx-xxxx
-   * On-call: PagerDuty
+
+   - Slack: #security-team
+   - Email: security@example.com
+   - Phone: 1-800-xxx-xxxx
+   - On-call: PagerDuty
 
 2. AWS Support
-   * Enterprise Support
-   * Security Response
-   * TAM Contact
-   * Account Team
+
+   - Enterprise Support
+   - Security Response
+   - TAM Contact
+   - Account Team
 
 3. External Partners
-   * SOC Provider
-   * MSSP Contact
-   * Forensics Team
-   * Legal Team 
+   - SOC Provider
+   - MSSP Contact
+   - Forensics Team
+   - Legal Team

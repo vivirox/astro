@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { SendIcon, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect } from "react";
+import { SendIcon, Loader2 } from "lucide-react";
 
 export interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -11,47 +11,50 @@ export interface ChatInputProps {
 /**
  * Component for inputting and sending chat messages
  */
-export function ChatInput({ 
-  onSendMessage, 
-  isLoading = false, 
-  placeholder = 'Type a message...', 
-  disabled = false 
+export function ChatInput({
+  onSendMessage,
+  isLoading = false,
+  placeholder = "Type a message...",
+  disabled = false,
 }: ChatInputProps) {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Auto-resize textarea based on content
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [message]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (message.trim() && !isLoading && !disabled) {
       onSendMessage(message);
-      setMessage('');
-      
+      setMessage("");
+
       // Reset textarea height
       if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height = "auto";
       }
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Submit on Enter (without Shift)
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-end border rounded-lg p-2 bg-background">
+    <form
+      onSubmit={handleSubmit}
+      className="flex items-end border rounded-lg p-2 bg-background"
+    >
       <textarea
         ref={textareaRef}
         value={message}
@@ -75,4 +78,4 @@ export function ChatInput({
       </button>
     </form>
   );
-} 
+}

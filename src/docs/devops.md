@@ -9,11 +9,13 @@ This document describes the DevOps setup for Gradiant, including CI/CD pipelines
 Our CI/CD pipeline is implemented using GitHub Actions and consists of the following stages:
 
 1. **Security Scan**
+
    - Runs Trivy vulnerability scanner
    - Checks for security issues in dependencies
    - Uploads results to GitHub Security tab
 
 2. **Build and Test**
+
    - Installs dependencies
    - Runs test suite
    - Builds application
@@ -31,11 +33,13 @@ Our CI/CD pipeline is implemented using GitHub Actions and consists of the follo
 Infrastructure is managed using Terraform with the following components:
 
 1. **Vercel Configuration**
+
    - Project settings
    - Environment variables
    - Domain configuration
 
 2. **GitHub Configuration**
+
    - Repository settings
    - Branch protection rules
    - Action secrets
@@ -48,18 +52,21 @@ Infrastructure is managed using Terraform with the following components:
 ## Monitoring and Observability
 
 ### Metrics Collection
+
 - Request rates and latencies
 - Error rates
 - Resource utilization
 - Custom business metrics
 
 ### Dashboards
+
 - Application performance
 - System health
 - Business metrics
 - Error tracking
 
 ### Alerting
+
 - Slack notifications
 - Error rate thresholds
 - Performance degradation alerts
@@ -68,6 +75,7 @@ Infrastructure is managed using Terraform with the following components:
 ## Deployment Procedures
 
 ### Standard Deployment
+
 1. Push to main branch
 2. Automatic deployment to staging
 3. Verification and testing
@@ -75,6 +83,7 @@ Infrastructure is managed using Terraform with the following components:
 5. Deployment to production
 
 ### Rollback Procedure
+
 1. Run rollback script:
    ```bash
    ./scripts/rollback.sh <environment> <version>
@@ -97,12 +106,14 @@ The following secrets need to be configured in GitHub:
 ## Local Development
 
 ### Prerequisites
+
 - Node.js 20+
 - pnpm
 - Docker and Docker Compose
 - Vercel CLI
 
 ### Setup
+
 1. Clone repository
 2. Install dependencies:
    ```bash
@@ -118,6 +129,7 @@ The following secrets need to be configured in GitHub:
    ```
 
 ### Testing
+
 - Unit tests: `pnpm test`
 - E2E tests: `pnpm test:e2e`
 - Integration tests: `pnpm test:integration`
@@ -125,22 +137,26 @@ The following secrets need to be configured in GitHub:
 ## Terraform Management
 
 ### Initialize
+
 ```bash
 cd terraform
 terraform init
 ```
 
 ### Plan Changes
+
 ```bash
 terraform plan -var-file=environments/development.tfvars
 ```
 
 ### Apply Changes
+
 ```bash
 terraform apply -var-file=environments/development.tfvars
 ```
 
 ### Destroy Infrastructure
+
 ```bash
 terraform destroy -var-file=environments/development.tfvars
 ```
@@ -148,12 +164,14 @@ terraform destroy -var-file=environments/development.tfvars
 ## Monitoring Access
 
 ### Grafana
+
 - URL: http://localhost:3001
 - Default credentials:
   - Username: admin
   - Password: admin
 
 ### Prometheus
+
 - URL: http://localhost:9090
 
 ## Troubleshooting
@@ -161,12 +179,14 @@ terraform destroy -var-file=environments/development.tfvars
 ### Common Issues
 
 1. **Deployment Failures**
+
    - Check deployment logs in Vercel
    - Verify GitHub Actions logs
    - Check application logs
    - Run health checks
 
 2. **Monitoring Issues**
+
    - Verify Prometheus targets
    - Check metric collection
    - Validate alert rules
@@ -181,7 +201,8 @@ terraform destroy -var-file=environments/development.tfvars
 ### Support
 
 For additional support:
+
 1. Check error logs
 2. Review documentation
 3. Contact DevOps team
-4. Create GitHub issue 
+4. Create GitHub issue

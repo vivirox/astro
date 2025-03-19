@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { logAuditEvent } from '../auth';
+import { db } from "../db";
+import { logAuditEvent } from "../auth";
 
 export interface PerformanceMetric {
   model: string;
@@ -19,9 +19,12 @@ export interface PerformanceMetric {
 /**
  * Track AI performance metrics in the database
  */
-export async function trackPerformance(metric: PerformanceMetric): Promise<void> {
+export async function trackPerformance(
+  metric: PerformanceMetric,
+): Promise<void> {
   try {
-    await db.query(`
+    await db.query(
+      `
       INSERT INTO ai_performance_metrics (
         model, 
         latency, 
@@ -38,47 +41,53 @@ export async function trackPerformance(metric: PerformanceMetric): Promise<void>
       ) VALUES (
         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
       )
-    `, [
-      metric.model,
-      metric.latency,
-      metric.input_tokens,
-      metric.output_tokens,
-      metric.total_tokens,
-      metric.success,
-      metric.error_code || null,
-      metric.cached,
-      metric.optimized,
-      metric.user_id || null,
-      metric.session_id || null,
-      metric.request_id
-    ]);
+    `,
+      [
+        metric.model,
+        metric.latency,
+        metric.input_tokens,
+        metric.output_tokens,
+        metric.total_tokens,
+        metric.success,
+        metric.error_code || null,
+        metric.cached,
+        metric.optimized,
+        metric.user_id || null,
+        metric.session_id || null,
+        metric.request_id,
+      ],
+    );
 
     // Log audit event for tracking purposes
     if (metric.user_id) {
       await logAuditEvent(
         metric.user_id,
-        'track_ai_performance',
-        'ai_service',
+        "track_ai_performance",
+        "ai_service",
         metric.request_id,
         {
           model: metric.model,
           success: metric.success,
           cached: metric.cached,
-          optimized: metric.optimized
-        }
+          optimized: metric.optimized,
+        },
       );
     }
   } catch (error) {
-    console.error('Error tracking AI performance:', error);
+    console.error("Error tracking AI performance:", error);
   }
 }
 
 /**
  * Get performance metrics for a specific model
  */
-export async function getModelPerformance(model: string, days: number = 30): Promise<any> {
+export async function getModelPerformance(
+  model: string,
+  days: number = 30,
+): Promise<any> {
   try {
-    const result = await db.query(`
+    const result = await db.query(
+      `
       SELECT 
         AVG(latency) as avg_latency,
         AVG(total_tokens) as avg_tokens,
@@ -89,11 +98,13 @@ export async function getModelPerformance(model: string, days: number = 30): Pro
       FROM ai_performance_metrics
       WHERE model = $1
       AND timestamp > NOW() - INTERVAL '${days} days'
-    `, [model]);
+    `,
+      [model],
+    );
 
     return result.rows[0];
   } catch (error) {
-    console.error('Error getting model performance:', error);
+    console.error("Error getting model performance:", error);
     return null;
   }
 }
@@ -118,7 +129,7 @@ export async function getOverallPerformance(days: number = 30): Promise<any> {
 
     return result.rows[0];
   } catch (error) {
-    console.error('Error getting overall performance:', error);
+    console.error("Error getting overall performance:", error);
     return null;
   }
-} 
+}

@@ -28,13 +28,17 @@ sudo apt-get install automake build-essential clang cmake git \
 ### 1. Initialize the Environment
 
 ```typescript
-import { JIFFAdapter, JIFFAdapterConfig, MPCProtocol } from '@gradiant/mp-spdz-bindings';
+import {
+  JIFFAdapter,
+  JIFFAdapterConfig,
+  MPCProtocol,
+} from "@gradiant/mp-spdz-bindings";
 
 const config: JIFFAdapterConfig = {
   partyId: 0, // Change for each party
   numParties: 3,
   threshold: 1,
-  protocol: MPCProtocol.SEMI2K // Use SEMI2K for better performance
+  protocol: MPCProtocol.SEMI2K, // Use SEMI2K for better performance
 };
 
 const adapter = new JIFFAdapter(config);
@@ -45,9 +49,7 @@ const adapter = new JIFFAdapter(config);
 ```typescript
 async function calculateSecureMean(values: number[]): Promise<number> {
   // Share all values
-  const shares = await Promise.all(
-    values.map(value => adapter.share(value))
-  );
+  const shares = await Promise.all(values.map((value) => adapter.share(value)));
 
   // Sum the shares
   let sum = shares[0];
@@ -68,7 +70,7 @@ async function calculateSecureMean(values: number[]): Promise<number> {
 // Example usage
 const values = [1, 2, 3, 4, 5];
 const mean = await calculateSecureMean(values);
-console.log('Secure mean:', mean);
+console.log("Secure mean:", mean);
 ```
 
 ### 3. Secure Standard Deviation
@@ -80,16 +82,14 @@ async function calculateSecureStdDev(values: number[]): Promise<number> {
   const meanShare = await adapter.share(mean);
 
   // Share all values
-  const shares = await Promise.all(
-    values.map(value => adapter.share(value))
-  );
+  const shares = await Promise.all(values.map((value) => adapter.share(value)));
 
   // Calculate squared differences
   const squaredDiffs = await Promise.all(
-    shares.map(async share => {
+    shares.map(async (share) => {
       const diff = await adapter.subtract(share, meanShare);
       return adapter.multiply(diff, diff);
-    })
+    }),
   );
 
   // Sum squared differences
@@ -109,7 +109,7 @@ async function calculateSecureStdDev(values: number[]): Promise<number> {
 
 // Example usage
 const stdDev = await calculateSecureStdDev(values);
-console.log('Secure standard deviation:', stdDev);
+console.log("Secure standard deviation:", stdDev);
 ```
 
 ### 4. Secure Correlation Coefficient
@@ -117,15 +117,15 @@ console.log('Secure standard deviation:', stdDev);
 ```typescript
 async function calculateSecureCorrelation(
   x: number[],
-  y: number[]
+  y: number[],
 ): Promise<number> {
   if (x.length !== y.length) {
-    throw new Error('Arrays must have same length');
+    throw new Error("Arrays must have same length");
   }
 
   // Share all values
-  const xShares = await Promise.all(x.map(value => adapter.share(value)));
-  const yShares = await Promise.all(y.map(value => adapter.share(value)));
+  const xShares = await Promise.all(x.map((value) => adapter.share(value)));
+  const yShares = await Promise.all(y.map((value) => adapter.share(value)));
 
   // Calculate means
   const xMean = await calculateSecureMean(x);
@@ -139,7 +139,7 @@ async function calculateSecureCorrelation(
       const xDiff = await adapter.subtract(xShare, xMeanShare);
       const yDiff = await adapter.subtract(yShares[i], yMeanShare);
       return adapter.multiply(xDiff, yDiff);
-    })
+    }),
   );
 
   // Sum products
@@ -164,7 +164,7 @@ async function calculateSecureCorrelation(
 const x = [1, 2, 3, 4, 5];
 const y = [2, 4, 6, 8, 10];
 const correlation = await calculateSecureCorrelation(x, y);
-console.log('Secure correlation:', correlation);
+console.log("Secure correlation:", correlation);
 ```
 
 ### 5. Secure Linear Regression
@@ -172,15 +172,15 @@ console.log('Secure correlation:', correlation);
 ```typescript
 async function calculateSecureLinearRegression(
   x: number[],
-  y: number[]
+  y: number[],
 ): Promise<{ slope: number; intercept: number }> {
   if (x.length !== y.length) {
-    throw new Error('Arrays must have same length');
+    throw new Error("Arrays must have same length");
   }
 
   // Share all values
-  const xShares = await Promise.all(x.map(value => adapter.share(value)));
-  const yShares = await Promise.all(y.map(value => adapter.share(value)));
+  const xShares = await Promise.all(x.map((value) => adapter.share(value)));
+  const yShares = await Promise.all(y.map((value) => adapter.share(value)));
 
   // Calculate means
   const xMean = await calculateSecureMean(x);
@@ -194,14 +194,14 @@ async function calculateSecureLinearRegression(
       const xDiff = await adapter.subtract(xShare, xMeanShare);
       const yDiff = await adapter.subtract(yShares[i], yMeanShare);
       return adapter.multiply(xDiff, yDiff);
-    })
+    }),
   );
 
   const denominatorProducts = await Promise.all(
-    xShares.map(async xShare => {
+    xShares.map(async (xShare) => {
       const xDiff = await adapter.subtract(xShare, xMeanShare);
       return adapter.multiply(xDiff, xDiff);
-    })
+    }),
   );
 
   // Sum products
@@ -219,7 +219,7 @@ async function calculateSecureLinearRegression(
   // Calculate intercept
   const interceptShare = await adapter.subtract(
     yMeanShare,
-    await adapter.multiply(xMeanShare, await adapter.share(slopeValue))
+    await adapter.multiply(xMeanShare, await adapter.share(slopeValue)),
   );
   const interceptValue = Number(await adapter.open(interceptShare));
 
@@ -228,16 +228,18 @@ async function calculateSecureLinearRegression(
 
 // Example usage
 const regression = await calculateSecureLinearRegression(x, y);
-console.log('Secure linear regression:', regression);
+console.log("Secure linear regression:", regression);
 ```
 
 ## Performance Considerations
 
 1. **Batch Processing**
+
    - Process multiple values in parallel using `Promise.all`
    - Use preprocessing for better performance
 
 2. **Protocol Selection**
+
    - Use Semi2k for better performance when security requirements allow
    - Use SPDZ2k for integer-heavy computations
    - Use MASCOT when malicious security is required
@@ -249,11 +251,13 @@ console.log('Secure linear regression:', regression);
 ## Security Considerations
 
 1. **Data Privacy**
+
    - All input data remains private
    - Only final results are revealed
    - Intermediate values remain secret
 
 2. **Protocol Security**
+
    - Semi2k provides semi-honest security
    - Use MASCOT for malicious security if needed
    - Ensure proper network security (TLS)
@@ -266,24 +270,24 @@ console.log('Secure linear regression:', regression);
 ## Testing
 
 ```typescript
-describe('Secure Analytics', () => {
+describe("Secure Analytics", () => {
   let adapter: JIFFAdapter;
 
   beforeEach(() => {
     adapter = new JIFFAdapter({
       partyId: 0,
       numParties: 3,
-      protocol: MPCProtocol.SEMI2K
+      protocol: MPCProtocol.SEMI2K,
     });
   });
 
-  it('should calculate mean securely', async () => {
+  it("should calculate mean securely", async () => {
     const values = [1, 2, 3, 4, 5];
     const mean = await calculateSecureMean(values);
     expect(mean).toBe(3);
   });
 
-  it('should calculate correlation securely', async () => {
+  it("should calculate correlation securely", async () => {
     const x = [1, 2, 3, 4, 5];
     const y = [2, 4, 6, 8, 10];
     const correlation = await calculateSecureCorrelation(x, y);

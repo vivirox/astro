@@ -1,6 +1,7 @@
 # Monitoring Guide
 
 ## Table of Contents
+
 1. [Overview](#overview)
 2. [Metrics Reference](#metrics-reference)
 3. [Log Analysis](#log-analysis)
@@ -11,6 +12,7 @@
 ## Overview
 
 Our monitoring stack consists of:
+
 - CloudWatch for metrics and logs
 - OpenSearch for log aggregation and analysis
 - Grafana for visualization
@@ -36,11 +38,13 @@ graph TD
 ### Application Metrics
 
 1. Request Metrics
+
    - `request_count`: Total number of requests
    - `request_latency`: P95 response time
    - `error_rate`: Percentage of 5xx errors
 
 2. Resource Metrics
+
    - `cpu_utilization`: CPU usage percentage
    - `memory_utilization`: Memory usage percentage
    - `disk_usage`: Disk space utilization
@@ -53,12 +57,14 @@ graph TD
 ### Infrastructure Metrics
 
 1. ECS Metrics
+
    - `running_tasks`: Number of running tasks
    - `pending_tasks`: Number of pending tasks
    - `service_cpu`: Service CPU utilization
    - `service_memory`: Service memory utilization
 
 2. ALB Metrics
+
    - `healthy_hosts`: Number of healthy targets
    - `request_count`: Number of processed requests
    - `target_response_time`: Target response time
@@ -75,6 +81,7 @@ graph TD
 ### Log Types
 
 1. Application Logs
+
    ```json
    {
      "timestamp": "2024-03-21T10:00:00Z",
@@ -87,6 +94,7 @@ graph TD
    ```
 
 2. Access Logs
+
    ```json
    {
      "timestamp": "2024-03-21T10:00:00Z",
@@ -112,6 +120,7 @@ graph TD
 ### OpenSearch Queries
 
 1. Error Analysis
+
    ```json
    {
      "query": {
@@ -153,11 +162,13 @@ graph TD
 ### Alert Types
 
 1. Threshold Alerts
+
    - High Error Rate: > 1% errors
    - High Latency: P95 > 1000ms
    - Resource Usage: > 80% CPU/Memory
 
 2. Anomaly Detection
+
    - Unusual traffic patterns
    - Abnormal error rates
    - Resource usage spikes
@@ -170,6 +181,7 @@ graph TD
 ### Alert Configuration
 
 1. SNS Topics
+
    ```bash
    aws sns create-topic --name high-priority-alerts
    aws sns subscribe \
@@ -197,6 +209,7 @@ graph TD
 ### Application Dashboard
 
 1. Key Metrics
+
    - Request volume
    - Error rates
    - Response times
@@ -211,6 +224,7 @@ graph TD
 ### Infrastructure Dashboard
 
 1. Service Health
+
    - ECS task status
    - ALB health checks
    - Database connections
@@ -225,6 +239,7 @@ graph TD
 ### Business Dashboard
 
 1. User Metrics
+
    - Active users
    - Session duration
    - User actions
@@ -241,6 +256,7 @@ graph TD
 ### Metric Collection
 
 1. Naming Convention
+
    - Use consistent prefixes
    - Include service name
    - Add environment tag
@@ -255,6 +271,7 @@ graph TD
 ### Log Management
 
 1. Log Levels
+
    - ERROR: System errors
    - WARN: Potential issues
    - INFO: Normal operations
@@ -269,6 +286,7 @@ graph TD
 ### Alert Management
 
 1. Alert Severity
+
    - P1: Critical system issues
    - P2: Service degradation
    - P3: Warning conditions
@@ -283,6 +301,7 @@ graph TD
 ### Dashboard Organization
 
 1. Layout
+
    - Group related metrics
    - Use consistent time ranges
    - Add descriptions
@@ -292,4 +311,4 @@ graph TD
    - Set up user roles
    - Configure permissions
    - Enable SSO
-   - Audit access logs 
+   - Audit access logs

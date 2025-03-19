@@ -50,10 +50,10 @@ Choose the appropriate protocol based on your security and performance requireme
 ## Performance Comparison
 
 | Protocol | Security Model | Preprocessing | Online Phase | Memory Usage |
-|----------|---------------|---------------|--------------|--------------|
-| MASCOT   | Malicious     | Slow          | Moderate     | High         |
-| SPDZ2k   | Malicious     | Moderate      | Fast         | Moderate     |
-| Semi2k   | Semi-honest   | Fast          | Very Fast    | Low          |
+| -------- | -------------- | ------------- | ------------ | ------------ |
+| MASCOT   | Malicious      | Slow          | Moderate     | High         |
+| SPDZ2k   | Malicious      | Moderate      | Fast         | Moderate     |
+| Semi2k   | Semi-honest    | Fast          | Very Fast    | Low          |
 
 ## Security Considerations
 
@@ -102,16 +102,19 @@ Choose the appropriate protocol based on your security and performance requireme
 ## Best Practices
 
 1. **Protocol Selection**
+
    - Choose based on security requirements first
    - Consider performance only after security needs are met
    - Test with realistic data volumes
 
 2. **Network Configuration**
+
    - Use secure channels (TLS 1.3)
    - Configure proper timeouts
    - Handle network failures gracefully
 
 3. **Error Handling**
+
    - Implement proper error recovery
    - Log security-relevant events
    - Monitor protocol execution

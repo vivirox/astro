@@ -30,12 +30,12 @@ Key features include:
 The `createAIService` function creates an AI service with the specified provider and options. It automatically applies error handling and performance optimization wrappers.
 
 ```typescript
-import { createAIService } from '../lib/ai';
+import { createAIService } from "../lib/ai";
 
 const aiService = createAIService({
-  provider: 'openai', // or 'anthropic'
+  provider: "openai", // or 'anthropic'
   enableErrorHandling: true,
-  enablePerformanceOptimization: true
+  enablePerformanceOptimization: true,
 });
 ```
 
@@ -44,12 +44,14 @@ const aiService = createAIService({
 The `SentimentAnalysisService` analyzes the sentiment of text, providing a score and explanation.
 
 ```typescript
-import { SentimentAnalysisService, createAIService } from '../lib/ai';
+import { SentimentAnalysisService, createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 const sentimentService = new SentimentAnalysisService({ aiService });
 
-const result = await sentimentService.analyzeSentiment('I am feeling great today!');
+const result = await sentimentService.analyzeSentiment(
+  "I am feeling great today!",
+);
 // { sentiment: 'positive', score: 0.85, explanation: '...', model: '...', processingTime: 123 }
 ```
 
@@ -58,12 +60,14 @@ const result = await sentimentService.analyzeSentiment('I am feeling great today
 The `CrisisDetectionService` detects potential crisis situations in text, providing a risk level and explanation.
 
 ```typescript
-import { CrisisDetectionService, createAIService } from '../lib/ai';
+import { CrisisDetectionService, createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 const crisisService = new CrisisDetectionService({ aiService });
 
-const result = await crisisService.detectCrisis('I am feeling really down lately.');
+const result = await crisisService.detectCrisis(
+  "I am feeling really down lately.",
+);
 // { is_crisis: true, risk_level: 'low', crisis_type: 'depression', confidence: 0.65, ... }
 ```
 
@@ -72,13 +76,13 @@ const result = await crisisService.detectCrisis('I am feeling really down lately
 The `ResponseGenerationService` generates responses to user messages, with support for streaming.
 
 ```typescript
-import { ResponseGenerationService, createAIService } from '../lib/ai';
+import { ResponseGenerationService, createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 const responseService = new ResponseGenerationService({ aiService });
 
 const result = await responseService.generateResponse([
-  { role: 'user', content: 'Hello, how are you?' }
+  { role: "user", content: "Hello, how are you?" },
 ]);
 // { response: 'I am doing well, thank you!', model: '...', processingTime: 123 }
 ```
@@ -88,7 +92,7 @@ const result = await responseService.generateResponse([
 The `InterventionAnalysisService` analyzes the effectiveness of therapeutic interventions.
 
 ```typescript
-import { InterventionAnalysisService, createAIService } from '../lib/ai';
+import { InterventionAnalysisService, createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 const interventionService = new InterventionAnalysisService({ aiService });
@@ -96,7 +100,7 @@ const interventionService = new InterventionAnalysisService({ aiService });
 const result = await interventionService.analyzeIntervention(
   conversation,
   interventionMessage,
-  userResponse
+  userResponse,
 );
 // { effectiveness_score: 8, user_receptiveness: 'high', emotional_impact: 'positive', ... }
 ```
@@ -110,12 +114,12 @@ The AI module includes a comprehensive error handling system that standardizes e
 The `AIError` class is a custom error class for AI-related errors. It includes a code, status code, context, and original error.
 
 ```typescript
-import { AIError, AIErrorCodes } from '../lib/ai';
+import { AIError, AIErrorCodes } from "../lib/ai";
 
-throw new AIError('The AI service is currently unavailable', {
+throw new AIError("The AI service is currently unavailable", {
   code: AIErrorCodes.SERVICE_UNAVAILABLE,
   statusCode: 503,
-  context: { model: 'gpt-4o' }
+  context: { model: "gpt-4o" },
 });
 ```
 
@@ -124,12 +128,12 @@ throw new AIError('The AI service is currently unavailable', {
 The module includes utilities for handling errors from AI services and transforming them into standardized AIErrors.
 
 ```typescript
-import { handleAIServiceError, AIErrorCodes } from '../lib/ai';
+import { handleAIServiceError, AIErrorCodes } from "../lib/ai";
 
 try {
   // Call AI service
 } catch (error) {
-  const aiError = handleAIServiceError(error, { model: 'gpt-4o' });
+  const aiError = handleAIServiceError(error, { model: "gpt-4o" });
   console.error(`AI Error: ${aiError.message} (${aiError.code})`);
 }
 ```
@@ -139,7 +143,7 @@ try {
 The module includes a utility for handling errors in API routes and returning appropriate responses.
 
 ```typescript
-import { handleApiError } from '../lib/ai';
+import { handleApiError } from "../lib/ai";
 
 try {
   // API route logic
@@ -157,13 +161,13 @@ The AI module includes utilities for optimizing the performance of AI services, 
 The `createOptimizedAIService` function creates a performance-optimized AI service wrapper.
 
 ```typescript
-import { createOptimizedAIService } from '../lib/ai';
+import { createOptimizedAIService } from "../lib/ai";
 
 const optimizedService = createOptimizedAIService(aiService, {
   logToConsole: true,
   createAuditLogs: true,
   slowRequestThreshold: 3000,
-  highTokenUsageThreshold: 1000
+  highTokenUsageThreshold: 1000,
 });
 ```
 
@@ -172,7 +176,7 @@ const optimizedService = createOptimizedAIService(aiService, {
 The module includes utilities for estimating token usage and truncating messages to fit within token limits.
 
 ```typescript
-import { truncateMessages, estimateMessagesTokenCount } from '../lib/ai';
+import { truncateMessages, estimateMessagesTokenCount } from "../lib/ai";
 
 const tokenCount = estimateMessagesTokenCount(messages);
 console.log(`Estimated token count: ${tokenCount}`);
@@ -185,13 +189,13 @@ const truncatedMessages = truncateMessages(messages, 4000, 1000);
 ### Basic Usage
 
 ```typescript
-import { createAIService } from '../lib/ai';
+import { createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 
 const completion = await aiService.createChatCompletion(
-  [{ role: 'user', content: 'Hello, how are you?' }],
-  { model: 'gpt-4o' }
+  [{ role: "user", content: "Hello, how are you?" }],
+  { model: "gpt-4o" },
 );
 
 console.log(completion.content);
@@ -200,13 +204,13 @@ console.log(completion.content);
 ### Streaming Response
 
 ```typescript
-import { createAIService } from '../lib/ai';
+import { createAIService } from "../lib/ai";
 
 const aiService = createAIService();
 
 const { stream } = await aiService.createStreamingChatCompletion(
-  [{ role: 'user', content: 'Hello, how are you?' }],
-  { model: 'gpt-4o' }
+  [{ role: "user", content: "Hello, how are you?" }],
+  { model: "gpt-4o" },
 );
 
 for await (const chunk of stream) {
@@ -217,20 +221,20 @@ for await (const chunk of stream) {
 ### Error Handling
 
 ```typescript
-import { createAIService, AIError, AIErrorCodes } from '../lib/ai';
+import { createAIService, AIError, AIErrorCodes } from "../lib/ai";
 
 const aiService = createAIService();
 
 try {
   const completion = await aiService.createChatCompletion(
-    [{ role: 'user', content: 'Hello, how are you?' }],
-    { model: 'invalid-model' }
+    [{ role: "user", content: "Hello, how are you?" }],
+    { model: "invalid-model" },
   );
 } catch (error) {
   if (error instanceof AIError && error.code === AIErrorCodes.INVALID_MODEL) {
-    console.error('Invalid model specified');
+    console.error("Invalid model specified");
   } else {
-    console.error('An unexpected error occurred:', error);
+    console.error("An unexpected error occurred:", error);
   }
 }
 ```
@@ -238,21 +242,22 @@ try {
 ### Retry with Exponential Backoff
 
 ```typescript
-import { createAIService, withRetry } from '../lib/ai';
+import { createAIService, withRetry } from "../lib/ai";
 
 const aiService = createAIService();
 
 const completion = await withRetry(
-  () => aiService.createChatCompletion(
-    [{ role: 'user', content: 'Hello, how are you?' }],
-    { model: 'gpt-4o' }
-  ),
+  () =>
+    aiService.createChatCompletion(
+      [{ role: "user", content: "Hello, how are you?" }],
+      { model: "gpt-4o" },
+    ),
   {
     maxRetries: 3,
     initialDelay: 500,
     maxDelay: 10000,
-    factor: 2
-  }
+    factor: 2,
+  },
 );
 ```
 
@@ -264,14 +269,14 @@ const completion = await withRetry(
 interface AIService {
   createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion>;
-  
+
   createStreamingChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AIStreamingCompletion>;
-  
+
   getModelInfo(model: string): ModelInfo;
 }
 ```
@@ -280,7 +285,7 @@ interface AIService {
 
 ```typescript
 interface AIMessage {
-  role: 'system' | 'user' | 'assistant';
+  role: "system" | "user" | "assistant";
   content: string;
 }
 ```
@@ -325,7 +330,7 @@ interface AIServiceOptions {
 
 ```typescript
 interface SentimentAnalysisResult {
-  sentiment: 'positive' | 'negative' | 'neutral';
+  sentiment: "positive" | "negative" | "neutral";
   score: number;
   explanation: string;
   model: string;
@@ -338,7 +343,7 @@ interface SentimentAnalysisResult {
 ```typescript
 interface CrisisDetectionResult {
   is_crisis: boolean;
-  risk_level: 'high' | 'medium' | 'low' | 'none';
+  risk_level: "high" | "medium" | "low" | "none";
   crisis_type: string | null;
   confidence: number;
   reasoning: string;
@@ -367,8 +372,8 @@ interface ResponseGenerationResult {
 ```typescript
 interface InterventionEffectivenessResult {
   effectiveness_score: number;
-  user_receptiveness: 'high' | 'medium' | 'low';
-  emotional_impact: 'positive' | 'neutral' | 'negative';
+  user_receptiveness: "high" | "medium" | "low";
+  emotional_impact: "positive" | "neutral" | "negative";
   key_insights: string[];
   improvement_suggestions: string[];
   model: string;
@@ -393,32 +398,32 @@ This library provides a comprehensive set of tools for working with AI services 
 ### Basic Usage
 
 ```typescript
-import { createAIService } from './lib/ai/factory';
+import { createAIService } from "./lib/ai/factory";
 
 // Create a basic AI service
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   // Other provider-specific options
 });
 
 // Use the service
 const response = await aiService.complete({
-  model: 'gpt-4o',
+  model: "gpt-4o",
   messages: [
-    { role: 'system', content: 'You are a helpful assistant.' },
-    { role: 'user', content: 'Hello, how are you?' }
-  ]
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "Hello, how are you?" },
+  ],
 });
 ```
 
 ### With Advanced Performance Optimization
 
 ```typescript
-import { createAIService } from './lib/ai/factory';
+import { createAIService } from "./lib/ai/factory";
 
 // Create an AI service with advanced performance optimization
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   enableAdvancedOptimization: true,
   advancedPerformanceOptions: {
     enableCache: true,
@@ -431,9 +436,9 @@ const aiService = createAIService({
     batchWindow: 50, // ms
     maxBatchSize: 5,
     enableFallback: true,
-    fallbackModels: ['gpt-3.5-turbo'],
-    enableDetailedTracking: true
-  }
+    fallbackModels: ["gpt-3.5-turbo"],
+    enableDetailedTracking: true,
+  },
 });
 ```
 
@@ -446,12 +451,12 @@ The caching system stores responses to identical requests to reduce latency and 
 ```typescript
 // Configure caching
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   enableAdvancedOptimization: true,
   advancedPerformanceOptions: {
     enableCache: true,
-    cacheTTL: 3600 // 1 hour in seconds
-  }
+    cacheTTL: 3600, // 1 hour in seconds
+  },
 });
 ```
 
@@ -462,12 +467,12 @@ Rate limiting prevents excessive API usage by limiting the number of requests pe
 ```typescript
 // Configure rate limiting
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   enableAdvancedOptimization: true,
   advancedPerformanceOptions: {
     enableRateLimit: true,
-    maxRequestsPerMinute: 100
-  }
+    maxRequestsPerMinute: 100,
+  },
 });
 ```
 
@@ -478,12 +483,12 @@ Token optimization reduces token usage by intelligently truncating conversation 
 ```typescript
 // Configure token optimization
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   enableAdvancedOptimization: true,
   advancedPerformanceOptions: {
     enableTokenOptimization: true,
-    maxContextLength: 4000
-  }
+    maxContextLength: 4000,
+  },
 });
 ```
 
@@ -494,13 +499,13 @@ Request batching combines multiple requests into batches to reduce overhead and 
 ```typescript
 // Configure request batching
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   enableAdvancedOptimization: true,
   advancedPerformanceOptions: {
     enableBatching: true,
     batchWindow: 50, // ms
-    maxBatchSize: 5
-  }
+    maxBatchSize: 5,
+  },
 });
 ```
 
@@ -511,12 +516,12 @@ Fallback models provide reliability by automatically switching to alternative mo
 ```typescript
 // Configure fallback models
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   enableAdvancedOptimization: true,
   advancedPerformanceOptions: {
     enableFallback: true,
-    fallbackModels: ['gpt-3.5-turbo', 'text-davinci-003']
-  }
+    fallbackModels: ["gpt-3.5-turbo", "text-davinci-003"],
+  },
 });
 ```
 
@@ -527,11 +532,11 @@ Performance tracking collects detailed metrics on AI service usage, including la
 ```typescript
 // Configure performance tracking
 const aiService = createAIService({
-  provider: 'openai',
+  provider: "openai",
   enableAdvancedOptimization: true,
   advancedPerformanceOptions: {
-    enableDetailedTracking: true
-  }
+    enableDetailedTracking: true,
+  },
 });
 ```
 
@@ -552,19 +557,19 @@ Access the dashboard at `/admin/ai/performance`.
 
 Performance metrics are stored in the `ai_performance_metrics` table with the following schema:
 
-| Column         | Type      | Description                           |
-|----------------|-----------|---------------------------------------|
-| id             | uuid      | Primary key                           |
-| model          | text      | AI model name                         |
-| latency        | integer   | Request latency in ms                 |
-| input_tokens   | integer   | Number of input tokens                |
-| output_tokens  | integer   | Number of output tokens               |
-| total_tokens   | integer   | Total tokens used                     |
-| success        | boolean   | Whether the request was successful    |
-| error_code     | text      | Error code if request failed          |
-| cached         | boolean   | Whether the response was cached       |
-| optimized      | boolean   | Whether token optimization was applied|
-| user_id        | uuid      | User ID                               |
-| session_id     | text      | Session ID                            |
-| request_id     | uuid      | Unique request ID                     |
-| timestamp      | timestamp | Request timestamp                     | 
+| Column        | Type      | Description                            |
+| ------------- | --------- | -------------------------------------- |
+| id            | uuid      | Primary key                            |
+| model         | text      | AI model name                          |
+| latency       | integer   | Request latency in ms                  |
+| input_tokens  | integer   | Number of input tokens                 |
+| output_tokens | integer   | Number of output tokens                |
+| total_tokens  | integer   | Total tokens used                      |
+| success       | boolean   | Whether the request was successful     |
+| error_code    | text      | Error code if request failed           |
+| cached        | boolean   | Whether the response was cached        |
+| optimized     | boolean   | Whether token optimization was applied |
+| user_id       | uuid      | User ID                                |
+| session_id    | text      | Session ID                             |
+| request_id    | uuid      | Unique request ID                      |
+| timestamp     | timestamp | Request timestamp                      |

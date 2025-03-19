@@ -34,10 +34,10 @@ To use this approach, ensure the `LitlyxAnalytics` component is included in your
 As an alternative, you can use the script tag approach by including the `LitlyxScript` component in your App:
 
 ```jsx
-import { LitlyxScript } from '@/components/LitlyxScript';
+import { LitlyxScript } from "@/components/LitlyxScript";
 
 // In your component
-<LitlyxScript projectId={LITLYX_PROJECT_ID} />
+<LitlyxScript projectId={LITLYX_PROJECT_ID} />;
 ```
 
 For self-hosted Litlyx instances, you can provide additional parameters:
@@ -62,16 +62,16 @@ Page views are automatically tracked when using the `Layout` component with Reac
 Use the `useAnalytics` hook to track custom events:
 
 ```jsx
-import { useAnalytics } from '@/hooks/useAnalytics';
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 function MyComponent() {
   const { trackEvent, trackButtonClick, trackFormSubmit } = useAnalytics();
 
   const handleButtonClick = () => {
     // Track a button click
-    trackButtonClick('submit-button', {
-      location: 'homepage',
-      action: 'submit-form'
+    trackButtonClick("submit-button", {
+      location: "homepage",
+      action: "submit-form",
     });
 
     // Do something...
@@ -79,9 +79,9 @@ function MyComponent() {
 
   const handleFormSubmit = (data) => {
     // Track a form submission
-    trackFormSubmit('contact-form', {
-      formType: 'contact',
-      fields: Object.keys(data).length
+    trackFormSubmit("contact-form", {
+      formType: "contact",
+      fields: Object.keys(data).length,
     });
 
     // Process form...
@@ -89,20 +89,16 @@ function MyComponent() {
 
   const handleCustomAction = () => {
     // Track a custom event
-    trackEvent('feature_used', {
-      featureName: 'image-upload',
+    trackEvent("feature_used", {
+      featureName: "image-upload",
       fileSize: 1024,
-      fileType: 'image/png'
+      fileType: "image/png",
     });
 
     // Do something...
   };
 
-  return (
-    <div>
-      {/* Your component JSX */}
-    </div>
-  );
+  return <div>{/* Your component JSX */}</div>;
 }
 ```
 
@@ -112,12 +108,12 @@ If you're using the script tag approach, you can also use the Litlyx API directl
 
 ```javascript
 // Track a custom event
-window.Lit.event('click_on_buy_item', {
+window.Lit.event("click_on_buy_item", {
   metadata: {
-    'product-name': 'Product Name',
-    'price': 19.99,
-    'currency': 'USD'
-  }
+    "product-name": "Product Name",
+    price: 19.99,
+    currency: "USD",
+  },
 });
 ```
 
@@ -154,14 +150,15 @@ If you prefer to self-host Litlyx, follow the instructions in the [Litlyx docume
 To connect to your self-hosted instance:
 
 1. With the npm package approach:
+
    ```typescript
    // Add this code to configure the Litlyx instance
-   import { Lit } from 'litlyx-js';
+   import { Lit } from "litlyx-js";
 
-   Lit.setHost('your-host-name');
-   Lit.setPort('your-port');
+   Lit.setHost("your-host-name");
+   Lit.setPort("your-port");
    Lit.setSecure(true); // For HTTPS
-   Lit.init('your-project-id');
+   Lit.init("your-project-id");
    ```
 
 2. With the script tag approach, use the additional props:

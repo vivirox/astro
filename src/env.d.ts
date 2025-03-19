@@ -1,5 +1,5 @@
 /// <reference types="astro/client" />
-import type { Session } from './lib/auth/types';
+import type { Session } from "./lib/auth/types";
 
 interface ImportMetaEnv {
   readonly SUPABASE_URL: string;
@@ -19,4 +19,4 @@ declare namespace App {
 
 declare namespace Astro {
   interface Locals extends App.Locals {}
-} 
+}

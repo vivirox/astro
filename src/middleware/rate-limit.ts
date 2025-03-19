@@ -1,17 +1,18 @@
-import { defineMiddleware } from 'astro:middleware';
-import type { MiddlewareResponseHandler } from 'astro';
-import { getSession } from '../lib/auth';
+import { defineMiddleware } from "astro:middleware";
+import type { MiddlewareResponseHandler } from "astro";
+import { getSession } from "../lib/auth";
 
 // Simple in-memory rate limiter implementation
 // In production, this should be replaced with a Redis-based solution
 class RateLimiter {
-  private storage: Map<string, { count: number, resetTime: number }> = new Map();
+  private storage: Map<string, { count: number; resetTime: number }> =
+    new Map();
   private readonly defaultLimit: number;
   private readonly windowMs: number;
   private readonly userLimits: Record<string, number> = {
-    admin: 60,    // 60 requests per minute for admins
-    user: 30,     // 30 requests per minute for regular users
-    anonymous: 15 // 15 requests per minute for unauthenticated users
+    admin: 60, // 60 requests per minute for admins
+    user: 30, // 30 requests per minute for regular users
+    anonymous: 15, // 15 requests per minute for unauthenticated users
   };
 
   constructor(defaultLimit = 30, windowMs = 60 * 1000) {
@@ -22,7 +23,10 @@ class RateLimiter {
   /**
    * Check if a request from the specified identifier is rate limited
    */
-  public check(identifier: string, role = 'anonymous'): { allowed: boolean; limit: number; remaining: number; reset: number } {
+  public check(
+    identifier: string,
+    role = "anonymous",
+  ): { allowed: boolean; limit: number; remaining: number; reset: number } {
     const now = Date.now();
     const entry = this.storage.get(identifier);
     const limit = this.userLimits[role] || this.defaultLimit;
@@ -43,7 +47,12 @@ class RateLimiter {
     entry.count += 1;
     this.storage.set(identifier, entry);
 
-    return { allowed: true, limit, remaining: limit - entry.count, reset: entry.resetTime };
+    return {
+      allowed: true,
+      limit,
+      remaining: limit - entry.count,
+      reset: entry.resetTime,
+    };
   }
 
   /**
@@ -71,56 +80,65 @@ setInterval(() => {
  * Rate limiting middleware
  * Restricts the number of requests a client can make in a given time window
  */
-export const rateLimitMiddleware = defineMiddleware(async ({ request, cookies }, next) => {
-  // Only apply rate limiting to AI API routes
-  if (!request.url.includes('/api/ai/')) {
-    return next();
-  }
-
-  // Get client identifier - prefer user ID or IP address
-  let identifier = request.headers.get('x-forwarded-for') || 
-                  request.headers.get('cf-connecting-ip') ||
-                  'anonymous';
-                  
-  let role = 'anonymous';
-  
-  // Try to get user from session
-  try {
-    const session = await getSession(cookies);
-    if (session?.user?.id) {
-      identifier = session.user.id;
-      role = session.user.role || 'user';
+export const rateLimitMiddleware = defineMiddleware(
+  async ({ request, cookies }, next) => {
+    // Only apply rate limiting to AI API routes
+    if (!request.url.includes("/api/ai/")) {
+      return next();
     }
-  } catch (error) {
-    console.warn('Error getting session for rate limiting:', error);
-  }
 
-  // Check rate limit
-  const { allowed, limit, remaining, reset } = rateLimiter.check(identifier, role);
+    // Get client identifier - prefer user ID or IP address
+    let identifier =
+      request.headers.get("x-forwarded-for") ||
+      request.headers.get("cf-connecting-ip") ||
+      "anonymous";
 
-  if (!allowed) {
-    return new Response(JSON.stringify({
-      error: 'Too Many Requests',
-      message: 'Rate limit exceeded. Please try again later.'
-    }), {
-      status: 429,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-RateLimit-Limit': limit.toString(),
-        'X-RateLimit-Remaining': '0',
-        'X-RateLimit-Reset': reset.toString(),
-        'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString()
+    let role = "anonymous";
+
+    // Try to get user from session
+    try {
+      const session = await getSession(cookies);
+      if (session?.user?.id) {
+        identifier = session.user.id;
+        role = session.user.role || "user";
       }
-    });
-  }
+    } catch (error) {
+      console.warn("Error getting session for rate limiting:", error);
+    }
 
-  // Process the request
-  const response = await next();
+    // Check rate limit
+    const { allowed, limit, remaining, reset } = rateLimiter.check(
+      identifier,
+      role,
+    );
 
-  // Add rate limit headers to the response
-  response.headers.set('X-RateLimit-Limit', limit.toString());
-  response.headers.set('X-RateLimit-Remaining', remaining.toString());
-  response.headers.set('X-RateLimit-Reset', reset.toString());
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({
+          error: "Too Many Requests",
+          message: "Rate limit exceeded. Please try again later.",
+        }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "X-RateLimit-Limit": limit.toString(),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": reset.toString(),
+            "Retry-After": Math.ceil((reset - Date.now()) / 1000).toString(),
+          },
+        },
+      );
+    }
 
-  return response;
-}) as MiddlewareResponseHandler; 
+    // Process the request
+    const response = await next();
+
+    // Add rate limit headers to the response
+    response.headers.set("X-RateLimit-Limit", limit.toString());
+    response.headers.set("X-RateLimit-Remaining", remaining.toString());
+    response.headers.set("X-RateLimit-Reset", reset.toString());
+
+    return response;
+  },
+) as MiddlewareResponseHandler;

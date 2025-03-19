@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { zkChat } from '../../lib/chat';
-import type { ChatMessageWithProof } from '../../lib/chat/zkChat';
+import React, { useState, useEffect } from "react";
+import { zkChat } from "../../lib/chat";
+import type { ChatMessageWithProof } from "../../lib/chat/zkChat";
 
 interface ZKChatStatusProps {
   message: ChatMessageWithProof;
@@ -11,7 +11,10 @@ interface ZKChatStatusProps {
  * Component to display the ZK verification status of a chat message
  * Enhanced with accessibility features
  */
-export default function ZKChatStatus({ message, className = '' }: ZKChatStatusProps) {
+export default function ZKChatStatus({
+  message,
+  className = "",
+}: ZKChatStatusProps) {
   const [verificationStatus, setVerificationStatus] = useState<{
     isValid: boolean;
     isVerifying: boolean;
@@ -28,7 +31,7 @@ export default function ZKChatStatus({ message, className = '' }: ZKChatStatusPr
       try {
         // Verify the message proof
         const result = await zkChat.verifyMessageProof(message);
-        
+
         if (isMounted) {
           setVerificationStatus({
             isValid: result.isValid,
@@ -40,7 +43,8 @@ export default function ZKChatStatus({ message, className = '' }: ZKChatStatusPr
           setVerificationStatus({
             isValid: false,
             isVerifying: false,
-            error: error instanceof Error ? error.message : 'Verification failed',
+            error:
+              error instanceof Error ? error.message : "Verification failed",
           });
         }
       }
@@ -57,21 +61,21 @@ export default function ZKChatStatus({ message, className = '' }: ZKChatStatusPr
   const getAriaAttributes = () => {
     if (verificationStatus.isVerifying) {
       return {
-        role: 'status',
-        'aria-live': 'polite' as React.AriaAttributes['aria-live'],
-        'aria-label': 'Verifying message security'
+        role: "status",
+        "aria-live": "polite" as React.AriaAttributes["aria-live"],
+        "aria-label": "Verifying message security",
       };
     } else if (verificationStatus.isValid) {
       return {
-        role: 'status',
-        'aria-live': 'polite' as React.AriaAttributes['aria-live'],
-        'aria-label': `Message verified at ${new Date(message.proof.timestamp).toLocaleTimeString()}`
+        role: "status",
+        "aria-live": "polite" as React.AriaAttributes["aria-live"],
+        "aria-label": `Message verified at ${new Date(message.proof.timestamp).toLocaleTimeString()}`,
       };
     } else {
       return {
-        role: 'alert',
-        'aria-live': 'assertive' as React.AriaAttributes['aria-live'],
-        'aria-label': `Message verification failed: ${verificationStatus.error || 'Unknown error'}`
+        role: "alert",
+        "aria-live": "assertive" as React.AriaAttributes["aria-live"],
+        "aria-label": `Message verification failed: ${verificationStatus.error || "Unknown error"}`,
       };
     }
   };
@@ -79,18 +83,19 @@ export default function ZKChatStatus({ message, className = '' }: ZKChatStatusPr
   const ariaAttributes = getAriaAttributes();
 
   return (
-    <div 
-      className={`zk-chat-status ${className}`}
-      {...ariaAttributes}
-    >
+    <div className={`zk-chat-status ${className}`} {...ariaAttributes}>
       {verificationStatus.isVerifying ? (
         <div className="zk-status-verifying flex items-center text-gray-500 dark:text-gray-400">
-          <span className="zk-status-icon mr-1" aria-hidden="true">⏳</span>
+          <span className="zk-status-icon mr-1" aria-hidden="true">
+            ⏳
+          </span>
           <span className="zk-status-text">Verifying...</span>
         </div>
       ) : verificationStatus.isValid ? (
         <div className="zk-status-valid flex items-center text-green-600 dark:text-green-400">
-          <span className="zk-status-icon mr-1" aria-hidden="true">✅</span>
+          <span className="zk-status-icon mr-1" aria-hidden="true">
+            ✅
+          </span>
           <span className="zk-status-text">Verified</span>
           <span className="zk-status-timestamp ml-2">
             {new Date(message.proof.timestamp).toLocaleTimeString()}
@@ -98,12 +103,17 @@ export default function ZKChatStatus({ message, className = '' }: ZKChatStatusPr
         </div>
       ) : (
         <div className="zk-status-invalid flex items-center text-red-600 dark:text-red-400">
-          <span className="zk-status-icon mr-1" aria-hidden="true">❌</span>
+          <span className="zk-status-icon mr-1" aria-hidden="true">
+            ❌
+          </span>
           <span className="zk-status-text">Invalid</span>
           {verificationStatus.error && (
-            <span className="zk-status-error ml-2" title={verificationStatus.error}>
-              {verificationStatus.error.length > 30 
-                ? `${verificationStatus.error.substring(0, 30)}...` 
+            <span
+              className="zk-status-error ml-2"
+              title={verificationStatus.error}
+            >
+              {verificationStatus.error.length > 30
+                ? `${verificationStatus.error.substring(0, 30)}...`
                 : verificationStatus.error}
             </span>
           )}
@@ -111,4 +121,4 @@ export default function ZKChatStatus({ message, className = '' }: ZKChatStatusPr
       )}
     </div>
   );
-} 
+}

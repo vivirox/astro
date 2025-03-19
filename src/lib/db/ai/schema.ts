@@ -1,12 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '../../../types/supabase';
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "../../../types/supabase";
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables');
+  throw new Error("Missing Supabase environment variables");
 }
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
@@ -16,11 +16,11 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
  * These are used for type checking and documentation
  */
 export const AI_TABLES = {
-  SENTIMENT_ANALYSIS: 'ai_sentiment_analysis',
-  CRISIS_DETECTION: 'ai_crisis_detection',
-  RESPONSE_GENERATION: 'ai_response_generation',
-  INTERVENTION_ANALYSIS: 'ai_intervention_analysis',
-  USAGE_STATS: 'ai_usage_stats'
+  SENTIMENT_ANALYSIS: "ai_sentiment_analysis",
+  CRISIS_DETECTION: "ai_crisis_detection",
+  RESPONSE_GENERATION: "ai_response_generation",
+  INTERVENTION_ANALYSIS: "ai_intervention_analysis",
+  USAGE_STATS: "ai_usage_stats",
 };
 
 /**
@@ -214,19 +214,19 @@ CREATE INDEX IF NOT EXISTS usage_stats_user_id_period_date_idx ON ${AI_TABLES.US
  */
 export async function initializeAITables() {
   try {
-    const { error } = await (supabase as any).rpc('execute_sql', {
-      sql: createAITablesSQL
+    const { error } = await (supabase as any).rpc("execute_sql", {
+      sql: createAITablesSQL,
     });
-    
+
     if (error) {
-      console.error('Error initializing AI tables:', error);
+      console.error("Error initializing AI tables:", error);
       throw error;
     }
-    
-    console.log('AI tables initialized successfully');
+
+    console.log("AI tables initialized successfully");
     return true;
   } catch (error) {
-    console.error('Failed to initialize AI tables:', error);
+    console.error("Failed to initialize AI tables:", error);
     throw error;
   }
-} 
+}

@@ -3,12 +3,18 @@
 // This file is only kept temporarily for backward compatibility
 
 // Re-export from ai-types.ts to maintain compatibility
-export * from './ai-types';
+export * from "./ai-types";
 
 /**
  * AI Provider types
  */
-export type AIProvider = 'openai' | 'anthropic' | 'gemini' | 'azure' | 'deepseek' | 'local';
+export type AIProvider =
+  | "openai"
+  | "anthropic"
+  | "gemini"
+  | "azure"
+  | "deepseek"
+  | "local";
 
 /**
  * AI Model types
@@ -16,8 +22,14 @@ export type AIProvider = 'openai' | 'anthropic' | 'gemini' | 'azure' | 'deepseek
 export interface AIModel {
   id: string;
   name: string;
-  provider: 'openai' | 'anthropic' | 'google' | 'azure' | 'deepseek' | 'local';
-  capabilities: ('chat' | 'sentiment' | 'crisis' | 'response' | 'intervention')[];
+  provider: "openai" | "anthropic" | "google" | "azure" | "deepseek" | "local";
+  capabilities: (
+    | "chat"
+    | "sentiment"
+    | "crisis"
+    | "response"
+    | "intervention"
+  )[];
   contextWindow: number;
   maxTokens: number;
   costPer1KTokens?: {
@@ -26,19 +38,19 @@ export interface AIModel {
   };
 }
 
-export type ModelCapability = 
-  | 'chat'
-  | 'completion'
-  | 'embedding'
-  | 'function-calling'
-  | 'vision'
-  | 'streaming';
+export type ModelCapability =
+  | "chat"
+  | "completion"
+  | "embedding"
+  | "function-calling"
+  | "vision"
+  | "streaming";
 
 /**
  * Message types
  */
 export interface AIMessage {
-  role: 'user' | 'assistant' | 'system';
+  role: "user" | "assistant" | "system";
   content: string;
 }
 
@@ -52,19 +64,22 @@ export interface AICompletionRequest {
   max_tokens?: number;
   stream?: boolean;
   functions?: AIFunction[];
-  function_call?: 'auto' | 'none' | { name: string };
+  function_call?: "auto" | "none" | { name: string };
 }
 
 export interface AIFunction {
   name: string;
   description?: string;
   parameters: {
-    type: 'object';
-    properties: Record<string, {
-      type: string;
-      description?: string;
-      enum?: string[];
-    }>;
+    type: "object";
+    properties: Record<
+      string,
+      {
+        type: string;
+        description?: string;
+        enum?: string[];
+      }
+    >;
     required?: string[];
   };
 }
@@ -110,7 +125,13 @@ export interface AIStreamChunk {
  */
 export interface AIError {
   message: string;
-  type: 'rate_limit' | 'invalid_request' | 'authentication' | 'server' | 'timeout' | 'unknown';
+  type:
+    | "rate_limit"
+    | "invalid_request"
+    | "authentication"
+    | "server"
+    | "timeout"
+    | "unknown";
   provider: AIProvider;
   status?: number;
   retryAfter?: number;
@@ -120,9 +141,9 @@ export interface AIError {
  * Sentiment analysis types
  */
 export interface SentimentResult {
-  score: number;        // -1 to 1, where -1 is very negative, 1 is very positive
-  label: 'negative' | 'neutral' | 'positive';
-  confidence: number;   // 0 to 1
+  score: number; // -1 to 1, where -1 is very negative, 1 is very positive
+  label: "negative" | "neutral" | "positive";
+  confidence: number; // 0 to 1
   emotions?: Record<string, number>; // Optional map of emotions to scores (0-1)
 }
 
@@ -131,9 +152,9 @@ export interface SentimentResult {
  */
 export interface CrisisDetectionResult {
   isCrisis: boolean;
-  confidence: number;   // 0 to 1
-  category?: string;    // Optional category of crisis (e.g., "self-harm", "suicide", "abuse")
-  severity?: 'low' | 'medium' | 'high';
+  confidence: number; // 0 to 1
+  category?: string; // Optional category of crisis (e.g., "self-harm", "suicide", "abuse")
+  severity?: "low" | "medium" | "high";
   recommendedAction?: string;
 }
 
@@ -171,8 +192,8 @@ export interface ResponseGenerationResult {
  * Intervention Effectiveness Types
  */
 export interface InterventionEffectivenessResult {
-  score: number;        // 0 to 1, where 0 is ineffective, 1 is very effective
-  confidence: number;   // 0 to 1
+  score: number; // 0 to 1, where 0 is ineffective, 1 is very effective
+  confidence: number; // 0 to 1
   recommendations?: string[];
   areas?: {
     name: string;
@@ -199,7 +220,7 @@ export interface SentimentAnalysisRequest {
 export interface CrisisDetectionRequest {
   model: string;
   text: string;
-  sensitivityLevel?: 'low' | 'medium' | 'high';
+  sensitivityLevel?: "low" | "medium" | "high";
 }
 
 export interface ResponseGenerationRequest {
@@ -215,4 +236,4 @@ export interface InterventionEffectivenessRequest {
   conversation: AIMessage[];
   interventionMessage: string;
   userResponse: string;
-} 
+}

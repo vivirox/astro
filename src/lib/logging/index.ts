@@ -1,12 +1,12 @@
-import { v4 as uuidv4 } from 'uuid';
-import { createAuditLog } from '../audit/log';
+import { v4 as uuidv4 } from "uuid";
+import { createAuditLog } from "../audit/log";
 
 // Log levels
 export enum LogLevel {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error'
+  DEBUG = "debug",
+  INFO = "info",
+  WARN = "warn",
+  ERROR = "error",
 }
 
 // Log entry interface
@@ -32,7 +32,7 @@ const defaultOptions: LoggerOptions = {
   minLevel: LogLevel.INFO,
   console: true,
   audit: true,
-  metadata: {}
+  metadata: {},
 };
 
 /**
@@ -116,8 +116,8 @@ export class Logger {
       ...this.options,
       metadata: {
         ...this.options.metadata,
-        ...additionalMetadata
-      }
+        ...additionalMetadata,
+      },
     });
   }
 
@@ -146,22 +146,28 @@ export class Logger {
    * Log a message at ERROR level
    */
   error(message: string, error?: Error, context?: Record<string, any>): void {
-    const errorContext = error ? {
-      ...context,
-      error: {
-        message: error.message,
-        name: error.name,
-        stack: error.stack
-      }
-    } : context;
-    
+    const errorContext = error
+      ? {
+          ...context,
+          error: {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+          },
+        }
+      : context;
+
     this.log(LogLevel.ERROR, message, errorContext);
   }
 
   /**
    * Log a message
    */
-  private log(level: LogLevel, message: string, context?: Record<string, any>): void {
+  private log(
+    level: LogLevel,
+    message: string,
+    context?: Record<string, any>,
+  ): void {
     // Skip if below minimum level
     if (this.shouldSkip(level)) {
       return;
@@ -169,7 +175,7 @@ export class Logger {
 
     const timestamp = new Date();
     const requestContext = RequestContext.getContext(this.requestId);
-    
+
     const entry: LogEntry = {
       level,
       message,
@@ -179,8 +185,8 @@ export class Logger {
       context: {
         ...this.options.metadata,
         ...requestContext,
-        ...context
-      }
+        ...context,
+      },
     };
 
     // Log to console
@@ -198,8 +204,15 @@ export class Logger {
    * Check if a log level should be skipped
    */
   private shouldSkip(level: LogLevel): boolean {
-    const levels = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
-    const minLevelIndex = levels.indexOf(this.options.minLevel || LogLevel.INFO);
+    const levels = [
+      LogLevel.DEBUG,
+      LogLevel.INFO,
+      LogLevel.WARN,
+      LogLevel.ERROR,
+    ];
+    const minLevelIndex = levels.indexOf(
+      this.options.minLevel || LogLevel.INFO,
+    );
     const currentLevelIndex = levels.indexOf(level);
 
     return currentLevelIndex < minLevelIndex;
@@ -210,13 +223,13 @@ export class Logger {
    */
   private logToConsole(entry: LogEntry): void {
     const { level, message, timestamp, requestId, context } = entry;
-    
+
     const logObject = {
       timestamp: timestamp.toISOString(),
       level,
       requestId,
       message,
-      ...context
+      ...context,
     };
 
     // Use appropriate console method based on level
@@ -247,20 +260,20 @@ export class Logger {
       }
 
       const { userId, context } = entry;
-      
+
       await createAuditLog({
-        userId: userId || 'system',
+        userId: userId || "system",
         action: `log.${entry.level}`,
-        resource: 'application',
+        resource: "application",
         metadata: {
           requestId: entry.requestId,
           message: entry.message,
           timestamp: entry.timestamp.toISOString(),
-          context: context || {}
-        }
+          context: context || {},
+        },
       });
     } catch (error) {
-      console.error('Failed to write to audit log:', error);
+      console.error("Failed to write to audit log:", error);
     }
   }
 
@@ -276,6 +289,9 @@ export class Logger {
 const defaultLogger = new Logger();
 
 // Export a function to get a logger instance
-export function getLogger(requestId?: string, options?: Partial<LoggerOptions>): Logger {
+export function getLogger(
+  requestId?: string,
+  options?: Partial<LoggerOptions>,
+): Logger {
   return requestId ? new Logger(requestId, options) : defaultLogger;
-} 
+}
