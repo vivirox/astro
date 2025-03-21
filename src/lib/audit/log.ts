@@ -1,44 +1,94 @@
-import { createClient } from '@supabase/supabase-js';
+/**
+ * Audit logging system
+ * Provides HIPAA-compliant audit logging
+ */
+
+import { createClient } from '@supabase/supabase-js'
 
 // Define audit log entry type
 export interface AuditLogEntry {
-  userId: string;
-  action: string;
-  resource: string;
-  metadata?: Record<string, any>;
-  timestamp?: Date;
+  userId?: string
+  action: string
+  resource: string
+  resourceId?: string
+  metadata?: Record<string, any>
+  timestamp?: Date
 }
 
 /**
- * Create an audit log entry
- * @param entry The audit log entry to create
+ * Create an audit log entry - function overloads
+ * Function overload signatures
  */
-export async function createAuditLog(entry: AuditLogEntry): Promise<void> {
+export function createAuditLog(entry: AuditLogEntry): Promise<void>
+export function createAuditLog(
+  userId: string,
+  action: string,
+  resource: string,
+  metadata?: Record<string, any>,
+  request?: { headers: { get(name: string): string | null } }
+): Promise<void>
+
+/**
+ * Create an audit log entry - implementation
+ */
+export async function createAuditLog(
+  entryOrUserId: AuditLogEntry | string,
+  action?: string,
+  resource?: string,
+  metadata: Record<string, any> = {},
+  request?: { headers: { get(name: string): string | null } }
+): Promise<void> {
   try {
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-    );
+    )
 
-    // Add timestamp if not provided
-    const timestamp = entry.timestamp || new Date();
+    // Add timestamp
+    const timestamp = new Date()
 
-    // Insert the audit log entry
-    const { error } = await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: entry.userId,
-        action: entry.action,
-        resource: entry.resource,
-        metadata: entry.metadata || {},
-        created_at: timestamp.toISOString()
-      });
+    // Extract IP and user agent if request is provided
+    let ip_address = null
+    let user_agent = null
+    if (request) {
+      ip_address =
+        request.headers.get('x-forwarded-for') ||
+        request.headers.get('x-real-ip')
+      user_agent = request.headers.get('user-agent')
+    }
 
-    if (error) {
-      console.error('Error creating audit log:', error);
+    // Handle both function signatures
+    if (typeof entryOrUserId === 'string') {
+      // Called with individual parameters
+      const userId = entryOrUserId
+
+      // Insert the audit log entry
+      const { error } = await supabase.from('audit_logs').insert({
+        user_id: userId,
+        action: action,
+        resource: resource,
+        metadata: metadata,
+        created_at: timestamp.toISOString(),
+        ip_address,
+        user_agent,
+      })
+
+      if (error) {
+        console.error('Error creating audit log:', error)
+      }
+    } else {
+      // Called with entry object
+      const entry = entryOrUserId
+
+      // Insert the audit log entry
+      const { error } = await supabase.from('audit_logs').insert(entry)
+
+      if (error) {
+        console.error('Error creating audit log:', error)
+      }
     }
   } catch (error) {
-    console.error('Error creating audit log:', error);
+    console.error('Error creating audit log:', error)
   }
 }
 
@@ -58,7 +108,7 @@ export async function getUserAuditLogs(
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-    );
+    )
 
     // Get the audit logs
     const { data, error } = await supabase
@@ -66,24 +116,34 @@ export async function getUserAuditLogs(
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+      .range(offset, offset + limit - 1)
 
     if (error) {
-      console.error('Error getting audit logs:', error);
-      return [];
+      console.error('Error getting audit logs:', error)
+      return []
     }
 
     // Transform the data to match our interface
-    return data.map(log => ({
-      userId: log.user_id,
-      action: log.action,
-      resource: log.resource,
-      metadata: log.metadata,
-      timestamp: new Date(log.created_at)
-    }));
+    return data?.map(
+      (log: {
+        user_id: any
+        action: any
+        resource: any
+        resource_id: any
+        metadata: any
+        created_at: string | number | Date
+      }) => ({
+        userId: log.user_id,
+        action: log.action,
+        resource: log.resource,
+        resourceId: log.resource_id,
+        metadata: log.metadata,
+        timestamp: new Date(log.created_at),
+      })
+    )
   } catch (error) {
-    console.error('Error getting audit logs:', error);
-    return [];
+    console.error('Error getting audit logs:', error)
+    return []
   }
 }
 
@@ -103,7 +163,7 @@ export async function getActionAuditLogs(
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-    );
+    )
 
     // Get the audit logs
     const { data, error } = await supabase
@@ -111,23 +171,33 @@ export async function getActionAuditLogs(
       .select('*')
       .eq('action', action)
       .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+      .range(offset, offset + limit - 1)
 
     if (error) {
-      console.error('Error getting audit logs:', error);
-      return [];
+      console.error('Error getting audit logs:', error)
+      return []
     }
 
     // Transform the data to match our interface
-    return data.map(log => ({
-      userId: log.user_id,
-      action: log.action,
-      resource: log.resource,
-      metadata: log.metadata,
-      timestamp: new Date(log.created_at)
-    }));
+    return data?.map(
+      (log: {
+        user_id: any
+        action: any
+        resource: any
+        resource_id: any
+        metadata: any
+        created_at: string | number | Date
+      }) => ({
+        userId: log.user_id,
+        action: log.action,
+        resource: log.resource,
+        resourceId: log.resource_id,
+        metadata: log.metadata,
+        timestamp: new Date(log.created_at),
+      })
+    )
   } catch (error) {
-    console.error('Error getting audit logs:', error);
-    return [];
+    console.error('Error getting audit logs:', error)
+    return []
   }
-} 
+}

@@ -1,13 +1,14 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
+import { defineConfig } from 'astro/config'
+import node from '@astrojs/node'
 
-import react from '@astrojs/react';
-import mdx from '@astrojs/mdx';
-import UnoCSS from '@unocss/astro';
+import react from '@astrojs/react'
+import mdx from '@astrojs/mdx'
+import UnoCSS from '@unocss/astro'
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://vivi.rocks',
   integrations: [
     react(),
     mdx(),
@@ -35,12 +36,12 @@ export default defineConfig({
         { find: '@components', replacement: '/src/components' },
         { find: '@layouts', replacement: '/src/layouts' },
         { find: '@pages', replacement: '/src/pages' },
-        { find: '@utils', replacement: '/src/utils' }
+        { find: '@utils', replacement: '/src/utils' },
       ],
     },
   },
   output: 'server',
   adapter: node({
-    mode: 'standalone' // or 'middleware' if integrating with an existing server
+    mode: 'standalone', // or 'middleware' if integrating with an existing server
   }),
-});
+})

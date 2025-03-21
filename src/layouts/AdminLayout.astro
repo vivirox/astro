@@ -8,14 +8,16 @@ interface Props {
 }
 
 const {
-  title,
-  description = 'Admin Dashboard - ' + SITE.description,
   image = SITE.ogImage,
+  title,
+  description = `Admin dashboard for ${SITE.name}`,
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const socialImageURL = new URL(image, Astro.site);
+const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
+
 ---
+
+
 
 <!DOCTYPE html>
 <html lang={SITE.lang}>
@@ -24,7 +26,7 @@ const socialImageURL = new URL(image, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="canonical" href={canonicalURL} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, SITE.url).toString()} />
     <title>{title} | Admin Dashboard</title>
     <meta name="description" content={description} />
 
@@ -33,14 +35,14 @@ const socialImageURL = new URL(image, Astro.site);
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image" content={image} />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={socialImageURL} />
+    <meta property="twitter:image" content={image} />
   </head>
   <body class="bg-gray-100 dark:bg-gray-900 min-h-screen">
     <div class="flex min-h-screen">
@@ -52,8 +54,8 @@ const socialImageURL = new URL(image, Astro.site);
         <nav class="mt-6">
           <ul>
             <li>
-              <a 
-                href="/admin/dashboard" 
+              <a
+                href="/admin/dashboard"
                 class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <span class="mr-3">
@@ -65,8 +67,8 @@ const socialImageURL = new URL(image, Astro.site);
               </a>
             </li>
             <li>
-              <a 
-                href="/admin/users" 
+              <a
+                href="/admin/users"
                 class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <span class="mr-3">
@@ -78,8 +80,8 @@ const socialImageURL = new URL(image, Astro.site);
               </a>
             </li>
             <li>
-              <a 
-                href="/admin/ai-performance" 
+              <a
+                href="/admin/ai-performance"
                 class="flex items-center px-6 py-3 bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-100 dark:hover:bg-blue-800"
               >
                 <span class="mr-3">
@@ -91,8 +93,8 @@ const socialImageURL = new URL(image, Astro.site);
               </a>
             </li>
             <li>
-              <a 
-                href="/admin/security" 
+              <a
+                href="/admin/security"
                 class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <span class="mr-3">
@@ -104,8 +106,8 @@ const socialImageURL = new URL(image, Astro.site);
               </a>
             </li>
             <li>
-              <a 
-                href="/admin/settings" 
+              <a
+                href="/admin/settings"
                 class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <span class="mr-3">
@@ -119,7 +121,7 @@ const socialImageURL = new URL(image, Astro.site);
           </ul>
         </nav>
       </aside>
-      
+
       <!-- Main Content -->
       <main class="flex-1 overflow-x-hidden overflow-y-auto">
         <!-- Top Navigation -->
@@ -130,14 +132,14 @@ const socialImageURL = new URL(image, Astro.site);
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            
+
             <div class="flex items-center">
               <button class="text-gray-500 dark:text-gray-400 focus:outline-none mr-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
               </button>
-              
+
               <div class="relative">
                 <button class="flex items-center text-gray-700 dark:text-gray-300 focus:outline-none">
                   <img class="h-8 w-8 rounded-full object-cover" src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Admin" />
@@ -150,7 +152,7 @@ const socialImageURL = new URL(image, Astro.site);
             </div>
           </div>
         </header>
-        
+
         <!-- Content -->
         <div>
           <slot />
@@ -158,4 +160,4 @@ const socialImageURL = new URL(image, Astro.site);
       </main>
     </div>
   </body>
-</html> 
+</html>

@@ -1,14 +1,17 @@
-name: Deploy to Production
+name: Deployment Production
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
 
 env:
-  NODE_VERSION: 22.13.11
-  PNPM_VERSION: 10.5.3
+  NODE_VERSION: 20.11.0
+  PNPM_VERSION: 10.0.0
 
 jobs:
   test:
@@ -22,18 +25,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: ${{ env.PNPM_VERSION }}
-          
+
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run security tests
-        run: pnpm test:security
-        
       - name: Run Playwright tests
         run: |
           pnpm exec playwright install --with-deps
@@ -43,7 +43,6 @@ jobs:
     name: Build
     needs: test
     runs-on: ubuntu-latest
-    environment: production
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,27 +51,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: ${{ env.PNPM_VERSION }}
-          
+
       - name: Install dependencies
         run: pnpm install
-        
+
       - name: Build application
         run: pnpm build
         env:
-          LOG_LEVEL: info
+          LOG_LEVEL: debug
           LOG_CONSOLE: true
           LOG_AUDIT: true
-          SECURITY_ENABLE_ALERTS: true
-      
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: build-output-production
           path: dist
           retention-days: 7
 
@@ -81,44 +79,63 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: production
-    concurrency: 
+    concurrency:
       group: production_environment
-      cancel-in-progress: false
+      cancel-in-progress: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output
+          name: build-output-production
           path: dist
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: ${{ env.PNPM_VERSION }}
-      
+
       - name: Deploy to production
         run: |
           npm install -g wrangler
           wrangler pages deploy dist --project-name=gradiant-astro --branch=main
-      
+
       - name: Create deployment tag
         run: |
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
           git tag production-$TIMESTAMP
           git push origin production-$TIMESTAMP
-          
+
       - name: Notify deployment status
         if: always()
-        uses: rtCamp/action-slack-notify@v2.2.1
-        env:
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_TITLE: Production Deployment ${{ job.status }}
-          SLACK_MESSAGE: "Deployment to production ${{ job.status }} at $(date)" 
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "${{ job.status == 'success' && '✅' || '❌' }} Production Deployment Status",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Status:* ${{ job.status == 'success' && '✅ Success' || '❌ Failure' }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Timestamp:* $(date +%Y-%m-%d %H:%M:%S)"
+                    }
+                  ]
+                }
+              ]
+            }

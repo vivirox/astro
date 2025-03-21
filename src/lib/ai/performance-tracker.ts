@@ -1,100 +1,108 @@
-import { db } from '../db';
-import { logAuditEvent } from '../auth';
+import { supabase } from '../db/supabase'
+import { createAuditLog } from '../audit'
 
 export interface PerformanceMetric {
-  model: string;
-  latency: number;
-  input_tokens: number;
-  output_tokens: number;
-  total_tokens: number;
-  success: boolean;
-  error_code?: string;
-  cached: boolean;
-  optimized: boolean;
-  user_id?: string;
-  session_id?: string;
-  request_id: string;
+  model: string
+  latency: number
+  input_tokens: number
+  output_tokens: number
+  total_tokens: number
+  success: boolean
+  error_code?: string
+  cached: boolean
+  optimized: boolean
+  user_id?: string
+  session_id?: string
+  request_id: string
 }
 
 /**
  * Track AI performance metrics in the database
  */
-export async function trackPerformance(metric: PerformanceMetric): Promise<void> {
+export async function trackPerformance(
+  metric: PerformanceMetric
+): Promise<void> {
   try {
-    await db.query(`
-      INSERT INTO ai_performance_metrics (
-        model, 
-        latency, 
-        input_tokens, 
-        output_tokens, 
-        total_tokens, 
-        success, 
-        error_code, 
-        cached, 
-        optimized, 
-        user_id, 
-        session_id, 
-        request_id
-      ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
-      )
-    `, [
-      metric.model,
-      metric.latency,
-      metric.input_tokens,
-      metric.output_tokens,
-      metric.total_tokens,
-      metric.success,
-      metric.error_code || null,
-      metric.cached,
-      metric.optimized,
-      metric.user_id || null,
-      metric.session_id || null,
-      metric.request_id
-    ]);
+    await supabase.from('ai_performance_metrics').insert({
+      model: metric.model,
+      latency: metric.latency,
+      input_tokens: metric.input_tokens,
+      output_tokens: metric.output_tokens,
+      total_tokens: metric.total_tokens,
+      success: metric.success,
+      error_code: metric.error_code || null,
+      cached: metric.cached,
+      optimized: metric.optimized,
+      user_id: metric.user_id || null,
+      session_id: metric.session_id || null,
+      request_id: metric.request_id,
+    })
 
     // Log audit event for tracking purposes
     if (metric.user_id) {
-      await logAuditEvent(
-        metric.user_id,
-        'track_ai_performance',
-        'ai_service',
-        metric.request_id,
-        {
+      await createAuditLog({
+        userId: metric.user_id,
+        action: 'track_ai_performance',
+        resource: 'ai_service',
+        resourceId: metric.request_id,
+        metadata: {
           model: metric.model,
           success: metric.success,
           cached: metric.cached,
-          optimized: metric.optimized
-        }
-      );
+          optimized: metric.optimized,
+        },
+      })
     }
   } catch (error) {
-    console.error('Error tracking AI performance:', error);
+    console.error('Error tracking AI performance:', error)
   }
 }
 
 /**
  * Get performance metrics for a specific model
  */
-export async function getModelPerformance(model: string, days: number = 30): Promise<any> {
+export async function getModelPerformance(
+  model: string,
+  days: number = 30
+): Promise<any> {
   try {
-    const result = await db.query(`
-      SELECT 
-        AVG(latency) as avg_latency,
-        AVG(total_tokens) as avg_tokens,
-        COUNT(*) as request_count,
-        SUM(CASE WHEN success = true THEN 1 ELSE 0 END) as success_count,
-        SUM(CASE WHEN cached = true THEN 1 ELSE 0 END) as cached_count,
-        SUM(CASE WHEN optimized = true THEN 1 ELSE 0 END) as optimized_count
-      FROM ai_performance_metrics
-      WHERE model = $1
-      AND timestamp > NOW() - INTERVAL '${days} days'
-    `, [model]);
+    const { data, error } = await supabase
+      .from('ai_performance_metrics')
+      .select('*')
+      .eq('model', model)
+      .gte(
+        'created_at',
+        new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+      )
 
-    return result.rows[0];
+    if (error) throw error
+
+    // Calculate aggregated metrics
+    const avgLatency =
+      data?.reduce((sum, row) => sum + row.latency, 0) / data?.length
+    const avgTokens =
+      data?.reduce((sum, row) => sum + row.total_tokens, 0) / data?.length
+    const requestCount = data?.length
+    const successCount = data?.filter((row) => row.success).length
+    const cachedCount = data?.filter((row) => row.cached).length
+    const optimizedCount = data?.filter((row) => row.optimized).length
+
+    return {
+      avg_latency: avgLatency,
+      avg_tokens: avgTokens,
+      request_count: requestCount,
+      success_count: successCount,
+      cached_count: cachedCount,
+      optimized_count: optimizedCount,
+    }
   } catch (error) {
-    console.error('Error getting model performance:', error);
-    return null;
+    console.error('Error getting model performance:', error)
+    return {
+      model: 'unknown',
+      avg_latency: 0,
+      success_rate: 0,
+      usage_count: 0,
+    }
   }
 }
 
@@ -103,22 +111,43 @@ export async function getModelPerformance(model: string, days: number = 30): Pro
  */
 export async function getOverallPerformance(days: number = 30): Promise<any> {
   try {
-    const result = await db.query(`
-      SELECT 
-        AVG(latency) as avg_latency,
-        AVG(total_tokens) as avg_tokens,
-        COUNT(*) as request_count,
-        SUM(CASE WHEN success = true THEN 1 ELSE 0 END) as success_count,
-        SUM(CASE WHEN cached = true THEN 1 ELSE 0 END) as cached_count,
-        SUM(CASE WHEN optimized = true THEN 1 ELSE 0 END) as optimized_count,
-        COUNT(DISTINCT model) as model_count
-      FROM ai_performance_metrics
-      WHERE timestamp > NOW() - INTERVAL '${days} days'
-    `);
+    const { data, error } = await supabase
+      .from('ai_performance_metrics')
+      .select('*')
+      .gte(
+        'created_at',
+        new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+      )
 
-    return result.rows[0];
+    if (error) throw error
+
+    // Calculate aggregated metrics
+    const avgLatency =
+      data?.reduce((sum, row) => sum + row.latency, 0) / data?.length
+    const avgTokens =
+      data?.reduce((sum, row) => sum + row.total_tokens, 0) / data?.length
+    const requestCount = data?.length
+    const successCount = data?.filter((row) => row.success).length
+    const cachedCount = data?.filter((row) => row.cached).length
+    const optimizedCount = data?.filter((row) => row.optimized).length
+    const uniqueModels = new Set(data?.map((row) => row.model)).size
+
+    return {
+      avg_latency: avgLatency,
+      avg_tokens: avgTokens,
+      request_count: requestCount,
+      success_count: successCount,
+      cached_count: cachedCount,
+      optimized_count: optimizedCount,
+      model_count: uniqueModels,
+    }
   } catch (error) {
-    console.error('Error getting overall performance:', error);
-    return null;
+    console.error('Error getting overall performance:', error)
+    return {
+      avg_latency: 0,
+      success_rate: 0,
+      total_requests: 0,
+      token_usage: 0,
+    }
   }
-} 
+}

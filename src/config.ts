@@ -1,75 +1,138 @@
-export const SITE = {
-  name: 'Gradiant Ascent',
-  title: 'Gradiant Ascent - AI-Assisted Emotional Intelligence',
-  description:
-    'The premier destination for all things related to the world of AI-assisted emotional intelligence.',
-  url: 'https://gradiantascent.com',
-  ogImage: 'https://gradiantascent.com/og-image.png',
-  themeColor: '#3f51b5',
-  lang: 'en-US',
-  base: '',
-  author: {
-    name: 'Gradiant Team',
-    twitter: '@gradiantascent',
-  },
-  menu: [
+import type { Site, Ui, Features } from './types'
+
+export const SITE: Site = {
+  website: 'https://vivi.rocks',
+  base: '/',
+  title: 'Gradiant Ascent',
+  description: 'All your base are belong to us',
+  author: 'Vivi Ornitier',
+  lang: 'en',
+  ogLocale: 'en_US',
+  imageDomains: ['cdn.bsky.app'],
+}
+
+export const UI: Ui = {
+  internalNavs: [
     {
-      text: 'Home',
-      link: '/',
-    },
-    {
+      path: '/blog',
+      title: 'Blog',
+      displayMode: 'alwaysText',
       text: 'Blog',
-      link: '/blog',
     },
     {
-      text: 'About',
-      link: '/about',
+      path: '/projects',
+      title: 'Projects',
+      displayMode: 'alwaysText',
+      text: 'Projects',
     },
     {
-      text: 'Contact',
-      link: '/contact',
+      path: '/highlights',
+      title: 'Highlights',
+      displayMode: 'iconToTextOnMobile',
+      text: 'Highlights',
+      icon: 'i-ri-movie-ai-line',
+    },
+    {
+      path: '/changelog',
+      title: 'Changelog',
+      displayMode: 'iconToTextOnMobile',
+      text: 'Changelog',
+      icon: 'i-ri-draft-line',
     },
   ],
-};
-
-export const UI = {
-  // Navigation UI settings
-  nav: {
-    position: 'sticky', // 'fixed' | 'sticky' | 'static'
-    glassmorphism: true,
-    blur: 10, // px
+  socialLinks: [
+    {
+      link: 'https://github.com/vivirox/antfu',
+      title: 'AntfuStyle on Github',
+      displayMode: 'alwaysIcon',
+      icon: 'i-uil-github-alt',
+    },
+    {
+      link: 'https://x.com/gemcityxyz',
+      title: 'Vivi on Twitter',
+      displayMode: 'alwaysIcon',
+      icon: 'i-ri-twitter-x-fill',
+    },
+  ],
+  navBarLayout: {
+    left: [],
+    right: [
+      'internalNavs',
+      'socialLinks',
+      'searchButton',
+      'themeButton',
+      'rssLink',
+    ],
+    mergeOnMobile: true,
   },
-  // Theme switching UI settings
-  theme: {
-    default: 'system', // 'light' | 'dark' | 'system'
-    toggleIcon: true,
+  tabbedLayoutTabs: [
+    { title: 'Changelog', path: '/changelog' },
+    { title: 'AstroBlog', path: '/feeds' },
+    { title: 'AstroStreams', path: '/streams' },
+  ],
+  groupView: {
+    maxGroupColumns: 3,
+    showGroupItemColorOnHover: true,
   },
-  // External link settings
+  githubView: {
+    monorepos: [
+      'withastro/astro',
+      'withastro/starlight',
+      'lin-stephanie/astro-loaders',
+    ],
+    mainLogoOverrides: [
+      [/starlight/, 'https://starlight.astro.build/favicon.svg'],
+    ],
+    subLogoMatches: [
+      [/theme/, 'i-unjs-theme-colors'],
+      [/github/, 'https://www.svgrepo.com/show/475654/github-color.svg'],
+      [/tweet/, 'i-logos-twitter'],
+      [/bluesky/, 'i-logos-bluesky'],
+    ],
+  },
   externalLink: {
-    newTab: true,
-    icon: true,
-    cursorType: 'pointer', // 'pointer' | 'newtab'
+    newTab: false,
+    cursorType: '',
+    showNewTabIcon: false,
   },
-};
+}
 
-export const FEATURES = {
-  // Animation settings
-  slideEnterAnim: [true, { enterStep: 100 }], // [enabled, { options }]
-  // Core Web Vitals optimizations
-  useLightImages: true,
-  lazyLoadImages: true,
-  // Social features
-  enableSocialShare: true,
-  // Content features
-  tocMaxDepth: 3,
-  enableComments: false,
-};
-
-// API endpoints
-export const API = {
-  base: '/api',
-  endpoints: {
-    contact: '/contact',
-    newsletter: '/newsletter',
-  },
-}; 
+/**
+ * Configures whether to enable special features:
+ *  - Set to `false` or `[false, {...}]` to disable the feature.
+ *  - Set to `[true, {...}]` to enable and configure the feature.
+ */
+export const FEATURES: Features = {
+  share: [
+    true,
+    {
+      twitter: [true, '@GradiantAscent'],
+      bluesky: [true, '@GradiantAscent.bsky.social'],
+      mastodon: false,
+      facebook: false,
+      pinterest: false,
+      reddit: false,
+      telegram: false,
+      whatsapp: false,
+      email: true,
+    },
+  ],
+  toc: [
+    true,
+    {
+      minHeadingLevel: 2,
+      maxHeadingLevel: 4,
+      displayPosition: 'right',
+      displayMode: 'always',
+    },
+  ],
+  ogImage: [
+    true,
+    {
+      authorOrBrand: `${SITE.title}`,
+      fallbackTitle: `${SITE.description}`,
+      fallbackBgType: 'plum',
+    },
+  ],
+  slideEnterAnim: [true, { enterStep: 60 }],
+}

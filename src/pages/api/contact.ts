@@ -1,11 +1,11 @@
-import type { APIRoute } from 'astro';
+import type { APIRoute } from 'astro'
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const data = await request.json();
-    
+    const data = await request.json()
+
     // Validate required fields
-    const requiredFields = ['name', 'email', 'subject', 'message'];
+    const requiredFields = ['name', 'email', 'subject', 'message']
     for (const field of requiredFields) {
       if (!data[field]) {
         return new Response(
@@ -14,38 +14,42 @@ export const POST: APIRoute = async ({ request }) => {
             message: `Missing required field: ${field}`,
           }),
           { status: 400 }
-        );
+        )
       }
     }
-    
+
     // In a real application, you would:
-    // 1. Validate the email format
+    // 1. Validate the email forma
     // 2. Check for spam
     // 3. Store the message in a database
     // 4. Send an email notification
     // 5. Maybe add the user to a CRM
-    
-    console.log('Contact form submission:', data);
-    
+
+    console.log('Contact form submission:', data)
+
     // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Your message has been received. We will get back to you soon!',
+        message:
+          'Your message has been received. We will get back to you soon!',
       }),
       { status: 200 }
-    );
+    )
   } catch (error) {
-    console.error('Error processing contact form:', error);
-    
+    console.error('Error processing contact form:', error)
     return new Response(
       JSON.stringify({
-        success: false,
-        message: 'An error occurred while processing your request. Please try again later.',
+        error: 'Failed to process form submission, please try again later',
       }),
-      { status: 500 }
-    );
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
   }
-}; 
+}

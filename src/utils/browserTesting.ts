@@ -3,18 +3,18 @@
  */
 
 export interface BrowserInfo {
-  name: string;
-  version: string;
-  os: string;
-  supportsAriaLive: boolean;
-  supportsReducedMotion: boolean;
-  supportsHighContrast: boolean;
-  supportsFocusVisible: boolean;
+  name: string
+  version: string
+  os: string
+  supportsAriaLive: boolean
+  supportsReducedMotion: boolean
+  supportsHighContrast: boolean
+  supportsFocusVisible: boolean
 }
 
 /**
  * Detects current browser information
- * @returns Browser information object
+ * @returns Browser information objec
  */
 export function detectBrowser(): BrowserInfo {
   if (typeof window === 'undefined') {
@@ -25,53 +25,63 @@ export function detectBrowser(): BrowserInfo {
       supportsAriaLive: true,
       supportsReducedMotion: true,
       supportsHighContrast: true,
-      supportsFocusVisible: true
-    };
+      supportsFocusVisible: true,
+    }
   }
 
-  const userAgent = navigator.userAgent;
-  let browserName = 'Unknown';
-  let browserVersion = 'Unknown';
-  let os = 'Unknown';
+  const userAgent = navigator.userAgent
+  let browserName = 'Unknown'
+  let browserVersion = 'Unknown'
+  let os = 'Unknown'
 
   // Detect browser
   if (userAgent.indexOf('Firefox') > -1) {
-    browserName = 'Firefox';
-    browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)?.[1] || 'Unknown';
+    browserName = 'Firefox'
+    browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)?.[1] || 'Unknown'
   } else if (userAgent.indexOf('Edg') > -1) {
-    browserName = 'Edge';
-    browserVersion = userAgent.match(/Edg\/([0-9.]+)/)?.[1] || 'Unknown';
+    browserName = 'Edge'
+    browserVersion = userAgent.match(/Edg\/([0-9.]+)/)?.[1] || 'Unknown'
   } else if (userAgent.indexOf('Chrome') > -1) {
-    browserName = 'Chrome';
-    browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)?.[1] || 'Unknown';
+    browserName = 'Chrome'
+    browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)?.[1] || 'Unknown'
   } else if (userAgent.indexOf('Safari') > -1) {
-    browserName = 'Safari';
-    browserVersion = userAgent.match(/Version\/([0-9.]+)/)?.[1] || 'Unknown';
-  } else if (userAgent.indexOf('MSIE') > -1 || userAgent.indexOf('Trident') > -1) {
-    browserName = 'Internet Explorer';
-    browserVersion = userAgent.match(/(?:MSIE |rv:)([0-9.]+)/)?.[1] || 'Unknown';
+    browserName = 'Safari'
+    browserVersion = userAgent.match(/Version\/([0-9.]+)/)?.[1] || 'Unknown'
+  } else if (
+    userAgent.indexOf('MSIE') > -1 ||
+    userAgent.indexOf('Trident') > -1
+  ) {
+    browserName = 'Internet Explorer'
+    browserVersion = userAgent.match(/(?:MSIE |rv:)([0-9.]+)/)?.[1] || 'Unknown'
   }
 
   // Detect OS
   if (userAgent.indexOf('Windows') > -1) {
-    os = 'Windows';
+    os = 'Windows'
   } else if (userAgent.indexOf('Mac') > -1) {
-    os = 'macOS';
+    os = 'macOS'
   } else if (userAgent.indexOf('Linux') > -1) {
-    os = 'Linux';
+    os = 'Linux'
   } else if (userAgent.indexOf('Android') > -1) {
-    os = 'Android';
-  } else if (userAgent.indexOf('iOS') > -1 || userAgent.indexOf('iPhone') > -1 || userAgent.indexOf('iPad') > -1) {
-    os = 'iOS';
+    os = 'Android'
+  } else if (
+    userAgent.indexOf('iOS') > -1 ||
+    userAgent.indexOf('iPhone') > -1 ||
+    userAgent.indexOf('iPad') > -1
+  ) {
+    os = 'iOS'
   }
 
   // Feature detection
-  const supportsAriaLive = 'role' in document.createElement('div');
-  const supportsReducedMotion = typeof window.matchMedia === 'function' && 
-    window.matchMedia('(prefers-reduced-motion: reduce)') !== null;
-  const supportsHighContrast = typeof window.matchMedia === 'function' && 
-    window.matchMedia('(forced-colors: active)') !== null;
-  const supportsFocusVisible = 'CSS' in window && CSS.supports('selector(:focus-visible)');
+  const supportsAriaLive = 'role' in document.createElement('div')
+  const supportsReducedMotion =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)') !== null
+  const supportsHighContrast =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(forced-colors: active)') !== null
+  const supportsFocusVisible =
+    'CSS' in window && CSS.supports('selector(:focus-visible)')
 
   return {
     name: browserName,
@@ -80,76 +90,81 @@ export function detectBrowser(): BrowserInfo {
     supportsAriaLive,
     supportsReducedMotion,
     supportsHighContrast,
-    supportsFocusVisible
-  };
+    supportsFocusVisible,
+  }
 }
 
 /**
  * Tests if ARIA live regions are working correctly
  * @returns Promise that resolves with test results
  */
-export async function testAriaLiveAnnouncements(): Promise<{success: boolean, message: string}> {
+export async function testAriaLiveAnnouncements(): Promise<{
+  success: boolean
+  message: string
+}> {
   return new Promise((resolve) => {
     // Create test elements
-    const testContainer = document.createElement('div');
-    testContainer.style.position = 'absolute';
-    testContainer.style.left = '-9999px';
-    testContainer.setAttribute('aria-live', 'polite');
-    document.body.appendChild(testContainer);
+    const testContainer = document.createElement('div')
+    testContainer.style.position = 'absolute'
+    testContainer.style.left = '-9999px'
+    testContainer.setAttribute('aria-live', 'polite')
+    document.body.appendChild(testContainer)
 
-    // Set a timeout to update the content
+    // Set a timeout to update the conten
     setTimeout(() => {
-      testContainer.textContent = 'Test announcement';
-      
+      testContainer.textContent = 'Test announcement'
+
       // Give time for screen readers to process
       setTimeout(() => {
-        document.body.removeChild(testContainer);
+        document.body.removeChild(testContainer)
         resolve({
           success: true,
-          message: 'ARIA live region test completed. Please verify the test announcement was spoken by your screen reader.'
-        });
-      }, 1000);
-    }, 500);
-  });
+          message:
+            'ARIA live region test completed. Please verify the test announcement was spoken by your screen reader.',
+        })
+      }, 1000)
+    }, 500)
+  })
 }
 
 /**
  * Tests if focus management is working correctly
  * @returns Test results
  */
-export function testFocusManagement(): {success: boolean, message: string} {
+export function testFocusManagement(): { success: boolean; message: string } {
   // Create test elements
-  const button1 = document.createElement('button');
-  button1.textContent = 'Button 1';
-  button1.id = 'test-button-1';
-  
-  const button2 = document.createElement('button');
-  button2.textContent = 'Button 2';
-  button2.id = 'test-button-2';
-  
-  const testContainer = document.createElement('div');
-  testContainer.style.position = 'absolute';
-  testContainer.style.left = '-9999px';
-  testContainer.appendChild(button1);
-  testContainer.appendChild(button2);
-  document.body.appendChild(testContainer);
-  
+  const button1 = document.createElement('button')
+  button1.textContent = 'Button 1'
+  button1.id = 'test-button-1'
+
+  const button2 = document.createElement('button')
+  button2.textContent = 'Button 2'
+  button2.id = 'test-button-2'
+
+  const testContainer = document.createElement('div')
+  testContainer.style.position = 'absolute'
+  testContainer.style.left = '-9999px'
+  testContainer.appendChild(button1)
+  testContainer.appendChild(button2)
+  document.body.appendChild(testContainer)
+
   // Test focus
-  button1.focus();
-  const button1HasFocus = document.activeElement === button1;
-  
-  button2.focus();
-  const button2HasFocus = document.activeElement === button2;
-  
+  button1.focus()
+  const button1HasFocus = document.activeElement === button1
+
+  button2.focus()
+  const button2HasFocus = document.activeElement === button2
+
   // Clean up
-  document.body.removeChild(testContainer);
-  
+  document.body.removeChild(testContainer)
+
   return {
     success: button1HasFocus && button2HasFocus,
-    message: button1HasFocus && button2HasFocus 
-      ? 'Focus management is working correctly.' 
-      : 'Focus management test failed. Elements could not receive focus.'
-  };
+    message:
+      button1HasFocus && button2HasFocus
+        ? 'Focus management is working correctly.'
+        : 'Focus management test failed. Elements could not receive focus.',
+  }
 }
 
 /**
@@ -157,17 +172,17 @@ export function testFocusManagement(): {success: boolean, message: string} {
  * @returns Test results
  */
 export async function runBrowserCompatibilityTests(): Promise<{
-  browserInfo: BrowserInfo;
-  ariaLiveTest: {success: boolean, message: string};
-  focusTest: {success: boolean, message: string};
+  browserInfo: BrowserInfo
+  ariaLiveTest: { success: boolean; message: string }
+  focusTest: { success: boolean; message: string }
 }> {
-  const browserInfo = detectBrowser();
-  const ariaLiveTest = await testAriaLiveAnnouncements();
-  const focusTest = testFocusManagement();
-  
+  const browserInfo = detectBrowser()
+  const ariaLiveTest = await testAriaLiveAnnouncements()
+  const focusTest = testFocusManagement()
+
   return {
     browserInfo,
     ariaLiveTest,
-    focusTest
-  };
-} 
+    focusTest,
+  }
+}

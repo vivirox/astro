@@ -1,40 +1,21 @@
-# trunk-ignore-all(isort)
+
 #!~/.venv/ ~/.venv/bin/env/python
 
 import argparse
-import atexit
 import base64
 import mimetypes
 import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 import google.generativeai as genai
+from anthropic import Anthropic
 from dotenv import load_dotenv
-from token_tracker import APIResponse, TokenUsage, get_token_tracker
-import grpc
-from absl import app
-from absl import logging
+from openai import AzureOpenAI, OpenAI
 
-# Initialize logging before anything else
-app.run(lambda argv: None, argv=["dummy"])
-logging.set_verbosity(logging.INFO)
-
-# Import required modules
-from openai import OpenAI, AzureOpenAI
-
-def cleanup():
-    try:
-        # Safely clean up resources
-        pass
-    except Exception as e:
-        logging.debug(f"Ignoring cleanup error: {e}")
-
-
-# Register cleanup handler
-atexit.register(cleanup)
+from tools.token_tracker import APIResponse, TokenUsage, get_token_tracker
 
 
 def load_environment():
@@ -104,7 +85,16 @@ def encode_image_file(image_path: str) -> tuple[str, str]:
     return encoded_string, mime_type
 
 
-def create_llm_client(provider: str = "openai") -> Any:
+def create_llm_client(provider="openai"):
+    """
+    Create and return an LLM client based on the specified provider.
+
+    Args:
+        provider (str): The provider name ('openai', 'azure', 'deepseek', 'anthropic', 'gemini', 'local')
+
+    Returns:
+        Any: The appropriate client for the specified provider
+    """
     if provider == "openai":
         api_key = os.getenv("OPENAI_API_KEY")
         base_url = os.getenv("OPENAI_BASE_URL")
@@ -128,12 +118,18 @@ def create_llm_client(provider: str = "openai") -> Any:
             api_key=api_key,
             base_url="https://api.deepseek.com/v1",
         )
+    elif provider == "anthropic":
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise ValueError("ANTHROPIC_API_KEY not found in environment variables")
+        return Anthropic(api_key=api_key)
     elif provider == "gemini":
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             raise ValueError("GOOGLE_API_KEY not found in environment variables")
-        # Just return the API key, we'll create the model in query_llm
-        return api_key
+        # Set the API key directly instead of using configure
+        os.environ["GOOGLE_API_KEY"] = api_key
+        return genai
     elif provider == "local":
         return OpenAI(base_url="http://192.168.180.137:8006/v1", api_key="not-needed")
     else:
@@ -152,7 +148,7 @@ def query_llm(
 
     Args:
         prompt (str): The text prompt to send
-        client: The LLM client instance or API key for Gemini
+        client (Any): The LLM client instance
         model (str, optional): The model to use
         provider (str): The API provider to use
         image_path (str, optional): Path to an image file to attach
@@ -165,16 +161,21 @@ def query_llm(
 
     try:
         # Set default model
-        model = model or {
-            "openai": "gpt-4o",
-            "azure": os.getenv("AZURE_OPENAI_MODEL_DEPLOYMENT", "gpt-4o-ms"),
-            "deepseek": "deepseek-chat",
-            "gemini": "gemini-1.5-flash",
-            "local": "Qwen/Qwen2.5-32B-Instruct-AWQ"
-        }.get(provider)
-
-        if not model:
-            raise ValueError(f"No default model available for provider: {provider}")
+        if model is None:
+            if provider == "openai":
+                model = "gpt-4o"
+            elif provider == "azure":
+                model = os.getenv(
+                    "AZURE_OPENAI_MODEL_DEPLOYMENT", "gpt-4o-ms"
+                )  # Get from env with fallback
+            elif provider == "deepseek":
+                model = "deepseek-chat"
+            elif provider == "anthropic":
+                model = "claude-3-7-sonnet-20250219"
+            elif provider == "gemini":
+                model = "gemini-2.0-flash-exp"
+            elif provider == "local":
+                model = "Qwen/Qwen2.5-32B-Instruct-AWQ"
 
         start_time = time.time()
         if provider in ["openai", "local", "deepseek", "azure"]:
@@ -222,9 +223,7 @@ def query_llm(
 
             # Calculate cost
             cost = get_token_tracker().calculate_openai_cost(
-                token_usage.prompt_tokens,
-                token_usage.completion_tokens,
-                str(model)  # Ensure model is str
+                token_usage.prompt_tokens, token_usage.completion_tokens, str(model)
             )
 
             # Track the request
@@ -234,39 +233,97 @@ def query_llm(
                 cost=cost,
                 thinking_time=thinking_time,
                 provider=provider,
-                model=str(model)  # Ensure model is str
+                model=str(model),
             )
             get_token_tracker().track_request(api_response)
             return response.choices[0].message.content
 
+        elif provider == "anthropic":
+            # Anthropic API uses a different structure
+            content_parts = []
+
+            # Add text content
+            content_parts.append({"type": "text", "text": prompt})
+
+            # Add image content if provided
+            if image_path:
+                encoded_image, mime_type = encode_image_file(image_path)
+                # Create image content part with proper typing
+                image_part = {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": mime_type,
+                        "data": encoded_image,
+                    },
+                }
+                content_parts.append(image_part)
+
+            # Create the message using Anthropic's API
+            response = client.messages.create(
+                model=model,
+                max_tokens=1000,
+                system="You are a helpful AI assistant.",
+                messages=[{"role": "user", "content": content_parts}],
+            )
+
+            thinking_time = time.time() - start_time
+
+            # Track token usage
+            token_usage = TokenUsage(
+                prompt_tokens=response.usage.input_tokens,
+                completion_tokens=response.usage.output_tokens,
+                total_tokens=response.usage.input_tokens + response.usage.output_tokens,
+                reasoning_tokens=None,
+            )
+
+            # Calculate cost
+            cost = get_token_tracker().calculate_claude_cost(
+                token_usage.prompt_tokens, token_usage.completion_tokens, str(model)
+            )
+
+            # Get content from the response
+            content = ""
+            for block in response.content:
+                if hasattr(block, "text"):
+                    content = block.text
+                    break
+
+            # Track the request
+            api_response = APIResponse(
+                content=content,
+                token_usage=token_usage,
+                cost=cost,
+                thinking_time=thinking_time,
+                provider=provider,
+                model=str(model),
+            )
+            get_token_tracker().track_request(api_response)
+            return content
+
         elif provider == "gemini":
-            # For Gemini, we need to configure the API and create a model
-            api_key = client if isinstance(client, str) else os.getenv("GOOGLE_API_KEY")
-            if not api_key:
-                raise ValueError("No API key available for Gemini")
-                
+            # Use Google's Generative AI properly
             try:
-                # Configure the API and create model directly
-                import google.generativeai as genai_direct
-                getattr(genai_direct, "configure")(api_key=api_key)
-                gemini_model = getattr(genai_direct, "GenerativeModel")(model)
+                # Create a model instance
+                gemini_model = client.GenerativeModel(model_name=str(model))
+
+                # Generate content with the model
                 response = gemini_model.generate_content(prompt)
-                thinking_time = time.time() - start_time
-                
-                # Track the request with minimal information
-                api_response = APIResponse(
-                    content=response.text,
-                    token_usage=TokenUsage(0, 0, 0, None),
-                    cost=0.0,
-                    thinking_time=thinking_time,
-                    provider=provider,
-                    model=str(model)
+
+                # Return the text response
+                if hasattr(response, "text"):
+                    return response.text
+                else:
+                    # Handle different response formats
+                    return str(response)
+            except AttributeError:
+                # Fallback method if the API has changed
+                print("Using fallback method for Gemini API", file=sys.stderr)
+                response = client.generate_content(
+                    model=str(model),
+                    contents=prompt,
                 )
-                get_token_tracker().track_request(api_response)
                 return response.text
-            except Exception as e:
-                print(f"Error with Gemini model: {e}", file=sys.stderr)
-                return f"Error with Gemini: {str(e)}"
 
     except Exception as e:
         print(f"Error querying LLM: {e}", file=sys.stderr)
@@ -280,7 +337,7 @@ def main():
     )
     parser.add_argument(
         "--provider",
-        choices=["openai", "gemini", "local", "deepseek", "azure"],
+        choices=["openai", "anthropic", "gemini", "local", "deepseek", "azure"],
         default="openai",
         help="The API provider to use",
     )
@@ -295,10 +352,12 @@ def main():
     if not args.model:
         if args.provider == "openai":
             args.model = "gpt-4o"
-        elif args.provider == "deepseek":
-            args.model = "deepseek-chat"
+        elif args.provider == "siliconflow":
+            args.model = "deepseek-ai/DeepSeek-R1"
+        elif args.provider == "anthropic":
+            args.model = "claude-3-7-sonnet-20250219"
         elif args.provider == "gemini":
-            args.model = "gemini-1.5-flash"
+            args.model = "gemini-2.0-flash-exp"
         elif args.provider == "azure":
             args.model = os.getenv(
                 "AZURE_OPENAI_MODEL_DEPLOYMENT", "gpt-4o-ms"
@@ -320,3 +379,22 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+class SecureDataHandler:
+    def __init__(self):
+        self.encryption_key = os.getenv("ENCRYPTION_KEY")
+
+    async def process_sensitive_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Process sensitive mental health and EQ data with encryption
+        """
+        if "mental_health_data" in data:
+            data["mental_health_data"] = self.encrypt_sensitive_data(
+                data["mental_health_data"]
+            )
+        return data
+
+    def encrypt_sensitive_data(self, data: str) -> str:
+        # Add encryption implementation
+        pass

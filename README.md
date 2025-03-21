@@ -1,171 +1,63 @@
-# Astro AI Integration
 
-This project integrates TogetherAI's API into our Astro application for AI-powered features.
+# Gradiant Ascent
 
-## Features
+![Gradiant Ascent](https://gradiantascent.com/cube.png)
 
-- Chat interface with TogetherAI models
-- Support for multiple TogetherAI models
-- Sentiment analysis
-- Crisis detection
-- Response generation
-- Intervention effectiveness analysis
+## The Premier Destination for AI-Assisted Emotional Intelligence
 
-## Getting Started
+Welcome to Gradiant Ascent, a platform dedicated to exploring the critical intersection of emotional intelligence and artificial intelligence. In a world increasingly shaped by AI, understanding and developing emotional intelligence has never been more important.
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-3. Copy the `.env.example` file to `.env` and add your TogetherAI API key:
-   ```bash
-   cp .env.example .env
-   ```
-4. Start the development server:
-   ```bash
-   pnpm dev
-   ```
+## Our Mission
 
-## AI Models
+At Gradiant Ascent, we believe that the future belongs not to those who simply adopt AI, but to those who successfully integrate emotional intelligence with artificial intelligence. Our mission is to provide insights, resources, and guidance on navigating this evolving landscape.
 
-The application supports various TogetherAI models:
+## What We Offer
 
-- Llama 3 and 3.1 models (8B, 70B, 405B)
-- Mistral models (7B, Mixtral 8x7B, Large)
-- Claude 3.5 Sonnet
+### Cutting-Edge Research and Analysis
 
-## AI Performance Optimization
+- In-depth exploration of emotional intelligence in an AI-driven world
+- Analysis of the paradox between AI's cognitive abilities and emotional limitations
+- Insights into key shifts in the AI-EQ relationship
+- Research on why emotional intelligence matters more in 2025
 
-The AI system includes several performance optimization features:
+### Mental Health and AI
 
-### Request Caching
+- Comprehensive resources on how AI is revolutionizing mental health care
+- Personal AI tools for mental wellness
+- Clinical applications of AI in mental healthcare
+- Ethical considerations and the future of AI in mental health
 
-- Caches responses for frequently used prompts to reduce API calls
-- Configurable TTL and cache size limits
-- LRU cache eviction strategy
-- Cache statistics tracking
+### Exceptional User Experience
 
-### Prompt Optimization
+- Responsive design for all devices
+- Light & dark modes for comfortable reading
+- Smooth transitions and animations
+- Accessible interface with keyboard navigation
+- Powerful search functionality
+- Social media sharing capabilities
 
-- Compresses prompts to reduce token usage
-- Message length truncation
-- Conversation history summarization
-- Message count limiting
+## Coming Soon - March 31, 2025
 
-### Connection Pooling
+Gradiant Ascent is currently under development and will launch on March 31, 2025. We're working hard to create a platform that will serve as the definitive resource for understanding and developing emotional intelligence in an AI-driven world.
 
-- Reuses connections to reduce API latency
-- Connection lifecycle management
-- Automatic cleanup of idle connections
-- Connection statistics tracking
+## Preview
 
-### Fallback Mechanisms
+![Emotional Intelligence](https://raw.githubusercontent.com/lin-stephanie/assets/refs/heads/main/astro-antfustyle-theme/blog_2x.png)
 
-- Retry logic with exponential backoff
-- Error-specific fallback responses
-- Comprehensive error handling
+![Mental Health](https://raw.githubusercontent.com/lin-stephanie/assets/refs/heads/main/astro-antfustyle-theme/post_2x.png)
 
-### Performance Monitoring
+![Research](https://raw.githubusercontent.com/lin-stephanie/assets/refs/heads/main/astro-antfustyle-theme/projects_2x.png)
 
-- Real-time metrics visualization
-- Cache efficiency tracking
-- Connection pool monitoring
-- Response time and token usage analytics
+![Resources](https://raw.githubusercontent.com/lin-stephanie/assets/refs/heads/main/astro-antfustyle-theme/streams_2x.png)
 
-## Configuration
+## Stay Connected
 
-The AI service can be configured with the following options:
+Join us on our journey to explore the fascinating intersection of emotional intelligence and artificial intelligence. Check back on March 31, 2025, for our official launch.
 
-```typescript
-const aiService = new AIService({
-  together: {
-    apiKey: process.env.TOGETHER_API_KEY,
-    baseUrl: 'https://api.together.xyz/v1' // Optional
-  },
-  onUsage: async (usage) => {
-    // Handle usage tracking
-    console.log('AI Usage:', usage);
-  },
-  cache: { 
-    enabled: true,
-    maxSize: 200 
-  },
-  connectionPool: { 
-    maxConnections: 10 
-  }
-});
-```
+## About the Creator
 
-## Usage
-
-```typescript
-// Create a chat completion
-const response = await aiService.createChatCompletion(
-  [
-    { role: 'user', content: 'Hello, how are you?' }
-  ],
-  {
-    model: 'llama-3-1-70b-instruct',
-    temperature: 0.7,
-    maxTokens: 1000
-  }
-);
-
-console.log(response.choices[0].message.content);
-```
-
-## Demo
-
-Visit `/ai-chat` to try out the AI chat interface with different models.
+Gradiant Ascent is the brainchild of a passionate advocate for emotional intelligence in the digital age. With a background in both psychology and technology, the creator aims to bridge the gap between human emotional capabilities and artificial intelligence advancements.
 
 ## License
 
-MIT
-
-```sh
-pnpm create astro@latest -- --template basics
-```
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+© 2025 Gradiant Ascent. All rights reserved.

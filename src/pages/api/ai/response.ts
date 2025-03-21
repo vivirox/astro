@@ -1,133 +1,298 @@
-import { type APIRoute } from 'astro';
-import { getSession } from '../../../lib/auth/session';
-import { createAIService } from '../../../lib/ai/services/together';
-import { ResponseGenerationService } from '../../../lib/ai/services/response';
-import { createAuditLog } from '../../../lib/audit/log';
-import { aiRepository } from '../../../lib/db/ai';
+import { type APIRoute } from 'astro'
+import { getSession } from '../../../lib/auth/session'
+import { createTogetherAIService } from '../../../lib/ai/services/together'
+import { ResponseGenerationService } from '../../../lib/ai/services/response-generation'
+import { createAuditLog } from '../../../lib/audit/log'
+import { aiRepository } from '../../../lib/db/ai/index'
+import type {
+  AIService,
+  AIMessage,
+  AIServiceOptions,
+} from '../../../lib/ai/models/ai-types'
 
 /**
  * API route for therapeutic response generation
  */
 export const POST: APIRoute = async ({ request }) => {
+  let session
+
   try {
     // Verify session
-    const session = await getSession(request);
+    session = await getSession(request)
     if (!session) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Parse request body
-    const body = await request.json();
-    const { 
-      messages, 
-      currentMessage, 
-      previousMessages, 
-      instructions, 
-      model, 
-      temperature = 0.5, 
-      maxResponseTokens = 1024 
-    } = body;
+    const body = await request.json()
+    const {
+      messages,
+      currentMessage,
+      model,
+      temperature = 0.7,
+      maxResponseTokens = 1024,
+      instructions,
+    } = body
 
     // Validate required fields
-    if (!messages && !(currentMessage && previousMessages)) {
-      return new Response(JSON.stringify({ 
-        error: 'Either messages or both currentMessage and previousMessages are required' 
-      }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
+    if (!messages && !currentMessage) {
+      return new Response(
+        JSON.stringify({
+          error: 'Either messages or currentMessage is required',
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
     }
 
     // Create Together AI service
-    const togetherService = createAIService({
+    const togetherService = createTogetherAIService({
       togetherApiKey: import.meta.env.TOGETHER_API_KEY,
-      togetherBaseUrl: import.meta.env.TOGETHER_BASE_URL
-    });
+      togetherBaseUrl: import.meta.env.TOGETHER_BASE_URL,
+      apiKey: '',
+    })
 
     // Use the model from the request or the default
-    const modelId = model || 'mistralai/Mixtral-8x7B-Instruct-v0.1';
+    const modelId = model || 'mistralai/Mixtral-8x7B-Instruct-v0.2'
+
+    // Create an adapter for the AI service
+    const serviceAdapter: AIService = {
+      createChatCompletion: async (
+        messages: AIMessage[],
+        options?: AIServiceOptions
+      ) => {
+        const response = await togetherService.generateCompletion(
+          messages,
+          options
+        )
+        return {
+          id: 'together' + Date.now(),
+          created: Date.now(),
+          model: options?.model || modelId,
+          choices: [
+            {
+              message: {
+                role: 'assistant',
+                content:
+                  typeof response === 'object' &&
+                  response !== null &&
+                  'content' in response
+                    ? (response as { content: string }).content
+                    : '',
+                name: 'assistant',
+              },
+              finishReason: 'stop',
+            },
+          ],
+          usage:
+            typeof response === 'object' &&
+            response !== null &&
+            'usage' in response
+              ? {
+                  promptTokens: Number(
+                    (response.usage as any)?.promptTokens || 0
+                  ),
+                  completionTokens: Number(
+                    (response.usage as any)?.completionTokens || 0
+                  ),
+                  totalTokens: Number(
+                    (response.usage as any)?.totalTokens || 0
+                  ),
+                }
+              : {
+                  promptTokens: 0,
+                  completionTokens: 0,
+                  totalTokens: 0,
+                },
+          provider: 'together',
+          content:
+            typeof response === 'object' &&
+            response !== null &&
+            'content' in response
+              ? (response as { content: string }).content
+              : '',
+        }
+      },
+      createStreamingChatCompletion: async () => {
+        throw new Error('Streaming not supported yet')
+      },
+      getModelInfo: (model: string) => ({
+        id: model,
+        capabilities: ['chat'],
+      }),
+      createChatCompletionWithTracking: async (
+        messages: AIMessage[],
+        options?: AIServiceOptions
+      ) => {
+        const response = await togetherService.generateCompletion(
+          messages,
+          options
+        )
+        return {
+          id: 'together' + Date.now(),
+          created: Date.now(),
+          model: options?.model || modelId,
+          choices: [
+            {
+              message: {
+                role: 'assistant',
+                content:
+                  typeof response === 'object' &&
+                  response !== null &&
+                  'content' in response
+                    ? (response as { content: string }).content
+                    : '',
+                name: 'assistant',
+              },
+              finishReason: 'stop',
+            },
+          ],
+          usage:
+            typeof response === 'object' &&
+            response !== null &&
+            'usage' in response
+              ? {
+                  promptTokens: Number(
+                    (response.usage as any)?.promptTokens || 0
+                  ),
+                  completionTokens: Number(
+                    (response.usage as any)?.completionTokens || 0
+                  ),
+                  totalTokens: Number(
+                    (response.usage as any)?.totalTokens || 0
+                  ),
+                }
+              : {
+                  promptTokens: 0,
+                  completionTokens: 0,
+                  totalTokens: 0,
+                },
+          provider: 'together',
+          content:
+            typeof response === 'object' &&
+            response !== null &&
+            'content' in response
+              ? (response as { content: string }).content
+              : '',
+        }
+      },
+      generateCompletion: togetherService.generateCompletion,
+      dispose: () => {
+        togetherService.dispose()
+      },
+    }
 
     // Create response generation service
     const responseService = new ResponseGenerationService({
-      aiService: togetherService,
+      aiService: serviceAdapter,
       model: modelId,
       temperature,
-      maxResponseTokens
-    });
+      maxResponseTokens,
+    })
 
     // Log the request
     await createAuditLog({
-      userId: session.user.id,
+      userId: session?.user?.id || 'anonymous',
       action: 'ai.response.request',
       resource: 'ai',
+      resourceId: undefined,
       metadata: {
-        model: modelId,
+        model: modelId || 'mistralai/Mixtral-8x7B-Instruct-v0.2',
         temperature,
         maxResponseTokens,
-        hasInstructions: !!instructions,
-        messageCount: messages ? messages.length : (previousMessages ? previousMessages.length + 1 : 1)
-      }
-    });
+        messageCount: messages ? messages.length : 1,
+      },
+    })
 
     // Start timer for latency measurement
-    const startTime = Date.now();
+    const startTime = Date.now()
 
     // Process the request
-    let result;
+    let result
     if (messages) {
-      result = await responseService.generateFromMessages(messages, instructions);
+      result = await responseService.generateResponseWithInstructions(
+        messages,
+        instructions
+      )
     } else {
-      result = await responseService.generate(currentMessage, previousMessages, instructions);
+      result = await responseService.generateResponseWithInstructions(
+        [currentMessage],
+        instructions
+      )
     }
 
-    const latencyMs = Date.now() - startTime;
-    
+    const latencyMs = Date.now() - startTime
+
     // Store the result in the database
     await aiRepository.storeResponseGeneration({
-      userId: session.user.id,
-      modelId: modelId,
+      userId: session?.user?.id || 'anonymous',
+      modelId: modelId || 'mistralai/Mixtral-8x7B-Instruct-v0.2',
       modelProvider: 'together',
-      requestTokens: result.usage?.promptTokens || 0,
-      responseTokens: result.usage?.completionTokens || 0,
-      totalTokens: result.usage?.totalTokens || 0,
       latencyMs,
       success: true,
+      error: null,
       prompt: currentMessage || (messages ? JSON.stringify(messages) : ''),
-      response: result.content,
-      context: previousMessages ? JSON.stringify(previousMessages) : undefined,
+      response: result?.content,
+      context: '',
       instructions,
       temperature: temperature,
       maxTokens: maxResponseTokens,
+      requestTokens: result?.usage?.promptTokens || 0,
+      responseTokens: result?.usage?.completionTokens || 0,
+      totalTokens: result?.usage?.totalTokens || 0,
       metadata: {
-        messageCount: messages ? messages.length : (previousMessages ? previousMessages.length + 1 : 1)
-      }
-    });
+        messageCount: messages ? messages.length : 1,
+      },
+    })
 
     // Log the response
     await createAuditLog({
-      userId: session.user.id,
-      action: 'ai.response.generated',
+      userId: session?.user?.id || 'anonymous',
+      action: 'ai.response.response',
       resource: 'ai',
+      resourceId: undefined,
       metadata: {
-        model: modelId,
-        responseLength: result.content.length,
-        latencyMs
-      }
-    });
+        model: modelId || 'mistralai/Mixtral-8x7B-Instruct-v0.2',
+        responseLength: result?.content.length,
+        latencyMs,
+      },
+    })
 
     return new Response(JSON.stringify(result), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+      headers: { 'Content-Type': 'application/json' },
+    })
   } catch (error: unknown) {
-    console.error('Error in response generation API:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    console.error('Error in response generation API:', error)
+
+    // Create audit log for the error
+    await createAuditLog({
+      userId: session?.user?.id || 'anonymous',
+      action: 'ai.response.error',
+      resource: 'ai',
+      resourceId: undefined,
+      metadata: {
+        error: error instanceof Error ? error?.message : String(error),
+        stack: error instanceof Error ? error?.stack : undefined,
+        status: 'error',
+      },
+    })
+
+    return new Response(
+      JSON.stringify({
+        error: 'An error occurred during response generation',
+      }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
   }
-}; 
+}

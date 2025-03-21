@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
-import { type AIMessage } from '../../../lib/ai';
-import { ChatMessage } from './ChatMessage';
-import { ChatInput } from './ChatInput';
+import { useRef, useEffect } from 'react'
+import { type AIMessage } from '../../../lib/ai/index'
+import { ChatMessage } from './ChatMessage'
+import { ChatInput } from './ChatInput'
 
 export interface ChatContainerProps {
-  messages: AIMessage[];
-  onSendMessage: (message: string) => void;
-  isLoading?: boolean;
-  error?: string;
-  className?: string;
-  inputPlaceholder?: string;
-  disabled?: boolean;
+  messages: AIMessage[]
+  onSendMessage: (message: string) => void
+  isLoading?: boolean
+  error?: string
+  className?: string
+  inputPlaceholder?: string
+  disabled?: boolean
 }
 
 /**
@@ -23,16 +23,16 @@ export function ChatContainer({
   error,
   className = '',
   inputPlaceholder,
-  disabled = false
+  disabled = false,
 }: ChatContainerProps) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Scroll to bottom when messages change or loading state changes
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading])
 
   return (
     <div className={`flex flex-col h-full ${className}`}>
@@ -46,27 +46,27 @@ export function ChatContainer({
             {messages.map((message, index) => (
               <ChatMessage key={index} message={message} />
             ))}
-            
+
             {isLoading && (
               <ChatMessage
-                message={{ role: 'assistant', content: '' }}
+                message={{ role: 'assistant', content: '', name: 'assistant' }}
                 isLoading={true}
               />
             )}
-            
+
             {error && (
               <ChatMessage
-                message={{ role: 'assistant', content: '' }}
+                message={{ role: 'assistant', content: '', name: 'assistant' }}
                 isError={true}
                 errorMessage={error}
               />
             )}
-            
+
             <div ref={messagesEndRef} />
           </>
         )}
       </div>
-      
+
       <div className="p-4 border-t">
         <ChatInput
           onSendMessage={onSendMessage}
@@ -76,5 +76,5 @@ export function ChatContainer({
         />
       </div>
     </div>
-  );
-} 
+  )
+}

@@ -1,6 +1,5 @@
 ---
-import { SITE } from '../config';
-import '../styles/global.css';
+import { SITE } from '../config.ts';
 
 interface Props {
   title?: string;
@@ -8,22 +7,23 @@ interface Props {
 }
 
 const {
-  title = 'Authentication',
-  description = 'Sign in or register for an account',
+  title = SITE.title,
+  description = SITE.description,
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
+
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonicalURL} />
-    <title>{title} | {SITE.title}</title>
+    <title>{title}</title>
     <meta name="description" content={description} />
   </head>
   <body>
@@ -31,7 +31,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="auth-card">
         <div class="auth-logo">
           <a href="/">
-            <img src="/logo.svg" alt={SITE.title} width="120" height="40" />
+            <img src="/logo.svg" alt={SITE.name} width="120" height="40" />
           </a>
         </div>
         <slot />

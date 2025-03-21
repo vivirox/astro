@@ -1,8 +1,8 @@
 ---
-import ChatLayout from '../../layouts/ChatLayout.astro';
-import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester';
-import AIChat from '../../components/AIChat';
-import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadingIndicator';
+
+
+
+
 ---
 
 <ChatLayout title="Browser Compatibility Testing">
@@ -12,12 +12,12 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
       This page tests critical AI components across different browsers to ensure consistent functionality and accessibility.
       Run this page in Chrome, Firefox, Safari, and Edge to verify compatibility.
     </p>
-    
+
     <section class="test-section">
       <h2>Browser Information</h2>
       <BrowserCompatibilityTester client:load />
     </section>
-    
+
     <section class="test-section">
       <h2>AI Chat Component Test</h2>
       <div class="component-test">
@@ -37,7 +37,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
         </div>
       </div>
     </section>
-    
+
     <section class="test-section">
       <h2>Loading Indicator Test</h2>
       <div class="component-test">
@@ -64,7 +64,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
         </div>
       </div>
     </section>
-    
+
     <section class="test-section">
       <h2>Compatibility Issues Log</h2>
       <div class="compatibility-log">
@@ -99,7 +99,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
             <button type="submit" class="btn btn-primary">Log Issue</button>
           </div>
         </form>
-        
+
         <div class="issues-list">
           <h3>Reported Issues</h3>
           <div id="issues-container">
@@ -116,12 +116,12 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('compatibility-form') as HTMLFormElement;
     const issuesContainer = document.getElementById('issues-container') as HTMLDivElement;
-    
+
     if (!form || !issuesContainer) {
       console.error('Required elements not found');
       return;
     }
-    
+
     // Load existing issues from localStorage
     const loadIssues = () => {
       const issues = JSON.parse(localStorage.getItem('compatibility-issues') || '[]');
@@ -129,7 +129,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
         issuesContainer.innerHTML = '<p>No issues reported yet.</p>';
         return;
       }
-      
+
       issuesContainer.innerHTML = '';
       issues.forEach((issue: any, index: number) => {
         const issueElement = document.createElement('div');
@@ -149,13 +149,13 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
         `;
         issuesContainer.appendChild(issueElement);
       });
-      
+
       // Add event listeners to delete buttons
       document.querySelectorAll('.delete-issue').forEach(button => {
         button.addEventListener('click', (e) => {
           const target = e.currentTarget as HTMLElement;
           if (!target) return;
-          
+
           const index = parseInt(target.getAttribute('data-index') || '0');
           const issues = JSON.parse(localStorage.getItem('compatibility-issues') || '[]');
           issues.splice(index, 1);
@@ -164,11 +164,11 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
         });
       });
     };
-    
+
     // Handle form submission
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      
+
       const formData = new FormData(form);
       const issue = {
         browser: formData.get('browser'),
@@ -177,26 +177,26 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
         severity: formData.get('severity'),
         timestamp: new Date().toISOString()
       };
-      
+
       // Save to localStorage
       const issues = JSON.parse(localStorage.getItem('compatibility-issues') || '[]');
       issues.push(issue);
       localStorage.setItem('compatibility-issues', JSON.stringify(issues));
-      
+
       // Reset form and reload issues
       form.reset();
       loadIssues();
     });
-    
+
     // Initial load
     loadIssues();
-    
+
     // Pre-fill browser field with user agent info
     const browserInput = document.getElementById('browser') as HTMLInputElement;
     if (browserInput) {
       const ua = navigator.userAgent;
       let browserName = "Unknown";
-      
+
       if (ua.includes("Firefox")) {
         browserName = "Firefox";
       } else if (ua.includes("SamsungBrowser")) {
@@ -210,7 +210,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
       } else if (ua.includes("Safari")) {
         browserName = "Safari";
       }
-      
+
       browserInput.value = browserName;
     }
   });
@@ -222,7 +222,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
     margin: 0 auto;
     padding: 2rem;
   }
-  
+
   .test-section {
     margin-bottom: 3rem;
     padding: 1.5rem;
@@ -230,38 +230,38 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
     border-radius: 8px;
     background-color: var(--card-bg, #fff);
   }
-  
+
   .component-test {
     margin-top: 1rem;
   }
-  
+
   .component-container {
     margin-top: 1.5rem;
     padding: 1rem;
     border: 1px solid var(--border-color, #ddd);
     border-radius: 4px;
   }
-  
+
   .loading-indicators-test {
     display: flex;
     gap: 2rem;
     margin-top: 1.5rem;
   }
-  
+
   .compatibility-form {
     margin-bottom: 2rem;
   }
-  
+
   .form-group {
     margin-bottom: 1rem;
   }
-  
+
   .form-group label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
   }
-  
+
   .form-group input,
   .form-group select,
   .form-group textarea {
@@ -270,11 +270,11 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
     border: 1px solid var(--border-color, #ddd);
     border-radius: 4px;
   }
-  
+
   .form-actions {
     margin-top: 1.5rem;
   }
-  
+
   .btn {
     padding: 0.5rem 1rem;
     border: none;
@@ -282,72 +282,72 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
     cursor: pointer;
     font-weight: 500;
   }
-  
+
   .btn-primary {
     background-color: var(--primary-color, #0066cc);
     color: white;
   }
-  
+
   .btn-danger {
     background-color: var(--danger-color, #dc3545);
     color: white;
   }
-  
+
   .btn-sm {
     padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
   }
-  
+
   .issue-item {
     margin-bottom: 1rem;
     padding: 1rem;
     border: 1px solid var(--border-color, #ddd);
     border-radius: 4px;
   }
-  
+
   .issue-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
   }
-  
+
   .issue-severity {
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 500;
   }
-  
+
   .issue-severity.critical {
     background-color: var(--danger-color, #dc3545);
     color: white;
   }
-  
+
   .issue-severity.major {
     background-color: var(--warning-color, #ffc107);
     color: black;
   }
-  
+
   .issue-severity.minor {
     background-color: var(--info-color, #17a2b8);
     color: white;
   }
-  
+
   .issue-actions {
     margin-top: 0.5rem;
     text-align: right;
   }
-  
+
   @media (prefers-reduced-motion: reduce) {
     .loading-indicator {
       animation: none !important;
     }
   }
-  
+
   @media (prefers-color-scheme: dark) {
     .test-section {
       border-color: var(--border-color-dark, #444);
       background-color: var(--card-bg-dark, #222);
     }
   }
-</style> 
+</style>

@@ -14,15 +14,15 @@ This guide outlines the process for testing our AI components across different b
 
 We aim to support the following browsers:
 
-| Browser | Minimum Version | Priority |
-|---------|----------------|----------|
-| Chrome  | 90+            | High     |
-| Firefox | 90+            | High     |
-| Safari  | 14+            | High     |
-| Edge    | 90+            | High     |
-| iOS Safari | 14+         | Medium   |
-| Android Chrome | 90+     | Medium   |
-| Samsung Internet | 14+   | Low      |
+| Browser          | Minimum Version | Priority |
+| ---------------- | --------------- | -------- |
+| Chrome           | 90+             | High     |
+| Firefox          | 90+             | High     |
+| Safari           | 14+             | High     |
+| Edge             | 90+             | High     |
+| iOS Safari       | 14+             | Medium   |
+| Android Chrome   | 90+             | Medium   |
+| Samsung Internet | 14+             | Low      |
 
 ## Testing Process
 
@@ -150,4 +150,4 @@ Our CI pipeline includes:
 
 ## Contact
 
-For questions about browser compatibility testing, contact the accessibility team at accessibility@example.com. 
+For questions about browser compatibility testing, contact the accessibility team at [accessibility@example.com](mailto:accessibility@example.com).

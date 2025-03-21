@@ -1,41 +1,42 @@
-import { createClient } from '@supabase/supabase-js';
-import type { Session, User } from '@supabase/supabase-js';
-import { createAuditLog } from '../audit/log';
+import { createClient } from '@supabase/supabase-js'
+import type { Session, User } from '@supabase/supabase-js'
+import { createAuditLog } from '../audit/log.js'
 
-// Define session type
 export interface SessionData {
-  user: User;
-  session: Session;
+  user: User
+  session: Session
 }
 
 /**
- * Get the current session from the request
- * @param request The incoming request
+ * Get the current session
+ * @param request The request object from the API route
  * @returns The session data or null if not authenticated
  */
-export async function getSession(request: Request): Promise<SessionData | null> {
+export async function getSession(
+  request: Request
+): Promise<SessionData | null> {
   try {
-    // Get the session cookie
+    // Create a Supabase client
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-    );
+    )
 
-    // Get the session from the request cookie
-    const { data, error } = await supabase.auth.getSession();
-    
-    if (error || !data.session) {
-      return null;
+    // Get the session from the session cookie
+    const { data, error } = await supabase.auth.getSession()
+
+    if (error || !data?.session) {
+      return null
     }
 
     // Return the session data
     return {
-      user: data.session.user,
-      session: data.session
-    };
+      user: data?.session.user,
+      session: data?.session,
+    }
   } catch (error) {
-    console.error('Error getting session:', error);
-    return null;
+    console.error('Error getting session:', error)
+    return null
   }
 }
 
@@ -49,13 +50,13 @@ export async function createSession(user: User): Promise<SessionData | null> {
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-    );
+    )
 
     // Create a new session
-    const { data, error } = await supabase.auth.refreshSession();
-    
-    if (error || !data.session) {
-      return null;
+    const { data, error } = await supabase.auth.refreshSession()
+
+    if (error || !data?.session) {
+      return null
     }
 
     // Log the session creation
@@ -64,18 +65,18 @@ export async function createSession(user: User): Promise<SessionData | null> {
       action: 'auth.session.created',
       resource: 'session',
       metadata: {
-        sessionId: data.session.access_token.substring(0, 8) // Use part of the access token as a session identifier
-      }
-    });
+        sessionId: data?.session.access_token.substring(0, 8),
+      },
+    })
 
     // Return the session data
     return {
-      user: data.session.user,
-      session: data.session
-    };
+      user: data?.session.user,
+      session: data?.session,
+    }
   } catch (error) {
-    console.error('Error creating session:', error);
-    return null;
+    console.error('Error creating session:', error)
+    return null
   }
 }
 
@@ -84,15 +85,18 @@ export async function createSession(user: User): Promise<SessionData | null> {
  * @param sessionId The session ID to end
  * @param userId The user ID associated with the session
  */
-export async function endSession(sessionId: string, userId: string): Promise<void> {
+export async function endSession(
+  sessionId: string,
+  userId: string
+): Promise<void> {
   try {
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-    );
+    )
 
     // Sign out
-    await supabase.auth.signOut();
+    await supabase.auth.signOut()
 
     // Log the session end
     await createAuditLog({
@@ -100,10 +104,10 @@ export async function endSession(sessionId: string, userId: string): Promise<voi
       action: 'auth.session.ended',
       resource: 'session',
       metadata: {
-        sessionId
-      }
-    });
+        sessionId,
+      },
+    })
   } catch (error) {
-    console.error('Error ending session:', error);
+    console.error('Error ending session:', error)
   }
-} 
+}

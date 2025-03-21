@@ -1,16 +1,23 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { PerformanceDashboard } from '../../../components/ai/PerformanceDashboard';
-import { getCurrentUser, hasRole } from '../../../lib/auth';
+import PerformanceDashboard from "@components/admin/PerformanceDashboard.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
 
-// Require authentication and admin role
-const user = await getCurrentUser(Astro.cookies);
-if (!user || !await hasRole(Astro.cookies, 'admin')) {
-  return Astro.redirect('/login?redirect=' + encodeURIComponent(Astro.url.pathname));
-}
+import { verifyAdmin } from "../../../lib/auth/middleware";
+import type { AuthContext, SessionData } from "../../../lib/auth/types";
+
+// Verify admin access
+const context: AuthContext = {
+  user: (Astro.locals as { session?: SessionData }).session?.user || null,
+  session: (Astro.locals as { session?: SessionData }).session?.session || null,
+  isAuthenticated: !!(Astro.locals as { session?: SessionData }).session?.user,
+  zkVerification: undefined,
+};
+
+const response = await verifyAdmin(Astro.request, context);
+if (response) return response;
 ---
 
-<BaseLayout title="AI Performance">
+<BaseLayout title="AI Performance" bgType="default">
   <div class="container py-6">
     <div class="flex justify-between items-center mb-6">
       <div>
@@ -20,7 +27,7 @@ if (!user || !await hasRole(Astro.cookies, 'admin')) {
         </p>
       </div>
     </div>
-    
-    <PerformanceDashboard client:load />
+
+    <PerformanceDashboard />
   </div>
-</BaseLayout> 
+</BaseLayout>

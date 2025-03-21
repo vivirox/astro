@@ -1,100 +1,258 @@
-// This file is deprecated and should be removed.
-// Please use ai-types.ts instead.
-// This file is only kept temporarily for backward compatibility
+import type { ReadableStream } from 'node:stream/web'
+// Re-export types from models
+export * from './models/ai-types'
 
-// Re-export from ai-types.ts to maintain compatibility
-export * from './models/ai-types';
-
-export type AIProvider = 'openai' | 'anthropic' | 'google' | 'azure' | 'deepseek' | 'local';
+export type AIProvider =
+  | 'openai'
+  | 'anthropic'
+  | 'google'
+  | 'azure'
+  | 'deepseek'
+  | 'together'
+  | 'local'
 
 export interface AIModel {
-  id: string;
-  name: string;
-  provider: AIProvider;
-  maxTokens: number;
-  contextWindow: number;
+  id: string
+  name: string
+  provider: AIProvider
+  maxTokens: number
+  contextWindow: number
 }
 
 export interface AIModelResponse {
-  model: string;
+  model: string
   choices: Array<{
     message?: {
-      content: string;
-    };
-  }>;
+      content: string
+    }
+  }>
   usage?: {
-    totalTokens: number;
-    promptTokens: number;
-    completionTokens: number;
-  };
-  error?: string;
+    totalTokens: number
+    promptTokens: number
+    completionTokens: number
+  }
+  error?: string
 }
 
 // Message type for AI conversations
-export interface Message {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
+export interface AIMessage {
+  role: 'system' | 'user' | 'assistant'
+  content: string
+  name?: string
 }
 
 // AI service configuration
 export interface AIServiceConfig {
-  model: string;
-  temperature?: number;
-  maxResponseTokens?: number;
-  topP?: number;
-  frequencyPenalty?: number;
-  presencePenalty?: number;
+  model: string
+  temperature?: number
+  maxResponseTokens?: number
 }
 
 // Token usage information
 export interface TokenUsage {
-  promptTokens: number;
-  completionTokens: number;
-  totalTokens: number;
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
 }
 
 // AI service response
 export interface AIServiceResponse {
-  content: string;
-  usage?: TokenUsage;
-  model: string;
-  provider: string;
+  content: string
+  usage?: TokenUsage
+  model: string
 }
 
-// Response generation service configuration
+/**
+ * Response Generation Config
+ */
 export interface ResponseGenerationConfig {
-  aiService: any; // The AI service instance
-  model: string;
-  temperature?: number;
-  maxResponseTokens?: number;
+  aiService: AIService
+  model?: string
+  temperature?: number
+  maxResponseTokens?: number
+  systemPrompt?: string
 }
 
-// Sentiment analysis result
+/**
+ * Response Generation Result
+ */
+export interface ResponseGenerationResult {
+  content: string
+  usage?: TokenUsage
+  aiService?: AIService
+  model?: string
+  temperature?: number
+  maxResponseTokens?: number
+  systemPrompt?: string
+}
+
+// Sentiment analysis resul
 export interface SentimentAnalysisResult {
-  sentiment: 'positive' | 'negative' | 'neutral';
-  score: number;
-  confidence: number;
-  content: string;
-  usage?: TokenUsage;
+  sentiment: 'positive' | 'negative' | 'neutral'
+  score: number
+  confidence: number
+  content: string
+  usage?: TokenUsage
 }
 
-// Crisis detection result
+// Crisis detection resul
 export interface CrisisDetectionResult {
-  hasCrisis: boolean;
-  riskLevel: 'none' | 'low' | 'medium' | 'high' | 'severe';
-  confidence: number;
-  categories?: string[];
-  explanation?: string;
-  content: string;
-  usage?: TokenUsage;
+  isCrisis: boolean
+  severity: 'none' | 'low' | 'medium' | 'high' | 'severe'
+  confidence: number
+  category?: string
+  recommendedAction?: string
+  content: string
+  usage?: TokenUsage
 }
 
-// Intervention analysis result
+// Intervention analysis resul
 export interface InterventionAnalysisResult {
-  effectiveness: number;
-  strengths: string[];
-  weaknesses: string[];
-  suggestions: string[];
-  content: string;
-  usage?: TokenUsage;
-} 
+  effectiveness: number
+  strengths: string[]
+  weaknesses: string[]
+  suggestions: string[]
+  content: string
+  usage?: TokenUsage
+}
+
+export interface ResponseGenerationOptions {
+  temperature?: number
+  maxResponseTokens?: number
+  instructions?: string
+}
+
+/**
+ * Sentiment Analysis Resul
+ */
+export interface SentimentResult {
+  sentiment: 'positive' | 'negative' | 'neutral'
+  score: number
+  confidence: number
+  content: string
+  usage?: TokenUsage
+}
+
+/**
+ * Extended AI Message Type for flexible roles
+ */
+export interface ExtendedAIMessage {
+  role: string
+  content: string
+  name?: string
+}
+
+/**
+ * AI Service Options
+ */
+export interface AIServiceOptions {
+  model?: string
+  temperature?: number
+  maxTokens?: number
+  skipCache?: boolean
+  togetherApiKey?: string
+  userId?: string
+  sessionId?: string
+}
+
+/**
+ * AI Completion Response
+ */
+export interface AICompletionResponse {
+  id: string
+  model: string
+  created: number
+  content: string
+  choices: Array<{
+    message: {
+      role: string
+      content: string
+      name?: string
+    }
+    finishReason?: string
+  }>
+  usage?: {
+    promptTokens: number
+    completionTokens: number
+    totalTokens: number
+  }
+}
+
+/**
+ * AI Stream Chunk
+ */
+export interface AIStreamChunk {
+  id: string
+  created: number
+  model: string
+  content: string
+  choices: Array<{
+    delta: {
+      content: string
+    }
+    finishReason?: string | null
+  }>
+}
+
+/**
+ * AI Usage Record
+ */
+export interface AIUsageRecord {
+  timestamp: number
+  model: string
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+  id: string
+  provider: AIProvider
+  cost?: number
+}
+
+/**
+ * AI Service Interface
+ */
+export interface AIService {
+  createChatCompletion(
+    messages: AIMessage[],
+    options?: AIServiceOptions
+  ): Promise<AICompletionResponse>
+
+  createStreamingChatCompletion(
+    messages: AIMessage[],
+    options?: AIServiceOptions
+  ): Promise<ReadableStream<AIStreamChunk>>
+
+  getModelInfo(model: string): any
+
+  createChatCompletionWithTracking(
+    messages: AIMessage[],
+    options?: AIServiceOptions
+  ): Promise<AICompletionResponse>
+
+  generateCompletion(
+    messages: AIMessage[],
+    options?: AIServiceOptions
+  ): Promise<AICompletionResponse>
+
+  dispose(): void
+}
+
+/**
+ * AI Completion Reques
+ */
+export interface AICompletionRequest {
+  messages: AIMessage[]
+  model: string
+  temperature?: number
+  maxTokens?: number
+}
+
+/**
+ * AI Error
+ */
+export interface AIError {
+  message: string
+  type: string
+  param: string | null
+  code: number
+}

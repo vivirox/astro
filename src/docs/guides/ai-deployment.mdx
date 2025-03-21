@@ -66,19 +66,22 @@ For secure management of API keys and other secrets:
 Example using AWS Secrets Manager:
 
 ```typescript
-import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} from '@aws-sdk/client-secrets-manager'
 
-const secretsManager = new SecretsManagerClient({ region: 'us-east-1' });
+const secretsManager = new SecretsManagerClient({ region: 'us-east-1' })
 
 async function getSecret(secretName: string): Promise<string> {
-  const command = new GetSecretValueCommand({ SecretId: secretName });
-  const response = await secretsManager.send(command);
-  return response.SecretString || '';
+  const command = new GetSecretValueCommand({ SecretId: secretName })
+  const response = await secretsManager.send(command)
+  return response.SecretString || ''
 }
 
 // In your AI service factory
-const openaiApiKey = await getSecret('openai-api-key');
-const anthropicApiKey = await getSecret('anthropic-api-key');
+const openaiApiKey = await getSecret('openai-api-key')
+const anthropicApiKey = await getSecret('anthropic-api-key')
 ```
 
 ## Deployment Options
@@ -129,15 +132,15 @@ For deploying to AWS:
 
 ```typescript
 // astro.config.mjs
-import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
+import { defineConfig } from 'astro/config'
+import node from '@astrojs/node'
 
 export default defineConfig({
   output: 'server',
   adapter: node({
-    mode: 'standalone'
-  })
-});
+    mode: 'standalone',
+  }),
+})
 ```
 
 2. Create a Lambda deployment package:
@@ -221,22 +224,26 @@ For horizontal scaling:
 2. Implement distributed caching with Redis:
 
 ```typescript
-import { createClient } from 'redis';
+import { createClient } from 'redis'
 
 const redisClient = createClient({
-  url: process.env.REDIS_URL
-});
+  url: process.env.REDIS_URL,
+})
 
-await redisClient.connect();
+await redisClient.connect()
 
 // In your performance optimization wrapper
 async function getCachedResponse(key: string): Promise<AICompletion | null> {
-  const cached = await redisClient.get(key);
-  return cached ? JSON.parse(cached) : null;
+  const cached = await redisClient.get(key)
+  return cached ? JSON.parse(cached) : null
 }
 
-async function cacheResponse(key: string, response: AICompletion, ttl: number): Promise<void> {
-  await redisClient.set(key, JSON.stringify(response), { EX: ttl });
+async function cacheResponse(
+  key: string,
+  response: AICompletion,
+  ttl: number
+): Promise<void> {
+  await redisClient.set(key, JSON.stringify(response), { EX: ttl })
 }
 ```
 
@@ -261,20 +268,20 @@ Implement a multi-level caching strategy:
 1. In-memory LRU cache for frequently used prompts:
 
 ```typescript
-import LRUCache from 'lru-cache';
+import LRUCache from 'lru-cache'
 
 const memoryCache = new LRUCache<string, AICompletion>({
   max: 1000,
-  ttl: 1000 * 60 * 60 // 1 hour
-});
+  ttl: 1000 * 60 * 60, // 1 hour
+})
 
 // In your performance optimization wrapper
 function getCachedResponseFromMemory(key: string): AICompletion | undefined {
-  return memoryCache.get(key);
+  return memoryCache.get(key)
 }
 
 function cacheResponseInMemory(key: string, response: AICompletion): void {
-  memoryCache.set(key, response);
+  memoryCache.set(key, response)
 }
 ```
 
@@ -300,7 +307,7 @@ Set up performance monitoring:
 1. Implement custom metrics for AI operations:
 
 ```typescript
-import { Metrics } from '../lib/monitoring';
+import { Metrics } from '../lib/monitoring'
 
 // In your performance optimization wrapper
 async function trackPerformance(
@@ -308,18 +315,22 @@ async function trackPerformance(
   provider: string,
   model: string,
   startTime: number,
-  tokenUsage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }
-): Promise<void> {
-  const duration = Date.now() - startTime;
-  
-  Metrics.recordLatency(operation, provider, model, duration);
-  
-  if (tokenUsage) {
-    Metrics.recordTokenUsage(operation, provider, model, tokenUsage);
+  tokenUsage?: {
+    prompt_tokens: number
+    completion_tokens: number
+    total_tokens: number
   }
-  
+): Promise<void> {
+  const duration = Date.now() - startTime
+
+  Metrics.recordLatency(operation, provider, model, duration)
+
+  if (tokenUsage) {
+    Metrics.recordTokenUsage(operation, provider, model, tokenUsage)
+  }
+
   if (duration > Number(process.env.SLOW_REQUEST_THRESHOLD || 5000)) {
-    Metrics.recordSlowRequest(operation, provider, model, duration);
+    Metrics.recordSlowRequest(operation, provider, model, duration)
   }
 }
 ```
@@ -335,7 +346,7 @@ Set up usage tracking:
 1. Implement database logging for AI usage:
 
 ```typescript
-import { db } from '../lib/db';
+import { db } from '../lib/db'
 
 // In your performance optimization wrapper
 async function trackUsage(
@@ -343,7 +354,11 @@ async function trackUsage(
   operation: string,
   provider: string,
   model: string,
-  tokenUsage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }
+  tokenUsage?: {
+    prompt_tokens: number
+    completion_tokens: number
+    total_tokens: number
+  }
 ): Promise<void> {
   await db.insert('ai_usage', {
     user_id: userId,
@@ -353,8 +368,8 @@ async function trackUsage(
     prompt_tokens: tokenUsage?.prompt_tokens || 0,
     completion_tokens: tokenUsage?.completion_tokens || 0,
     total_tokens: tokenUsage?.total_tokens || 0,
-    timestamp: new Date()
-  });
+    timestamp: new Date(),
+  })
 }
 ```
 
@@ -369,7 +384,7 @@ Set up HIPAA-compliant audit logging:
 1. Implement comprehensive audit logging:
 
 ```typescript
-import { AuditLogger } from '../lib/audit';
+import { AuditLogger } from '../lib/audit'
 
 // In your AI service wrapper
 async function logAuditEvent(
@@ -383,10 +398,11 @@ async function logAuditEvent(
     action,
     resource,
     details,
-    ip_address: request.headers.get('x-forwarded-for') || request.socket.remoteAddress,
+    ip_address:
+      request.headers.get('x-forwarded-for') || request.socket.remoteAddress,
     user_agent: request.headers.get('user-agent'),
-    timestamp: new Date()
-  });
+    timestamp: new Date(),
+  })
 }
 ```
 
@@ -403,7 +419,7 @@ Implement rate limiting to prevent abuse:
 1. Set up rate limiting middleware:
 
 ```typescript
-import { rateLimit } from 'express-rate-limit';
+import { rateLimit } from 'express-rate-limit'
 
 const aiRateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
@@ -412,23 +428,26 @@ const aiRateLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => req.user?.id || req.ip,
   handler: (req, res) => {
-    return new Response(JSON.stringify({
-      error: {
-        message: 'Too many requests, please try again later.',
-        code: 'RATE_LIMIT_EXCEEDED',
-        statusCode: 429
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: 'Too many requests, please try again later.',
+          code: 'RATE_LIMIT_EXCEEDED',
+          statusCode: 429,
+        },
+      }),
+      {
+        status: 429,
+        headers: { 'Content-Type': 'application/json' },
       }
-    }), {
-      status: 429,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-});
+    )
+  },
+})
 
 // In your API route
 export const config = {
-  middleware: [aiRateLimiter]
-};
+  middleware: [aiRateLimiter],
+}
 ```
 
 2. Implement tiered rate limits based on user roles
@@ -442,23 +461,23 @@ Implement content filtering for AI inputs and outputs:
 1. Set up input validation and sanitization:
 
 ```typescript
-import { z } from 'zod';
+import { z } from 'zod'
 
 const messageSchema = z.object({
   role: z.enum(['system', 'user', 'assistant']),
-  content: z.string().min(1).max(32768)
-});
+  content: z.string().min(1).max(32768),
+})
 
 const completionRequestSchema = z.object({
   messages: z.array(messageSchema).min(1).max(100),
   model: z.string().min(1),
   temperature: z.number().min(0).max(2).optional(),
   max_tokens: z.number().min(1).max(32768).optional(),
-  provider: z.enum(['openai', 'anthropic']).optional()
-});
+  provider: z.enum(['openai', 'anthropic']).optional(),
+})
 
 // In your API route
-const validatedData = completionRequestSchema.parse(await request.json());
+const validatedData = completionRequestSchema.parse(await request.json())
 ```
 
 2. Implement output filtering for sensitive information
@@ -472,20 +491,23 @@ Implement access control for AI features:
 1. Set up role-based access control:
 
 ```typescript
-import { AccessControl } from '../lib/access-control';
+import { AccessControl } from '../lib/access-control'
 
 // In your API route
 if (!AccessControl.can(user, 'use', 'ai:sentiment-analysis')) {
-  return new Response(JSON.stringify({
-    error: {
-      message: 'You do not have permission to use this feature.',
-      code: 'PERMISSION_DENIED',
-      statusCode: 403
+  return new Response(
+    JSON.stringify({
+      error: {
+        message: 'You do not have permission to use this feature.',
+        code: 'PERMISSION_DENIED',
+        statusCode: 403,
+      },
+    }),
+    {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
     }
-  }), {
-    status: 403,
-    headers: { 'Content-Type': 'application/json' }
-  });
+  )
 }
 ```
 
@@ -502,15 +524,15 @@ Implement HIPAA-compliant data protection:
 1. Encrypt sensitive data in transit and at rest:
 
 ```typescript
-import { encrypt, decrypt } from '../lib/crypto';
+import { encrypt, decrypt } from '../lib/crypto'
 
 // Encrypt sensitive data before storing
-const encryptedData = await encrypt(sensitiveData, encryptionKey);
-await db.insert('ai_data', { encrypted_data: encryptedData });
+const encryptedData = await encrypt(sensitiveData, encryptionKey)
+await db.insert('ai_data', { encrypted_data: encryptedData })
 
 // Decrypt data when needed
-const encryptedData = await db.select('ai_data').where({ id });
-const decryptedData = await decrypt(encryptedData, encryptionKey);
+const encryptedData = await db.select('ai_data').where({ id })
+const decryptedData = await decrypt(encryptedData, encryptionKey)
 ```
 
 2. Implement secure data deletion policies
@@ -553,36 +575,42 @@ Implement a failover strategy:
 1. Set up provider failover for AI services:
 
 ```typescript
-import { createAIService, AIError, AIErrorCodes } from '../lib/ai';
+import { createAIService, AIError, AIErrorCodes } from '../lib/ai'
 
 async function createCompletionWithFailover(
   messages: AIMessage[],
   options?: AIServiceOptions
 ): Promise<AICompletion> {
-  const primaryProvider = options?.provider || process.env.DEFAULT_AI_PROVIDER || 'openai';
-  const fallbackProviders = ['anthropic', 'openai'].filter(p => p !== primaryProvider);
-  
+  const primaryProvider =
+    options?.provider || process.env.DEFAULT_AI_PROVIDER || 'openai'
+  const fallbackProviders = ['anthropic', 'openai'].filter(
+    (p) => p !== primaryProvider
+  )
+
   try {
-    const aiService = createAIService({ provider: primaryProvider });
-    return await aiService.createChatCompletion(messages, options);
+    const aiService = createAIService({ provider: primaryProvider })
+    return await aiService.createChatCompletion(messages, options)
   } catch (error) {
-    if (error instanceof AIError && (
-      error.code === AIErrorCodes.SERVICE_UNAVAILABLE ||
-      error.code === AIErrorCodes.RATE_LIMIT_EXCEEDED
-    )) {
+    if (
+      error instanceof AIError &&
+      (error.code === AIErrorCodes.SERVICE_UNAVAILABLE ||
+        error.code === AIErrorCodes.RATE_LIMIT_EXCEEDED)
+    ) {
       // Try fallback providers
       for (const fallbackProvider of fallbackProviders) {
         try {
-          const fallbackService = createAIService({ provider: fallbackProvider });
-          return await fallbackService.createChatCompletion(messages, options);
+          const fallbackService = createAIService({
+            provider: fallbackProvider,
+          })
+          return await fallbackService.createChatCompletion(messages, options)
         } catch (fallbackError) {
           // Continue to next fallback
         }
       }
     }
-    
+
     // If all providers fail, throw the original error
-    throw error;
+    throw error
   }
 }
 ```
@@ -650,7 +678,7 @@ If you encounter API key issues:
 3. Ensure the API key is valid and not expired
 4. Verify the API key is for the correct environment (production vs. development)
 
-#### Rate Limiting
+#### Rate Limiting 2
 
 If you encounter rate limiting issues:
 
@@ -724,4 +752,4 @@ Conduct regular security reviews:
 
 - [GitHub Repository](https://github.com/your-org/your-repo)
 - [Issue Tracker](https://github.com/your-org/your-repo/issues)
-- [Email Support](mailto:support@your-org.com) 
+- [Email Support](mailto:support@your-org.com)

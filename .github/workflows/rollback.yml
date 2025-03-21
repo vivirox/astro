@@ -1,91 +1,120 @@
-name: Rollback Deployment
+name: Deployment Rollback
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to rollback (production or staging)'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - production
-          - staging
-      tag:
-        description: 'Git tag to rollback to (leave empty for last successful deployment)'
-        required: false
-        type: string
+  push:
+    branches:
+      - main
+      - staging
+
+permissions:
+  contents: read
+  id-token: write
 
 env:
-  NODE_VERSION: 22.13.11
-  PNPM_VERSION: 10.5.3
+  NODE_VERSION: 20.11.0
+  PNPM_VERSION: 10.0.0
 
 jobs:
-  rollback:
-    name: Rollback
+  rollback-staging:
+    name: Rollback Staging
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    concurrency: 
-      group: ${{ github.event.inputs.environment }}_environment
-      cancel-in-progress: false
+    environment: staging
+    if: github.ref == 'refs/heads/staging'
+    concurrency:
+      group: staging_environment
+      cancel-in-progress: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-        
+
       - name: Determine rollback tag
         id: get-tag
         run: |
-          if [ -z "${{ github.event.inputs.tag }}" ]; then
-            if [ "${{ github.event.inputs.environment }}" == "production" ]; then
-              TAG=$(git tag -l "production-*" --sort=-committerdate | head -n 2 | tail -n 1)
-            else
-              TAG=$(git tag -l "staging-*" --sort=-committerdate | head -n 2 | tail -n 1)
-            fi
-          else
-            TAG="${{ github.event.inputs.tag }}"
-          fi
-          
+          TAG=$(git tag -l "staging-*" --sort=-committerdate | head -n 2 | tail -n 1)
           if [ -z "$TAG" ]; then
             echo "::error::No suitable tag found for rollback"
             exit 1
           fi
-          
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           git checkout $TAG
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: ${{ env.PNPM_VERSION }}
-          
+
       - name: Install dependencies
         run: pnpm install
-      
+
       - name: Build application
         run: pnpm build
-      
+
       - name: Deploy rollback
         run: |
           npm install -g wrangler
-          wrangler pages deploy dist --project-name=gradiant-astro --branch=${{ github.event.inputs.environment == 'production' && 'main' || 'staging' }}
-      
+          wrangler pages deploy dist --project-name=gradiant-astro --branch=staging
+
       - name: Create rollback tag
         run: |
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          git tag rollback-${{ github.event.inputs.environment }}-$TIMESTAMP
-          git push origin rollback-${{ github.event.inputs.environment }}-$TIMESTAMP
-          
-      - name: Notify rollback status
-        if: always()
-        uses: rtCamp/action-slack-notify@v2.2.1
-        env:
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_TITLE: "ROLLBACK to ${{ steps.get-tag.outputs.tag }} - ${{ job.status }}"
-          SLACK_MESSAGE: "Rollback to ${{ steps.get-tag.outputs.tag }} for ${{ github.event.inputs.environment }} ${{ job.status }} at $(date)" 
+          git tag rollback-staging-$TIMESTAMP
+          git push origin rollback-staging-$TIMESTAMP
+
+  rollback-production:
+    name: Rollback Production
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main'
+    concurrency:
+      group: production_environment
+      cancel-in-progress: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine rollback tag
+        id: get-tag
+        run: |
+          TAG=$(git tag -l "production-*" --sort=-committerdate | head -n 2 | tail -n 1)
+          if [ -z "$TAG" ]; then
+            echo "::error::No suitable tag found for rollback"
+            exit 1
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          git checkout $TAG
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Deploy rollback
+        run: |
+          npm install -g wrangler
+          wrangler pages deploy dist --project-name=gradiant-astro --branch=production
+
+      - name: Create rollback tag
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          git tag rollback-production-$TIMESTAMP
+          git push origin rollback-production-$TIMESTAMP

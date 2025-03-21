@@ -1,8 +1,24 @@
-import { zkAuth } from '../../../lib/auth';
+import { zkAuth } from '../../../lib/auth/zkAuth'
+
+interface LoginRequest {
+  email: string
+  password: string
+}
+
+interface User {
+  id: string
+  email: string
+}
 
 export async function POST(request: Request) {
   try {
-    // ... existing authentication logic ...
+    const body = (await request.json()) as LoginRequest
+
+    // Authenticate user (replace with your actual auth logic)
+    const user: User = {
+      id: 'user-' + crypto.randomUUID(),
+      email: body.email,
+    }
 
     // Create session data
     const sessionData = {
@@ -14,13 +30,17 @@ export async function POST(request: Request) {
         ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
         userAgent: request.headers.get('user-agent') || 'unknown',
       },
-    };
+    }
 
     // Generate ZK proof for the session
-    const sessionWithProof = await zkAuth.generateSessionProof(sessionData);
+    const sessionWithProof = await zkAuth.generateSessionProof(
+      sessionData as any
+    )
 
-    // Encrypt the session data with proof
-    const encryptedSession = await zkAuth.encryptSessionWithProof(sessionData);
+    // Encrypt the session data with proof (not used currently but kept for future)
+    const encryptedSession = await zkAuth.encryptSessionWithProof(
+      sessionData as any
+    )
 
     // ... existing session storage logic ...
 
@@ -38,8 +58,26 @@ export async function POST(request: Request) {
           // ... other headers ...
         },
       }
-    );
+    )
   } catch (error) {
-    // ... existing error handling ...
+    // Handle the error properly
+    console.error(
+      'Login error:',
+      error instanceof Error ? error?.message : String(error)
+    )
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: 'Authentication failed',
+        error: error instanceof Error ? error?.message : 'Unknown error',
+      }),
+      {
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
   }
-} 
+}

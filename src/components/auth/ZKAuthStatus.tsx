@@ -1,56 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import { zkAuth } from '../../lib/auth';
-import type { AuthSessionWithProof } from '../../lib/auth/zkAuth';
+import { useState, useEffect } from 'react'
+import { zkAuth } from '../../lib/auth/index'
+import type { AuthSessionWithProof } from '../../lib/auth/index'
 
 interface ZKAuthStatusProps {
-  session: AuthSessionWithProof;
-  className?: string;
+  session: AuthSessionWithProof
+  className?: string
 }
 
 /**
  * Component to display the ZK verification status of an authentication session
  */
-export default function ZKAuthStatus({ session, className = '' }: ZKAuthStatusProps) {
+export default function ZKAuthStatus({
+  session,
+  className = '',
+}: ZKAuthStatusProps) {
   const [verificationStatus, setVerificationStatus] = useState<{
-    isValid: boolean;
-    isVerifying: boolean;
-    error?: string;
+    isValid: boolean
+    isVerifying: boolean
+    error?: string
   }>({
     isValid: false,
     isVerifying: true,
-  });
+  })
 
   useEffect(() => {
-    let isMounted = true;
+    let isMounted = true
 
     const verifySession = async () => {
       try {
         // Verify the session proof
-        const result = await zkAuth.verifySessionProof(session);
-        
+        const result = await zkAuth.verifySessionProofWithZK(session)
+
         if (isMounted) {
           setVerificationStatus({
-            isValid: result.isValid,
+            isValid: result?.isValid,
             isVerifying: false,
-          });
+          })
         }
       } catch (error) {
         if (isMounted) {
           setVerificationStatus({
             isValid: false,
             isVerifying: false,
-            error: error instanceof Error ? error.message : 'Verification failed',
-          });
+            error:
+              error instanceof Error ? error?.message : 'Verification failed',
+          })
         }
       }
-    };
+    }
 
-    verifySession();
+    verifySession()
 
     return () => {
-      isMounted = false;
-    };
-  }, [session]);
+      isMounted = false
+    }
+  }, [session])
 
   return (
     <div className={`zk-auth-status ${className}`}>
@@ -64,7 +68,7 @@ export default function ZKAuthStatus({ session, className = '' }: ZKAuthStatusPr
           <span className="zk-status-icon">✅</span>
           <span className="zk-status-text">Session verified</span>
           <span className="zk-status-timestamp">
-            {new Date(session.proof.timestamp).toLocaleTimeString()}
+            {new Date(session.startTime).toLocaleTimeString()}
           </span>
         </div>
       ) : (
@@ -77,5 +81,5 @@ export default function ZKAuthStatus({ session, className = '' }: ZKAuthStatusPr
         </div>
       )}
     </div>
-  );
-} 
+  )
+}

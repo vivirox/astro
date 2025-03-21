@@ -1,6 +1,7 @@
 # Troubleshooting Guide
 
 ## Table of Contents
+
 1. [Common Issues](#common-issues)
 2. [Debug Procedures](#debug-procedures)
 3. [Recovery Steps](#recovery-steps)
@@ -10,14 +11,17 @@
 
 ### 1. Deployment Failures
 
-#### Symptoms
+#### Symptoms 1
+
 - CodeDeploy shows failed status
 - ECS tasks fail to start
 - Health checks failing
 - Traffic not routing correctly
 
-#### Diagnosis
+#### Diagnosis 1
+
 1. Check CodeDeploy events:
+
    ```bash
    aws deploy get-deployment \
      --deployment-id deployment-id \
@@ -25,6 +29,7 @@
    ```
 
 2. Review ECS task status:
+
    ```bash
    aws ecs describe-tasks \
      --cluster your-cluster \
@@ -38,14 +43,17 @@
      --log-stream-name container-log-stream
    ```
 
-#### Resolution
+#### Resolution 1
+
 1. Container Issues
+
    - Check container health command
    - Verify environment variables
    - Review resource limits
    - Check container registry access
 
 2. Network Issues
+
    - Verify security group rules
    - Check subnet configurations
    - Test load balancer health checks
@@ -59,14 +67,17 @@
 
 ### 2. Performance Issues
 
-#### Symptoms
+#### Symptoms 2
+
 - High latency alerts
 - Increased error rates
 - Resource utilization spikes
 - Degraded user experience
 
-#### Diagnosis
+#### Diagnosis 2
+
 1. Check CloudWatch metrics:
+
    ```bash
    aws cloudwatch get-metric-statistics \
      --namespace AWS/ECS \
@@ -79,6 +90,7 @@
    ```
 
 2. Analyze OpenSearch logs:
+
    ```json
    {
      "query": {
@@ -98,14 +110,17 @@
    - Network throughput
    - Database connections
 
-#### Resolution
+#### Resolution 2
+
 1. Resource Optimization
+
    - Adjust container resources
    - Scale service capacity
    - Optimize database queries
    - Enable caching
 
 2. Performance Tuning
+
    - Review application settings
    - Optimize database indexes
    - Adjust connection pools
@@ -119,14 +134,17 @@
 
 ### 3. Monitoring Issues
 
-#### Symptoms
+#### Symptoms 3
+
 - Missing metrics
 - Delayed alerts
 - Incomplete logs
 - Dashboard errors
 
-#### Diagnosis
+#### Diagnosis 3
+
 1. Verify CloudWatch agent:
+
    ```bash
    aws cloudwatch describe-alarms \
      --alarm-names your-alarm \
@@ -134,6 +152,7 @@
    ```
 
 2. Check log delivery:
+
    ```bash
    aws firehose describe-delivery-stream \
      --delivery-stream-name your-stream \
@@ -145,14 +164,17 @@
    curl -X GET "https://${OPENSEARCH_ENDPOINT}/_cluster/health"
    ```
 
-#### Resolution
+#### Resolution 3
+
 1. Metric Collection
+
    - Restart CloudWatch agent
    - Update agent configuration
    - Check IAM permissions
    - Verify metric namespaces
 
 2. Log Aggregation
+
    - Check Firehose delivery
    - Verify Lambda processor
    - Update retention policies
@@ -169,6 +191,7 @@
 ### 1. Application Debug
 
 1. Enable Debug Logging
+
    ```bash
    aws ecs update-service \
      --cluster your-cluster \
@@ -177,6 +200,7 @@
    ```
 
 2. Collect Debug Information
+
    ```bash
    # Get application logs
    aws logs get-log-events \
@@ -203,6 +227,7 @@
 ### 2. Infrastructure Debug
 
 1. Check Service Health
+
    ```bash
    # ECS service status
    aws ecs describe-services \
@@ -219,6 +244,7 @@
    ```
 
 2. Verify Network Configuration
+
    ```bash
    # Security group rules
    aws ec2 describe-security-groups \
@@ -234,6 +260,7 @@
    ```
 
 3. Test Connectivity
+
    ```bash
    # DNS resolution
    dig +short your-domain
@@ -253,6 +280,7 @@
 ### 1. Service Recovery
 
 1. Rollback Deployment
+
    ```bash
    # Stop current deployment
    aws deploy stop-deployment \
@@ -266,6 +294,7 @@
    ```
 
 2. Scale Services
+
    ```bash
    # Adjust service count
    aws ecs update-service \
@@ -280,6 +309,7 @@
    ```
 
 3. Reset Configuration
+
    ```bash
    # Update task definition
    aws ecs register-task-definition \
@@ -295,6 +325,7 @@
 ### 2. Data Recovery
 
 1. Restore Backups
+
    ```bash
    # List available backups
    aws backup list-recovery-points-by-backup-vault \
@@ -306,6 +337,7 @@
    ```
 
 2. Verify Data
+
    ```bash
    # Check database status
    aws rds describe-db-instances \
@@ -318,6 +350,7 @@
    ```
 
 3. Validate Recovery
+
    ```bash
    # Run health checks
    curl https://your-app/health
@@ -334,12 +367,14 @@
 ### 1. Escalation Levels
 
 1. Level 1: DevOps Team
+
    - Initial investigation
    - Basic troubleshooting
    - Quick fixes
    - Monitoring alerts
 
 2. Level 2: Platform Team
+
    - Infrastructure issues
    - Performance problems
    - Security incidents
@@ -354,12 +389,14 @@
 ### 2. Escalation Process
 
 1. Initial Response
+
    - Document issue details
    - Collect relevant logs
    - Identify impact
    - Start investigation
 
 2. Escalation Criteria
+
    - Issue duration > 30 minutes
    - Multiple services affected
    - Data loss potential
@@ -374,14 +411,16 @@
 ### 3. Contact Information
 
 1. DevOps Team
+
    - Slack: #devops-support
-   - Email: devops@example.com
+   - Email: [devops@example.com](mailto:devops@example.com)
    - Phone: 1-800-xxx-xxxx
    - On-call: PagerDuty
 
 2. Platform Team
+
    - Slack: #platform-support
-   - Email: platform@example.com
+   - Email: [platform@example.com](mailto:platform@example.com)
    - Phone: 1-800-xxx-xxxx
    - Escalation: JIRA
 
@@ -389,4 +428,4 @@
    - Console: AWS Support Center
    - Phone: Enterprise Support
    - Case: aws.amazon.com/support
-   - Priority: Business/Enterprise 
+   - Priority: Business/Enterprise

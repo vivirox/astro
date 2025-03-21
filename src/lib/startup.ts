@@ -1,8 +1,8 @@
-import { getLogger } from './logging';
-import { initializeSecurity } from './security';
-import { LogRotationService } from './logging/rotation';
+import { getLogger } from './logging'
+import { initializeSecurity } from './security'
+import { LogRotationService } from './logging/rotation'
 
-const logger = getLogger();
+const logger = getLogger()
 
 /**
  * Initialize the application
@@ -10,19 +10,19 @@ const logger = getLogger();
  */
 export async function initializeApplication(): Promise<void> {
   try {
-    logger.info('Starting application initialization...');
-    
+    logger.info('Starting application initialization...')
+
     // Initialize log rotation
-    const logRotation = new LogRotationService();
-    await logRotation.ensureLogDir();
-    
+    const logRotation = new LogRotationService()
+    await logRotation.ensureLogDir()
+
     // Initialize security module
-    await initializeSecurity();
-    
-    logger.info('Application initialization complete');
+    await initializeSecurity()
+
+    logger.info('Application initialization complete')
   } catch (error) {
-    logger.error('Failed to initialize application', error);
-    throw error;
+    logger.error('Failed to initialize application', error)
+    throw error
   }
 }
 
@@ -32,13 +32,13 @@ export async function initializeApplication(): Promise<void> {
  */
 export async function shutdownApplication(): Promise<void> {
   try {
-    logger.info('Starting application shutdown...');
-    
+    logger.info('Starting application shutdown...')
+
     // Add shutdown tasks here
-    
-    logger.info('Application shutdown complete');
+
+    logger.info('Application shutdown complete')
   } catch (error) {
-    logger.error('Error during application shutdown', error);
-    throw error;
+    logger.error('Error during application shutdown', error)
+    throw error
   }
-} 
+}

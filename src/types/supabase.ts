@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+import type { Json } from './json.js'
 
 export interface Database {
   public: {
@@ -39,12 +33,53 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'profiles_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      ai_usage_logs: {
+        Row: {
+          id: string
+          created_at: string
+          user_id: string | null
+          model: string
+          input_tokens: number
+          output_tokens: number
+          total_tokens: number
+          cost: number
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          user_id?: string | null
+          model: string
+          input_tokens?: number
+          output_tokens?: number
+          total_tokens?: number
+          cost?: number
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          user_id?: string | null
+          model?: string
+          input_tokens?: number
+          output_tokens?: number
+          total_tokens?: number
+          cost?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ai_usage_logs_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
         ]
       }
       audit_logs: {
@@ -83,12 +118,12 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "audit_logs_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'audit_logs_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
         ]
       }
       conversations: {
@@ -124,12 +159,12 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "conversations_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'conversations_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
         ]
       }
       messages: {
@@ -168,19 +203,19 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "messages_conversation_id_fkey"
-            columns: ["conversation_id"]
+            foreignKeyName: 'messages_conversation_id_fkey'
+            columns: ['conversation_id']
             isOneToOne: false
-            referencedRelation: "conversations"
-            referencedColumns: ["id"]
+            referencedRelation: 'conversations'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "messages_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'messages_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
         ]
       }
       user_settings: {
@@ -219,13 +254,374 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "user_settings_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'user_settings_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
         ]
+      }
+      ai_sentiment_analysis: {
+        Row: {
+          id: string
+          user_id: string
+          created_at: string
+          updated_at: string
+          model_id: string
+          model_provider: string
+          request_tokens: number
+          response_tokens: number
+          total_tokens: number
+          latency_ms: number
+          success: boolean
+          error: string | null
+          text: string
+          sentiment: string
+          score: number
+          confidence: number
+          metadata: Json | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          created_at?: string
+          updated_at?: string
+          model_id: string
+          model_provider: string
+          request_tokens?: number
+          response_tokens?: number
+          total_tokens?: number
+          latency_ms?: number
+          success?: boolean
+          error?: string | null
+          text: string
+          sentiment: string
+          score: number
+          confidence: number
+          metadata?: Json | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          created_at?: string
+          updated_at?: string
+          model_id?: string
+          model_provider?: string
+          request_tokens?: number
+          response_tokens?: number
+          total_tokens?: number
+          latency_ms?: number
+          success?: boolean
+          error?: string | null
+          text?: string
+          sentiment?: string
+          score?: number
+          confidence?: number
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ai_sentiment_analysis_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      ai_crisis_detection: {
+        Row: {
+          id: string
+          user_id: string
+          created_at: string
+          updated_at: string
+          model_id: string
+          model_provider: string
+          request_tokens: number
+          response_tokens: number
+          total_tokens: number
+          latency_ms: number
+          success: boolean
+          error: string | null
+          text: string
+          crisis_detected: boolean
+          crisis_type: string | null
+          confidence: number
+          risk_level: string
+          sensitivity_level: number
+          metadata: Json | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          created_at?: string
+          updated_at?: string
+          model_id: string
+          model_provider: string
+          request_tokens?: number
+          response_tokens?: number
+          total_tokens?: number
+          latency_ms?: number
+          success?: boolean
+          error?: string | null
+          text: string
+          crisis_detected?: boolean
+          crisis_type?: string | null
+          confidence: number
+          risk_level: string
+          sensitivity_level?: number
+          metadata?: Json | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          created_at?: string
+          updated_at?: string
+          model_id?: string
+          model_provider?: string
+          request_tokens?: number
+          response_tokens?: number
+          total_tokens?: number
+          latency_ms?: number
+          success?: boolean
+          error?: string | null
+          text?: string
+          crisis_detected?: boolean
+          crisis_type?: string | null
+          confidence?: number
+          risk_level?: string
+          sensitivity_level?: number
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ai_crisis_detection_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      ai_response_generation: {
+        Row: {
+          id: string
+          user_id: string
+          created_at: string
+          updated_at: string
+          model_id: string
+          model_provider: string
+          request_tokens: number
+          response_tokens: number
+          total_tokens: number
+          latency_ms: number
+          success: boolean
+          error: string | null
+          prompt: string
+          response: string
+          context: string | null
+          instructions: string | null
+          temperature: number
+          max_tokens: number
+          metadata: Json | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          created_at?: string
+          updated_at?: string
+          model_id: string
+          model_provider: string
+          request_tokens?: number
+          response_tokens?: number
+          total_tokens?: number
+          latency_ms?: number
+          success?: boolean
+          error?: string | null
+          prompt: string
+          response: string
+          context?: string | null
+          instructions?: string | null
+          temperature?: number
+          max_tokens?: number
+          metadata?: Json | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          created_at?: string
+          updated_at?: string
+          model_id?: string
+          model_provider?: string
+          request_tokens?: number
+          response_tokens?: number
+          total_tokens?: number
+          latency_ms?: number
+          success?: boolean
+          error?: string | null
+          prompt?: string
+          response?: string
+          context?: string | null
+          instructions?: string | null
+          temperature?: number
+          max_tokens?: number
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ai_response_generation_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      ai_intervention_analysis: {
+        Row: {
+          id: string
+          user_id: string
+          created_at: string
+          updated_at: string
+          model_id: string
+          model_provider: string
+          request_tokens: number
+          response_tokens: number
+          total_tokens: number
+          latency_ms: number
+          success: boolean
+          error: string | null
+          conversation: string
+          intervention: string
+          user_response: string
+          effectiveness: number
+          insights: string
+          recommended_follow_up: string
+          metadata: Json | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          created_at?: string
+          updated_at?: string
+          model_id: string
+          model_provider: string
+          request_tokens?: number
+          response_tokens?: number
+          total_tokens?: number
+          latency_ms?: number
+          success?: boolean
+          error?: string | null
+          conversation: string
+          intervention: string
+          user_response: string
+          effectiveness: number
+          insights: string
+          recommended_follow_up: string
+          metadata?: Json | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          created_at?: string
+          updated_at?: string
+          model_id?: string
+          model_provider?: string
+          request_tokens?: number
+          response_tokens?: number
+          total_tokens?: number
+          latency_ms?: number
+          success?: boolean
+          error?: string | null
+          conversation?: string
+          intervention?: string
+          user_response?: string
+          effectiveness?: number
+          insights?: string
+          recommended_follow_up?: string
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ai_intervention_analysis_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      ai_usage_stats: {
+        Row: {
+          id: string
+          user_id: string
+          period: string
+          date: string
+          total_requests: number
+          total_tokens: number
+          total_cost: number
+          model_usage: Json
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          period: string
+          date: string
+          total_requests?: number
+          total_tokens?: number
+          total_cost?: number
+          model_usage?: Json
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          period?: string
+          date?: string
+          total_requests?: number
+          total_tokens?: number
+          total_cost?: number
+          model_usage?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ai_usage_stats_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      security_events: {
+        Row: {
+          id: number
+          type: string
+          user_id: string | null
+          ip_address: string | null
+          user_agent: string | null
+          metadata: Record<string, unknown>
+          severity: string
+          created_at: string
+        }
+        Insert: {
+          type: string
+          user_id?: string | null
+          ip_address?: string | null
+          user_agent?: string | null
+          metadata?: Record<string, unknown>
+          severity: string
+          created_at?: string
+        }
+        Update: {
+          type?: string
+          user_id?: string | null
+          ip_address?: string | null
+          user_agent?: string | null
+          metadata?: Record<string, unknown>
+          severity?: string
+          created_at?: string
+        }
       }
     }
     Views: {
@@ -238,4 +634,6 @@ export interface Database {
       [_ in never]: never
     }
   }
-} 
+}
+
+export { type Json } from './json.js'

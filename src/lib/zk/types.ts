@@ -9,22 +9,22 @@ export interface SessionData {
   /**
    * Unique identifier for the session
    */
-  sessionId: string;
-  
+  sessionId: string
+
   /**
    * User identifier associated with the session
    */
-  userId: string;
-  
+  userId: string
+
   /**
    * Timestamp when the session started
    */
-  startTime: number;
-  
+  startTime: number
+
   /**
-   * Optional additional data to protect
+   * Optional additional data to protec
    */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, any>
 }
 
 /**
@@ -35,27 +35,27 @@ export interface ProofData {
    * The proof itself, containing cryptographic elements
    */
   proof: {
-    pi_a: string[];
-    pi_b: string[][];
-    pi_c: string[];
-    protocol: string;
-    curve: string;
-  };
-  
+    pi_a: string[]
+    pi_b: string[][]
+    pi_c: string[]
+    protocol: string
+    curve: string
+  }
+
   /**
    * Public inputs used for verification
    */
-  publicInputs: string[];
-  
+  publicInputs: string[]
+
   /**
    * Hash of the original data (public)
    */
-  publicHash: string;
-  
+  publicHash: string
+
   /**
    * Timestamp when the proof was generated
    */
-  timestamp: number;
+  timestamp: number
 }
 
 /**
@@ -65,27 +65,27 @@ export interface ZKSystemOptions {
   /**
    * Namespace for the system
    */
-  namespace?: string;
-  
+  namespace?: string
+
   /**
    * Reference to the crypto system for integration
    */
-  crypto?: any;
-  
+  crypto?: any
+
   /**
    * Path to the circuit WASM file
    */
-  circuitWasmPath?: string;
-  
+  circuitWasmPath?: string
+
   /**
    * Path to the proving key file
    */
-  provingKeyPath?: string;
-  
+  provingKeyPath?: string
+
   /**
    * Path to the verification key file
    */
-  verificationKeyPath?: string;
+  verificationKeyPath?: string
 }
 
 /**
@@ -95,17 +95,17 @@ export interface ProofInput {
   /**
    * Original data to prove knowledge of
    */
-  data: any;
-  
+  data: any
+
   /**
    * Optional encrypted version of the data
    */
-  encryptedData?: string;
-  
+  encryptedData?: string
+
   /**
    * Optional blinding factor for additional security
    */
-  blindingFactor?: string;
+  blindingFactor?: string
 }
 
 /**
@@ -115,17 +115,17 @@ export interface VerificationResult {
   /**
    * Whether the proof is valid
    */
-  isValid: boolean;
-  
+  isValid: boolean
+
   /**
    * Timestamp of verification
    */
-  verifiedAt: number;
-  
+  verifiedAt: number
+
   /**
    * Optional error message if verification failed
    */
-  error?: string;
+  error?: string
 }
 
 /**
@@ -135,15 +135,15 @@ export interface CircuitOptions {
   /**
    * Hash function to use (e.g., 'Poseidon', 'MiMC')
    */
-  hashFunction: string;
-  
+  hashFunction: string
+
   /**
    * Elliptic curve type (e.g., 'BN254', 'BLS12-381')
    */
-  curveType: string;
-  
+  curveType: string
+
   /**
    * Depth of Merkle tree if used
    */
-  merkleTreeDepth?: number;
-} 
+  merkleTreeDepth?: number
+}

@@ -1,2 +1,2 @@
-// Export ZK chat
-export * from './zkChat'; 
+// Export ZK cha
+export * from './zkChat'

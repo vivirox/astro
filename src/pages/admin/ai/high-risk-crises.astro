@@ -1,17 +1,17 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCurrentUser } from '../../../lib/auth';
 import { requirePermission } from '../../../lib/access-control';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 // Check if user has admin permission
 const checkPermission = requirePermission('read:admin');
 const permissionResponse = await checkPermission({
   cookies: Astro.cookies,
   redirect: Astro.redirect,
-  request: Astro.request
+  request: Astro.reques
 });
 
-// If permission check returned a response, return it
+// If permission check returned a response, return i
 if (permissionResponse) {
   return permissionResponse;
 }
@@ -47,7 +47,7 @@ const user = await getCurrentUser(Astro.cookies);
           <button id="next-page" class="btn btn-sm btn-outline">Next</button>
         </div>
       </div>
-      
+
       <table class="data-table" id="crisis-table">
         <thead>
           <tr>
@@ -141,11 +141,11 @@ const user = await getCurrentUser(Astro.cookies);
     try {
       const offset = page * pageSize;
       const response = await fetch(`/api/ai/high-risk-detections?limit=${pageSize}&offset=${offset}`);
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch crisis detections');
       }
-      
+
       const data = await response.json();
       totalItems = data.total || data.detections.length;
       return data.detections;
@@ -182,10 +182,10 @@ const user = await getCurrentUser(Astro.cookies);
   async function updateTable() {
     const detections = await fetchCrisisDetections(currentPage);
     crisisData = detections as CrisisDetection[];
-    
+
     const tableBody = document.querySelector('#crisis-table tbody');
     if (!tableBody) return;
-    
+
     if (!detections || detections.length === 0) {
       tableBody.innerHTML = `
         <tr>
@@ -194,14 +194,14 @@ const user = await getCurrentUser(Astro.cookies);
       `;
       return;
     }
-    
+
     tableBody.innerHTML = '';
-    
+
     detections.forEach((detection: CrisisDetection, index: number) => {
       const row = document.createElement('tr');
-      
+
       const riskClass = getRiskLevelClass(detection.riskLevel);
-      
+
       row.innerHTML = `
         <td>${formatDate(detection.createdAt)}</td>
         <td>${detection.userId}</td>
@@ -213,13 +213,13 @@ const user = await getCurrentUser(Astro.cookies);
           <button class="btn btn-sm btn-outline view-details" data-index="${index}">View Details</button>
         </td>
       `;
-      
+
       tableBody.appendChild(row);
     });
-    
+
     // Update pagination
     updatePagination();
-    
+
     // Add event listeners to view details buttons
     document.querySelectorAll('.view-details').forEach(button => {
       button.addEventListener('click', () => {
@@ -234,12 +234,12 @@ const user = await getCurrentUser(Astro.cookies);
     const pageInfo = document.getElementById('page-info');
     const prevButton = document.getElementById('prev-page') as HTMLButtonElement | null;
     const nextButton = document.getElementById('next-page') as HTMLButtonElement | null;
-    
+
     if (!pageInfo || !prevButton || !nextButton) return;
-    
+
     const totalPages = Math.ceil(totalItems / pageSize);
     pageInfo.textContent = `Page ${currentPage + 1} of ${totalPages || 1}`;
-    
+
     prevButton.disabled = currentPage <= 0;
     nextButton.disabled = currentPage >= totalPages - 1 || totalPages === 0;
   }
@@ -248,8 +248,8 @@ const user = await getCurrentUser(Astro.cookies);
   function showCrisisDetails(index: number) {
     const detection = crisisData[index];
     if (!detection) return;
-    
-    // Update modal content
+
+    // Update modal conten
     const detailDate = document.getElementById('detail-date');
     const detailUser = document.getElementById('detail-user');
     const detailRisk = document.getElementById('detail-risk');
@@ -257,7 +257,7 @@ const user = await getCurrentUser(Astro.cookies);
     const detailConfidence = document.getElementById('detail-confidence');
     const detailModel = document.getElementById('detail-model');
     const detailText = document.getElementById('detail-text');
-    
+
     if (detailDate) detailDate.textContent = formatDate(detection.createdAt);
     if (detailUser) detailUser.textContent = detection.userId;
     if (detailRisk) {
@@ -268,7 +268,7 @@ const user = await getCurrentUser(Astro.cookies);
     if (detailConfidence) detailConfidence.textContent = `${(detection.confidence * 100).toFixed(1)}%`;
     if (detailModel) detailModel.textContent = detection.modelId;
     if (detailText) detailText.textContent = detection.text;
-    
+
     // Show modal
     const modal = document.getElementById('crisis-modal');
     if (modal) modal.style.display = 'block';
@@ -284,7 +284,7 @@ const user = await getCurrentUser(Astro.cookies);
   document.addEventListener('DOMContentLoaded', () => {
     // Initial table load
     updateTable();
-    
+
     // Refresh button
     const refreshBtn = document.getElementById('refresh-btn');
     if (refreshBtn) {
@@ -292,11 +292,11 @@ const user = await getCurrentUser(Astro.cookies);
         updateTable();
       });
     }
-    
+
     // Pagination buttons
     const prevButton = document.getElementById('prev-page');
     const nextButton = document.getElementById('next-page');
-    
+
     if (prevButton) {
       prevButton.addEventListener('click', () => {
         if (currentPage > 0) {
@@ -305,20 +305,20 @@ const user = await getCurrentUser(Astro.cookies);
         }
       });
     }
-    
+
     if (nextButton) {
       nextButton.addEventListener('click', () => {
         currentPage++;
         updateTable();
       });
     }
-    
+
     // Modal close button
     const closeBtn = document.querySelector('.close-btn');
     if (closeBtn) {
       closeBtn.addEventListener('click', closeModal);
     }
-    
+
     // Close modal when clicking outside
     window.addEventListener('click', (event) => {
       const modal = document.getElementById('crisis-modal');
@@ -326,18 +326,18 @@ const user = await getCurrentUser(Astro.cookies);
         closeModal();
       }
     });
-    
+
     // Mock action buttons in modal
     const markReviewedBtn = document.getElementById('mark-reviewed-btn');
     const escalateBtn = document.getElementById('escalate-btn');
-    
+
     if (markReviewedBtn) {
       markReviewedBtn.addEventListener('click', () => {
         alert('Crisis marked as reviewed. This would update the status in a real implementation.');
         closeModal();
       });
     }
-    
+
     if (escalateBtn) {
       escalateBtn.addEventListener('click', () => {
         alert('Crisis escalated to emergency response team. This would trigger notifications in a real implementation.');
@@ -445,7 +445,7 @@ const user = await getCurrentUser(Astro.cookies);
   .data-table-container {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(_0, 0, 0, 0.1);
     padding: 1.5rem;
   }
 
@@ -536,7 +536,7 @@ const user = await getCurrentUser(Astro.cookies);
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(_0, 0, 0, 0.5);
   }
 
   .modal-content {
@@ -545,7 +545,7 @@ const user = await getCurrentUser(Astro.cookies);
     width: 80%;
     max-width: 800px;
     border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 16px rgba(_0, 0, 0, 0.2);
   }
 
   .modal-header {
@@ -609,21 +609,21 @@ const user = await getCurrentUser(Astro.cookies);
       align-items: flex-start;
       gap: 1rem;
     }
-    
+
     .table-header {
       flex-direction: column;
       align-items: flex-start;
       gap: 1rem;
     }
-    
+
     .data-table {
       display: block;
       overflow-x: auto;
     }
-    
+
     .modal-content {
       width: 95%;
       margin: 5% auto;
     }
   }
-</style> 
+</style>

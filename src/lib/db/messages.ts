@@ -1,11 +1,11 @@
-import { supabase, supabaseAdmin } from '../supabase';
-import type { Database } from '../../types/supabase';
-import { logAuditEvent } from '../auth';
-import { updateConversation } from './conversations';
+import { supabase, supabaseAdmin } from '../supabase'
+import type { Database } from '../../types/supabase'
+import { updateConversation } from './conversations'
+import { createAuditLog } from '../audit/log'
 
-export type Message = Database['public']['Tables']['messages']['Row'];
-export type NewMessage = Database['public']['Tables']['messages']['Insert'];
-export type UpdateMessage = Database['public']['Tables']['messages']['Update'];
+export type Message = Database['public']['Tables']['messages']['Row']
+export type NewMessage = Database['public']['Tables']['messages']['Insert']
+export type UpdateMessage = Database['public']['Tables']['messages']['Update']
 
 /**
  * Get messages for a conversation
@@ -22,11 +22,11 @@ export async function getMessages(
     .select('id')
     .eq('id', conversationId)
     .eq('user_id', userId)
-    .single();
+    .single()
 
   if (conversationError || !conversation) {
-    console.error('Error verifying conversation access:', conversationError);
-    throw new Error('Unauthorized access to conversation');
+    console.error('Error verifying conversation access:', conversationError)
+    throw new Error('Unauthorized access to conversation')
   }
 
   // Then get the messages
@@ -35,14 +35,14 @@ export async function getMessages(
     .select('*')
     .eq('conversation_id', conversationId)
     .order('created_at', { ascending: false })
-    .range(offset, offset + limit - 1);
+    .range(offset, offset + limit - 1)
 
   if (error) {
-    console.error('Error fetching messages:', error);
-    throw new Error('Failed to fetch messages');
+    console.error('Error fetching messages:', error)
+    throw new Error('Failed to fetch messages')
   }
 
-  return data || [];
+  return data || []
 }
 
 /**
@@ -59,11 +59,11 @@ export async function createMessage(
     .select('id, user_id')
     .eq('id', message.conversation_id)
     .eq('user_id', userId)
-    .single();
+    .single()
 
   if (conversationError || !conversation) {
-    console.error('Error verifying conversation access:', conversationError);
-    throw new Error('Unauthorized access to conversation');
+    console.error('Error verifying conversation access:', conversationError)
+    throw new Error('Unauthorized access to conversation')
   }
 
   // Create the message
@@ -71,37 +71,34 @@ export async function createMessage(
     .from('messages')
     .insert(message)
     .select()
-    .single();
+    .single()
 
   if (error) {
-    console.error('Error creating message:', error);
-    throw new Error('Failed to create message');
+    console.error('Error creating message:', error)
+    throw new Error('Failed to create message')
   }
 
   // Update the conversation's last_message_at timestamp
-  await updateConversation(
-    message.conversation_id,
-    userId,
-    { 
-      last_message_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  );
+  await updateConversation(message.conversation_id, userId, {
+    last_message_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  })
 
   // Log the event for HIPAA compliance
-  await logAuditEvent(
-    userId,
-    'message_created',
-    'messages',
-    data.id,
-    { 
-      conversation_id: message.conversation_id,
-      role: message.role
+  await createAuditLog({
+    userId: userId,
+    action: 'message_created',
+    resource: 'messages',
+    metadata: {
+      messageId: data.id,
+      conversationId: message.conversation_id,
+      role: message.role,
+      ipAddress: request?.headers.get('x-forwarded-for'),
+      userAgent: request?.headers.get('user-agent'),
     },
-    request
-  );
+  })
 
-  return data;
+  return data
 }
 
 /**
@@ -120,11 +117,11 @@ export async function updateMessage(
     .select('id')
     .eq('id', conversationId)
     .eq('user_id', userId)
-    .single();
+    .single()
 
   if (conversationError || !conversation) {
-    console.error('Error verifying conversation access:', conversationError);
-    throw new Error('Unauthorized access to conversation');
+    console.error('Error verifying conversation access:', conversationError)
+    throw new Error('Unauthorized access to conversation')
   }
 
   // Update the message
@@ -134,24 +131,28 @@ export async function updateMessage(
     .eq('id', id)
     .eq('conversation_id', conversationId)
     .select()
-    .single();
+    .single()
 
   if (error) {
-    console.error('Error updating message:', error);
-    throw new Error('Failed to update message');
+    console.error('Error updating message:', error)
+    throw new Error('Failed to update message')
   }
 
   // Log the event for HIPAA compliance
-  await logAuditEvent(
+  await createAuditLog({
     userId,
-    'message_updated',
-    'messages',
-    id,
-    { updates },
-    request
-  );
+    action: 'message_updated',
+    resource: 'messages',
+    metadata: {
+      messageId: id,
+      conversationId,
+      updates,
+      ipAddress: request?.headers.get('x-forwarded-for'),
+      userAgent: request?.headers.get('user-agent'),
+    },
+  })
 
-  return data;
+  return data
 }
 
 /**
@@ -169,11 +170,11 @@ export async function flagMessage(
     metadata: {
       flagged_at: new Date().toISOString(),
       flagged_by: userId,
-      reason
-    }
-  };
+      reason,
+    },
+  }
 
-  return updateMessage(id, conversationId, userId, updates, request);
+  return updateMessage(id, conversationId, userId, updates, request)
 }
 
 /**
@@ -184,12 +185,12 @@ export async function adminGetFlaggedMessages(): Promise<Message[]> {
     .from('messages')
     .select('*, conversations(title, user_id)')
     .eq('is_flagged', true)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
 
   if (error) {
-    console.error('Error fetching flagged messages:', error);
-    throw new Error('Failed to fetch flagged messages');
+    console.error('Error fetching flagged messages:', error)
+    throw new Error('Failed to fetch flagged messages')
   }
 
-  return data || [];
-} 
+  return data || []
+}

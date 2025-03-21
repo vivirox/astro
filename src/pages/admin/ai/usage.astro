@@ -1,17 +1,18 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { getCurrentUser } from '../../../lib/auth';
-import { requirePermission } from '../../../lib/access-control';
+
+import { getCurrentUser } from "../../../lib/auth";
+import { requirePermission } from "../../../lib/access-control";
+import BaseLayout from "@layouts/BaseLayout.astro";
 
 // Check if user has admin permission
-const checkPermission = requirePermission('read:admin');
+const checkPermission = requirePermission("read:admin");
 const permissionResponse = await checkPermission({
   cookies: Astro.cookies,
   redirect: Astro.redirect,
-  request: Astro.request
+  request: Astro.request,
 });
 
-// If permission check returned a response, return it
+// If permission check returned a response, return i
 if (permissionResponse) {
   return permissionResponse;
 }
@@ -20,7 +21,7 @@ if (permissionResponse) {
 const user = await getCurrentUser(Astro.cookies);
 
 // Get query parameters
-const period = Astro.url.searchParams.get('period') || 'daily';
+const period = Astro.url.searchParams.get("period") || "daily";
 ---
 
 <BaseLayout title="AI Usage Statistics" bgType="default">
@@ -45,19 +46,19 @@ const period = Astro.url.searchParams.get('period') || 'daily';
         <div class="stat-value">Loading...</div>
         <div class="stat-chart"></div>
       </div>
-      
+
       <div class="stat-card" id="total-tokens">
         <h3>Total Tokens</h3>
         <div class="stat-value">Loading...</div>
         <div class="stat-chart"></div>
       </div>
-      
+
       <div class="stat-card" id="total-cost">
         <h3>Estimated Cost</h3>
         <div class="stat-value">Loading...</div>
         <div class="stat-chart"></div>
       </div>
-      
+
       <div class="stat-card" id="model-usage">
         <h3>Model Usage</h3>
         <div class="stat-chart-large"></div>
@@ -115,13 +116,13 @@ const period = Astro.url.searchParams.get('period') || 'daily';
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const period = urlParams.get('period') || 'daily';
-      
+
       const response = await fetch(`/api/ai/usage-stats?period=${period}&allUsers=true`);
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch usage statistics');
       }
-      
+
       const data = await response.json();
       return data.stats;
     } catch (error) {
@@ -144,15 +145,15 @@ const period = Astro.url.searchParams.get('period') || 'daily';
     }).format(amount);
   }
 
-  // Create a line chart
+  // Create a line char
   function createLineChart(elementId: string, labels: string[], data: number[], label: string, color: string): Chart | null {
     const element = document.querySelector(`#${elementId} .stat-chart`);
     if (!element) return null;
-    
+
     const canvas = element as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
-    
+
     return new Chart(ctx, {
       type: 'line',
       data: {
@@ -191,17 +192,17 @@ const period = Astro.url.searchParams.get('period') || 'daily';
   function createModelUsageChart(elementId: string, models: string[], data: number[]): Chart | null {
     const element = document.querySelector(`#${elementId} .stat-chart-large`);
     if (!element) return null;
-    
+
     const canvas = element as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
-    
+
     // Generate colors for each model
     const colors = models.map((_: unknown, index: number) => {
       const hue = (index * 137) % 360; // Use golden ratio to spread colors
       return `hsl(${hue}, 70%, 60%)`;
     });
-    
+
     return new Chart(ctx, {
       type: 'pie',
       data: {
@@ -241,13 +242,13 @@ const period = Astro.url.searchParams.get('period') || 'daily';
   // Update the UI with the fetched data
   async function updateUI(): Promise<void> {
     const stats = await fetchUsageStats();
-    
+
     if (!stats || stats.length === 0) {
       const totalRequestsEl = document.querySelector('#total-requests .stat-value');
       const totalTokensEl = document.querySelector('#total-tokens .stat-value');
       const totalCostEl = document.querySelector('#total-cost .stat-value');
       const usageTableEl = document.querySelector('#usage-table tbody');
-      
+
       if (totalRequestsEl) totalRequestsEl.textContent = 'No data';
       if (totalTokensEl) totalTokensEl.textContent = 'No data';
       if (totalCostEl) totalCostEl.textContent = 'No data';
@@ -258,36 +259,36 @@ const period = Astro.url.searchParams.get('period') || 'daily';
       `;
       return;
     }
-    
+
     // Calculate totals
     const totalRequests = stats.reduce((sum: number, day: DailyStats) => sum + day.totalRequests, 0);
     const totalTokens = stats.reduce((sum: number, day: DailyStats) => sum + day.totalTokens, 0);
     const totalCost = stats.reduce((sum: number, day: DailyStats) => sum + day.totalCost, 0);
-    
+
     // Update summary cards
     const totalRequestsEl = document.querySelector('#total-requests .stat-value');
     const totalTokensEl = document.querySelector('#total-tokens .stat-value');
     const totalCostEl = document.querySelector('#total-cost .stat-value');
-    
+
     if (totalRequestsEl) totalRequestsEl.textContent = formatNumber(totalRequests);
     if (totalTokensEl) totalTokensEl.textContent = formatNumber(totalTokens);
     if (totalCostEl) totalCostEl.textContent = formatCurrency(totalCost);
-    
+
     // Prepare data for charts
     const dates = stats.map((day: DailyStats) => {
       const date = new Date(day.date);
       return date.toLocaleDateString();
     }).reverse();
-    
+
     const requestData = stats.map((day: DailyStats) => day.totalRequests).reverse();
     const tokenData = stats.map((day: DailyStats) => day.totalTokens).reverse();
     const costData = stats.map((day: DailyStats) => day.totalCost).reverse();
-    
+
     // Create charts
     createLineChart('total-requests', dates, requestData, 'Requests', '#3b82f6');
     createLineChart('total-tokens', dates, tokenData, 'Tokens', '#10b981');
     createLineChart('total-cost', dates, costData, 'Cost', '#f59e0b');
-    
+
     // Prepare model usage data
     const modelUsage: Record<string, number> = {};
     stats.forEach((day: DailyStats) => {
@@ -298,29 +299,29 @@ const period = Astro.url.searchParams.get('period') || 'daily';
         modelUsage[model] += usage.requests;
       });
     });
-    
+
     const models = Object.keys(modelUsage);
     const modelData = Object.values(modelUsage);
-    
-    // Create model usage chart
+
+    // Create model usage char
     createModelUsageChart('model-usage', models, modelData);
-    
+
     // Update table
     const tableBody = document.querySelector('#usage-table tbody');
     if (!tableBody) return;
-    
+
     tableBody.innerHTML = '';
-    
+
     stats.forEach((day: DailyStats) => {
       const row = document.createElement('tr');
-      
+
       // Format the date
       const date = new Date(day.date);
       const formattedDate = date.toLocaleDateString();
-      
+
       // Get model names
       const modelNames = Object.keys(day.modelUsage).join(', ');
-      
+
       row.innerHTML = `
         <td>${formattedDate}</td>
         <td>${formatNumber(day.totalRequests)}</td>
@@ -328,7 +329,7 @@ const period = Astro.url.searchParams.get('period') || 'daily';
         <td>${formatCurrency(day.totalCost)}</td>
         <td>${modelNames || 'None'}</td>
       `;
-      
+
       tableBody.appendChild(row);
     });
   }
@@ -408,7 +409,7 @@ const period = Astro.url.searchParams.get('period') || 'daily';
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(_250px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
   }
@@ -416,7 +417,7 @@ const period = Astro.url.searchParams.get('period') || 'daily';
   .stat-card {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(_0, 0, 0, 0.1);
     padding: 1.5rem;
   }
 
@@ -445,7 +446,7 @@ const period = Astro.url.searchParams.get('period') || 'daily';
   .data-table-container {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(_0, 0, 0, 0.1);
     padding: 1.5rem;
   }
 
@@ -483,16 +484,16 @@ const period = Astro.url.searchParams.get('period') || 'daily';
     .stats-grid {
       grid-template-columns: 1fr;
     }
-    
+
     .admin-actions {
       flex-direction: column;
       align-items: flex-start;
       gap: 1rem;
     }
-    
+
     .data-table {
       display: block;
       overflow-x: auto;
     }
   }
-</style> 
+</style>

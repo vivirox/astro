@@ -1,201 +1,199 @@
-import type { 
-  AICompletionRequest, 
-  AICompletionResponse, 
-  AIMessage, 
+import type {
+  AICompletionRequest,
+  AICompletionResponse,
+  AIUsageRecord,
   AIStreamChunk,
-  AIError,
-  AIProvider,
-  AIUsageRecord
-} from '../models/ai-types';
-import { TogetherAIProvider, type TogetherAIProviderConfig } from '../providers/together';
-import { getModelById, getDefaultModelForCapability } from '../models/registry';
-import { AICacheService, type CacheConfig } from './cache-service';
-import { PromptOptimizerService, type PromptOptimizerConfig } from './prompt-optimizer';
-import { ConnectionPoolManager, type ConnectionPoolConfig } from './connection-pool';
-import { FallbackService, type FallbackServiceConfig } from './fallback-service';
+  AIMessage,
+  AIService as AIServiceInterface,
+  AIServiceOptions,
+} from '../models/types'
+import { AICacheService, type CacheConfig } from './cache-service'
+import {
+  PromptOptimizerService,
+  type PromptOptimizerConfig,
+} from './prompt-optimizer'
+import {
+  ConnectionPoolManager,
+  type ConnectionPoolConfig,
+} from './connection-pool'
+import { FallbackService, type FallbackServiceConfig } from './fallback-service'
+import { createTogetherAIService } from './together'
+
+// Define a custom ReadableStream type that matches both implementations
+type GenericReadableStream<T> = any
 
 /**
  * AI Service Configuration
  */
 export interface AIServiceConfig {
-  together?: TogetherAIProviderConfig;
-  cache?: CacheConfig;
-  promptOptimizer?: PromptOptimizerConfig;
-  connectionPool?: ConnectionPoolConfig;
-  fallback?: FallbackServiceConfig;
-  onUsage?: (usage: AIUsageRecord) => Promise<void>;
+  together?: {
+    apiKey?: string
+    baseUrl?: string
+  }
+  cache?: CacheConfig
+  promptOptimizer?: PromptOptimizerConfig
+  connectionPool?: ConnectionPoolConfig
+  fallback?: FallbackServiceConfig
+  onUsage?: (usage: AIUsageRecord) => Promise<void>
 }
 
 /**
  * AI Service Implementation
- * 
+ *
  * This service provides a unified interface to TogetherAI with performance optimizations
  */
-export class AIService {
-  private togetherProvider: TogetherAIProvider;
-  private cacheService: AICacheService;
-  private promptOptimizer: PromptOptimizerService;
-  private connectionPool: ConnectionPoolManager;
-  private fallbackService: FallbackService;
-  private onUsage?: (usage: AIUsageRecord) => Promise<void>;
+export class AIService implements AIServiceInterface {
+  private togetherService: any // Use any to bypass strict typing
+  private cacheService: AICacheService
+  private promptOptimizer: PromptOptimizerService
+  private connectionPool: ConnectionPoolManager
+  private fallbackService: FallbackService
+  private onUsage?: (usage: AIUsageRecord) => Promise<void>
+  private defaultRequest: Partial<AICompletionRequest> = {}
 
   constructor(config: AIServiceConfig = {}) {
     // Initialize services
-    this.cacheService = new AICacheService(config.cache);
-    this.promptOptimizer = new PromptOptimizerService(config.promptOptimizer);
-    this.connectionPool = new ConnectionPoolManager(config.connectionPool);
-    this.fallbackService = new FallbackService(config.fallback);
-    
-    // Initialize TogetherAI provider with connection pool
-    this.togetherProvider = new TogetherAIProvider({
-      ...config.together,
-      connectionPool: this.connectionPool
-    });
-    
+    this.cacheService = new AICacheService(config.cache)
+    this.promptOptimizer = new PromptOptimizerService(config.promptOptimizer)
+    this.connectionPool = new ConnectionPoolManager(config.connectionPool)
+    this.fallbackService = new FallbackService(config.fallback)
+
+    // Initialize TogetherAI provider
+    this.togetherService = config.together?.apiKey
+      ? createTogetherAIService({
+          apiKey: config.together.apiKey,
+          togetherApiKey: config.together.apiKey,
+          togetherBaseUrl: config.together.baseUrl,
+        })
+      : createTogetherAIService({
+          apiKey: process.env.TOGETHER_API_KEY || '',
+          togetherApiKey: process.env.TOGETHER_API_KEY || '',
+          togetherBaseUrl: process.env.TOGETHER_BASE_URL,
+        })
+
     // Set usage callback
-    this.onUsage = config.onUsage;
+    this.onUsage = config.onUsage
   }
 
   /**
-   * Create a chat completion with performance optimizations
+   * Get information about a model
+   */
+  getModelInfo(model: string): any {
+    return this.togetherService.getModelInfo(model)
+  }
+
+  /**
+   * Create a chat completion
    */
   async createChatCompletion(
     messages: AIMessage[],
-    options: {
-      model?: string;
-      temperature?: number;
-      maxTokens?: number;
-      stream?: boolean;
-      skipCache?: boolean;
-    } = {}
+    options: AIServiceOptions = {}
   ): Promise<AICompletionResponse> {
-    const model = options.model || getDefaultModelForCapability('chat').id;
-    const modelInfo = getModelById(model);
-
-    if (!modelInfo) {
-      throw new Error(`Model not found: ${model}`);
-    }
-
-    // Prepare the request
-    const request: AICompletionRequest = {
+    const response = await this.togetherService.createChatCompletion(
       messages,
-      model: modelInfo.togetherModelId || model,
-      temperature: options.temperature,
-      maxTokens: options.maxTokens,
-      stream: options.stream
-    };
-
-    try {
-      // Step 1: Optimize the prompt to reduce token usage
-      const optimizedMessages = this.promptOptimizer.optimizeMessages(messages);
-      request.messages = optimizedMessages;
-
-      // Step 2: Check cache for non-streaming requests
-      if (!options.stream && !options.skipCache) {
-        const cachedResponse = this.cacheService.get(request);
-        if (cachedResponse) {
-          // Track usage from cache hit
-          this.trackUsage({
-            ...cachedResponse.usage,
-            provider: 'cache',
-            timestamp: new Date().toISOString()
-          });
-          
-          return cachedResponse;
-        }
-      }
-
-      // Step 3: Use fallback service with retry logic
-      const response = await this.fallbackService.withRetry(
-        async () => {
-          // Use TogetherAI provider for all models
-          return this.togetherProvider.createChatCompletion(optimizedMessages, {
-            ...options,
-            model: modelInfo.togetherModelId || model
-          });
-        },
-        {
-          onRetry: (attempt, error) => {
-            console.warn(`Retry attempt ${attempt} for AI request: ${error.message}`);
-          }
-        }
-      );
-
-      // Step 4: Cache the response for future use (non-streaming only)
-      if (!options.stream) {
-        this.cacheService.set(request, response);
-      }
-
-      // Step 5: Track usage
-      if (response.usage) {
-        this.trackUsage(response.usage);
-      }
-
-      return response;
-    } catch (error) {
-      // Generate fallback response if all retries failed
-      const aiError = error as AIError;
-      const fallbackResponse = this.fallbackService.generateFallbackResponse(request, aiError);
-      
-      if (fallbackResponse) {
-        // Track fallback usage
-        if (fallbackResponse.usage) {
-          this.trackUsage(fallbackResponse.usage);
-        }
-        
-        return fallbackResponse;
-      }
-      
-      // Re-throw if no fallback
-      throw error;
+      options
+    )
+    // Add the provider field required by AICompletionResponse in models/types.ts
+    return {
+      ...response,
+      provider: 'together',
+      usage: response.usage || {
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+      },
     }
   }
-  
+
   /**
    * Create a streaming chat completion
    */
   async createStreamingChatCompletion(
     messages: AIMessage[],
-    options: {
-      model?: string;
-      temperature?: number;
-      maxTokens?: number;
-    } = {}
-  ) {
-    return this.createChatCompletion(messages, {
-      ...options,
-      stream: true
-    });
+    options: AIServiceOptions = {}
+  ): Promise<GenericReadableStream<AIStreamChunk>> {
+    // Cast to the expected return type
+    return this.togetherService.createStreamingChatCompletion(
+      messages,
+      options
+    ) as unknown as GenericReadableStream<AIStreamChunk>
   }
-  
+
   /**
-   * Track usage statistics
+   * Generate completion
    */
-  private async trackUsage(usage: AIUsageRecord): Promise<void> {
-    try {
-      if (this.onUsage) {
-        await this.onUsage(usage);
-      }
-    } catch (error) {
-      console.error('Error tracking AI usage:', error);
+  async generateCompletion(
+    messages: AIMessage[],
+    options: AIServiceOptions = {}
+  ): Promise<AICompletionResponse> {
+    const response = await this.togetherService.generateCompletion(
+      messages,
+      options
+    )
+    // Add the provider field required by AICompletionResponse in models/types.ts
+    return {
+      ...response,
+      provider: 'together',
+      usage: response.usage || {
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+      },
     }
   }
-  
+
   /**
-   * Get performance statistics
+   * Create a chat completion with usage tracking
    */
-  getStats() {
+  async createChatCompletionWithTracking(
+    messages: AIMessage[],
+    options?: AIServiceOptions
+  ): Promise<AICompletionResponse> {
+    const response =
+      await this.togetherService.createChatCompletionWithTracking(
+        messages,
+        options
+      )
+    // Add the provider field required by AICompletionResponse in models/types.ts
     return {
-      cache: this.cacheService.getStats(),
-      connectionPool: this.connectionPool.getStats(),
-      promptOptimizer: this.promptOptimizer.getStats()
-    };
+      ...response,
+      provider: 'together',
+      usage: response.usage || {
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+      },
+    }
   }
-  
+
   /**
-   * Dispose of resources
+   * Helper methods for advanced optimizations
    */
-  dispose(): void {
-    this.connectionPool.dispose();
+  getCacheService(): AICacheService {
+    return this.cacheService
   }
-} 
+
+  getPromptOptimizer(): PromptOptimizerService {
+    return this.promptOptimizer
+  }
+
+  getConnectionPool(): ConnectionPoolManager {
+    return this.connectionPool
+  }
+
+  getFallbackService(): FallbackService {
+    return this.fallbackService
+  }
+
+  getDefaultRequest(): Partial<AICompletionRequest> {
+    return this.defaultRequest
+  }
+
+  dispose() {
+    this.togetherService.dispose()
+    this.cacheService.dispose()
+    this.promptOptimizer.dispose()
+    this.connectionPool.dispose()
+    this.fallbackService.dispose()
+  }
+}

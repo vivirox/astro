@@ -1,16 +1,16 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCurrentUser } from '../../lib/auth';
 import { requireAuth } from '../../lib/auth';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 // Check if user is authenticated
 const authResponse = await requireAuth({
   cookies: Astro.cookies,
   redirect: Astro.redirect,
-  request: Astro.request
+  request: Astro.reques
 });
 
-// If auth check returned a response, return it
+// If auth check returned a response, return i
 if (authResponse) {
   return authResponse;
 }
@@ -20,8 +20,8 @@ const user = await getCurrentUser(Astro.cookies);
 
 // Get user's current AI preferences (in a real implementation, this would come from the database)
 const defaultPreferences = {
-  defaultModel: 'gpt-4o',
-  preferredModels: ['gpt-4o', 'claude-3-sonnet'],
+  defaultModel: 'gemini-2-flash',
+  preferredModels: ['gemini-2-flash', 'claude-3-sonnet'],
   responseLength: 'medium',
   responseStyle: 'balanced',
   enableSentimentAnalysis: true,
@@ -32,7 +32,7 @@ const defaultPreferences = {
 };
 
 // For demo purposes, we'll use the default preferences
-const userPreferences = defaultPreferences;
+
 ---
 
 <BaseLayout title="AI Preferences" bgType="default">
@@ -45,40 +45,40 @@ const userPreferences = defaultPreferences;
     <form id="ai-preferences-form" class="settings-form">
       <div class="settings-section">
         <h2>Model Preferences</h2>
-        
+
         <div class="form-group">
           <label for="defaultModel">Default AI Model</label>
           <select id="defaultModel" name="defaultModel" class="form-select">
-            <option value="gpt-4o" selected={userPreferences.defaultModel === 'gpt-4o'}>GPT-4o (Balanced)</option>
-            <option value="gpt-4o-mini" selected={userPreferences.defaultModel === 'gpt-4o-mini'}>GPT-4o Mini (Faster)</option>
-            <option value="claude-3-opus" selected={userPreferences.defaultModel === 'claude-3-opus'}>Claude 3 Opus (Detailed)</option>
-            <option value="claude-3-sonnet" selected={userPreferences.defaultModel === 'claude-3-sonnet'}>Claude 3 Sonnet (Balanced)</option>
-            <option value="claude-3-haiku" selected={userPreferences.defaultModel === 'claude-3-haiku'}>Claude 3 Haiku (Fast)</option>
+            <option value="gemini-2-flash" selected={defaultPreferences.defaultModel === 'gemini-2-flash'}>Gemini 2 Flash (Balanced)</option>
+            <option value="gemini-2-flash-lite" selected={defaultPreferences.defaultModel === 'gemini-2-flash-lite'}>Gemini 2 Flash Lite (Faster)</option>
+            <option value="claude-3-opus" selected={defaultPreferences.defaultModel === 'claude-3-opus'}>Claude 3 Opus (Detailed)</option>
+            <option value="claude-3-sonnet" selected={defaultPreferences.defaultModel === 'claude-3-sonnet'}>Claude 3 Sonnet (Balanced)</option>
+            <option value="claude-3-haiku" selected={defaultPreferences.defaultModel === 'claude-3-haiku'}>Claude 3 Haiku (Fast)</option>
           </select>
           <div class="form-hint">This model will be used by default for all AI interactions.</div>
         </div>
-        
+
         <div class="form-group">
           <label>Preferred Models</label>
           <div class="checkbox-group">
             <label class="checkbox-label">
-              <input type="checkbox" name="preferredModels" value="gpt-4o" checked={userPreferences.preferredModels.includes('gpt-4o')}>
-              GPT-4o
+              <input type="checkbox" name="preferredModels" value="gemini-2-flash" checked={defaultPreferences.preferredModels.includes('gemini-2-flash')}>
+              Gemini 2 Flash
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="preferredModels" value="gpt-4o-mini" checked={userPreferences.preferredModels.includes('gpt-4o-mini')}>
-              GPT-4o Mini
+              <input type="checkbox" name="preferredModels" value="gemini-2-flash-lite" checked={defaultPreferences.preferredModels.includes('gemini-2-flash-lite')}>
+              Gemini 2 Flash Lite
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="preferredModels" value="claude-3-opus" checked={userPreferences.preferredModels.includes('claude-3-opus')}>
+              <input type="checkbox" name="preferredModels" value="claude-3-opus" checked={defaultPreferences.preferredModels.includes('claude-3-opus')}>
               Claude 3 Opus
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="preferredModels" value="claude-3-sonnet" checked={userPreferences.preferredModels.includes('claude-3-sonnet')}>
-              Claude 3 Sonnet
+              <input type="checkbox" name="preferredModels" value="claude-3-sonnet" checked={defaultPreferences.preferredModels.includes('claude-3-sonnet')}>
+              Claude 3 Sonne
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="preferredModels" value="claude-3-haiku" checked={userPreferences.preferredModels.includes('claude-3-haiku')}>
+              <input type="checkbox" name="preferredModels" value="claude-3-haiku" checked={defaultPreferences.preferredModels.includes('claude-3-haiku')}>
               Claude 3 Haiku
             </label>
           </div>
@@ -88,40 +88,40 @@ const userPreferences = defaultPreferences;
 
       <div class="settings-section">
         <h2>Response Preferences</h2>
-        
+
         <div class="form-group">
           <label for="responseLength">Response Length</label>
           <div class="radio-group">
             <label class="radio-label">
-              <input type="radio" name="responseLength" value="concise" checked={userPreferences.responseLength === 'concise'}>
+              <input type="radio" name="responseLength" value="concise" checked={defaultPreferences.responseLength === 'concise'}>
               Concise
             </label>
             <label class="radio-label">
-              <input type="radio" name="responseLength" value="medium" checked={userPreferences.responseLength === 'medium'}>
+              <input type="radio" name="responseLength" value="medium" checked={defaultPreferences.responseLength === 'medium'}>
               Medium
             </label>
             <label class="radio-label">
-              <input type="radio" name="responseLength" value="detailed" checked={userPreferences.responseLength === 'detailed'}>
+              <input type="radio" name="responseLength" value="detailed" checked={defaultPreferences.responseLength === 'detailed'}>
               Detailed
             </label>
           </div>
           <div class="form-hint">Controls how detailed AI responses will be.</div>
         </div>
-        
+
         <div class="form-group">
           <label for="responseStyle">Response Style</label>
           <div class="radio-group">
             <label class="radio-label">
-              <input type="radio" name="responseStyle" value="supportive" checked={userPreferences.responseStyle === 'supportive'}>
+              <input type="radio" name="responseStyle" value="supportive" checked={defaultPreferences.responseStyle === 'supportive'}>
               Supportive
             </label>
             <label class="radio-label">
-              <input type="radio" name="responseStyle" value="balanced" checked={userPreferences.responseStyle === 'balanced'}>
+              <input type="radio" name="responseStyle" value="balanced" checked={defaultPreferences.responseStyle === 'balanced'}>
               Balanced
             </label>
             <label class="radio-label">
-              <input type="radio" name="responseStyle" value="direct" checked={userPreferences.responseStyle === 'direct'}>
-              Direct
+              <input type="radio" name="responseStyle" value="direct" checked={defaultPreferences.responseStyle === 'direct'}>
+              Direc
             </label>
           </div>
           <div class="form-hint">Determines the tone and approach of AI responses.</div>
@@ -130,7 +130,7 @@ const userPreferences = defaultPreferences;
 
       <div class="settings-section">
         <h2>Analysis Features</h2>
-        
+
         <div class="form-group">
           <div class="switch-container">
             <label class="switch-label" for="enableSentimentAnalysis">
@@ -138,12 +138,12 @@ const userPreferences = defaultPreferences;
               <div class="form-hint">Analyzes emotional tone of messages to provide better support.</div>
             </label>
             <label class="switch">
-              <input type="checkbox" id="enableSentimentAnalysis" name="enableSentimentAnalysis" checked={userPreferences.enableSentimentAnalysis}>
+              <input type="checkbox" id="enableSentimentAnalysis" name="enableSentimentAnalysis" checked={defaultPreferences.enableSentimentAnalysis}>
               <span class="slider"></span>
             </label>
           </div>
         </div>
-        
+
         <div class="form-group">
           <div class="switch-container">
             <label class="switch-label" for="enableCrisisDetection">
@@ -151,18 +151,18 @@ const userPreferences = defaultPreferences;
               <div class="form-hint">Identifies potential crisis situations in messages.</div>
             </label>
             <label class="switch">
-              <input type="checkbox" id="enableCrisisDetection" name="enableCrisisDetection" checked={userPreferences.enableCrisisDetection}>
+              <input type="checkbox" id="enableCrisisDetection" name="enableCrisisDetection" checked={defaultPreferences.enableCrisisDetection}>
               <span class="slider"></span>
             </label>
           </div>
         </div>
-        
+
         <div class="form-group" id="crisisDetectionSensitivityGroup">
           <label for="crisisDetectionSensitivity">Crisis Detection Sensitivity</label>
           <select id="crisisDetectionSensitivity" name="crisisDetectionSensitivity" class="form-select">
-            <option value="low" selected={userPreferences.crisisDetectionSensitivity === 'low'}>Low</option>
-            <option value="medium" selected={userPreferences.crisisDetectionSensitivity === 'medium'}>Medium</option>
-            <option value="high" selected={userPreferences.crisisDetectionSensitivity === 'high'}>High</option>
+            <option value="low" selected={defaultPreferences.crisisDetectionSensitivity === 'low'}>Low</option>
+            <option value="medium" selected={defaultPreferences.crisisDetectionSensitivity === 'medium'}>Medium</option>
+            <option value="high" selected={defaultPreferences.crisisDetectionSensitivity === 'high'}>High</option>
           </select>
           <div class="form-hint">Higher sensitivity may result in more false positives.</div>
         </div>
@@ -170,7 +170,7 @@ const userPreferences = defaultPreferences;
 
       <div class="settings-section">
         <h2>Privacy & Data</h2>
-        
+
         <div class="form-group">
           <div class="switch-container">
             <label class="switch-label" for="saveAnalysisResults">
@@ -178,12 +178,12 @@ const userPreferences = defaultPreferences;
               <div class="form-hint">Store AI analysis results for improved personalization.</div>
             </label>
             <label class="switch">
-              <input type="checkbox" id="saveAnalysisResults" name="saveAnalysisResults" checked={userPreferences.saveAnalysisResults}>
+              <input type="checkbox" id="saveAnalysisResults" name="saveAnalysisResults" checked={defaultPreferences.saveAnalysisResults}>
               <span class="slider"></span>
             </label>
           </div>
         </div>
-        
+
         <div class="form-group">
           <div class="switch-container">
             <label class="switch-label" for="aiSuggestions">
@@ -191,7 +191,7 @@ const userPreferences = defaultPreferences;
               <div class="form-hint">Allow AI to suggest relevant resources based on conversation.</div>
             </label>
             <label class="switch">
-              <input type="checkbox" id="aiSuggestions" name="aiSuggestions" checked={userPreferences.aiSuggestions}>
+              <input type="checkbox" id="aiSuggestions" name="aiSuggestions" checked={defaultPreferences.aiSuggestions}>
               <span class="slider"></span>
             </label>
           </div>
@@ -213,7 +213,7 @@ const userPreferences = defaultPreferences;
     const resetButton = document.getElementById('reset-defaults');
     const enableCrisisDetection = document.getElementById('enableCrisisDetection') as HTMLInputElement;
     const crisisDetectionSensitivityGroup = document.getElementById('crisisDetectionSensitivityGroup');
-    
+
     // Toggle crisis detection sensitivity based on crisis detection toggle
     if (enableCrisisDetection && crisisDetectionSensitivityGroup) {
       enableCrisisDetection.addEventListener('change', () => {
@@ -221,16 +221,16 @@ const userPreferences = defaultPreferences;
           crisisDetectionSensitivityGroup.style.display = enableCrisisDetection.checked ? 'block' : 'none';
         }
       });
-      
+
       // Initial state
       crisisDetectionSensitivityGroup.style.display = enableCrisisDetection.checked ? 'block' : 'none';
     }
-    
+
     // Handle form submission
     if (form) {
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         // Get form data
         const formData = new FormData(form);
         const preferences = {
@@ -244,12 +244,12 @@ const userPreferences = defaultPreferences;
           saveAnalysisResults: formData.has('saveAnalysisResults'),
           aiSuggestions: formData.has('aiSuggestions')
         };
-        
+
         try {
           // In a real implementation, this would save to the database
           // For now, we'll just log to console and show a success message
           console.log('Saving preferences:', preferences);
-          
+
           // Show success message
           showNotification('Preferences saved successfully!', 'success');
         } catch (error) {
@@ -258,7 +258,7 @@ const userPreferences = defaultPreferences;
         }
       });
     }
-    
+
     // Handle reset to defaults
     if (resetButton) {
       resetButton.addEventListener('click', () => {
@@ -269,22 +269,22 @@ const userPreferences = defaultPreferences;
         }
       });
     }
-    
+
     // Notification helper function
     function showNotification(message: string, type = 'info') {
-      // Create notification element
+      // Create notification elemen
       const notification = document.createElement('div');
       notification.className = `notification ${type}`;
       notification.textContent = message;
-      
-      // Add to document
+
+      // Add to documen
       document.body.appendChild(notification);
-      
+
       // Show notification
       setTimeout(() => {
         notification.classList.add('show');
       }, 10);
-      
+
       // Remove after delay
       setTimeout(() => {
         notification.classList.remove('show');
@@ -322,7 +322,7 @@ const userPreferences = defaultPreferences;
   .settings-section {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(_0, 0, 0, 0.1);
     padding: 1.5rem;
   }
 
@@ -434,7 +434,7 @@ const userPreferences = defaultPreferences;
   }
 
   input:checked + .slider:before {
-    transform: translateX(26px);
+    transform: translateX(_26px);
   }
 
   .form-actions {
@@ -479,15 +479,15 @@ const userPreferences = defaultPreferences;
     border-radius: 4px;
     background-color: #333;
     color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(100px);
+    box-shadow: 0 4px 12px rgba(_0, 0, 0, 0.15);
+    transform: translateY(_100px);
     opacity: 0;
     transition: all 0.3s ease;
     z-index: 1000;
   }
 
   .notification.show {
-    transform: translateY(0);
+    transform: translateY(_0);
     opacity: 1;
   }
 
@@ -507,23 +507,23 @@ const userPreferences = defaultPreferences;
     .settings-container {
       padding: 1rem;
     }
-    
+
     .checkbox-group, .radio-group {
       flex-direction: column;
       gap: 0.75rem;
     }
-    
+
     .switch-container {
       flex-direction: column;
       gap: 0.75rem;
     }
-    
+
     .form-actions {
       flex-direction: column;
     }
-    
+
     .btn {
       width: 100%;
     }
   }
-</style> 
+</style>

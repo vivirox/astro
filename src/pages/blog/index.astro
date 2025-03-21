@@ -4,34 +4,53 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StandardLayout from '../../layouts/StandardLayout.astro';
 import Button from '../../components/ui/Button.astro';
-import { formatDate } from '../../utils/date';
 
 type BlogPost = CollectionEntry<'blog'>;
 
 // Get all blog posts, sorted by date
-const allBlogPosts = await getCollection('blog', ({ data }: BlogPost) => {
+const allBlogPosts = await getCollection('blog', ({ data }) => {
   return import.meta.env.PROD ? !data.draft : true;
 });
 
 // Sort by date (newest first)
-const sortedPosts = allBlogPosts.sort((a: BlogPost, b: BlogPost) => {
+const sortedPosts = allBlogPosts.sort((a, b) => {
   return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
 });
 
 // Get featured post (first post)
-const featuredPost = sortedPosts[0];
+const featuredPost = sortedPosts.length > 0 ? sortedPosts[0] : null;
 
 // Get rest of posts
 const remainingPosts = sortedPosts.slice(1);
 
 // Get unique series
-const allSeries = [...new Set(sortedPosts
-  .filter((post: CollectionEntry<'blog'>) => post.data.series)
-  .map((post: CollectionEntry<'blog'>) => post.data.series as string)
-)];
+const seriesSet = new Set<string>();
+sortedPosts.forEach(post => {
+  if (post.data.series) {
+    seriesSet.add(post.data.series);
+  }
+});
+const allSeries = [...seriesSet];
 
 // Get unique tags
-const allTags = [...new Set(sortedPosts.flatMap((post: CollectionEntry<'blog'>) => post.data.tags || []))];
+const tagSet = new Set<string>();
+sortedPosts.forEach(post => {
+  if (post.data.tags) {
+    post.data.tags.forEach(tag => tagSet.add(tag));
+  }
+});
+const allTags = [...tagSet];
+
+// Format date function
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
 ---
 
 <BaseLayout
@@ -47,8 +66,8 @@ const allTags = [...new Set(sortedPosts.flatMap((post: CollectionEntry<'blog'>) 
       {featuredPost && (
         <div class="mb-12">
           <div class="relative rounded-lg overflow-hidden">
-            <img 
-              src={featuredPost.data.image || 'https://images.unsplash.com/photo-1507146153580-69a1fe6d8aa1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} 
+            <img
+              src={featuredPost.data.image || 'https://images.unsplash.com/photo-1507146153580-69a1fe6d8aa1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}
               alt={featuredPost.data.title}
               class="w-full h-96 object-cover"
             />
@@ -68,14 +87,16 @@ const allTags = [...new Set(sortedPosts.flatMap((post: CollectionEntry<'blog'>) 
           </div>
         </div>
       )}
-      
+
       <!-- Series Section (if any) -->
       {allSeries.length > 0 && (
         <div class="mb-12">
           <h2 class="text-2xl font-bold mb-6">Featured Series</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(allSeries as string[]).map((series) => {
-              const seriesPosts = sortedPosts.filter((post: BlogPost) => post.data.series === series);
+            {allSeries.map((series) => {
+              const seriesPosts = sortedPosts.filter((post) => post.data.series === series);
+              const seriesSlug = series.toLowerCase().replace(/\s+/g, '-');
+
               return (
                 <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md">
                   <div class="p-6">
@@ -84,9 +105,9 @@ const allTags = [...new Set(sortedPosts.flatMap((post: CollectionEntry<'blog'>) 
                       {seriesPosts.length} article{seriesPosts.length !== 1 ? 's' : ''}
                     </p>
                     <ul class="space-y-2 mb-4">
-                      {seriesPosts.slice(0, 3).map((post: CollectionEntry<'blog'>) => (
+                      {seriesPosts.slice(0, 3).map((post) => (
                         <li>
-                          <a 
+                          <a
                             href={`/blog/${post.slug}`}
                             class="text-blue-600 dark:text-blue-400 hover:underline"
                           >
@@ -95,7 +116,7 @@ const allTags = [...new Set(sortedPosts.flatMap((post: CollectionEntry<'blog'>) 
                         </li>
                       ))}
                     </ul>
-                    <Button href={`/blog/${series.toLowerCase().replace(/\s+/g, '-')}`} variant="outline" size="sm">
+                    <Button href={`/blog/${seriesSlug}`} variant="outline" size="sm">
                       View Series
                     </Button>
                   </div>
@@ -105,16 +126,16 @@ const allTags = [...new Set(sortedPosts.flatMap((post: CollectionEntry<'blog'>) 
           </div>
         </div>
       )}
-      
+
       <!-- Blog Grid -->
       <div class="mb-12">
         <h2 class="text-2xl font-bold mb-6">Latest Articles</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {remainingPosts.map((post: CollectionEntry<'blog'>) => (
+          {remainingPosts.map((post) => (
             <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-transform hover:scale-[1.02]">
               <a href={`/blog/${post.slug}`}>
-                <img 
-                  src={post.data.image || 'https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} 
+                <img
+                  src={post.data.image || 'https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}
                   alt={post.data.title}
                   class="w-full h-48 object-cover"
                 />
@@ -136,14 +157,14 @@ const allTags = [...new Set(sortedPosts.flatMap((post: CollectionEntry<'blog'>) 
           ))}
         </div>
       </div>
-      
+
       <!-- Tags Section -->
-      {(allTags as string[]).length > 0 && (
+      {allTags.length > 0 && (
         <div class="mb-12">
           <h2 class="text-2xl font-bold mb-6">Browse by Topic</h2>
           <div class="flex flex-wrap gap-3">
-            {(allTags as string[]).map((tag) => (
-              <a 
+            {allTags.map((tag) => (
+              <a
                 href={`/blog/tag/${tag}`}
                 class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               >
@@ -162,8 +183,8 @@ const allTags = [...new Set(sortedPosts.flatMap((post: CollectionEntry<'blog'>) 
   .blog-card {
     transition: transform 0.2s ease-in-out;
   }
-  
+
   .blog-card:hover {
     transform: translateY(-5px);
   }
-</style> 
+</style>

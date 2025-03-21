@@ -1,158 +1,165 @@
-import type { APIRoute } from 'astro';
-import { db } from '../../../lib/db';
-import { createAuditLog } from '../../../lib/audit';
-import { requireAuth } from '../../../lib/auth';
+/* trunk-ignore-all(prettier) */
+import type { APIRoute } from "astro";
+import { createAuditLog } from "../../../lib/audit/log";
+import { getSession } from "../../../lib/auth/session";
+import { supabase } from "../../../lib/db/supabase";
+import type { Database } from "../../../types/supabase";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-export const GET: APIRoute = async ({ request, cookies }) => {
+// Update the supabase client type
+const supabaseTyped = supabase as SupabaseClient<Database>;
+
+export const GET: APIRoute = async ({ request, url }) => {
   try {
     // Require authentication and admin role
-    const user = await requireAuth(request, cookies, { requiredRole: 'admin' });
-    
+    const session = await getSession(request);
+    if (session?.user?.role !== "admin") {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized - Admin access required" }),
+        {
+          status: 403,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
+    const user = session.user;
+
     // Get query parameters
-    const url = new URL(request.url);
-    const period = url.searchParams.get('period') || 'daily';
-    const startDate = url.searchParams.get('startDate') 
-      ? new Date(url.searchParams.get('startDate')!) 
+    const period = url.searchParams.get("period") || "weekly";
+    const startDate = url.searchParams.get("startDate")
+      ? new Date(url.searchParams.get("startDate")!)
       : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default to last 30 days
-    const endDate = url.searchParams.get('endDate') 
-      ? new Date(url.searchParams.get('endDate')!) 
+    const endDate = url.searchParams.get("endDate")
+      ? new Date(url.searchParams.get("endDate")!)
       : new Date();
-    const model = url.searchParams.get('model') || undefined;
-    const limit = parseInt(url.searchParams.get('limit') || '100', 10);
-    
+    const model = url.searchParams.get("model") || undefined;
+    const limit = parseInt(url.searchParams.get("limit") || "100", 10);
+
     // Log the analytics request
     await createAuditLog({
-      action: 'ai.performance.metrics.request',
-      category: 'ai',
-      status: 'success',
       userId: user.id,
-      details: {
+      action: "ai.performance.metrics.request",
+      resource: "ai",
+      metadata: {
         period,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
         model,
-        limit
-      }
+        limit,
+      },
     });
-    
+
+    const dateTrunc =
+      period === "daily"
+        ? "DATE(timestamp)"
+        : period === "weekly"
+        ? "DATE_TRUNC('week', timestamp)"
+        : "DATE_TRUNC('month', timestamp)";
+
     // Build the query
-    let query = db.query()
-      .select([
-        // Select appropriate date grouping based on period
-        period === 'daily' 
-          ? db.sql`DATE(timestamp)` 
-          : period === 'weekly' 
-            ? db.sql`DATE_TRUNC('week', timestamp)` 
-            : db.sql`DATE_TRUNC('month', timestamp)`,
-        'model',
-        db.sql`COUNT(*) as request_count`,
-        db.sql`AVG(latency) as avg_latency`,
-        db.sql`MAX(latency) as max_latency`,
-        db.sql`MIN(latency) as min_latency`,
-        db.sql`SUM(input_tokens) as total_input_tokens`,
-        db.sql`SUM(output_tokens) as total_output_tokens`,
-        db.sql`SUM(total_tokens) as total_tokens`,
-        db.sql`SUM(CASE WHEN success = true THEN 1 ELSE 0 END) as success_count`,
-        db.sql`SUM(CASE WHEN cached = 1 THEN 1 ELSE 0 END) as cached_count`,
-        db.sql`SUM(CASE WHEN optimized = 1 THEN 1 ELSE 0 END) as optimized_count`
-      ])
-      .from('ai_performance_metrics')
-      .where('timestamp', '>=', startDate)
-      .where('timestamp', '<=', endDate)
-      .groupBy(['date_trunc', 'model'])
-      .orderBy('date_trunc', 'desc')
-      .limit(limit);
-    
-    // Add model filter if specified
-    if (model) {
-      query = query.where('model', '=', model);
+    const { data: results, error } = await supabase
+      .rpc("get_ai_metrics", {
+        p_period: period,
+        p_start_date: startDate.toISOString(),
+        p_end_date: endDate.toISOString(),
+        p_model: model,
+        p_limit: limit,
+      })
+      .then((response) => response.data);
+
+    if (error) {
+      throw error;
     }
-    
-    const results = await query.execute();
-    
+
     // Process and format the results
-    const metrics = results.map(row => ({
+    const metrics = results?.map((row: any) => ({
       date: row.date_trunc,
       model: row.model,
       requestCount: Number(row.request_count),
       latency: {
         avg: Number(row.avg_latency),
         max: Number(row.max_latency),
-        min: Number(row.min_latency)
+        min: Number(row.min_latency),
       },
       tokens: {
         input: Number(row.total_input_tokens),
         output: Number(row.total_output_tokens),
-        total: Number(row.total_tokens)
+        total: Number(row.total_tokens),
       },
       successRate: Number(row.success_count) / Number(row.request_count),
       cacheHitRate: Number(row.cached_count) / Number(row.request_count),
-      optimizationRate: Number(row.optimized_count) / Number(row.request_count)
-    }));
-    
+      optimizationRate: Number(row.optimized_count) / Number(row.request_count),
+    })) ?? [];
+
     // Get model breakdown
-    const modelBreakdown = await db.query()
-      .select([
-        'model',
-        db.sql`COUNT(*) as request_count`,
-        db.sql`SUM(total_tokens) as total_tokens`,
-        db.sql`SUM(CASE WHEN success = true THEN 1 ELSE 0 END) as success_count`,
-        db.sql`SUM(CASE WHEN cached = 1 THEN 1 ELSE 0 END) as cached_count`,
-        db.sql`SUM(CASE WHEN optimized = 1 THEN 1 ELSE 0 END) as optimized_count`
-      ])
-      .from('ai_performance_metrics')
-      .where('timestamp', '>=', startDate)
-      .where('timestamp', '<=', endDate)
-      .groupBy(['model'])
-      .orderBy('request_count', 'desc')
-      .execute();
-    
+    const { data: modelBreakdown, error: modelBreakdownError } =
+      await supabase
+        .rpc("get_ai_model_breakdown", {
+          p_start_date: startDate.toISOString(),
+          p_end_date: endDate.toISOString(),
+        })
+        .then((response) => response.data);
+
+    if (modelBreakdownError) {
+      throw modelBreakdownError;
+    }
+
     // Get error breakdown
-    const errorBreakdown = await db.query()
-      .select([
-        'error_code',
-        db.sql`COUNT(*) as error_count`
-      ])
-      .from('ai_performance_metrics')
-      .where('timestamp', '>=', startDate)
-      .where('timestamp', '<=', endDate)
-      .where('success', '=', false)
-      .groupBy(['error_code'])
-      .orderBy('error_count', 'desc')
-      .execute();
-    
+    const { data: errorBreakdown, error: errorBreakdownError } =
+      await supabase
+        .rpc("get_ai_error_breakdown", {
+          p_start_date: startDate.toISOString(),
+          p_end_date: endDate.toISOString(),
+        })
+        .then((response) => response.data);
+
+    if (errorBreakdownError) {
+      throw errorBreakdownError;
+    }
+
+    if (errorBreakdownError) {
+      throw errorBreakdownError;
+    }
+
     // Return the metrics
-    return new Response(JSON.stringify({
-      metrics,
-      modelBreakdown: modelBreakdown.map(row => ({
-        model: row.model,
-        requestCount: Number(row.request_count),
-        totalTokens: Number(row.total_tokens),
-        successRate: Number(row.success_count) / Number(row.request_count),
-        cacheHitRate: Number(row.cached_count) / Number(row.request_count),
-        optimizationRate: Number(row.optimized_count) / Number(row.request_count)
-      })),
-      errorBreakdown: errorBreakdown.map(row => ({
-        errorCode: row.error_code,
-        count: Number(row.error_count)
-      }))
-    }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    return new Response(
+      JSON.stringify({
+        metrics,
+        modelBreakdown: modelBreakdown?.map((row: any) => ({
+          model: row.model,
+          requestCount: Number(row.request_count),
+          totalTokens: Number(row.total_tokens),
+          successRate: Number(row.success_count) / Number(row.request_count),
+          cacheHitRate: Number(row.cached_count) / Number(row.request_count),
+          optimizationRate:
+            Number(row.optimized_count) / Number(row.request_count),
+        })) ?? [],
+        errorBreakdown: errorBreakdown?.map((row: any) => ({
+          errorCode: row.error_code,
+          count: Number(row.error_count),
+        })) ?? [],
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
   } catch (error) {
-    console.error('Error fetching AI performance metrics:', error);
-    
-    return new Response(JSON.stringify({
-      error: 'Failed to fetch AI performance metrics',
-      details: error instanceof Error ? error.message : String(error)
-    }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    console.error("Error fetching AI performance metrics:", error);
+
+    return new Response(
+      JSON.stringify({
+        error: "Failed to fetch AI performance metrics",
+        details: error instanceof Error ? error?.message : String(error),
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
   }
-}; 
+};

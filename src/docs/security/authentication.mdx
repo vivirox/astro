@@ -1,9 +1,9 @@
 ---
-title: "Authentication"
-description: "Learn about Gradiants authentication system and security features"
+title: 'Authentication'
+description: "Learn about Gradiant's authentication system and security features"
 ---
 
-# Authentication
+## Authentication
 
 Gradiant's authentication system provides robust security through multiple authentication methods, session management, and comprehensive security controls.
 
@@ -85,14 +85,10 @@ const response = await auth.updatePassword({
     - Compatible with Google Authenticator - 30-second code rotation - Secure
     key generation - Backup codes provided
   </Accordion>
-
-{" "}
-
-<Accordion title="SMS Authentication">
-  - Phone number verification - Rate-limited sending - Code expiration -
-  Fallback options
-</Accordion>
-
+  <Accordion title="SMS Authentication">
+    - Phone number verification - Rate-limited sending - Code expiration -
+    Fallback options
+  </Accordion>
   <Accordion title="Email Authentication">
     - Secure code delivery - Limited validity period - Anti-phishing measures -
     Backup verification
@@ -123,23 +119,23 @@ const response = await auth.updatePassword({
 
 ```typescript
 const webAuthnAuth = new WebAuthnAuthentication({
-  rpName: "Gradiant Healthcare",
-  rpID: "gradiant.dev",
-  origin: "https://gradiant.dev",
-  userVerification: "preferred",
-});
+  rpName: 'Gradiant Healthcare',
+  rpID: 'gradiant.dev',
+  origin: 'https://gradiant.dev',
+  userVerification: 'preferred',
+})
 
 // Register new credential
 const credential = await webAuthnAuth.register({
-  userId: "user_123",
-  userName: "john.doe@example.com",
-});
+  userId: 'user_123',
+  userName: 'john.doe@example.com',
+})
 
 // Authenticate with credential
 const auth = await webAuthnAuth.authenticate({
-  userId: "user_123",
+  userId: 'user_123',
   credentialId: credential.id,
-});
+})
 ```
 
 ## OAuth/SSO Integration
@@ -175,11 +171,11 @@ const oauthConfig = {
 
 ```typescript SAML Setup
 const samlConfig = {
-  entryPoint: "https://sso.healthcare.org/saml2/idp",
-  issuer: "gradiant-healthcare",
+  entryPoint: 'https://sso.healthcare.org/saml2/idp',
+  issuer: 'gradiant-healthcare',
   cert: process.env.SAML_CERT,
   privateKey: process.env.SAML_PRIVATE_KEY,
-};
+}
 ```
 
 </CodeGroup>
@@ -201,18 +197,18 @@ const samlConfig = {
 
 ```typescript
 const sessionConfig = {
-  maxAge: "24h",
+  maxAge: '24h',
   secure: true,
   httpOnly: true,
-  sameSite: "strict",
+  sameSite: 'strict',
   fingerprint: true,
   maxConcurrent: 5,
-};
+}
 
 const session = await auth.createSession({
-  userId: "user_123",
+  userId: 'user_123',
   config: sessionConfig,
-});
+})
 ```
 
 ## Security Controls
@@ -266,14 +262,10 @@ const session = await auth.createSession({
     - Wait for lockout period to expire - Contact support for manual unlock -
     Use account recovery process - Verify identity through alternate means
   </Accordion>
-
-{" "}
-
-<Accordion title="MFA Issues">
-  - Check time synchronization - Use backup codes if available - Contact support
-  for reset - Verify device settings
-</Accordion>
-
+  <Accordion title="MFA Issues">
+    - Check time synchronization - Use backup codes if available - Contact
+    support for reset - Verify device settings
+  </Accordion>
   <Accordion title="SSO Problems">
     - Verify provider configuration - Check network connectivity - Validate
     certificates - Review error logs

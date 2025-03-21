@@ -9,10 +9,12 @@ This document outlines the disaster recovery procedures for the Gradiant Astro a
 ### Site Down / Inaccessible
 
 1. **Check Monitoring Alerts**
+
    - Review Slack alerts for specific error details
    - Check GitHub Actions monitoring workflow results
 
 2. **Verify Deployment Status**
+
    - Check Cloudflare Pages deployment status
    - Verify DNS resolution is working properly
 
@@ -27,24 +29,27 @@ This document outlines the disaster recovery procedures for the Gradiant Astro a
 ### Database Issues
 
 1. **Check Database Connection**
-   - Verify Supabase status at https://status.supabase.com
+
+   - Verify Supabase status at [Supabase Status](https://status.supabase.com)
    - Run health check against the API endpoint manually:
      ```bash
      curl -v https://app.gradiantastro.com/api/health
      ```
 
 2. **Database Recovery Steps**
+
    - If database corruption is suspected, restore from the latest backup:
+
      ```bash
      # List available backups
      aws s3 ls s3://[BACKUP_BUCKET]/database-backups/ --profile gradiant
-     
+
      # Download the latest backup
      aws s3 cp s3://[BACKUP_BUCKET]/database-backups/[LATEST_BACKUP] ./backup.sql.gz --profile gradiant
-     
+
      # Decompress the backup
      gunzip backup.sql.gz
-     
+
      # Restore the database
      PGPASSWORD=[PASSWORD] psql -h [HOST] -U [USER] -d [DATABASE] < backup.sql
      ```
@@ -56,7 +61,6 @@ This document outlines the disaster recovery procedures for the Gradiant Astro a
      ```bash
      curl -v https://app.gradiantastro.com/api/health
      ```
-   
 2. **API Recovery Steps**
    - Check application logs for specific error details
    - Verify environment variables are correctly set
@@ -67,6 +71,7 @@ This document outlines the disaster recovery procedures for the Gradiant Astro a
 ### Database Backups
 
 Backups are automatically created every 6 hours and stored in AWS S3. The backup workflow:
+
 1. Creates a full PostgreSQL dump of the Supabase database
 2. Compresses the backup file with gzip
 3. Uploads to S3 with proper encryption
@@ -77,22 +82,24 @@ Backups are automatically created every 6 hours and stored in AWS S3. The backup
 If an immediate backup is needed:
 
 1. Trigger the backup workflow manually:
+
    ```bash
    gh workflow run backup.yml
    ```
 
 2. Or create a manual backup:
+
    ```bash
    # Set environment variables
    export PGPASSWORD=[PASSWORD]
    export TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-   
+
    # Create backup
    pg_dump -h [HOST] -U [USER] -d [DATABASE] -F p > supabase_backup_${TIMESTAMP}.sql
-   
+
    # Compress
    gzip supabase_backup_${TIMESTAMP}.sql
-   
+
    # Upload to S3
    aws s3 cp supabase_backup_${TIMESTAMP}.sql.gz s3://[BACKUP_BUCKET]/database-backups/ --profile gradiant
    ```
@@ -102,18 +109,20 @@ If an immediate backup is needed:
 To restore a database from backup:
 
 1. Identify the backup to restore:
+
    ```bash
    aws s3 ls s3://[BACKUP_BUCKET]/database-backups/ --profile gradiant
    ```
 
 2. Download and restore:
+
    ```bash
    # Download
    aws s3 cp s3://[BACKUP_BUCKET]/database-backups/[BACKUP_FILENAME] ./ --profile gradiant
-   
+
    # Decompress
    gunzip [BACKUP_FILENAME]
-   
+
    # Restore
    PGPASSWORD=[PASSWORD] psql -h [HOST] -U [USER] -d [DATABASE] < [BACKUP_SQL_FILE]
    ```
@@ -137,24 +146,27 @@ If GitHub Actions is unavailable:
 
 1. Check out the repository locally
 2. View available deployment tags:
+
    ```bash
    git fetch --tags
    git tag -l "production-*" --sort=-committerdate
    ```
 
 3. Check out the last stable deployment:
+
    ```bash
    git checkout [TAG_NAME]
    ```
 
 4. Build and deploy manually:
+
    ```bash
    # Install dependencies
    pnpm install
-   
+
    # Build
    NODE_ENV=production pnpm build
-   
+
    # Deploy using Wrangler CLI
    npx wrangler pages deploy dist --project-name=gradiant-astro --branch=main
    ```
@@ -171,21 +183,25 @@ If GitHub Actions is unavailable:
 ### Response Procedures
 
 1. **Identification**
+
    - Determine severity level
    - Document initial findings
    - Notify appropriate team members
 
 2. **Containment**
+
    - Implement immediate mitigation (e.g., rollback)
    - Isolate affected components
    - Prevent further damage
 
 3. **Eradication**
+
    - Identify and fix the root cause
    - Deploy and test fixes
    - Verify security of all components
 
 4. **Recovery**
+
    - Restore service to normal operation
    - Verify data integrity
    - Monitor for any recurring issues
@@ -206,9 +222,9 @@ If GitHub Actions is unavailable:
 
 ### External Services
 
-- **Cloudflare Support**: https://dash.cloudflare.com/support
-- **Supabase Support**: https://supabase.com/support
-- **AWS Support**: https://console.aws.amazon.com/support
+- **Cloudflare Support**: [Support Dashboard](https://dash.cloudflare.com/support)
+- **Supabase Support**: [Support Portal](https://supabase.com/support)
+- **AWS Support**: [Support Center](https://console.aws.amazon.com/support)
 
 ## Emergency Access Procedures
 
@@ -249,6 +265,7 @@ The disaster recovery plan should be tested quarterly:
 ### Recovery Checklists
 
 #### Site Outage Checklist
+
 - [ ] Verify monitoring alerts
 - [ ] Check deployment status
 - [ ] Examine application logs
@@ -259,6 +276,7 @@ The disaster recovery plan should be tested quarterly:
 - [ ] Initiate rollback if necessary
 
 #### Database Recovery Checklist
+
 - [ ] Identify corruption scope
 - [ ] Select appropriate backup
 - [ ] Verify backup integrity
@@ -275,4 +293,4 @@ For planned maintenance:
 2. Post notification to status page
 3. Implement changes during low-traffic periods
 4. Have rollback plan prepared
-5. Verify all systems after maintenance 
+5. Verify all systems after maintenance

@@ -1,8 +1,18 @@
-import { zkChat } from '../../../lib/chat';
+import { zkChat } from '../../../lib/chat/zkChat.ts'
+
+interface ChatMessageRequest {
+  conversationId: string
+  userId: string
+  message: string
+  isEncrypted?: boolean
+  requireSenderVerification?: boolean
+}
 
 // Update the message sending handler to include ZK proof generation
 export async function POST(request: Request) {
   try {
+    const body = (await request.json()) as ChatMessageRequest
+
     // ... existing message validation logic ...
 
     // Create message data
@@ -16,15 +26,15 @@ export async function POST(request: Request) {
         ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
         userAgent: request.headers.get('user-agent') || 'unknown',
       },
-    };
+    }
 
     // Generate ZK proof for the message
-    const messageWithProof = await zkChat.generateMessageProof(messageData);
+    const messageWithProof = await zkChat.generateMessageProof(messageData)
 
     // For sensitive conversations, encrypt the message with proof
-    let encryptedMessage;
+    let encryptedMessage
     if (body.isEncrypted) {
-      encryptedMessage = await zkChat.encryptMessageWithProof(messageData);
+      encryptedMessage = await zkChat.encryptMessageWithProof(messageData)
       // ... store encrypted message ...
     } else {
       // ... store message with proof ...
@@ -32,8 +42,8 @@ export async function POST(request: Request) {
 
     // Verify the sender is authorized (for AI messages or restricted conversations)
     if (body.requireSenderVerification) {
-      const authorizedSenders = await getAuthorizedSenders(body.conversationId);
-      await zkChat.verifyAuthorizedSender(body.userId, authorizedSenders);
+      const authorizedSenders = await getAuthorizedSenders(body.conversationId)
+      await zkChat.verifyAuthorizedSender(body.userId, authorizedSenders)
     }
 
     // ... existing message processing logic ...
@@ -52,7 +62,7 @@ export async function POST(request: Request) {
           // ... other headers ...
         },
       }
-    );
+    )
   } catch (error) {
     // ... existing error handling ...
   }
@@ -61,6 +71,6 @@ export async function POST(request: Request) {
 // Helper function to get authorized senders for a conversation
 async function getAuthorizedSenders(conversationId: string): Promise<string[]> {
   // In a real implementation, this would fetch the authorized senders from the database
-  // For now, return a mock list
-  return ['user-1', 'user-2', 'ai-assistant'];
-} 
+  // For now, return a mock lis
+  return ['user-1', 'user-2', 'ai-assistant']
+}

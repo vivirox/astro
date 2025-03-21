@@ -2,103 +2,195 @@ name: Database Backup
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Every 6 hours
-  workflow_dispatch:
+    - cron: 0 */12 * * * # Run every 12 hours
+  workflow_dispatch: {} # Allow manual trigger without inputs
+
+permissions:
+  contents: read
+  id-token: write
 
 env:
-  NODE_VERSION: 22.13.11
-  PNPM_VERSION: 10.5.3
+  NODE_VERSION: 20.11.0
+  PNPM_VERSION: 10.0.0
+  BACKUP_RETENTION_DAYS: 30
 
 jobs:
   backup:
-    name: Backup Supabase Database
+    name: >-
+      Backup ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }} Database
     runs-on: ubuntu-latest
-    environment: production
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: >-
+            arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-backup
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-duration-seconds: 1200
+          mask-aws-account-id: true
+
+      - name: Configure Supabase CLI
+        uses: supabase/setup-cli@v1.1.0
+        with:
+          version: latest
+
+      - name: Login to Supabase
+        run: supabase login --access-token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: ${{ env.PNPM_VERSION }}
-          
+
       - name: Install dependencies
-        run: pnpm install
-      
-      - name: Install PostgreSQL client
+        run: pnpm install --frozen-lockfile
+
+      - name: Create and upload backup
+        id: backup
+        env:
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PGHOST: ${{ secrets.SUPABASE_DB_HOST }}
+          PGUSER: ${{ secrets.SUPABASE_DB_USER }}
+          PGDATABASE: ${{ secrets.SUPABASE_DB_NAME }}
+          ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
-      
-      - name: Create backup
-        id: create-backup
-        run: |
+          set -euo pipefail
+
           timestamp=$(date +%Y%m%d_%H%M%S)
-          backup_file="supabase_backup_${timestamp}.sql"
-          
-          # Create the backup - using environment variables set in GitHub UI
-          PGPASSWORD=${SUPABASE_DB_PASSWORD} pg_dump \
-            -h ${SUPABASE_DB_HOST} \
-            -p 5432 \
-            -U ${SUPABASE_DB_USER} \
-            -d ${SUPABASE_DB_NAME} \
-            -F p > "${backup_file}"
-          
-          # Check if backup was successful
-          if [ -s "${backup_file}" ]; then
-            echo "backup_file=${backup_file}" >> $GITHUB_OUTPUT
-            echo "::notice::Backup created successfully: ${backup_file}"
-          else
-            echo "::error::Backup creation failed or resulted in empty file"
+          backup_file="supabase_backup_${ENVIRONMENT}_${timestamp}.sql"
+          compressed_file="${backup_file}.gz"
+
+          echo "::group::Creating database backup"
+          # Create backup with error handling
+          if ! pg_dump -p 5432 -F p > "${backup_file}"; then
+            echo "::error::Failed to create database backup"
             exit 1
           fi
-      
-      - name: Compress backup
-        if: steps.create-backup.outputs.backup_file != ''
-        id: compress-backup
-        run: |
-          compressed_file="${{ steps.create-backup.outputs.backup_file }}.gz"
-          gzip ${{ steps.create-backup.outputs.backup_file }}
-          echo "compressed_file=${compressed_file}" >> $GITHUB_OUTPUT
-      
-      - name: Upload backup to S3
-        if: steps.compress-backup.outputs.compressed_file != ''
-        uses: jakejarvis/s3-sync-action@v0.5.1
-        with:
-          args: --acl private --follow-symlinks
-        # Using environment variables set in GitHub UI
-        env:
-          SOURCE: ${{ steps.compress-backup.outputs.compressed_file }}
-          AWS_S3_BUCKET: ${BACKUP_S3_BUCKET}
-          DEST: 'database-backups/${{ steps.compress-backup.outputs.compressed_file }}'
-      
-      - name: Clean up local backup
-        if: always() && steps.create-backup.outputs.backup_file != ''
-        run: |
-          rm -f ${{ steps.create-backup.outputs.backup_file }}
-          rm -f ${{ steps.compress-backup.outputs.compressed_file }}
-      
-      - name: Rotate backups
+
+          # Verify backup size
+          if [ ! -s "${backup_file}" ]; then
+            echo "::error::Backup file is empty"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Compressing backup"
+          if ! gzip "${backup_file}"; then
+            echo "::error::Failed to compress backup file"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Uploading to S3"
+          if ! aws s3 cp "${compressed_file}" \
+            s3://${{ secrets.BACKUP_S3_BUCKET }}/database-backups/${ENVIRONMENT}/ \
+            --storage-class STANDARD_IA; then
+            echo "::error::Failed to upload backup to S3"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+          # Clean up local files
+          rm -f "${backup_file}" "${compressed_file}"
+
+          # Set outputs for next steps
+          echo "backup_file=${compressed_file}" >> $GITHUB_OUTPUT
+          echo "environment=${ENVIRONMENT}" >> $GITHUB_OUTPUT
+          echo "timestamp=${timestamp}" >> $GITHUB_OUTPUT
+
+      - name: Rotate old backups
         if: success()
-        run: |
-          # Using AWS CLI to manage backup retention
-          aws s3 ls s3://${BACKUP_S3_BUCKET}/database-backups/ --recursive | \
-            sort | \
-            head -n -20 | \
-            awk '{print $4}' | \
-            xargs -I {} aws s3 rm s3://${BACKUP_S3_BUCKET}/{}
-        # Using environment variables set in GitHub UI
-          
-      - name: Notify backup status
-        if: always()
-        uses: rtCamp/action-slack-notify@v2.2.1
         env:
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_TITLE: "Database Backup ${{ job.status }}"
-          SLACK_MESSAGE: "Database backup ${{ job.status }} at $(date). ${{ job.status == 'success' && 'Backup stored in S3.' || 'Backup failed!' }}" 
+          ENVIRONMENT: ${{ steps.backup.outputs.environment }}
+        run: |
+          set -euo pipefail
+
+          echo "::group::Rotating old backups"
+          # List backups older than retention period and delete them
+          aws s3 ls s3://${{ secrets.BACKUP_S3_BUCKET }}/database-backups/${ENVIRONMENT}/ --recursive | \
+            awk -v cutoff=$(date -d "-${BACKUP_RETENTION_DAYS} days" +%Y-%m-%d) '$1 < cutoff {print $4}' | \
+            while read -r backup; do
+              echo "Deleting old backup: ${backup}"
+              aws s3 rm "s3://${{ secrets.BACKUP_S3_BUCKET }}/${backup}"
+            done
+          echo "::endgroup::"
+
+      - name: Verify backup
+        if: success()
+        env:
+          ENVIRONMENT: ${{ steps.backup.outputs.environment }}
+          BACKUP_FILE: ${{ steps.backup.outputs.backup_file }}
+        run: |
+          set -euo pipefail
+
+          echo "::group::Verifying backup integrity"
+          # Download the backup we just created
+          aws s3 cp \
+            s3://${{ secrets.BACKUP_S3_BUCKET }}/database-backups/${ENVIRONMENT}/${BACKUP_FILE} \
+            ./verify_${BACKUP_FILE}
+
+          # Check file size and integrity
+          if [ ! -s "./verify_${BACKUP_FILE}" ]; then
+            echo "::error::Verification failed: Downloaded backup is empty"
+            exit 1
+          fi
+
+          # Clean up verification file
+          rm -f "./verify_${BACKUP_FILE}"
+          echo "::endgroup::"
+
+      - name: Notify status
+        if: always()
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "${{ job.status == 'success' && '✅' || '🚨' }} Database Backup Status",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Status:* ${{ job.status == 'success' && '✅ Success' || '🚨 Failure' }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:* ${{ steps.backup.outputs.environment }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Timestamp:* ${{ steps.backup.outputs.timestamp }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Workflow:* ${{ github.workflow }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Trigger:* ${{ github.event_name }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>"
+                  }
+                }
+              ]
+            }

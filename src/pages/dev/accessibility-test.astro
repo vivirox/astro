@@ -1,24 +1,24 @@
 ---
-import ChatLayout from '../../layouts/ChatLayout.astro';
-import { ContrastChecker } from '../../components/accessibility/ContrastChecker';
-import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester';
-import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadingIndicator';
+
+
+
+
 ---
 
 <ChatLayout title="Accessibility Testing">
   <div class="container">
     <h1>Accessibility Testing Dashboard</h1>
-    
+
     <section class="test-section">
       <h2>Browser Compatibility</h2>
       <BrowserCompatibilityTester client:load />
     </section>
-    
+
     <section class="test-section">
       <h2>Color Contrast</h2>
       <ContrastChecker client:load />
     </section>
-    
+
     <section class="test-section">
       <h2>Loading Indicators</h2>
       <div class="loading-indicators-test">
@@ -36,7 +36,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
         </div>
       </div>
     </section>
-    
+
     <section class="test-section">
       <h2>Keyboard Navigation Test</h2>
       <p>Tab through the following elements to test keyboard navigation:</p>
@@ -49,7 +49,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
         <textarea placeholder="Textarea" class="test-textarea"></textarea>
       </div>
     </section>
-    
+
     <section class="test-section">
       <h2>Screen Reader Test</h2>
       <p>The following elements should be properly announced by screen readers:</p>
@@ -58,12 +58,12 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
           <button id="announce-btn" class="test-button">Announce Message</button>
           <div id="announcement-area" class="announcement-area">No announcement yet</div>
         </div>
-        
+
         <div class="sr-only-test">
           <p>This text is visible to everyone.</p>
           <p class="sr-only">This text is only visible to screen readers.</p>
         </div>
-        
+
         <div class="image-test">
           <img src="/placeholder.jpg" alt="A placeholder image for testing alt text" width="200" height="100" />
         </div>
@@ -72,11 +72,11 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
   </div>
 
   <script>
-    // Add interactivity for the screen reader test
+    // Add interactivity for the screen reader tes
     document.addEventListener('DOMContentLoaded', () => {
       const announceBtn = document.getElementById('announce-btn');
       const announcementArea = document.getElementById('announcement-area');
-      
+
       if (announceBtn && announcementArea) {
         announceBtn.addEventListener('click', () => {
           announcementArea.textContent = `Announcement at ${new Date().toLocaleTimeString()}`;
@@ -91,7 +91,7 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
       margin: 0 auto;
       padding: 20px;
     }
-    
+
     .test-section {
       margin-bottom: 40px;
       padding: 20px;
@@ -99,37 +99,37 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
       border-radius: 8px;
       background-color: var(--background);
     }
-    
+
     .loading-indicators-test {
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
     }
-    
+
     .keyboard-test {
       display: flex;
       flex-direction: column;
       gap: 10px;
       max-width: 400px;
     }
-    
+
     .test-button, .test-link {
       padding: 8px 16px;
       border-radius: 4px;
     }
-    
+
     .test-button {
       background-color: var(--button-background);
       color: var(--button-text);
       border: none;
       cursor: pointer;
     }
-    
+
     .test-link {
       color: var(--info);
       text-decoration: underline;
     }
-    
+
     .test-input, .test-textarea {
       padding: 8px;
       border: 1px solid var(--input-border);
@@ -137,22 +137,22 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
       background-color: var(--input-background);
       color: var(--input-text);
     }
-    
+
     .test-textarea {
       min-height: 100px;
     }
-    
+
     .live-region {
       margin-bottom: 20px;
     }
-    
+
     .announcement-area {
       margin-top: 10px;
       padding: 10px;
       background-color: var(--ai-message-background);
       border-radius: 4px;
     }
-    
+
     .sr-only {
       position: absolute;
       width: 1px;
@@ -160,9 +160,9 @@ import { AccessibleLoadingIndicator } from '../../components/ai/AccessibleLoadin
       padding: 0;
       margin: -1px;
       overflow: hidden;
-      clip: rect(0, 0, 0, 0);
+      clip: rect(_0, 0, 0, 0);
       white-space: nowrap;
       border-width: 0;
     }
   </style>
-</ChatLayout> 
+</ChatLayout>

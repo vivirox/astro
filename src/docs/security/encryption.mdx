@@ -1,9 +1,9 @@
 ---
-title: "Encryption & Zero-Knowledge System"
-description: "Learn about Gradiants encryption architecture and zero-knowledge implementation"
+title: 'Encryption & Zero-Knowledge System'
+description: "Learn about Gradiant's encryption architecture and zero-knowledge implementation"
 ---
 
-# Encryption & Zero-Knowledge System
+## Encryption & Zero-Knowledge System
 
 Gradiant's encryption system provides end-to-end security through zero-knowledge proofs, quantum-resistant algorithms, and comprehensive key management.
 
@@ -88,26 +88,26 @@ const isValid = await circuit.verifyProof({
 
 ```typescript
 const keyManager = new KeyManager({
-  kmsProvider: "aws",
-  region: "us-east-1",
-  keyRotationPeriod: "30d",
+  kmsProvider: 'aws',
+  region: 'us-east-1',
+  keyRotationPeriod: '30d',
   backupEnabled: true,
-});
+})
 
 // Generate new data encryption key
 const dek = await keyManager.generateDataKey({
-  keySpec: "AES_256",
+  keySpec: 'AES_256',
   context: {
-    purpose: "session_encryption",
-    userId: "user_123",
+    purpose: 'session_encryption',
+    userId: 'user_123',
   },
-});
+})
 
 // Rotate keys
 await keyManager.rotateKeys({
-  keyType: "data",
-  gracePeriod: "7d",
-});
+  keyType: 'data',
+  gracePeriod: '7d',
+})
 ```
 
 ## Data Encryption
@@ -116,19 +116,15 @@ await keyManager.rotateKeys({
 
 <AccordionGroup>
   <Accordion title="Transport Layer">
-    - TLS 1.3 - Perfect forward secrecy - Strong cipher suites - Certificate
+    * TLS 1.3 * Perfect forward secrecy * Strong cipher suites * Certificate
     pinning
   </Accordion>
-
-{" "}
-
-<Accordion title="Application Layer">
-  - End-to-end encryption - Zero-knowledge proofs - Homomorphic encryption -
-  Secure key exchange
-</Accordion>
-
+  <Accordion title="Application Layer">
+    * End-to-end encryption * Zero-knowledge proofs * Homomorphic encryption *
+    Secure key exchange
+  </Accordion>
   <Accordion title="Storage Layer">
-    - At-rest encryption - Key wrapping - Secure key storage - Backup encryption
+    * At-rest encryption * Key wrapping * Secure key storage * Backup encryption
   </Accordion>
 </AccordionGroup>
 
@@ -179,24 +175,24 @@ const decrypted = await encryption.decrypt({
 
 ```typescript
 const quantumResistant = new QuantumResistantCrypto({
-  kemAlgorithm: "Kyber1024",
-  signatureAlgorithm: "Dilithium5",
+  kemAlgorithm: 'Kyber1024',
+  signatureAlgorithm: 'Dilithium5',
   useHybridMode: true,
-});
+})
 
 // Generate quantum-resistant keypair
-const keyPair = await quantumResistant.generateKeyPair();
+const keyPair = await quantumResistant.generateKeyPair()
 
 // Encapsulate key
 const { ciphertext, sharedSecret } = await quantumResistant.encapsulate({
   publicKey: keyPair.publicKey,
-});
+})
 
 // Decapsulate key
 const decapsulated = await quantumResistant.decapsulate({
   ciphertext: ciphertext,
   privateKey: keyPair.privateKey,
-});
+})
 ```
 
 ## Homomorphic Encryption
@@ -214,20 +210,20 @@ const decapsulated = await quantumResistant.decapsulate({
 
 ```typescript
 const homomorphic = new HomomorphicEncryption({
-  scheme: "BFV",
+  scheme: 'BFV',
   securityLevel: 128,
   polyModulusDegree: 4096,
-});
+})
 
 // Encrypt numbers
-const encrypted1 = await homomorphic.encrypt(5);
-const encrypted2 = await homomorphic.encrypt(3);
+const encrypted1 = await homomorphic.encrypt(5)
+const encrypted2 = await homomorphic.encrypt(3)
 
 // Perform operation on encrypted data
-const encryptedSum = await homomorphic.add(encrypted1, encrypted2);
+const encryptedSum = await homomorphic.add(encrypted1, encrypted2)
 
 // Decrypt result
-const sum = await homomorphic.decrypt(encryptedSum); // 8
+const sum = await homomorphic.decrypt(encryptedSum) // 8
 ```
 
 ## Forward Secrecy
@@ -252,22 +248,22 @@ sequenceDiagram
 
 ```typescript
 const forwardSecrecy = new ForwardSecrecyProtocol({
-  ratchetAlgorithm: "Double",
-  kdf: "HKDF-SHA256",
+  ratchetAlgorithm: 'Double',
+  kdf: 'HKDF-SHA256',
   messageKeyLimit: 100,
-});
+})
 
 // Initialize session
 const session = await forwardSecrecy.initSession({
   identityKey: localIdentityKey,
   preKey: remotePreKey,
-});
+})
 
 // Send message
-const encrypted = await session.encrypt("Hello");
+const encrypted = await session.encrypt('Hello')
 
 // Receive message
-const decrypted = await session.decrypt(encrypted);
+const decrypted = await session.decrypt(encrypted)
 ```
 
 ## Best Practices
@@ -291,19 +287,15 @@ const decrypted = await session.decrypt(encrypted);
 
 <AccordionGroup>
   <Accordion title="Key Issues">
-    - Check key permissions - Verify key version - Ensure key availability -
+    * Check key permissions * Verify key version * Ensure key availability *
     Check rotation status
   </Accordion>
-
-{" "}
-
-<Accordion title="Encryption Errors">
-  - Validate input format - Check algorithm compatibility - Verify key integrity
-  - Review operation logs
-</Accordion>
-
+  <Accordion title="Encryption Errors">
+    * Validate input format * Check algorithm compatibility * Verify key
+    integrity * Review operation logs
+  </Accordion>
   <Accordion title="Performance Issues">
-    - Monitor operation timing - Check resource usage - Optimize key cache -
+    * Monitor operation timing * Check resource usage * Optimize key cache *
     Review batch operations
   </Accordion>
 </AccordionGroup>

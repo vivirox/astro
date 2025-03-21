@@ -1,20 +1,24 @@
-import type { AstroCookies } from 'astro';
-import { getCurrentUser, hasRole } from './auth';
-import { logAuditEvent } from './auth';
+import type { AstroCookies } from 'astro'
+import { getCurrentUser, hasRole, createAuditLogFromParams } from './auth'
 
 // Define permission types
-export type Resource = 'conversations' | 'messages' | 'users' | 'settings' | 'admin';
-export type Action = 'create' | 'read' | 'update' | 'delete' | 'list' | 'manage';
-export type Permission = `${Action}:${Resource}`;
+export type Resource =
+  | 'conversations'
+  | 'messages'
+  | 'users'
+  | 'settings'
+  | 'admin'
+export type Action = 'create' | 'read' | 'update' | 'delete' | 'list' | 'manage'
+export type Permission = `${Action}:${Resource}`
 
 // Define role hierarchy
 export const ROLES = {
   USER: 'user',
   STAFF: 'staff',
   ADMIN: 'admin',
-} as const;
+} as const
 
-export type Role = typeof ROLES[keyof typeof ROLES];
+export type Role = (typeof ROLES)[keyof typeof ROLES]
 
 // Define role-based permissions
 const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
@@ -67,13 +71,13 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'read:admin',
     'manage:admin',
   ],
-};
+}
 
 /**
  * Check if a role has a specific permission
  */
 export function roleHasPermission(role: Role, permission: Permission): boolean {
-  return ROLE_PERMISSIONS[role]?.includes(permission) || false;
+  return ROLE_PERMISSIONS[role]?.includes(permission) || false
 }
 
 /**
@@ -84,22 +88,22 @@ export async function hasPermission(
   permission: Permission,
   request?: Request
 ): Promise<boolean> {
-  const user = await getCurrentUser(cookies);
-  
+  const user = await getCurrentUser(cookies)
+
   if (!user) {
-    return false;
+    return false
   }
-  
-  const userRole = user.role as Role;
-  const hasPermission = roleHasPermission(userRole, permission);
-  
+
+  const userRole = user.role as Role
+  const hasPermission = roleHasPermission(userRole, permission)
+
   // Log access control check for sensitive operations
   if (
     permission.startsWith('delete:') ||
     permission.includes(':admin') ||
     permission.startsWith('manage:')
   ) {
-    await logAuditEvent(
+    await createAuditLogFromParams(
       user.id,
       'permission_check',
       'access_control',
@@ -107,48 +111,54 @@ export async function hasPermission(
       {
         permission,
         granted: hasPermission,
-      },
-      request
-    );
+      }
+    )
   }
-  
-  return hasPermission;
+
+  return hasPermission
 }
 
 /**
  * Check if the current user is an admin
  */
 export async function isAdmin(cookies: AstroCookies): Promise<boolean> {
-  return hasRole(cookies, ROLES.ADMIN);
+  return hasRole(cookies, ROLES.ADMIN)
 }
 
 /**
  * Check if the current user is staff or admin
  */
 export async function isStaffOrAdmin(cookies: AstroCookies): Promise<boolean> {
-  return hasRole(cookies, ROLES.STAFF);
+  return hasRole(cookies, ROLES.STAFF)
 }
 
 /**
  * Create a middleware function that checks for a specific permission
  */
 export function requirePermission(permission: Permission) {
-  return async ({ cookies, redirect, request }: { 
-    cookies: AstroCookies; 
-    redirect: (path: string) => Response;
-    request: Request;
+  return async ({
+    cookies,
+    redirect,
+    request,
+  }: {
+    cookies: AstroCookies
+    redirect: (path: string) => Response
+    request: Request
   }) => {
-    const user = await getCurrentUser(cookies);
-    
+    const user = await getCurrentUser(cookies)
+
     if (!user) {
-      return redirect('/signin?error=' + encodeURIComponent('You must be signed in to access this page'));
+      return redirect(
+        '/signin?error=' +
+          encodeURIComponent('You must be signed in to access this page')
+      )
     }
-    
-    const userRole = user.role as Role;
-    const hasPermission = roleHasPermission(userRole, permission);
-    
+
+    const userRole = user.role as Role
+    const hasPermission = roleHasPermission(userRole, permission)
+
     // Log access control check
-    await logAuditEvent(
+    await createAuditLogFromParams(
       user.id,
       'permission_check',
       'access_control',
@@ -156,14 +166,16 @@ export function requirePermission(permission: Permission) {
       {
         permission,
         granted: hasPermission,
-      },
-      request
-    );
-    
+      }
+    )
+
     if (!hasPermission) {
-      return redirect('/dashboard?error=' + encodeURIComponent('You do not have permission to access this page'));
+      return redirect(
+        '/dashboard?error=' +
+          encodeURIComponent('You do not have permission to access this page')
+      )
     }
-    
-    return null; // Continue to the page
-  };
-} 
+
+    return null // Continue to the page
+  }
+}

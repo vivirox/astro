@@ -1,5 +1,5 @@
-import { initializeAITables } from './schema';
-import { createAuditLog } from '../../audit/log';
+import { initializeAITables } from './schema'
+import { createAuditLog } from '../../audit/log'
 
 /**
  * Initialize the AI database tables
@@ -7,38 +7,40 @@ import { createAuditLog } from '../../audit/log';
  */
 export async function initializeAIDatabase() {
   try {
-    console.log('Initializing AI database tables...');
-    
+    console.log('Initializing AI database tables...')
+
     // Initialize tables
-    await initializeAITables();
-    
+    await initializeAITables()
+
     // Log successful initialization
-    await createAuditLog({
-      userId: 'system',
-      action: 'system.ai.database.initialize',
-      resource: 'database',
-      metadata: {
-        timestamp: new Date().toISOString()
+    await createAuditLog(
+      'system',
+      'system.ai.database.initialize',
+      'database',
+      {
+        timestamp: new Date().toISOString(),
       }
-    });
-    
-    console.log('AI database tables initialized successfully');
-    return true;
+    )
+
+    console.log('AI database tables initialized successfully')
+    return true
   } catch (error) {
-    console.error('Failed to initialize AI database:', error);
-    
+    console.error(
+      'Failed to initialize AI database:',
+      error instanceof Error ? error : new Error(String(error))
+    )
+
     // Log initialization failure
-    await createAuditLog({
-      userId: 'system',
-      action: 'system.ai.database.initialize.error',
-      resource: 'database',
-      priority: 'high',
-      metadata: {
-        error: error.message,
-        timestamp: new Date().toISOString()
+    await createAuditLog(
+      'system',
+      'system.ai.database.initialize.error',
+      'database',
+      {
+        error: error instanceof Error ? error?.message : String(error),
+        timestamp: new Date().toISOString(),
       }
-    });
-    
-    throw error;
+    )
+
+    throw error instanceof Error ? error : new Error(String(error))
   }
-} 
+}

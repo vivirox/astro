@@ -1,0 +1,177 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  NODE_VERSION: 20.11.0
+  PNPM_VERSION: 10.0.0
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Playwright tests
+        run: |
+          pnpm exec playwright install --with-deps
+          pnpm exec playwright test
+
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: pnpm build
+        env:
+          LOG_LEVEL: debug
+          LOG_CONSOLE: true
+          LOG_AUDIT: true
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.ref == 'refs/heads/main' && 'build-output-production' || 'build-output-staging' }}
+          path: dist
+          retention-days: 7
+
+  deploy:
+    name: Deployment
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    concurrency:
+      group: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}_environment
+      cancel-in-progress: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.ref == 'refs/heads/main' && 'build-output-production' || 'build-output-staging' }}
+          path: dist
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Deploy
+        run: |
+          npm install -g wrangler
+          wrangler pages deploy dist --project-name=gradiant-astro \
+            --branch=${{ github.ref == 'refs/heads/main' && 'main' || 'staging' }}
+
+      - name: Create deployment tag
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          ENVIRONMENT="${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}"
+          git tag $ENVIRONMENT-$TIMESTAMP
+          git push origin $ENVIRONMENT-$TIMESTAMP
+
+      - name: Notify deployment status
+        if: always()
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          slack-message: |
+            ${{ job.status == 'success' &&
+              format('✅ Successfully deployed to {0}', github.ref == 'refs/heads/main' && 'production' || 'staging') ||
+              format('❌ Deployment to {0} failed', github.ref == 'refs/heads/main' && 'production' || 'staging') }}
+            Time: $(date)
+
+  rollback:
+    name: Rollback
+    needs: deploy
+    if: failure()
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Execute rollback
+        run: |
+          echo "Initiating automatic rollback due to deployment failure"
+          ENVIRONMENT="${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}"
+          pnpm tsx src/scripts/rollback.ts --notify=true --environment=$ENVIRONMENT
+
+      - name: Verify rollback
+        if: success()
+        run: |
+          echo "Verifying rollback success"
+          pnpm verify-deployment
+
+      - name: Notify rollback status
+        if: always()
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          slack-message: |
+            ${{ job.status == 'success' &&
+              '⚠️ Deployment failed, but rollback was successful.' ||
+              '🚨 URGENT: Deployment and rollback failed! Manual intervention required.' }}
+            Environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+            Time: $(date)

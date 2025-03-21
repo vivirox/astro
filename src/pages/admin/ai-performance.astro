@@ -1,102 +1,38 @@
 ---
-import AdminLayout from '../../layouts/AdminLayout.astro';
-import PerformanceDashboard from '../../components/ai/PerformanceDashboard';
-import { AIService } from '../../lib/ai/services/ai-service';
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PerformanceDashboard from "@components/admin/PerformanceDashboard.astro";
+import { AIService } from "../../services/AIService";
+
+// Fetch performance metrics
+const performanceMetrics = await AIService.getPerformanceMetrics();
 ---
 
-<AdminLayout title="AI Performance Dashboard">
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8 text-gray-900 dark:text-white">
-      AI Performance Monitoring
-    </h1>
-    
-    <div class="mb-8">
-      <p class="text-gray-700 dark:text-gray-300 mb-4">
-        This dashboard provides real-time metrics on AI performance, including cache efficiency, 
-        connection pooling, response times, and token usage. Use this information to optimize 
-        your AI configuration for better performance and cost efficiency.
-      </p>
-      
-      <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
-        <h2 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
-          Performance Optimization Features
-        </h2>
-        <ul class="list-disc list-inside text-blue-700 dark:text-blue-300 space-y-1">
-          <li>Request caching for frequently used prompts</li>
-          <li>Token usage optimization with prompt compression</li>
-          <li>Connection pooling for reduced API latency</li>
-          <li>Automatic retries and fallback mechanisms</li>
-          <li>Comprehensive performance monitoring</li>
-        </ul>
-      </div>
-    </div>
-    
-    <PerformanceDashboard 
-      client:load 
-      aiService={new AIService()} 
-      refreshInterval={5000} 
-    />
-    
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-          Optimization Recommendations
-        </h2>
-        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">✓</span>
-            <span>Enable caching for frequently used prompts to reduce API calls</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">✓</span>
-            <span>Use prompt optimization to reduce token usage and costs</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">✓</span>
-            <span>Configure connection pooling for high-volume scenarios</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">✓</span>
-            <span>Implement fallback mechanisms for API failures</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">✓</span>
-            <span>Monitor performance metrics regularly to identify bottlenecks</span>
-          </li>
-        </ul>
-      </div>
-      
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-          Configuration Guide
-        </h2>
-        <div class="space-y-4 text-gray-700 dark:text-gray-300">
-          <p>
-            To configure AI performance settings, update your environment variables:
-          </p>
-          <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded font-mono text-sm">
-            <pre>AI_CACHE_ENABLED=true
-AI_CACHE_MAX_SIZE=200
-AI_CACHE_TTL=300000
-AI_CONNECTION_POOL_MAX=10
-AI_PROMPT_OPTIMIZER_ENABLED=true</pre>
+<BaseLayout title="AI Performance Dashboard" bgType="default">
+  <div class="p-6">
+    <h1 class="text-2xl font-bold mb-6">AI Performance Dashboard</h1>
+
+    <div class="space-y-8">
+      <PerformanceDashboard />
+
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4">Cost Analysis</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-yellow-50 p-4 rounded-lg">
+            <h3 class="text-lg font-medium mb-2">Total Cost (7 days)</h3>
+            <p class="text-3xl font-bold">${performanceMetrics.models.length * 25.50}</p>
           </div>
-          <p>
-            These settings can also be configured programmatically when initializing the AIService:
-          </p>
-          <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded font-mono text-sm">
-            <pre>const aiService = new AIService({
-  cache: { 
-    enabled: true,
-    maxSize: 200 
-  },
-  connectionPool: { 
-    maxConnections: 10 
-  }
-});</pre>
+
+          <div class="bg-orange-50 p-4 rounded-lg">
+            <h3 class="text-lg font-medium mb-2">Cost Per Request</h3>
+            <p class="text-3xl font-bold">$0.056</p>
+          </div>
+
+          <div class="bg-red-50 p-4 rounded-lg">
+            <h3 class="text-lg font-medium mb-2">Est. Monthly Cost</h3>
+            <p class="text-3xl font-bold">$580.00</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-</AdminLayout> 
+</BaseLayout>

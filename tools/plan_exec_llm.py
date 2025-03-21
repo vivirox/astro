@@ -1,13 +1,35 @@
+
 #!/usr/bin/env python3
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-from llm_api import query_llm as llm_query
+from tools.llm_api import query_llm
 
 STATUS_FILE = ".cursorrules"
+
+
+# Define our own load_dotenv function to bypass type checking issues
+def load_dotenv(dotenv_path: Path | str | None = None, **kwargs) -> bool:
+    """Simple implementation of load_dotenv to bypass type checking issues"""
+    if dotenv_path is None:
+        return False
+
+    path = Path(dotenv_path)
+    if not path.exists():
+        return False
+
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ[key.strip()] = value.strip().strip("\"'")
+
+    return True
 
 
 def load_environment():
@@ -16,7 +38,7 @@ def load_environment():
     env_loaded = False
 
     for env_file in env_files:
-        env_path = Path(env_file)
+        env_path = Path(".") / env_file
         if env_path.exists():
             load_dotenv(dotenv_path=env_path)
             env_loaded = True
@@ -36,7 +58,7 @@ def read_plan_status():
         with open(status_file, "r", encoding="utf-8") as f:
             content = f.read()
             # Find the Multi-Agent Scratchpad section
-            scratchpad_marker = "## Scratchpad"
+            scratchpad_marker = "# Multi-Agent Scratchpad"
             if scratchpad_marker in content:
                 return content[content.index(scratchpad_marker) :]
             else:
@@ -50,7 +72,7 @@ def read_plan_status():
         return ""
 
 
-def read_file_content(file_path):
+def read_file_content(file_path: str | Path) -> str | None:
     """Read content from a specified file"""
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -60,13 +82,20 @@ def read_file_content(file_path):
         return None
 
 
-def query_llm(plan_content, user_prompt=None, file_content=None):
+def query_llm_with_plan(
+    plan_content: str,
+    user_prompt: str | None = None,
+    file_content: str | None = None,
+    provider: str = "openai",
+    model: str | None = None,
+) -> str | None:
     """Query the LLM with combined prompts"""
     # Combine prompts
+
     combined_prompt = f"""You are working on a multi-agent context. The executor is the one who actually does the work. And you are the planner. Now the executor is asking you for help. Please analyze the provided project plan and status, then address the executor's specific query or request.
 
 You need to think like a founder. Prioritize agility and don't over-engineer. Think deep. Try to foresee challenges and derisk earlier. If opportunity sizing or probing experiments can reduce risk with low cost, instruct the executor to do them.
-    
+
 Project Plan and Status:
 ======
 {plan_content}
@@ -90,15 +119,9 @@ Project Plan and Status:
 We will do the actual changes in the .cursorrules file.
 """
 
-    try:
-        # Use the shared LLM API with OpenAI and smollm2-instruct model
-        response = llm_query(
-            combined_prompt, provider="openai", model="smollm2-instruct"
-        )
-        return response
-    except Exception as e:
-        print(f"Error querying LLM: {e}", file=sys.stderr)
-        return None
+    # Use the imported query_llm function
+    response = query_llm(combined_prompt, model=model, provider=provider)
+    return response
 
 
 def main():
@@ -114,6 +137,15 @@ def main():
         type=str,
         help="Path to a file whose content should be included in the prompt",
         required=False,
+    )
+    parser.add_argument(
+        "--provider",
+        choices=["openai", "anthropic", "gemini", "local", "deepseek", "azure"],
+        default="openai",
+        help="The API provider to use",
+    )
+    parser.add_argument(
+        "--model", type=str, help="The model to use (default depends on provider)"
     )
     args = parser.parse_args()
 
@@ -131,7 +163,13 @@ def main():
             sys.exit(1)
 
     # Query LLM and output response
-    response = query_llm(plan_content, args.prompt, file_content)
+    response = query_llm_with_plan(
+        plan_content,
+        args.prompt,
+        file_content,
+        provider=args.provider,
+        model=args.model,
+    )
     if response:
         print(
             "Following is the instruction on how to revise the Multi-Agent Scratchpad section in .cursorrules:"

@@ -1,8 +1,8 @@
 ---
-import AuthLayout from '../layouts/AuthLayout.astro';
 import { isAuthenticated } from '../lib/auth';
+import AuthLayout from '../layouts/AuthLayout.astro';
 
-const { cookies, redirect } = Astro;
+const { cookies, params, redirect } = Astro;
 
 // Check if user is already authenticated
 if (await isAuthenticated(cookies)) {
@@ -10,9 +10,10 @@ if (await isAuthenticated(cookies)) {
 }
 
 // Check for query parameters
-const registered = Astro.url.searchParams.get('registered') === 'true';
-const signedOut = Astro.url.searchParams.get('signedout') === 'true';
-const error = Astro.url.searchParams.get('error');
+const registered = params.registered;
+const signedOut = params.signedout;
+const error = params.error;
+
 ---
 
 <AuthLayout title="Sign In">
@@ -42,22 +43,22 @@ const error = Astro.url.searchParams.get('error');
   <form action="/api/auth/signin" method="post" class="auth-form">
     <div class="form-group">
       <label for="email">Email</label>
-      <input 
-        type="email" 
-        id="email" 
-        name="email" 
-        placeholder="your@email.com" 
+      <inpu
+        type="email"
+        id="email"
+        name="email"
+        placeholder="your@email.com"
         required
       />
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        placeholder="••••••••" 
+      <inpu
+        type="password"
+        id="password"
+        name="password"
+        placeholder="••••••••"
         required
       />
     </div>
@@ -232,4 +233,4 @@ const error = Astro.url.searchParams.get('error');
     color: #c62828;
     border: 1px solid #ffcdd2;
   }
-</style> 
+</style>

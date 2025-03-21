@@ -1,17 +1,16 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCurrentUser } from '../../lib/auth';
 import { requirePermission } from '../../lib/access-control';
-
+import BaseLayout from '../../layouts/BaseLayout.astro';
 // Check if user has admin permission
 const checkPermission = requirePermission('read:admin');
 const permissionResponse = await checkPermission({
   cookies: Astro.cookies,
   redirect: Astro.redirect,
-  request: Astro.request
+  request: Astro.reques
 });
 
-// If permission check returned a response, return it
+// If permission check returned a response, return i
 if (permissionResponse) {
   return permissionResponse;
 }
@@ -57,6 +56,7 @@ const user = await getCurrentUser(Astro.cookies);
         <div class="admin-actions">
           <a href="/admin/analytics/users" class="btn btn-primary">User Analytics</a>
           <a href="/admin/analytics/usage" class="btn btn-secondary">Usage Analytics</a>
+          <a href="/admin/ai/performance" class="btn btn-secondary">AI Performance</a>
         </div>
       </div>
     </div>
@@ -84,14 +84,14 @@ const user = await getCurrentUser(Astro.cookies);
 
   .admin-content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(_350px, 1fr));
     gap: 1.5rem;
   }
 
   .admin-card {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(_0, 0, 0, 0.1);
     padding: 1.5rem;
   }
 
@@ -153,4 +153,4 @@ const user = await getCurrentUser(Astro.cookies);
       grid-template-columns: 1fr;
     }
   }
-</style> 
+</style>
