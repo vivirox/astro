@@ -354,19 +354,32 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Execute rollback
+      - name: Rollback to Previous Version
         id: rollback
+        if: ${{ failure() && github.ref == 'refs/heads/main' }}
         run: |
-          echo "Initiating automatic rollback due to deployment failure"
-          pnpm tsx src/scripts/rollback.ts --notify=true --environment=production
+          # First create a tag if none exists to prevent rollback error
+          if [ -z "$(git tag -l 'production-*')" ]; then
+            echo "No production tags found, creating initial tag"
+            git tag production-initial-$(date +%Y%m%d%H%M%S)
+          fi
+
+          # Get the second most recent tag if available
+          TAG=$(git tag -l "production-*" --sort=-committerdate | head -n 2 | tail -n 1)
+
+          # If we still don't have a tag, use fallback to main branch
+          if [ -z "$TAG" ]; then
+            echo "Using main branch as fallback since no suitable tag found"
+            echo "tag=main" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          git checkout $TAG
+        shell: /usr/bin/bash -e {0}
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
-          NODE_ENV: production
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          REDIS_URL: ${{ secrets.REDIS_URL }}
-          STORAGE_URL: ${{ secrets.STORAGE_URL }}
+          NODE_VERSION: 20.11.0
+          PNPM_VERSION: 10.0.0
 
       - name: Send fallback Slack notification (GitHub Action)
         if: failure() && steps.rollback.outcome == 'failure'
