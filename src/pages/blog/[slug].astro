@@ -1,5 +1,18 @@
+---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+
+// Format date
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+// Add prerender directive to generate static HTML during build
+export const prerender = true;
 
 // Generate static paths for all blog posts
 export async function getStaticPaths() {
@@ -13,15 +26,7 @@ export async function getStaticPaths() {
 // Get the blog post for the current page
 const { entry } = Astro.props;
 const { Content } = await entry.render();
-
-// Format date
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
+---
 
 <Layout title={`${entry.data.title} | Gradiant`}>
   <article class="container mx-auto px-4 py-8 max-w-3xl">
