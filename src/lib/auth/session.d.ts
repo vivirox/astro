@@ -1,4 +1,4 @@
-import type { User, Session } from './types'
+import type { User, Session } from '@supabase/supabase-js'
 
 export interface SessionData {
   user: User

@@ -35,7 +35,7 @@ export function ChatInput({
       onSendMessage(message)
       setMessage('')
 
-      // Reset textarea height
+      // Reset textarea heigh
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto'
       }

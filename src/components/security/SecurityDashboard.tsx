@@ -174,7 +174,7 @@ export function SecurityDashboard({ className }: SecurityDashboardProps) {
         />
         <StatCard
           title="Failed Logins"
-          value={typeCounts[SecurityEventType.FAILED_LOGIN] || 0}
+          value={typeCounts[SecurityEventType.AUTH_FAILURE] || 0}
           className="bg-blue-50 dark:bg-blue-900"
         />
       </div>
@@ -276,7 +276,7 @@ function StatCard({
   )
 }
 
-// Severity badge componen
+// Severity badge component
 function SeverityBadge({ severity }: { severity: SecurityEventSeverity }) {
   let color = ''
 

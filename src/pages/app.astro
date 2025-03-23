@@ -1,26 +1,26 @@
 ---
-import { initializeApplication, shutdownApplication } from "../lib/startup";
-import { getLogger } from "../lib/logging";
+import { initializeApplication, shutdownApplication } from '../lib/startup'
+import { getLogger } from '../lib/logging'
 
-const logger = getLogger();
+const logger = getLogger()
 
-// Execute startup logic in Astro's server contex
+// Execute startup logic in Astro's server context
 if (import.meta.env.SSR) {
   try {
-    await initializeApplication();
-    logger.info("Application started successfully");
+    await initializeApplication()
+    logger.info('Application started successfully')
 
     // Register shutdown handlers for the Node.js process
     // Note: This will only work in SSR mode
-    process.on("SIGTERM", handleShutdown);
-    process.on("SIGINT", handleShutdown);
+    process.on('SIGTERM', handleShutdown)
+    process.on('SIGINT', handleShutdown)
   } catch (error) {
     logger.error(
-      "Failed to start application",
-      error instanceof Error ? error : undefined,
-    );
+      'Failed to start application',
+      error instanceof Error ? error : undefined
+    )
     // Cannot exit the process in Astro middleware, log the error instead
-    console.error("Application failed to start properly");
+    console.error('Application failed to start properly')
   }
 }
 
@@ -28,18 +28,18 @@ if (import.meta.env.SSR) {
  * Handle graceful shutdown
  */
 async function handleShutdown() {
-  logger.info("Shutdown signal received, gracefully shutting down...");
+  logger.info('Shutdown signal received, gracefully shutting down...')
 
   try {
-    await shutdownApplication();
-    logger.info("Application shutdown complete");
-    process.exit(0);
+    await shutdownApplication()
+    logger.info('Application shutdown complete')
+    process.exit(0)
   } catch (error) {
     logger.error(
-      "Error during shutdown",
-      error instanceof Error ? error : new Error(String(error)),
-    );
-    process.exit(1);
+      'Error during shutdown',
+      error instanceof Error ? error : new Error(String(error))
+    )
+    process.exit(1)
   }
 }
 ---

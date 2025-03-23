@@ -34,7 +34,7 @@ export const corsMiddleware = defineMiddleware(async ({ request }, next) => {
   // Process the request first
   const response = await next()
 
-  // Apply CORS headers if origin is present
+  // Apply CORS headers if origin is presen
   if (origin) {
     // Check if origin is allowed
     const isAllowed = corsOptions.allowedOrigins.some((allowedOrigin) => {

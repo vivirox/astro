@@ -4,11 +4,10 @@
  */
 /// <reference types="mdast-util-directive" />
 
-import { h } from 'hastscript'
 import { visit } from 'unist-util-visit'
 
 import type { Root } from 'mdast'
-import type { MarkdownVFile } from '@astrojs/markdown-remark'
+import type { VFile } from 'vfile'
 
 type BadgePreset = Record<string, { text: string; color: string }>
 interface Config {
@@ -63,7 +62,7 @@ const CONFIG: Config = {
     },
   },
 }
-const BADGE_REGEXP = /^badge-(.*)/
+const _BADGE_REGEXP = /^badge-(.*)/
 const VALID_BADGES = new Set(Object.keys(CONFIG.badge.preset))
 
 /**
@@ -82,7 +81,7 @@ function remarkDirectiveSugar() {
    * @param {import('vfile').VFile} file
    *   File.
    */
-  return (tree: Root, file: MarkdownVFile) => {
+  return (tree: Root, file: VFile) => {
     visit(tree, function (node) {
       if (
         node.type === 'containerDirective' ||
@@ -132,7 +131,7 @@ function remarkDirectiveSugar() {
             }
           }
 
-          // nested in div（otherwise, the transform style won‘t apply）
+          // nested in div（otherwise, the transform style won't apply）
           data.hName = 'div'
           data.hProperties = {
             class: 'sugar-video',
@@ -168,18 +167,18 @@ function remarkDirectiveSugar() {
               node
             )
 
-          let resolvedText = ''
-          let resolvedLink = ''
-          let resolvedImageUrl = ''
-          let resolvedTab = ''
+          let _resolvedText = ''
+          let _resolvedLink = ''
+          let _resolvedImageUrl = ''
+          let _resolvedTab = ''
           let isOrg = false
-          let resolvedStyle = ''
+          let _resolvedStyle = ''
 
           const { id, link, imageUrl, tab, style } = attributes
 
           // check label
           if (children.length > 0 && children[0].type === 'text') {
-            resolvedText = children[0].value
+            _resolvedText = children[0].value
           } else if (!id) {
             file.fail(
               'Invalid `link` directive. The text in the `[]` of `:link[]{}` is required if `id` attribute is not specified.',
@@ -189,7 +188,7 @@ function remarkDirectiveSugar() {
 
           // check type
           if (style && (LINK_STYLE as readonly string[]).includes(style)) {
-            resolvedStyle = style as typeof resolvedStyle
+            _resolvedStyle = style as typeof _resolvedStyle
           } else if (
             style &&
             !(LINK_STYLE as readonly string[]).includes(style)
@@ -210,111 +209,49 @@ function remarkDirectiveSugar() {
             const match = tab.match(TAB_ORG_REGEXP)
             if (match) {
               isOrg = true
-              resolvedTab = match[1]
+              _resolvedTab = match[1]
             } else {
-              resolvedTab = tab
+              _resolvedTab = tab
             }
           }
 
           // handle
           if (!id && link) {
             // non github scope
-            resolvedLink = link
-            resolvedImageUrl =
+            _resolvedLink = link
+            _resolvedImageUrl =
               imageUrl ||
-              `${FAVICON_BASE_URL}?domain=${new URL(resolvedLink).hostname}&sz=${FAVICON_RESOLUTION}`
-            resolvedStyle = resolvedStyle || 'square'
+              `${FAVICON_BASE_URL}?domain=${new URL(link).hostname}&sz=${FAVICON_RESOLUTION}`
+            _resolvedStyle = _resolvedStyle || 'square'
           } else if (id) {
             // github scope
             if (id.match(GITHUB_USERNAME_REGEXP)) {
-              resolvedLink =
+              _resolvedLink =
                 link ||
-                (resolvedTab && isOrg
-                  ? `https://github.com/orgs/${id.substring(1)}/${resolvedTab}`
-                  : `https://github.com/${id.substring(1)}?tab=${resolvedTab}`)
+                (tab && isOrg
+                  ? `https://github.com/orgs/${id.substring(1)}/${_resolvedTab}`
+                  : `https://github.com/${id.substring(1)}?tab=${_resolvedTab}`)
 
-              resolvedImageUrl =
+              _resolvedImageUrl =
                 imageUrl || `https://github.com/${id.substring(1)}.png`
 
-              resolvedStyle = resolvedStyle || 'rounded'
-              resolvedText = resolvedText || id.substring(1)
+              _resolvedStyle = _resolvedStyle || 'rounded'
+              _resolvedText = _resolvedText || id.substring(1)
             } else if (id.match(GITHUB_REPO_REGEXP)) {
-              const match = id.match(GITHUB_REPO_REGEXP)
-              resolvedLink = link || `https://github.com/${id}`
+              const _match = id.match(GITHUB_REPO_REGEXP)
+              _resolvedLink = link || `https://github.com/${id}`
 
-              resolvedImageUrl =
-                imageUrl || `https://github.com/${match && match[1]}.png`
+              _resolvedImageUrl = imageUrl || `https://github.com/${id}.png`
 
-              resolvedStyle = resolvedStyle || 'square'
-              resolvedText = resolvedText || id
-            } else {
-              file.fail(
-                'Invalid `link` directive. The `id` attribute must be provided in the format `@username` or `username/reponame`.',
-                node
-              )
+              _resolvedStyle = _resolvedStyle || 'rounded'
+              _resolvedText = _resolvedText || id.substring(1)
             }
-          } else {
-            file.fail(
-              'Invalid `link` directive. The `link` attribute is required if `id` attribute is not specified.',
-              node
-            )
-          }
-
-          if (resolvedStyle === 'square' || resolvedStyle === 'rounded') {
-            data.hName = 'a'
-            data.hProperties = {
-              class: `${
-                resolvedStyle === 'square'
-                  ? 'sugar-link-square'
-                  : 'sugar-link-rounded'
-              }`,
-              href: resolvedLink,
-            }
-            data.hChildren = [
-              {
-                type: 'element',
-                tagName: 'span',
-                properties: {
-                  class: 'sugar-link-image',
-                  style: `background-image: url("${resolvedImageUrl}")`,
-                },
-                children: [],
-              },
-              {
-                type: 'text',
-                value: resolvedText,
-              },
-            ]
-          } else if (resolvedStyle === 'github') {
-            data.hName = 'span'
-            data.hProperties = {
-              style: 'white-space: nowrap',
-            }
-            data.hChildren = [
-              {
-                type: 'element',
-                tagName: 'span',
-                properties: {
-                  class: 'i-carbon-logo-github',
-                },
-                children: [],
-              },
-              {
-                type: 'element',
-                tagName: 'a',
-                properties: {
-                  class: 'sugar-link-github',
-                  href: resolvedLink,
-                },
-                children: [{ type: 'text', value: resolvedText }],
-              },
-            ]
           }
         } else if (node.name === 'badge') {
           /* :badge */
-          if (node.type === 'leafDirective')
+          if (node.type === 'textDirective')
             file.fail(
-              'Unexpected `::badge` text directive. Use single colon (`:`) for an `badge` text directive.',
+              'Unexpected `:badge` text directive. Use single colon (`:`) for an `badge` text directive.',
               node
             )
 
@@ -324,108 +261,35 @@ function remarkDirectiveSugar() {
               node
             )
 
-          let resolvedText = ''
-          let resolvedColorLight = ''
-          let resolvedColorDark = ''
+          let _resolvedBadge = ''
+          let resolvedBadgeText = ''
+          let resolvedBadgeColor = ''
 
-          const { color } = attributes
+          const { id: badgeId } = attributes
 
-          // check label & get text
-          if (children.length > 0 && children[0].type === 'text') {
-            resolvedText = children[0].value
-          } else {
+          if (badgeId && VALID_BADGES.has(badgeId)) {
+            _resolvedBadge = badgeId
+            const badge = CONFIG.badge.preset[badgeId]
+            resolvedBadgeText = badge.text
+            resolvedBadgeColor = badge.color
+          } else if (!badgeId) {
             file.fail(
-              'Invalid `badge` directive. The text in the `[]` of `:badge[]{}` is required.',
+              'Invalid `badge` directive. The text in the `[]` of `:badge[]{}` is required if `id` attribute is not specified.',
               node
             )
-          }
-
-          // get color
-          // resolvedColor = color || CONFIG.badge.defaultColor
-          if (color) {
-            const colors = color.split('|').map((color) => color.trim())
-            if (colors.length === 1) {
-              resolvedColorLight = resolvedColorDark = colors[0]
-            } else if (colors.length === 2) {
-              ;[resolvedColorLight, resolvedColorDark] = colors
-            } else {
-              file.fail(
-                "Invalid `badge` directive. The `color` expected one or two color values split by '|'.",
-                node
-              )
-            }
-          } else {
-            resolvedColorLight = resolvedColorDark = CONFIG.badge.defaultColor
           }
 
           data.hName = 'span'
           data.hProperties = {
             class: 'sugar-badge',
-            style: `--badge-color-light:${resolvedColorLight}; --badge-color-dark:${resolvedColorDark}`,
+            style: `background-color: ${resolvedBadgeColor};`,
           }
           data.hChildren = [
             {
               type: 'text',
-              value: resolvedText,
+              value: resolvedBadgeText,
             },
           ]
-        } else if (node.name.match(BADGE_REGEXP)) {
-          /* :badge-* */
-          const match = node.name.match(BADGE_REGEXP)
-          if (match && VALID_BADGES.has(match[1])) {
-            let resolvedColor = ''
-            let resolvedColorLight = ''
-            let resolvedColorDark = ''
-
-            const { color } = attributes
-
-            // get type
-            const type = match[1]
-
-            // get color
-            resolvedColor = color || CONFIG.badge.preset[type].color
-
-            if (resolvedColor) {
-              const colors = resolvedColor
-                .split('|')
-                .map((color) => color.trim())
-              if (colors.length === 1) {
-                resolvedColorLight = resolvedColorDark = colors[0]
-              } else if (colors.length === 2) {
-                ;[resolvedColorLight, resolvedColorDark] = colors
-              } else {
-                file.fail(
-                  "Invalid `badge` directive. The `color` expected one or two color values split by '|'.",
-                  node
-                )
-              }
-            } else {
-              resolvedColorLight = resolvedColorDark = CONFIG.badge.defaultColor
-            }
-
-            data.hName = 'span'
-            data.hProperties = {
-              class: 'sugar-badge',
-              // style: `background: ${CONFIG.badge.preset[type].color} `,
-              style: `--badge-color-light:${resolvedColorLight}; --badge-color-dark:${resolvedColorDark}`,
-            }
-            data.hChildren = [
-              {
-                type: 'text',
-                value: CONFIG.badge.preset[type].text,
-              },
-            ]
-          } else {
-            file.fail(
-              'The `badge` directive failed to match a valid badge name.',
-              node
-            )
-          }
-        } else {
-          /* common */
-          const hast = h(node.name, attributes)
-          data.hName = hast.tagName
-          data.hProperties = hast.properties
         }
       }
     })

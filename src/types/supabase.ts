@@ -1,5 +1,18 @@
-import type { Json } from './json.js'
+/**
+ * TypeScript type definitions for Supabase database schema
+ */
 
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+/**
+ * Generated TypeScript types for Supabase database
+ */
 export interface Database {
   public: {
     Tables: {
@@ -85,36 +98,33 @@ export interface Database {
       audit_logs: {
         Row: {
           id: string
-          created_at: string
           user_id: string | null
           action: string
           resource: string
-          resource_id: string | null
-          metadata: Json | null
+          details: Json | null
           ip_address: string | null
           user_agent: string | null
+          created_at: string
         }
         Insert: {
           id?: string
-          created_at?: string
           user_id?: string | null
           action: string
           resource: string
-          resource_id?: string | null
-          metadata?: Json | null
+          details?: Json | null
           ip_address?: string | null
           user_agent?: string | null
+          created_at?: string
         }
         Update: {
           id?: string
-          created_at?: string
           user_id?: string | null
           action?: string
           resource?: string
-          resource_id?: string | null
-          metadata?: Json | null
+          details?: Json | null
           ip_address?: string | null
           user_agent?: string | null
+          created_at?: string
         }
         Relationships: [
           {
@@ -623,17 +633,171 @@ export interface Database {
           created_at?: string
         }
       }
+      user_preferences: {
+        Row: {
+          id: string
+          user_id: string
+          theme: string | null
+          language: string | null
+          notifications_enabled: boolean | null
+          accessibility_settings: Json | null
+          timezone: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          theme?: string | null
+          language?: string | null
+          notifications_enabled?: boolean | null
+          accessibility_settings?: Json | null
+          timezone?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          theme?: string | null
+          language?: string | null
+          notifications_enabled?: boolean | null
+          accessibility_settings?: Json | null
+          timezone?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'user_preferences_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: true
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      users: {
+        Row: {
+          id: string
+          email: string
+          full_name: string | null
+          avatar_url: string | null
+          created_at: string
+          updated_at: string
+          last_login: string | null
+          is_verified: boolean
+          role: string
+          status: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          full_name?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          updated_at?: string
+          last_login?: string | null
+          is_verified?: boolean
+          role?: string
+          status?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          full_name?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          updated_at?: string
+          last_login?: string | null
+          is_verified?: boolean
+          role?: string
+          status?: string
+        }
+        Relationships: []
+      }
     }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      [_ in never]: never
-    }
+    Views: Record<never, never>
+    Functions: Record<never, never>
     Enums: {
-      [_ in never]: never
+      user_role: 'admin' | 'user' | 'therapist' | 'supervisor'
+      user_status: 'active' | 'inactive' | 'suspended' | 'pending'
     }
   }
 }
 
-export { type Json } from './json.js'
+export type Tables<
+  PublicTableNameOrOptions extends
+    | keyof Database['public']['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
+    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  PublicTableNameOrOptions extends
+    | keyof Database['public']['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
+    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  PublicTableNameOrOptions extends
+    | keyof Database['public']['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
+    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  PublicEnumNameOrOptions extends
+    | keyof Database['public']['Enums']
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
+    : never = never,
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database['public']['Enums']
+    ? Database['public']['Enums'][PublicEnumNameOrOptions]
+    : never

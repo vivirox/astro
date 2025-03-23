@@ -1,4 +1,3 @@
-
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import StandardLayout from '~/layouts/StandardLayout.astro'
@@ -42,17 +41,15 @@ frontmatter to <code>false</code> or remove it to publish the post.`
   {pubDate}
   {lastModDate}
 >
-  <StandardLayout
-    title={frontmatter.title}
-    subtitle={frontmatter.subtitle}
-    isSearchable={true}
-  >
-    <Fragment slot="head">
+  <StandardLayout title={frontmatter.title} subtitle={frontmatter.subtitle}>
+    <div slot="head">
       {
         frontmatter.pubDate && (
           <p class="mt--6! op-50">
             <time datetime={pubDate}>{formatDate(pubDate)}</time>
-            {minutesRead !== 0 && <span>· {minutesRead} min</span>}
+            {minutesRead && minutesRead > 0 && (
+              <span>· {minutesRead} min read</span>
+            )}
             {lastModDate && (
               <time datetime={lastModDate}>
                 | Updated: {formatDate(lastModDate)}
@@ -62,17 +59,17 @@ frontmatter to <code>false</code> or remove it to publish the post.`
         )
       }
       {frontmatter.draft && <Warning rawHTMLString={warningHTML} />}
-    </Fragment>
-    <Fragment slot="article">
+    </div>
+    <div slot="article">
       {Array.isArray(toc) && toc[0] && frontmatter.toc && <Toc {headings} />}
       <Content />
-    </Fragment>
+    </div>
   </StandardLayout>
-  <Fragment slot="share">
+  <div slot="share">
     {
       Array.isArray(share) && share[0] && frontmatter.share && (
         <ShareLink config={share[1]} />
       )
     }
-  </Fragment>
+  </div>
 </BaseLayout>

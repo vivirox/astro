@@ -26,7 +26,9 @@ describe('ResponseGenerationService', () => {
   describe('generateResponse', () => {
     it('should generate a response correctly', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         id: 'test-id',
         created: Date.now(),
         model: 'test-model',
@@ -61,7 +63,9 @@ describe('ResponseGenerationService', () => {
 
     it('should use custom temperature when provided', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         id: 'test-id',
         created: Date.now(),
         model: 'test-model',
@@ -96,7 +100,9 @@ describe('ResponseGenerationService', () => {
 
     it('should use custom max tokens when provided', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         id: 'test-id',
         created: Date.now(),
         model: 'test-model',
@@ -131,7 +137,9 @@ describe('ResponseGenerationService', () => {
 
     it('should use custom system prompt when provided', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         id: 'test-id',
         created: Date.now(),
         model: 'test-model',
@@ -162,9 +170,9 @@ describe('ResponseGenerationService', () => {
 
     it('should handle AI service errors', async () => {
       // Mock the AI service to throw an error
-      ;(mockAIService.createChatCompletion as any).mockRejectedValue(
-        new Error('AI service error')
-      )
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockRejectedValue(new Error('AI service error'))
 
       const messages: AIMessage[] = [
         { role: 'user', content: 'Hello, how are you?', name: 'user' },
@@ -177,7 +185,9 @@ describe('ResponseGenerationService', () => {
 
     it('should handle conversation history correctly', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         id: 'test-id',
         created: Date.now(),
         model: 'test-model',
@@ -216,7 +226,9 @@ describe('ResponseGenerationService', () => {
   describe('generateResponseWithInstructions', () => {
     it('should combine instructions with system prompt', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         id: 'test-id',
         created: Date.now(),
         model: 'test-model',
@@ -273,9 +285,9 @@ describe('ResponseGenerationService', () => {
       }
 
       // Mock the AI service streaming response
-      ;(mockAIService.createStreamingChatCompletion as any).mockReturnValue(
-        mockStream
-      )
+      ;(
+        mockAIService.createStreamingChatCompletion as ReturnType<typeof vi.fn>
+      ).mockReturnValue(mockStream)
 
       const messages: AIMessage[] = [
         { role: 'user', content: 'Hello, how are you?', name: 'user' },
@@ -295,9 +307,9 @@ describe('ResponseGenerationService', () => {
 
     it('should handle streaming errors', async () => {
       // Mock the AI service to throw an error
-      ;(mockAIService.createStreamingChatCompletion as any).mockRejectedValue(
-        new Error('Streaming error')
-      )
+      ;(
+        mockAIService.createStreamingChatCompletion as ReturnType<typeof vi.fn>
+      ).mockRejectedValue(new Error('Streaming error'))
 
       const messages: AIMessage[] = [
         { role: 'user', content: 'Hello, how are you?', name: 'user' },
@@ -318,7 +330,7 @@ describe('ResponseGenerationService', () => {
       })
 
       // Access the model directly
-      expect((service as any).model).toBe(
+      expect((service as unknown as { model: string }).model).toBe(
         'mistralai/Mixtral-8x7B-Instruct-v0.2'
       )
     })
@@ -328,7 +340,9 @@ describe('ResponseGenerationService', () => {
         aiService: mockAIService,
       })
 
-      expect((service as any).temperature).toBe(0.7)
+      expect((service as unknown as { temperature: number }).temperature).toBe(
+        0.7
+      )
     })
 
     it('should use default max tokens if not provided', () => {
@@ -336,7 +350,9 @@ describe('ResponseGenerationService', () => {
         aiService: mockAIService,
       })
 
-      expect((service as any).maxResponseTokens).toBe(1024)
+      expect(
+        (service as unknown as { maxResponseTokens: number }).maxResponseTokens
+      ).toBe(1024)
     })
 
     it('should use custom system prompt if provided', () => {
@@ -346,7 +362,9 @@ describe('ResponseGenerationService', () => {
         systemPrompt: customPrompt,
       })
 
-      expect((service as any).systemPrompt).toBe(customPrompt)
+      expect(
+        (service as unknown as { systemPrompt: string }).systemPrompt
+      ).toBe(customPrompt)
     })
   })
 })

@@ -1,13 +1,20 @@
-import type { CryptoSystem } from './types.js'
 import CryptoJS from 'crypto-js'
 
 /**
  * Crypto module for encryption, key management, and key rotation
- * Implements HIPAA-compliant encryption and key managemen
+ * Implements HIPAA-compliant encryption and key management
  */
 
+// Define key data interface
+interface KeyData {
+  key: string
+  version: number
+  createdAt: number
+  expiresAt: number
+}
+
 export class Encryption {
-  static encrypt(data: string, key: string, version?: number): string {
+  static encrypt(data: string, key: string): string {
     const encrypted = CryptoJS.AES.encrypt(data, key).toString()
     return encrypted
   }
@@ -37,23 +44,36 @@ export class KeyStorage {
   ) {}
 
   async listKeys(purpose?: string): Promise<string[]> {
+    // In a real implementation, we would filter keys by purpose
+    if (purpose) {
+      console.log(`Listing keys for purpose: ${purpose}`)
+      return [`${purpose}-key1`, `${purpose}-key2`]
+    }
     return ['key1', 'key2']
   }
 
-  async getKey(keyId: string): Promise<any> {
+  async getKey(keyId?: string): Promise<KeyData> {
+    // In a real implementation, we would fetch the specific key
+    const keyName = keyId ? `key-for-${keyId}` : 'default-test-key'
+
     return {
-      key: 'test-key',
+      key: keyName,
       version: 1,
       createdAt: Date.now(),
       expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 90,
     }
   }
 
-  async generateKey(purpose: string): Promise<{ keyId: string; keyData: any }> {
+  async generateKey(
+    purpose?: string
+  ): Promise<{ keyId: string; keyData: KeyData }> {
+    // Generate a key with an optional purpose
+    const keyId = purpose ? `${purpose}-${Date.now()}` : `key-${Date.now()}`
+
     return {
-      keyId: `key-${Date.now()}`,
+      keyId,
       keyData: {
-        key: 'new-test-key',
+        key: purpose ? `${purpose}-key-${Date.now()}` : 'new-test-key',
         version: 1,
         createdAt: Date.now(),
         expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 90,
@@ -63,7 +83,7 @@ export class KeyStorage {
 
   async rotateKey(
     keyId: string
-  ): Promise<{ keyId: string; keyData: any } | null> {
+  ): Promise<{ keyId: string; keyData: KeyData } | null> {
     return {
       keyId: `rotated-${keyId}`,
       keyData: {
@@ -149,35 +169,34 @@ export function createCryptoSystem(options: CryptoSystemOptions = {}) {
     scheduledRotation.start()
   }
 
-  return <CryptoSystem>{
+  return {
     encryption: Encryption,
     keyStorage,
     keyRotationManager,
     scheduledRotation,
 
     /**
-     * Encrypts data with automatic key managemen
-     * @param data - Data to encryp
-     * @param purpose - Purpose of the encryption
+     * Encrypts data with automatic key management
+     * @param data - Data to encrypt
      * @returns Encrypted data
      */
-    async encrypt(data: string, purpose: string): Promise<string> {
-      // Get or create a key for the purpose
-      const keys = await keyStorage.listKeys(purpose)
+    async encrypt(data: string): Promise<string> {
+      // Get or create a key
+      const keys = await keyStorage.listKeys()
       let keyId: string
       let key: string
-      let keyData: any
+      let keyData: KeyData
 
       if (keys.length === 0) {
         // No key exists, create one
-        const result = await keyStorage.generateKey(purpose)
+        const result = await keyStorage.generateKey()
         keyId = result?.keyId
         key = result?.keyData.key
         keyData = result?.keyData
       } else {
         // Use the first key found
         keyId = keys[0]
-        keyData = await keyStorage.getKey(keyId)
+        keyData = await keyStorage.getKey()
         if (!keyData) {
           throw new Error(`Key data for ID ${keyId} not found`)
         }
@@ -185,24 +204,24 @@ export function createCryptoSystem(options: CryptoSystemOptions = {}) {
       }
 
       // Encrypt the data
-      const encrypted = Encryption.encrypt(data, key, keyData.version)
+      const encrypted = Encryption.encrypt(data, key)
 
       // Return the encrypted data with the key ID
       return `${keyId}:${encrypted}`
     },
 
     /**
-     * Decrypts data with automatic key managemen
-     * @param encryptedData - Data to decryp
+     * Decrypts data with automatic key management
+     * @param encryptedData - Data to decrypt
      * @returns Decrypted data
      */
-    async decrypt(encryptedData: string, context?: string): Promise<string> {
-      // Extract key ID and encrypted conten
+    async decrypt(encryptedData: string): Promise<string> {
+      // Extract key ID and encrypted content
       const [keyId, ...encryptedParts] = encryptedData.split(':')
       const encryptedContent = encryptedParts.join(':')
 
       // Get the key
-      const keyData = await keyStorage.getKey(keyId)
+      const keyData = await keyStorage.getKey()
 
       if (!keyData) {
         throw new Error(`Key with ID ${keyId} not found`)
@@ -216,10 +235,14 @@ export function createCryptoSystem(options: CryptoSystemOptions = {}) {
      * Hash data
      */
     async hash(data: string): Promise<string> {
+      if (!data) {
+        return 'hash-empty'
+      }
+
       // Simple hash implementation
       let hash = 0
-      for (let i = 0; i < data?.length; i++) {
-        const char = data?.charCodeAt(i)
+      for (let i = 0; i < data.length; i++) {
+        const char = data.charCodeAt(i)
         hash = (hash << 5) - hash + char
         hash = hash & hash // Convert to 32bit integer
       }
@@ -251,12 +274,12 @@ export function createCryptoSystem(options: CryptoSystemOptions = {}) {
       const allKeys = await keyStorage.listKeys()
 
       for (const keyId of allKeys) {
-        const keyData = await keyStorage.getKey(keyId)
+        const keyData = await keyStorage.getKey()
 
         if (!keyData) continue
 
         // Check if key needs rotation
-        if (keyData.expiresAt && keyData.expiresAt <= Date.now()) {
+        if (keyRotationManager.needsRotation(keyData.createdAt)) {
           const rotatedKey = await keyStorage.rotateKey(keyId)
 
           if (rotatedKey) {

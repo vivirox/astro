@@ -1,8 +1,35 @@
 ---
+import ChatLayout from '../../layouts/ChatLayout.astro';
+import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester';
+import { ContrastChecker } from '../../components/accessibility/ContrastChecker';
 
+// Custom component to match expected props
+const AccessibleLoadingIndicator = (props: { size: string, message: string }) => {
+  const sizeMap = {
+    small: { width: 50, height: 20 },
+    medium: { width: 100, height: 30 },
+    large: { width: 150, height: 40 },
+  };
 
+  const size = sizeMap[props.size as keyof typeof sizeMap] || sizeMap.medium;
 
-
+  return (
+    <div class="loading-indicator" aria-live="polite">
+      <div
+        class="loading-skeleton"
+        style={{
+          width: `${size.width}px`,
+          height: `${size.height}px`,
+          background: "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
+          backgroundSize: "200% 100%",
+          animation: "loading 1.5s infinite",
+          borderRadius: "4px"
+        }}
+      ></div>
+      <p class="loading-message">{props.message}</p>
+    </div>
+  );
+};
 ---
 
 <ChatLayout title="Accessibility Testing">
@@ -24,15 +51,27 @@
       <div class="loading-indicators-test">
         <div>
           <h3>Small</h3>
-          <AccessibleLoadingIndicator size="small" message="Loading small..." client:load />
+          <AccessibleLoadingIndicator
+            size="small"
+            message="Loading small..."
+            client:load
+          />
         </div>
         <div>
           <h3>Medium</h3>
-          <AccessibleLoadingIndicator size="medium" message="Loading medium..." client:load />
+          <AccessibleLoadingIndicator
+            size="medium"
+            message="Loading medium..."
+            client:load
+          />
         </div>
         <div>
           <h3>Large</h3>
-          <AccessibleLoadingIndicator size="large" message="Loading large..." client:load />
+          <AccessibleLoadingIndicator
+            size="large"
+            message="Loading large..."
+            client:load
+          />
         </div>
       </div>
     </section>
@@ -43,8 +82,6 @@
       <div class="keyboard-test">
         <button class="test-button">Button 1</button>
         <button class="test-button">Button 2</button>
-        <a href="#" class="test-link">Link 1</a>
-        <a href="#" class="test-link">Link 2</a>
         <input type="text" placeholder="Text input" class="test-input" />
         <textarea placeholder="Textarea" class="test-textarea"></textarea>
       </div>
@@ -52,11 +89,16 @@
 
     <section class="test-section">
       <h2>Screen Reader Test</h2>
-      <p>The following elements should be properly announced by screen readers:</p>
+      <p>
+        The following elements should be properly announced by screen readers:
+      </p>
       <div class="screen-reader-test">
         <div aria-live="polite" class="live-region">
-          <button id="announce-btn" class="test-button">Announce Message</button>
-          <div id="announcement-area" class="announcement-area">No announcement yet</div>
+          <button id="announce-btn" class="test-button">Announce Message</button
+          >
+          <div id="announcement-area" class="announcement-area">
+            No announcement yet
+          </div>
         </div>
 
         <div class="sr-only-test">
@@ -65,24 +107,29 @@
         </div>
 
         <div class="image-test">
-          <img src="/placeholder.jpg" alt="A placeholder image for testing alt text" width="200" height="100" />
+          <img
+            src="/placeholder.jpg"
+            alt="A placeholder for testing alt text"
+            width="200"
+            height="100"
+          />
         </div>
       </div>
     </section>
   </div>
 
   <script>
-    // Add interactivity for the screen reader tes
+    // Add interactivity for the screen reader test
     document.addEventListener('DOMContentLoaded', () => {
-      const announceBtn = document.getElementById('announce-btn');
-      const announcementArea = document.getElementById('announcement-area');
+      const announceBtn = document.getElementById('announce-btn')
+      const announcementArea = document.getElementById('announcement-area')
 
       if (announceBtn && announcementArea) {
         announceBtn.addEventListener('click', () => {
-          announcementArea.textContent = `Announcement at ${new Date().toLocaleTimeString()}`;
-        });
+          announcementArea.textContent = `Announcement at ${new Date().toLocaleTimeString()}`
+        })
       }
-    });
+    })
   </script>
 
   <style>
@@ -113,7 +160,8 @@
       max-width: 400px;
     }
 
-    .test-button, .test-link {
+    .test-button,
+    .test-link {
       padding: 8px 16px;
       border-radius: 4px;
     }
@@ -130,7 +178,8 @@
       text-decoration: underline;
     }
 
-    .test-input, .test-textarea {
+    .test-input,
+    .test-textarea {
       padding: 8px;
       border: 1px solid var(--input-border);
       border-radius: 4px;
@@ -163,6 +212,11 @@
       clip: rect(_0, 0, 0, 0);
       white-space: nowrap;
       border-width: 0;
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
   </style>
 </ChatLayout>

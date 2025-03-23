@@ -19,7 +19,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // In a real application, you would:
-    // 1. Validate the email forma
+    // 1. Validate the email format
     // 2. Check for spam
     // 3. Store the message in a database
     // 4. Send an email notification

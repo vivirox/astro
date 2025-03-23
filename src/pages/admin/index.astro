@@ -1,156 +1,30 @@
 ---
-import { getCurrentUser } from '../../lib/auth';
-import { requirePermission } from '../../lib/access-control';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-// Check if user has admin permission
-const checkPermission = requirePermission('read:admin');
-const permissionResponse = await checkPermission({
-  cookies: Astro.cookies,
-  redirect: Astro.redirect,
-  request: Astro.reques
-});
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import AdminLayout from '../../components/admin/AdminLayout'
+import AdminDashboard from '../../components/admin/AdminDashboard'
+import { AdminService } from '../../lib/admin'
 
-// If permission check returned a response, return i
-if (permissionResponse) {
-  return permissionResponse;
+// Server-side authentication check
+const adminService = AdminService.getInstance()
+const isAdmin = await adminService.isAdminRequest(Astro)
+
+// Redirect non-admin users to login
+if (!isAdmin) {
+  return Astro.redirect('/login?returnUrl=/admin')
 }
-
-// Get the current user
-const user = await getCurrentUser(Astro.cookies);
 ---
 
-<BaseLayout title="Admin Dashboard" bgType="default">
-  <main class="admin-container">
-    <div class="admin-header">
-      <h1>Admin Dashboard</h1>
-      <p>Welcome, {user?.fullName || 'Admin'}. This is the administration panel.</p>
-    </div>
-
-    <div class="admin-content">
-      <div class="admin-card">
-        <h2>User Management</h2>
-        <div class="admin-actions">
-          <a href="/admin/users" class="btn btn-primary">Manage Users</a>
-          <a href="/admin/roles" class="btn btn-secondary">Manage Roles</a>
-        </div>
-      </div>
-
-      <div class="admin-card">
-        <h2>Content Management</h2>
-        <div class="admin-actions">
-          <a href="/admin/conversations" class="btn btn-primary">Manage Conversations</a>
-          <a href="/admin/flagged-messages" class="btn btn-warning">Review Flagged Messages</a>
-        </div>
-      </div>
-
-      <div class="admin-card">
-        <h2>System Settings</h2>
-        <div class="admin-actions">
-          <a href="/admin/settings" class="btn btn-primary">System Settings</a>
-          <a href="/admin/audit-logs" class="btn btn-secondary">Audit Logs</a>
-        </div>
-      </div>
-
-      <div class="admin-card">
-        <h2>Analytics</h2>
-        <div class="admin-actions">
-          <a href="/admin/analytics/users" class="btn btn-primary">User Analytics</a>
-          <a href="/admin/analytics/usage" class="btn btn-secondary">Usage Analytics</a>
-          <a href="/admin/ai/performance" class="btn btn-secondary">AI Performance</a>
-        </div>
-      </div>
-    </div>
-  </main>
+<BaseLayout title="Admin Dashboard | Gradiant">
+  <div class="admin-page">
+    <AdminLayout title="Dashboard" client:load>
+      <AdminDashboard client:load />
+    </AdminLayout>
+  </div>
 </BaseLayout>
 
 <style>
-  .admin-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .admin-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #eee;
-  }
-
-  .admin-header h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .admin-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(_350px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .admin-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(_0, 0, 0, 0.1);
-    padding: 1.5rem;
-  }
-
-  .admin-card h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #eee;
-  }
-
-  .admin-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .btn {
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    text-decoration: none;
-    text-align: center;
-  }
-
-  .btn-primary {
-    background-color: #3f51b5;
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background-color: #303f9f;
-  }
-
-  .btn-secondary {
-    background-color: #f5f5f5;
-    color: #333;
-  }
-
-  .btn-secondary:hover {
-    background-color: #e0e0e0;
-  }
-
-  .btn-warning {
-    background-color: #ff9800;
-    color: white;
-  }
-
-  .btn-warning:hover {
-    background-color: #f57c00;
-  }
-
-  @media (max-width: 768px) {
-    .admin-content {
-      grid-template-columns: 1fr;
-    }
+  .admin-page {
+    width: 100%;
+    min-height: 100vh;
   }
 </style>

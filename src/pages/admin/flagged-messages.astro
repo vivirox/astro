@@ -1,40 +1,39 @@
 ---
-import { getCurrentUser } from '../../lib/auth';
-import { requirePermission } from '../../lib/access-control';
-import { adminGetFlaggedMessages } from '../../lib/db/messages';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { requirePermission } from '../../lib/access-control'
+import { adminGetFlaggedMessages } from '../../lib/db/messages'
+import BaseLayout from '../../layouts/BaseLayout.astro'
 
 // Check if user has admin permission
-const checkPermission = requirePermission('read:admin');
+const checkPermission = requirePermission('read:admin')
 const permissionResponse = await checkPermission({
   cookies: Astro.cookies,
-  redirect: Astro.redirect,
-  request: Astro.request
-});
+  redirect: Astro.redirec,
+})
 
 // If permission check returned a response, return i
 if (permissionResponse) {
-  return permissionResponse;
+  return permissionResponse
 }
 
-// Get the current user
-const user = await getCurrentUser(Astro.cookies);
-
 // Get flagged messages
-const flaggedMessages = await adminGetFlaggedMessages();
+const flaggedMessages = await adminGetFlaggedMessages()
 
 // Helper function to get flag reason from metadata
 function getFlagReason(metadata: unknown): string {
   if (metadata && typeof metadata === 'object') {
     // Safe access with optional chaining
-    const meta = metadata as Record<string, unknown>;
-    return (meta.reason as string) || (meta.flagged_reason as string) || 'Not specified';
+    const meta = metadata as Record<string, unknown>
+    return (
+      (meta.reason as string) ||
+      (meta.flagged_reason as string) ||
+      'Not specified'
+    )
   }
-  return 'Not specified';
+  return 'Not specified'
 }
 ---
 
-<BaseLayout title="Flagged Messages" bgType="default">
+<BaseLayout title="Flagged Messages">
   <main class="admin-container">
     <div class="admin-header">
       <h1>Flagged Messages</h1>
@@ -46,47 +45,61 @@ function getFlagReason(metadata: unknown): string {
     </div>
 
     <div class="flagged-messages">
-      {flaggedMessages.length === 0 ? (
-        <div class="empty-state">
-          <p>No flagged messages to review at this time.</p>
-        </div>
-      ) : (
-        <table class="messages-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Conversation</th>
-              <th>Content</th>
-              <th>Reason</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {flaggedMessages.map((message) => (
+      {
+        flaggedMessages.length === 0 ? (
+          <div class="empty-state">
+            <p>No flagged messages to review at this time.</p>
+          </div>
+        ) : (
+          <table class="messages-table">
+            <thead>
               <tr>
-                <td>{new Date(message.created_at).toLocaleString()}</td>
-                <td>
-                  <a href={`/admin/conversations/${message.conversation_id}`}>
-                    {message.conversation_id}
-                  </a>
-                </td>
-                <td class="message-content">{message.content}</td>
-                <td>{getFlagReason(message.metadata)}</td>
-                <td class="actions">
-                  <form action="/api/admin/messages/approve" method="post">
-                    <input type="hidden" name="messageId" value={message.id} />
-                    <button type="submit" class="btn btn-small btn-success">Approve</button>
-                  </form>
-                  <form action="/api/admin/messages/delete" method="post">
-                    <input type="hidden" name="messageId" value={message.id} />
-                    <button type="submit" class="btn btn-small btn-danger">Delete</button>
-                  </form>
-                </td>
+                <th>Date</th>
+                <th>Conversation</th>
+                <th>Content</th>
+                <th>Reason</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {flaggedMessages.map((message) => (
+                <tr>
+                  <td>{new Date(message.created_at).toLocaleString()}</td>
+                  <td>
+                    <a href={`/admin/conversations/${message.conversation_id}`}>
+                      {message.conversation_id}
+                    </a>
+                  </td>
+                  <td class="message-content">{message.content}</td>
+                  <td>{getFlagReason(message.metadata)}</td>
+                  <td class="actions">
+                    <form action="/api/admin/messages/approve" method="post">
+                      <input
+                        type="hidden"
+                        name="messageId"
+                        value={message.id}
+                      />
+                      <button type="submit" class="btn btn-small btn-success">
+                        Approve
+                      </button>
+                    </form>
+                    <form action="/api/admin/messages/delete" method="post">
+                      <input
+                        type="hidden"
+                        name="messageId"
+                        value={message.id}
+                      />
+                      <button type="submit" class="btn btn-small btn-danger">
+                        Delete
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )
+      }
     </div>
   </main>
 </BaseLayout>

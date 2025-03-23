@@ -1,0 +1,359 @@
+---
+title: Migration Plan
+description: Detailed plan for migrating from Next.js to Astro
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import { Steps } from '@astrojs/starlight/components'
+import { Card, CardGrid } from '@astrojs/starlight/components'
+import { LinkCard } from '@astrojs/starlight/components'
+
+# Gradiant Migration Plan
+
+This document outlines the plan for migrating the Gradiant platform from Next.js to Astro. The migration will be done in phases to ensure minimal disruption to the service.
+
+## Core Infrastructure Migration (50% Complete)
+
+<Steps>
+  1. ✅ Migrate core utilities (utils, validation, logging)
+
+2. ✅ Create configuration files
+
+   - ✅ Environment variables configuration (env.config.ts)
+   - ✅ Supabase configuration (supabase.config.ts)
+   - ✅ Deployment configuration (deployment.config.ts)
+   - ✅ Rate limiting configuration (rate-limit.config.ts)
+   - ✅ Configuration index exports (index.ts)
+
+3. ✅ Setup CI/CD workflows - ✅ Build workflow in GitHub Actions - ✅ Configure Vercel deployments via GitHub integration
+   </Steps>
+
+## Authentication & Authorization (100% Complete)
+
+<Steps>
+  1. ✅ Migrate auth types and interfaces
+     - ✅ Define AuthUser and related interfaces
+     - ✅ Create provider and role types
+
+2. ✅ Implement auth service
+
+   - ✅ Create AuthService class
+   - ✅ Implement sign in/out methods
+   - ✅ Implement registration
+   - ✅ Add password reset functionality
+
+3. ✅ Create auth hooks and context
+
+   - ✅ Implement useAuth hook
+   - ✅ Create AuthContext
+   - ✅ Add useAuthorized hook for RBAC
+
+4. ✅ Develop auth components
+
+   - ✅ Login form component
+   - ✅ Registration form component
+
+5. ✅ Migrate auth pages
+
+   - ✅ Login page
+   - ✅ Signup page
+   - ✅ Password reset pages
+   - ✅ Profile page
+
+6. ✅ Implement role-based access control - ✅ Create route protection - ✅ Set up role verification
+   </Steps>
+
+## Security Infrastructure (100% Complete)
+
+<Steps>
+  1. ✅ Create basic security utilities
+     - ✅ Token management
+     - ✅ Signature creation/verification
+
+2. ✅ Migrate FHE (Fully Homomorphic Encryption) system
+
+   - ✅ Port encryption service
+   - ✅ Implement key management
+   - ✅ Create FHE component demo
+   - ✅ Replace all ZK references with FHE
+
+3. ✅ Add PII detection and handling
+
+   - ✅ Create PII detection service
+   - ✅ Implement pattern matching detection
+   - ✅ Add ML-based detection simulation
+   - ✅ Integrate with FHE for encrypted data
+   - ✅ Implement PII redaction
+   - ✅ Create middleware for request/response scanning
+
+4. ✅ Set up security middleware - ✅ Content security policy headers - ✅ CSRF protection - ✅ Rate limiting middleware - ✅ Audit logging integration
+   </Steps>
+
+## Core Components (100% Complete)
+
+<Steps>
+  1. ✅ Theme system (ThemeToggle)
+
+2. ✅ ServiceWorkerUpdater
+
+3. ✅ UserPreferences
+
+4. ✅ OfflineIndicator
+
+5. ✅ Layout components
+
+   - ✅ Main Layout (Layout.tsx)
+   - ✅ Header component
+   - ✅ Footer component
+
+6. ✅ Navigation elements
+
+   - ✅ Navigation component
+   - ✅ UserMenu
+
+7. ✅ Form components
+
+   - ✅ Button
+   - ✅ Input
+   - ✅ Select
+   - ✅ Textarea
+   - ✅ Checkbox
+   - ✅ Radio
+
+8. ✅ Feedback components
+
+   - ✅ Alert
+   - ✅ Toast
+   - ✅ Dialog
+   - ✅ Progress
+   - ✅ Skeleton
+
+9. ✅ Data display components - ✅ Card - ✅ Table - ✅ List - ✅ Enhanced with accessibility features - ✅ Added NestedListItem for hierarchical structures - ✅ Implemented animation for collapsible elements - ✅ Added maxItems, hoverable, and clickable properties - ✅ Avatar - ✅ Badge
+   </Steps>
+
+## Hooks and Custom Logic (35% Complete)
+
+<Steps>
+  1. ✅ useOffline hook
+     - ✅ Fixed NetworkInformation TypeScript interface issues
+     - ✅ Implemented reliable connection detection
+
+2. ✅ useLocalStorage hook
+
+3. ✅ useAuth hook
+
+4. ✅ useMediaQuery hook
+     - ✅ Implemented responsive UI detection
+     - ✅ Added server-side rendering support
+     - ✅ Created comprehensive documentation
+
+5. ⬜ Context providers
+   - ⬜ implement ConvexProvider wrapper
+   - ⬜ Create shared providers system
+   - ⬜ Add provider composition utilities
+</Steps>
+
+## Utility Services (20% Complete)
+
+<Steps>
+  1. ✅ Redis service
+     - ✅ Implemented connection pooling
+     - ✅ Added cache invalidation strategies
+     - ✅ Configured error handling and recovery
+
+  2. ✅ Cache service
+     - ✅ Implemented tiered caching strategy
+     - ✅ Added TTL support for different data types
+     - ✅ Created cache warmup utilities
+
+  3. ⬜ Email service
+     - ⬜ Implement transactional email provider integration
+     - ⬜ Create email templating system
+     - ⬜ Add queue system for reliable delivery
+     - ⬜ Implement retry logic and tracking
+
+  4. ⬜ Notification service
+     - ⬜ Create multi-channel notification system
+     - ⬜ Implement user preferences for notifications
+     - ⬜ Add real-time and delayed notification support
+     - ⬜ Create notification center UI components
+</Steps>
+
+## Analytics System (0% Complete)
+
+<Steps>
+  1. ⬜ Event tracking
+
+2. ⬜ Usage analytics
+
+3. ⬜ Performance monitoring
+   </Steps>
+
+## Chat System (0% Complete)
+
+<Steps>
+  1. ⬜ Chat service
+
+2. ⬜ Message components
+
+3. ⬜ Conversation handling
+   </Steps>
+
+## Therapy System (0% Complete)
+
+<Steps>
+  1. ⬜ AI integration
+
+2. ⬜ Therapeutic models
+
+3. ⬜ Progress tracking
+   </Steps>
+
+## Admin System (0% Complete)
+
+<Steps>
+  1. ⬜ User management
+
+2. ⬜ Content management
+
+3. ⬜ System monitoring
+   </Steps>
+
+## Content System (0% Complete)
+
+<Steps>
+  1. ⬜ Content rendering
+
+2. ⬜ MDX integration
+
+3. ⬜ Content API
+   </Steps>
+
+## Compliance System (0% Complete)
+
+<Steps>
+  1. ⬜ HIPAA compliance
+
+2. ⬜ Audit logging
+
+3. ⬜ Data retention
+   </Steps>
+
+## API Layer (0% Complete)
+
+<Steps>
+  1. ⬜ REST endpoints
+
+2. ⬜ GraphQL integration
+
+3. ⬜ API authentication
+   </Steps>
+
+## Performance Optimization (0% Complete)
+
+<Steps>
+  1. ⬜ Bundle optimization
+
+2. ⬜ Image optimization
+
+3. ⬜ Caching strategy
+   </Steps>
+
+## Timeline
+
+<Tabs>
+  <TabItem label="Phase 1">
+    <CardGrid>
+      <Card title="Core Infrastructure" icon="setting">
+        Focus on setting up the foundational elements of the application.
+      </Card>
+      <Card title="Authentication & Authorization" icon="user">
+        Implement user authentication and authorization systems.
+      </Card>
+      <Card title="Security Infrastructure" icon="lock">
+        Set up the base security systems including FHE.
+      </Card>
+    </CardGrid>
+  </TabItem>
+  <TabItem label="Phase 2">
+    <CardGrid>
+      <Card title="Core Components" icon="puzzle">
+        Develop the UI components that will be used throughout the application.
+      </Card>
+      <Card title="Hooks and Logic" icon="code">
+        Implement the custom hooks and business logic.
+      </Card>
+      <Card title="Utility Services" icon="terminal">
+        Set up the supporting services for the application.
+      </Card>
+    </CardGrid>
+  </TabItem>
+  <TabItem label="Phase 3">
+    <CardGrid>
+      <Card title="Chat System" icon="comment">
+        Build the chat interface and messaging system.
+      </Card>
+      <Card title="Therapy System" icon="heart">
+        Develop the therapeutic components and AI integration.
+      </Card>
+      <Card title="Admin System" icon="dashboard">
+        Create the administration interfaces.
+      </Card>
+    </CardGrid>
+  </TabItem>
+  <TabItem label="Phase 4">
+    <CardGrid>
+      <Card title="Content System" icon="document">
+        Implement the content management and rendering.
+      </Card>
+      <Card title="Compliance System" icon="verify">
+        Ensure all compliance requirements are met.
+      </Card>
+      <Card title="API Layer" icon="random">
+        Finalize the API interfaces for external systems.
+      </Card>
+      <Card title="Performance" icon="rocket">
+        Optimize application performance and loading times.
+      </Card>
+    </CardGrid>
+  </TabItem>
+</Tabs>
+
+## Dependencies
+
+<LinkCard
+  title="Astro Documentation"
+  description="Official documentation for Astro framework"
+  href="https://docs.astro.build"
+/>
+
+<LinkCard
+  title="Tailwind CSS"
+  description="Utility-first CSS framework"
+  href="https://tailwindcss.com/docs"
+/>
+
+<LinkCard
+  title="React"
+  description="JavaScript library for building user interfaces"
+  href="https://react.dev"
+/>
+
+<LinkCard
+  title="Supabase"
+  description="Open source Firebase alternative"
+  href="https://supabase.com/docs"
+/>
+
+## Migration Checklist
+
+- [x] Set up Astro project
+- [x] Configure tools and linters
+- [x] Create component migration strategy
+- [x] Identify critical path components
+- [x] Define testing approach
+- [x] Plan deployment strategy
+- [x] Complete FHE system migration (replacing ZK)
+- [ ] Refactor global state management
+- [ ] Migrate API routes
+- [ ] Update documentation

@@ -1,27 +1,24 @@
 ---
-import { UI, SITE } from '../../config';
-import ThemeToggle from './ThemeToggle.astro';
-
+import { UI, SITE } from '../../config'
+import ThemeToggle from './ThemeToggle.astro'
 
 interface Props {
-  class?: string;
+  class?: string
 }
 
-const { class: className = '' } = Astro.props;
+const { class: className = '' } = Astro.props
 
-type NavPosition = 'fixed' | 'sticky' | 'static';
+type NavPosition = 'fixed' | 'sticky' | 'static'
 
 const navPositionClasses: Record<NavPosition, string> = {
   fixed: 'fixed top-0 left-0 right-0 z-50',
   sticky: 'sticky top-0 z-50',
   static: 'relative',
-};
+}
 
 // Define the nav classes based on the position setting in UI config
-const position = UI.nav.position as NavPosition;
-const navClasses = `${navPositionClasses[position]} ${UI.nav.glassmorphism ? 'backdrop-blur-md bg-white/80 dark:bg-gray-900/80' : 'bg-white dark:bg-gray-900'} ${className}`;
-
-
+const position = UI.nav.position as NavPosition
+const navClasses = `${navPositionClasses[position]} ${UI.nav.glassmorphism ? 'backdrop-blur-md bg-white/80 dark:bg-gray-900/80' : 'bg-white dark:bg-gray-900'} ${className}`
 ---
 
 <nav class={navClasses}>
@@ -48,7 +45,17 @@ const navClasses = `${navPositionClasses[position]} ${UI.nav.glassmorphism ? 'ba
       <ThemeToggle />
       <button id="mobile-menu-toggle" class="md:hidden">
         <span class="sr-only">Menu</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -76,10 +83,10 @@ const navClasses = `${navPositionClasses[position]} ${UI.nav.glassmorphism ? 'ba
 
 <script>
   // Mobile menu toggle
-  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle')
+  const mobileMenu = document.getElementById('mobile-menu')
 
   mobileMenuToggle?.addEventListener('click', () => {
-    mobileMenu?.classList.toggle('hidden');
-  });
+    mobileMenu?.classList.toggle('hidden')
+  })
 </script>

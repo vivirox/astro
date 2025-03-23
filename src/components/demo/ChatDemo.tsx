@@ -74,7 +74,7 @@ export function ChatDemo() {
             }))}
           onSendMessage={handleSendMessage}
           isLoading={isLoading}
-          error={error ?? undefined}
+          error={error?.toString()}
           inputPlaceholder="Type a message..."
         />
       </div>
@@ -95,7 +95,7 @@ export function ChatDemo() {
               <h3 className="font-semibold mb-2">Sentiment Analysis</h3>
               {sentimentResult ? (
                 <div>
-                  <p>Sentiment: {sentimentResult.sentiment}</p>
+                  <p>Sentiment: {String(sentimentResult.sentiment)}</p>
                   <p>
                     Confidence: {(sentimentResult.confidence * 100).toFixed(0)}%
                   </p>

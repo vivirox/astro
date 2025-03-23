@@ -7,7 +7,7 @@
 import { visit } from 'unist-util-visit'
 
 import type { Root, Paragraph, PhrasingContent } from 'mdast'
-import type { MarkdownVFile } from '@astrojs/markdown-remark'
+import type { VFile } from 'vfile'
 
 const IMAGE_DIR_REGEXP = /^image-(.*)/
 const VALID_TAGS_FOR_IMG = new Set<string>([
@@ -28,7 +28,13 @@ const VALID_TAGS_FOR_IMG = new Set<string>([
  * Convert `:::image-*` into container elements for images.
  */
 function remarkImageContainer() {
-  return (tree: Root, file: MarkdownVFile) => {
+  /**
+   * @param {import('mdast').Root} tree
+   *   Tree.
+   * @param {import('vfile').VFile} file
+   *   File.
+   */
+  return (tree: Root, file: VFile) => {
     visit(tree, (node) => {
       if (node.type !== 'containerDirective') return
 

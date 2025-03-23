@@ -20,16 +20,16 @@ describe('UserService', () => {
     const userData = {
       email: 'test@example.com',
       password: 'securePassword123',
-    };
+    }
 
     // Act
-    const user = await userService.create(userData);
+    const user = await userService.create(userData)
 
     // Assert
-    expect(user).toBeDefined();
-    expect(user.email).toBe(userData.email);
-  });
-});
+    expect(user).toBeDefined()
+    expect(user.email).toBe(userData.email)
+  })
+})
 ```
 
 ### Test Grouping
@@ -39,16 +39,16 @@ Group related tests using descriptive `describe` blocks:
 ```typescript
 describe('AuthenticationService', () => {
   describe('login', () => {
-    it('should authenticate valid credentials');
-    it('should reject invalid credentials');
-    it('should handle rate limiting');
-  });
+    it('should authenticate valid credentials')
+    it('should reject invalid credentials')
+    it('should handle rate limiting')
+  })
 
   describe('logout', () => {
-    it('should clear session');
-    it('should revoke tokens');
-  });
-});
+    it('should clear session')
+    it('should revoke tokens')
+  })
+})
 ```
 
 ## Mocking Patterns
@@ -58,18 +58,18 @@ describe('AuthenticationService', () => {
 Use MSW for mocking HTTP requests:
 
 ```typescript
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
+import { rest } from 'msw'
+import { setupServer } from 'msw/node'
 
 const server = setupServer(
   rest.post('/api/analytics', (req, res, ctx) => {
-    return res(ctx.json({ success: true }));
+    return res(ctx.json({ success: true }))
   })
-);
+)
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
 ```
 
 ### Database Operations
@@ -78,21 +78,21 @@ Use test containers and transactions:
 
 ```typescript
 describe('Database Operations', () => {
-  let transaction: Transaction;
+  let transaction: Transaction
 
   beforeEach(async () => {
-    transaction = await db.transaction();
-  });
+    transaction = await db.transaction()
+  })
 
   afterEach(async () => {
-    await transaction.rollback();
-  });
+    await transaction.rollback()
+  })
 
   it('should create record in transaction', async () => {
-    const result = await db.create({ trx: transaction });
-    expect(result).toBeDefined();
-  });
-});
+    const result = await db.create({ trx: transaction })
+    expect(result).toBeDefined()
+  })
+})
 ```
 
 ## Async Testing
@@ -103,9 +103,9 @@ Always use async/await for cleaner test code:
 
 ```typescript
 it('should handle async operations', async () => {
-  await expect(asyncOperation()).resolves.toBeDefined();
-  await expect(failingOperation()).rejects.toThrow();
-});
+  await expect(asyncOperation()).resolves.toBeDefined()
+  await expect(failingOperation()).rejects.toThrow()
+})
 ```
 
 ### WebSocket Testing
@@ -114,28 +114,28 @@ Test real-time communication:
 
 ```typescript
 describe('WebSocket', () => {
-  let ws: WebSocket;
+  let ws: WebSocket
 
   beforeEach(() => {
-    ws = new WebSocket('ws://localhost:3000');
-  });
+    ws = new WebSocket('ws://localhost:3000')
+  })
 
   afterEach(() => {
-    ws.close();
-  });
+    ws.close()
+  })
 
   it('should receive messages', (done) => {
     ws.onmessage = (event) => {
       expect(JSON.parse(event.data)).toEqual({
         type: 'message',
         content: 'test',
-      });
-      done();
-    };
+      })
+      done()
+    }
 
-    ws.send(JSON.stringify({ type: 'echo', content: 'test' }));
-  });
-});
+    ws.send(JSON.stringify({ type: 'echo', content: 'test' }))
+  })
+})
 ```
 
 ## Error Handling
@@ -147,16 +147,16 @@ Test both success and error cases:
 ```typescript
 describe('Error Handling', () => {
   it('should handle expected errors', async () => {
-    const error = new ValidationError('Invalid input');
-    await expect(service.process({ invalid: true })).rejects.toThrow(error);
-  });
+    const error = new ValidationError('Invalid input')
+    await expect(service.process({ invalid: true })).rejects.toThrow(error)
+  })
 
   it('should handle unexpected errors', async () => {
-    const spy = vi.spyOn(logger, 'error');
-    await service.process({ trigger: 'unexpected' });
-    expect(spy).toHaveBeenCalled();
-  });
-});
+    const spy = vi.spyOn(logger, 'error')
+    await service.process({ trigger: 'unexpected' })
+    expect(spy).toHaveBeenCalled()
+  })
+})
 ```
 
 ## Test Data Management
@@ -166,16 +166,16 @@ describe('Error Handling', () => {
 Use factories for test data:
 
 ```typescript
-import { createUser, createSession } from '@/test/factories';
+import { createUser, createSession } from '@/test/factories'
 
 describe('User Sessions', () => {
   it('should link session to user', async () => {
-    const user = await createUser();
-    const session = await createSession({ userId: user.id });
+    const user = await createUser()
+    const session = await createSession({ userId: user.id })
 
-    expect(session.userId).toBe(user.id);
-  });
-});
+    expect(session.userId).toBe(user.id)
+  })
+})
 ```
 
 ### Data Cleanup
@@ -184,19 +184,19 @@ Always clean up test data:
 
 ```typescript
 describe('File Operations', () => {
-  const testFiles: string[] = [];
+  const testFiles: string[] = []
 
   afterEach(async () => {
-    await Promise.all(testFiles.map((file) => fs.unlink(file)));
-    testFiles.length = 0;
-  });
+    await Promise.all(testFiles.map((file) => fs.unlink(file)))
+    testFiles.length = 0
+  })
 
   it('should create file', async () => {
-    const file = await createFile();
-    testFiles.push(file.path);
-    expect(await fs.exists(file.path)).toBe(true);
-  });
-});
+    const file = await createFile()
+    testFiles.push(file.path)
+    expect(await fs.exists(file.path)).toBe(true)
+  })
+})
 ```
 
 ## Coverage Requirements

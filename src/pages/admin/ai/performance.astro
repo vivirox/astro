@@ -1,23 +1,22 @@
 ---
-import PerformanceDashboard from "@components/admin/PerformanceDashboard.astro";
-import BaseLayout from "@layouts/BaseLayout.astro";
+import PerformanceDashboard from '../../../components/admin/PerformanceDashboard.astro'
+import BaseLayout from '../../../layouts/BaseLayout.astro'
 
-import { verifyAdmin } from "../../../lib/auth/middleware";
-import type { AuthContext, SessionData } from "../../../lib/auth/types";
+import { verifyAdmin } from '../../../lib/auth/middleware'
+import type { AuthContext, SessionData } from '../../../lib/auth/types'
 
 // Verify admin access
 const context: AuthContext = {
-  user: (Astro.locals as { session?: SessionData }).session?.user || null,
-  session: (Astro.locals as { session?: SessionData }).session?.session || null,
-  isAuthenticated: !!(Astro.locals as { session?: SessionData }).session?.user,
-  zkVerification: undefined,
-};
+  session: (Astro.locals as { session?: SessionData }).session || null,
+  securityVerification: undefined,
+  hipaaCompliance: undefined,
+}
 
-const response = await verifyAdmin(Astro.request, context);
-if (response) return response;
+const response = await verifyAdmin(Astro.request, context)
+if (response) return response
 ---
 
-<BaseLayout title="AI Performance" bgType="default">
+<BaseLayout title="AI Performance">
   <div class="container py-6">
     <div class="flex justify-between items-center mb-6">
       <div>

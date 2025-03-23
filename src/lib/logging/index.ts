@@ -1,5 +1,7 @@
-import { v4 as uuidv4 } from 'uuid'
-import { createAuditLog } from '../audit/log'
+/**
+ * Logging utility for the therapy chat system
+ * Provides consistent logging across the application
+ */
 
 // Log levels
 export enum LogLevel {
@@ -9,288 +11,256 @@ export enum LogLevel {
   ERROR = 'error',
 }
 
-// Log entry interface
-export interface LogEntry {
-  level: LogLevel
-  message: string
-  timestamp: Date
-  requestId?: string
-  userId?: string
-  context?: Record<string, any>
+// Define a type for log metadata that is more specific than 'any'
+export type LogMetadataValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | LogMetadataObject
+  | LogMetadataArray
+
+export interface LogMetadataObject {
+  [key: string]: LogMetadataValue
 }
+
+export type LogMetadataArray = LogMetadataValue[]
+export type LogMetadata = Record<string, LogMetadataValue>
 
 // Logger options
 export interface LoggerOptions {
-  minLevel?: LogLevel
-  console?: boolean
-  audit?: boolean
-  metadata?: Record<string, any>
+  level?: LogLevel
+  prefix?: string
+  includeTimestamp?: boolean
+  console?: Console
+  enableLogCollection?: boolean
+}
+
+// Log message format
+export interface LogMessage {
+  level: LogLevel
+  message: string
+  timestamp: Date
+  prefix?: string
+  metadata?: LogMetadata
 }
 
 // Default options
-const defaultOptions: LoggerOptions = {
-  minLevel: LogLevel.INFO,
-  console: true,
-  audit: true,
-  metadata: {},
+const DEFAULT_OPTIONS: LoggerOptions = {
+  level: LogLevel.INFO,
+  prefix: '',
+  includeTimestamp: true,
+  console: console,
+  enableLogCollection: false,
 }
 
-/**
- * Request context for maintaining request-specific data
- */
-class RequestContext {
-  private static requestMap = new Map<string, Record<string, any>>()
-
-  /**
-   * Get or create context for a request ID
-   */
-  static getContext(requestId: string): Record<string, any> {
-    if (!this.requestMap.has(requestId)) {
-      this.requestMap.set(requestId, {})
-    }
-    return this.requestMap.get(requestId)!
-  }
-
-  /**
-   * Set context value for a request ID
-   */
-  static setValue(requestId: string, key: string, value: any): void {
-    const context = this.getContext(requestId)
-    context[key] = value
-  }
-
-  /**
-   * Get context value for a request ID
-   */
-  static getValue(requestId: string, key: string): any {
-    const context = this.getContext(requestId)
-    return context[key]
-  }
-
-  /**
-   * Clean up context for a request ID
-   */
-  static cleanup(requestId: string): void {
-    this.requestMap.delete(requestId)
-  }
-}
+// Collected logs for debugging/telemetry
+const collectedLogs: LogMessage[] = []
+const MAX_COLLECTED_LOGS = 1000
 
 /**
- * Structured logger with request ID tracking
+ * Logger class for consistent logging
  */
 export class Logger {
   private options: LoggerOptions
-  private requestId: string
 
-  constructor(requestId?: string, options?: Partial<LoggerOptions>) {
-    this.options = { ...defaultOptions, ...options }
-    this.requestId = requestId || uuidv4()
+  constructor(options?: Partial<LoggerOptions>) {
+    this.options = { ...DEFAULT_OPTIONS, ...options }
   }
 
   /**
-   * Get the current request ID
+   * Log a debug message
+   * @param message The message to log
+   * @param metadata Optional metadata to include
    */
-  getRequestId(): string {
-    return this.requestId
+  debug(message: string, metadata?: LogMetadata): void {
+    this.log(LogLevel.DEBUG, message, metadata)
   }
 
   /**
-   * Set context value for the current reques
+   * Log an info message
+   * @param message The message to log
+   * @param metadata Optional metadata to include
    */
-  setContext(key: string, value: any): void {
-    RequestContext.setValue(this.requestId, key, value)
+  info(message: string, metadata?: LogMetadata): void {
+    this.log(LogLevel.INFO, message, metadata)
   }
 
   /**
-   * Get context value for the current reques
+   * Log a warning message
+   * @param message The message to log
+   * @param metadata Optional metadata to include
    */
-  getContext(key: string): any {
-    return RequestContext.getValue(this.requestId, key)
+  warn(message: string, metadata?: LogMetadata): void {
+    this.log(LogLevel.WARN, message, metadata)
   }
 
   /**
-   * Create a child logger with the same request ID
+   * Log an error message
+   * @param message The message to log
+   * @param error Optional error object
+   * @param metadata Optional metadata to include
    */
-  child(additionalMetadata: Record<string, any> = {}): Logger {
-    return new Logger(this.requestId, {
-      ...this.options,
-      metadata: {
-        ...this.options.metadata,
-        ...additionalMetadata,
-      },
-    })
+  error(message: string, error?: unknown, metadata?: LogMetadata): void {
+    const errorMetadata =
+      error instanceof Error
+        ? {
+            ...metadata,
+            error: {
+              name: error.name,
+              message: error.message,
+              stack: error.stack,
+            },
+          }
+        : metadata
+
+    this.log(LogLevel.ERROR, message, errorMetadata)
   }
 
   /**
-   * Log a message at DEBUG level
+   * Internal log method
    */
-  debug(message: string, context?: Record<string, any>): void {
-    this.log(LogLevel.DEBUG, message, context)
-  }
-
-  /**
-   * Log a message at INFO level
-   */
-  info(message: string, context?: Record<string, any>): void {
-    this.log(LogLevel.INFO, message, context)
-  }
-
-  /**
-   * Log a message at WARN level
-   */
-  warn(message: string, context?: Record<string, any>): void {
-    this.log(LogLevel.WARN, message, context)
-  }
-
-  /**
-   * Log a message at ERROR level
-   */
-  error(message: string, error?: Error, context?: Record<string, any>): void {
-    const errorContext = error
-      ? {
-          ...context,
-          error: {
-            message: error?.message,
-            name: error?.name,
-            stack: error?.stack,
-          },
-        }
-      : context
-
-    this.log(LogLevel.ERROR, message, errorContext)
-  }
-
-  /**
-   * Log a message
-   */
-  private log(
-    level: LogLevel,
-    message: string,
-    context?: Record<string, any>
-  ): void {
-    // Skip if below minimum level
-    if (this.shouldSkip(level)) {
+  private log(level: LogLevel, message: string, metadata?: LogMetadata): void {
+    // Skip if log level is too low
+    if (!this.shouldLog(level)) {
       return
     }
 
-    const timestamp = new Date()
-    const requestContext = RequestContext.getContext(this.requestId)
-
-    const entry: LogEntry = {
+    const logMessage: LogMessage = {
       level,
       message,
-      timestamp,
-      requestId: this.requestId,
-      userId: requestContext.userId,
-      context: {
-        ...this.options.metadata,
-        ...requestContext,
-        ...context,
-      },
+      timestamp: new Date(),
+      prefix: this.options.prefix,
+      metadata,
     }
 
-    // Log to console
-    if (this.options.console) {
-      this.logToConsole(entry)
+    // Format the log message
+    const formattedMessage = this.formatLogMessage(logMessage)
+
+    // Output to console
+    switch (level) {
+      case LogLevel.DEBUG:
+        this.options.console?.debug(formattedMessage, metadata || '')
+        break
+      case LogLevel.INFO:
+        this.options.console?.info(formattedMessage, metadata || '')
+        break
+      case LogLevel.WARN:
+        this.options.console?.warn(formattedMessage, metadata || '')
+        break
+      case LogLevel.ERROR:
+        this.options.console?.error(formattedMessage, metadata || '')
+        break
     }
 
-    // Log to audit log
-    if (this.options.audit) {
-      this.logToAudit(entry)
+    // Add to collected logs if enabled
+    if (this.options.enableLogCollection) {
+      this.collectLog(logMessage)
     }
   }
 
   /**
-   * Check if a log level should be skipped
+   * Check if the log level should be logged
    */
-  private shouldSkip(level: LogLevel): boolean {
+  private shouldLog(level: LogLevel): boolean {
     const levels = [
       LogLevel.DEBUG,
       LogLevel.INFO,
       LogLevel.WARN,
       LogLevel.ERROR,
     ]
-    const minLevelIndex = levels.indexOf(this.options.minLevel || LogLevel.INFO)
-    const currentLevelIndex = levels.indexOf(level)
+    const configuredLevelIndex = levels.indexOf(
+      this.options.level || LogLevel.INFO
+    )
+    const logLevelIndex = levels.indexOf(level)
 
-    return currentLevelIndex < minLevelIndex
+    return logLevelIndex >= configuredLevelIndex
   }
 
   /**
-   * Log to console in structured forma
+   * Format a log message
    */
-  private logToConsole(entry: LogEntry): void {
-    const { level, message, timestamp, requestId, context } = entry
+  private formatLogMessage(logMessage: LogMessage): string {
+    const parts: string[] = []
 
-    const logObject = {
-      timestamp: timestamp.toISOString(),
-      level,
-      requestId,
-      message,
-      ...context,
+    // Add timestamp if configured
+    if (this.options.includeTimestamp) {
+      parts.push(`[${logMessage.timestamp.toISOString()}]`)
     }
 
-    // Use appropriate console method based on level
-    switch (level) {
-      case LogLevel.DEBUG:
-        console.debug(JSON.stringify(logObject))
-        break
-      case LogLevel.INFO:
-        console.info(JSON.stringify(logObject))
-        break
-      case LogLevel.WARN:
-        console.warn(JSON.stringify(logObject))
-        break
-      case LogLevel.ERROR:
-        console.error(JSON.stringify(logObject))
-        break
+    // Add log level
+    parts.push(`[${logMessage.level.toUpperCase()}]`)
+
+    // Add prefix if configured
+    if (logMessage.prefix) {
+      parts.push(`[${logMessage.prefix}]`)
     }
+
+    // Add message
+    parts.push(logMessage.message)
+
+    return parts.join(' ')
   }
 
   /**
-   * Log to audit log system
+   * Collect a log message for debugging/telemetry
    */
-  private async logToAudit(entry: LogEntry): Promise<void> {
-    try {
-      // Only log INFO and above to audit logs
-      if (entry.level === LogLevel.DEBUG) {
-        return
-      }
+  private collectLog(logMessage: LogMessage): void {
+    collectedLogs.push(logMessage)
 
-      const { userId, context } = entry
-
-      await createAuditLog({
-        userId: userId || 'system',
-        action: `log.${entry.level}`,
-        resource: 'application',
-        resourceId: undefined,
-        metadata: {
-          requestId: entry.requestId,
-          message: entry.message,
-          timestamp: entry.timestamp.toISOString(),
-          context: context || {},
-        },
-      })
-    } catch (error) {
-      console.error('Failed to write to audit log:', error)
+    // Keep log collection under the maximum size
+    if (collectedLogs.length > MAX_COLLECTED_LOGS) {
+      collectedLogs.shift()
     }
   }
 
   /**
-   * Clean up resources
+   * Create a child logger with a new prefix
+   * @param prefix The prefix for the child logger
    */
-  cleanup(): void {
-    RequestContext.cleanup(this.requestId)
+  child(prefix: string): Logger {
+    return new Logger({
+      ...this.options,
+      prefix: this.options.prefix ? `${this.options.prefix}:${prefix}` : prefix,
+    })
   }
 }
 
-// Create a default logger instance
-const defaultLogger = new Logger()
+// Global logger instance
+let globalLogger: Logger | null = null
 
-// Export a function to get a logger instance
-export function getLogger(
-  requestId?: string,
-  options?: Partial<LoggerOptions>
-): Logger {
-  return requestId ? new Logger(requestId, options) : defaultLogger
+/**
+ * Get the global logger instance
+ * Creates one if it doesn't exist
+ */
+export function getLogger(options?: Partial<LoggerOptions>): Logger {
+  if (!globalLogger || options) {
+    globalLogger = new Logger(options)
+  }
+  return globalLogger
 }
+
+/**
+ * Get collected logs (for debugging/telemetry)
+ */
+export function getCollectedLogs(): LogMessage[] {
+  return [...collectedLogs]
+}
+
+/**
+ * Clear collected logs
+ */
+export function clearCollectedLogs(): void {
+  collectedLogs.length = 0
+}
+
+/**
+ * Configure global logging
+ */
+export function configureLogging(options: Partial<LoggerOptions>): void {
+  globalLogger = new Logger(options)
+}
+
+// Export default logger
+export default getLogger()

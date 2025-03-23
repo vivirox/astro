@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro'
-import { getSession } from '../../../lib/auth/session'
-import { requirePermission } from '../../../lib/access-control'
+import { getAIUsageStats } from '../../../lib/ai/analytics'
 import { createAuditLog } from '../../../lib/audit/log'
 import { handleApiError } from '../../../lib/ai/error-handling'
-import { getAIUsageStats } from '../../../lib/ai/analytics'
+import { getSession } from '../../../lib/auth/session'
+import { requirePermission } from '../../../lib/access-control'
 
 /**
  * API route for AI usage statistics
@@ -27,8 +27,7 @@ export const GET: APIRoute = async ({ request, cookies, url }) => {
     const checkPermission = requirePermission('read:admin')
     const permissionResponse = await checkPermission({
       cookies,
-      redirect: (path: string) => new Response(null, { status: 401 }),
-      request,
+      redirect: () => new Response(null, { status: 401 }),
     })
 
     if (permissionResponse) {
@@ -45,22 +44,36 @@ export const GET: APIRoute = async ({ request, cookies, url }) => {
     const allUsers = url.searchParams.get('allUsers') === 'true'
     const userId = allUsers ? undefined : session?.user?.id
 
+    // Create audit log for the request
+    await createAuditLog({
+      userId: session?.user?.id || 'anonymous',
+      action: 'ai.stats.request',
+      resource: 'ai',
+      resourceId: undefined,
+      metadata: {
+        period,
+        allUsers,
+        status: 'success',
+      },
+    })
+
     // Get usage statistics
     const stats = await getAIUsageStats({
       period: period as 'daily' | 'weekly' | 'monthly',
       userId,
     })
 
-    // Create audit log for the request
+    // Create audit log for the response
     await createAuditLog({
       userId: session?.user?.id || 'anonymous',
-      action: 'ai.stats.view',
+      action: 'ai.stats.response',
       resource: 'ai',
       resourceId: undefined,
       metadata: {
         period,
         allUsers,
         statsCount: stats.length,
+        status: 'success',
       },
     })
 
@@ -82,6 +95,8 @@ export const GET: APIRoute = async ({ request, cookies, url }) => {
       resourceId: undefined,
       metadata: {
         error: error instanceof Error ? error?.message : String(error),
+        stack: error instanceof Error ? error?.stack : undefined,
+        status: 'error',
       },
     })
 

@@ -1,4 +1,3 @@
-
 ---
 import Link from '~/components/base/Link.astro'
 import { formatDate } from '~/utils/datetime'
@@ -22,31 +21,24 @@ type Props =
 
 const { collectionType, idx, item, isDiffMonth } = Astro.props
 
-const isOrg =
-  collectionType === 'releases'
-    ? item.repoIsInOrganization
-    : item.repository.isInOrganization
+// Organization check - only available for PRs
+const isOrg = collectionType === 'prs' ? item.repository?.isInOrganization : false
 
+// Logo handling
 const mainLogoSrc = item.mainLogo
-const mainLogoAlt =
-  collectionType === 'releases'
-    ? item.repoNameWithOwner
-    : item.repository.nameWithOwner
+const mainLogoAlt = collectionType === 'releases' ? item.name : item.repository?.nameWithOwner || ''
 const subLogoSrc = item.subLogo
 
-const firstLinkHref = item.url
+// Link handling
+const firstLinkHref = collectionType === 'releases' ? item.link : item.url
 const firstLinkText = collectionType === 'releases' ? item.pkgName : item.title
 
-const secondLinkHref =
-  collectionType === 'releases' ? item.repoUrl : item.repository.url
-const secondLinkText =
-  collectionType === 'releases'
-    ? item.repoNameWithOwner
-    : item.repository.nameWithOwner
+const secondLinkHref = collectionType === 'prs' ? item.repository?.url : item.link
+const secondLinkText = collectionType === 'prs' ? item.repository?.nameWithOwner : item.name
 
+// Time and content handling
 const time = collectionType === 'releases' ? item.publishedAt : item.createdAt
-const content =
-  collectionType === 'releases' ? item.descriptionHTML : item.bodyHTML
+const content = collectionType === 'releases' ? item.desc : item.bodyHTML
 ---
 
 <details

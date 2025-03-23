@@ -13,12 +13,7 @@
  */
 
 import { promises as fs, statSync } from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
-
-// Get the current directory
-const _filename = fileURLToPath(import.meta.url)
-const _dirname = path.dirname(_filename)
+import { basename, join } from 'path'
 
 // Configuration
 const DRY_RUN = process.argv.includes('--dry-run')
@@ -58,71 +53,85 @@ const patterns = [
   // Variables with underscore prefix
   {
     pattern: /(const|let|var)\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, prefix, name) => `${prefix} ${name.substring(1)}`,
+    getNewName: (prefix, name) => `${prefix} ${name.substring(1)}`,
+    getParams: (args) => [args[1], args[2]],
   },
   // Function declarations with underscore prefix
   {
     pattern: /function\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, name) => `function ${name.substring(1)}`,
+    getNewName: (name) => `function ${name.substring(1)}`,
+    getParams: (args) => [args[1]],
   },
   // Classes with underscore prefix
   {
     pattern: /class\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, name) => `class ${name.substring(1)}`,
+    getNewName: (name) => `class ${name.substring(1)}`,
+    getParams: (args) => [args[1]],
   },
   // Interfaces with underscore prefix
   {
     pattern: /interface\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, name) => `interface ${name.substring(1)}`,
+    getNewName: (name) => `interface ${name.substring(1)}`,
+    getParams: (args) => [args[1]],
   },
   // Types with underscore prefix
   {
     pattern: /type\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, name) => `type ${name.substring(1)}`,
+    getNewName: (name) => `type ${name.substring(1)}`,
+    getParams: (args) => [args[1]],
   },
   // Exported variables with underscore prefix
   {
     pattern: /export\s+(const|let|var)\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, exportType, name) =>
+    getNewName: (exportType, name) =>
       `export ${exportType} ${name.substring(1)}`,
+    getParams: (args) => [args[1], args[2]],
   },
   // Exported classes with underscore prefix
   {
     pattern: /export\s+class\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, name) => `export class ${name.substring(1)}`,
+    getNewName: (name) => `export class ${name.substring(1)}`,
+    getParams: (args) => [args[1]],
   },
   // Exported interfaces with underscore prefix
   {
     pattern: /export\s+interface\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, name) => `export interface ${name.substring(1)}`,
+    getNewName: (name) => `export interface ${name.substring(1)}`,
+    getParams: (args) => [args[1]],
   },
   // Exported types with underscore prefix
   {
     pattern: /export\s+type\s+(_[a-zA-Z][a-zA-Z0-9]*)\b/g,
-    getNewName: (match, name) => `export type ${name.substring(1)}`,
+    getNewName: (name) => `export type ${name.substring(1)}`,
+    getParams: (args) => [args[1]],
   },
   // Object property with underscore prefix
   {
     pattern: /\b(_[a-zA-Z][a-zA-Z0-9]*)\s*:/g,
-    getNewName: (match, name) => `${name.substring(1)}:`,
+    getNewName: (name) => `${name.substring(1)}:`,
+    getParams: (args) => [args[1]],
   },
   // Anonymous function parameter with underscore prefix
   {
     pattern: /\(\s*(_[a-zA-Z][a-zA-Z0-9]*)\s*\)/g,
-    getNewName: (match, name) => `(${name.substring(1)})`,
+    getNewName: (name) => `(${name.substring(1)})`,
+    getParams: (args) => [args[1]],
   },
   // Multiple parameters with underscore prefix
   {
     pattern: /\(\s*(_[a-zA-Z][a-zA-Z0-9]*)\s*,/g,
-    getNewName: (match, name) => `(${name.substring(1)},`,
+    getNewName: (name) => `(${name.substring(1)},`,
+    getParams: (args) => [args[1]],
   },
   {
     pattern: /,\s*(_[a-zA-Z][a-zA-Z0-9]*)\s*\)/g,
-    getNewName: (match, name) => `, ${name.substring(1)})`,
+    getNewName: (name) => `, ${name.substring(1)})`,
+    getParams: (args) => [args[1]],
   },
   {
     pattern: /,\s*(_[a-zA-Z][a-zA-Z0-9]*)\s*,/g,
-    getNewName: (match, name) => `, ${name.substring(1)},`,
+    getNewName: (name) => `, ${name.substring(1)},`,
+    getParams: (args) => [args[1]],
   },
 ]
 
@@ -133,7 +142,7 @@ const identifierMap = new Map()
  * Check if a file should be ignored
  */
 function shouldIgnoreFile(filePath) {
-  const fileName = path.basename(filePath)
+  const fileName = basename(filePath)
 
   // Check if file is in ignored list
   if (IGNORED_FILES.includes(fileName)) {
@@ -210,7 +219,7 @@ async function processFile(filePath) {
     let newContent = content
     let fileChanged = false
 
-    for (const { pattern, getNewName } of patterns) {
+    for (const { pattern, getNewName, getParams } of patterns) {
       let lastMatches = []
 
       // Use a replacer function to remember found identifiers
@@ -230,7 +239,9 @@ async function processFile(filePath) {
           identifierMap.set(underscoredName, newName)
         }
 
-        const replacement = getNewName(...args)
+        // Use the getParams helper to extract only the needed parameters
+        const params = getParams(args)
+        const replacement = getNewName(...params)
 
         // Track changes
         if (match !== replacement) {
@@ -255,8 +266,6 @@ async function processFile(filePath) {
         // Use word boundaries to avoid partial matches
         const refPattern = new RegExp(`\\b${oldName}\\b`, 'g')
 
-        // Skip first occurrence which is the declaration we already replaced
-        let count = 0
         newContent = newContent.replace(refPattern, (match) => {
           // Skip the already processed matches to avoid double replacement
           for (const processedMatch of lastMatches) {
@@ -265,7 +274,6 @@ async function processFile(filePath) {
             }
           }
 
-          count++
           if (VERBOSE) {
             console.log(`  Replacing reference: ${match} -> ${newName}`)
           }
@@ -307,7 +315,7 @@ async function processDirectory(directory) {
     const entries = await fs.readdir(directory, { withFileTypes: true })
 
     for (const entry of entries) {
-      const fullPath = path.join(directory, entry.name)
+      const fullPath = join(directory, entry.name)
 
       // Skip ignored directories
       if (entry.isDirectory() && IGNORED_DIRS.includes(entry.name)) {
@@ -325,7 +333,7 @@ async function processDirectory(directory) {
         // Check if the filename has an underscore prefix
         if (entry.name.startsWith('_')) {
           const newFileName = entry.name.substring(1)
-          const newFullPath = path.join(directory, newFileName)
+          const newFullPath = join(directory, newFileName)
 
           changes.filesRenamed.push({ from: fullPath, to: newFullPath })
 

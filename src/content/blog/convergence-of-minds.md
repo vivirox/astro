@@ -1,9 +1,8 @@
-
 ---
 title: Convergence of Minds
 description: "The intersection of artificial intelligence and mental health care stands at a fascinating crossroads, poised to revolutionize how we understand, treat, and support psychological wellbeing."
-pubDate: 2025-03-10
-lastModDate: ''
+pubDate: 2025-03-01
+lastModDate: 2025-03-22
 toc: true
 share: true
 ogImage: true

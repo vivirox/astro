@@ -1,4 +1,3 @@
-
 ---
 import '@unocss/reset/tailwind.css'
 import '@/styles/main.css'
@@ -15,8 +14,7 @@ import Footer from '@/components/base/Footer.astro'
 import ToTopButton from '@/components/widgets/ToTopButton.astro'
 import Backdrop from '@/components/base/Backdrop.astro'
 
-import { SITE, UI, FEATURES } from '@/config'
-import { getUrl } from '@/utils/common'
+import { UI, FEATURES } from '@/config'
 
 import type { BgType } from '@/types'
 
@@ -29,8 +27,7 @@ interface Props {
   lastModDate?: string
 }
 
-const { title, description, ogImage, bgType, pubDate, lastModDate } =
-  Astro.props
+const { bgType } = Astro.props
 
 let style: Record<string, string> = {}
 
@@ -48,9 +45,15 @@ if (hasCustomCursor) style['--external-link-cursor'] = cursorType
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang="en">
   <head>
-    <Head {title} {description} {ogImage} {pubDate} {lastModDate} />
+    <Head
+      title={Astro.props.title}
+      description={Astro.props.description}
+      ogImage={Astro.props.ogImage}
+      pubDate={Astro.props.pubDate}
+      lastModDate={Astro.props.lastModDate}
+    />
   </head>
 
   <body
@@ -73,7 +76,7 @@ if (hasCustomCursor) style['--external-link-cursor'] = cursorType
     <main id="main" class="px-7 py-10">
       <slot />
       {
-        Astro.url.pathname !== getUrl('/') && (
+        Astro.url.pathname !== '/' && (
           <footer class="slide-enter animate-delay-1000! prose mx-auto mt-8 print:hidden">
             <slot name="share" />
             <br />

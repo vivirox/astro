@@ -2,7 +2,6 @@
 export { getSession, createSession, endSession } from './session'
 export type { SessionData } from './session'
 
-// Export ZK authentication
+// Export authentication types and middleware
 export * from './types'
 export * from './middleware'
-export * from './zkAuth'

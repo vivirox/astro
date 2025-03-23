@@ -48,44 +48,48 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     }
 
     // Set cookies for session management
-    const { access_token, refresh_token } = data?.session
-    cookies.set('sb-access-token', access_token, {
-      path: '/',
-      httpOnly: true,
-      secure: import.meta.env.PROD,
-      sameSite: 'lax',
-      maxAge: 3600, // 1 hour
-    })
+    if (data && data.session) {
+      const { access_token, refresh_token } = data.session
+      cookies.set('sb-access-token', access_token, {
+        path: '/',
+        httpOnly: true,
+        secure: import.meta.env.PROD,
+        sameSite: 'lax',
+        maxAge: 3600, // 1 hour
+      })
 
-    cookies.set('sb-refresh-token', refresh_token, {
-      path: '/',
-      httpOnly: true,
-      secure: import.meta.env.PROD,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 3600, // 7 days
-    })
+      cookies.set('sb-refresh-token', refresh_token, {
+        path: '/',
+        httpOnly: true,
+        secure: import.meta.env.PROD,
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 3600, // 7 days
+      })
 
-    // Log the sign in for HIPAA compliance
-    const { error: auditError } = await supabase.from('audit_logs').insert({
-      user_id: data?.user.id,
-      action: 'user_signed_in',
-      resource: 'auth',
-      resource_id: data?.user.id,
-      metadata: {
-        email: data?.user.email,
-      },
-      ip_address:
-        request.headers.get('x-forwarded-for') ||
-        request.headers.get('x-real-ip'),
-      user_agent: request.headers.get('user-agent'),
-    })
+      // Log the sign in for HIPAA compliance
+      const { error: auditError } = await supabase.from('audit_logs').insert({
+        user_id: data.user.id,
+        action: 'user_signed_in',
+        resource: 'auth',
+        resource_id: data.user.id,
+        metadata: {
+          email: data.user.email,
+        },
+        ip_address:
+          request.headers.get('x-forwarded-for') ||
+          request.headers.get('x-real-ip'),
+        user_agent: request.headers.get('user-agent'),
+      })
 
-    if (auditError) {
-      console.error('Audit logging error:', auditError)
-      // Continue anyway, as this is just logging
+      if (auditError) {
+        console.error('Audit logging error:', auditError)
+        // Continue anyway, as this is just logging
+      }
+
+      return redirect('/dashboard')
     }
 
-    return redirect('/dashboard')
+    return new Response('Authentication failed', { status: 401 })
   } catch (error) {
     console.error('Sign in error:', error)
     return new Response('An unexpected error occurred', { status: 500 })

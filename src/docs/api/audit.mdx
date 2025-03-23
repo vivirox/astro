@@ -18,6 +18,7 @@ Authorization: Bearer your-jwt-token
 ## Rate Limiting
 
 Audit endpoints have a specific rate limit:
+
 - 100 requests per 15 minutes per IP address
 - Rate limit headers are included in responses
 
@@ -33,16 +34,16 @@ GET /api/audit/logs
 
 #### Query Parameters
 
-| Parameter    | Type     | Description                                                |
-|-------------|----------|------------------------------------------------------------|
-| startTime   | string   | Start time in ISO format (required)                        |
-| endTime     | string   | End time in ISO format (required)                          |
-| eventType   | string   | Filter by event type                                       |
-| userId      | string   | Filter by user ID                                          |
-| sessionId   | string   | Filter by session ID                                       |
-| resourceType| string   | Filter by resource type                                    |
-| status      | string   | Filter by status ('success' or 'failure')                  |
-| severity    | string   | Filter by severity ('LOW', 'MEDIUM', 'HIGH')              |
+| Parameter    | Type   | Description                                  |
+| ------------ | ------ | -------------------------------------------- |
+| startTime    | string | Start time in ISO format (required)          |
+| endTime      | string | End time in ISO format (required)            |
+| eventType    | string | Filter by event type                         |
+| userId       | string | Filter by user ID                            |
+| sessionId    | string | Filter by session ID                         |
+| resourceType | string | Filter by resource type                      |
+| status       | string | Filter by status ('success' or 'failure')    |
+| severity     | string | Filter by severity ('LOW', 'MEDIUM', 'HIGH') |
 
 #### Response
 
@@ -79,11 +80,11 @@ GET /api/audit/metrics
 
 #### Query Parameters
 
-| Parameter | Type     | Description                                          |
-|-----------|----------|------------------------------------------------------|
-| startTime | string   | Start time in ISO format (required)                  |
-| endTime   | string   | End time in ISO format (required)                    |
-| interval  | string   | Time bucket interval ('hour', 'day', 'week', 'month')|
+| Parameter | Type   | Description                                           |
+| --------- | ------ | ----------------------------------------------------- |
+| startTime | string | Start time in ISO format (required)                   |
+| endTime   | string | End time in ISO format (required)                     |
+| interval  | string | Time bucket interval ('hour', 'day', 'week', 'month') |
 
 #### Response
 
@@ -142,10 +143,10 @@ GET /api/audit/rate-limits
 
 #### Query Parameters
 
-| Parameter | Type   | Description                                    |
-|-----------|--------|------------------------------------------------|
-| ip        | string | IP address to filter by (optional)             |
-| userId    | string | User ID to filter by (optional)                |
+| Parameter | Type   | Description                        |
+| --------- | ------ | ---------------------------------- |
+| ip        | string | IP address to filter by (optional) |
+| userId    | string | User ID to filter by (optional)    |
 
 Note: Either `ip` or `userId` must be provided.
 
@@ -176,12 +177,14 @@ Note: Either `ip` or `userId` must be provided.
 The system logs the following types of events:
 
 ### Authentication Events
+
 - `AUTH_SUCCESS`: Successful authentication
 - `AUTH_FAILURE`: Failed authentication attempt
 - `USER_SIGNUP_SUCCESS`: Successful user registration
 - `USER_SIGNUP_FAILED`: Failed user registration
 
 ### Session Events
+
 - `SESSION_CREATED`: New session created
 - `SESSION_UPDATED`: Session updated
 - `SESSION_DELETED`: Session deleted
@@ -190,6 +193,7 @@ The system logs the following types of events:
 - `SESSION_DELETE_FAILED`: Failed to delete session
 
 ### Security Events
+
 - `SECURITY_ALERT`: Security-related alert
 - `RATE_LIMIT`: Rate limit exceeded
 - `IP_MARKED_SUSPICIOUS`: IP added to suspicious list
@@ -197,11 +201,13 @@ The system logs the following types of events:
 - `IP_TEMPORARILY_BLOCKED`: IP temporarily blocked
 
 ### Data Access Events
+
 - `DATA_ACCESS`: Data access event
 
 ## Error Responses
 
 ### 400 Bad Request
+
 ```json
 {
   "error": "Invalid query parameters",
@@ -216,6 +222,7 @@ The system logs the following types of events:
 ```
 
 ### 401 Unauthorized
+
 ```json
 {
   "error": "Authentication required"
@@ -223,6 +230,7 @@ The system logs the following types of events:
 ```
 
 ### 403 Forbidden
+
 ```json
 {
   "error": "Insufficient permissions"
@@ -230,6 +238,7 @@ The system logs the following types of events:
 ```
 
 ### 429 Too Many Requests
+
 ```json
 {
   "error": "Too many audit log requests from this IP, please try again later."
@@ -237,8 +246,9 @@ The system logs the following types of events:
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
   "error": "Internal server error"
 }
-``` 
+```

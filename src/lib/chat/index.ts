@@ -1,2 +1,2 @@
-// Export ZK cha
-export * from './zkChat'
+// Export chat utilities and FHE implementations
+export * from './fheChat'

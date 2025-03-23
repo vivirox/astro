@@ -1,9 +1,8 @@
-
 ---
 title: Emotional Intelligence in an AI-Driven World
 description: "Exploring the critical intersection of emotional intelligence and artificial intelligence in 2025 and beyond"
-pubDate: 2025-03-08
-lastModDate: ''
+pubDate: 2025-03-02
+lastModDate: 2025-03-22
 toc: true
 share: true
 ogImage: true

@@ -1,10 +1,10 @@
 import { test, expect } from 'vitest'
 import { chromium, webkit, firefox, devices } from 'playwright'
 import type { Browser, BrowserContext, Page } from 'playwright'
-import fs from 'fs/promises'
-import { join } from 'path'
+import fs from 'node:fs/promises'
+import { join } from 'node:path'
 
-// Pages to tes
+// Pages to test
 const TEST_PAGES = [
   { path: '/', name: 'Home Page' },
   { path: '/app/dashboard', name: 'Dashboard' },
@@ -12,14 +12,14 @@ const TEST_PAGES = [
   { path: '/app/settings', name: 'Settings' },
 ]
 
-// Browser configurations to tes
+// Browser configurations to test
 const BROWSERS = [
   { name: 'Chrome', engine: chromium, options: {} },
   { name: 'Firefox', engine: firefox, options: {} },
   { name: 'Safari', engine: webkit, options: {} },
 ]
 
-// Mobile device configurations to tes
+// Mobile device configurations to test
 const MOBILE_DEVICES = [
   { name: 'iPhone 12', config: devices['iPhone 12'] },
   { name: 'Pixel 5', config: devices['Pixel 5'] },
@@ -27,7 +27,7 @@ const MOBILE_DEVICES = [
   { name: 'Galaxy Tab S4', config: devices['Galaxy Tab S4'] },
 ]
 
-// Features to tes
+// Features to test
 const FEATURES = [
   { name: 'CSS Grid', test: "'grid' in document.createElement('div').style" },
   { name: 'Flexbox', test: "'flex' in document.createElement('div').style" },
@@ -56,9 +56,21 @@ const FEATURES = [
 ]
 
 // Results storage
-const compatibilityResults: Record<string, any> = {
+const compatibilityResults: Record<string, unknown> = {
   timestamp: new Date().toISOString(),
   browsers: {},
+}
+
+// Helper function for type-safe access to mobile device results
+function getMobileResults(deviceName: string): Record<string, unknown> {
+  const key = `mobile_${deviceName.replace(/\s+/g, '_')}`
+  if (!compatibilityResults[key]) {
+    compatibilityResults[key] = {
+      pages: {},
+      features: {},
+    }
+  }
+  return compatibilityResults[key] as Record<string, unknown>
 }
 
 describe('Browser Compatibility Tests', () => {
@@ -90,14 +102,14 @@ describe('Browser Compatibility Tests', () => {
           const isSupported = await page.evaluate((testCode: string) => {
             try {
               // Using eval is needed here for feature detection
-              // eslint-disable-next-line no-eval
+
               return eval(testCode)
-            } catch (error) {
+            } catch {
               return false
             }
           }, feature.test)
 
-          // Store resul
+          // Store result
           compatibilityResults.browsers[name].features[feature.name] =
             isSupported
 
@@ -115,20 +127,18 @@ describe('Browser Compatibility Tests', () => {
         test(`Visual test - ${pageName} on ${name}`, async () => {
           page = await browser.newPage()
 
-          // Create page results objec
+          // Create page results object
           if (!compatibilityResults.browsers[name].pages[pageName]) {
             compatibilityResults.browsers[name].pages[pageName] = {}
           }
 
-          // Navigation tes
+          // Navigation test
           let navigationSuccessful = false
           try {
             await page.goto(`http://localhost:3000${path}`, { timeout: 10000 })
             navigationSuccessful = true
-          } catch (error) {
-            console.error(
-              `Failed to navigate to ${pageName} on ${name}: ${error}`
-            )
+          } catch {
+            console.error(`Failed to navigate to ${pageName} on ${name}`)
           }
 
           compatibilityResults.browsers[name].pages[
@@ -136,7 +146,7 @@ describe('Browser Compatibility Tests', () => {
           ].navigationSuccessful = navigationSuccessful
 
           if (navigationSuccessful) {
-            // Visual defects tes
+            // Visual defects test
             const visualIssues = await checkVisualIssues(page)
             compatibilityResults.browsers[name].pages[pageName].visualIssues =
               visualIssues
@@ -158,12 +168,12 @@ describe('Browser Compatibility Tests', () => {
               pageName
             ].criticalElements = criticalElements
 
-            // Interactive elements tes
+            // Interactive elements test
             const interactionResults = await testInteractions(page)
             compatibilityResults.browsers[name].pages[pageName].interactions =
               interactionResults
 
-            // JavaScript errors tes
+            // JavaScript errors test
             const jsErrors = await checkJsErrors(page)
             compatibilityResults.browsers[name].pages[pageName].jsErrors =
               jsErrors
@@ -200,10 +210,7 @@ describe('Browser Compatibility Tests', () => {
           userAgent: config.userAgent,
         })
 
-        compatibilityResults[`mobile_${name.replace(/\s+/g, '_')}`] = {
-          pages: {},
-          features: {},
-        }
+        getMobileResults(name)
       })
 
       afterAll(async () => {
@@ -220,17 +227,15 @@ describe('Browser Compatibility Tests', () => {
           const isSupported = await page.evaluate((testCode: string) => {
             try {
               // Using eval is needed here for feature detection
-              // eslint-disable-next-line no-eval
+
               return eval(testCode)
-            } catch (error) {
+            } catch {
               return false
             }
           }, feature.test)
 
-          // Store resul
-          compatibilityResults[`mobile_${name.replace(/\s+/g, '_')}`].features[
-            feature.name
-          ] = isSupported
+          // Store result
+          getMobileResults(name).features[feature.name] = isSupported
         }
 
         await page.close()
@@ -241,36 +246,27 @@ describe('Browser Compatibility Tests', () => {
         test(`Responsive design - ${pageName} on ${name}`, async () => {
           page = await context.newPage()
 
-          // Create page results objec
-          if (
-            !compatibilityResults[`mobile_${name.replace(/\s+/g, '_')}`].pages[
-              pageName
-            ]
-          ) {
-            compatibilityResults[`mobile_${name.replace(/\s+/g, '_')}`].pages[
-              pageName
-            ] = {}
+          // Create page results object
+          if (!getMobileResults(name).pages[pageName]) {
+            getMobileResults(name).pages[pageName] = {}
           }
 
-          // Navigation tes
+          // Navigation test
           let navigationSuccessful = false
           try {
             await page.goto(`http://localhost:3000${path}`, { timeout: 10000 })
             navigationSuccessful = true
-          } catch (error) {
-            console.error(
-              `Failed to navigate to ${pageName} on ${name}: ${error}`
-            )
+          } catch {
+            console.error(`Failed to navigate to ${pageName} on ${name}`)
           }
 
-          compatibilityResults[`mobile_${name.replace(/\s+/g, '_')}`].pages[
-            pageName
-          ].navigationSuccessful = navigationSuccessful
+          getMobileResults(name).pages[pageName].navigationSuccessful =
+            navigationSuccessful
 
           if (navigationSuccessful) {
             // Mobile-specific tests
 
-            // Viewport adaptation tes
+            // Viewport adaptation test
             const viewportAdaption = await page.evaluate(() => {
               const viewport = {
                 width: window.innerWidth,
@@ -306,6 +302,7 @@ describe('Browser Compatibility Tests', () => {
               }
             })
 
+            // @ts-expect-error - Dynamic property access
             compatibilityResults[`mobile_${name.replace(/\s+/g, '_')}`].pages[
               pageName
             ].viewportAdaption = viewportAdaption
@@ -324,14 +321,16 @@ describe('Browser Compatibility Tests', () => {
               fullPage: true,
             })
 
-            // Mobile touch input tes
+            // Mobile touch input test
             const touchInputResults = await testTouchInteractions(page)
+            // @ts-expect-error - Dynamic property access
             compatibilityResults[`mobile_${name.replace(/\s+/g, '_')}`].pages[
               pageName
             ].touchInputResults = touchInputResults
 
-            // JavaScript errors tes
+            // JavaScript errors test
             const jsErrors = await checkJsErrors(page)
+            // @ts-expect-error - Dynamic property access
             compatibilityResults[`mobile_${name.replace(/\s+/g, '_')}`].pages[
               pageName
             ].jsErrors = jsErrors
@@ -411,7 +410,7 @@ async function checkVisualIssues(page: Page): Promise<string[]> {
       })
     })
 
-    // Check for elements extending outside viewpor
+    // Check for elements extending outside viewport
     Array.from(elements).forEach((el) => {
       const rect = el.getBoundingClientRect()
       if (rect.right > window.innerWidth + 5) {

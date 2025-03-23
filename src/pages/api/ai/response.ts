@@ -95,13 +95,16 @@ export const POST: APIRoute = async ({ request }) => {
             'usage' in response
               ? {
                   promptTokens: Number(
-                    (response.usage as any)?.promptTokens || 0
+                    (response.usage as { promptTokens: number })
+                      ?.promptTokens || 0
                   ),
                   completionTokens: Number(
-                    (response.usage as any)?.completionTokens || 0
+                    (response.usage as { completionTokens: number })
+                      ?.completionTokens || 0
                   ),
                   totalTokens: Number(
-                    (response.usage as any)?.totalTokens || 0
+                    (response.usage as { totalTokens: number })?.totalTokens ||
+                      0
                   ),
                 }
               : {
@@ -123,7 +126,11 @@ export const POST: APIRoute = async ({ request }) => {
       },
       getModelInfo: (model: string) => ({
         id: model,
+        name: model,
+        provider: 'together',
         capabilities: ['chat'],
+        contextWindow: 8192,
+        maxTokens: 8192,
       }),
       createChatCompletionWithTracking: async (
         messages: AIMessage[],
@@ -158,13 +165,16 @@ export const POST: APIRoute = async ({ request }) => {
             'usage' in response
               ? {
                   promptTokens: Number(
-                    (response.usage as any)?.promptTokens || 0
+                    (response.usage as { promptTokens: number })
+                      ?.promptTokens || 0
                   ),
                   completionTokens: Number(
-                    (response.usage as any)?.completionTokens || 0
+                    (response.usage as { completionTokens: number })
+                      ?.completionTokens || 0
                   ),
                   totalTokens: Number(
-                    (response.usage as any)?.totalTokens || 0
+                    (response.usage as { totalTokens: number })?.totalTokens ||
+                      0
                   ),
                 }
               : {
@@ -181,7 +191,24 @@ export const POST: APIRoute = async ({ request }) => {
               : '',
         }
       },
-      generateCompletion: togetherService.generateCompletion,
+      generateCompletion: async (messages, options, provider) => {
+        const response = await togetherService.generateCompletion(
+          messages,
+          options
+        )
+        return {
+          ...response,
+          provider: provider || 'together',
+          id:
+            typeof response === 'object' && response !== null
+              ? (response as { id?: string }).id || `together-${Date.now()}`
+              : `together-${Date.now()}`,
+          created:
+            typeof response === 'object' && response !== null
+              ? (response as { created?: number }).created || Date.now()
+              : Date.now(),
+        }
+      },
       dispose: () => {
         togetherService.dispose()
       },

@@ -19,7 +19,7 @@ async function basicEncryptionExample() {
 
   // Encrypt some data
   const sensitiveData = 'This is sensitive patient information'
-  const encrypted = await crypto.encrypt(sensitiveData, 'patient-data')
+  const encrypted = await crypto.encrypt(sensitiveData)
 
   console.log('Encrypted data:', encrypted)
 
@@ -104,7 +104,7 @@ async function reencryptionExample() {
 
   // Encrypt some data
   const sensitiveData = 'This is sensitive patient information'
-  const encrypted = await crypto.encrypt(sensitiveData, 'patient-data')
+  const encrypted = await crypto.encrypt(sensitiveData)
 
   console.log('Original encrypted data:', encrypted)
 
@@ -123,7 +123,7 @@ async function reencryptionExample() {
 
     // Re-encrypt the data with the new key
     const decrypted = await crypto.decrypt(encrypted)
-    const reencrypted = await crypto.encrypt(decrypted, 'patient-data')
+    const reencrypted = await crypto.encrypt(decrypted)
 
     console.log('Re-encrypted data:', reencrypted)
 

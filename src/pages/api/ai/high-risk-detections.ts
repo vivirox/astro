@@ -49,6 +49,20 @@ export const GET: APIRoute = async ({ request, url }) => {
       offset
     )
 
+    // Log the response
+    await createAuditLog({
+      userId: session?.user?.id || 'anonymous',
+      action: 'ai.crisis.high-risk.response',
+      resource: 'ai',
+      resourceId: undefined,
+      metadata: {
+        limit,
+        offset,
+        detectionsCount: detections.length,
+        status: 'success',
+      },
+    })
+
     // Return the results
     return new Response(JSON.stringify({ detections }), {
       status: 200,

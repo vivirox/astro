@@ -6,7 +6,7 @@
 
 /**
  * Reports Core Web Vitals and other metrics to the console
- * Helps with debugging performance issues during developmen
+ * Helps with debugging performance issues during development
  */
 export function reportWebVitals(): void {
   if (typeof window !== 'undefined') {
@@ -29,10 +29,27 @@ export function reportWebVitals(): void {
         reportFCP()
         reportTTFB()
       }
-    } catch (error) {
-      console.error('Error initializing Web Vitals reporting:', error)
+    } catch {
+      console.error('Error initializing Web Vitals reporting')
     }
   }
+}
+
+// Define interfaces for Performance entries
+interface LargestContentfulPaintEntry extends PerformanceEntry {
+  element?: Element
+  size: number
+  renderTime?: number
+  loadTime?: number
+}
+
+interface LayoutShiftEntry extends PerformanceEntry {
+  value: number
+  hadRecentInput: boolean
+}
+
+interface FirstInputEntry extends PerformanceEntry {
+  processingStart: number
 }
 
 /**
@@ -44,12 +61,14 @@ function reportLCP(): void {
 
     const observer = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries()
-      const lastEntry = entries[entries.length - 1]
+      const lastEntry = entries[
+        entries.length - 1
+      ] as LargestContentfulPaintEntry
 
       if (lastEntry) {
         const lcp = lastEntry.startTime
-        const lcpElement = (lastEntry as any).element?.tagName || 'unknown'
-        const lcpSize = (lastEntry as any).size || 0
+        const lcpElement = lastEntry.element?.tagName || 'unknown'
+        const lcpSize = lastEntry.size || 0
 
         console.log('LCP:', {
           value: Math.round(lcp),
@@ -61,7 +80,7 @@ function reportLCP(): void {
     })
 
     observer.observe({ type: entryTypes, buffered: true })
-  } catch (error) {
+  } catch (_error) {
     console.warn('LCP reporting not supported in this browser')
   }
 }
@@ -72,16 +91,16 @@ function reportLCP(): void {
 function reportCLS(): void {
   try {
     let clsValue = 0
-    let clsEntries: PerformanceEntry[] = []
+    const clsEntries: LayoutShiftEntry[] = []
 
     const observer = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries()
 
       entries.forEach((entry) => {
-        if (!(entry as any).hadRecentInput) {
-          const value = (entry as any).value
+        if (!(entry as LayoutShiftEntry).hadRecentInput) {
+          const value = (entry as LayoutShiftEntry).value
           clsValue += value
-          clsEntries.push(entry)
+          clsEntries.push(entry as LayoutShiftEntry)
         }
       })
 
@@ -93,7 +112,7 @@ function reportCLS(): void {
     })
 
     observer.observe({ type: 'layout-shift', buffered: true })
-  } catch (error) {
+  } catch {
     console.warn('CLS reporting not supported in this browser')
   }
 }
@@ -105,7 +124,7 @@ function reportFID(): void {
   try {
     const observer = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries()
-      const firstEntry = entries[0]
+      const firstEntry = entries[0] as FirstInputEntry
 
       if (firstEntry) {
         const fid = firstEntry.processingStart - firstEntry.startTime
@@ -119,7 +138,7 @@ function reportFID(): void {
     })
 
     observer.observe({ type: 'first-input', buffered: true })
-  } catch (error) {
+  } catch {
     console.warn('FID reporting not supported in this browser')
   }
 }
@@ -144,7 +163,7 @@ function reportFCP(): void {
     })
 
     observer.observe({ type: 'paint', buffered: true })
-  } catch (error) {
+  } catch {
     console.warn('FCP reporting not supported in this browser')
   }
 }
@@ -166,7 +185,7 @@ function reportTTFB(): void {
         rating: ttfbRating(ttfb),
       })
     }
-  } catch (error) {
+  } catch {
     console.warn('TTFB reporting not supported in this browser')
   }
 }
@@ -217,8 +236,8 @@ export function optimizeLCP(resources: string[] = []): void {
         .catch((error) => {
           console.warn(`Failed to check resource: ${resource}`, error)
         })
-    } catch (error) {
-      console.warn(`Error preloading resource: ${resource}`, error)
+    } catch {
+      console.warn(`Error preloading resource: ${resource}`)
     }
   })
 
@@ -228,7 +247,7 @@ export function optimizeLCP(resources: string[] = []): void {
     if (img instanceof HTMLImageElement) {
       // Add loading and fetchpriority attributes for better LCP
       img.loading = 'eager'
-      ;(img as any).fetchpriority = 'high'
+      img.fetchPriority = 'high'
     }
   })
 }
@@ -243,7 +262,7 @@ export function optimizeFID(): void {
   const scripts = document.querySelectorAll('script:not([data-critical])')
   scripts.forEach((script) => {
     if (!script.hasAttribute('defer') && !script.hasAttribute('async')) {
-      script.defer = true
+      ;(script as HTMLScriptElement).defer = true
     }
   })
 }
@@ -257,13 +276,13 @@ export function optimizeCLS(): void {
   // Find images without dimensions and add styling to prevent layout shifts
   const images = document.querySelectorAll('img:not([width]):not([height])')
   images.forEach((img) => {
-    img.style.aspectRatio = '16/9'
+    ;(img as HTMLImageElement).style.aspectRatio = '16/9'
   })
 
   // Find iframes without dimensions
   const iframes = document.querySelectorAll('iframe:not([width]):not([height])')
   iframes.forEach((iframe) => {
-    iframe.style.aspectRatio = '16/9'
+    ;(iframe as HTMLIFrameElement).style.aspectRatio = '16/9'
   })
 }
 
@@ -274,7 +293,7 @@ export function optimizeCLS(): void {
  */
 export function setupContainment(
   selector: string,
-  containmentValue: string = 'content'
+  containmentValue = 'content'
 ): void {
   if (typeof document === 'undefined') return
 

@@ -2,14 +2,14 @@ import type { APIRoute } from 'astro'
 import { createClient } from '@supabase/supabase-js'
 
 /**
- * Health check API endpoin
+ * Health check API endpoint
  *
  * This endpoint will check:
  * 1. API server availability
  * 2. Supabase connection
  * 3. System resources
  */
-export const GET: APIRoute = async ({}) => {
+export const GET: APIRoute = async () => {
   try {
     // Check database connection
     const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL

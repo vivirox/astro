@@ -18,7 +18,7 @@ export const POST: APIRoute = async ({ cookies, redirect }) => {
         userId = data?.user?.id
       } catch (error) {
         console.error('Error getting user session:', error)
-        // Continue with signout even if we can't get the user ID
+        // Continue with signout event if we can't get the user ID
       }
     }
 

@@ -4,17 +4,17 @@
 // Use a different variable name to avoid the conflict with the Astro.cookies object
 
 // Import from the correct file
-import BaseLayout from '@layouts/BaseLayout.astro';
-import { getCurrentUser } from '../../lib/auth';
-import { SecurityDashboard as SecurityDashboardComponent } from '../../components/security/SecurityDashboard';
+import BaseLayout from '@layouts/BaseLayout.astro'
+import { getCurrentUser } from '../../lib/auth'
+import { SecurityDashboard as SecurityDashboardComponent } from '../../components/security/SecurityDashboard'
 
 // Check for admin access using the correct function name
-const user = await getCurrentUser(Astro.cookies);
-const isAdmin = user?.role === 'admin';
+const user = await getCurrentUser(Astro.cookies)
+const isAdmin = user?.role === 'admin'
 
 // Redirect non-admin users
 if (!isAdmin) {
-  return Astro.redirect('/login?redirectTo=/admin/security-dashboard');
+  return Astro.redirect('/login?redirectTo=/admin/security-dashboard')
 }
 ---
 
@@ -24,8 +24,9 @@ if (!isAdmin) {
 
     <div class="mb-8">
       <p class="text-gray-600 dark:text-gray-300 mb-4">
-        This dashboard provides real-time monitoring of security events and alerts across the application.
-        Use the filters to narrow down events by type, severity, and time range.
+        This dashboard provides real-time monitoring of security events and
+        alerts across the application. Use the filters to narrow down events by
+        type, severity, and time range.
       </p>
 
       <div class="flex flex-wrap gap-4">
@@ -52,6 +53,6 @@ if (!isAdmin) {
 <script>
   // Add refresh functionality
   document.getElementById('refresh-btn')?.addEventListener('click', () => {
-    window.location.reload();
-  });
+    window.location.reload()
+  })
 </script>

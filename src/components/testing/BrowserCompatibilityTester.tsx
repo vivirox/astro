@@ -34,7 +34,7 @@ export function BrowserCompatibilityTester() {
       hasTouch: 'ontouchstart' in window,
     })
 
-    // Test feature suppor
+    // Test feature support
     const featureTests: FeatureSupport[] = [
       {
         feature: 'CSS Grid',
@@ -127,7 +127,7 @@ export function BrowserCompatibilityTester() {
       localStorage.setItem('test', 'test')
       localStorage.removeItem('test')
       return true
-    } catch (e) {
+    } catch {
       return false
     }
   }
@@ -136,7 +136,7 @@ export function BrowserCompatibilityTester() {
     try {
       eval('(async () => {})()')
       return true
-    } catch (e) {
+    } catch {
       return false
     }
   }

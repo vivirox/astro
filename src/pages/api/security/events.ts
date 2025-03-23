@@ -14,6 +14,16 @@ interface RequestContext {
   cookies: AstroCookies
 }
 
+interface SecurityEventRow {
+  type: SecurityEventType
+  user_id: string
+  ip_address: string
+  user_agent: string
+  metadata: Record<string, unknown>
+  severity: SecurityEventSeverity
+  created_at: string
+}
+
 export async function GET({ request, cookies }: RequestContext) {
   try {
     // Get current user session
@@ -97,13 +107,13 @@ export async function GET({ request, cookies }: RequestContext) {
     }
 
     // Transform results to match the SecurityEvent interface
-    const events = (result || []).map((row: any) => ({
-      type: row.type as SecurityEventType,
+    const events = (result || []).map((row: SecurityEventRow) => ({
+      type: row.type,
       userId: row.user_id,
       ip: row.ip_address,
       userAgent: row.user_agent,
       metadata: row.metadata,
-      severity: row.severity as SecurityEventSeverity,
+      severity: row.severity,
       timestamp: row.created_at,
     }))
 
@@ -120,10 +130,9 @@ export async function GET({ request, cookies }: RequestContext) {
     })
   } catch (error) {
     // Log error
-    logger.error(
-      'Error fetching security events',
-      error instanceof Error ? error : new Error(String(error))
-    )
+    logger.error('Error fetching security events', {
+      message: error instanceof Error ? error : new Error(String(error)),
+    })
 
     // Return error response
     return new Response(

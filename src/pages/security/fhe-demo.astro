@@ -1,0 +1,101 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro'
+import FHEDemo from '../../components/security/FHEDemo'
+---
+
+<MainLayout title="FHE Demo | Gradiant">
+  <div class="container mx-auto px-4 py-8">
+    <h1
+      class="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white"
+    >
+      Fully Homomorphic Encryption Demo
+    </h1>
+
+    <div class="max-w-4xl mx-auto mb-8">
+      <p class="text-gray-700 dark:text-gray-300 mb-4">
+        This demo showcases Gradiant's implementation of Fully Homomorphic
+        Encryption (FHE), which allows computation on encrypted data without
+        decryption. This technology is crucial for maintaining privacy in
+        sensitive therapy conversations.
+      </p>
+
+      <p class="text-gray-700 dark:text-gray-300 mb-4">
+        FHE enables our AI models to analyze therapy content, detect risk
+        patterns, and generate insights while keeping the original content
+        encrypted and secure.
+      </p>
+
+      <div
+        class="bg-yellow-50 dark:bg-yellow-900 p-4 rounded-md text-yellow-800 dark:text-yellow-200 mb-8"
+      >
+        <strong>Note:</strong> This is a simplified demonstration of the FHE capabilities.
+        The actual implementation includes more advanced features such as:
+        <ul class="list-disc pl-8 mt-2">
+          <li>Homomorphic sentiment analysis</li>
+          <li>Encrypted content categorization</li>
+          <li>Risk pattern detection in encrypted text</li>
+          <li>Secure key management with automatic rotation</li>
+          <li>Multi-level security modes (Standard, HIPAA, FHE)</li>
+        </ul>
+      </div>
+    </div>
+
+    <FHEDemo client:load />
+
+    <div class="max-w-4xl mx-auto mt-12">
+      <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
+        How Fully Homomorphic Encryption Works
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <h3 class="font-bold text-lg mb-2 text-blue-600 dark:text-blue-400">
+            1. Encryption
+          </h3>
+          <p class="text-gray-700 dark:text-gray-300">
+            Client data is encrypted before transmission using FHE algorithms,
+            creating a mathematical representation that preserves the structure
+            of the data while making it unreadable.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <h3 class="font-bold text-lg mb-2 text-blue-600 dark:text-blue-400">
+            2. Computation
+          </h3>
+          <p class="text-gray-700 dark:text-gray-300">
+            Specialized algorithms work directly on the encrypted data,
+            performing calculations and analysis without ever decrypting the
+            information.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <h3 class="font-bold text-lg mb-2 text-blue-600 dark:text-blue-400">
+            3. Results
+          </h3>
+          <p class="text-gray-700 dark:text-gray-300">
+            The encrypted results are returned to the client, where they can be
+            decrypted using private keys that never left the client's device.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="bg-blue-50 dark:bg-blue-900 p-6 rounded-lg shadow-md text-blue-800 dark:text-blue-200"
+      >
+        <h3 class="font-bold text-xl mb-3">Security and Compliance</h3>
+        <p class="mb-4">
+          Our FHE implementation exceeds HIPAA requirements for protecting
+          patient data and provides an additional layer of security beyond
+          standard encryption methods.
+        </p>
+        <p>
+          By processing data while it remains encrypted, we eliminate the
+          vulnerability window that exists when data must be decrypted for
+          analysis in traditional systems.
+        </p>
+      </div>
+    </div>
+  </div>
+</MainLayout>

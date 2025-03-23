@@ -1,10 +1,7 @@
-
 ---
 import Link from '~/components/base/Link.astro'
-
 import { getUrl } from '~/utils/common'
 import { formatDate } from '~/utils/datetime'
-
 interface Props {
   idx: number
   collectionType: string
@@ -40,7 +37,7 @@ const {
     external={redirect ? true : false}
     enableNewTabWarning={redirect ? true : false}
   >
-    <Fragment slot="title">{title}</Fragment>
+    <div slot="title">{title}</div>
     <span slot="end" u-flex="~ gap-2 items-center">
       {
         video && (
@@ -70,7 +67,7 @@ const {
       </time>
       {
         typeof minutesRead === 'number' && minutesRead > 0 && (
-          <span class="op-40 text-sm ws-nowrap">· {minutesRead} min</span>
+          <span class="op-40 text-sm ws-nowrap">· {minutesRead} min read</span>
         )
       }
       {platform && <span class="op-40 text-sm ws-nowrap">· {platform}</span>}

@@ -1,5 +1,5 @@
 ---
-title: "Session Management"
+title: 'Session Management'
 description: "Understanding Gradiant's session management system"
 ---
 
@@ -26,12 +26,10 @@ Gradiant's session management system handles real-time communication, state mana
 ## Session Lifecycle
 
 <Frame>
-```
-mermaid stateDiagram-v2 [*] --> Created Created --> Active: Start Session
-Active --> Paused: Pause Paused --> Active: Resume Active --> Completed: End
-Session Active --> Cancelled: Cancel Paused --> Cancelled: Cancel Completed
---> [*] Cancelled --> [*]
-```
+  ``` mermaid stateDiagram-v2 [*] --> Created Created --> Active: Start Session
+  Active --> Paused: Pause Paused --> Active: Resume Active --> Completed: End
+  Session Active --> Cancelled: Cancel Paused --> Cancelled: Cancel Completed
+  --> [*] Cancelled --> [*] ```
 </Frame>
 
 ## WebSocket Communication
@@ -39,34 +37,34 @@ Session Active --> Cancelled: Cancel Paused --> Cancelled: Cancel Completed
 ### Connection Setup
 
 ```typescript
-const socket = new WebSocket("wss://api.gemcity.xyz/ws", {
+const socket = new WebSocket('wss://api.gemcity.xyz/ws', {
   headers: {
     Authorization: `Bearer ${token}`,
   },
-});
+})
 
 socket.onopen = () => {
-  console.log("Connected to session");
-};
+  console.log('Connected to session')
+}
 
 socket.onmessage = (event) => {
-  const message = JSON.parse(event.data);
-  handleMessage(message);
-};
+  const message = JSON.parse(event.data)
+  handleMessage(message)
+}
 ```
 
 ### Message Types
 
 ```typescript
 interface Message {
-  type: "text" | "system" | "ai" | "action";
-  content: string;
+  type: 'text' | 'system' | 'ai' | 'action'
+  content: string
   metadata?: {
-    sentiment?: number;
-    topics?: string[];
-    suggestions?: string[];
-  };
-  timestamp: string;
+    sentiment?: number
+    topics?: string[]
+    suggestions?: string[]
+  }
+  timestamp: string
 }
 ```
 
@@ -76,36 +74,36 @@ interface Message {
 // Send heartbeat every 30 seconds
 setInterval(() => {
   if (socket.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify({ type: "ping" }));
+    socket.send(JSON.stringify({ type: 'ping' }))
   }
-}, 30000);
+}, 30000)
 
 // Handle heartbeat response
 socket.onmessage = (event) => {
-  const message = JSON.parse(event.data);
-  if (message.type === "pong") {
-    updateLastHeartbeat();
+  const message = JSON.parse(event.data)
+  if (message.type === 'pong') {
+    updateLastHeartbeat()
   }
-};
+}
 ```
 
 ## Session Data Model
 
 ```typescript
 interface Session {
-  id: string;
-  clientId: string;
-  mode: "chat" | "voice" | "video";
-  status: "active" | "completed" | "cancelled";
-  startTime: string;
-  endTime?: string;
+  id: string
+  clientId: string
+  mode: 'chat' | 'voice' | 'video'
+  status: 'active' | 'completed' | 'cancelled'
+  startTime: string
+  endTime?: string
   metrics?: {
-    duration: number;
-    messageCount: number;
-    responseTime: number;
-  };
-  created_at: string;
-  updated_at: string;
+    duration: number
+    messageCount: number
+    responseTime: number
+  }
+  created_at: string
+  updated_at: string
 }
 ```
 
@@ -115,40 +113,40 @@ interface Session {
 
 ```typescript
 interface SessionContext {
-  messages: Message[];
-  participants: Participant[];
-  status: SessionStatus;
-  metrics: SessionMetrics;
+  messages: Message[]
+  participants: Participant[]
+  status: SessionStatus
+  metrics: SessionMetrics
 }
 
 const SessionContext = createContext<{
-  session: SessionContext;
-  sendMessage: (content: string) => void;
-  updateStatus: (status: SessionStatus) => void;
-}>();
+  session: SessionContext
+  sendMessage: (content: string) => void
+  updateStatus: (status: SessionStatus) => void
+}>()
 ```
 
 ### Message Queue
 
 ```typescript
 class MessageQueue {
-  private queue: Message[] = [];
-  private processing = false;
+  private queue: Message[] = []
+  private processing = false
 
   async add(message: Message) {
-    this.queue.push(message);
+    this.queue.push(message)
     if (!this.processing) {
-      this.process();
+      this.process()
     }
   }
 
   private async process() {
-    this.processing = true;
+    this.processing = true
     while (this.queue.length > 0) {
-      const message = this.queue.shift();
-      await this.sendMessage(message);
+      const message = this.queue.shift()
+      await this.sendMessage(message)
     }
-    this.processing = false;
+    this.processing = false
   }
 }
 ```
@@ -171,9 +169,9 @@ class MessageQueue {
 
 ```typescript
 interface SentimentAnalysis {
-  score: number; // -1 to 1
-  labels: string[];
-  confidence: number;
+  score: number // -1 to 1
+  labels: string[]
+  confidence: number
 }
 ```
 
@@ -181,9 +179,9 @@ interface SentimentAnalysis {
 
 ```typescript
 interface TopicAnalysis {
-  topics: string[];
-  relevance: number[];
-  context: string;
+  topics: string[]
+  relevance: number[]
+  context: string
 }
 ```
 
@@ -191,9 +189,9 @@ interface TopicAnalysis {
 
 ```typescript
 interface CrisisDetection {
-  risk_level: "none" | "low" | "medium" | "high";
-  triggers: string[];
-  recommended_action: string;
+  risk_level: 'none' | 'low' | 'medium' | 'high'
+  triggers: string[]
+  recommended_action: string
 }
 ```
 
@@ -203,22 +201,22 @@ interface CrisisDetection {
 
 ```typescript
 class ConnectionManager {
-  private retryCount = 0;
-  private maxRetries = 5;
-  private backoffMs = 1000;
+  private retryCount = 0
+  private maxRetries = 5
+  private backoffMs = 1000
 
   async reconnect() {
     while (this.retryCount < this.maxRetries) {
       try {
-        await this.connect();
-        this.retryCount = 0;
-        return;
+        await this.connect()
+        this.retryCount = 0
+        return
       } catch (error) {
-        this.retryCount++;
-        await this.wait(this.backoffMs * Math.pow(2, this.retryCount));
+        this.retryCount++
+        await this.wait(this.backoffMs * Math.pow(2, this.retryCount))
       }
     }
-    throw new Error("Connection failed");
+    throw new Error('Connection failed')
   }
 }
 ```
@@ -228,14 +226,14 @@ class ConnectionManager {
 ```typescript
 async function recoverMessages(sessionId: string, lastMessageId: string) {
   const { data, error } = await supabase
-    .from("messages")
-    .select("*")
-    .eq("session_id", sessionId)
-    .gt("id", lastMessageId)
-    .order("created_at", { ascending: true });
+    .from('messages')
+    .select('*')
+    .eq('session_id', sessionId)
+    .gt('id', lastMessageId)
+    .order('created_at', { ascending: true })
 
-  if (error) throw error;
-  return data;
+  if (error) throw error
+  return data
 }
 ```
 
@@ -245,26 +243,26 @@ async function recoverMessages(sessionId: string, lastMessageId: string) {
 
 ```typescript
 class MessageBatcher {
-  private batch: Message[] = [];
-  private batchSize = 10;
-  private flushInterval = 1000;
+  private batch: Message[] = []
+  private batchSize = 10
+  private flushInterval = 1000
 
   constructor() {
-    setInterval(() => this.flush(), this.flushInterval);
+    setInterval(() => this.flush(), this.flushInterval)
   }
 
   add(message: Message) {
-    this.batch.push(message);
+    this.batch.push(message)
     if (this.batch.length >= this.batchSize) {
-      this.flush();
+      this.flush()
     }
   }
 
   private async flush() {
-    if (this.batch.length === 0) return;
-    const messages = [...this.batch];
-    this.batch = [];
-    await this.persistMessages(messages);
+    if (this.batch.length === 0) return
+    const messages = [...this.batch]
+    this.batch = []
+    await this.persistMessages(messages)
   }
 }
 ```
@@ -278,7 +276,7 @@ const pool = {
   idle: 10000,
   acquire: 30000,
   evict: 1000,
-};
+}
 ```
 
 ## Monitoring
@@ -287,18 +285,18 @@ const pool = {
 
 ```typescript
 interface SessionMetrics {
-  messageCount: number;
-  averageResponseTime: number;
+  messageCount: number
+  averageResponseTime: number
   aiUsage: {
-    requests: number;
-    processingTime: number;
-    errorRate: number;
-  };
+    requests: number
+    processingTime: number
+    errorRate: number
+  }
   networkMetrics: {
-    latency: number;
-    bandwidth: number;
-    packetLoss: number;
-  };
+    latency: number
+    bandwidth: number
+    packetLoss: number
+  }
 }
 ```
 
@@ -307,18 +305,18 @@ interface SessionMetrics {
 ```typescript
 const monitor = {
   collectMetrics: async (session: Session) => {
-    const metrics = await calculateMetrics(session);
-    await persistMetrics(metrics);
-    checkThresholds(metrics);
+    const metrics = await calculateMetrics(session)
+    await persistMetrics(metrics)
+    checkThresholds(metrics)
   },
 
   checkHealth: async () => {
-    const status = await getSystemStatus();
+    const status = await getSystemStatus()
     if (status.hasIssues) {
-      alertOperations(status);
+      alertOperations(status)
     }
   },
-};
+}
 ```
 
 ## Next Steps

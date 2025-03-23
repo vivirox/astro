@@ -1,5 +1,7 @@
+// Import necessary libraries and types
 import { createClient } from '@supabase/supabase-js'
 import type { Session, User } from '@supabase/supabase-js'
+
 import { createAuditLog } from '../audit/log.js'
 
 export interface SessionData {
@@ -16,6 +18,7 @@ export async function getSession(
   request: Request
 ): Promise<SessionData | null> {
   try {
+    console.log('Processing request:', request.url)
     // Create a Supabase client
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
@@ -26,6 +29,7 @@ export async function getSession(
     const { data, error } = await supabase.auth.getSession()
 
     if (error || !data?.session) {
+      console.log('Error getting session:', error)
       return null
     }
 
@@ -95,7 +99,7 @@ export async function endSession(
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY
     )
 
-    // Sign out
+    // Sign out the user
     await supabase.auth.signOut()
 
     // Log the session end

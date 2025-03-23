@@ -21,7 +21,7 @@ export interface BaseAnalysisResult {
 }
 
 /**
- * Sentiment analysis resul
+ * Sentiment analysis result
  */
 export interface SentimentAnalysisResult extends BaseAnalysisResult {
   text: string
@@ -32,7 +32,7 @@ export interface SentimentAnalysisResult extends BaseAnalysisResult {
 }
 
 /**
- * Crisis detection resul
+ * Crisis detection result
  */
 export interface CrisisDetectionResult extends BaseAnalysisResult {
   text: string
@@ -45,7 +45,7 @@ export interface CrisisDetectionResult extends BaseAnalysisResult {
 }
 
 /**
- * Therapeutic response generation resul
+ * Therapeutic response generation result
  */
 export interface ResponseGenerationResult extends BaseAnalysisResult {
   prompt: string
@@ -58,7 +58,7 @@ export interface ResponseGenerationResult extends BaseAnalysisResult {
 }
 
 /**
- * Intervention analysis resul
+ * Intervention analysis result
  */
 export interface InterventionAnalysisResult extends BaseAnalysisResult {
   conversation: string

@@ -1,4 +1,3 @@
-
 ---
 import { getCollection } from 'astro:content'
 
@@ -28,6 +27,12 @@ export type ExtendedReleaseData = ReleaseData & {
   subLogo: Url | Icon | undefined
   versionType: 'major' | 'minor' | 'patch' | 'pre'
   versionParts: [string, string]
+  publishedAt: string
+  repoOwner: string
+  repoName: string
+  repoNameWithOwner: string
+  tagName: string
+  versionNum: string
 }
 
 export type ExtendedPrData = PrData & {
@@ -56,28 +61,49 @@ if (collectionType === 'releases') {
   // Process each release
   extendedReleases = allReleases
     .map((release: ReleaseData) => {
+      // Extract repo details from the link or generate defaults
+      const repoInfo =
+        release.link?.match(/github\.com\/([^/]+)\/([^/]+)/) || []
+      const repoOwner = repoInfo[1] || 'unknown'
+      const repoName = repoInfo[2] || release.name || ''
+      const repoNameWithOwner = `${repoOwner}/${repoName}`
+
+      // Extract version from name or use a default
+      const versionMatch = (release.name || '').match(
+        /v?(\d+\.\d+\.\d+(?:-[\w.]+)?)/
+      ) || ['', '0.0.0']
+      const versionNum = versionMatch[1]
+      const tagName = `${release.name || ''}@${versionNum}`
+
       const isInMonorepo = monorepos.includes(
-        release.repoNameWithOwner as RepoWithOwner
+        repoNameWithOwner as RepoWithOwner
       )
-      const pkgName = isInMonorepo
-        ? extractPackageName(release.tagName)
-        : release.repoName
+      const pkgName = isInMonorepo ? extractPackageName(tagName) : repoName
 
       const mainLogo =
         matchLogo(pkgName, mainLogoOverrides) ||
-        `https://github.com/${release.repoOwner}.png`
+        `https://github.com/${repoOwner}.png`
       const subLogo = matchLogo(pkgName, subLogoMatches)
 
-      const [versionType, ...versionParts] = processVersion(release.versionNum)
+      const [versionType, ...versionParts] = processVersion(versionNum)
+
+      // Use current date as fallback for publishedAt
+      const publishedAt = new Date().toISOString()
 
       return {
         ...release,
+        repoOwner,
+        repoName,
+        repoNameWithOwner,
+        versionNum,
+        tagName,
         isInMonorepo,
         pkgName,
         mainLogo,
         subLogo,
         versionType,
         versionParts,
+        publishedAt,
       }
     })
     // filters releases to ensure each pkg has no more than a specified maximum number
@@ -178,7 +204,7 @@ if (collectionType === 'prs') {
         class="inline-block text-[var(--fg-deeper)]"
         datetime={new Date().toISOString()}
         title={new Date().toISOString()}
-        >{formatDate(new Date())}
+        >{formatDate(new Date(), false)}
       </time>
     </span>
     <span class="lt-sm:hidden">&nbsp;|&nbsp;</span>

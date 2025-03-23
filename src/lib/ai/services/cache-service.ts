@@ -3,13 +3,21 @@ import type {
   AICompletionResponse,
 } from '../models/ai-types'
 
+/**
+ * Extended request type that includes streaming option
+ */
+export interface ExtendedAICompletionRequest extends AICompletionRequest {
+  stream?: boolean
+}
+
 // Use a safe crypto implementation for both server and client
-const getCrypto = () => {
+const getCrypto = async () => {
   if (typeof window === 'undefined') {
     // Server environment
     try {
-      // Dynamic require instead of import
-      return require('crypto')
+      // Dynamic import
+      const cryptoModule = await import('crypto')
+      return cryptoModule.default
     } catch (e) {
       console.error('Crypto not available:', e)
     }
@@ -17,9 +25,9 @@ const getCrypto = () => {
 
   // Fallback for browser or when crypto is not available
   return {
-    createHash: () => ({
+    createHash: (_algorithm: string) => ({
       update: (data: string) => ({
-        digest: () => {
+        digest: (_format: string) => {
           // Simple hash function for browser
           let hash = 0
           for (let i = 0; i < data.length; i++) {
@@ -73,7 +81,7 @@ interface CacheEntry {
  * and improve response times for frequently used prompts.
  */
 export class AICacheService {
-  private cache: Map<string, CacheEntry> = new Map()
+  private cache = new Map<string, CacheEntry>()
   private maxSize: number
   private ttl: number
   private enabled: boolean
@@ -91,9 +99,11 @@ export class AICacheService {
   /**
    * Generate a cache key from a request
    */
-  private generateKey(request: AICompletionRequest): string {
-    // Don't cache streaming requests - need to check this differently since stream isn't in AICompletionRequest
-    if ((request as any).stream) {
+  private async generateKey(
+    request: ExtendedAICompletionRequest
+  ): Promise<string> {
+    // Don't cache streaming requests
+    if (request.stream) {
       return ''
     }
 
@@ -105,17 +115,19 @@ export class AICacheService {
       maxTokens: request.maxTokens,
     })
 
-    const crypto = getCrypto()
+    const crypto = await getCrypto()
     return crypto.createHash('md5').update(requestData).digest('hex')
   }
 
   /**
    * Get a cached response if available
    */
-  get(request: AICompletionRequest): AICompletionResponse | null {
+  async get(
+    request: ExtendedAICompletionRequest
+  ): Promise<AICompletionResponse | null> {
     if (!this.enabled) return null
 
-    const key = this.generateKey(request)
+    const key = await this.generateKey(request)
     if (!key) return null
 
     const entry = this.cache.get(key)
@@ -137,10 +149,13 @@ export class AICacheService {
   /**
    * Store a response in the cache
    */
-  set(request: AICompletionRequest, response: AICompletionResponse): void {
+  async set(
+    request: ExtendedAICompletionRequest,
+    response: AICompletionResponse
+  ): Promise<void> {
     if (!this.enabled) return
 
-    const key = this.generateKey(request)
+    const key = await this.generateKey(request)
     if (!key) return
 
     // Add to cache

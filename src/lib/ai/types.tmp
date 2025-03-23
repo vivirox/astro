@@ -1,81 +1,82 @@
-import { ReadableStream } from "node:stream/web";
+import { ReadableStream } from 'node:stream/web'
 
 /**
  * AI Message Type
  */
 export interface AIMessage {
-  role: string;
-  content: string;
-  name?: string;
+  role: string
+  content: string
+  name?: string
 }
 
 /**
  * AI Service Options
  */
 export interface AIServiceOptions {
-  model?: string;
-  temperature?: number;
-  maxTokens?: number;
-  skipCache?: boolean;
-  togetherApiKey?: string;
+  model?: string
+  temperature?: number
+  maxTokens?: number
+  skipCache?: boolean
+  togetherApiKey?: string
 }
 
 /**
  * AI Completion Response
  */
 export interface AICompletionResponse {
-  id: string;
-  model: string;
-  created: number;
-  content: string;
+  id: string
+  model: string
+  created: number
+  provider: AIProvider
+  content: string
   choices: Array<{
     message: {
-      role: string;
-      content: string;
-      name?: string;
-    };
-    finishReason?: string;
-  }>;
+      role: string
+      content: string
+      name?: string
+    }
+    finishReason?: string
+  }>
   usage?: {
-    promptTokens: number;
-    completionTokens: number;
-    totalTokens: number;
-  };
+    promptTokens: number
+    completionTokens: number
+    totalTokens: number
+  }
 }
 
 /**
  * AI Stream Chunk
  */
 export interface AIStreamChunk {
-  id: string;
-  created: number;
-  model: string;
-  content: string;
+  id: string
+  created: number
+  model: string
+  content: string
   choices: Array<{
     delta: {
-      content: string;
-    };
-    finishReason?: string | null;
-  }>;
+      content: string
+    }
+    finishReason?: string | null
+  }>
 }
 
 /**
  * AI Usage Record
  */
 export interface AIUsageRecord {
-  timestamp: number;
-  model: string;
-  promptTokens: number;
-  completionTokens: number;
-  totalTokens: number;
-  id: string;
-  provider: AIProvider;
+  timestamp: number
+  model: string
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+  id: string
+  provider: AIProvider
 }
 
 /**
  * AI Provider Type
  */
-export type AIProvider = "openai" | "together" | "local";
+export type AIProvider = 'openai' | 'together' | 'local'
 
 /**
  * AI Service Interface
@@ -84,45 +85,46 @@ export interface AIService {
   createChatCompletion(
     messages: AIMessage[],
     options?: AIServiceOptions
-  ): Promise<AICompletionResponse>;
-  
+  ): Promise<AICompletionResponse>
+
   createStreamingChatCompletion(
     messages: AIMessage[],
     options?: AIServiceOptions
-  ): Promise<ReadableStream<AIStreamChunk>>;
-  
-  getModelInfo(model: string): any;
-  
+  ): Promise<ReadableStream<AIStreamChunk>>
+
+  getModelInfo(model: string): any
+
   createChatCompletionWithTracking(
     messages: AIMessage[],
     options?: AIServiceOptions
-  ): Promise<AICompletionResponse>;
+  ): Promise<AICompletionResponse>
 
   // Add generateCompletion method
   generateCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<AICompletionResponse>;
+    options?: AIServiceOptions,
+    provider?: AIProvider
+  ): Promise<AICompletionResponse>
 
-  dispose(): void;
+  dispose(): void
 }
 
 /**
  * AI Completion Request
  */
 export interface AICompletionRequest {
-  messages: AIMessage[];
-  model: string;
-  temperature?: number;
-  maxTokens?: number;
+  messages: AIMessage[]
+  model: string
+  temperature?: number
+  maxTokens?: number
 }
 
 /**
  * AI Error
  */
 export interface AIError {
-  message: string;
-  type: string;
-  param: string | null;
-  code: number;
-} 
+  message: string
+  type: string
+  param: string | null
+  code: number
+}

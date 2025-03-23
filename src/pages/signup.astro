@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/AuthLayout.astro'
+import { RegisterForm } from '../components/auth/RegisterForm'
+import { isAuthenticated } from '../lib/auth'
+
+// Check if user is already authenticated
+const redirect = Astro.url.searchParams.get('redirect') || '/dashboard'
+const alreadyAuthenticated = await isAuthenticated(Astro.cookies)
+
+// Redirect authenticated users
+if (alreadyAuthenticated) {
+  return Astro.redirect(redirect)
+}
+---
+
+<Layout title="Sign Up - Gradiant">
+  <main class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto">
+      <RegisterForm client:load redirectTo={redirect} />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Scoped styles for the signup page */
+  main {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* The rest of the styles for auth components are defined in login.astro */
+</style>

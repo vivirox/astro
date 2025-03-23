@@ -60,7 +60,7 @@ export class LogRotationService {
   /**
    * Get current log filename based on frequency
    */
-  getLogFilename(prefix: string = 'app'): string {
+  getLogFilename(prefix = 'app'): string {
     const date = new Date()
     let dateStr: string
 
@@ -68,11 +68,12 @@ export class LogRotationService {
       case 'hourly':
         dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}-${String(date.getHours()).padStart(2, '0')}`
         break
-      case 'weekly':
+      case 'weekly': {
         const startOfWeek = new Date(date)
         startOfWeek.setDate(date.getDate() - date.getDay())
         dateStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`
         break
+      }
       case 'daily':
       default:
         dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -84,7 +85,7 @@ export class LogRotationService {
   /**
    * Write a log entry to the appropriate file
    */
-  async writeLog(entry: string, prefix: string = 'app'): Promise<void> {
+  async writeLog(entry: string, prefix = 'app'): Promise<void> {
     await this.ensureLogDir()
     const filename = this.getLogFilename(prefix)
 
@@ -109,7 +110,7 @@ export class LogRotationService {
       if (stats.size >= (this.config.maxSize ?? defaultConfig.maxSize!)) {
         await this.rotateLog(filename)
       }
-    } catch (error) {
+    } catch {
       // File might not exist yet, ignore
     }
   }
@@ -196,7 +197,7 @@ export class LogRotationService {
    */
   async aggregateLogs(
     output: string,
-    pattern: string = '*',
+    pattern = '*',
     startDate?: Date,
     endDate?: Date
   ): Promise<void> {
@@ -208,7 +209,7 @@ export class LogRotationService {
       const files = await fs.readdir(logDir)
 
       // Filter by pattern
-      let filteredFiles = files.filter((file) => {
+      const filteredFiles = files.filter((file) => {
         if (!file.endsWith('.log') && !file.endsWith('.log.gz')) {
           return false
         }
@@ -235,7 +236,7 @@ export class LogRotationService {
       // Create output file
       await fs.writeFile(output, '')
 
-      // Aggregate log conten
+      // Aggregate log content
       for (const file of filteredFiles) {
         const filePath = path.join(logDir, file)
 

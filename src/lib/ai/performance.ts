@@ -1,5 +1,6 @@
 import type { AIService, AIMessage, AIServiceOptions } from './models/ai-types'
-import { createAuditLog } from '../audit'
+import type { AIProvider } from './models/ai-types'
+import { createAuditLog, AuditEventType } from '../audit'
 import { checkRateLimit } from '../../lib/rate-limit'
 
 /**
@@ -185,6 +186,14 @@ class AIResponseCache<T> {
 }
 
 /**
+ * Extended AIError interface that includes code property
+ */
+interface ExtendedAIError extends Error {
+  code?: string
+  name: string
+}
+
+/**
  * Creates a performance-optimized AI service wrapper
  */
 export function createOptimizedAIService(
@@ -205,7 +214,11 @@ export function createOptimizedAIService(
     createAuditLogs: performanceOptions.createAuditLogs ?? true,
     slowRequestThreshold: performanceOptions.slowRequestThreshold ?? 3000, // 3 seconds
     highTokenUsageThreshold: performanceOptions.highTokenUsageThreshold ?? 1000,
-    onMetricsCollected: performanceOptions.onMetricsCollected ?? (() => {}),
+    onMetricsCollected:
+      performanceOptions.onMetricsCollected ??
+      ((_metricsData) => {
+        /* No default action */
+      }),
   }
 
   /**
@@ -226,11 +239,12 @@ export function createOptimizedAIService(
 
     // Create audit log if enabled
     if (options.createAuditLogs) {
-      await createAuditLog({
-        action: 'ai.response',
-        resource: 'ai',
-        userId: metrics.userId || 'system',
-        metadata: {
+      await createAuditLog(
+        AuditEventType.AI_OPERATION,
+        'ai.response',
+        metrics.userId || 'system',
+        'ai',
+        {
           requestId: metrics.requestId,
           model: metrics.model,
           latency: metrics.latency,
@@ -240,8 +254,8 @@ export function createOptimizedAIService(
           errorCode: metrics.errorCode,
           cached: metrics.cached,
           optimized: metrics.optimized,
-        },
-      })
+        }
+      )
     }
 
     // Check for slow requests
@@ -352,7 +366,7 @@ export function createOptimizedAIService(
         errorCode =
           error instanceof Error
             ? error?.name === 'AIError'
-              ? (error as any).code
+              ? (error as ExtendedAIError).code
               : error?.name
             : 'unknown'
 
@@ -406,7 +420,7 @@ export function createOptimizedAIService(
         errorCode =
           error instanceof Error
             ? error.name === 'AIError'
-              ? (error as any).code
+              ? (error as ExtendedAIError).code
               : error.name
             : 'unknown'
 
@@ -437,9 +451,14 @@ export function createOptimizedAIService(
 
     generateCompletion: async (
       messages: AIMessage[],
-      serviceOptions?: AIServiceOptions
+      serviceOptions?: AIServiceOptions,
+      provider?: AIProvider
     ) => {
-      return aiService.generateCompletion(messages, serviceOptions)
+      return aiService.generateCompletion(
+        messages,
+        serviceOptions,
+        provider as AIProvider
+      )
     },
 
     dispose: () => {
@@ -480,8 +499,8 @@ export function estimateMessagesTokenCount(messages: AIMessage[]): number {
  */
 export function truncateMessages(
   messages: AIMessage[],
-  maxTokens: number = 4000,
-  reserveTokens: number = 1000
+  maxTokens = 4000,
+  reserveTokens = 1000
 ): AIMessage[] {
   // If we don't have enough messages to worry about, return as is
   if (messages.length <= 2) return messages

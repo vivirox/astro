@@ -13,7 +13,7 @@ import type { Database } from '../../../types/supabase'
  */
 export class AIRepository {
   /**
-   * Store a sentiment analysis resul
+   * Store a sentiment analysis result
    */
   async storeSentimentAnalysis(
     result: Omit<SentimentAnalysisResult, 'id' | 'createdAt' | 'updatedAt'>
@@ -48,7 +48,7 @@ export class AIRepository {
   }
 
   /**
-   * Store a crisis detection resul
+   * Store a crisis detection result
    */
   async storeCrisisDetection(
     result: Omit<CrisisDetectionResult, 'id' | 'createdAt' | 'updatedAt'>
@@ -85,7 +85,7 @@ export class AIRepository {
   }
 
   /**
-   * Store a response generation resul
+   * Store a response generation result
    */
   async storeResponseGeneration(
     result: Omit<ResponseGenerationResult, 'id' | 'createdAt' | 'updatedAt'>
@@ -122,7 +122,7 @@ export class AIRepository {
   }
 
   /**
-   * Store an intervention analysis resul
+   * Store an intervention analysis result
    */
   async storeInterventionAnalysis(
     result: Omit<InterventionAnalysisResult, 'id' | 'createdAt' | 'updatedAt'>

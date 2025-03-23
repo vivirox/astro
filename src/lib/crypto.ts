@@ -18,7 +18,7 @@ export function createCryptoSystem(options: CryptoSystemOptions): CryptoSystem {
 
   return {
     /**
-     * Encrypt data with a key derived from the contex
+     * Encrypt data with a key derived from the context
      */
     async encrypt(data: string, context: string): Promise<string> {
       // In a real implementation, this would use a proper encryption algorithm
@@ -31,7 +31,7 @@ export function createCryptoSystem(options: CryptoSystemOptions): CryptoSystem {
     },
 
     /**
-     * Decrypt data with a key derived from the contex
+     * Decrypt data with a key derived from the context
      */
     async decrypt(encryptedData: string, context: string): Promise<string> {
       // In a real implementation, this would use a proper decryption algorithm

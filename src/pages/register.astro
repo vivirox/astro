@@ -1,16 +1,16 @@
 ---
-import { isAuthenticated } from '../lib/auth';
-import AuthLayout from '../layouts/AuthLayout.astro';
+import { isAuthenticated } from '../lib/auth'
+import AuthLayout from '../layouts/AuthLayout.astro'
 
-const { cookies, redirect } = Astro;
+const { cookies, redirect } = Astro
 
 // Check if user is already authenticated
 if (await isAuthenticated(cookies)) {
-  return redirect('/dashboard');
+  return redirect('/dashboard')
 }
 
 // Check for error query parameter
-const error = Astro.params.error;
+const error = Astro.params.error
 ---
 
 <AuthLayout title="Register">
@@ -19,26 +19,23 @@ const error = Astro.params.error;
     <p>Join us today and get access to all features.</p>
   </div>
 
-  {error && (
-    <div class="alert alert-error">
-      <p>{decodeURIComponent(error)}</p>
-    </div>
-  )}
+  {
+    error && (
+      <div class="alert alert-error">
+        <p>{decodeURIComponent(error)}</p>
+      </div>
+    )
+  }
 
   <form action="/api/auth/register" method="post" class="auth-form">
     <div class="form-group">
       <label for="fullName">Full Name</label>
-      <inpu
-        type="text"
-        id="fullName"
-        name="fullName"
-        placeholder="John Doe"
-      />
+      <input type="text" id="fullName" name="fullName" placeholder="John Doe" />
     </div>
 
     <div class="form-group">
       <label for="email">Email</label>
-      <inpu
+      <input
         type="email"
         id="email"
         name="email"
@@ -49,7 +46,7 @@ const error = Astro.params.error;
 
     <div class="form-group">
       <label for="password">Password</label>
-      <inpu
+      <input
         type="password"
         id="password"
         name="password"
@@ -64,7 +61,8 @@ const error = Astro.params.error;
       <div class="checkbox-wrapper">
         <input type="checkbox" id="terms" name="terms" required />
         <label for="terms">
-          I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>
+          I agree to the <a href="/terms" target="_blank">Terms of Service</a> and
+          <a href="/privacy" target="_blank">Privacy Policy</a>
         </label>
       </div>
     </div>
@@ -79,16 +77,12 @@ const error = Astro.params.error;
   <div class="oauth-buttons">
     <form action="/api/auth/signin" method="post">
       <input type="hidden" name="provider" value="github" />
-      <button type="submit" class="btn btn-oauth btn-github">
-        GitHub
-      </button>
+      <button type="submit" class="btn btn-oauth btn-github"> GitHub </button>
     </form>
 
     <form action="/api/auth/signin" method="post">
       <input type="hidden" name="provider" value="google" />
-      <button type="submit" class="btn btn-oauth btn-google">
-        Google
-      </button>
+      <button type="submit" class="btn btn-oauth btn-google"> Google </button>
     </form>
   </div>
 
@@ -131,9 +125,9 @@ const error = Astro.params.error;
     font-weight: 500;
   }
 
-  .form-group input[type="text"],
-  .form-group input[type="email"],
-  .form-group input[type="password"] {
+  .form-group input[type='text'],
+  .form-group input[type='email'],
+  .form-group input[type='password'] {
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -151,7 +145,7 @@ const error = Astro.params.error;
     gap: 0.5rem;
   }
 
-  .checkbox-wrapper input[type="checkbox"] {
+  .checkbox-wrapper input[type='checkbox'] {
     margin-top: 0.25rem;
   }
 

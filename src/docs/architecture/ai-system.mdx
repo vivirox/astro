@@ -15,23 +15,23 @@ graph TD
     Services --> Providers[AI Provider Layer]
     Providers --> OpenAI[OpenAI API]
     Providers --> Anthropic[Anthropic API]
-    
+
     Services --> SentimentAnalysis[Sentiment Analysis]
     Services --> CrisisDetection[Crisis Detection]
     Services --> ResponseGeneration[Response Generation]
     Services --> InterventionAnalysis[Intervention Analysis]
-    
+
     API --> ErrorHandling[Error Handling]
     API --> PerformanceOptimization[Performance Optimization]
     API --> AuditLogging[Audit Logging]
-    
+
     ErrorHandling --> StandardizedErrors[Standardized Errors]
     ErrorHandling --> RetryMechanism[Retry Mechanism]
-    
+
     PerformanceOptimization --> Caching[Response Caching]
     PerformanceOptimization --> TokenOptimization[Token Optimization]
     PerformanceOptimization --> Metrics[Performance Metrics]
-    
+
     AuditLogging --> HIPAACompliance[HIPAA Compliance]
     AuditLogging --> UsageTracking[Usage Tracking]
 ```
@@ -43,6 +43,7 @@ graph TD
 The AI API layer provides RESTful endpoints for accessing AI capabilities. It handles request validation, authentication, and response formatting.
 
 Key components:
+
 - API routes for chat completion, sentiment analysis, crisis detection, etc.
 - Request validation using Zod schemas
 - Authentication and authorization checks
@@ -54,6 +55,7 @@ Key components:
 The AI Services layer provides specialized services for common AI tasks. It abstracts away the details of prompt engineering and response parsing.
 
 Key components:
+
 - `SentimentAnalysisService`: Analyzes the sentiment of text
 - `CrisisDetectionService`: Detects potential crisis situations in text
 - `ResponseGenerationService`: Generates therapeutic responses
@@ -64,6 +66,7 @@ Key components:
 The AI Provider layer provides a unified interface for interacting with different AI providers. It handles provider-specific details like API formats, authentication, and error handling.
 
 Key components:
+
 - `OpenAIProvider`: Interacts with the OpenAI API
 - `AnthropicProvider`: Interacts with the Anthropic API
 - Provider factory for creating provider instances
@@ -73,6 +76,7 @@ Key components:
 The Error Handling system provides standardized error handling across the AI system. It transforms provider-specific errors into standardized errors and provides retry mechanisms for transient errors.
 
 Key components:
+
 - `AIError` class for standardized errors
 - Error transformation utilities
 - Retry mechanism with exponential backoff
@@ -83,6 +87,7 @@ Key components:
 The Performance Optimization system improves the performance and reliability of AI services. It includes caching, token optimization, and performance metrics.
 
 Key components:
+
 - Response caching with LRU eviction
 - Token usage estimation and optimization
 - Performance metrics collection
@@ -93,6 +98,7 @@ Key components:
 The Audit Logging system provides comprehensive logging for AI operations. It logs all AI requests, responses, errors, and performance metrics.
 
 Key components:
+
 - HIPAA-compliant audit logging
 - Usage tracking
 - Error logging
@@ -136,6 +142,7 @@ Key components:
 ### Provider Abstraction
 
 The system uses a provider abstraction layer to support multiple AI providers. This allows for:
+
 - Easy switching between providers
 - Fallback to alternative providers if one is unavailable
 - Comparison of results from different providers
@@ -144,6 +151,7 @@ The system uses a provider abstraction layer to support multiple AI providers. T
 ### Service Specialization
 
 The system uses specialized services for common AI tasks. This allows for:
+
 - Optimized prompts for specific tasks
 - Consistent response formats
 - Reuse of common functionality
@@ -152,6 +160,7 @@ The system uses specialized services for common AI tasks. This allows for:
 ### Error Standardization
 
 The system standardizes errors across providers. This allows for:
+
 - Consistent error handling
 - Improved error messages for users
 - Easier debugging and monitoring
@@ -160,6 +169,7 @@ The system standardizes errors across providers. This allows for:
 ### Performance Optimization
 
 The system includes performance optimization features. This allows for:
+
 - Reduced latency through caching
 - Lower costs through token optimization
 - Better monitoring through performance metrics
@@ -168,6 +178,7 @@ The system includes performance optimization features. This allows for:
 ### HIPAA Compliance
 
 The system is designed to be HIPAA compliant. This includes:
+
 - Comprehensive audit logging
 - Secure handling of sensitive data
 - Access controls and authentication
@@ -210,14 +221,14 @@ interface AIService {
   createChatCompletion(
     messages: AIMessage[],
     options?: AIServiceOptions
-  ): Promise<AICompletion>;
-  
+  ): Promise<AICompletion>
+
   createStreamingChatCompletion(
     messages: AIMessage[],
     options?: AIServiceOptions
-  ): Promise<AIStreamingCompletion>;
-  
-  getModelInfo(model: string): ModelInfo;
+  ): Promise<AIStreamingCompletion>
+
+  getModelInfo(model: string): ModelInfo
 }
 ```
 
@@ -228,16 +239,16 @@ interface AIProvider {
   createChatCompletion(
     messages: AIMessage[],
     options?: AIServiceOptions
-  ): Promise<AICompletion>;
-  
+  ): Promise<AICompletion>
+
   createStreamingChatCompletion(
     messages: AIMessage[],
     options?: AIServiceOptions
-  ): Promise<AIStreamingCompletion>;
-  
-  getModelInfo(model: string): ModelInfo;
-  
-  getSupportedModels(): string[];
+  ): Promise<AIStreamingCompletion>
+
+  getModelInfo(model: string): ModelInfo
+
+  getSupportedModels(): string[]
 }
 ```
 
@@ -245,19 +256,19 @@ interface AIProvider {
 
 ```typescript
 interface AIErrorOptions {
-  code: AIErrorCode;
-  statusCode?: number;
-  context?: Record<string, any>;
-  cause?: Error;
+  code: AIErrorCode
+  statusCode?: number
+  context?: Record<string, any>
+  cause?: Error
 }
 
 class AIError extends Error {
-  code: AIErrorCode;
-  statusCode: number;
-  context?: Record<string, any>;
-  cause?: Error;
-  
-  constructor(message: string, options: AIErrorOptions);
+  code: AIErrorCode
+  statusCode: number
+  context?: Record<string, any>
+  cause?: Error
+
+  constructor(message: string, options: AIErrorOptions)
 }
 ```
 
@@ -372,4 +383,4 @@ class AIError extends Error {
 - Enhanced content filtering
 - Improved anonymization
 - Federated learning
-- Differential privacy 
+- Differential privacy

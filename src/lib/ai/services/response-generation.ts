@@ -176,7 +176,7 @@ export class ResponseGenerationService {
     const maxTokens = options?.maxResponseTokens ?? this.maxResponseTokens
     const systemPrompt = options?.systemPrompt ?? this.systemPrompt
 
-    // Ensure the first message is a system message with our promp
+    // Ensure the first message is a system message with our prompt
     const messagesWithSystem = [...messages]
     if (
       messagesWithSystem.length === 0 ||
@@ -272,7 +272,7 @@ export class ResponseGenerationService {
     const maxTokens = options?.maxResponseTokens ?? this.maxResponseTokens
     const systemPrompt = options?.systemPrompt ?? this.systemPrompt
 
-    // Ensure the first message is a system message with our promp
+    // Ensure the first message is a system message with our prompt
     const messagesWithSystem = [...messages]
     if (
       messagesWithSystem.length === 0 ||

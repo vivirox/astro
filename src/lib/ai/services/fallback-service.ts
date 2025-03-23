@@ -6,6 +6,15 @@ import type {
 } from '../models/ai-types'
 
 /**
+ * Error type interface with status property
+ */
+export interface ApiError {
+  status: number
+  message?: string
+  [key: string]: unknown
+}
+
+/**
  * Fallback Service Configuration
  */
 export interface FallbackServiceConfig {
@@ -59,7 +68,7 @@ export class FallbackService {
     operation: () => Promise<T>,
     options: {
       onRetry?: (attempt: number, error: Error) => void
-      shouldRetry?: (error: any) => boolean
+      shouldRetry?: (error: unknown) => boolean
     } = {}
   ): Promise<T> {
     if (!this.enabled) {
@@ -99,7 +108,7 @@ export class FallbackService {
   /**
    * Default logic to determine if an error should trigger a retry
    */
-  private defaultShouldRetry(error: any): boolean {
+  private defaultShouldRetry(error: unknown): boolean {
     // Retry on network errors or 5xx server errors
     if (error instanceof Error) {
       // Network errors
@@ -114,10 +123,11 @@ export class FallbackService {
 
     // Check for API errors
     if (error && typeof error === 'object') {
-      // Retry on rate limits or server errors
+      // Check if error has a status property
+      const apiError = error as ApiError
       if (
-        'status' in error &&
-        ((error as any).status >= 500 || (error as any).status === 429)
+        'status' in apiError &&
+        (apiError.status >= 500 || apiError.status === 429)
       ) {
         return true
       }
@@ -192,11 +202,13 @@ export class FallbackService {
   private createFallbackContent(error: AIError): string {
     // Different responses based on error type
     if ('status' in error) {
-      if ((error as any).status === 429) {
+      const errorWithStatus = error as ApiError & AIError
+
+      if (errorWithStatus.status === 429) {
         return "I'm currently experiencing high demand. Please try again in a moment."
       }
 
-      if ((error as any).status >= 500) {
+      if (errorWithStatus.status >= 500) {
         return "I'm having trouble connecting to my services right now. Please try again later."
       }
     }
@@ -213,6 +225,6 @@ export class FallbackService {
    * Clean up resources
    */
   dispose() {
-    // Nothing to clean up ye
+    // Nothing to clean up yet
   }
 }

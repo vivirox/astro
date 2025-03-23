@@ -1,11 +1,11 @@
 ---
-import { UI } from '../../config';
+import { UI } from '../../config'
 
 interface Props {
-  class?: string;
+  class?: string
 }
 
-const { class: className = '' } = Astro.props;
+const { class: className = '' } = Astro.props
 ---
 
 <button
@@ -69,60 +69,68 @@ const { class: className = '' } = Astro.props;
 
 <script>
   // Theme toggle functionality
-  const themeToggle = document.getElementById('theme-toggle');
-  const sunIcon = document.getElementById('sun-icon');
-  const moonIcon = document.getElementById('moon-icon');
-  const systemIcon = document.getElementById('system-icon');
+  const themeToggle = document.getElementById('theme-toggle')
+  const sunIcon = document.getElementById('sun-icon')
+  const moonIcon = document.getElementById('moon-icon')
+  const systemIcon = document.getElementById('system-icon')
 
   // Function to set theme
   function setTheme(theme: 'light' | 'dark' | 'system') {
-    localStorage.setItem('theme', theme);
+    localStorage.setItem('theme', theme)
 
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.classList.toggle('dark', systemTheme === 'dark');
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+        .matches
+        ? 'dark'
+        : 'light'
+      document.documentElement.classList.toggle('dark', systemTheme === 'dark')
     } else {
-      document.documentElement.classList.toggle('dark', theme === 'dark');
+      document.documentElement.classList.toggle('dark', theme === 'dark')
     }
 
     // Update icons
     if (sunIcon && moonIcon && systemIcon) {
-      sunIcon.classList.toggle('hidden', theme !== 'light');
-      moonIcon.classList.toggle('hidden', theme !== 'dark');
-      systemIcon.classList.toggle('hidden', theme !== 'system');
+      sunIcon.classList.toggle('hidden', theme !== 'light')
+      moonIcon.classList.toggle('hidden', theme !== 'dark')
+      systemIcon.classList.toggle('hidden', theme !== 'system')
     }
   }
 
   // Initialize theme
-  const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' || 'system';
-  setTheme(savedTheme);
+  const savedTheme =
+    (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system'
+  setTheme(savedTheme)
 
   // Toggle theme on click
   themeToggle?.addEventListener('click', () => {
-    const currentTheme = localStorage.getItem('theme') || 'system';
+    const currentTheme = localStorage.getItem('theme') || 'system'
 
     // Cycle through themes: system -> light -> dark -> system
     if (currentTheme === 'system') {
-      setTheme('light');
+      setTheme('light')
     } else if (currentTheme === 'light') {
-      setTheme('dark');
+      setTheme('dark')
     } else {
-      setTheme('system');
+      setTheme('system')
     }
-  });
+  })
 
   // Listen for system preference changes
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    const currentTheme = localStorage.getItem('theme') || 'system';
-    if (currentTheme === 'system') {
-      setTheme('system');
-    }
-  });
+  window
+    .matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => {
+      const currentTheme = localStorage.getItem('theme') || 'system'
+      if (currentTheme === 'system') {
+        setTheme('system')
+      }
+    })
 </script>
 
 <style>
   /* Smooth transition for theme changes */
   :global(html) {
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 </style>

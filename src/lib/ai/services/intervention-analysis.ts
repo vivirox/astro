@@ -17,6 +17,27 @@ export interface InterventionAnalysisConfig {
 export type InterventionAnalysisResult = InterventionEffectivenessResult
 
 /**
+ * Interface for parsed JSON result
+ */
+interface ParsedResult {
+  score?: number | string
+  confidence?: number | string
+  areas?: {
+    name?: string
+    score?: number | string
+  }[]
+  recommendations?: (string | unknown)[]
+}
+
+/**
+ * Interface for area item in parsed result
+ */
+interface AreaItem {
+  name?: string
+  score?: number | string
+}
+
+/**
  * Intervention Analysis Service Implementation
  */
 export class InterventionAnalysisService {
@@ -105,24 +126,23 @@ export class InterventionAnalysisService {
         content.match(/{[\s\S]*?}/)
 
       const jsonStr = jsonMatch ? jsonMatch[0] : content
-      const result = JSON.parse(jsonStr)
+      const result = JSON.parse(jsonStr) as ParsedResult
 
       // Validate and normalize the result
       return {
         score: Number(result?.score),
         confidence: Number(result?.confidence),
         areas: Array.isArray(result?.areas)
-          ? result?.areas.map((area: any) => ({
+          ? result?.areas.map((area: AreaItem) => ({
               name: String(area.name),
               score: Number(area.score),
             }))
           : [],
         recommendations: Array.isArray(result?.recommendations)
-          ? result?.recommendations.map((rec: any) => String(rec))
+          ? result?.recommendations.map((rec: unknown) => String(rec))
           : [],
       }
-    } catch (error) {
-      console.error('Error parsing intervention analysis result:', error)
+    } catch {
       throw new Error('Failed to parse intervention analysis result')
     }
   }
@@ -131,11 +151,11 @@ export class InterventionAnalysisService {
    * Analyze multiple interventions
    */
   async analyzeBatch(
-    interventions: Array<{
+    interventions: {
       conversation: AIMessage[]
       interventionMessage: string
       userResponse: string
-    }>
+    }[]
   ): Promise<InterventionAnalysisResult[]> {
     return Promise.all(
       interventions.map((item) =>

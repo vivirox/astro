@@ -2,8 +2,6 @@
 // Please use models/types.ts instead.
 // This file is only kept temporarily for backward compatibility
 
-import type { ReadableStream } from 'node:stream/web'
-
 /**
  * AI Provider types
  */
@@ -142,13 +140,17 @@ export interface AIService {
   createStreamingChatCompletion: (
     messages: AIMessage[],
     options?: AIServiceOptions
-  ) => Promise<ReadableStream<AIStreamChunk>>
-  getModelInfo: (model: string) => any
+  ) => Promise<AsyncGenerator<AIStreamChunk, void, void>>
+  getModelInfo: (model: string) => AIModel | null
   createChatCompletionWithTracking: (
     messages: AIMessage[],
     options?: AIServiceOptions
   ) => Promise<AICompletionResponse>
-  generateCompletion: any
+  generateCompletion: (
+    messages: AIMessage[],
+    options: AIServiceOptions,
+    provider: AIProvider
+  ) => Promise<AICompletionResponse | ReadableStream<AIStreamChunk>>
   dispose: () => void
 }
 

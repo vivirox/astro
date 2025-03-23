@@ -1,5 +1,5 @@
 import { glob } from 'astro/loaders'
-import { defineCollection } from 'astro:content'
+import { defineCollection, z } from 'astro:content'
 
 import { feedLoader } from '@ascorbic/feed-loader'
 // Comment out unused imports to fix linter errors
@@ -22,7 +22,17 @@ const pages = defineCollection({
 
 const blog = defineCollection({
   type: 'content',
-  schema: postSchema,
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.date(),
+    lastModDate: z.date().optional(),
+    toc: z.boolean().default(false),
+    share: z.boolean().default(true),
+    ogImage: z.boolean().optional(),
+    tags: z.array(z.string()).optional(),
+    author: z.string().optional(),
+  }),
 })
 
 const projects = defineCollection({

@@ -56,7 +56,7 @@ export class TogetherAIProvider {
       }))
 
       // Prepare request body
-      const body: Record<string, any> = {
+      const body: Record<string, string | number | boolean | object> = {
         model,
         messages: formattedMessages,
         temperature,
@@ -182,7 +182,7 @@ export class TogetherAIProvider {
     response: Response,
     model: string,
     connectionId?: string
-  ): AsyncGenerator<AIStreamChunk> {
+  ): AsyncGenerator<AIStreamChunk, void, void> {
     if (!response?.body) {
       // Release connection if no body
       if (this.connectionPool && connectionId) {
@@ -194,8 +194,6 @@ export class TogetherAIProvider {
     const reader = response?.body.getReader()
     const decoder = new TextDecoder('utf-8')
     let buffer = ''
-    let promptTokens = 0
-    let completionTokens = 0
 
     try {
       while (true) {
@@ -219,8 +217,6 @@ export class TogetherAIProvider {
             const finishReason = json.choices[0]?.finish_reason
 
             if (delta?.content) {
-              completionTokens += 1 // Approximate token count
-
               yield {
                 id: `together-${Date.now()}`,
                 model,
@@ -251,8 +247,6 @@ export class TogetherAIProvider {
       }
 
       // Final usage record
-      const totalTokens = promptTokens + completionTokens
-
       yield {
         id: `together-${Date.now()}`,
         model,
@@ -273,19 +267,30 @@ export class TogetherAIProvider {
   /**
    * Process streaming response in background
    */
-  private async processStreamResponse(
+  private processStreamResponse(
     response: Response,
     model: string,
     connectionId?: string
   ): Promise<void> {
-    try {
+    return new Promise((resolve, reject) => {
       const streamGenerator = this.handleStream(response, model, connectionId)
-      for await (const chunk of streamGenerator) {
-        // Process chunk (e.g., send to client via WebSocket or SSE)
-        // This would be implemented by the consumer of this library
+      const reader = streamGenerator[Symbol.asyncIterator]()
+
+      const readStream = async () => {
+        try {
+          // Consume the stream without storing unused values
+          await reader.next().then(function processNext(result) {
+            if (result.done) return
+            return reader.next().then(processNext)
+          })
+        } catch (error) {
+          reject(error)
+        } finally {
+          resolve()
+        }
       }
-    } catch (error) {
-      console.error('Error processing stream:', error)
-    }
+
+      readStream()
+    })
   }
 }

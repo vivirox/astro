@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import type { AIMessage } from '../lib/ai/models/types'
 import type { AIUsageRecord } from '../lib/ai/models/ai-types'
-import { getAllModels } from '../lib/ai/models/registry.js'
-import { createTogetherAIService } from '../lib/ai/services/together.js'
+import type { AIModel } from '../lib/ai/models/types'
+import { getAllModels } from '../lib/ai/models/registry'
+import { createTogetherAIService } from '../lib/ai/services/together'
 
 // Initialize AI service
 const aiService = createTogetherAIService({
@@ -153,7 +154,7 @@ export default function AIChat() {
           className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           aria-label="AI model selection"
         >
-          {availableModels.map((model: any) => (
+          {availableModels.map((model: AIModel) => (
             <option key={model.id} value={model.id}>
               {model.name}
             </option>

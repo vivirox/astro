@@ -1,9 +1,8 @@
-
 ---
 title: How AI is Revolutionizing Mental Health Care
 description: "Exploring the innovative ways artificial intelligence is transforming mental health support, treatment, and accessibility"
 pubDate: 2025-03-09
-lastModDate: ''
+lastModDate: 2025-03-22
 toc: true
 share: true
 ogImage: true

@@ -1,30 +1,24 @@
 ---
-
-import { getCurrentUser } from "../../../lib/auth";
-import { requirePermission } from "../../../lib/access-control";
-import BaseLayout from "@layouts/BaseLayout.astro";
+import { requirePermission } from '../../../lib/access-control'
+import BaseLayout from '../../../layouts/BaseLayout.astro'
 
 // Check if user has admin permission
-const checkPermission = requirePermission("read:admin");
+const checkPermission = requirePermission('read:admin')
 const permissionResponse = await checkPermission({
   cookies: Astro.cookies,
   redirect: Astro.redirect,
-  request: Astro.request,
-});
+})
 
 // If permission check returned a response, return i
 if (permissionResponse) {
-  return permissionResponse;
+  return permissionResponse
 }
 
-// Get the current user
-const user = await getCurrentUser(Astro.cookies);
-
 // Get query parameters
-const period = Astro.url.searchParams.get("period") || "daily";
+const period = Astro.url.searchParams.get('period') || 'daily'
 ---
 
-<BaseLayout title="AI Usage Statistics" bgType="default">
+<BaseLayout title="AI Usage Statistics">
   <main class="admin-container">
     <div class="admin-header">
       <h1>AI Usage Statistics</h1>
@@ -34,9 +28,21 @@ const period = Astro.url.searchParams.get("period") || "daily";
     <div class="admin-actions">
       <a href="/admin" class="btn btn-secondary">Back to Admin Dashboard</a>
       <div class="period-selector">
-        <a href="?period=daily" class={`btn ${period === 'daily' ? 'btn-primary' : 'btn-outline'}`}>Daily</a>
-        <a href="?period=weekly" class={`btn ${period === 'weekly' ? 'btn-primary' : 'btn-outline'}`}>Weekly</a>
-        <a href="?period=monthly" class={`btn ${period === 'monthly' ? 'btn-primary' : 'btn-outline'}`}>Monthly</a>
+        <a
+          href="?period=daily"
+          class={`btn ${period === 'daily' ? 'btn-primary' : 'btn-outline'}`}
+          >Daily</a
+        >
+        <a
+          href="?period=weekly"
+          class={`btn ${period === 'weekly' ? 'btn-primary' : 'btn-outline'}`}
+          >Weekly</a
+        >
+        <a
+          href="?period=monthly"
+          class={`btn ${period === 'monthly' ? 'btn-primary' : 'btn-outline'}`}
+          >Monthly</a
+        >
       </div>
     </div>
 
@@ -87,53 +93,56 @@ const period = Astro.url.searchParams.get("period") || "daily";
   </main>
 </BaseLayout>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+></script>
 
 <script>
   // Define types for usage statistics
   interface ModelUsage {
-    requests: number;
-    tokens: number;
-    cost: number;
+    requests: number
+    tokens: number
+    cost: number
   }
 
   interface DailyStats {
-    date: string;
-    totalRequests: number;
-    totalTokens: number;
-    totalCost: number;
-    modelUsage: Record<string, ModelUsage>;
+    date: string
+    totalRequests: number
+    totalTokens: number
+    totalCost: number
+    modelUsage: Record<string, ModelUsage>
   }
 
   // Chart.js type declaration
   declare class Chart {
-    constructor(ctx: CanvasRenderingContext2D, config: any);
-    destroy(): void;
+    constructor(ctx: CanvasRenderingContext2D, config: unknown)
+    destroy(): void
   }
 
   // Fetch AI usage statistics
   async function fetchUsageStats(): Promise<DailyStats[]> {
     try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const period = urlParams.get('period') || 'daily';
+      const urlParams = new URLSearchParams(window.location.search)
+      const period = urlParams.get('period') || 'daily'
 
-      const response = await fetch(`/api/ai/usage-stats?period=${period}&allUsers=true`);
+      const response = await fetch(
+        `/api/ai/usage-stats?period=${period}&allUsers=true`
+      )
 
       if (!response.ok) {
-        throw new Error('Failed to fetch usage statistics');
+        throw new Error('Failed to fetch usage statistics')
       }
 
-      const data = await response.json();
-      return data.stats;
+      const data = await response.json()
+      return data.stats
     } catch (error) {
-      console.error('Error fetching usage statistics:', error);
-      return [];
+      console.error('Error fetching usage statistics:', error)
+      return []
     }
   }
 
   // Format numbers for display
   function formatNumber(num: number): string {
-    return new Intl.NumberFormat().format(num);
+    return new Intl.NumberFormat().format(num)
   }
 
   // Format currency for display
@@ -141,77 +150,91 @@ const period = Astro.url.searchParams.get("period") || "daily";
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(amount);
+      minimumFractionDigits: 2,
+    }).format(amount)
   }
 
   // Create a line char
-  function createLineChart(elementId: string, labels: string[], data: number[], label: string, color: string): Chart | null {
-    const element = document.querySelector(`#${elementId} .stat-chart`);
-    if (!element) return null;
+  function createLineChart(
+    elementId: string,
+    labels: string[],
+    data: number[],
+    label: string,
+    color: string
+  ): Chart | null {
+    const element = document.querySelector(`#${elementId} .stat-chart`)
+    if (!element) return null
 
-    const canvas = element as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
+    const canvas = element as HTMLCanvasElement
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return null
 
     return new Chart(ctx, {
       type: 'line',
       data: {
         labels,
-        datasets: [{
-          label,
-          data,
-          borderColor: color,
-          backgroundColor: color + '20', // Add transparency
-          tension: 0.2,
-          fill: true
-        }]
+        datasets: [
+          {
+            label,
+            data,
+            borderColor: color,
+            backgroundColor: color + '20', // Add transparency
+            tension: 0.2,
+            fill: true,
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false
-          }
+            display: false,
+          },
         },
         scales: {
           x: {
-            display: false
+            display: false,
           },
           y: {
             display: false,
-            beginAtZero: true
-          }
-        }
-      }
-    });
+            beginAtZero: true,
+          },
+        },
+      },
+    })
   }
 
   // Create a pie chart for model usage
-  function createModelUsageChart(elementId: string, models: string[], data: number[]): Chart | null {
-    const element = document.querySelector(`#${elementId} .stat-chart-large`);
-    if (!element) return null;
+  function createModelUsageChart(
+    elementId: string,
+    models: string[],
+    data: number[]
+  ): Chart | null {
+    const element = document.querySelector(`#${elementId} .stat-chart-large`)
+    if (!element) return null
 
-    const canvas = element as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
+    const canvas = element as HTMLCanvasElement
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return null
 
     // Generate colors for each model
     const colors = models.map((_: unknown, index: number) => {
-      const hue = (index * 137) % 360; // Use golden ratio to spread colors
-      return `hsl(${hue}, 70%, 60%)`;
-    });
+      const hue = (index * 137) % 360 // Use golden ratio to spread colors
+      return `hsl(${hue}, 70%, 60%)`
+    })
 
     return new Chart(ctx, {
       type: 'pie',
       data: {
         labels: models,
-        datasets: [{
-          data,
-          backgroundColor: colors,
-          borderWidth: 1
-        }]
+        datasets: [
+          {
+            data,
+            backgroundColor: colors,
+            borderWidth: 1,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -221,106 +244,130 @@ const period = Astro.url.searchParams.get("period") || "daily";
             position: 'right',
             labels: {
               boxWidth: 15,
-              padding: 15
-            }
+              padding: 15,
+            },
           },
           tooltip: {
             callbacks: {
-              label: function(context: any) {
-                const label = context.label || '';
-                const value = context.raw;
-                const percentage = context.parsed;
-                return `${label}: ${value} (${percentage.toFixed(1)}%)`;
-              }
-            }
-          }
-        }
-      }
-    });
+              label: function (context: unknown) {
+                const typedContext = context as {
+                  label: string;
+                  raw: number;
+                  parsed: number;
+                };
+                const label = typedContext.label || ''
+                const value = typedContext.raw
+                const percentage = typedContext.parsed
+                return `${label}: ${value} (${percentage.toFixed(1)}%)`
+              },
+            },
+          },
+        },
+      },
+    })
   }
 
   // Update the UI with the fetched data
   async function updateUI(): Promise<void> {
-    const stats = await fetchUsageStats();
+    const stats = await fetchUsageStats()
 
     if (!stats || stats.length === 0) {
-      const totalRequestsEl = document.querySelector('#total-requests .stat-value');
-      const totalTokensEl = document.querySelector('#total-tokens .stat-value');
-      const totalCostEl = document.querySelector('#total-cost .stat-value');
-      const usageTableEl = document.querySelector('#usage-table tbody');
+      const totalRequestsEl = document.querySelector(
+        '#total-requests .stat-value'
+      )
+      const totalTokensEl = document.querySelector('#total-tokens .stat-value')
+      const totalCostEl = document.querySelector('#total-cost .stat-value')
+      const usageTableEl = document.querySelector('#usage-table tbody')
 
-      if (totalRequestsEl) totalRequestsEl.textContent = 'No data';
-      if (totalTokensEl) totalTokensEl.textContent = 'No data';
-      if (totalCostEl) totalCostEl.textContent = 'No data';
-      if (usageTableEl) usageTableEl.innerHTML = `
+      if (totalRequestsEl) totalRequestsEl.textContent = 'No data'
+      if (totalTokensEl) totalTokensEl.textContent = 'No data'
+      if (totalCostEl) totalCostEl.textContent = 'No data'
+      if (usageTableEl)
+        usageTableEl.innerHTML = `
         <tr>
           <td colspan="5" class="empty-row">No usage data available</td>
         </tr>
-      `;
-      return;
+      `
+      return
     }
 
     // Calculate totals
-    const totalRequests = stats.reduce((sum: number, day: DailyStats) => sum + day.totalRequests, 0);
-    const totalTokens = stats.reduce((sum: number, day: DailyStats) => sum + day.totalTokens, 0);
-    const totalCost = stats.reduce((sum: number, day: DailyStats) => sum + day.totalCost, 0);
+    const totalRequests = stats.reduce(
+      (sum: number, day: DailyStats) => sum + day.totalRequests,
+      0
+    )
+    const totalTokens = stats.reduce(
+      (sum: number, day: DailyStats) => sum + day.totalTokens,
+      0
+    )
+    const totalCost = stats.reduce(
+      (sum: number, day: DailyStats) => sum + day.totalCost,
+      0
+    )
 
     // Update summary cards
-    const totalRequestsEl = document.querySelector('#total-requests .stat-value');
-    const totalTokensEl = document.querySelector('#total-tokens .stat-value');
-    const totalCostEl = document.querySelector('#total-cost .stat-value');
+    const totalRequestsEl = document.querySelector(
+      '#total-requests .stat-value'
+    )
+    const totalTokensEl = document.querySelector('#total-tokens .stat-value')
+    const totalCostEl = document.querySelector('#total-cost .stat-value')
 
-    if (totalRequestsEl) totalRequestsEl.textContent = formatNumber(totalRequests);
-    if (totalTokensEl) totalTokensEl.textContent = formatNumber(totalTokens);
-    if (totalCostEl) totalCostEl.textContent = formatCurrency(totalCost);
+    if (totalRequestsEl)
+      totalRequestsEl.textContent = formatNumber(totalRequests)
+    if (totalTokensEl) totalTokensEl.textContent = formatNumber(totalTokens)
+    if (totalCostEl) totalCostEl.textContent = formatCurrency(totalCost)
 
     // Prepare data for charts
-    const dates = stats.map((day: DailyStats) => {
-      const date = new Date(day.date);
-      return date.toLocaleDateString();
-    }).reverse();
+    const dates = stats
+      .map((day: DailyStats) => {
+        const date = new Date(day.date)
+        return date.toLocaleDateString()
+      })
+      .reverse()
 
-    const requestData = stats.map((day: DailyStats) => day.totalRequests).reverse();
-    const tokenData = stats.map((day: DailyStats) => day.totalTokens).reverse();
-    const costData = stats.map((day: DailyStats) => day.totalCost).reverse();
+    const requestData = stats
+      .map((day: DailyStats) => day.totalRequests)
+      .reverse()
+    const tokenData = stats.map((day: DailyStats) => day.totalTokens).reverse()
+    const costData = stats.map((day: DailyStats) => day.totalCost).reverse()
 
     // Create charts
-    createLineChart('total-requests', dates, requestData, 'Requests', '#3b82f6');
-    createLineChart('total-tokens', dates, tokenData, 'Tokens', '#10b981');
-    createLineChart('total-cost', dates, costData, 'Cost', '#f59e0b');
+    createLineChart('total-requests', dates, requestData, 'Requests', '#3b82f6')
+    createLineChart('total-tokens', dates, tokenData, 'Tokens', '#10b981')
+    createLineChart('total-cost', dates, costData, 'Cost', '#f59e0b')
 
     // Prepare model usage data
-    const modelUsage: Record<string, number> = {};
+    const modelUsage: Record<string, number> = {}
     stats.forEach((day: DailyStats) => {
       Object.entries(day.modelUsage).forEach(([model, usage]) => {
         if (!modelUsage[model]) {
-          modelUsage[model] = 0;
+          modelUsage[model] = 0
         }
-        modelUsage[model] += usage.requests;
-      });
-    });
+        modelUsage[model] += usage.requests
+      })
+    })
 
-    const models = Object.keys(modelUsage);
-    const modelData = Object.values(modelUsage);
+    const models = Object.keys(modelUsage)
+    const modelData = Object.values(modelUsage)
 
     // Create model usage char
-    createModelUsageChart('model-usage', models, modelData);
+    createModelUsageChart('model-usage', models, modelData)
 
     // Update table
-    const tableBody = document.querySelector('#usage-table tbody');
-    if (!tableBody) return;
+    const tableBody = document.querySelector('#usage-table tbody')
+    if (!tableBody) return
 
-    tableBody.innerHTML = '';
+    tableBody.innerHTML = ''
 
     stats.forEach((day: DailyStats) => {
-      const row = document.createElement('tr');
+      const row = document.createElement('tr')
 
       // Format the date
-      const date = new Date(day.date);
-      const formattedDate = date.toLocaleDateString();
+      const date = new Date(day.date)
+      const formattedDate = date.toLocaleDateString()
 
       // Get model names
-      const modelNames = Object.keys(day.modelUsage).join(', ');
+      const modelNames = Object.keys(day.modelUsage).join(', ')
 
       row.innerHTML = `
         <td>${formattedDate}</td>
@@ -328,14 +375,14 @@ const period = Astro.url.searchParams.get("period") || "daily";
         <td>${formatNumber(day.totalTokens)}</td>
         <td>${formatCurrency(day.totalCost)}</td>
         <td>${modelNames || 'None'}</td>
-      `;
+      `
 
-      tableBody.appendChild(row);
-    });
+      tableBody.appendChild(row)
+    })
   }
 
   // Initialize the page
-  document.addEventListener('DOMContentLoaded', updateUI);
+  document.addEventListener('DOMContentLoaded', updateUI)
 </script>
 
 <style>
@@ -474,7 +521,8 @@ const period = Astro.url.searchParams.get("period") || "daily";
     color: #666;
   }
 
-  .loading-row, .empty-row {
+  .loading-row,
+  .empty-row {
     text-align: center;
     color: #666;
     padding: 2rem 0;

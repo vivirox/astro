@@ -2,12 +2,38 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { InterventionAnalysisService } from '../../lib/ai/services/intervention-analysis.ts'
 import type { AIMessage } from '../../lib/ai/models/types.ts'
 
-// Mock AI service - passing any here as the typings are inconsistent between modules
+// Import AIService type to make sure our mock is compatible
+import type { AIService } from '../../lib/ai/models/types.ts'
+
+// Define types for mocked responses
+interface AIServiceResponse {
+  content: string
+  model: string
+  usage: {
+    total_tokens: number
+    prompt_tokens: number
+    completion_tokens: number
+  }
+  id: string
+  provider: string
+  created: number
+}
+
+interface InterventionRequest {
+  conversation: AIMessage[]
+  interventionMessage: string
+  userResponse: string
+}
+
+// Create a simplified mock of the AIService
 const mockAIService = {
   createChatCompletion: vi.fn(),
   createStreamingChatCompletion: vi.fn(),
   getModelInfo: vi.fn(),
-} as any
+  createChatCompletionWithTracking: vi.fn(),
+  generateCompletion: vi.fn(),
+  dispose: vi.fn(),
+} as AIService
 
 describe('InterventionAnalysisService', () => {
   let interventionService: InterventionAnalysisService
@@ -22,8 +48,8 @@ describe('InterventionAnalysisService', () => {
 
   describe('analyzeIntervention', () => {
     it('should analyze intervention effectiveness correctly', async () => {
-      // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      // Mock the AI service response with proper typing
+      const mockResponse: AIServiceResponse = {
         content: JSON.stringify({
           effectiveness_score: 8,
           user_receptiveness: 'high',
@@ -38,7 +64,17 @@ describe('InterventionAnalysisService', () => {
         }),
         model: 'test-model',
         usage: { total_tokens: 150, prompt_tokens: 120, completion_tokens: 30 },
-      })
+        id: 'test-id-123',
+        provider: 'test-provider',
+        created: Date.now(),
+      }
+
+      ;(
+        mockAIService.createChatCompletion as unknown as jest.MockInstance<
+          Promise<AIServiceResponse>,
+          [AIMessage[]]
+        >
+      ).mockResolvedValue(mockResponse)
 
       // Create test conversation
       const conversation: AIMessage[] = [
@@ -67,7 +103,18 @@ describe('InterventionAnalysisService', () => {
         userResponse
       )
 
-      // Verify the resul
+      // Define expected result type
+      interface ExpectedResult {
+        effectiveness_score: number
+        user_receptiveness: string
+        emotional_impact: string
+        key_insights: string[]
+        improvement_suggestions: string[]
+        model: string
+        processingTime: number
+      }
+
+      // Verify the result with proper typing
       expect(result).toEqual({
         effectiveness_score: 8,
         user_receptiveness: 'high',
@@ -81,7 +128,7 @@ describe('InterventionAnalysisService', () => {
         ],
         model: 'test-model',
         processingTime: expect.any(Number),
-      })
+      } as ExpectedResult)
 
       // Verify the AI service was called with correct parameters
       expect(mockAIService.createChatCompletion).toHaveBeenCalledWith(
@@ -97,8 +144,8 @@ describe('InterventionAnalysisService', () => {
     })
 
     it('should handle custom analysis prompt', async () => {
-      // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      // Mock the AI service response with proper typing
+      const mockResponse: AIServiceResponse = {
         content: JSON.stringify({
           effectiveness_score: 7,
           user_receptiveness: 'medium',
@@ -108,7 +155,16 @@ describe('InterventionAnalysisService', () => {
         }),
         model: 'test-model',
         usage: { total_tokens: 150, prompt_tokens: 120, completion_tokens: 30 },
-      })
+        id: 'test-id-456',
+        provider: 'test-provider',
+        created: Date.now(),
+      }
+
+      ;(
+        mockAIService.createChatCompletion as unknown as ReturnType<
+          typeof vi.fn
+        >
+      ).mockResolvedValue(mockResponse)
 
       // Create test conversation
       const conversation: AIMessage[] = [
@@ -129,7 +185,7 @@ describe('InterventionAnalysisService', () => {
         { customPrompt }
       )
 
-      // Verify the AI service was called with custom promp
+      // Verify the AI service was called with custom prompt
       expect(mockAIService.createChatCompletion).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
@@ -143,11 +199,20 @@ describe('InterventionAnalysisService', () => {
 
     it('should handle invalid JSON responses', async () => {
       // Mock the AI service response with invalid JSON
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      const mockResponse: AIServiceResponse = {
         content: 'Not a valid JSON response',
         model: 'test-model',
         usage: { total_tokens: 150, prompt_tokens: 120, completion_tokens: 30 },
-      })
+        id: 'test-id-789',
+        provider: 'test-provider',
+        created: Date.now(),
+      }
+
+      ;(
+        mockAIService.createChatCompletion as unknown as ReturnType<
+          typeof vi.fn
+        >
+      ).mockResolvedValue(mockResponse)
 
       // Create test conversation
       const conversation: AIMessage[] = [
@@ -169,9 +234,11 @@ describe('InterventionAnalysisService', () => {
 
     it('should handle AI service errors', async () => {
       // Mock the AI service to throw an error
-      ;(mockAIService.createChatCompletion as any).mockRejectedValue(
-        new Error('AI service error')
-      )
+      ;(
+        mockAIService.createChatCompletion as unknown as ReturnType<
+          typeof vi.fn
+        >
+      ).mockRejectedValue(new Error('AI service error'))
 
       // Create test conversation
       const conversation: AIMessage[] = [
@@ -195,40 +262,55 @@ describe('InterventionAnalysisService', () => {
   describe('analyzeBatch', () => {
     it('should analyze multiple interventions in parallel', async () => {
       // Mock the AI service response for multiple calls
-      ;(mockAIService.createChatCompletion as any)
-        .mockResolvedValueOnce({
-          content: JSON.stringify({
-            effectiveness_score: 8,
-            user_receptiveness: 'high',
-            emotional_impact: 'positive',
-            key_insights: ['First insight'],
-            improvement_suggestions: ['First suggestion'],
-          }),
-          model: 'test-model',
-          usage: {
-            total_tokens: 150,
-            prompt_tokens: 120,
-            completion_tokens: 30,
-          },
-        })
-        .mockResolvedValueOnce({
-          content: JSON.stringify({
-            effectiveness_score: 6,
-            user_receptiveness: 'medium',
-            emotional_impact: 'neutral',
-            key_insights: ['Second insight'],
-            improvement_suggestions: ['Second suggestion'],
-          }),
-          model: 'test-model',
-          usage: {
-            total_tokens: 150,
-            prompt_tokens: 120,
-            completion_tokens: 30,
-          },
-        })
+      const mockResponse1: AIServiceResponse = {
+        content: JSON.stringify({
+          effectiveness_score: 8,
+          user_receptiveness: 'high',
+          emotional_impact: 'positive',
+          key_insights: ['First insight'],
+          improvement_suggestions: ['First suggestion'],
+        }),
+        model: 'test-model',
+        usage: {
+          total_tokens: 150,
+          prompt_tokens: 120,
+          completion_tokens: 30,
+        },
+        id: 'test-id-001',
+        provider: 'test-provider',
+        created: Date.now(),
+      }
 
-      // Create test interventions
-      const interventions = [
+      const mockResponse2: AIServiceResponse = {
+        content: JSON.stringify({
+          effectiveness_score: 6,
+          user_receptiveness: 'medium',
+          emotional_impact: 'neutral',
+          key_insights: ['Second insight'],
+          improvement_suggestions: ['Second suggestion'],
+        }),
+        model: 'test-model',
+        usage: {
+          total_tokens: 150,
+          prompt_tokens: 120,
+          completion_tokens: 30,
+        },
+        id: 'test-id-002',
+        provider: 'test-provider',
+        created: Date.now(),
+      }
+
+      ;(
+        mockAIService.createChatCompletion as unknown as jest.MockInstance<
+          Promise<AIServiceResponse>,
+          [AIMessage[]]
+        >
+      )
+        .mockResolvedValueOnce(mockResponse1)
+        .mockResolvedValueOnce(mockResponse2)
+
+      // Create test interventions with proper typing
+      const interventions: InterventionRequest[] = [
         {
           conversation: [
             { role: 'user', content: 'First conversation', name: 'user' },
@@ -258,26 +340,36 @@ describe('InterventionAnalysisService', () => {
 
     it('should handle errors in batch processing', async () => {
       // Mock the AI service to succeed for first call and fail for second
-      ;(mockAIService.createChatCompletion as any)
-        .mockResolvedValueOnce({
-          content: JSON.stringify({
-            effectiveness_score: 8,
-            user_receptiveness: 'high',
-            emotional_impact: 'positive',
-            key_insights: ['First insight'],
-            improvement_suggestions: ['First suggestion'],
-          }),
-          model: 'test-model',
-          usage: {
-            total_tokens: 150,
-            prompt_tokens: 120,
-            completion_tokens: 30,
-          },
-        })
+      const mockResponse: AIServiceResponse = {
+        content: JSON.stringify({
+          effectiveness_score: 8,
+          user_receptiveness: 'high',
+          emotional_impact: 'positive',
+          key_insights: ['First insight'],
+          improvement_suggestions: ['First suggestion'],
+        }),
+        model: 'test-model',
+        usage: {
+          total_tokens: 150,
+          prompt_tokens: 120,
+          completion_tokens: 30,
+        },
+        id: 'test-id-003',
+        provider: 'test-provider',
+        created: Date.now(),
+      }
+
+      ;(
+        mockAIService.createChatCompletion as unknown as jest.MockInstance<
+          Promise<AIServiceResponse>,
+          [AIMessage[]]
+        >
+      )
+        .mockResolvedValueOnce(mockResponse)
         .mockRejectedValueOnce(new Error('AI service error'))
 
-      // Create test interventions
-      const interventions = [
+      // Create test interventions with proper typing
+      const interventions: InterventionRequest[] = [
         {
           conversation: [
             { role: 'user', content: 'First conversation', name: 'user' },
@@ -299,15 +391,17 @@ describe('InterventionAnalysisService', () => {
       ).rejects.toThrow()
     })
   })
-
   describe('constructor', () => {
     it('should use default model if not provided', () => {
       const service = new InterventionAnalysisService({
         aiService: mockAIService,
       })
 
-      // Use a non-public method to test the model
-      expect((service as any).config.model).toBe('gpt-4o')
+      // Use property access for testing private fields
+      interface ServiceConfig {
+        config: { model: string }
+      }
+      expect((service as unknown as ServiceConfig).config.model).toBe('gpt-4o')
     })
 
     it('should use custom system prompt if provided', () => {
@@ -317,7 +411,12 @@ describe('InterventionAnalysisService', () => {
         systemPrompt: customPrompt,
       })
 
-      expect((service as any).config.systemPrompt).toBe(customPrompt)
+      interface ServiceConfigWithPrompt {
+        config: { systemPrompt: string }
+      }
+      expect(
+        (service as unknown as ServiceConfigWithPrompt).config.systemPrompt
+      ).toBe(customPrompt)
     })
   })
 })

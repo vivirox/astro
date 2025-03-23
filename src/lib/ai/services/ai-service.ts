@@ -19,8 +19,35 @@ import {
 import { FallbackService, type FallbackServiceConfig } from './fallback-service'
 import { createTogetherAIService } from './together'
 
-// Define a custom ReadableStream type that matches both implementations
-type GenericReadableStream<T> = any
+// Define proper interfaces for API responses
+interface ServiceResponse {
+  id?: string
+  model: string
+  created?: number
+  content: string
+  choices?: {
+    message: { role: string; content: string }
+    finishReason?: string
+  }[]
+  usage?: {
+    promptTokens?: number
+    completionTokens?: number
+    totalTokens?: number
+  }
+}
+
+/**
+ * Model information interface
+ */
+interface ModelInfo {
+  id: string
+  name: string
+  provider: string
+  parameters?: number
+  context_length?: number
+  capabilities?: string[]
+  [key: string]: unknown
+}
 
 /**
  * AI Service Configuration
@@ -43,7 +70,7 @@ export interface AIServiceConfig {
  * This service provides a unified interface to TogetherAI with performance optimizations
  */
 export class AIService implements AIServiceInterface {
-  private togetherService: any // Use any to bypass strict typing
+  private togetherService: ReturnType<typeof createTogetherAIService>
   private cacheService: AICacheService
   private promptOptimizer: PromptOptimizerService
   private connectionPool: ConnectionPoolManager
@@ -78,8 +105,8 @@ export class AIService implements AIServiceInterface {
   /**
    * Get information about a model
    */
-  getModelInfo(model: string): any {
-    return this.togetherService.getModelInfo(model)
+  getModelInfo(model: string): ModelInfo {
+    return this.togetherService.getModelInfo(model) as ModelInfo
   }
 
   /**
@@ -89,18 +116,29 @@ export class AIService implements AIServiceInterface {
     messages: AIMessage[],
     options: AIServiceOptions = {}
   ): Promise<AICompletionResponse> {
-    const response = await this.togetherService.createChatCompletion(
+    const response = (await this.togetherService.createChatCompletion(
       messages,
       options
-    )
-    // Add the provider field required by AICompletionResponse in models/types.ts
+    )) as ServiceResponse
+
+    // Construct a fully compliant AICompletionResponse
     return {
-      ...response,
+      id: response.id || `chat-${Date.now()}`,
+      model: response.model,
+      created: response.created || Date.now(),
       provider: 'together',
-      usage: response.usage || {
-        promptTokens: 0,
-        completionTokens: 0,
-        totalTokens: 0,
+      content: response.content,
+      choices: (response.choices || []).map((choice) => ({
+        message: {
+          role: choice.message?.role || 'assistant',
+          content: choice.message?.content || '',
+        },
+        finishReason: choice.finishReason,
+      })),
+      usage: {
+        promptTokens: response.usage?.promptTokens || 0,
+        completionTokens: response.usage?.completionTokens || 0,
+        totalTokens: response.usage?.totalTokens || 0,
       },
     }
   }
@@ -111,12 +149,15 @@ export class AIService implements AIServiceInterface {
   async createStreamingChatCompletion(
     messages: AIMessage[],
     options: AIServiceOptions = {}
-  ): Promise<GenericReadableStream<AIStreamChunk>> {
-    // Cast to the expected return type
-    return this.togetherService.createStreamingChatCompletion(
+  ): Promise<ReadableStream<AIStreamChunk>> {
+    // Get the stream from the service
+    const stream = await this.togetherService.createStreamingChatCompletion(
       messages,
       options
-    ) as unknown as GenericReadableStream<AIStreamChunk>
+    )
+
+    // Return as proper ReadableStream
+    return stream as ReadableStream<AIStreamChunk>
   }
 
   /**
@@ -126,18 +167,29 @@ export class AIService implements AIServiceInterface {
     messages: AIMessage[],
     options: AIServiceOptions = {}
   ): Promise<AICompletionResponse> {
-    const response = await this.togetherService.generateCompletion(
+    const response = (await this.togetherService.generateCompletion(
       messages,
       options
-    )
-    // Add the provider field required by AICompletionResponse in models/types.ts
+    )) as ServiceResponse
+
+    // Construct a fully compliant AICompletionResponse
     return {
-      ...response,
+      id: response.id || `gen-${Date.now()}`,
+      model: response.model,
+      created: response.created || Date.now(),
       provider: 'together',
-      usage: response.usage || {
-        promptTokens: 0,
-        completionTokens: 0,
-        totalTokens: 0,
+      content: response.content,
+      choices: (response.choices || []).map((choice) => ({
+        message: {
+          role: choice.message?.role || 'assistant',
+          content: choice.message?.content || '',
+        },
+        finishReason: choice.finishReason,
+      })),
+      usage: {
+        promptTokens: response.usage?.promptTokens || 0,
+        completionTokens: response.usage?.completionTokens || 0,
+        totalTokens: response.usage?.totalTokens || 0,
       },
     }
   }
@@ -150,18 +202,29 @@ export class AIService implements AIServiceInterface {
     options?: AIServiceOptions
   ): Promise<AICompletionResponse> {
     const response =
-      await this.togetherService.createChatCompletionWithTracking(
+      (await this.togetherService.createChatCompletionWithTracking(
         messages,
         options
-      )
-    // Add the provider field required by AICompletionResponse in models/types.ts
+      )) as ServiceResponse
+
+    // Construct a fully compliant AICompletionResponse
     return {
-      ...response,
+      id: response.id || `track-${Date.now()}`,
+      model: response.model,
+      created: response.created || Date.now(),
       provider: 'together',
-      usage: response.usage || {
-        promptTokens: 0,
-        completionTokens: 0,
-        totalTokens: 0,
+      content: response.content,
+      choices: (response.choices || []).map((choice) => ({
+        message: {
+          role: choice.message?.role || 'assistant',
+          content: choice.message?.content || '',
+        },
+        finishReason: choice.finishReason,
+      })),
+      usage: {
+        promptTokens: response.usage?.promptTokens || 0,
+        completionTokens: response.usage?.completionTokens || 0,
+        totalTokens: response.usage?.totalTokens || 0,
       },
     }
   }
@@ -189,7 +252,7 @@ export class AIService implements AIServiceInterface {
     return this.defaultRequest
   }
 
-  dispose() {
+  dispose(): void {
     this.togetherService.dispose()
     this.cacheService.dispose()
     this.promptOptimizer.dispose()

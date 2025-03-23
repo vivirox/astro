@@ -1,49 +1,54 @@
 ---
-import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content'
 
-export const prerender = true;
+export const prerender = true
 
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection('blog', ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true;
-  });
+    return import.meta.env.PROD ? !data.draft : true
+  })
 
   // Get all unique series
-  const allSeries = [...new Set(allBlogPosts
-    .filter(post => post.data.series)
-    .map(post => post.data.series)
-  )];
+  const allSeries = [
+    ...new Set(
+      allBlogPosts
+        .filter((post) => post.data.series)
+        .map((post) => post.data.series)
+    ),
+  ]
 
   // Create a path for each series
-  return allSeries.map(series => ({
-    params: { series: typeof series === 'string' ? series.toLowerCase().replace(/\s+/g, '-') : '' },
+  return allSeries.map((series) => ({
+    params: {
+      series:
+        typeof series === 'string'
+          ? series.toLowerCase().replace(/\s+/g, '-')
+          : '',
+    },
     props: { series },
-  }));
+  }))
 }
 
-const { series } = Astro.props;
+const { series } = Astro.props
 
 // Get all posts in this series
 const allBlogPosts = await getCollection('blog', ({ data }) => {
-  return (import.meta.env.PROD ? !data.draft : true) &&
-         data.series === series;
-});
+  return import.meta.env.PROD ? !data.draft : true
+})
 
 // Sort by seriesOrder if available, otherwise by date
 const posts = allBlogPosts.sort((a, b) => {
   // First try to sort by seriesOrder
   if (a.data.seriesOrder !== undefined && b.data.seriesOrder !== undefined) {
-    return a.data.seriesOrder - b.data.seriesOrder;
+    return a.data.seriesOrder - b.data.seriesOrder
   }
 
   // Fall back to date sorting
-  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
-});
+  return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+})
 
 // Get the first post for the hero section
-const firstPost = posts[0];
-
+const firstPost = posts[0]
 ---
 
 <html lang="en">
@@ -51,39 +56,60 @@ const firstPost = posts[0];
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{series} Series | Blog</title>
-    <meta name="description" content={`Articles in the ${series} series - Explore insights and guides on this topic.`} />
+    <meta
+      name="description"
+      content={`Articles in the ${series} series - Explore insights and guides on this topic.`}
+    />
   </head>
   <body>
     <div class="max-w-6xl mx-auto px-4 py-8">
       <h1 class="text-3xl font-bold mb-2">{series} Series</h1>
-      <p class="text-gray-600 mb-8">{posts.length} article{posts.length !== 1 ? 's' : ''} in this series</p>
+      <p class="text-gray-600 mb-8">
+        {posts.length} article{posts.length !== 1 ? 's' : ''} in this series
+      </p>
 
       <div class="space-y-6">
-        {posts.map((post, index) => (
-          <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
-                {post.data.seriesOrder || index + 1}
-              </div>
-              <div class="flex-grow">
-                <a href={`/blog/${post.slug}`} class="block">
-                  <h3 class="text-xl font-semibold mb-2">{post.data.title}</h3>
-                </a>
-                <p class="text-gray-600 mb-4">{post.data.description}</p>
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-500">
-                    {new Date(post.data.date).toLocaleDateString()} • {post.data.readingTime || 'Quick read'}
-                  </span>
-                  <a href={`/blog/${post.slug}`} class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm">Read Article</a>
+        {
+          posts.map((post, index) => (
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                  {post.data.seriesOrder || index + 1}
+                </div>
+                <div class="flex-grow">
+                  <a href={`/blog/${post.slug}`} class="block">
+                    <h3 class="text-xl font-semibold mb-2">
+                      {post.data.title}
+                    </h3>
+                  </a>
+                  <p class="text-gray-600 mb-4">{post.data.description}</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500">
+                      {new Date(post.data.pubDate).toLocaleDateString()} •{' '}
+                      {post.data.minutesRead
+                        ? `${post.data.minutesRead} min read`
+                        : 'Quick read'}
+                    </span>
+                    <a
+                      href={`/blog/${post.slug}`}
+                      class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm"
+                    >
+                      Read Article
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
 
       <div class="mt-12 text-center">
-        <a href="/blog" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700">Back to All Articles</a>
+        <a
+          href="/blog"
+          class="px-4 py-2 border border-gray-300 rounded-md text-gray-700"
+          >Back to All Articles</a
+        >
       </div>
     </div>
   </body>

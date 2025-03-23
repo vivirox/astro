@@ -1,16 +1,16 @@
 ---
-// Simple ArticleCard componen
-// Used to display a card for a blog pos
+// Simple ArticleCard component
+// Used to display a card for a blog post
 export interface Props {
-  title: string;
-  description: string;
-  author?: string;
-  date?: string;
-  readingTime?: string;
-  tags?: string[];
+  title: string
+  description: string
+  author?: string
+  date?: string
+  readingTime?: string
+  tags?: string[]
 }
 
-const { title, description, author, date, readingTime, tags } = Astro.props;
+const { title, description, author, date, readingTime, tags } = Astro.props
 ---
 
 <div class="bg-white border border-gray-200 rounded-lg shadow-md p-5 mb-5">
@@ -23,13 +23,15 @@ const { title, description, author, date, readingTime, tags } = Astro.props;
     {readingTime && <span>{readingTime}</span>}
   </div>
 
-  {tags && tags.length > 0 && (
-    <div class="flex flex-wrap gap-2">
-      {tags.map(tag => (
-        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-          {tag}
-        </span>
-      ))}
-    </div>
-  )}
+  {
+    tags && tags.length > 0 && (
+      <div class="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+            {tag}
+          </span>
+        ))}
+      </div>
+    )
+  }
 </div>

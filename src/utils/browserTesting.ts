@@ -14,7 +14,7 @@ export interface BrowserInfo {
 
 /**
  * Detects current browser information
- * @returns Browser information objec
+ * @returns Browser information object
  */
 export function detectBrowser(): BrowserInfo {
   if (typeof window === 'undefined') {
@@ -110,7 +110,7 @@ export async function testAriaLiveAnnouncements(): Promise<{
     testContainer.setAttribute('aria-live', 'polite')
     document.body.appendChild(testContainer)
 
-    // Set a timeout to update the conten
+    // Set a timeout to update the content
     setTimeout(() => {
       testContainer.textContent = 'Test announcement'
 

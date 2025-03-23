@@ -1,4 +1,3 @@
-
 # Instructions
 
 You are a multi-agent system coordinator, playing two roles in this environment: Planner and Executor. You will decide the next steps based on the current state of `Multi-Agent Scratchpad` section in the `.cursorrules` file. Your goal is to complete the user's (or business's) final requirements. The specific instructions are as follows:
@@ -72,46 +71,45 @@ tools/screenshot_utils.py URL [--output OUTPUT] [--width WIDTH] [--height HEIGHT
 
 - LLM Verification with Images:
 
-'''bash
-python tools/llm_api.py --prompt "Your verification question" --provider {openai|anthropic} --image path/to/screenshot.png
-'''
+```bash
+python tools/llm_api.py --prompt "Your verification question" --provider gemini --image path/to/screenshot.png
+```
 
 Example workflow:
 
-'''python
+```python
 from screenshot_utils import take_screenshot_sync
 from llm_api import query_llm
+```
 
 ## Take a screenshot
 
+```bash
 screenshot_path = take_screenshot_sync('<https://example.com>', 'screenshot.png')
+```
 
 ## Verify with LLM
 
+```python
 response = query_llm(
 "What is the background color and title of this webpage?",
-provider="openai", # or "anthropic"
+provider="gemini", # or "anthropic"
 image_path=screenshot_path
 )
 print(response)
-'''
+```
 
 ## LLM
 
 You always have an LLM at your side to help you with the task. For simple tasks, you could invoke the LLM by running the following command:
 
-'''bash
-python ./tools/llm_api.py --prompt "What is the capital of France?" --provider "anthropic"
-'''
+```bash
+python ./tools/llm_api.py --prompt "What is the capital of France?" --provider "gemini"
+```
 
 The LLM API supports multiple providers:
 
-- OpenAI (default, model: gpt-4o)
-- Azure OpenAI (model: configured via AZURE_OPENAI_MODEL_DEPLOYMENT in .env file, defaults to gpt-4o-ms)
-- DeepSeek (model: deepseek-chat)
-- Anthropic (model: claude-3-sonnet-20240229)
-- Gemini (model: gemini-pro)
-- Local LLM (model: Qwen/Qwen2.5-32B-Instruct-AWQ)
+- Gemini (model: gemini-2.0-flash-exp)
 
 But usually it's a better idea to check the content of the file and use the APIs in the `tools/llm_api.py` file to invoke the LLM if needed.
 
@@ -119,9 +117,9 @@ But usually it's a better idea to check the content of the file and use the APIs
 
 You could use the `tools/web_scraper.py` file to scrape the web.
 
-'''bash
+```bash
 python ./tools/web_scraper.py --max-concurrent 3 URL1 URL2 URL3
-'''
+```
 
 This will output the content of the web pages.
 
@@ -129,17 +127,17 @@ This will output the content of the web pages.
 
 You could use the `tools/search_engine.py` file to search the web.
 
-'''bash
+```bash
 python ./tools/search_engine.py "your search keywords"
-'''
+```
 
 This will output the search results in the following format:
 
-'''bash
+```bash
 URL: <https://example.com>
 Title: This is the title of the search result
 Snippet: This is a snippet of the search result
-'''
+```
 
 If needed, you can further use the `web_scraper.py` file to scrape the web page content.
 
@@ -159,7 +157,13 @@ If needed, you can further use the `web_scraper.py` file to scrape the web page 
   - Use web_scraper.py for gathering detailed documentation
   - Use llm_api.py for analyzing complex technical decisions
   - Combine tools for a more thorough research workflow
-  - When running Python scripts that import from other local modules, use `PYTHONPATH=.` to ensure Python can find the modules. For example: `PYTHONPATH=. python tools/plan_exec_llm.py` instead of just `python tools/plan_exec_llm.py`. This is especially important when using relative imports.
+  - Right now, try to only use 'gemini' for the LLM API. The others are not working properly.
+- For TypeScript interfaces:
+  - Define interfaces inline when they're only used in a single file
+  - Add meaningful properties to interfaces to avoid empty interface linter warnings
+  - Use JSDoc comments for complex interfaces to document usage
+  - Use type aliases when appropriate for simple type definitions
+  - Add eslint-disable comments only when necessary and with specific rule references
 
 ### Recent Fixes
 
@@ -200,7 +204,7 @@ If needed, you can further use the `web_scraper.py` file to scrape the web page 
   - Check for markdown lint warnings and errors before committing changes
   - Maintain consistent bullet point style throughout the document
 
-### Lessons 2
+### Lessons Extended
 
 - Always verify protocol security requirements before implementation
 - Use proper preprocessing phase management for MPC protocols
@@ -209,64 +213,348 @@ If needed, you can further use the `web_scraper.py` file to scrape the web page 
 - Document security assumptions and guarantees
 - Test with multiple parties and security settings
 
-## Multi-Agent Scratchpad for Blog Posts Task
+- List Component Best Practices:
+  - Use appropriate semantic HTML elements (ul/ol/li)
+  - Implement proper ARIA attributes for accessibility
+  - Provide multiple variants for different visual styles
+  - Support both horizontal and vertical layouts
+  - Include support for nested lists with proper indentation
+  - Add smooth animations for expandable/collapsible elements
+  - Use data attributes for styling hooks
+  - Support different list markers (disc, circle, square, decimal, none)
+  - Implement truncation for long lists with "show more" functionality
+
+- React Hooks Best Practices (2025):
+  - Handle server-side rendering explicitly in hooks that use browser APIs
+  - Implement proper cleanup functions to prevent memory leaks
+  - Use TypeScript for better type safety and developer experience
+  - Add comprehensive JSDoc comments for hook parameters and return values
+  - Implement debounce for hooks that trigger on high-frequency events
+  - Provide sensible defaults and fallback values
+  - Create thorough testing for hooks, including SSR environments
+  - Follow naming conventions (use, get, set) consistently
+
+- Context Provider Best Practices in Astro:
+  - Use wrapper components when implementing React context providers in Astro
+  - Apply the ConvexProvider pattern for framework-specific providers
+  - Keep context values serializable when possible for better SSR compatibility
+  - Split large contexts into smaller, more focused providers
+  - Implement proper TypeScript types for context values and providers
+  - Add default values that make sense even when provider is missing
+  - Consider performance implications of context updates
+  - Document provider requirements and dependencies clearly
+
+## Multi-Agent Scratchpad for Chat System
 
 ### Background and Motivation
 
-The user requested the creation of two new blog posts for the website: one about emotional intelligence in an AI-driven world and another about how AI can assist in improving mental health. These posts needed to be properly formatted according to the site's design and added to the blog list for visibility.
+- Gradiant is a secure AI therapy chat interface for therapists and counselors
+- Utilizes Fully Homomorphic Encryption (FHE) for maximum security of sensitive therapy data
+- Implements HIPAA-compliant security measures
+- Focuses on user experience for therapists and clients
+
+## Current Implementation Status
+- ✅ FHE integration complete with key management and rotation
+- ✅ Custom API endpoint for therapy chat with enhanced security
+- ✅ Security levels: standard, HIPAA, and maximum (FHE)
+- ✅ Client-side encryption and secure processing
+- ✅ Analytics dashboard for therapy metrics
+- ✅ Updated authentication with FHE-based verification instead of ZK
+- ✅ PII detection and redaction in encrypted data
+- ✅ Toxicity filtering for content safety
+- ✅ Implemented enhanced key partitioning for maximum security level
+- ✅ Component-level security state management
+- ✅ Multi-level key rotation system
+
+## Security Design
+- FHE allows operations on encrypted data without decryption
+- Key partitioning for enhanced security in maximum security level
+- PII detection and redaction in encrypted data
+- Toxicity filtering for harmful content
+- Secure key management with rotation periods
+- Session-based encryption with key scoping
+- Homomorphic operations for secure analytics
+
+## Next Steps
+- [ ] Implement advanced therapeutic analytics using FHE homomorphic operations
+  - [ ] Sentiment tracking across sessions
+  - [ ] Pattern recognition within encrypted therapy content
+  - [ ] Risk level assessment with homomorphic machine learning
+- [ ] Add more client scenarios and therapeutic responses
+  - [ ] Expand beyond current scenarios to include more specialized conditions
+  - [ ] Add demographic-specific scenario support
+- [ ] Develop specialized therapy modules (CBT, DBT, etc.)
+  - [ ] Implement module-specific secure prompts
+  - [ ] Create structured therapy progression tracking
+- [ ] Enhance the analytics dashboard for therapist insights
+  - [ ] Add visualizations for encrypted patient trends
+  - [ ] Create secure export functionality
+- [ ] Complete end-to-end testing with production FHE libraries
+  - [ ] Performance optimization for large-scale deployments
+  - [ ] Key rotation stress testing
+  - [ ] Penetration testing of security system
+
+## File Structure
+- `/src/components/chat/TherapyChatSystem.tsx` - Main component for therapy chat UI
+- `/src/app/api/ai/therapy-chat/route.ts` - API endpoint for secure therapy chat
+- `/src/lib/fhe/index.ts` - FHE service implementation
+- `/src/lib/security/index.ts` - Security module for general encryption
+- `/src/pages/api/auth/login.ts` - Authentication with FHE security
+- `/src/pages/api/security/rotate-keys.ts` - Key rotation API endpoint
+
+## Standards & Best Practices
+- Always use the FHE service for sensitive operations
+- Implement proper key management with appropriate rotation schedules
+- Follow HIPAA compliance guidelines for all data operations
+- Use client-side processing when possible for maximum security
+- Ensure appropriate error handling and audit logging
+- Maintain clear separation between encrypted and plaintext data
+- Include verification tokens for all sensitive operations
+
+## Multi-Agent Scratchpad for Gradiant to Astro Migration
+
+### Background and Motivation
+
+The Gradiant project is being migrated to a new Astro-based implementation. This migration involves transferring valuable functionality while taking advantage of Astro's improved architecture. The migration plan encompasses multiple areas including core infrastructure, authentication, security, components, services, and more.
 
 ### Key Challenges and Analysis
 
-1. Implementation Requirements:
-
-   - Create well-researched, informative blog posts on the specified topics
-   - Follow the site's existing blog post format and structure
-   - Ensure proper frontmatter configuration for each post
-   - Make the posts visible in the blog listing
+1. Migration Requirements:
+   - Transfer all valuable functionality from original Gradiant project
+   - Adapt components and services to work with Astro architecture
+   - Maintain security features including FHE
+   - Preserve user experience while improving performance
+   - Ensure all migrated features are properly tested
 
 2. Technical Approach:
-   - Research current information on both topics using Python tools
-   - Create properly formatted Markdown files in the blog content directory
-   - Include all required frontmatter fields
-   - Ensure the posts appear in the blog listing automatically
+   - Prioritize migration of core infrastructure and utilities
+   - Adapt authentication and security components
+   - Transfer UI components with appropriate styling
+   - Migrate services with proper TypeScript typing
+   - Implement hooks and context providers for state management
 
 ### Current Status / Progress Tracking
 
-- Created two new blog posts:
-  - "Emotional Intelligence in an AI-Driven World" (src/content/blog/emotional-intelligence-in-ai-world.md)
-  - "How AI is Revolutionizing Mental Health Care" (src/content/blog/ai-mental-health-assistance.md)
-- Used Python tools to research current information on both topics
-- Properly formatted both posts with correct frontmatter including:
-  - Title and description
-  - Publication date
-  - Table of contents enabled
-  - Sharing enabled
-  - OG image generation enabled
-- Verified that blog posts are automatically included in the blog listing through the ListView component
+Based on migration-plan.mdx, the following progress has been made:
+
+- Core Infrastructure Migration: 50% Complete
+  - ✅ Migrated core utilities (utils, validation, logging)
+  - ✅ Configuration files created
+    - ✅ Environment variables configuration (env.config.ts)
+    - ✅ Supabase configuration (supabase.config.ts)
+    - ✅ Deployment configuration (deployment.config.ts)
+    - ✅ Rate limiting configuration (rate-limit.config.ts)
+    - ✅ Configuration index exports (index.ts)
+  - ✅ CI/CD workflows setup
+    - ✅ Build workflow in GitHub Actions
+    - ✅ Configured Vercel deployments via GitHub integration
+
+- Authentication & Authorization: 100% Complete
+  - ✅ Migrated auth types and interfaces
+    - ✅ Defined AuthUser and related interfaces
+    - ✅ Created provider and role types
+  - ✅ Implemented AuthService
+    - ✅ Created authentication methods (sign in, sign up, sign out)
+    - ✅ Added password reset functionality
+    - ✅ Implemented OAuth providers
+  - ✅ Created auth hooks and context
+    - ✅ Implemented useAuth hook
+    - ✅ Created AuthContext provider
+    - ✅ Added useAuthorized hook for RBAC
+  - ✅ Developed auth components
+    - ✅ Login form component
+    - ✅ Registration form component
+  - ✅ Migrated auth pages
+    - ✅ Login page
+    - ✅ Signup page
+    - ✅ Password reset pages
+    - ✅ Profile page
+  - ✅ Role-based access control
+    - ✅ Created route protection middleware
+    - ✅ Implemented role verification
+    - ✅ Added unauthorized page
+
+- Security Infrastructure: 100% Complete
+  - ✅ Created security utilities
+    - ✅ Token management
+    - ✅ Signature creation/verification
+  - ✅ FHE system migration
+    - ✅ Core FHE service implementation
+    - ✅ Key rotation system
+    - ✅ Homomorphic operations for secure data processing
+    - ✅ Demo component showing FHE capabilities
+    - ✅ Complete replacement of all ZK references with FHE
+  - ✅ PII detection implemented
+    - ✅ Created PII detection service
+    - ✅ Implemented pattern-matching detection
+    - ✅ Added ML-based detection simulation
+    - ✅ Integrated with FHE for encrypted data
+    - ✅ Implemented PII redaction functionality
+    - ✅ Created PII detection middleware
+    - ✅ Added configurable environment settings
+  - ✅ Security middleware implemented
+    - ✅ Content security policy headers
+    - ✅ CSRF protection
+    - ✅ Rate limiting middleware
+    - ✅ Audit logging for security events
+
+- Core Components: 100% Complete
+  - ✅ Theme system (ThemeToggle)
+  - ✅ ServiceWorkerUpdater
+  - ✅ UserPreferences
+  - ✅ OfflineIndicator
+  - ✅ Layout components
+    - ✅ Main Layout (Layout.tsx)
+    - ✅ Header component
+    - ✅ Footer component
+  - ✅ Navigation elements
+    - ✅ Navigation component
+    - ✅ UserMenu
+  - ✅ Form components
+    - ✅ Button
+    - ✅ Input
+    - ✅ Select
+    - ✅ Textarea
+    - ✅ Checkbox
+    - ✅ Radio
+  - ✅ Feedback components
+    - ✅ Alert
+    - ✅ Toast
+    - ✅ Dialog
+    - ✅ Progress
+    - ✅ Skeleton
+  - ✅ Data display components
+    - ✅ Card
+    - ✅ Table
+    - ✅ List
+    - ✅ Avatar
+    - ✅ Badge
+
+- Hooks and Custom Logic: 35% Complete
+  - ✅ useOffline hook
+    - ✅ Fixed NetworkInformation TypeScript interface issues
+    - ✅ Implemented reliable connection detection
+  - ✅ useLocalStorage hook
+  - ✅ useAuth hook
+  - ✅ useMediaQuery hook
+    - ✅ Implemented responsive UI detection
+    - ✅ Added server-side rendering support
+    - ✅ Created comprehensive documentation
+  - ⬜ Context providers pending
+    - ⬜ Implement ConvexProvider wrapper
+    - ⬜ Create shared providers system
+    - ⬜ Add provider composition utilities
+
+- Utility Services: 20% Complete
+  - ✅ Redis service
+    - ✅ Implemented connection pooling
+    - ✅ Added cache invalidation strategies
+    - ✅ Configured error handling and recovery
+  - ✅ Cache service
+    - ✅ Implemented tiered caching strategy
+    - ✅ Added TTL support for different data types
+    - ✅ Created cache warmup utilities
+  - ⬜ Email service pending
+    - ⬜ Implement transactional email provider integration
+    - ⬜ Create email templating system
+    - ⬜ Add queue system for reliable delivery
+    - ⬜ Implement retry logic and tracking
+  - ⬜ Notification service pending
+    - ⬜ Create multi-channel notification system
+    - ⬜ Implement user preferences for notifications
+    - ⬜ Add real-time and delayed notification support
+    - ⬜ Create notification center UI components
+
+- All other areas (Analytics, Chat, Therapy, Admin, Content, Compliance, API, Performance): 0% Complete
 
 ### Executor's Feedback or Assistance Requests
 
-The implementation is complete. Two well-researched blog posts have been created and added to the site:
+I've successfully completed the implementation of the useMediaQuery hook with the following features:
 
-1. "Emotional Intelligence in an AI-Driven World" explores:
+1. Responsive Design Support:
+   - Implemented window.matchMedia API integration for reliable media query detection
+   - Added support for multiple breakpoints (small, medium, large, extra-large devices)
+   - Ensured real-time updates when viewport size changes
 
-   - The current state of emotional intelligence in an AI world
-   - The paradox between AI's cognitive abilities and emotional limitations
-   - Three key shifts in the AI-EQ relationship
-   - Why emotional intelligence matters more in 2025
-   - The path forward for integrating AI and EQ
+2. Server-Side Rendering Compatibility:
+   - Added proper server-side rendering detection to prevent hydration mismatches
+   - Implemented initial value fallback for SSR environments
+   - Created safe error handling for server environments where window is not available
 
-2. "How AI is Revolutionizing Mental Health Care" covers:
-   - The mental health crisis and AI solutions
-   - Personal AI tools for mental wellness
-   - Clinical applications of AI in mental healthcare
-   - The integration of AI and human care
-   - Challenges and ethical considerations
-   - The future of AI in mental health
+3. Performance Optimizations:
+   - Used event listeners instead of polling for better performance
+   - Implemented cleanup to prevent memory leaks
+   - Added debounce option for high-frequency resize events
 
-Both posts are properly formatted with all required frontmatter fields and will automatically appear in the blog listing through the site's content collection system. No additional configuration is needed as the ListView component automatically pulls posts from the blog collection.
+4. Documentation and Examples:
+   - Created comprehensive documentation with usage examples
+   - Added TypeScript types and JSDoc comments
+   - Provided examples for common responsive design patterns
+
+The implementation follows modern best practices for React hooks in 2025, including proper TypeScript typing and support for the latest browser APIs. I've also ensured it works seamlessly with Astro's component model and hydration strategies.
 
 ### Next Steps and Action Items
 
-- Task complete - no further actions required
-- If adjustments are needed to the blog posts, they can be easily modified in their respective Markdown files
+Based on the updated migration plan and current progress, the following immediate next steps should be prioritized:
+
+1. Implement Context Providers system:
+   - Create a ConvexProvider wrapper similar to the approach documented in the Convex Astro template
+   - Develop a system for shared context providers that works with Astro's component model
+   - Implement provider composition utilities for complex nested providers
+   - Add TypeScript types and documentation for the context system
+
+2. Begin Email Service Implementation:
+   - Research and select a modern transactional email provider (Resend, Postmark, or SendGrid)
+   - Create a type-safe email service with template support
+   - Implement email queue system with retry logic
+   - Add comprehensive tracking and logging
+   - Create testing utilities for email verification
+
+3. Start Notification Service Development:
+   - Design multi-channel notification system (in-app, email, push)
+   - Implement user preference management for notifications
+   - Create real-time notification capabilities
+   - Develop notification center UI components
+   - Add analytics for notification engagement
+
+These next steps will complete the Hooks and Custom Logic section and make substantial progress on the Utility Services section, bringing us closer to completing Phase 2 of the migration plan.
+
+### Lessons Extended
+
+- Always verify protocol security requirements before implementation
+- Use proper preprocessing phase management for MPC protocols
+- Implement secure channel communication from the start
+- Handle protocol-specific parameters carefully
+- Document security assumptions and guarantees
+- Test with multiple parties and security settings
+
+- List Component Best Practices:
+  - Use appropriate semantic HTML elements (ul/ol/li)
+  - Implement proper ARIA attributes for accessibility
+  - Provide multiple variants for different visual styles
+  - Support both horizontal and vertical layouts
+  - Include support for nested lists with proper indentation
+  - Add smooth animations for expandable/collapsible elements
+  - Use data attributes for styling hooks
+  - Support different list markers (disc, circle, square, decimal, none)
+  - Implement truncation for long lists with "show more" functionality
+
+- React Hooks Best Practices (2025):
+  - Handle server-side rendering explicitly in hooks that use browser APIs
+  - Implement proper cleanup functions to prevent memory leaks
+  - Use TypeScript for better type safety and developer experience
+  - Add comprehensive JSDoc comments for hook parameters and return values
+  - Implement debounce for hooks that trigger on high-frequency events
+  - Provide sensible defaults and fallback values
+  - Create thorough testing for hooks, including SSR environments
+  - Follow naming conventions (use, get, set) consistently
+
+- Context Provider Best Practices in Astro:
+  - Use wrapper components when implementing React context providers in Astro
+  - Apply the ConvexProvider pattern for framework-specific providers
+  - Keep context values serializable when possible for better SSR compatibility
+  - Split large contexts into smaller, more focused providers
+  - Implement proper TypeScript types for context values and providers
+  - Add default values that make sense even when provider is missing
+  - Consider performance implications of context updates
+  - Document provider requirements and dependencies clearly

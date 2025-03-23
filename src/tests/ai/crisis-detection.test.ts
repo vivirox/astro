@@ -1,12 +1,39 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { CrisisDetectionService } from '../../lib/ai/services/crisis-detection'
+import type { AIService } from '../../lib/ai/models/types.ts'
+
+// Define types for mocked responses
+interface AIServiceResponse {
+  content: string
+  model: string
+  usage: {
+    total_tokens: number
+    prompt_tokens: number
+    completion_tokens: number
+  }
+  id?: string
+  provider?: string
+  created?: number
+  choices?: [
+    {
+      message: {
+        role: string
+        content: string
+      }
+      finishReason?: string
+    },
+  ]
+}
 
 // Create a minimal mock that satisfies the AIService interface used by CrisisDetectionService
 const mockAIService = {
   createChatCompletion: vi.fn(),
   createStreamingChatCompletion: vi.fn(),
   getModelInfo: vi.fn(),
-} as any // Using 'any' to bypass type checking
+  createChatCompletionWithTracking: vi.fn(),
+  generateCompletion: vi.fn(),
+  dispose: vi.fn(),
+} as AIService
 
 describe('CrisisDetectionService', () => {
   let crisisService: CrisisDetectionService
@@ -22,7 +49,9 @@ describe('CrisisDetectionService', () => {
   describe('detectCrisis', () => {
     it('should detect high-risk crisis correctly', async () => {
       // Mock the AI service response for high-risk crisis
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           isCrisis: true,
           severity: 'high',
@@ -33,13 +62,28 @@ describe('CrisisDetectionService', () => {
         }),
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-      })
+        choices: [
+          {
+            message: {
+              role: 'assistant',
+              content: JSON.stringify({
+                isCrisis: true,
+                severity: 'high',
+                category: 'suicidal_ideation',
+                confidence: 0.92,
+                recommendedAction:
+                  'The text contains explicit statements about self-harm and suicide.',
+              }),
+            },
+          },
+        ],
+      } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
         "I can't take it anymore. I'm thinking of ending it all tonight."
       )
 
-      // Verify the resul
+      // Verify the result
       expect(result).toEqual({
         isCrisis: true,
         severity: 'high',
@@ -68,7 +112,9 @@ describe('CrisisDetectionService', () => {
 
     it('should detect medium-risk crisis correctly', async () => {
       // Mock the AI service response for medium-risk crisis
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           isCrisis: true,
           severity: 'medium',
@@ -79,13 +125,28 @@ describe('CrisisDetectionService', () => {
         }),
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-      })
+        choices: [
+          {
+            message: {
+              role: 'assistant',
+              content: JSON.stringify({
+                isCrisis: true,
+                severity: 'medium',
+                category: 'self_harm',
+                confidence: 0.78,
+                recommendedAction:
+                  'The text mentions self-harm but without immediate intent.',
+              }),
+            },
+          },
+        ],
+      } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
         'Sometimes I think about hurting myself when I feel overwhelmed.'
       )
 
-      // Verify the resul
+      // Verify the result
       expect(result).toEqual({
         isCrisis: true,
         severity: 'medium',
@@ -100,7 +161,9 @@ describe('CrisisDetectionService', () => {
 
     it('should detect low-risk crisis correctly', async () => {
       // Mock the AI service response for low-risk crisis
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           isCrisis: true,
           severity: 'low',
@@ -111,13 +174,28 @@ describe('CrisisDetectionService', () => {
         }),
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-      })
+        choices: [
+          {
+            message: {
+              role: 'assistant',
+              content: JSON.stringify({
+                isCrisis: true,
+                severity: 'low',
+                category: 'depression',
+                confidence: 0.65,
+                recommendedAction:
+                  'The text indicates depressive symptoms but no immediate danger.',
+              }),
+            },
+          },
+        ],
+      } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
         "I've been feeling really down lately. Nothing seems to matter."
       )
 
-      // Verify the resul
+      // Verify the result
       expect(result).toEqual({
         isCrisis: true,
         severity: 'low',
@@ -132,7 +210,9 @@ describe('CrisisDetectionService', () => {
 
     it('should correctly identify non-crisis text', async () => {
       // Mock the AI service response for non-crisis
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           isCrisis: false,
           severity: 'none',
@@ -143,13 +223,28 @@ describe('CrisisDetectionService', () => {
         }),
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-      })
+        choices: [
+          {
+            message: {
+              role: 'assistant',
+              content: JSON.stringify({
+                isCrisis: false,
+                severity: 'none',
+                category: null,
+                confidence: 0.95,
+                recommendedAction:
+                  'The text does not contain any indicators of crisis or self-harm.',
+              }),
+            },
+          },
+        ],
+      } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
         'I had a good day today. The weather was nice and I enjoyed my walk.'
       )
 
-      // Verify the resul
+      // Verify the result
       expect(result).toEqual({
         isCrisis: false,
         severity: 'none',
@@ -164,20 +259,30 @@ describe('CrisisDetectionService', () => {
 
     it('should handle invalid JSON responses', async () => {
       // Mock the AI service response with invalid JSON
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: 'Not a valid JSON response',
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-      })
+        choices: [
+          {
+            message: {
+              role: 'assistant',
+              content: 'Not a valid JSON response',
+            },
+          },
+        ],
+      } as AIServiceResponse)
 
       await expect(crisisService.detectCrisis('Test text')).rejects.toThrow()
     })
 
     it('should handle AI service errors', async () => {
       // Mock the AI service to throw an error
-      ;(mockAIService.createChatCompletion as any).mockRejectedValue(
-        new Error('AI service error')
-      )
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockRejectedValue(new Error('AI service error'))
 
       await expect(crisisService.detectCrisis('Test text')).rejects.toThrow(
         'AI service error'
@@ -186,7 +291,9 @@ describe('CrisisDetectionService', () => {
 
     it('should respect sensitivity level', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           isCrisis: true,
           severity: 'medium',
@@ -196,7 +303,21 @@ describe('CrisisDetectionService', () => {
         }),
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-      })
+        choices: [
+          {
+            message: {
+              role: 'assistant',
+              content: JSON.stringify({
+                isCrisis: true,
+                severity: 'medium',
+                category: 'anxiety',
+                confidence: 0.75,
+                recommendedAction: 'The text indicates anxiety symptoms.',
+              }),
+            },
+          },
+        ],
+      } as AIServiceResponse)
 
       // Test with high sensitivity
       await crisisService.detectCrisis(
@@ -218,7 +339,9 @@ describe('CrisisDetectionService', () => {
 
       // Reset mocks
       vi.resetAllMocks()
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           isCrisis: false,
           severity: 'none',
@@ -229,7 +352,22 @@ describe('CrisisDetectionService', () => {
         }),
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-      })
+        choices: [
+          {
+            message: {
+              role: 'assistant',
+              content: JSON.stringify({
+                isCrisis: false,
+                severity: 'none',
+                category: null,
+                confidence: 0.75,
+                recommendedAction:
+                  "The text indicates anxiety symptoms but doesn't meet low sensitivity threshold.",
+              }),
+            },
+          },
+        ],
+      } as AIServiceResponse)
 
       // Test with low sensitivity
       await crisisService.detectCrisis(
@@ -254,7 +392,7 @@ describe('CrisisDetectionService', () => {
   describe('detectBatch', () => {
     it('should analyze multiple texts in parallel', async () => {
       // Mock the AI service response for multiple calls
-      ;(mockAIService.createChatCompletion as any)
+      ;(mockAIService.createChatCompletion as ReturnType<typeof vi.fn>)
         .mockResolvedValueOnce({
           content: JSON.stringify({
             isCrisis: true,
@@ -269,7 +407,21 @@ describe('CrisisDetectionService', () => {
             prompt_tokens: 50,
             completion_tokens: 50,
           },
-        })
+          choices: [
+            {
+              message: {
+                role: 'assistant',
+                content: JSON.stringify({
+                  isCrisis: true,
+                  severity: 'high',
+                  category: 'suicidal_ideation',
+                  confidence: 0.92,
+                  recommendedAction: 'High risk text',
+                }),
+              },
+            },
+          ],
+        } as AIServiceResponse)
         .mockResolvedValueOnce({
           content: JSON.stringify({
             isCrisis: false,
@@ -284,7 +436,21 @@ describe('CrisisDetectionService', () => {
             prompt_tokens: 50,
             completion_tokens: 50,
           },
-        })
+          choices: [
+            {
+              message: {
+                role: 'assistant',
+                content: JSON.stringify({
+                  isCrisis: false,
+                  severity: 'none',
+                  category: null,
+                  confidence: 0.95,
+                  recommendedAction: 'No risk text',
+                }),
+              },
+            },
+          ],
+        } as AIServiceResponse)
 
       const results = await crisisService.detectBatch([
         "I can't take it anymore",
@@ -304,7 +470,7 @@ describe('CrisisDetectionService', () => {
 
     it('should handle errors in batch processing', async () => {
       // Mock the AI service to succeed for first call and fail for second
-      ;(mockAIService.createChatCompletion as any)
+      ;(mockAIService.createChatCompletion as ReturnType<typeof vi.fn>)
         .mockResolvedValueOnce({
           content: JSON.stringify({
             isCrisis: true,
@@ -319,7 +485,21 @@ describe('CrisisDetectionService', () => {
             prompt_tokens: 50,
             completion_tokens: 50,
           },
-        })
+          choices: [
+            {
+              message: {
+                role: 'assistant',
+                content: JSON.stringify({
+                  isCrisis: true,
+                  severity: 'high',
+                  category: 'suicidal_ideation',
+                  confidence: 0.92,
+                  recommendedAction: 'High risk text',
+                }),
+              },
+            },
+          ],
+        } as AIServiceResponse)
         .mockRejectedValueOnce(new Error('AI service error'))
 
       await expect(
@@ -338,7 +518,9 @@ describe('CrisisDetectionService', () => {
       })
 
       // Use a non-public method to test the model
-      expect((service as any).config.model).toBe('gpt-4o')
+      expect(
+        (service as unknown as { config: { model: string } }).config.model
+      ).toBe('gpt-4o')
     })
 
     it('should use custom system prompt if provided', () => {
@@ -348,7 +530,10 @@ describe('CrisisDetectionService', () => {
         defaultPrompt: customPrompt,
       })
 
-      expect((service as any).config.defaultPrompt).toBe(customPrompt)
+      expect(
+        (service as unknown as { config: { defaultPrompt: string } }).config
+          .defaultPrompt
+      ).toBe(customPrompt)
     })
   })
 })

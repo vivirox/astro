@@ -1,7 +1,7 @@
 ---
 // This component will be rendered client-side to generate a table of contents
-// from the headings in the blog pos
-export interface Props {}
+// from the headings in the blog post
+// export interface Props {}
 ---
 
 <div class="toc-container">
@@ -14,44 +14,45 @@ export interface Props {}
 <script>
   // Function to generate the table of contents
   function generateTableOfContents() {
-    const headings = document.querySelectorAll('h2, h3, h4');
-    const tocList = document.getElementById('toc');
+    const headings = document.querySelectorAll('h2, h3, h4')
+    const tocList = document.getElementById('toc')
 
-    if (!tocList) return;
+    if (!tocList) return
 
     headings.forEach((heading) => {
       // Create an ID for the heading if it doesn't have one
       if (!heading.id) {
-        heading.id = heading.textConten
-          ?.toLowerCase()
-          .replace(/[^\w\s]/g, '')
-          .replace(/\s+/g, '-') || '';
+        heading.id =
+          heading.textContent
+            ?.toLowerCase()
+            .replace(/[^\w\s]/g, '')
+            .replace(/\s+/g, '-') || ''
       }
 
       // Create list item
-      const listItem = document.createElement('li');
-      listItem.className = `toc-item toc-${heading.tagName.toLowerCase()}`;
+      const listItem = document.createElement('li')
+      listItem.className = `toc-item toc-${heading.tagName.toLowerCase()}`
 
       // Create link
-      const link = document.createElement('a');
-      link.href = `#${heading.id}`;
-      link.textContent = heading.textContent;
+      const link = document.createElement('a')
+      link.href = `#${heading.id}`
+      link.textContent = heading.textContent
 
       // Add click event to smooth scroll
       link.addEventListener('click', (e) => {
-        e.preventDefault();
+        e.preventDefault()
         document.querySelector(`#${heading.id}`)?.scrollIntoView({
-          behavior: 'smooth'
-        });
-      });
+          behavior: 'smooth',
+        })
+      })
 
-      listItem.appendChild(link);
-      tocList.appendChild(listItem);
-    });
+      listItem.appendChild(link)
+      tocList.appendChild(listItem)
+    })
   }
 
   // Run after the DOM is fully loaded
-  document.addEventListener('DOMContentLoaded', generateTableOfContents);
+  document.addEventListener('DOMContentLoaded', generateTableOfContents)
 </script>
 
 <style>

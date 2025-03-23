@@ -1,10 +1,61 @@
 import { defineMiddleware } from 'astro:middleware'
 import { getSession } from '../auth/session'
+import { getLogger } from '../logging'
+
+// Initialize logger
+const logger = getLogger()
+
+// Rate limit configuration for different API endpoints
+export interface RateLimitConfig {
+  /** Path pattern to match */
+  path: string
+  /** Rate limits by role */
+  limits: Record<string, number>
+  /** Time window in milliseconds */
+  windowMs: number
+}
+
+// Default rate limit configuration for different endpoints
+const rateLimitConfigs: RateLimitConfig[] = [
+  {
+    path: '/api/ai/',
+    limits: {
+      admin: 120, // 120 requests per minute for admins
+      therapist: 80, // 80 requests per minute for therapists
+      user: 40, // 40 requests per minute for regular users
+      anonymous: 10, // 10 requests per minute for unauthenticated users
+    },
+    windowMs: 60 * 1000, // 1 minute
+  },
+  {
+    path: '/api/auth/',
+    limits: {
+      admin: 30,
+      therapist: 30,
+      user: 20,
+      anonymous: 5,
+    },
+    windowMs: 60 * 1000, // 1 minute
+  },
+  {
+    path: '/api/',
+    limits: {
+      admin: 300,
+      therapist: 200,
+      user: 100,
+      anonymous: 30,
+    },
+    windowMs: 60 * 1000, // 1 minute
+  },
+]
 
 // Simple in-memory rate limiter implementation
 // In production, this should be replaced with a Redis-based solution
-class RateLimiter {
-  private storage: Map<string, { count: number; resetTime: number }> = new Map()
+export class RateLimiter {
+  private storage: Map<string, { count: number; resetTime: number }> = new Map<
+    string,
+    { count: number; resetTime: number }
+  >()
   private readonly defaultLimit: number
   private readonly windowMs: number
   private readonly userLimits: Record<string, number> = {
@@ -23,16 +74,27 @@ class RateLimiter {
    */
   public check(
     identifier: string,
-    role = 'anonymous'
+    role = 'anonymous',
+    pathSpecificLimits?: Record<string, number>,
+    customWindowMs?: number
   ): { allowed: boolean; limit: number; remaining: number; reset: number } {
     const now = Date.now()
-    const entry = this.storage.get(identifier)
-    const limit = this.userLimits[role] || this.defaultLimit
+    // Create a compound key that includes the path information
+    const hasPathSpecificLimits = !!pathSpecificLimits
+    const storageKey = hasPathSpecificLimits
+      ? `${identifier}:path_specific`
+      : identifier
+
+    const entry = this.storage.get(storageKey)
+    // Use path-specific limits if provided, otherwise use default
+    const limit =
+      pathSpecificLimits?.[role] || this.userLimits[role] || this.defaultLimit
+    const windowMs = customWindowMs || this.windowMs
 
     // If no entry exists or the entry has expired, create a new one
     if (!entry || entry.resetTime <= now) {
-      const resetTime = now + this.windowMs
-      this.storage.set(identifier, { count: 1, resetTime })
+      const resetTime = now + windowMs
+      this.storage.set(storageKey, { count: 1, resetTime })
       return { allowed: true, limit, remaining: limit - 1, reset: resetTime }
     }
 
@@ -43,7 +105,7 @@ class RateLimiter {
 
     // Increment the count
     entry.count += 1
-    this.storage.set(identifier, entry)
+    this.storage.set(storageKey, entry)
 
     return {
       allowed: true,
@@ -75,13 +137,37 @@ setInterval(() => {
 }, 60 * 1000)
 
 /**
+ * Find the matching rate limit configuration for a given path
+ */
+function findMatchingConfig(path: string): RateLimitConfig | undefined {
+  // Sort configs by specificity (longest path first)
+  const sortedConfigs = [...rateLimitConfigs].sort(
+    (a, b) => b.path.length - a.path.length
+  )
+
+  // Find the first config that matches the path
+  return sortedConfigs.find((config) => path.includes(config.path))
+}
+
+/**
  * Rate limiting middleware
  * Restricts the number of requests a client can make in a given time window
  */
 export const rateLimitMiddleware = defineMiddleware(
   async ({ request }, next) => {
-    // Only apply rate limiting to AI API routes
-    if (!request.url.includes('/api/ai/')) {
+    const url = new URL(request.url)
+    const path = url.pathname
+
+    // Only apply rate limiting to API routes
+    if (!path.startsWith('/api/')) {
+      return next()
+    }
+
+    // Find the matching rate limit configuration
+    const config = findMatchingConfig(path)
+
+    if (!config) {
+      // No specific configuration found, proceed normally
       return next()
     }
 
@@ -101,16 +187,28 @@ export const rateLimitMiddleware = defineMiddleware(
         role = session.user.role || 'user'
       }
     } catch (error) {
-      console.warn('Error getting session for rate limiting:', error)
+      logger.warn('Error getting session for rate limiting:', error)
     }
+
+    // Create a composite identifier that includes the API path type
+    const compositeIdentifier = `${identifier}:${config.path}`
 
     // Check rate limit
     const { allowed, limit, remaining, reset } = rateLimiter.check(
-      identifier,
-      role
+      compositeIdentifier,
+      role,
+      config.limits,
+      config.windowMs
     )
 
     if (!allowed) {
+      logger.warn('Rate limit exceeded', {
+        path,
+        identifier,
+        role,
+        limit,
+      })
+
       return new Response(
         JSON.stringify({
           error: 'Too Many Requests',
@@ -140,3 +238,6 @@ export const rateLimitMiddleware = defineMiddleware(
     return response
   }
 )
+
+// Export the instance for direct use in API routes
+export const rateLimit = rateLimiter

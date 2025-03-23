@@ -86,7 +86,7 @@ export function createSentimentAnalysisService(
   defaultPrompt?: string
 ) {
   return new SentimentAnalysisService({
-    aiService: aiService as any,
+    aiService,
     model,
     defaultPrompt,
   })
@@ -102,7 +102,7 @@ export function createCrisisDetectionService(
   sensitivityLevel?: 'low' | 'medium' | 'high'
 ) {
   return new CrisisDetectionService({
-    aiService: aiService as any,
+    aiService,
     model,
     defaultPrompt,
     sensitivityLevel,
@@ -119,7 +119,7 @@ export function createResponseGenerationService(
   temperature?: number
 ) {
   return new ResponseGenerationService({
-    aiService: aiService as any,
+    aiService,
     model,
     maxResponseTokens,
     temperature,
@@ -134,7 +134,7 @@ export function createInterventionAnalysisService(
   model?: string
 ) {
   return new InterventionAnalysisService({
-    aiService: aiService as any,
+    aiService,
     model,
     systemPrompt: `You are an expert therapist analyzing the effectiveness of interventions. Your responses should be concise and focused on the intervention's impact and areas for improvement.`,
   })
@@ -153,12 +153,13 @@ export interface AIMessage {
  * Sentiment Analysis Types
  */
 export interface SentimentResult {
-  [x: string]: any
   score: number // -1 to 1, where -1 is very negative, 1 is very positive
   label: 'negative' | 'neutral' | 'positive'
   confidence: number // 0 to 1
   emotions?: Record<string, number> // Optional map of emotions to scores (0-1)
   usage?: TokenUsage
+  // Allow additional properties with string keys
+  [key: string]: string | number | boolean | object | undefined
 }
 
 /**

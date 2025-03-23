@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import type { CrisisDetectionResult } from '../../../lib/ai/models/types'
 
 interface UseCrisisDetectionOptions {
@@ -41,7 +41,7 @@ export function useCrisisDetection({
     setError(null)
   }, [])
 
-  // Detect crisis in a single tex
+  // Detect crisis in a single text
   const detectCrisis = useCallback(
     async (text: string) => {
       if (!text.trim() || isLoading) return null
@@ -149,7 +149,7 @@ export function useCrisisDetection({
         const crisisDetected = data?.some((result) => result?.isCrisis)
 
         if (crisisDetected && onCrisisDetected) {
-          // Call onCrisisDetected with the first crisis resul
+          // Call onCrisisDetected with the first crisis result
           const firstCrisis = data?.find((result) => result?.isCrisis)
           if (firstCrisis) {
             onCrisisDetected(firstCrisis)

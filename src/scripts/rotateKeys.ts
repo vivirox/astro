@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Key Rotation Scrip
+ * Key Rotation Script
  *
  * This script is designed to be run as a scheduled task (e.g., via cron)
  * to automatically rotate encryption keys based on their expiration dates.

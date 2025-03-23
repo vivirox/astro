@@ -1,5 +1,6 @@
 import type { AstroCookies } from 'astro'
-import { getCurrentUser, hasRole, createAuditLogFromParams } from './auth'
+import { getCurrentUser, hasRole } from './auth'
+import { createAuditLog } from './audit/log'
 
 // Define permission types
 export type Resource =
@@ -85,8 +86,7 @@ export function roleHasPermission(role: Role, permission: Permission): boolean {
  */
 export async function hasPermission(
   cookies: AstroCookies,
-  permission: Permission,
-  request?: Request
+  permission: Permission
 ): Promise<boolean> {
   const user = await getCurrentUser(cookies)
 
@@ -103,16 +103,16 @@ export async function hasPermission(
     permission.includes(':admin') ||
     permission.startsWith('manage:')
   ) {
-    await createAuditLogFromParams(
-      user.id,
-      'permission_check',
-      'access_control',
-      null,
-      {
+    await createAuditLog({
+      userId: user.id,
+      action: 'permission_check',
+      resource: 'access_control',
+      resourceId: null,
+      metadata: {
         permission,
         granted: hasPermission,
-      }
-    )
+      },
+    })
   }
 
   return hasPermission
@@ -139,11 +139,9 @@ export function requirePermission(permission: Permission) {
   return async ({
     cookies,
     redirect,
-    request,
   }: {
     cookies: AstroCookies
     redirect: (path: string) => Response
-    request: Request
   }) => {
     const user = await getCurrentUser(cookies)
 
@@ -158,16 +156,16 @@ export function requirePermission(permission: Permission) {
     const hasPermission = roleHasPermission(userRole, permission)
 
     // Log access control check
-    await createAuditLogFromParams(
-      user.id,
-      'permission_check',
-      'access_control',
-      null,
-      {
+    await createAuditLog({
+      userId: user.id,
+      action: 'permission_check',
+      resource: 'access_control',
+      resourceId: null,
+      metadata: {
         permission,
         granted: hasPermission,
-      }
-    )
+      },
+    })
 
     if (!hasPermission) {
       return redirect(

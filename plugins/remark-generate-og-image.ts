@@ -42,9 +42,12 @@ async function generateOgImage(
 
   try {
     const node = ogImageMarkup(authorOrBrand, title, bgType)
-    unescapeHTML(node)
 
-    const svg = await satori(node, satoriOptions)
+    const unescapedNode = unescapeHTML(
+      node
+    ) as unknown as import('react').ReactNode
+
+    const svg = await satori(unescapedNode, satoriOptions)
 
     const compressedPngBuffer = await sharp(Buffer.from(svg))
       .png({
@@ -60,9 +63,7 @@ async function generateOgImage(
     )
     console.error(e)
   }
-}
-
-/**
+} /**
  * Used to generate {@link https://ogp.me/ Open Graph} images.
  *
  * @see https://github.com/vfile/vfile
@@ -74,9 +75,7 @@ function remarkGenerateOgImage() {
 
   const { authorOrBrand, fallbackTitle, fallbackBgType } = ogImage[1]
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  return async (_tree, file) => {
+  return async (file) => {
     // regenerate fallback
     if (!checkFileExistsInDir('public/og-images', 'og-image.png')) {
       await generateOgImage(

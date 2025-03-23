@@ -32,7 +32,7 @@ export interface PromptOptimizerConfig {
 /**
  * Prompt Optimizer Service
  *
- * Optimizes prompts to reduce token usage while maintaining contex
+ * Optimizes prompts to reduce token usage while maintaining context
  */
 export class PromptOptimizerService {
   dispose() {
@@ -89,7 +89,7 @@ export class PromptOptimizerService {
         return msg
       }
 
-      // For other messages, truncate conten
+      // For other messages, truncate content
       return {
         ...msg,
         content:

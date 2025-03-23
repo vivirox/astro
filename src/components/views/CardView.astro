@@ -1,8 +1,7 @@
-
 ---
 import { getCollection } from 'astro:content'
 import CardItem from '~/components/views/CardItem.astro'
-import { processBlueskyPosts } from '~/utils/data'
+import { processBlueskyPosttts } from '~/utils/data'
 
 import type {
   CollectionEntry,
@@ -17,6 +16,7 @@ interface Props {
   gap?: 'number'
   minCardWidth?: number
   maxCardWidth?: number
+  showMore?: boolean
 }
 
 const {
@@ -31,7 +31,7 @@ let highlights: CollectionEntry<'highlights'>[] = []
 let processedHighlights: CardItemData[] = []
 if (collectionType === 'highlights') {
   highlights = await getCollection(collectionType)
-  processedHighlights = processBlueskyPosts(highlights).sort((a, b) =>
+  processedHighlights = processBlueskyPosttts(highlights).sort((a, b) =>
     !a.date || !b.date
       ? 0
       : new Date(b.date).valueOf() - new Date(a.date).valueOf()
@@ -62,7 +62,12 @@ if (collectionType === 'highlights') {
     #debounceTimeout: number | null = null
 
     static get observedAttributes() {
-      return ['data-gap', 'data-min-card-width', 'data-max-card-width']
+      return [
+        'data-gap',
+        'data-min-card-width',
+        'data-max-card-width',
+        'data-show-more',
+      ]
     }
 
     get #config() {
@@ -70,6 +75,7 @@ if (collectionType === 'highlights') {
         gap: this.#getParseInt(this.dataset.gap || '16'),
         minCardWidth: this.#getParseInt(this.dataset.minCardWidth || '350'),
         maxCardWidth: this.#getParseInt(this.dataset.maxCardWidth || '1000'),
+        showMore: this.#getParseInt(this.dataset.showMore || '0'),
       }
     }
 
@@ -109,11 +115,11 @@ if (collectionType === 'highlights') {
     }
 
     attributeChangedCallback = (
-      _name: string,
+      name: string,
       oldValue: string,
       newValue: string
     ) => {
-      if (this.#initialized && oldValue !== newValue) {
+      if (this.#initialized && oldValue !== newValue && name in this.dataset) {
         this.#debounceUpdateLayout()
       }
     }
@@ -137,10 +143,14 @@ if (collectionType === 'highlights') {
 
     #handleDOMChanges = (mutations: MutationRecord[]) => {
       for (const m of mutations) {
-        const target = m.target
+        const target = m.targe
 
-        if (target instanceof HTMLElement && target.nodeName === 'SWIPER-SLIDE')
+        if (
+          target instanceof HTMLElement &&
+          target.nodeName === 'SWIPER-SLIDE'
+        ) {
           break
+        }
 
         if (
           target instanceof HTMLElement &&

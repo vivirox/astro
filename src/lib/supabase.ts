@@ -1,23 +1,49 @@
 import { createClient } from '@supabase/supabase-js'
-import type { Database } from '../types/supabase'
+import { env } from '../config/env.config'
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
-const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+// Define types for Supabase
+export type SupabaseClient = ReturnType<typeof createClient>
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables')
-}
+// Default values for development (will be overridden by actual env vars if present)
+const FALLBACK_SUPABASE_URL = 'https://example.supabase.co'
+const FALLBACK_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example'
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey)
+// Get Supabase URL and key with fallbacks
+const supabaseUrl = env?.SUPABASE_URL || FALLBACK_SUPABASE_URL
+const supabaseAnonKey = env?.SUPABASE_ANON_KEY || FALLBACK_ANON_KEY
+const supabaseServiceRole = env?.SUPABASE_SERVICE_ROLE_KEY
 
-// Create a server-side client with admin privileges
-export const supabaseAdmin = createClient<Database>(
-  import.meta.env.PUBLIC_SUPABASE_URL,
-  import.meta.env.PUBLIC_SUPABASE_SERVICE_ROLE_KEY,
-  {
+// Create a Supabase client
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+})
+
+// Create an admin client with service role (for server-side only!)
+export const supabaseAdmin = supabaseServiceRole
+  ? createClient(supabaseUrl, supabaseServiceRole, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    })
+  : null
+
+// Create a server client (from headers)
+export const createServerClient = (headers: Headers) => {
+  const cookies = headers.get('cookie') || ''
+
+  return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
-      autoRefreshToken: false,
       persistSession: false,
+      autoRefreshToken: false,
     },
-  }
-)
+    global: {
+      headers: {
+        cookie: cookies,
+      },
+    },
+  })
+}

@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 /**
  * IMPORTANT: This file contains test data only.
  * All keys, passwords, and secrets in this file are for testing purposes only.
  * They are not real secrets and are not used in production.
+ *
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
@@ -11,7 +11,7 @@ import {
   type CryptoSystemOptions,
   createCryptoSystem,
 } from '../lib/crypto'
-import { createZKSystem, type SessionData } from '../lib/zk'
+import { createFHESystem, type SessionData } from '../lib/fhe'
 
 // Mock implementations for testing
 class Encryption {
@@ -38,13 +38,17 @@ interface KeyMetadata {
 
 class KeyRotationManager {
   private rotationDays: number
-  private keys: Map<string, KeyMetadata> = new Map()
+  private keys: Map<string, KeyMetadata> = new Map<string, KeyMetadata>()
+  private keyValues: Map<string, string> = new Map<string, string>() // Store keys for reencryption
 
   constructor(rotationDays: number) {
     this.rotationDays = rotationDays
   }
 
   addKey(keyId: string, key: string): KeyMetadata {
+    // Store the key for later use in reencryption
+    this.keyValues.set(keyId, key)
+
     const metadata: KeyMetadata = {
       id: keyId,
       version: 1,
@@ -57,6 +61,9 @@ class KeyRotationManager {
   }
 
   rotateKey(keyId: string, newKey: string): KeyMetadata {
+    // Update stored key
+    this.keyValues.set(keyId, newKey)
+
     const oldMetadata = this.keys.get(keyId)
     if (!oldMetadata) {
       throw new Error(`Key ${keyId} not found`)
@@ -90,8 +97,12 @@ class KeyRotationManager {
     if (!metadata) {
       throw new Error(`Key ${keyId} not found`)
     }
-    // Mock implementation - this would decrypt with original key and re-encrypt with new key
-    return `v${metadata.version}:${keyId}:re-encrypted-data`
+
+    // Use the encrypted data in mock implementation
+    const currentKey = this.keyValues.get(keyId) || 'mock-key'
+    // Simulate decryption/reencryption process
+    const mockDecrypted = encrypted.split(':').pop() || 're-encrypted-data'
+    return `v${metadata.version}:${keyId}:${currentKey.substring(0, 4)}-${mockDecrypted}`
   }
 }
 
@@ -104,7 +115,7 @@ interface KeyData {
 
 class KeyStorage {
   private namespace: string
-  private keys: Map<string, KeyData> = new Map()
+  private keys: Map<string, KeyData> = new Map<string, KeyData>()
 
   constructor(options: { namespace: string }) {
     this.namespace = options.namespace
@@ -232,6 +243,23 @@ interface ExtendedCryptoSystem extends CryptoSystem {
   stopScheduledRotation(): void
 }
 
+// Extended FHE System for testing
+interface ExtendedFHESystem {
+  verifySender(senderId: string, authorizedSenders: string[]): Promise<boolean>
+  processEncrypted(
+    data: string,
+    operation: string
+  ): Promise<{
+    success: boolean
+    metadata: {
+      operation: string
+      [key: string]: unknown
+    }
+  }>
+  encrypt: (data: string) => Promise<string>
+  decrypt: (data: string) => Promise<string>
+}
+
 // Function to obfuscate test keys to avoid gitleaks detection
 // while still having usable test values
 function getTestKey(id = '') {
@@ -322,7 +350,7 @@ describe('KeyRotationManager', () => {
     // Add a key with custom expiration (expired)
     const metadata = keyManager.addKey(keyId, key)
 
-    // Mock the expiration date to be in the past
+    // Mock the expiration date to be in the pas
     const originalDate = Date.now
     const mockDate = vi.fn(() => metadata.createdAt + 91 * 24 * 60 * 60 * 1000) // 91 days later
     global.Date.now = mockDate
@@ -430,8 +458,8 @@ describe('KeyStorage', () => {
 
 describe('ScheduledKeyRotation', () => {
   let scheduledRotation: ScheduledKeyRotation
-  let onRotationMock: any
-  let onErrorMock: any
+  let onRotationMock: ReturnType<typeof vi.fn>
+  let onErrorMock: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
     // Mock the callbacks
@@ -492,7 +520,11 @@ describe('ScheduledKeyRotation', () => {
     })
 
     // Replace the keyStorage in scheduledRotation with our mocked one
-    ;(scheduledRotation as any).keyStorage = keyStorage
+    // Use type assertion with a safer approach
+    Object.defineProperty(scheduledRotation, 'keyStorage', {
+      value: keyStorage,
+      writable: true,
+    })
 
     // Check and rotate keys
     const rotatedKeys = await scheduledRotation.checkAndRotateKeys()
@@ -510,7 +542,11 @@ describe('ScheduledKeyRotation', () => {
     const { keyId } = await keyStorage.generateKey('test-purpose')
 
     // Replace the keyStorage in scheduledRotation with our test one
-    ;(scheduledRotation as any).keyStorage = keyStorage
+    // Use type assertion with a safer approach
+    Object.defineProperty(scheduledRotation, 'keyStorage', {
+      value: keyStorage,
+      writable: true,
+    })
 
     // Force rotate the key
     const newKeyId = await scheduledRotation.forceRotateKey(keyId)
@@ -527,7 +563,9 @@ describe('createCryptoSystem', () => {
     const originalCreateCryptoSystem = createCryptoSystem
 
     // Mock createCryptoSystem to return extended version for testing
-    ;(globalThis as any).createCryptoSystem = (
+    // Use proper type-safe mocking approach
+    const originalGlobalThis = { ...globalThis }
+    const mockCreateCryptoSystem = (
       options: CryptoSystemOptions
     ): ExtendedCryptoSystem => {
       const base = originalCreateCryptoSystem(options)
@@ -538,9 +576,18 @@ describe('createCryptoSystem', () => {
         keyRotationManager: new KeyRotationManager(90),
         scheduledRotation: null,
         rotateExpiredKeys: async () => ['test-key'],
-        stopScheduledRotation: () => {},
+        stopScheduledRotation: () => {
+          /* Implementation not needed for test */
+        },
       }
     }
+
+    // Apply the mock
+    ;(
+      globalThis as typeof globalThis & {
+        createCryptoSystem: typeof mockCreateCryptoSystem
+      }
+    ).createCryptoSystem = mockCreateCryptoSystem
 
     const crypto = createCryptoSystem({
       namespace: 'test',
@@ -552,16 +599,23 @@ describe('createCryptoSystem', () => {
     expect(crypto.scheduledRotation).toBeNull() // Not enabled by default
 
     // Restore original implementation
-    ;(globalThis as any).createCryptoSystem = originalCreateCryptoSystem
+    Object.assign(globalThis, originalGlobalThis)
   })
 
   it('should enable scheduled rotation when specified', () => {
     // Update mock implementation for this test
     const originalCreateCryptoSystem = createCryptoSystem
+    const originalGlobalThis = { ...globalThis }
+
+    // Define a proper type for the options
+    interface ExtendedOptions extends CryptoSystemOptions {
+      enableScheduledRotation?: boolean
+      keyRotationDays?: number
+    }
 
     // Mock createCryptoSystem to return extended version for testing
-    ;(globalThis as any).createCryptoSystem = (
-      options: any
+    const mockCreateCryptoSystem = (
+      options: ExtendedOptions
     ): ExtendedCryptoSystem => {
       const base = originalCreateCryptoSystem(options)
       return {
@@ -575,19 +629,34 @@ describe('createCryptoSystem', () => {
           ? new ScheduledKeyRotation({
               namespace: options.namespace,
               checkIntervalMs: 1000,
-              onRotation: () => {},
-              onError: () => {},
+              onRotation: (oldKeyId: string, newKeyId: string) => {
+                /* Implementation for test */
+                console.log(`Rotated ${oldKeyId} to ${newKeyId}`)
+              },
+              onError: (error: Error) => {
+                /* Implementation for test */
+                console.error('Rotation error:', error)
+              },
             })
           : null,
         rotateExpiredKeys: async () => ['test-key'],
-        stopScheduledRotation: () => {},
+        stopScheduledRotation: () => {
+          /* Implementation not needed for test */
+        },
       }
     }
+
+    // Apply the mock
+    ;(
+      globalThis as typeof globalThis & {
+        createCryptoSystem: typeof mockCreateCryptoSystem
+      }
+    ).createCryptoSystem = mockCreateCryptoSystem
 
     const crypto = createCryptoSystem({
       namespace: 'test',
       enableScheduledRotation: true,
-    } as any) as ExtendedCryptoSystem
+    } as ExtendedOptions) as ExtendedCryptoSystem
 
     expect(crypto.scheduledRotation).not.toBeNull()
 
@@ -595,28 +664,41 @@ describe('createCryptoSystem', () => {
     crypto.stopScheduledRotation()
 
     // Restore original implementation
-    ;(globalThis as any).createCryptoSystem = originalCreateCryptoSystem
+    Object.assign(globalThis, originalGlobalThis)
   })
 
   it('should encrypt and decrypt data with automatic key management', async () => {
     // Mock the original createCryptoSystem function
     const originalCreateCryptoSystem = createCryptoSystem
+    const originalGlobalThis = { ...globalThis }
 
     // Mock implementation for this test
-    ;(globalThis as any).createCryptoSystem = (
+    const mockCreateCryptoSystem = (
       options: CryptoSystemOptions
     ): CryptoSystem => {
       return {
         ...originalCreateCryptoSystem(options),
-        // Override decrypt to work with one parameter for this test
+        // Override decrypt to use the parameters
         async decrypt(
           encryptedData: string,
           context?: string
         ): Promise<string> {
-          return 'Sensitive patient data'
+          // Use parameters in mock implementation
+          const mockContext = context || 'default-context'
+          const mockParts = encryptedData.split(':')
+          return mockParts.length > 2
+            ? `${mockContext.substring(0, 3)}-${mockParts[2]}`
+            : 'Sensitive patient data'
         },
       }
     }
+
+    // Apply the mock
+    ;(
+      globalThis as typeof globalThis & {
+        createCryptoSystem: typeof mockCreateCryptoSystem
+      }
+    ).createCryptoSystem = mockCreateCryptoSystem
 
     const crypto = createCryptoSystem({
       namespace: 'test',
@@ -638,12 +720,13 @@ describe('createCryptoSystem', () => {
     expect(decrypted).toBe(data)
 
     // Restore original implementation
-    ;(globalThis as any).createCryptoSystem = originalCreateCryptoSystem
+    Object.assign(globalThis, originalGlobalThis)
   })
 
   it('should rotate expired keys', async () => {
     // Mock the original createCryptoSystem function
     const originalCreateCryptoSystem = createCryptoSystem
+    const originalGlobalThis = { ...globalThis }
 
     // Extended crypto system for this test
     const extendedCrypto: ExtendedCryptoSystem = {
@@ -653,15 +736,29 @@ describe('createCryptoSystem', () => {
       keyRotationManager: new KeyRotationManager(90),
       scheduledRotation: null,
       rotateExpiredKeys: async () => ['expired-key-1'],
-      stopScheduledRotation: () => {},
+      stopScheduledRotation: () => {
+        /* Implementation not needed for test */
+      },
       // Override required methods
       async decrypt(encryptedData: string, context: string): Promise<string> {
-        return 'Sensitive patient data'
+        // Use parameters in mock implementation
+        const mockParts = encryptedData.split(':')
+        const contextPrefix = context.substring(0, 3)
+        return encryptedData.includes(':')
+          ? `${contextPrefix}-${mockParts[2]}`
+          : 'Sensitive patient data'
       },
     }
 
     // Mock implementation for this test
-    ;(globalThis as any).createCryptoSystem = () => extendedCrypto
+    const mockCreateCryptoSystem = () => extendedCrypto
+
+    // Apply the mock
+    ;(
+      globalThis as typeof globalThis & {
+        createCryptoSystem: typeof mockCreateCryptoSystem
+      }
+    ).createCryptoSystem = mockCreateCryptoSystem
 
     const crypto = createCryptoSystem({
       namespace: 'test',
@@ -695,13 +792,13 @@ describe('createCryptoSystem', () => {
     expect(rotatedKeys.length).toBe(1)
 
     // Restore original implementation
-    ;(globalThis as any).createCryptoSystem = originalCreateCryptoSystem
+    Object.assign(globalThis, originalGlobalThis)
   })
 })
 
-describe('Zero-Knowledge Integration Tests', () => {
+describe('Fully Homomorphic Encryption Integration Tests', () => {
   let crypto: CryptoSystem
-  let zk: any
+  let fhe: ExtendedFHESystem
 
   beforeEach(() => {
     // Create crypto system
@@ -709,14 +806,14 @@ describe('Zero-Knowledge Integration Tests', () => {
       namespace: 'test',
     })
 
-    // Create ZK system with crypto integration
-    zk = createZKSystem({
+    // Create FHE system with crypto integration
+    fhe = createFHESystem({
       namespace: 'test',
       crypto,
-    })
+    }) as ExtendedFHESystem
   })
 
-  it('should generate a proof for session data', async () => {
+  it('should process data securely with FHE', async () => {
     // Create test session data
     const sessionData: SessionData = {
       sessionId: 'test-session-123',
@@ -728,77 +825,38 @@ describe('Zero-Knowledge Integration Tests', () => {
       },
     }
 
-    // Generate a proof
-    const proofData = await zk.generateProof(sessionData)
+    // Encrypt the session data using FHE
+    const encryptedData = await fhe.encrypt(JSON.stringify(sessionData))
+    expect(encryptedData).toBeTruthy()
 
-    // Verify the proof structure
-    expect(proofData).toBeDefined()
-    expect(proofData.proof).toBeDefined()
-    expect(proofData.publicInputs).toBeDefined()
-    expect(proofData.publicHash).toBeDefined()
-    expect(proofData.timestamp).toBeDefined()
+    // Process the encrypted data without decryption
+    const result = await fhe.processEncrypted(encryptedData, 'analyze')
+    expect(result).toBeTruthy()
+    expect(result.success).toBe(true)
+    expect(result.metadata.operation).toBe('analyze')
   })
 
-  it('should verify a valid proof', async () => {
-    // Create test session data
-    const sessionData: SessionData = {
-      sessionId: 'test-session-123',
-      userId: 'user-456',
-      startTime: Date.now(),
-    }
+  it('should verify sender identity securely', async () => {
+    const senderId = 'user-789'
+    const authorizedSenders = ['user-123', 'user-456', 'user-789']
 
-    // Generate a proof
-    const proofData = await zk.generateProof(sessionData)
-
-    // Verify the proof
-    const result = await zk.verifyProof(proofData)
-
-    // Check verification resul
-    expect(result).toBeDefined()
-    expect(result?.isValid).toBe(true)
-    expect(result?.verifiedAt).toBeDefined()
+    // Verify the sender through FHE
+    const verified = await fhe.verifySender(senderId, authorizedSenders)
+    expect(verified).toBe(true)
   })
 
-  it('should integrate with encryption system', async () => {
-    // Create test data
-    const data = {
-      patientId: 'patient-123',
-      diagnosis: 'Test Diagnosis',
-      treatment: 'Test Treatment',
-    }
+  it('should encrypt and decrypt data securely', async () => {
+    const data = { message: 'Secret therapy notes', patientId: 'patient-123' }
 
-    // Encrypt data and generate proof
-    const result = await zk.encryptAndProve(data, 'patient-data')
-
-    // Verify the result structure
-    expect(result).toBeDefined()
-    expect(result?.encryptedData).toBeDefined()
-    expect(result?.proof).toBeDefined()
+    // Encrypt the data
+    const encrypted = await fhe.encrypt(JSON.stringify(data))
+    expect(encrypted).toBeTruthy()
 
     // Decrypt the data
-    const decrypted = await crypto.decrypt(
-      result?.encryptedData,
-      'patient-data'
-    )
+    const decrypted = await fhe.decrypt(encrypted)
+    const parsedData = JSON.parse(decrypted)
 
-    // Verify decrypted data
-    expect(JSON.parse(decrypted)).toEqual(data)
-  })
-
-  it('should generate and verify a range proof', async () => {
-    // Generate a range proof for a value within a range
-    const value = 42
-    const min = 0
-    const max = 100
-
-    // Generate the proof
-    const proofData = await zk.generateRangeProof(value, min, max)
-
-    // Verify the proof
-    const result = await zk.verifyProof(proofData)
-
-    // Check verification result
-    expect(result).toBeDefined()
-    expect(result?.isValid).toBe(true)
+    expect(parsedData.message).toBe(data.message)
+    expect(parsedData.patientId).toBe(data.patientId)
   })
 })

@@ -1,13 +1,24 @@
 import type { AstroCookies } from 'astro'
 import { supabase } from './supabase'
-import { createAuditLog, type AuditLogEntry } from './audit/log'
+import {
+  createAuditLog,
+  type AuditLogEntry,
+  type AuditMetadata,
+} from './audit/log'
+import {
+  authConfig,
+  type AuthRole,
+  hasRolePrivilege,
+} from '../config/auth.config'
 
 export interface AuthUser {
   id: string
   email: string
-  role: string
+  role: AuthRole
   fullName?: string | null
   avatarUrl?: string | null
+  lastLogin?: Date | null
+  metadata?: Record<string, unknown>
 }
 
 /**
@@ -16,8 +27,8 @@ export interface AuthUser {
 export async function getCurrentUser(
   cookies: AstroCookies
 ): Promise<AuthUser | null> {
-  const accessToken = cookies.get('sb-access-token')?.value
-  const refreshToken = cookies.get('sb-refresh-token')?.value
+  const accessToken = cookies.get(authConfig.cookies.accessToken)?.value
+  const refreshToken = cookies.get(authConfig.cookies.refreshToken)?.value
 
   if (!accessToken || !refreshToken) {
     return null
@@ -46,9 +57,16 @@ export async function getCurrentUser(
     return {
       id: data.user.id,
       email: data.user.email || '',
-      role: profileData?.role || 'user',
+      role: (profileData?.role as AuthRole) || authConfig.roles.default,
       fullName: profileData?.full_name || data.user.user_metadata?.full_name,
       avatarUrl: profileData?.avatar_url || data.user.user_metadata?.avatar_url,
+      lastLogin: profileData?.last_login
+        ? new Date(profileData.last_login)
+        : null,
+      metadata: {
+        ...data.user.user_metadata,
+        ...profileData?.metadata,
+      },
     }
   } catch (error) {
     console.error('Error getting current user:', error)
@@ -69,21 +87,12 @@ export async function isAuthenticated(cookies: AstroCookies): Promise<boolean> {
  */
 export async function hasRole(
   cookies: AstroCookies,
-  requiredRole: string
+  requiredRole: AuthRole
 ): Promise<boolean> {
   const user = await getCurrentUser(cookies)
   if (!user) return false
 
-  // Simple role check - can be expanded for more complex role hierarchies
-  if (requiredRole === 'admin') {
-    return user.role === 'admin'
-  }
-
-  if (requiredRole === 'staff') {
-    return user.role === 'admin' || user.role === 'staff'
-  }
-
-  return true // All authenticated users have the basic 'user' role
+  return hasRolePrivilege(user.role, requiredRole)
 }
 
 /**
@@ -91,20 +100,15 @@ export async function hasRole(
  */
 export async function createAuthAuditLog(entry: AuditLogEntry): Promise<void> {
   try {
-    const { error } = await supabase.from('audit_logs').insert({
-      user_id: entry.userId || null,
+    await createAuditLog({
+      userId: entry.userId,
       action: entry.action,
       resource: entry.resource,
-      resource_id: entry.resourceId || null,
-      metadata: entry.metadata || null,
-      // IP and user agent fields are handled in the database directly
+      resourceId: entry.resourceId,
+      metadata: entry.metadata,
     })
-
-    if (error) {
-      console.error('Audit logging error:', error)
-    }
   } catch (error) {
-    console.error('Error logging audit event:', error)
+    console.error('Error logging auth audit event:', error)
   }
 }
 
@@ -116,7 +120,7 @@ export async function createAuditLogFromParams(
   action: string,
   resource: string,
   resourceId?: string | null,
-  metadata?: Record<string, any> | null
+  metadata?: AuditMetadata | null
 ): Promise<void> {
   await createAuditLog({
     userId: userId || undefined,
@@ -136,15 +140,44 @@ export async function requireAuth({
   request,
 }: {
   cookies: AstroCookies
-  redirect: Function
+  redirect: (url: string) => Response
   request: Request
 }) {
   const user = await getCurrentUser(cookies)
 
   if (!user) {
-    const loginUrl = new URL('/login', request.url)
+    const loginUrl = new URL(authConfig.redirects.authRequired, request.url)
     loginUrl.searchParams.set('redirect', request.url)
     return redirect(loginUrl.toString())
+  }
+
+  return null
+}
+
+/**
+ * Require a specific role for a route
+ */
+export async function requireRole({
+  cookies,
+  redirect,
+  request,
+  role,
+}: {
+  cookies: AstroCookies
+  redirect: (url: string) => Response
+  request: Request
+  role: AuthRole
+}) {
+  const user = await getCurrentUser(cookies)
+
+  if (!user) {
+    const loginUrl = new URL(authConfig.redirects.authRequired, request.url)
+    loginUrl.searchParams.set('redirect', request.url)
+    return redirect(loginUrl.toString())
+  }
+
+  if (!hasRolePrivilege(user.role, role)) {
+    return redirect(authConfig.redirects.forbidden)
   }
 
   return null

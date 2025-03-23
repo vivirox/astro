@@ -67,6 +67,29 @@ export const postSchema = z.object({
     .describe(
       '**Required**. Specifies the publication date. See supported formats [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#examples).'
     ),
+  tags: z
+    .array(z.string())
+    .optional()
+    .default([])
+    .describe(
+      'Tags for categorizing the post. Used for filtering and related content.'
+    ),
+  series: z
+    .string()
+    .optional()
+    .describe(
+      'The name of the series this post belongs to. Used for grouping related posts.'
+    ),
+  seriesOrder: z
+    .number()
+    .optional()
+    .describe(
+      'The order of this post within its series. Lower numbers come first.'
+    ),
+  author: z
+    .string()
+    .optional()
+    .describe('The author of the post. Displayed in the post metadata.'),
   lastModDate: z
     .union([z.coerce.date(), z.literal('')])
     .optional()

@@ -1,3 +1,7 @@
+import type { CollectionEntry } from 'astro:content'
+import type { CardItemData } from '~/components/views/CardItem.astro'
+import type { GitHubView } from '~/types'
+
 import {
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
@@ -61,19 +65,18 @@ type AppBskyEmbedRecordWithMediaView = ReturnType<
     | AppBskyEmbedExternalView
 }
 
-import type { CollectionEntry } from 'astro:content'
-import type { CardItemData } from '~/components/views/CardItem.astro'
-import type { GitHubView } from '~/types'
-
 // Define the structure for the highlights collection entry data
-type HighlightEntry = CollectionEntry<'highlights'>
+export type HighlightEntry = CollectionEntry<'highlights'>
 
 // Define the actual structure used in highlights data
 interface BlueskyPost {
   indexedAt?: string
   html?: string
   link?: string
-  embed?: unknown
+  embed?:
+    | AppBskyEmbedImagesView
+    | AppBskyEmbedVideoView
+    | AppBskyEmbedExternalView
   author?: {
     did: string
     handle: string
@@ -103,7 +106,7 @@ interface HighlightDataWithBluesky {
 
 // The actual schema used in the project (from config.ts)
 // Using underscore prefix to avoid eslint unused variable warning
-interface _HighlightData {
+export interface HighlightData {
   projects?: Record<
     string,
     { name: string; link: string; desc: string; icon: string }[]
@@ -196,7 +199,7 @@ export function processVersion(
 /**
  * Processes Bluesky posts and converts them into `CardItemData` interface.
  */
-export function processBlueskyPosts(data: HighlightEntry[]) {
+export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
   const cards: CardItemData[] = []
 
   for (const item of data) {

@@ -3,11 +3,11 @@ import type { APIRoute } from 'astro'
 import { createTogetherAIService } from '../../../lib/ai/services/together'
 import { getSession } from '../../../lib/auth/session'
 import type { SessionData } from '../../../lib/auth/session'
-import { createAuditLog } from '../../../lib/audit/log'
+import { createAuditLog, type AuditMetadata } from '@/lib/audit/log'
 import { handleApiError } from '../../../lib/ai/error-handling'
 import { validateRequestBody } from '../../../lib/validation/index'
 import { CompletionRequestSchema } from '../../../lib/validation/schemas'
-import type { AIMessage } from '../../../lib/ai/models/ai-types'
+import type { AIMessage } from '@/lib/ai/models/types'
 
 /**
  * API route for AI chat completions
@@ -44,9 +44,9 @@ export const POST: APIRoute = async ({ request }) => {
         resourceId: undefined,
         metadata: {
           error: validationError.error,
-          details: validationError.details,
+          details: JSON.stringify(validationError.details),
           status: 'error',
-        },
+        } as AuditMetadata,
       })
 
       return new Response(JSON.stringify(validationError), {
@@ -97,11 +97,13 @@ export const POST: APIRoute = async ({ request }) => {
       },
     })
 
-    // Format messages to ensure name property is always a string
+    // Format messages to ensure they conform to AIMessage type
     const formattedMessages: AIMessage[] = (data?.messages || []).map(
       (msg) => ({
-        ...msg,
-        name: msg.name || 'default_name', // Ensure name is always a string
+        role: msg.role || 'user',
+        content: msg.content || '',
+        // Include name if provided, but ensure it's optional
+        ...(msg.name && { name: msg.name }),
       })
     )
 
@@ -144,7 +146,7 @@ export const POST: APIRoute = async ({ request }) => {
         },
       })
 
-      return new Response(readableStream as any, {
+      return new Response(readableStream as unknown as BodyInit, {
         headers: {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache, no-transform',

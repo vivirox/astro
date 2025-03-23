@@ -1,6 +1,6 @@
 /**
- * Format a date string into a human-readable forma
- * @param dateString The ISO date string to forma
+ * Format a date string into a human-readable format
+ * @param dateString The ISO date string to format
  * @returns Formatted date string (e.g., "February 15, 2024")
  */
 export function formatDate(dateString: string): string {

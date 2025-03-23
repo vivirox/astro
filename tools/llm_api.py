@@ -8,12 +8,10 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 import google.generativeai as genai
-from anthropic import Anthropic
 from dotenv import load_dotenv
-from openai import AzureOpenAI, OpenAI
 
 from tools.token_tracker import APIResponse, TokenUsage, get_token_tracker
 
@@ -84,54 +82,23 @@ def encode_image_file(image_path: str) -> tuple[str, str]:
 
     return encoded_string, mime_type
 
-
-def create_llm_client(provider="openai"):
+def create_llm_client(provider="gemini"):
     """
     Create and return an LLM client based on the specified provider.
 
     Args:
-        provider (str): The provider name ('openai', 'azure', 'deepseek', 'anthropic', 'gemini', 'local')
+        provider (str): The provider name ('gemini')
 
     Returns:
         Any: The appropriate client for the specified provider
     """
-    if provider == "openai":
-        api_key = os.getenv("OPENAI_API_KEY")
-        base_url = os.getenv("OPENAI_BASE_URL")
-        if not api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment variables")
-        return OpenAI(api_key=api_key, base_url=base_url)
-    elif provider == "azure":
-        api_key = os.getenv("AZURE_OPENAI_API_KEY")
-        if not api_key:
-            raise ValueError("AZURE_OPENAI_API_KEY not found in environment variables")
-        return AzureOpenAI(
-            api_key=api_key,
-            api_version="2024-08-01-preview",
-            azure_endpoint="https://msopenai.openai.azure.com",
-        )
-    elif provider == "deepseek":
-        api_key = os.getenv("DEEPSEEK_API_KEY")
-        if not api_key:
-            raise ValueError("DEEPSEEK_API_KEY not found in environment variables")
-        return OpenAI(
-            api_key=api_key,
-            base_url="https://api.deepseek.com/v1",
-        )
-    elif provider == "anthropic":
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-        if not api_key:
-            raise ValueError("ANTHROPIC_API_KEY not found in environment variables")
-        return Anthropic(api_key=api_key)
-    elif provider == "gemini":
-        api_key = os.getenv("GOOGLE_API_KEY")
+    if provider == "gemini":
+        api_key: str | None = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             raise ValueError("GOOGLE_API_KEY not found in environment variables")
         # Set the API key directly instead of using configure
         os.environ["GOOGLE_API_KEY"] = api_key
         return genai
-    elif provider == "local":
-        return OpenAI(base_url="http://192.168.180.137:8006/v1", api_key="not-needed")
     else:
         raise ValueError(f"Unsupported provider: {provider}")
 
@@ -140,7 +107,7 @@ def query_llm(
     prompt: str,
     client: Any = None,
     model: Optional[str] = None,
-    provider: str = "openai",
+    provider: str = "gemini",
     image_path: Optional[str] = None,
 ) -> Optional[str]:
     """
@@ -164,14 +131,6 @@ def query_llm(
         if model is None:
             if provider == "openai":
                 model = "gpt-4o"
-            elif provider == "azure":
-                model = os.getenv(
-                    "AZURE_OPENAI_MODEL_DEPLOYMENT", "gpt-4o-ms"
-                )  # Get from env with fallback
-            elif provider == "deepseek":
-                model = "deepseek-chat"
-            elif provider == "anthropic":
-                model = "claude-3-7-sonnet-20250219"
             elif provider == "gemini":
                 model = "gemini-2.0-flash-exp"
             elif provider == "local":
@@ -203,103 +162,6 @@ def query_llm(
                 "messages": messages,
                 "temperature": 0.7,
             }
-
-            # Add o1-specific parameters
-            if model == "o1":
-                kwargs["response_format"] = {"type": "text"}
-                kwargs["reasoning_effort"] = "low"
-                del kwargs["temperature"]
-
-            response = client.chat.completions.create(**kwargs)
-            thinking_time = time.time() - start_time
-
-            # Track token usage
-            token_usage = TokenUsage(
-                prompt_tokens=getattr(response.usage, "prompt_tokens", 0),
-                completion_tokens=getattr(response.usage, "completion_tokens", 0),
-                total_tokens=getattr(response.usage, "total_tokens", 0),
-                reasoning_tokens=None,
-            )
-
-            # Calculate cost
-            cost = get_token_tracker().calculate_openai_cost(
-                token_usage.prompt_tokens, token_usage.completion_tokens, str(model)
-            )
-
-            # Track the request
-            api_response = APIResponse(
-                content=response.choices[0].message.content,
-                token_usage=token_usage,
-                cost=cost,
-                thinking_time=thinking_time,
-                provider=provider,
-                model=str(model),
-            )
-            get_token_tracker().track_request(api_response)
-            return response.choices[0].message.content
-
-        elif provider == "anthropic":
-            # Anthropic API uses a different structure
-            content_parts = []
-
-            # Add text content
-            content_parts.append({"type": "text", "text": prompt})
-
-            # Add image content if provided
-            if image_path:
-                encoded_image, mime_type = encode_image_file(image_path)
-                # Create image content part with proper typing
-                image_part = {
-                    "type": "image",
-                    "source": {
-                        "type": "base64",
-                        "media_type": mime_type,
-                        "data": encoded_image,
-                    },
-                }
-                content_parts.append(image_part)
-
-            # Create the message using Anthropic's API
-            response = client.messages.create(
-                model=model,
-                max_tokens=1000,
-                system="You are a helpful AI assistant.",
-                messages=[{"role": "user", "content": content_parts}],
-            )
-
-            thinking_time = time.time() - start_time
-
-            # Track token usage
-            token_usage = TokenUsage(
-                prompt_tokens=response.usage.input_tokens,
-                completion_tokens=response.usage.output_tokens,
-                total_tokens=response.usage.input_tokens + response.usage.output_tokens,
-                reasoning_tokens=None,
-            )
-
-            # Calculate cost
-            cost = get_token_tracker().calculate_claude_cost(
-                token_usage.prompt_tokens, token_usage.completion_tokens, str(model)
-            )
-
-            # Get content from the response
-            content = ""
-            for block in response.content:
-                if hasattr(block, "text"):
-                    content = block.text
-                    break
-
-            # Track the request
-            api_response = APIResponse(
-                content=content,
-                token_usage=token_usage,
-                cost=cost,
-                thinking_time=thinking_time,
-                provider=provider,
-                model=str(model),
-            )
-            get_token_tracker().track_request(api_response)
-            return content
 
         elif provider == "gemini":
             # Use Google's Generative AI properly
@@ -363,8 +225,8 @@ def main():
                 "AZURE_OPENAI_MODEL_DEPLOYMENT", "gpt-4o-ms"
             )  # Get from env with fallback
 
-    client = create_llm_client(args.provider)
-    response = query_llm(
+    client: Any = create_llm_client(args.provider)
+    response: str | None = query_llm(
         args.prompt,
         client,
         model=args.model,
@@ -383,7 +245,7 @@ if __name__ == "__main__":
 
 class SecureDataHandler:
     def __init__(self):
-        self.encryption_key = os.getenv("ENCRYPTION_KEY")
+        self.encryption_key: str | None = os.getenv("ENCRYPTION_KEY")
 
     async def process_sensitive_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -397,4 +259,8 @@ class SecureDataHandler:
 
     def encrypt_sensitive_data(self, data: str) -> str:
         # Add encryption implementation
-        pass
+        from cryptography.fernet import Fernet
+        if not self.encryption_key:
+            return data
+        cipher = Fernet(self.encryption_key.encode())
+        return cipher.encrypt(data.encode()).decode()

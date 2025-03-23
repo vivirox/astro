@@ -1,8 +1,16 @@
-import { zkAuth } from '../../../lib/auth/zkAuth'
+// Import necessary libraries and types
+import { fheService } from '../../../lib/fhe'
+import { EncryptionMode } from '../../../lib/fhe/types'
+import { createVerificationToken } from '../../../lib/security'
+import { getLogger } from '../../../lib/logging'
+
+// Initialize logger
+const logger = getLogger()
 
 interface LoginRequest {
   email: string
   password: string
+  securityLevel?: string
 }
 
 interface User {
@@ -26,29 +34,68 @@ export async function POST(request: Request) {
       userId: user.id,
       startTime: Date.now(),
       expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+      securityLevel: body.securityLevel || 'medium',
       metadata: {
         ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
         userAgent: request.headers.get('user-agent') || 'unknown',
       },
     }
 
-    // Generate ZK proof for the session
-    const sessionWithProof = await zkAuth.generateSessionProof(
-      sessionData as any
+    // Create a verification token for message integrity
+    const verificationToken = await createVerificationToken(
+      JSON.stringify(sessionData)
     )
 
-    // Encrypt the session data with proof (not used currently but kept for future)
-    const encryptedSession = await zkAuth.encryptSessionWithProof(
-      sessionData as any
-    )
+    // Encrypt sensitive session data if security level requires it
+    let encryptedSessionData = null
+    if (sessionData.securityLevel !== 'low') {
+      // Initialize FHE service if needed
+      await fheService.initialize({
+        mode:
+          sessionData.securityLevel === 'high'
+            ? EncryptionMode.FHE
+            : EncryptionMode.STANDARD,
+        securityLevel: sessionData.securityLevel,
+      })
+
+      encryptedSessionData = await fheService.encrypt(
+        JSON.stringify({
+          userId: sessionData.userId,
+          sessionId: sessionData.sessionId,
+          metadata: sessionData.metadata,
+        })
+      )
+    }
+
+    // Create final session object with security metadata
+    const secureSession = {
+      ...sessionData,
+      verificationToken,
+      securityMetadata: {
+        encryptionEnabled: sessionData.securityLevel !== 'low',
+        encryptedData: encryptedSessionData,
+        encryptionMode:
+          sessionData.securityLevel === 'high'
+            ? EncryptionMode.FHE
+            : EncryptionMode.STANDARD,
+        timestamp: Date.now(),
+      },
+    }
 
     // ... existing session storage logic ...
 
-    // Return the session with proof
+    // Log successful login
+    logger.info('User authenticated successfully', {
+      userId: user.id,
+      securityLevel: sessionData.securityLevel,
+      timestamp: Date.now(),
+    })
+
+    // Return the session with security data
     return new Response(
       JSON.stringify({
         success: true,
-        session: sessionWithProof,
+        session: secureSession,
         // ... other response data ...
       }),
       {
@@ -61,10 +108,9 @@ export async function POST(request: Request) {
     )
   } catch (error) {
     // Handle the error properly
-    console.error(
-      'Login error:',
-      error instanceof Error ? error?.message : String(error)
-    )
+    logger.error('Login error:', {
+      message: error instanceof Error ? error?.message : String(error),
+    })
 
     return new Response(
       JSON.stringify({

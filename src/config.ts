@@ -1,6 +1,7 @@
 import type { Site, Ui, Features } from './types'
 
 export const SITE: Site = {
+  name: 'Gradiant Ascent',
   website: 'https://vivi.rocks',
   base: '/',
   title: 'Gradiant Ascent',
@@ -9,6 +10,12 @@ export const SITE: Site = {
   lang: 'en',
   ogLocale: 'en_US',
   imageDomains: ['cdn.bsky.app'],
+  menu: {
+    home: 'Home',
+    blog: 'Blog',
+    about: 'About',
+    contact: 'Contact',
+  },
 }
 
 export const UI: Ui = {

@@ -1,11 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SentimentAnalysisService } from '../../lib/ai/services/sentiment-analysis'
-import type {
-  AIService,
-  AIMessage,
-  AIServiceOptions,
-  AICompletionResponse,
-} from '../../lib/ai/models/types'
+import type { AIService } from '../../lib/ai/models/types'
 
 // Mock AI service with type assertion to handle incompatible interfaces
 const mockAIService = {
@@ -43,7 +38,9 @@ describe('SentimentAnalysisService', () => {
   describe('analyzeSentiment', () => {
     it('should analyze sentiment correctly for positive text', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           sentiment: 'positive',
           score: 0.85,
@@ -61,7 +58,7 @@ describe('SentimentAnalysisService', () => {
         'I am feeling great today! Thank you for your help.'
       )
 
-      // Verify the resul
+      // Verify the result
       expect(result).toEqual({
         sentiment: 'positive',
         score: 0.85,
@@ -87,7 +84,9 @@ describe('SentimentAnalysisService', () => {
 
     it('should analyze sentiment correctly for negative text', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           sentiment: 'negative',
           score: 0.75,
@@ -105,7 +104,7 @@ describe('SentimentAnalysisService', () => {
         'I am really frustrated with this situation. Nothing is working.'
       )
 
-      // Verify the resul
+      // Verify the result
       expect(result).toEqual({
         sentiment: 'negative',
         score: 0.75,
@@ -117,7 +116,9 @@ describe('SentimentAnalysisService', () => {
 
     it('should analyze sentiment correctly for neutral text', async () => {
       // Mock the AI service response
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: JSON.stringify({
           sentiment: 'neutral',
           score: 0.1,
@@ -135,7 +136,7 @@ describe('SentimentAnalysisService', () => {
         'The sky is blue. The temperature is 72 degrees.'
       )
 
-      // Verify the resul
+      // Verify the result
       expect(result).toEqual({
         sentiment: 'neutral',
         score: 0.1,
@@ -147,7 +148,9 @@ describe('SentimentAnalysisService', () => {
 
     it('should handle invalid JSON responses', async () => {
       // Mock the AI service response with invalid JSON
-      ;(mockAIService.createChatCompletion as any).mockResolvedValue({
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         content: 'Not a valid JSON response',
         model: 'test-model',
         provider: 'openai',
@@ -171,9 +174,9 @@ describe('SentimentAnalysisService', () => {
 
     it('should handle AI service errors', async () => {
       // Mock the AI service to throw an error
-      ;(mockAIService.createChatCompletion as any).mockRejectedValue(
-        new Error('AI service error')
-      )
+      ;(
+        mockAIService.createChatCompletion as ReturnType<typeof vi.fn>
+      ).mockRejectedValue(new Error('AI service error'))
 
       await expect(
         sentimentService.analyzeSentiment('Test text')
@@ -184,7 +187,7 @@ describe('SentimentAnalysisService', () => {
   describe('analyzeBatch', () => {
     it('should analyze multiple texts in parallel', async () => {
       // Mock the AI service response for multiple calls
-      ;(mockAIService.createChatCompletion as any)
+      ;(mockAIService.createChatCompletion as ReturnType<typeof vi.fn>)
         .mockResolvedValueOnce({
           content: JSON.stringify({
             sentiment: 'positive',
@@ -232,7 +235,7 @@ describe('SentimentAnalysisService', () => {
 
     it('should handle errors in batch processing', async () => {
       // Mock the AI service to succeed for first call and fail for second
-      ;(mockAIService.createChatCompletion as any)
+      ;(mockAIService.createChatCompletion as ReturnType<typeof vi.fn>)
         .mockResolvedValueOnce({
           content: JSON.stringify({
             sentiment: 'positive',
@@ -277,7 +280,9 @@ describe('SentimentAnalysisService', () => {
       })
 
       // Use a non-public method to test the model
-      expect((service as any).config.model).toBe('gpt-4o')
+      expect(
+        (service as unknown as { config: { model: string } }).config.model
+      ).toBe('gpt-4o')
     })
 
     it('should use custom system prompt if provided', () => {
@@ -302,7 +307,10 @@ describe('SentimentAnalysisService', () => {
         defaultPrompt: customPrompt,
       })
 
-      expect((service as any).config.defaultPrompt).toBe(customPrompt)
+      expect(
+        (service as unknown as { config: { defaultPrompt: string } }).config
+          .defaultPrompt
+      ).toBe(customPrompt)
     })
   })
 })

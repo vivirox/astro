@@ -139,7 +139,7 @@ export function useChatCompletion({
                 // Streaming is complete
                 break
               }
-            } catch (e) {
+            } catch {
               // Skip invalid JSON
             }
           }

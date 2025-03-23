@@ -21,11 +21,11 @@ export interface AIModel {
 
 export interface AIModelResponse {
   model: string
-  choices: Array<{
+  choices: {
     message?: {
       content: string
     }
-  }>
+  }[]
   usage?: {
     totalTokens: number
     promptTokens: number
@@ -74,7 +74,7 @@ export interface ResponseGenerationConfig {
 }
 
 /**
- * Response Generation Result
+ * Response Generation result
  */
 export interface ResponseGenerationResult {
   content: string
@@ -86,7 +86,7 @@ export interface ResponseGenerationResult {
   systemPrompt?: string
 }
 
-// Sentiment analysis resul
+// Sentiment analysis result
 export interface SentimentAnalysisResult {
   sentiment: 'positive' | 'negative' | 'neutral'
   score: number
@@ -95,7 +95,7 @@ export interface SentimentAnalysisResult {
   usage?: TokenUsage
 }
 
-// Crisis detection resul
+// Crisis detection result
 export interface CrisisDetectionResult {
   isCrisis: boolean
   severity: 'none' | 'low' | 'medium' | 'high' | 'severe'
@@ -106,7 +106,7 @@ export interface CrisisDetectionResult {
   usage?: TokenUsage
 }
 
-// Intervention analysis resul
+// Intervention analysis result
 export interface InterventionAnalysisResult {
   effectiveness: number
   strengths: string[]
@@ -123,7 +123,7 @@ export interface ResponseGenerationOptions {
 }
 
 /**
- * Sentiment Analysis Resul
+ * Sentiment Analysis result
  */
 export interface SentimentResult {
   sentiment: 'positive' | 'negative' | 'neutral'
@@ -163,14 +163,14 @@ export interface AICompletionResponse {
   model: string
   created: number
   content: string
-  choices: Array<{
+  choices: {
     message: {
       role: string
       content: string
       name?: string
     }
     finishReason?: string
-  }>
+  }[]
   usage?: {
     promptTokens: number
     completionTokens: number
@@ -186,12 +186,12 @@ export interface AIStreamChunk {
   created: number
   model: string
   content: string
-  choices: Array<{
+  choices: {
     delta: {
       content: string
     }
     finishReason?: string | null
-  }>
+  }[]
 }
 
 /**
@@ -209,6 +209,31 @@ export interface AIUsageRecord {
 }
 
 /**
+ * Model information returned by getModelInfo
+ */
+export interface AIModelInfo {
+  id: string
+  name: string
+  provider: AIProvider
+  contextWindow: number
+  maxTokens: number
+  tokenCostInput?: number
+  tokenCostOutput?: number
+  features?: string[]
+  capabilities?: {
+    streaming?: boolean
+    json?: boolean
+    functionCalling?: boolean
+    tools?: boolean
+    vision?: boolean
+  }
+  training?: {
+    cutoffDate?: string
+  }
+  [key: string]: unknown
+}
+
+/**
  * AI Service Interface
  */
 export interface AIService {
@@ -222,7 +247,7 @@ export interface AIService {
     options?: AIServiceOptions
   ): Promise<ReadableStream<AIStreamChunk>>
 
-  getModelInfo(model: string): any
+  getModelInfo(model: string): AIModelInfo
 
   createChatCompletionWithTracking(
     messages: AIMessage[],
@@ -238,7 +263,7 @@ export interface AIService {
 }
 
 /**
- * AI Completion Reques
+ * AI Completion Request
  */
 export interface AICompletionRequest {
   messages: AIMessage[]

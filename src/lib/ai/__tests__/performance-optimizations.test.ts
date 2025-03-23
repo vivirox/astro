@@ -255,7 +255,7 @@ describe('Advanced Performance Optimizations', () => {
 
   it('should try fallback models when primary model fails', async () => {
     // Make the primary model fail
-    completeMock.mockImplementation((messages, options) => {
+    completeMock.mockImplementation((options) => {
       if (options?.model === 'primary-model') {
         return Promise.reject(new Error('Primary model error'))
       }
@@ -292,7 +292,6 @@ describe('Advanced Performance Optimizations', () => {
 
     // Should have tried the fallback model
     expect(completeMock).toHaveBeenCalledWith(
-      expect.anything(),
       expect.objectContaining({
         model: 'fallback-model-1',
       })

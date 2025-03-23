@@ -1,5 +1,12 @@
 import { createAuditLog } from '../audit'
-import type { AIMessage } from './models/ai-types'
+import type {
+  AIMessage,
+  AICompletionResponse,
+  ModelInfo,
+  AIServiceOptions,
+  AIStreamChunk,
+} from './models/ai-types'
+import type { ReadableStream } from 'node:stream/web'
 
 /**
  * Standard error types for AI service operations
@@ -21,16 +28,29 @@ export enum AIErrorType {
  * Interface for the AI service
  */
 export interface AIService {
-  createChatCompletion: (messages: AIMessage[], options?: any) => Promise<any>
+  createChatCompletion: (
+    messages: AIMessage[],
+    options?: AIServiceOptions
+  ) => Promise<AICompletionResponse>
   createStreamingChatCompletion: (
     messages: AIMessage[],
-    options?: any
-  ) => Promise<any>
+    options?: AIServiceOptions
+  ) => Promise<ReadableStream<AIStreamChunk>>
   generateStreamingCompletion: (
     messages: AIMessage[],
-    options?: any
-  ) => Promise<any>
-  getModelInfo: (model: string) => any
+    options?: AIServiceOptions
+  ) => Promise<ReadableStream<AIStreamChunk>>
+  getModelInfo: (model: string) => ModelInfo
+}
+
+/**
+ * AI Error details type
+ */
+export interface AIErrorDetails {
+  originalError?: string
+  stack?: string
+  context?: Record<string, unknown>
+  [key: string]: unknown
 }
 
 /**
@@ -39,13 +59,13 @@ export interface AIService {
 export class AIError extends Error {
   type: AIErrorType
   status: number
-  details?: any
+  details?: AIErrorDetails
 
   constructor(
     message: string,
     type: AIErrorType = AIErrorType.UNKNOWN,
     status?: number,
-    details?: any
+    details?: AIErrorDetails
   ) {
     super(message)
     this.name = 'AIError'
@@ -84,7 +104,7 @@ export const AIErrorCodes = {
   // Request errors
   INVALID_REQUEST: 'ai.invalid_request',
   INVALID_MODEL: 'ai.invalid_model',
-  CONTENT_FILTERED: 'ai.content_filtered',
+  CONTENT_FILTERED: 'ai.contenttt_filtered',
   TOKEN_LIMIT_EXCEEDED: 'ai.token_limit_exceeded',
 
   // Authentication errors
@@ -224,7 +244,10 @@ export function handleAIServiceError(
  */
 export function createErrorHandlingAIService(aiService: AIService): AIService {
   return {
-    createChatCompletion: async (messages: AIMessage[], options?: any) => {
+    createChatCompletion: async (
+      messages: AIMessage[],
+      options?: AIServiceOptions
+    ) => {
       try {
         return await aiService.createChatCompletion(messages, options)
       } catch (error) {
@@ -251,7 +274,7 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
 
     createStreamingChatCompletion: async (
       messages: AIMessage[],
-      options?: any
+      options?: AIServiceOptions
     ) => {
       try {
         return await aiService.createStreamingChatCompletion(messages, options)
@@ -280,7 +303,7 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
 
     generateStreamingCompletion: async (
       messages: AIMessage[],
-      options?: any
+      options?: AIServiceOptions
     ) => {
       try {
         return await aiService.generateStreamingCompletion(messages, options)
@@ -468,25 +491,31 @@ export function handleApiError(error: unknown): Response {
   }
 
   // Handle rate limit errors from middleware
+  interface RateLimitError {
+    type: string
+    retryAfter: number
+  }
+
   if (
     error &&
     typeof error === 'object' &&
     'type' in error &&
     error?.type === 'rate_limit_exceeded'
   ) {
+    const rateLimitError = error as RateLimitError
     return new Response(
       JSON.stringify({
         error: AIErrorType.RATE_LIMIT,
         message: 'Rate limit exceeded',
         details: {
-          retryAfter: (error as any).retryAfter,
+          retryAfter: rateLimitError.retryAfter,
         },
       }),
       {
         status: 429,
         headers: {
           'Content-Type': 'application/json',
-          'Retry-After': String((error as any).retryAfter || 60),
+          'Retry-After': String(rateLimitError.retryAfter || 60),
         },
       }
     )
@@ -531,7 +560,7 @@ export function handleApiError(error: unknown): Response {
 export function createAIError(
   message: string,
   type: AIErrorType = AIErrorType.UNKNOWN,
-  details?: any
+  details?: AIErrorDetails
 ): AIError {
   const status = errorTypeToStatusCode[type] || 500
   return new AIError(message, type, status, details)

@@ -1,10 +1,10 @@
 import React, { useRef } from 'react'
-import ZKChatStatus from './ZKChatStatus'
-import type { ChatMessageWithProof } from '../../lib/chat/zkChat.ts'
+import FHEChatStatus from './FHEChatStatus'
+import type { ChatMessageWithFHE } from '../../lib/chat/fheChat'
 
-// Update the interface to include ZK proof and accessibility props
+// Update the interface to include FHE security and accessibility props
 interface ChatMessageProps {
-  message: ChatMessageWithProof
+  message: ChatMessageWithFHE
   isUser: boolean
   onKeyDown?: (e: React.KeyboardEvent) => void
   tabIndex?: number
@@ -60,11 +60,11 @@ export default function ChatMessage({
         {message.content}
       </div>
 
-      {/* Add ZK verification status */}
+      {/* Add FHE verification status */}
       <div className="message-footer mt-2">
-        <ZKChatStatus
+        <FHEChatStatus
           message={message}
-          className="chat-message-zk-status text-xs"
+          className="chat-message-fhe-status text-xs"
         />
       </div>
     </div>

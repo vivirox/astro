@@ -50,7 +50,7 @@ export default function AccessibilityAnnouncer({
 
 /**
  * Utility function to announce a message to screen readers
- * without needing to render a componen
+ * without needing to render a component
  */
 export function announceToScreenReader(
   message: string,
@@ -58,7 +58,7 @@ export function announceToScreenReader(
 ): void {
   const { assertive = false, clearDelay = 1000 } = options
 
-  // Create a temporary element for the announcemen
+  // Create a temporary element for the announcement
   const announcer = document.createElement('div')
   announcer.className = 'sr-only'
   announcer.setAttribute('aria-live', assertive ? 'assertive' : 'polite')

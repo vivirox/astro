@@ -3,6 +3,8 @@ export type Url = `http://${string}` | `https://${string}`
 type Path = `/${string}`
 
 export interface Site {
+  menu: Record<string, string>
+  name: string
   /**
    * Specifies the final deployed URL, which must start with `http://` or `https://`.
    *
@@ -654,4 +656,30 @@ export interface Features {
    * Controls whether to enable slide enter animation on each page.
    */
   slideEnterAnim: FeatureConfig<slideEnterAnimConfig>
+}
+
+import type { IncomingMessage } from 'http'
+import type { Socket } from 'net'
+import type { AuthUser } from './lib/auth'
+
+export interface ExtendedRequest extends IncomingMessage {
+  url: string
+  method: string
+  headers: Record<string, string | string[] | undefined>
+  socket: Socket & {
+    remoteAddress?: string
+    remotePort?: number
+  }
+  body?: unknown
+  query?: Record<string, string | string[] | undefined>
+  params?: Record<string, string>
+  cookies?: Record<string, string>
+  session?: Record<string, unknown>
+  user?: AuthUser
+  ip?: string
+  protocol?: string
+  secure?: boolean
+  path?: string
+  hostname?: string
+  originalUrl?: string
 }

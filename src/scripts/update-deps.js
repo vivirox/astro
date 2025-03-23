@@ -1,10 +1,4 @@
 import { execSync } from 'child_process'
-import { createRequire } from 'module'
-
-// Create require function
-const require = createRequire(import.meta.url)
-
-// Read package.json
 
 // Packages that need updating based on outdated check
 const packagesToUpdate = [

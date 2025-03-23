@@ -1,6 +1,9 @@
 import { getDefaultModelForCapability } from '../models/registry'
-import type { AIService, AIMessage } from '../models/types'
-import type { SentimentResult } from '../index'
+import type {
+  AIService,
+  AIMessage,
+  SentimentAnalysisResult,
+} from '../models/types'
 
 /**
  * Sentiment Analysis Service Configuration
@@ -53,7 +56,7 @@ export class SentimentAnalysisService {
   async analyzeSentiment(
     text: string,
     customPrompt?: string
-  ): Promise<SentimentResult> {
+  ): Promise<SentimentAnalysisResult> {
     const startTime = Date.now()
     const prompt = customPrompt || this.defaultPrompt
 
@@ -75,25 +78,36 @@ export class SentimentAnalysisService {
         content.match(/{[\s\S]*?}/)
 
       const jsonStr = jsonMatch ? jsonMatch[0] : content
-      const result = JSON.parse(jsonStr)
+      const parsedResult = JSON.parse(jsonStr)
 
-      // Create sentiment result that matches the interface
-      const sentimentResult: SentimentResult = {
-        score: Number(result?.score),
-        label: result?.label as 'negative' | 'neutral' | 'positive',
-        confidence: Number(result?.confidence),
-        emotions: result?.emotions,
+      // Check if result is an object before proceeding
+      if (typeof parsedResult !== 'object' || parsedResult === null) {
+        throw new Error('Sentiment analysis result is not an object')
       }
 
-      // Additional metadata not part of the return type
-      const metadata: Record<string, any> = {
+      // Extract the sentiment data fields
+      const { score, label, confidence, emotions } =
+        parsedResult as Partial<SentimentAnalysisResult>
+
+      if (
+        typeof score !== 'number' ||
+        typeof confidence !== 'number' ||
+        !label
+      ) {
+        throw new Error('Missing required fields in sentiment analysis result')
+      }
+
+      // Return with required fields and metadata
+      return {
+        score,
+        label: label as 'positive' | 'negative' | 'neutral',
+        confidence,
+        emotions,
+        // Additional metadata (not in interface)
         model: this.model,
         processingTime: Date.now() - startTime,
-      }
-
-      return { ...sentimentResult, ...metadata }
-    } catch (error) {
-      console.error('Error parsing sentiment analysis result:', error)
+      } as SentimentAnalysisResult & { model: string; processingTime: number }
+    } catch {
       throw new Error('Failed to parse sentiment analysis result')
     }
   }
@@ -101,7 +115,7 @@ export class SentimentAnalysisService {
   /**
    * Analyze the sentiment of multiple texts
    */
-  async analyzeBatch(texts: string[]): Promise<SentimentResult[]> {
+  async analyzeBatch(texts: string[]): Promise<SentimentAnalysisResult[]> {
     return Promise.all(texts.map((text) => this.analyzeSentiment(text)))
   }
 }

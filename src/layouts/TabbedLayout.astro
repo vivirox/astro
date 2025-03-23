@@ -1,6 +1,4 @@
-
 ---
-import Link from '~/components/base/Link.astro'
 import { ensureTrailingSlash, getUrl } from '~/utils/common'
 import { UI } from '~/config'
 import type { Tabs } from '~/types'
@@ -22,8 +20,6 @@ if (
 }
 
 const currentPath = ensureTrailingSlash(Astro.url.pathname)
-const isActive = (href: string) =>
-  currentPath === getUrl(ensureTrailingSlash(href))
 ---
 
 <nav id="nav-tabs" class="prose mx-auto mb-8" aria-label="Page sections">
@@ -34,12 +30,12 @@ const isActive = (href: string) =>
   >
     {
       tabs.map((tab) => (
-        <Link
+        <a
           class:list={{
             'link': true,
             'op-transition!': true,
-            'active': isActive(tab.path),
-            'inactive': !isActive(tab.path),
+            'active': currentPath === getUrl(ensureTrailingSlash(tab.path)),
+            'inactive': currentPath !== getUrl(ensureTrailingSlash(tab.path)),
           }}
           href={getUrl(ensureTrailingSlash(tab.path))}
           role="tab"
@@ -50,7 +46,7 @@ const isActive = (href: string) =>
           }
         >
           {tab.title}
-        </Link>
+        </a>
       ))
     }
   </div>

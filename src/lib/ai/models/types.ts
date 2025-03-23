@@ -95,13 +95,13 @@ export interface AICompletionResponse {
   provider: AIProvider
   created: number
   content: string
-  choices: Array<{
+  choices: {
     message: {
       role: string
       content: string
     }
     finishReason?: string
-  }>
+  }[]
   usage: {
     promptTokens: number
     completionTokens: number
@@ -278,6 +278,31 @@ export interface SentimentAnalysisResult {
 }
 
 /**
+ * Model information returned by getModelInfo
+ */
+export interface ModelInfo {
+  id: string
+  name: string
+  provider: AIProvider
+  contextWindow: number
+  maxTokens: number
+  tokenCostInput?: number
+  tokenCostOutput?: number
+  features?: string[]
+  capabilities?: {
+    streaming?: boolean
+    json?: boolean
+    functionCalling?: boolean
+    tools?: boolean
+    vision?: boolean
+  }
+  training?: {
+    cutoffDate?: string
+  }
+  [key: string]: unknown
+}
+
+/**
  * AI Service Types
  */
 export interface AIService {
@@ -291,14 +316,17 @@ export interface AIService {
     options?: AIServiceOptions
   ): Promise<ReadableStream<AIStreamChunk>>
 
-  getModelInfo(model: string): any
+  getModelInfo(model: string): ModelInfo
 
   createChatCompletionWithTracking(
     messages: AIMessage[],
     options?: AIServiceOptions
   ): Promise<AICompletionResponse>
 
-  generateCompletion: any
+  generateCompletion(
+    messages: AIMessage[],
+    options?: AIServiceOptions
+  ): Promise<AICompletionResponse>
 
   dispose(): void
 }

@@ -1,12 +1,8 @@
-// @ts-check
 import { defineConfig } from 'astro/config'
 import node from '@astrojs/node'
-
 import react from '@astrojs/react'
 import mdx from '@astrojs/mdx'
 import UnoCSS from '@unocss/astro'
-
-// https://astro.build/config
 export default defineConfig({
   site: 'https://vivi.rocks',
   integrations: [

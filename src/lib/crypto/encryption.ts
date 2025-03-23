@@ -7,7 +7,7 @@ import CryptoJS from 'crypto-js'
 export class Encryption {
   /**
    * Encrypts data using AES encryption
-   * @param data - Data to encryp
+   * @param data - Data to encrypt
    * @param key - Encryption key
    * @param keyVersion - Optional key version for rotation tracking
    * @returns Encrypted data with metadata
@@ -34,13 +34,13 @@ export class Encryption {
 
   /**
    * Decrypts data using AES decryption
-   * @param encryptedData - Data to decryp
+   * @param encryptedData - Data to decrypt
    * @param key - Decryption key
    * @returns Decrypted data
    */
   static decrypt(encryptedData: string, key: string): string {
     try {
-      // Extract version and encrypted conten
+      // Extract version and encrypted content
       const [, encryptedContent] = encryptedData.split(':')
 
       // Decrypt the data

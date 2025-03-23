@@ -3,13 +3,15 @@ import type { MiddlewareHandler, APIContext, MiddlewareNext } from 'astro'
 import { corsMiddleware } from './cors'
 import { rateLimitMiddleware } from './rate-limit'
 import { loggingMiddleware } from './logging'
+import { csrfMiddleware } from './csrf'
+import { auditLoggingMiddleware } from './audit-logging'
 
 /**
  * Apply security headers to all responses
  * Based on best practices and penetration testing results
  */
 const securityHeadersMiddleware: MiddlewareHandler = async (
-  context: APIContext,
+  _context: APIContext,
   next: MiddlewareNext
 ) => {
   // Process the request first
@@ -45,16 +47,25 @@ const securityHeadersMiddleware: MiddlewareHandler = async (
 
   return response
 }
+
+export interface ExtendedMiddleware extends MiddlewareHandler {
+  (context: APIContext, next: MiddlewareNext): Promise<Response | undefined>
+}
+
 /**
  * Apply middleware in the correct sequence:
- * 1. Logging - track all requests with request IDs
- * 2. CORS - handle preflight requests
- * 3. Rate Limiting - protect against abuse
- * 4. Security Headers - apply to all responses
+ * 1. Audit Logging - capture security events for compliance
+ * 2. Logging - track all requests with request IDs
+ * 3. CORS - handle preflight requests
+ * 4. Rate Limiting - protect against abuse
+ * 5. CSRF Protection - prevent cross-site request forgery attacks
+ * 6. Security Headers - apply to all responses
  */
 export const onRequest = sequence(
+  auditLoggingMiddleware,
   loggingMiddleware,
   corsMiddleware,
   rateLimitMiddleware,
+  csrfMiddleware,
   securityHeadersMiddleware
 )

@@ -5,13 +5,35 @@
 
 import { createClient } from '@supabase/supabase-js'
 
+// Define structured metadata types to replace 'any'
+export type AuditMetadataValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | { [key: string]: AuditMetadataValue }
+  | AuditMetadataValue[]
+
+export type AuditMetadata = Record<string, AuditMetadataValue>
+
+// Define type for the database log record
+interface DbAuditLog {
+  user_id: string
+  action: string
+  resource: string
+  resource_id?: string
+  metadata: AuditMetadata
+  created_at: string | number | Date
+}
+
 // Define audit log entry type
 export interface AuditLogEntry {
   userId?: string
   action: string
   resource: string
   resourceId?: string
-  metadata?: Record<string, any>
+  metadata?: AuditMetadata
   timestamp?: Date
 }
 
@@ -24,7 +46,7 @@ export function createAuditLog(
   userId: string,
   action: string,
   resource: string,
-  metadata?: Record<string, any>,
+  metadata?: AuditMetadata,
   request?: { headers: { get(name: string): string | null } }
 ): Promise<void>
 
@@ -35,7 +57,7 @@ export async function createAuditLog(
   entryOrUserId: AuditLogEntry | string,
   action?: string,
   resource?: string,
-  metadata: Record<string, any> = {},
+  metadata: AuditMetadata = {},
   request?: { headers: { get(name: string): string | null } }
 ): Promise<void> {
   try {
@@ -124,23 +146,14 @@ export async function getUserAuditLogs(
     }
 
     // Transform the data to match our interface
-    return data?.map(
-      (log: {
-        user_id: any
-        action: any
-        resource: any
-        resource_id: any
-        metadata: any
-        created_at: string | number | Date
-      }) => ({
-        userId: log.user_id,
-        action: log.action,
-        resource: log.resource,
-        resourceId: log.resource_id,
-        metadata: log.metadata,
-        timestamp: new Date(log.created_at),
-      })
-    )
+    return data?.map((log: DbAuditLog) => ({
+      userId: log.user_id,
+      action: log.action,
+      resource: log.resource,
+      resourceId: log.resource_id,
+      metadata: log.metadata,
+      timestamp: new Date(log.created_at),
+    }))
   } catch (error) {
     console.error('Error getting audit logs:', error)
     return []
@@ -179,23 +192,14 @@ export async function getActionAuditLogs(
     }
 
     // Transform the data to match our interface
-    return data?.map(
-      (log: {
-        user_id: any
-        action: any
-        resource: any
-        resource_id: any
-        metadata: any
-        created_at: string | number | Date
-      }) => ({
-        userId: log.user_id,
-        action: log.action,
-        resource: log.resource,
-        resourceId: log.resource_id,
-        metadata: log.metadata,
-        timestamp: new Date(log.created_at),
-      })
-    )
+    return data?.map((log: DbAuditLog) => ({
+      userId: log.user_id,
+      action: log.action,
+      resource: log.resource,
+      resourceId: log.resource_id,
+      metadata: log.metadata,
+      timestamp: new Date(log.created_at),
+    }))
   } catch (error) {
     console.error('Error getting audit logs:', error)
     return []

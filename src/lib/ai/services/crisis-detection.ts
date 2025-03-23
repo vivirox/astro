@@ -51,7 +51,7 @@ export class CrisisDetectionService {
         "confidence": number, // 0 to 1
         "category": string, // e.g., "self-harm", "suicide", "harm_to_others", "abuse", "medical_emergency", "psychological_distress"
         "severity": "low" | "medium" | "high",
-        "recommendedAction": string // Explanation of the reasoning behind the resul
+        "recommendedAction": string // Explanation of the reasoning behind the result
       }`
   }
 

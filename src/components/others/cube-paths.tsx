@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { Button } from '~/components/ui/button'
 import Image from 'next/image'
 
-// Add custom font
+// Add custom fon
 import { Inter } from 'next/font/google'
 
 const inter = Inter({

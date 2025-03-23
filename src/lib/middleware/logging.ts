@@ -12,7 +12,7 @@ export const loggingMiddleware = defineMiddleware(async ({ request }, next) => {
   const requestId = request.headers.get('x-request-id') || uuidv4()
 
   // Create a logger for this request
-  const logger = getLogger(requestId)
+  const logger = getLogger({ prefix: requestId })
 
   // Basic request information
   const method = request.method
@@ -31,10 +31,8 @@ export const loggingMiddleware = defineMiddleware(async ({ request }, next) => {
     const session = await getSession(request)
     if (session?.user?.id) {
       userId = session.user.id
-      logger.setContext('userId', userId)
-      logger.setContext('userRole', session.user.role || 'user')
     }
-  } catch (error) {
+  } catch {
     // Ignore session errors
   }
 
@@ -47,6 +45,7 @@ export const loggingMiddleware = defineMiddleware(async ({ request }, next) => {
       userAgent,
       referer,
       ip,
+      userId,
     },
   })
 
@@ -74,13 +73,13 @@ export const loggingMiddleware = defineMiddleware(async ({ request }, next) => {
 
     return response
   } catch (error) {
-    // Calculate request duration even for errors
+    // Calculate request duration event for errors
     const duration = performance.now() - startTime
 
     // Log error
     logger.error(
       `Error processing ${method} ${path}`,
-      error instanceof Error ? error : new Error(String(error)),
+      { message: error instanceof Error ? error : new Error(String(error)) },
       {
         request: {
           method,
@@ -92,8 +91,5 @@ export const loggingMiddleware = defineMiddleware(async ({ request }, next) => {
 
     // Re-throw the error to be handled by error handlers
     throw error
-  } finally {
-    // Clean up request context
-    logger.cleanup()
   }
 })

@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
 import { getSession } from '../../../lib/auth/session'
 import { getAIUsageStats } from '../../../lib/ai/analytics'
-import { createAuditLog } from '../../../lib/audit/log'
+import { createAuditLog, type AuditMetadata } from '@/lib/audit/log'
 import { handleApiError } from '../../../lib/ai/error-handling'
 import { validateQueryParams } from '../../../lib/validation/index'
 import { UsageStatsRequestSchema } from '../../../lib/validation/schemas'
@@ -44,9 +44,9 @@ export const GET: APIRoute = async ({ request }) => {
         resourceId: undefined,
         metadata: {
           error: validationError.error,
-          details: validationError.details,
+          details: JSON.stringify(validationError.details),
           status: 'error',
-        },
+        } as AuditMetadata,
       })
 
       return new Response(JSON.stringify(validationError), {

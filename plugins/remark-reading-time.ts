@@ -7,8 +7,7 @@ import { toString } from 'mdast-util-to-string'
  * @see https://docs.astro.build/en/recipes/reading-time/
  */
 function remarkReadingTime() {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
+  //
   return (tree, file) => {
     const { frontmatter } = file.data.astro
     if (frontmatter.minutesRead || frontmatter.minutesRead === 0) return

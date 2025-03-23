@@ -3,105 +3,10 @@ import { getSession } from '../../../lib/auth/session.js'
 import { createTogetherAIService } from '../../../lib/ai/services/together.js'
 import { createAuditLog } from '../../../lib/audit/log.js'
 import { aiRepository } from '../../../lib/db/ai/index.js'
-import type { AIMessage as AIMessage } from '../../../lib/ai/models/ai-types.js'
+import type { AIMessage } from '../../../lib/ai/models/ai-types.js'
 import { InterventionAnalysisService } from '../../../lib/ai/services/intervention-analysis.js'
-import { AIService } from '../../../lib/ai/services/ai-service.js'
-
-/**
- * Wrapper for InterventionAnalysisService that works with TogetherAIService.
- * This is deprecated and will be removed in a future version.
- */
-class TogetherInterventionAnalysisService {
-  private togetherService: any
-  public model: string
-
-  constructor(togetherService: any, model: string) {
-    this.togetherService = togetherService
-    this.model = model
-  }
-
-  async analyzeIntervention(
-    conversation: AIMessage[],
-    interventionMessage: string,
-    userResponse: string
-  ) {
-    // Format messages for analysis
-    const messages = [
-      {
-        role: 'system',
-        content: `You are an intervention effectiveness analysis system. Evaluate the effectiveness of therapeutic interventions. Provide a JSON response with: score (0-1), confidence (0-1), areas (array of objects with name and score), and recommendations (array of strings).`,
-        name: '',
-      },
-      {
-        role: 'user',
-        content: `
-        CONVERSATION:
-        ${JSON.stringify(conversation)}
-
-        INTERVENTION:
-        ${interventionMessage}
-
-        USER RESPONSE:
-        ${userResponse}
-      `,
-        name: '',
-      },
-    ]
-
-    const response = await this.togetherService.generateCompletion(messages, {
-      model: this.model,
-      temperature: 0.7,
-    })
-
-    try {
-      // Extract JSON from response
-      const content = response?.content
-      const jsonMatch =
-        content.match(/```json\n([\s\S]*?)\n```/) ||
-        content.match(/```\n([\s\S]*?)\n```/) ||
-        content.match(/{[\s\S]*?}/)
-
-      const jsonStr = jsonMatch ? jsonMatch[0] : content
-      const result = JSON.parse(jsonStr)
-
-      // Return standardized result
-      return {
-        score: Number(result?.score || 0),
-        confidence: Number(result?.confidence || 0),
-        areas: Array.isArray(result?.areas) ? result?.areas : [],
-        recommendations: Array.isArray(result?.recommendations)
-          ? result?.recommendations
-          : [],
-      }
-    } catch (error) {
-      console.error('Error parsing intervention analysis result:', error)
-      return {
-        score: 0,
-        confidence: 0,
-        areas: [],
-        recommendations: ['Error analyzing intervention'],
-      }
-    }
-  }
-
-  async analyzeBatch(
-    interventions: Array<{
-      conversation: AIMessage[]
-      interventionMessage: string
-      userResponse: string
-    }>
-  ) {
-    return Promise.all(
-      interventions.map((item) =>
-        this.analyzeIntervention(
-          item.conversation,
-          item.interventionMessage,
-          item.userResponse
-        )
-      )
-    )
-  }
-}
+// Import the type expected by InterventionAnalysisService
+import type { AIService } from '../../../lib/ai/models/types.js'
 
 /**
  * API route for intervention effectiveness analysis
@@ -145,12 +50,13 @@ export const POST: APIRoute = async ({ request }) => {
       apiKey: '',
     })
 
-    // Use the model from the request or the default
+    // Use the model from the request or the default model
     const modelId = model || 'mistralai/Mixtral-8x7B-Instruct-v0.2'
 
     // Create intervention analysis service
     const interventionService = new InterventionAnalysisService({
-      aiService: aiService as any, // Cast to any to bypass type checking
+      // Force the type to match what InterventionAnalysisService expects
+      aiService: aiService as unknown as AIService,
       model: modelId,
     })
 
