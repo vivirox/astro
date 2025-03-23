@@ -17,6 +17,18 @@ interface RollbackOptions {
   version?: string
 }
 
+interface DeploymentInfo {
+  url: string
+  state: string
+  meta?: {
+    rollback?: boolean
+  }
+  // Add other deployment fields as needed
+  deploymentId?: string
+  createdAt?: string
+  target?: string
+}
+
 async function sendNotification(message: string, environment: string) {
   try {
     console.log(`Sending notification for ${environment} rollback...`)
@@ -72,11 +84,11 @@ async function getLastStableVersion(environment: string): Promise<string> {
       )
     }
 
-    const deployments = JSON.parse(result.stdout.toString())
+    const deployments = JSON.parse(result.stdout.toString()) as DeploymentInfo[]
 
     // Find last successful deployment (not the current failing one)
     const lastStable = deployments.find(
-      (d: any) => d.state === 'READY' && !d.meta?.rollback
+      (d) => d.state === 'READY' && !d.meta?.rollback
     )
 
     if (!lastStable) {
