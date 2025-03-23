@@ -9,6 +9,11 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  PNPM_VERSION: 10.6.1
+  NODE_VERSION: 20.19.0
+  PNPM_HOME: ${{ github.workspace }}/.pnpm
+
 jobs:
   lint:
     name: Lint
@@ -19,12 +24,30 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Set PNPM_HOME to PATH
+        run: |
+          mkdir -p $PNPM_HOME
+          echo "$PNPM_HOME" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
+        run: |
+          which pnpm || echo "pnpm not found in PATH"
+          pnpm --version
+          echo "PNPM_HOME: $PNPM_HOME"
+          echo "PATH: $PATH"
 
       - name: Get pnpm store directory
         id: pnpm-cache
+        shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
@@ -42,6 +65,7 @@ jobs:
       - name: Lint
         if: github.event_name == 'pull_request'
         run: pnpm lint
+
   typecheck:
     name: TypeScript Check
     runs-on: ubuntu-latest
@@ -52,17 +76,29 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: ${{ env.PNPM_VERSION }}
           run_install: false
+
+      - name: Set PNPM_HOME to PATH
+        run: |
+          mkdir -p $PNPM_HOME
+          echo "$PNPM_HOME" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
+        run: |
+          which pnpm || echo "pnpm not found in PATH"
+          pnpm --version
+          echo "PNPM_HOME: $PNPM_HOME"
+          echo "PATH: $PATH"
 
       - name: Get pnpm store directory
         id: pnpm-cache
+        shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
@@ -91,17 +127,29 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: ${{ env.PNPM_VERSION }}
           run_install: false
+
+      - name: Set PNPM_HOME to PATH
+        run: |
+          mkdir -p $PNPM_HOME
+          echo "$PNPM_HOME" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
+        run: |
+          which pnpm || echo "pnpm not found in PATH"
+          pnpm --version
+          echo "PNPM_HOME: $PNPM_HOME"
+          echo "PATH: $PATH"
 
       - name: Get pnpm store directory
         id: pnpm-cache
+        shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
@@ -133,17 +181,29 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: ${{ env.PNPM_VERSION }}
           run_install: false
+
+      - name: Set PNPM_HOME to PATH
+        run: |
+          mkdir -p $PNPM_HOME
+          echo "$PNPM_HOME" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
+        run: |
+          which pnpm || echo "pnpm not found in PATH"
+          pnpm --version
+          echo "PNPM_HOME: $PNPM_HOME"
+          echo "PATH: $PATH"
 
       - name: Get pnpm store directory
         id: pnpm-cache
+        shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
@@ -188,17 +248,29 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: ${{ env.PNPM_VERSION }}
           run_install: false
+
+      - name: Set PNPM_HOME to PATH
+        run: |
+          mkdir -p $PNPM_HOME
+          echo "$PNPM_HOME" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
+        run: |
+          which pnpm || echo "pnpm not found in PATH"
+          pnpm --version
+          echo "PNPM_HOME: $PNPM_HOME"
+          echo "PATH: $PATH"
 
       - name: Get pnpm store directory
         id: pnpm-cache
+        shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
@@ -245,14 +317,39 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: ${{ env.PNPM_VERSION }}
           run_install: false
+
+      - name: Set PNPM_HOME to PATH
+        run: |
+          mkdir -p $PNPM_HOME
+          echo "$PNPM_HOME" >> $GITHUB_PATH
+
+      - name: Verify pnpm installation
+        run: |
+          which pnpm || echo "pnpm not found in PATH"
+          pnpm --version
+          echo "PNPM_HOME: $PNPM_HOME"
+          echo "PATH: $PATH"
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
         run: pnpm install
