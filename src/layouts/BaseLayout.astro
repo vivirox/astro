@@ -42,6 +42,9 @@ const {
 const hasCustomCursor =
   newTab && cursorType.length > 0 && cursorType !== 'pointer'
 if (hasCustomCursor) style['--external-link-cursor'] = cursorType
+
+// Remove direct access to Astro.request.headers
+const currentPath = Astro.url.pathname
 ---
 
 <!doctype html>
@@ -76,7 +79,7 @@ if (hasCustomCursor) style['--external-link-cursor'] = cursorType
     <main id="main" class="px-7 py-10">
       <slot />
       {
-        Astro.url.pathname !== '/' && (
+        currentPath !== '/' && (
           <footer class="slide-enter animate-delay-1000! prose mx-auto mt-8 print:hidden">
             <slot name="share" />
             <br />

@@ -34,6 +34,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Setup environment variables
+        run: |
+          echo "Creating .env file for Playwright tests"
+          touch .env
+          echo "# Test environment variables" > .env
+          echo "TEST_VAR=test" >> .env
+
       - name: Run Playwright tests
         run: |
           pnpm exec playwright install --with-deps

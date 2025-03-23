@@ -11,43 +11,45 @@ export async function getStaticPaths() {
     return import.meta.env.PROD ? data.pubDate <= new Date() : true
   })
 
-  // Get all unique tags
-  const allTags = [
-    ...new Set(allBlogPosts.flatMap((post) => post.data.tags || [])),
+  // Get all unique tags to use as series
+  const allSeries = [
+    ...new Set(
+      allBlogPosts.flatMap(post => post.data.tags || [])
+    ),
   ]
 
-  // Create a path for each tag
-  return allTags.map((tag) => ({
-    params: { tag },
-    props: { tag },
+  // Create a path for each series
+  return allSeries.map(name => ({
+    params: { name },
+    props: { name },
   }))
 }
 
-const { tag } = Astro.props
+const { name } = Astro.props
 
-// Get all posts with this tag
+// Get all posts in this series (using tags)
 const allBlogPosts = await getCollection('blog', ({ data }) => {
   return import.meta.env.PROD ? data.pubDate <= new Date() : true
 })
 
 // Sort by date (newest first)
 const posts = allBlogPosts
-  .filter(post => post.data.tags?.includes(tag))
+  .filter(post => post.data.tags && post.data.tags.includes(name))
   .sort((a, b) => {
     return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
   })
 
 // Create page title and description
-const title = `#${tag} | Blog`
-const description = `Articles tagged with #${tag} - Explore insights and guides on this topic.`
+const title = `${name} Series | Blog`
+const description = `Articles in the ${name} series - Explore related guides and insights on this topic.`
 ---
 
 <BaseLayout {title} {description}>
   <StandardLayout>
     <div slot="article">
-      <h1 class="text-3xl font-bold mb-2">#{tag}</h1>
+      <h1 class="text-3xl font-bold mb-2">{name} Series</h1>
       <p class="text-gray-600 dark:text-gray-400 mb-8">
-        {posts.length} article{posts.length !== 1 ? 's' : ''} with this tag
+        {posts.length} article{posts.length !== 1 ? 's' : ''} in this series
       </p>
 
       <!-- Blog Grid -->
