@@ -15,6 +15,7 @@ interface RollbackOptions {
   environment: string
   notify: boolean
   version?: string
+  fallbackBranch?: string
 }
 
 interface DeploymentInfo {
@@ -65,9 +66,46 @@ async function sendNotification(message: string, environment: string) {
   }
 }
 
-async function getLastStableVersion(environment: string): Promise<string> {
+/**
+ * Get the last stable version from git tags or deployment history
+ */
+async function getLastStableVersion(
+  environment: string,
+  options: RollbackOptions
+): Promise<string> {
   try {
-    // Query deployment history to find last stable version
+    // First try to find the previous production tag
+    console.log('Looking for previous production tag...')
+    const tagResult = spawnSync('git', [
+      'tag',
+      '-l',
+      'production-*',
+      '--sort=-committerdate',
+    ])
+
+    if (tagResult.status === 0 && tagResult.stdout.toString().trim()) {
+      const tags = tagResult.stdout.toString().trim().split('\n')
+      console.log(`Found ${tags.length} production tags`)
+
+      // If we have at least two tags, get the second most recent one (skip current)
+      if (tags.length >= 2) {
+        const rollbackTag = tags[1]
+        console.log(`Using tag ${rollbackTag} for rollback`)
+        return rollbackTag
+      } else if (tags.length === 1) {
+        console.log(`Only one production tag found: ${tags[0]}`)
+        // Use it if explicitly allowed through options
+        if (options.fallbackBranch === 'use-current-tag') {
+          console.log('Using the only available tag for rollback')
+          return tags[0]
+        }
+      }
+    } else {
+      console.log('No production tags found')
+    }
+
+    // If no suitable tag found, try Vercel deployment history
+    console.log('Trying Vercel deployment history...')
     const result = spawnSync('pnpm', [
       'vercel',
       'list',
@@ -92,13 +130,36 @@ async function getLastStableVersion(environment: string): Promise<string> {
     )
 
     if (!lastStable) {
+      // If no stable version found and a fallback branch is specified, use it
+      if (
+        options.fallbackBranch &&
+        options.fallbackBranch !== 'use-current-tag'
+      ) {
+        console.log(
+          `No stable version found in deployments, using fallback branch: ${options.fallbackBranch}`
+        )
+        return options.fallbackBranch
+      }
       throw new Error('No stable version found in recent deployments')
     }
 
+    console.log(`Found stable deployment: ${lastStable.url}`)
     return lastStable.url
   } catch (error) {
     console.error('Error finding last stable version:', error)
-    return 'latest-stable'
+
+    // If fallback branch is specified, use it
+    if (
+      options.fallbackBranch &&
+      options.fallbackBranch !== 'use-current-tag'
+    ) {
+      console.log(`Using fallback branch: ${options.fallbackBranch}`)
+      return options.fallbackBranch
+    }
+
+    // Last resort: use main branch
+    console.log('Using main branch as last resort fallback')
+    return 'main'
   }
 }
 
@@ -108,21 +169,53 @@ async function performRollback(options: RollbackOptions) {
 
     // Get version to roll back to
     const version =
-      options.version || (await getLastStableVersion(options.environment))
+      options.version ||
+      (await getLastStableVersion(options.environment, options))
     console.log(`Target rollback version: ${version}`)
 
-    // Perform the rollback
-    console.log('\nExecuting rollback...')
-    const rollback = spawnSync('pnpm', [
-      'vercel',
-      'rollback',
-      '--environment',
-      options.environment,
-      '--yes',
-    ])
+    // Determine rollback method based on version format
+    if (
+      version.startsWith('production-') ||
+      version === 'main' ||
+      (options.fallbackBranch && version === options.fallbackBranch)
+    ) {
+      // Git tag or branch rollback
+      console.log(`Performing git-based rollback to ${version}...`)
 
-    if (rollback.status !== 0) {
-      throw new Error(`Rollback failed: ${rollback.stderr.toString()}`)
+      // Checkout the specified tag or branch
+      const checkoutResult = spawnSync('git', ['checkout', version])
+      if (checkoutResult.status !== 0) {
+        throw new Error(
+          `Failed to checkout ${version}: ${checkoutResult.stderr.toString()}`
+        )
+      }
+
+      // Deploy from the checked out version
+      console.log('Deploying from the previous version...')
+      const deployResult = spawnSync('pnpm', [
+        'vercel',
+        'deploy',
+        '--prod',
+        '--yes',
+      ])
+
+      if (deployResult.status !== 0) {
+        throw new Error(`Deployment failed: ${deployResult.stderr.toString()}`)
+      }
+    } else {
+      // Vercel URL-based rollback
+      console.log('Performing Vercel-based rollback...')
+      const rollback = spawnSync('pnpm', [
+        'vercel',
+        'rollback',
+        '--environment',
+        options.environment,
+        '--yes',
+      ])
+
+      if (rollback.status !== 0) {
+        throw new Error(`Rollback failed: ${rollback.stderr.toString()}`)
+      }
     }
 
     console.log('✓ Rollback completed successfully')
@@ -178,6 +271,7 @@ async function main() {
         environment: { type: 'string', short: 'e', default: 'production' },
         notify: { type: 'boolean', short: 'n', default: false },
         version: { type: 'string', short: 'v' },
+        fallbackBranch: { type: 'string', short: 'f', default: 'main' },
       },
     })
 
@@ -185,6 +279,7 @@ async function main() {
       environment: values.environment as string,
       notify: values.notify as boolean,
       version: values.version as string | undefined,
+      fallbackBranch: values.fallbackBranch as string | undefined,
     }
 
     const success = await performRollback(options)
