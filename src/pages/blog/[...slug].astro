@@ -8,8 +8,8 @@ import { formatDate } from '~/utils/datetime'
 import { getFilteredPosts } from '~/utils/post'
 import { FEATURES } from '~/config'
 
-// Add prerender directive to generate static HTML during build
-export const prerender = true;
+// Add prerender directive
+export const prerender = false;
 
 export async function getStaticPaths() {
   const posts = await getFilteredPosts('blog')
@@ -28,13 +28,10 @@ const { share, toc } = FEATURES
 const pubDate = frontmatter.pubDate.toISOString()
 const lastModDate =
   frontmatter.lastModDate && frontmatter.lastModDate.toISOString()
-const minutesRead =
-  frontmatter.minutesRead || remarkPluginFrontmatter.minutesRead
 
 /* Exception */
-const warningHTML = `This is a draft post that will not be published
-in production. Set the post's <code>draft</code> property in
-frontmatter to <code>false</code> or remove it to publish the post.`
+const warningHTML = `This article is not published yet.
+Please check back later when it's available.`
 ---
 
 <BaseLayout
@@ -44,15 +41,12 @@ frontmatter to <code>false</code> or remove it to publish the post.`
   {pubDate}
   {lastModDate}
 >
-  <StandardLayout title={frontmatter.title} subtitle={frontmatter.subtitle}>
+  <StandardLayout title={frontmatter.title}>
     <div slot="head">
       {
         frontmatter.pubDate && (
           <p class="mt--6! op-50">
             <time datetime={pubDate}>{formatDate(pubDate)}</time>
-            {minutesRead && minutesRead > 0 && (
-              <span>· {minutesRead} min read</span>
-            )}
             {lastModDate && (
               <time datetime={lastModDate}>
                 | Updated: {formatDate(lastModDate)}
@@ -61,7 +55,7 @@ frontmatter to <code>false</code> or remove it to publish the post.`
           </p>
         )
       }
-      {frontmatter.draft && <Warning rawHTMLString={warningHTML} />}
+      {(new Date(frontmatter.pubDate) > new Date()) && <Warning rawHTMLString={warningHTML} />}
     </div>
     <div slot="article">
       {Array.isArray(toc) && toc[0] && frontmatter.toc && <Toc {headings} />}

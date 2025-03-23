@@ -3,33 +3,18 @@ import ChatLayout from '../../layouts/ChatLayout.astro';
 import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester';
 import { ContrastChecker } from '../../components/accessibility/ContrastChecker';
 
-// Custom component to match expected props
-const AccessibleLoadingIndicator = (props: { size: string, message: string }) => {
-  const sizeMap = {
-    small: { width: 50, height: 20 },
-    medium: { width: 100, height: 30 },
-    large: { width: 150, height: 40 },
-  };
-
-  const size = sizeMap[props.size as keyof typeof sizeMap] || sizeMap.medium;
-
-  return (
-    <div class="loading-indicator" aria-live="polite">
-      <div
-        class="loading-skeleton"
-        style={{
-          width: `${size.width}px`,
-          height: `${size.height}px`,
-          background: "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
-          backgroundSize: "200% 100%",
-          animation: "loading 1.5s infinite",
-          borderRadius: "4px"
-        }}
-      ></div>
-      <p class="loading-message">{props.message}</p>
-    </div>
-  );
+// Define size map outside component
+const sizeMap = {
+  small: { width: 50, height: 20 },
+  medium: { width: 100, height: 30 },
+  large: { width: 150, height: 40 },
 };
+
+// Component props
+interface LoadingIndicatorProps {
+  size: 'small' | 'medium' | 'large';
+  message: string;
+}
 ---
 
 <ChatLayout title="Accessibility Testing">
@@ -51,27 +36,34 @@ const AccessibleLoadingIndicator = (props: { size: string, message: string }) =>
       <div class="loading-indicators-test">
         <div>
           <h3>Small</h3>
-          <AccessibleLoadingIndicator
-            size="small"
-            message="Loading small..."
-            client:load
-          />
+          <!-- AccessibleLoadingIndicator replaced with inline implementation -->
+          <div class="loading-indicator" aria-live="polite">
+            <div
+              class="loading-skeleton"
+              style={`width: ${sizeMap.small.width}px; height: ${sizeMap.small.height}px;`}
+            ></div>
+            <p class="loading-message">Loading small...</p>
+          </div>
         </div>
         <div>
           <h3>Medium</h3>
-          <AccessibleLoadingIndicator
-            size="medium"
-            message="Loading medium..."
-            client:load
-          />
+          <div class="loading-indicator" aria-live="polite">
+            <div
+              class="loading-skeleton"
+              style={`width: ${sizeMap.medium.width}px; height: ${sizeMap.medium.height}px;`}
+            ></div>
+            <p class="loading-message">Loading medium...</p>
+          </div>
         </div>
         <div>
           <h3>Large</h3>
-          <AccessibleLoadingIndicator
-            size="large"
-            message="Loading large..."
-            client:load
-          />
+          <div class="loading-indicator" aria-live="polite">
+            <div
+              class="loading-skeleton"
+              style={`width: ${sizeMap.large.width}px; height: ${sizeMap.large.height}px;`}
+            ></div>
+            <p class="loading-message">Loading large...</p>
+          </div>
         </div>
       </div>
     </section>
@@ -151,6 +143,13 @@ const AccessibleLoadingIndicator = (props: { size: string, message: string }) =>
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
+    }
+
+    .loading-skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: 4px;
     }
 
     .keyboard-test {

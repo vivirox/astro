@@ -1,11 +1,11 @@
 ---
 import { getCollection } from 'astro:content'
 
-export const prerender = true
+export const prerender = false
 
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection('blog', ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true
+    return import.meta.env.PROD ? data.pubDate <= new Date() : true
   })
 
   // Get all unique tags
@@ -24,11 +24,11 @@ const { tag } = Astro.props
 
 // Get all posts with this tag
 const allBlogPosts = await getCollection('blog', ({ data }) => {
-  return import.meta.env.PROD ? !data.draft : true
+  return import.meta.env.PROD ? data.pubDate <= new Date() : true
 })
 
 // Sort by date (newest first)
-const posts = allBlogPosts.sort((a, b) => {
+const posts = allBlogPosts.filter(post => post.data.tags?.includes(tag)).sort((a, b) => {
   return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 })
 ---
@@ -76,11 +76,6 @@ const posts = allBlogPosts.sort((a, b) => {
                 <div class="mt-4 flex items-center justify-between">
                   <span class="text-sm text-gray-500">
                     {new Date(post.data.pubDate).toLocaleDateString()}
-                  </span>
-                  <span class="text-sm text-gray-500">
-                    {post.data.minutesRead
-                      ? `${post.data.minutesRead} min read`
-                      : ''}
                   </span>
                 </div>
               </div>

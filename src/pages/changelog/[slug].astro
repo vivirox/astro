@@ -1,15 +1,12 @@
 ---
-import BaseLayout from '~/layouts/BaseLayout.astro'
-import StandardLayout from '~/layouts/StandardLayout.astro'
-import Toc from '~/components/toc/Toc.astro'
-import ShareLink from '~/components/widgets/ShareLink.astro'
-import Warning from '~/components/base/Warning.astro'
+import { getCollection } from 'astro:content'
+import Layout from '../../layouts/Layout.astro'
 import { formatDate } from '~/utils/datetime'
 import { getFilteredPosts } from '~/utils/post'
 import { FEATURES } from '~/config'
 
-// Add prerender directive to generate static HTML during build
-export const prerender = true;
+// Set prerender to false to ensure server-side rendering
+export const prerender = false;
 
 export async function getStaticPaths() {
   const posts = await getFilteredPosts('changelog')
@@ -22,57 +19,59 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props
 const { data: frontmatter } = post
-const { Content, headings, remarkPluginFrontmatter } = await post.render()
+const { Content, headings } = await post.render()
 const { share, toc } = FEATURES
 
 const pubDate = frontmatter.pubDate.toISOString()
 const lastModDate =
   frontmatter.lastModDate && frontmatter.lastModDate.toISOString()
-const minutesRead =
-  frontmatter.minutesRead || remarkPluginFrontmatter.minutesRead
 
-/* Exception */
-const warningHTML = `This is a draft post that will not be published
-in production. Set the post's <code>draft</code> property in
-frontmatter to <code>false</code> or remove it to publish the post.`
+/* Warning message */
+const warningHTML = `This article is not yet available.
+Please check back later.`
 ---
 
-<BaseLayout
+<Layout
   title={frontmatter.title}
   description={frontmatter.description}
-  ogImage={frontmatter.ogImage}
-  {pubDate}
-  {lastModDate}
 >
-  <StandardLayout title={frontmatter.title} subtitle={frontmatter.subtitle}>
-    <div slot="head">
+  <article class="prose prose-lg mx-auto">
+    <h1>{frontmatter.title}</h1>
+
+    <div class="text-sm text-gray-500 mb-6">
       {
         frontmatter.pubDate && (
-          <p class="mt--6! op-50">
+          <div>
             <time datetime={pubDate}>{formatDate(pubDate)}</time>
-            {minutesRead && minutesRead > 0 && (
-              <span>· {minutesRead} min read</span>
-            )}
             {lastModDate && (
-              <time datetime={lastModDate}>
-                | Updated: {formatDate(lastModDate)}
-              </time>
+              <div>
+                <time datetime={lastModDate}>
+                  Updated: {formatDate(lastModDate)}
+                </time>
+              </div>
             )}
-          </p>
+          </div>
         )
       }
-      {frontmatter.draft && <Warning rawHTMLString={warningHTML} />}
+
+      {new Date(frontmatter.pubDate) > new Date() &&
+        <div class="bg-yellow-100 text-yellow-800 p-3 my-4 rounded">
+          {warningHTML}
+        </div>
+      }
     </div>
-    <div slot="article">
-      {Array.isArray(toc) && toc[0] && frontmatter.toc && <Toc {headings} />}
-      <Content />
-    </div>
-  </StandardLayout>
-  <div slot="share">
-    {
-      Array.isArray(share) && share[0] && frontmatter.share && (
-        <ShareLink config={share[1]} />
-      )
-    }
-  </div>
-</BaseLayout>
+
+    {frontmatter.toc && <nav class="table-of-contents">
+      <h2>Table of Contents</h2>
+      <ul>
+        {headings.map(heading => (
+          <li class={`depth-${heading.depth}`}>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>}
+
+    <Content />
+  </article>
+</Layout>

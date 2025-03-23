@@ -3,33 +3,13 @@ import ChatLayout from '../../layouts/ChatLayout.astro';
 import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester';
 import AIChat from '../../components/AIChat';
 
-// Custom component to match expected props
-const AccessibleLoadingIndicator = (props: { size: string, message: string }) => {
-  const sizeMap = {
-    small: { width: 50, height: 20 },
-    medium: { width: 100, height: 30 },
-    large: { width: 150, height: 40 },
-  };
-
-  const size = sizeMap[props.size as keyof typeof sizeMap] || sizeMap.medium;
-
-  return (
-    <div>
-      <div
-        class="loading-skeleton"
-        style={{
-          width: `${size.width}px`,
-          height: `${size.height}px`,
-          background: "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
-          backgroundSize: "200% 100%",
-          animation: "loading 1.5s infinite",
-          borderRadius: "4px"
-        }}
-      ></div>
-      <p class="loading-message">{props.message}</p>
-    </div>
-  );
+// Define size map outside component
+const sizeMap = {
+  small: { width: 50, height: 20 },
+  medium: { width: 100, height: 30 },
+  large: { width: 150, height: 40 },
 };
+
 ---
 
 <ChatLayout title="Browser Compatibility Testing">
@@ -79,27 +59,33 @@ const AccessibleLoadingIndicator = (props: { size: string, message: string }) =>
         <div class="loading-indicators-test">
           <div>
             <h4>Small</h4>
-            <AccessibleLoadingIndicator
-              size="small"
-              message="Loading small..."
-              client:load
-            />
+            <div class="loading-indicator" aria-live="polite">
+              <div
+                class="loading-skeleton"
+                style={`width: ${sizeMap.small.width}px; height: ${sizeMap.small.height}px;`}
+              ></div>
+              <p class="loading-message">Loading small...</p>
+            </div>
           </div>
           <div>
             <h4>Medium</h4>
-            <AccessibleLoadingIndicator
-              size="medium"
-              message="Loading medium..."
-              client:load
-            />
+            <div class="loading-indicator" aria-live="polite">
+              <div
+                class="loading-skeleton"
+                style={`width: ${sizeMap.medium.width}px; height: ${sizeMap.medium.height}px;`}
+              ></div>
+              <p class="loading-message">Loading medium...</p>
+            </div>
           </div>
           <div>
             <h4>Large</h4>
-            <AccessibleLoadingIndicator
-              size="large"
-              message="Loading large..."
-              client:load
-            />
+            <div class="loading-indicator" aria-live="polite">
+              <div
+                class="loading-skeleton"
+                style={`width: ${sizeMap.large.width}px; height: ${sizeMap.large.height}px;`}
+              ></div>
+              <p class="loading-message">Loading large...</p>
+            </div>
           </div>
         </div>
       </div>
@@ -150,6 +136,159 @@ const AccessibleLoadingIndicator = (props: { size: string, message: string }) =>
       </div>
     </section>
   </div>
+
+  <style>
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .test-section {
+      margin-bottom: 40px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    .component-test {
+      margin-top: 20px;
+    }
+
+    .component-container {
+      margin-top: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 15px;
+    }
+
+    .loading-indicators-test {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .loading-skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: 4px;
+    }
+
+    .compatibility-log {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .compatibility-form {
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-danger {
+      background-color: var(--error);
+      color: white;
+    }
+
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 14px;
+    }
+
+    .issues-list {
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+
+    .issue-item {
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .issue-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .issue-severity {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .critical {
+      background-color: var(--error);
+      color: white;
+    }
+
+    .major {
+      background-color: var(--warning);
+      color: black;
+    }
+
+    .minor {
+      background-color: var(--info);
+      color: white;
+    }
+
+    .issue-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @media (max-width: 768px) {
+      .compatibility-log {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </ChatLayout>
 
 <script>
@@ -248,171 +387,7 @@ const AccessibleLoadingIndicator = (props: { size: string, message: string }) =>
       loadIssues()
     })
 
-    // Initial load
+    // Load issues on page load
     loadIssues()
-
-    // Pre-fill browser field with user agent info
-    const browserInput = document.getElementById('browser') as HTMLInputElement
-    if (browserInput) {
-      const ua = navigator.userAgent
-      let browserName = 'Unknown'
-
-      if (ua.includes('Firefox')) {
-        browserName = 'Firefox'
-      } else if (ua.includes('SamsungBrowser')) {
-        browserName = 'Samsung Browser'
-      } else if (ua.includes('Opera') || ua.includes('OPR')) {
-        browserName = 'Opera'
-      } else if (ua.includes('Edg')) {
-        browserName = 'Edge'
-      } else if (ua.includes('Chrome')) {
-        browserName = 'Chrome'
-      } else if (ua.includes('Safari')) {
-        browserName = 'Safari'
-      }
-
-      browserInput.value = browserName
-    }
   })
 </script>
-
-<style>
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .test-section {
-    margin-bottom: 3rem;
-    padding: 1.5rem;
-    border: 1px solid var(--border-color, #ddd);
-    border-radius: 8px;
-    background-color: var(--card-bg, #fff);
-  }
-
-  .component-test {
-    margin-top: 1rem;
-  }
-
-  .component-container {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    border: 1px solid var(--border-color, #ddd);
-    border-radius: 4px;
-  }
-
-  .loading-indicators-test {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1.5rem;
-  }
-
-  .compatibility-form {
-    margin-bottom: 2rem;
-  }
-
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid var(--border-color, #ddd);
-    border-radius: 4px;
-  }
-
-  .form-actions {
-    margin-top: 1.5rem;
-  }
-
-  .btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-  }
-
-  .btn-primary {
-    background-color: var(--primary-color, #0066cc);
-    color: white;
-  }
-
-  .btn-danger {
-    background-color: var(--danger-color, #dc3545);
-    color: white;
-  }
-
-  .btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-  }
-
-  .issue-item {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border: 1px solid var(--border-color, #ddd);
-    border-radius: 4px;
-  }
-
-  .issue-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-
-  .issue-severity {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-
-  .issue-severity.critical {
-    background-color: var(--danger-color, #dc3545);
-    color: white;
-  }
-
-  .issue-severity.major {
-    background-color: var(--warning-color, #ffc107);
-    color: black;
-  }
-
-  .issue-severity.minor {
-    background-color: var(--info-color, #17a2b8);
-    color: white;
-  }
-
-  .issue-actions {
-    margin-top: 0.5rem;
-    text-align: right;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .loading-indicator {
-      animation: none !important;
-    }
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .test-section {
-      border-color: var(--border-color-dark, #444);
-      background-color: var(--card-bg-dark, #222);
-    }
-  }
-
-  @keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-</style>

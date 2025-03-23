@@ -1,6 +1,6 @@
 import { supabase } from '../db/supabase'
 import { createAuditLog } from '../audit/log'
-import { getDateKey } from '@lib/utils'
+import { getDateKey } from '../utils'
 
 /**
  * Interface for AI usage statistics
@@ -160,12 +160,8 @@ export async function getModelUsageBreakdown(
     }
   > = {}
 
-  let totalRequests = 0
-
   // First pass: calculate totals
   for (const stat of stats) {
-    totalRequests += stat.totalRequests
-
     for (const [model, usage] of Object.entries(stat.modelUsage)) {
       if (!modelUsage[model]) {
         modelUsage[model] = {
@@ -183,7 +179,6 @@ export async function getModelUsageBreakdown(
 
   return modelUsage
 }
-
 /**
  * Get usage trends over time
  */

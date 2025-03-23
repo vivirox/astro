@@ -1,103 +1,70 @@
 ---
 import { getCollection } from 'astro:content'
+import { getFilteredPosts } from '~/utils/post'
 
-export const prerender = true
+export const prerender = false
 
 export async function getStaticPaths() {
-  const allBlogPosts = await getCollection('blog', ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true
-  })
+  const allPosts = await getFilteredPosts('blog')
 
-  // Get all unique series
-  const allSeries = [
-    ...new Set(
-      allBlogPosts
-        .filter((post) => post.data.series)
-        .map((post) => post.data.series)
-    ),
-  ]
+  // Get all tags as a substitute for series
+  const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))]
 
-  // Create a path for each series
-  return allSeries.map((series) => ({
-    params: {
-      series:
-        typeof series === 'string'
-          ? series.toLowerCase().replace(/\s+/g, '-')
-          : '',
-    },
-    props: { series },
+  return allTags.map(tag => ({
+    params: { series: tag },
+    props: { tag }
   }))
 }
 
-const { series } = Astro.props
+const { tag } = Astro.props
 
-// Get all posts in this series
-const allBlogPosts = await getCollection('blog', ({ data }) => {
-  return import.meta.env.PROD ? !data.draft : true
-})
+// Get all posts with this tag
+const allPosts = await getFilteredPosts('blog')
 
-// Sort by seriesOrder if available, otherwise by date
-const posts = allBlogPosts.sort((a, b) => {
-  // First try to sort by seriesOrder
-  if (a.data.seriesOrder !== undefined && b.data.seriesOrder !== undefined) {
-    return a.data.seriesOrder - b.data.seriesOrder
-  }
-
-  // Fall back to date sorting
-  return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
-})
-
-// Get the first post for the hero section
-const firstPost = posts[0]
+// Filter and sort by date
+const posts = allPosts
+  .filter(post => post.data.tags?.includes(tag))
+  .sort((a, b) => {
+    // Sort by date (newest first)
+    return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  })
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{series} Series | Blog</title>
+    <title>#{tag} | Blog</title>
     <meta
       name="description"
-      content={`Articles in the ${series} series - Explore insights and guides on this topic.`}
+      content={`Articles with tag #${tag} - Read the complete collection of posts.`}
     />
   </head>
   <body>
     <div class="max-w-6xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-2">{series} Series</h1>
+      <h1 class="text-3xl font-bold mb-2">#{tag}</h1>
       <p class="text-gray-600 mb-8">
-        {posts.length} article{posts.length !== 1 ? 's' : ''} in this series
+        {posts.length} article{posts.length !== 1 ? 's' : ''} with this tag
       </p>
 
+      <!-- Series List -->
       <div class="space-y-6">
         {
           posts.map((post, index) => (
-            <div class="bg-white rounded-lg shadow-md p-6">
-              <div class="flex items-start gap-4">
-                <div class="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
-                  {post.data.seriesOrder || index + 1}
-                </div>
-                <div class="flex-grow">
-                  <a href={`/blog/${post.slug}`} class="block">
-                    <h3 class="text-xl font-semibold mb-2">
-                      {post.data.title}
-                    </h3>
-                  </a>
-                  <p class="text-gray-600 mb-4">{post.data.description}</p>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-500">
-                      {new Date(post.data.pubDate).toLocaleDateString()} •{' '}
-                      {post.data.minutesRead
-                        ? `${post.data.minutesRead} min read`
-                        : 'Quick read'}
-                    </span>
-                    <a
-                      href={`/blog/${post.slug}`}
-                      class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm"
-                    >
-                      Read Article
-                    </a>
-                  </div>
-                </div>
+            <div class="border-l-4 border-blue-500 pl-4">
+              <div class="flex items-center mb-1">
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                  #{tag}
+                </span>
+              </div>
+              <h2 class="text-xl font-semibold">
+                <a href={`/blog/${post.slug}`} class="hover:text-blue-600">
+                  {post.data.title}
+                </a>
+              </h2>
+              <p class="text-gray-600 mt-1">{post.data.description}</p>
+              <div class="mt-2 text-sm text-gray-500">
+                {new Date(post.data.pubDate).toLocaleDateString()}
               </div>
             </div>
           ))
