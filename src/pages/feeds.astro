@@ -1,15 +1,18 @@
 ---
-title: Astro Blog
-description: 'Example: fetching Astro Blog using @ascorbic/feed-loader'
-subtitle: 'Example: fetching Astro Blog using @ascorbic/feed-loader'
-bgType: false
-toc: true
-ogImage: true
----
-
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import TabbedLayout from '~/layouts/TabbedLayout.astro'
 import ListView from '~/components/views/ListView.astro'
+import type { BgType } from '~/types'
+
+const frontmatter = {
+  title: "Astro Blog",
+  description: "Example: fetching Astro Blog using @ascorbic/feed-loader",
+  subtitle: "Example: fetching Astro Blog using @ascorbic/feed-loader",
+  bgType: false as const,
+  toc: true,
+  ogImage: true
+};
+---
 
 <BaseLayout
   title={frontmatter.title}
