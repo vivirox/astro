@@ -56,11 +56,34 @@ export interface AuditLogEntry {
   timestamp: Date
 }
 
-// Initialize Supabase client
-const supabase = createClient<Database>(
-  import.meta.env.PUBLIC_SUPABASE_URL,
-  import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-)
+// Initialize Supabase client or use mock if not available
+let supabase: any
+
+// Check if environment variables are available
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+
+if (supabaseUrl && supabaseKey) {
+  // Initialize real Supabase client
+  supabase = createClient<Database>(supabaseUrl, supabaseKey)
+} else {
+  // Create a mock implementation for builds without Supabase credentials
+  console.warn(
+    'Using mock Supabase client for audit logging. This should not be used in production.',
+  )
+  supabase = {
+    from: () => ({
+      insert: () => Promise.resolve({ error: null }),
+      select: () => ({
+        eq: () => ({
+          order: () => ({
+            range: () => Promise.resolve({ data: [], error: null }),
+          }),
+        }),
+      }),
+    }),
+  }
+}
 
 /**
  * Create an audit log entry - function overloads
@@ -92,9 +115,9 @@ export async function createAuditLog(
     let ip_address = null
     let user_agent = null
     if (request) {
-      ip_address
-        = request.headers.get('x-forwarded-for')
-          || request.headers.get('x-real-ip')
+      ip_address =
+        request.headers.get('x-forwarded-for') ||
+        request.headers.get('x-real-ip')
       user_agent = request.headers.get('user-agent')
     }
 
@@ -118,8 +141,7 @@ export async function createAuditLog(
       if (error) {
         console.error('Error creating audit log:', error)
       }
-    }
-    else {
+    } else {
       // Called with entry object
       const entry = entryOrUserId
 
@@ -138,8 +160,7 @@ export async function createAuditLog(
         console.error('Error creating audit log:', error)
       }
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error creating audit log:', error)
   }
 }
@@ -178,8 +199,7 @@ export async function getUserAuditLogs(
       metadata: log.metadata,
       timestamp: new Date(log.timestamp),
     }))
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error getting audit logs:', error)
     return []
   }
@@ -219,8 +239,7 @@ export async function getActionAuditLogs(
       metadata: log.metadata,
       timestamp: new Date(log.timestamp),
     }))
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error getting audit logs:', error)
     return []
   }

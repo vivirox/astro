@@ -17,7 +17,7 @@ export interface SessionData {
 
 export interface AuthContext {
   session?: unknown
-  securityVerification?: SecurityVerificationResul
+  securityVerification?: SecurityVerificationResult
   hipaaCompliance?: HIPAAComplianceInfo
 }
 

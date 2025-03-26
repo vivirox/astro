@@ -68,6 +68,9 @@ const streams = defineCollection({
 const feeds = defineCollection({
   loader: feedLoader({
     url: 'https://astro.build/rss.xml',
+    timeout: 30000, // 30 seconds timeout
+    retries: 3, // 3 retries
+    retryDelay: 1000, // 1 second between retries
   }),
 })
 

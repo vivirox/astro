@@ -14,7 +14,7 @@ if (
   !UI.tabbedLayoutTabs ||
   (Array.isArray(UI.tabbedLayoutTabs) && UI.tabbedLayoutTabs.length === 0)
 ) {
-  throw new Error('`UI.tabbedLayoutTabs`` is not configured.')
+  throw new Error('`UI.tabbedLayoutTabs` is not configured.')
 } else {
   tabs = UI.tabbedLayoutTabs
 }
@@ -40,7 +40,7 @@ const currentPath = ensureTrailingSlash(Astro.url.pathname)
           href={getUrl(ensureTrailingSlash(tab.path))}
           role="tab"
           aria-current={
-            Astro.url.pathname === getUrl(ensureTrailingSlash(tab.path))
+            currentPath === getUrl(ensureTrailingSlash(tab.path))
               ? 'page'
               : false
           }

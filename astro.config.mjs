@@ -1,15 +1,28 @@
+import path from 'node:path'
 import process from 'node:process'
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
+import starlight from '@astrojs/starlight'
 import tailwind from '@astrojs/tailwind'
 import vercel from '@astrojs/vercel'
 import UnoCSS from '@unocss/astro'
 import { defineConfig } from 'astro/config'
-import path from 'path'
 
 export default defineConfig({
-  site: 'https://vivi.rocks',
+  site: 'https://gradiantascent.xyz',
   integrations: [
+    starlight({
+      title: 'Gradiant Documentation',
+      social: {
+        github: 'https://github.com/vivi/gradiant',
+      },
+      sidebar: [
+        {
+          label: 'Guides',
+          items: [{ label: 'WebSocket', link: '/docs/websocket' }],
+        },
+      ],
+    }),
     react(),
     mdx(),
     UnoCSS({
@@ -21,7 +34,7 @@ export default defineConfig({
     tailwind(),
   ],
   content: {
-    collections: ['blog', 'docs']
+    collections: ['blog', 'docs'],
   },
   vite: {
     optimizeDeps: {
@@ -60,8 +73,8 @@ export default defineConfig({
         '@components': path.resolve('./src/components'),
         '@layouts': path.resolve('./src/layouts'),
         '@utils': path.resolve('./src/utils'),
-        '@lib': path.resolve('./src/lib')
-      }
+        '@lib': path.resolve('./src/lib'),
+      },
     },
     ssr: {
       noExternal: ['react'],
@@ -80,11 +93,11 @@ export default defineConfig({
     service: {
       entrypoint: 'astro/assets/services/sharp',
     },
-    domains: ['vivi.rocks'],
+    domains: ['gradiantascent.xyz'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**.vivi.rocks',
+        hostname: '**.gradiantascent.xyz',
       },
     ],
   },
@@ -94,6 +107,6 @@ export default defineConfig({
     // Allow JavaScript files
     allowJS: true,
     // Show TypeScript errors in dev server
-    reportTypeErrors: true
-  }
+    reportTypeErrors: true,
+  },
 })

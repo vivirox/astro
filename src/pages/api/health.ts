@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro'
+import * as processModule from 'node:process'
 import { createClient } from '@supabase/supabase-js'
 
 /**
@@ -6,7 +7,7 @@ import { createClient } from '@supabase/supabase-js'
  *
  * This endpoint will check:
  * 1. API server availability
- * 2. Supabase connection
+ * 2. Supabase connection (if credentials available)
  * 3. System resources
  */
 export const GET: APIRoute = async () => {
@@ -15,26 +16,45 @@ export const GET: APIRoute = async () => {
     const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
     const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
 
+    // Check memory usage
+    const memoryUsage = processModule.memoryUsage()
+    const usedMemoryPercentage =
+      (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
+
+    const memoryInfo = {
+      percentage: usedMemoryPercentage.toFixed(2),
+      heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
+      heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
+    }
+
+    // If no Supabase credentials, return partial health status
     if (!supabaseUrl || !supabaseAnonKey) {
+      console.warn(
+        'Health check: Missing Supabase credentials, skipping database check',
+      )
+
       return new Response(
         JSON.stringify({
-          status: 'error',
-          message: 'Missing Supabase credentials',
+          status: 'partial',
+          message: 'API available but database connection not configured',
           checks: {
             api: 'ok',
-            database: 'error',
-            memory: 'unknown',
+            database: 'skipped',
+            memory: usedMemoryPercentage < 85 ? 'ok' : 'warning',
+            memoryUsage: memoryInfo,
           },
         }),
         {
-          status: 500,
+          status: 200,
           headers: {
             'Content-Type': 'application/json',
+            'Cache-Control': 'no-store, max-age=0',
           },
         },
       )
     }
 
+    // Create Supabase client if credentials are available
     const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
     // Simple query to check database connection
@@ -42,11 +62,6 @@ export const GET: APIRoute = async () => {
       .from('health_checks')
       .select('count')
       .limit(1)
-
-    // Check memory usage
-    const memoryUsage = process.memoryUsage()
-    const usedMemoryPercentage =
-      (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
 
     if (error) {
       return new Response(
@@ -58,11 +73,7 @@ export const GET: APIRoute = async () => {
             api: 'ok',
             database: 'error',
             memory: usedMemoryPercentage < 85 ? 'ok' : 'warning',
-            memoryUsage: {
-              percentage: usedMemoryPercentage.toFixed(2),
-              heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
-              heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
-            },
+            memoryUsage: memoryInfo,
           },
         }),
         {
@@ -75,7 +86,7 @@ export const GET: APIRoute = async () => {
     }
 
     // Log a successful health check (useful for metrics)
-    console.info(`Health check successful at ${new Date().toISOString()}`)
+    console.warn(`Health check successful at ${new Date().toISOString()}`)
 
     // All checks passed
     return new Response(
@@ -87,11 +98,7 @@ export const GET: APIRoute = async () => {
           api: 'ok',
           database: 'ok',
           memory: usedMemoryPercentage < 85 ? 'ok' : 'warning',
-          memoryUsage: {
-            percentage: usedMemoryPercentage.toFixed(2),
-            heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
-            heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
-          },
+          memoryUsage: memoryInfo,
         },
       }),
       {

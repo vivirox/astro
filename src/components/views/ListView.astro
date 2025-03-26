@@ -125,12 +125,15 @@ const warningHTML = `The '${collectionType}' collection type does no
         <div class="py-2 op-50">nothing here yet</div>
       ) : (
         sortedBlogItems.map(async (item, idx) => {
-          const { data, slug } = item
-          const { remarkPluginFrontmatter } = await item.render()
+          const data = item.data;
+          const slug = (item as any).slug;
+          const rendered = await (item as any).render();
+          const remarkPluginFrontmatter = rendered.remarkPluginFrontmatter;
+
           const minutesRead =
             'minutesRead' in data
               ? data.minutesRead
-              : 'minutesRead' in remarkPluginFrontmatter
+              : remarkPluginFrontmatter && 'minutesRead' in remarkPluginFrontmatter
                 ? remarkPluginFrontmatter.minutesRead
                 : undefined
 

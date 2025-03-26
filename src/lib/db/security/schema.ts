@@ -42,7 +42,7 @@ export async function initializeSecurityTables(): Promise<void> {
     `,
     })
 
-    console.log('Security tables initialized successfully')
+    console.warn('Security tables initialized successfully')
   } catch (error) {
     console.error(
       'Failed to initialize security tables:',

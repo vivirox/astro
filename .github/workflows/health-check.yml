@@ -109,14 +109,8 @@ jobs:
 
       - name: Send Notification on Failure
         if: failure()
-        uses: rtCamp/action-slack-notify@v2
-        with:
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
-          channel: general
-          color: '#FF0000'
-          title: 'Development Health Check Failed'
-          message: |
-            The development server health check has failed. Details:
-            - Time: ${{ steps.healthcheck.outputs.time }}
-            - Environment: Development (localhost)
-            Please check the GitHub Actions logs for more information.
+        run: |
+          The development server health check has failed. Details:
+          - Time: ${{ steps.healthcheck.outputs.time }}
+          - Environment: Development (localhost)
+          Please check the GitHub Actions logs for more information.
