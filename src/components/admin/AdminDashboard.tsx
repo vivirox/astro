@@ -8,9 +8,9 @@ const logger = getLogger()
 interface SystemMetrics {
   activeUsers: number
   activeSessions: number
+  sessionsToday: number
   totalTherapists: number
   totalClients: number
-  sessionsToday: number
   messagesSent: number
   avgResponseTime: number
   systemLoad: number
@@ -27,6 +27,8 @@ interface MetricCardProps {
     value: number
     isPositive: boolean
   }
+  color?: string
+  loading?: boolean
 }
 
 /**
@@ -37,44 +39,55 @@ const MetricCard: React.FC<MetricCardProps> = ({
   value,
   icon,
   trend,
-}) => (
-  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-    <div className="flex justify-between items-start">
-      <div>
-        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-          {title}
-        </h3>
-        <p className="text-2xl font-bold mt-2 text-gray-800 dark:text-gray-200">
-          {value}
-        </p>
-
-        {trend && (
-          <div className="mt-2 flex items-center">
-            <span
-              className={`material-symbols-outlined text-sm ${
-                trend.isPositive ? 'text-green-500' : 'text-red-500'
-              }`}
-            >
-              {trend.isPositive ? 'trending_up' : 'trending_down'}
-            </span>
-            <span
-              className={`ml-1 text-xs ${
-                trend.isPositive ? 'text-green-500' : 'text-red-500'
-              }`}
-            >
-              {Math.abs(trend.value)}%
-            </span>
-            <span className="ml-1 text-xs text-gray-500">vs last week</span>
+  color = 'purple',
+  loading = false,
+}) => {
+  if (loading) {
+    return (
+      <div className="min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800">
+        <div className="p-4 flex items-center animate-pulse">
+          <div className="p-3 rounded-full bg-gray-200 dark:bg-gray-700 mr-4">
+            <div className="h-8 w-8"></div>
           </div>
-        )}
+          <div>
+            <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+            <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+          </div>
+        </div>
       </div>
+    )
+  }
 
-      <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400">
-        {icon}
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xs overflow-hidden">
+      <div className="p-4 flex items-center">
+        <div className={`p-3 rounded-full bg-${color}-100 dark:bg-${color}-900 mr-4`}>
+          <div className={`text-${color}-500 dark:text-${color}-100`}>{icon}</div>
+        </div>
+        <div>
+          <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            {title}
+          </p>
+          <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+            {value}
+          </p>
+          {trend && (
+            <div className="flex items-center text-sm mt-1">
+              <span
+                className={`text-${
+                  trend.isPositive ? 'green' : 'red'
+                }-500 mr-2`}
+              >
+                {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
+              </span>
+              <span className="text-gray-500 dark:text-gray-400">vs last week</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 /**
  * AdminDashboard component
@@ -85,171 +98,177 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Fetch system metrics
   useEffect(() => {
-    const fetchMetrics = async () => {
+    async function fetchMetrics() {
       try {
-        setLoading(true)
         const response = await fetch('/api/admin/metrics')
+        const data = await response.json()
 
         if (!response.ok) {
-          throw new Error('Failed to fetch metrics')
+          throw new Error(data.message || 'Failed to fetch metrics')
         }
 
-        const data = await response.json()
-        setMetrics(data.metrics)
+        setMetrics(data)
+        setError(null)
       } catch (err) {
-        logger.error('Error fetching admin metrics:', err)
-        setError('Failed to load system metrics. Please try again.')
+        logger.error('Error fetching metrics:', {
+          error: err instanceof Error ? err.message : String(err)
+        })
+        setError('Failed to load system metrics')
       } finally {
         setLoading(false)
       }
     }
 
     fetchMetrics()
-
-    // Set up polling for metrics
-    const interval = setInterval(fetchMetrics, 60000) // update every minute
-
+    const interval = setInterval(fetchMetrics, 30000) // Update every 30 seconds
     return () => clearInterval(interval)
   }, [])
 
-  // Handle loading state
-  if (loading && !metrics) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-      </div>
-    )
-  }
-
-  // Handle error state
-  if (error) {
-    return (
-      <div
-        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-        role="alert"
-      >
-        <strong className="font-bold">Error!</strong>
-        <span className="block sm:inline"> {error}</span>
-      </div>
-    )
-  }
-
-  // If we have metrics, render the dashboard
   return (
-    <div className="admin-dashboard">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
-          System Overview
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          Current status of the Gradiant Therapy Chat System
+    <div className="px-4 py-6">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          Dashboard
+        </h1>
+        <p className="mt-2 text-gray-600 dark:text-gray-400">
+          Monitor and manage your therapy platform's performance
         </p>
       </div>
 
-      {/* Security Level Indicator */}
-      <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-        <div className="flex items-center">
-          <span className="material-symbols-outlined mr-2 text-purple-600 dark:text-purple-400">
-            security
-          </span>
-          <h3 className="text-md font-medium text-gray-800 dark:text-gray-200">
-            Current Security Level:
-            <span
-              className={`ml-2 ${
-                metrics?.activeSecurityLevel === 'maximum'
-                  ? 'text-green-600 dark:text-green-400'
-                  : metrics?.activeSecurityLevel === 'hipaa'
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-yellow-600 dark:text-yellow-400'
-              }`}
-            >
-              {metrics?.activeSecurityLevel === 'maximum'
-                ? 'Maximum (FHE)'
-                : metrics?.activeSecurityLevel === 'hipaa'
-                  ? 'HIPAA Compliant'
-                  : 'Standard'}
-            </span>
-          </h3>
+      {error && (
+        <div className="mb-8 bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-200 p-4 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {/* Security Status */}
+      <div className="mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xs p-4">
+          <div className="flex items-center">
+            <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
+              <svg
+                className="w-6 h-6 text-purple-600 dark:text-purple-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Security Level
+              </p>
+              <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                {metrics?.activeSecurityLevel === 'maximum' ? (
+                  <span className="text-green-600 dark:text-green-400">Maximum (FHE)</span>
+                ) : metrics?.activeSecurityLevel === 'hipaa' ? (
+                  <span className="text-blue-600 dark:text-blue-400">HIPAA Compliant</span>
+                ) : (
+                  <span className="text-yellow-600 dark:text-yellow-400">Standard</span>
+                )}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Metric Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Metrics Grid */}
+      <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           title="Active Users"
           value={metrics?.activeUsers || 0}
-          icon={<span className="material-symbols-outlined">person</span>}
-          trend={{ value: 5.3, isPositive: true }}
+          icon={
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clipRule="evenodd"
+              />
+            </svg>
+          }
+          trend={{ value: 12, isPositive: true }}
+          loading={loading}
         />
 
         <MetricCard
           title="Active Sessions"
           value={metrics?.activeSessions || 0}
-          icon={<span className="material-symbols-outlined">chat</span>}
-          trend={{ value: 2.7, isPositive: true }}
-        />
-
-        <MetricCard
-          title="Sessions Today"
-          value={metrics?.sessionsToday || 0}
           icon={
-            <span className="material-symbols-outlined">calendar_today</span>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
+                clipRule="evenodd"
+              />
+            </svg>
           }
-          trend={{ value: 1.2, isPositive: true }}
+          trend={{ value: 7, isPositive: true }}
+          loading={loading}
+          color="blue"
         />
 
         <MetricCard
-          title="Total Therapists"
-          value={metrics?.totalTherapists || 0}
-          icon={<span className="material-symbols-outlined">psychology</span>}
-          trend={{ value: 8.4, isPositive: true }}
-        />
-
-        <MetricCard
-          title="Total Clients"
-          value={metrics?.totalClients || 0}
-          icon={<span className="material-symbols-outlined">diversity_3</span>}
-          trend={{ value: 12.8, isPositive: true }}
-        />
-
-        <MetricCard
-          title="Messages Sent"
-          value={metrics?.messagesSent || 0}
-          icon={<span className="material-symbols-outlined">mail</span>}
-          trend={{ value: 15.2, isPositive: true }}
-        />
-
-        <MetricCard
-          title="Avg. Response Time"
+          title="Average Response Time"
           value={`${metrics?.avgResponseTime || 0}ms`}
-          icon={<span className="material-symbols-outlined">speed</span>}
-          trend={{ value: 3.1, isPositive: false }}
+          icon={
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                clipRule="evenodd"
+              />
+            </svg>
+          }
+          trend={{ value: 3.2, isPositive: false }}
+          loading={loading}
+          color="yellow"
         />
 
         <MetricCard
           title="System Load"
           value={`${metrics?.systemLoad || 0}%`}
-          icon={<span className="material-symbols-outlined">memory</span>}
-        />
-
-        <MetricCard
-          title="Storage Used"
-          value={metrics?.storageUsed || '0 MB'}
-          icon={<span className="material-symbols-outlined">storage</span>}
+          icon={
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z"
+                clipRule="evenodd"
+              />
+            </svg>
+          }
+          loading={loading}
+          color="red"
         />
       </div>
 
-      {/* Additional sections can be added here */}
-      <div className="mt-8">
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-          Recent Activity
-        </h2>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-          <p className="text-gray-600 dark:text-gray-400 text-center py-8">
-            Activity monitoring coming soon...
-          </p>
+      {/* Charts Section */}
+      <div className="grid gap-6 mb-8 md:grid-cols-2">
+        <div className="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          <h4 className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+            Daily Sessions
+          </h4>
+          {/* Add chart component here */}
+          <div className="h-64 bg-gray-100 dark:bg-gray-700 rounded-lg">
+            {/* Placeholder for chart */}
+          </div>
+        </div>
+
+        <div className="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          <h4 className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+            System Performance
+          </h4>
+          {/* Add chart component here */}
+          <div className="h-64 bg-gray-100 dark:bg-gray-700 rounded-lg">
+            {/* Placeholder for chart */}
+          </div>
         </div>
       </div>
     </div>

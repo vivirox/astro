@@ -1,6 +1,6 @@
-import { auth } from '@/lib/auth'
-import { redis } from '@/lib/redis'
-import { BreachNotificationSystem } from '@/lib/security/breach-notification'
+import { AuthService } from '../services/AuthService'
+import { RedisService } from '../lib/services/redis/RedisService'
+import { BreachNotificationSystem } from '../lib/security/breach-notification'
 import { expect, test } from '@playwright/test'
 
 test.describe('Breach Notification System E2E', () => {
@@ -14,6 +14,9 @@ test.describe('Breach Notification System E2E', () => {
     remediation: 'Forced password reset and session invalidation',
   }
 
+  let redis: RedisService
+  let auth: AuthService
+
   test.beforeAll(async () => {
     // Setup test environment
     process.env.NODE_ENV = 'test'
@@ -24,28 +27,36 @@ test.describe('Breach Notification System E2E', () => {
     process.env.HHS_NOTIFICATION_EMAIL = 'hhs-test@example.com'
     process.env.SECURITY_STAKEHOLDERS = 'security-team@test-healthcare.com'
 
-    // Create test users
-    await auth.createUser({
-      id: 'test_user_1',
-      email: 'patient1@example.com',
-      name: 'Test Patient 1',
+    // Initialize services
+    redis = new RedisService({
+      url: process.env.REDIS_URL || 'redis://localhost:6379',
+      keyPrefix: 'test:breach:',
+      maxRetries: 3,
+      retryDelay: 100,
     })
+    await redis.connect()
 
-    await auth.createUser({
-      id: 'test_user_2',
-      email: 'patient2@example.com',
-      name: 'Test Patient 2',
+    auth = AuthService.getInstance()
+
+    // Create test users
+    await auth.signUp('patient1@example.com', 'testpassword', {
+      fullName: 'Test Patient 1',
+    })
+    await auth.signUp('patient2@example.com', 'testpassword', {
+      fullName: 'Test Patient 2',
     })
   })
 
   test.afterAll(async () => {
-    // Cleanup test data
-    const keys = await redis.keys('breach:*')
-    await Promise.all(keys.map((key) => redis.del(key)))
+    // Cleanup test data using pattern matching through RedisService
+    const pattern = 'test:breach:*'
+    await redis.del(pattern)
 
-    // Remove test users
-    await auth.deleteUser('test_user_1')
-    await auth.deleteUser('test_user_2')
+    // Sign out created users to clean up sessions
+    await auth.signOut()
+
+    // Disconnect Redis client
+    await redis.disconnect()
   })
 
   test.beforeEach(async ({ page }) => {
@@ -61,6 +72,19 @@ test.describe('Breach Notification System E2E', () => {
   test('should create and process a security breach notification', async ({
     page,
   }) => {
+    // Store requests for later verification
+    const emailRequests: Array<{ url: string; postData: any }> = []
+    await page.route('**/api/email', async (route) => {
+      const request = route.request()
+      if (request.method() === 'POST') {
+        emailRequests.push({
+          url: request.url(),
+          postData: JSON.parse(await request.postData() || '{}'),
+        })
+        await route.fulfill({ status: 200 })
+      }
+    })
+
     // Report the breach
     const breachId =
       await BreachNotificationSystem.reportBreach(mockBreachDetails)
@@ -96,12 +120,6 @@ test.describe('Breach Notification System E2E', () => {
       detailsDialog.locator('[data-testid="notification-status"]'),
     ).toHaveText('completed')
 
-    // Verify email notifications
-    const emailRequests = await page.requests.filter(
-      (request) =>
-        request.url().includes('/api/email') && request.method() === 'POST',
-    )
-
     // Should have sent emails to:
     // - 2 affected users
     // - 1 security stakeholder
@@ -110,21 +128,19 @@ test.describe('Breach Notification System E2E', () => {
 
     // Check user notification content
     const userEmails = emailRequests.filter(
-      (request) => request.postDataJSON().metadata.type === 'security_breach',
+      (request) => request.postData.metadata.type === 'security_breach',
     )
     expect(userEmails).toHaveLength(2)
 
     // Check HHS notification
     const hhsEmail = emailRequests.find(
-      (request) =>
-        request.postDataJSON().metadata.type === 'hipaa_breach_notification',
+      (request) => request.postData.metadata.type === 'hipaa_breach_notification',
     )
     expect(hhsEmail).toBeTruthy()
 
     // Check stakeholder notification
     const stakeholderEmail = emailRequests.find(
-      (request) =>
-        request.postDataJSON().metadata.type === 'internal_breach_notification',
+      (request) => request.postData.metadata.type === 'internal_breach_notification',
     )
     expect(stakeholderEmail).toBeTruthy()
   })
@@ -141,6 +157,19 @@ test.describe('Breach Notification System E2E', () => {
         .map((_, i) => `user_${i}`),
       affectedData: ['phi', 'financial_data', 'medical_records'],
     }
+
+    // Store requests for verification
+    const emailRequests: Array<{ url: string; postData: any }> = []
+    await page.route('**/api/email', async (route) => {
+      const request = route.request()
+      if (request.method() === 'POST') {
+        emailRequests.push({
+          url: request.url(),
+          postData: JSON.parse(await request.postData() || '{}'),
+        })
+        await route.fulfill({ status: 200 })
+      }
+    })
 
     // Report the critical breach
     const breachId = await BreachNotificationSystem.reportBreach(
@@ -161,27 +190,15 @@ test.describe('Breach Notification System E2E', () => {
     ).toHaveText('critical')
 
     // Check escalation notifications
-    const emailRequests = await page.requests.filter(
-      (request) =>
-        request.url().includes('/api/email') && request.method() === 'POST',
-    )
-
     // Should have sent priority notifications
-    expect(
-      emailRequests.every(
-        (request) => request.postDataJSON().priority === 'urgent',
-      ),
-    ).toBe(true)
+    expect(emailRequests.every((request) => request.postData.priority === 'urgent')).toBe(true)
 
     // Verify HHS notification for large-scale breach
     const hhsEmail = emailRequests.find(
-      (request) =>
-        request.postDataJSON().metadata.type === 'hipaa_breach_notification',
+      (request) => request.postData.metadata.type === 'hipaa_breach_notification',
     )
     expect(hhsEmail).toBeTruthy()
-    expect(
-      JSON.parse(hhsEmail.postDataJSON().body).breach.affectedIndividuals,
-    ).toBe(600)
+    expect(hhsEmail?.postData.breach.affectedIndividuals).toBe(600)
   })
 
   test('should display breach history and allow filtering', async ({
@@ -241,6 +258,19 @@ test.describe('Breach Notification System E2E', () => {
   })
 
   test('should handle breach notification preferences', async ({ page }) => {
+    // Store requests for verification
+    const emailRequests: Array<{ url: string; postData: any }> = []
+    await page.route('**/api/email', async (route) => {
+      const request = route.request()
+      if (request.method() === 'POST') {
+        emailRequests.push({
+          url: request.url(),
+          postData: JSON.parse(await request.postData() || '{}'),
+        })
+        await route.fulfill({ status: 200 })
+      }
+    })
+
     // Login as test user
     await page.goto('/login')
     await page.fill('[data-testid="email"]', 'patient1@example.com')
@@ -264,14 +294,13 @@ test.describe('Breach Notification System E2E', () => {
     })
 
     // Verify notification was sent according to preferences
-    const emailRequests = await page.requests.filter(
-      (request) =>
-        request.url().includes('/api/email') &&
-        request.method() === 'POST' &&
-        request.postDataJSON().to === 'patient1@example.com',
+    const userNotifications = emailRequests.filter(
+      (req) =>
+        req.postData.to === 'patient1@example.com' &&
+        req.postData.metadata.breachId === breachId
     )
 
-    expect(emailRequests).toHaveLength(1)
-    expect(emailRequests[0].postDataJSON().metadata.breachId).toBe(breachId)
+    expect(userNotifications).toHaveLength(1)
+    expect(userNotifications[0].postData.metadata.breachId).toBe(breachId)
   })
 })

@@ -18,7 +18,7 @@ export type LogMetadataValue =
   | boolean
   | null
   | undefined
-  | LogMetadataObjec
+  | LogMetadataObject
   | LogMetadataArray
 
 export interface LogMetadataObject {
@@ -37,7 +37,7 @@ export interface LoggerOptions {
   enableLogCollection?: boolean
 }
 
-// Log message forma
+// Log message format
 export interface LogMessage {
   level: LogLevel
   message: string
@@ -99,7 +99,7 @@ export class Logger {
   /**
    * Log an error message
    * @param message The message to log
-   * @param error Optional error objec
+   * @param error Optional error object
    * @param metadata Optional metadata to include
    */
   error(message: string, error?: unknown, metadata?: LogMetadata): void {

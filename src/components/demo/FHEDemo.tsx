@@ -4,9 +4,9 @@ import type {
   EncryptionMode,
   HomomorphicOperationResult,
 } from '@/lib/fhe/types'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Label } from '@/components/ui/Label'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { fheService } from '@/lib/fhe'
 import { FHEOperation } from '@/lib/fhe/types'
 import { useEffect, useState } from 'react'

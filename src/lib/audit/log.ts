@@ -3,15 +3,10 @@
  * Provides HIPAA-compliant audit logging
  */
 
-import type {
-  AuditLogEntry,
-  AuditMetadata,
-  AuditResource,
-  DbAuditLog,
-} from './types'
+import type { Database } from '@/types/supabase'
 import { createClient } from '@supabase/supabase-js'
 
-// Define structured metadata types to replace 'any'
+// Define structured metadata types
 export type AuditMetadataValue =
   | string
   | number
@@ -33,6 +28,11 @@ export interface AuditMetadata {
   [key: string]: unknown
 }
 
+export interface AuditResource {
+  id: string
+  type: string
+}
+
 // Define type for the database log record
 export interface DbAuditLog {
   id: string
@@ -41,7 +41,9 @@ export interface DbAuditLog {
   resource_id: string
   resource_type: string
   metadata: AuditMetadata
-  created_at: Date
+  timestamp: Date
+  ip_address?: string | null
+  user_agent?: string | null
 }
 
 // Define audit log entry type
@@ -49,17 +51,19 @@ export interface AuditLogEntry {
   id: string
   userId: string
   action: string
-  resource: {
-    id: string
-    type: string
-  }
+  resource: AuditResource
   metadata: AuditMetadata
   timestamp: Date
 }
 
+// Initialize Supabase client
+const supabase = createClient<Database>(
+  import.meta.env.PUBLIC_SUPABASE_URL,
+  import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+)
+
 /**
  * Create an audit log entry - function overloads
- * Function overload signatures
  */
 export function createAuditLog(entry: AuditLogEntry): Promise<void>
 export function createAuditLog(
@@ -81,11 +85,6 @@ export async function createAuditLog(
   request?: { headers: { get: (name: string) => string | null } },
 ): Promise<void> {
   try {
-    const supabase = createClient(
-      import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-    )
-
     // Add timestamp
     const timestamp = new Date()
 
@@ -93,9 +92,9 @@ export async function createAuditLog(
     let ip_address = null
     let user_agent = null
     if (request) {
-      ip_address =
-        request.headers.get('x-forwarded-for') ||
-        request.headers.get('x-real-ip')
+      ip_address
+        = request.headers.get('x-forwarded-for')
+          || request.headers.get('x-real-ip')
       user_agent = request.headers.get('user-agent')
     }
 
@@ -108,9 +107,10 @@ export async function createAuditLog(
       const { error } = await supabase.from('audit_logs').insert({
         user_id: userId,
         action,
-        resource,
+        resource_id: resource,
+        resource_type: 'unknown',
         metadata,
-        created_at: timestamp.toISOString(),
+        timestamp: timestamp.toISOString(),
         ip_address,
         user_agent,
       })
@@ -118,28 +118,34 @@ export async function createAuditLog(
       if (error) {
         console.error('Error creating audit log:', error)
       }
-    } else {
-      // Called with entry objec
+    }
+    else {
+      // Called with entry object
       const entry = entryOrUserId
 
       // Insert the audit log entry
-      const { error } = await supabase.from('audit_logs').insert(entry)
+      const { error } = await supabase.from('audit_logs').insert({
+        id: entry.id,
+        user_id: entry.userId,
+        action: entry.action,
+        resource_id: entry.resource.id,
+        resource_type: entry.resource.type,
+        metadata: entry.metadata,
+        timestamp: entry.timestamp.toISOString(),
+      })
 
       if (error) {
         console.error('Error creating audit log:', error)
       }
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error creating audit log:', error)
   }
 }
 
 /**
  * Get audit logs for a user
- * @param userId The user ID to get logs for
- * @param limit The maximum number of logs to return
- * @param offset The offset for pagination
- * @returns The audit logs
  */
 export async function getUserAuditLogs(
   userId: string,
@@ -147,17 +153,12 @@ export async function getUserAuditLogs(
   offset = 0,
 ): Promise<AuditLogEntry[]> {
   try {
-    const supabase = createClient(
-      import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-    )
-
     // Get the audit logs
     const { data, error } = await supabase
       .from('audit_logs')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+      .order('timestamp', { ascending: false })
       .range(offset, offset + limit - 1)
 
     if (error) {
@@ -166,15 +167,19 @@ export async function getUserAuditLogs(
     }
 
     // Transform the data to match our interface
-    return data?.map((log: DbAuditLog) => ({
+    return (data || []).map((log: DbAuditLog) => ({
+      id: log.id,
       userId: log.user_id,
       action: log.action,
-      resource: log.resource,
-      resourceId: log.resource_id,
+      resource: {
+        id: log.resource_id,
+        type: log.resource_type,
+      },
       metadata: log.metadata,
-      timestamp: new Date(log.created_at),
+      timestamp: new Date(log.timestamp),
     }))
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error getting audit logs:', error)
     return []
   }
@@ -182,10 +187,6 @@ export async function getUserAuditLogs(
 
 /**
  * Get audit logs for a specific action
- * @param action The action to get logs for
- * @param limit The maximum number of logs to return
- * @param offset The offset for pagination
- * @returns The audit logs
  */
 export async function getActionAuditLogs(
   action: string,
@@ -193,17 +194,12 @@ export async function getActionAuditLogs(
   offset = 0,
 ): Promise<AuditLogEntry[]> {
   try {
-    const supabase = createClient(
-      import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-    )
-
     // Get the audit logs
     const { data, error } = await supabase
       .from('audit_logs')
       .select('*')
       .eq('action', action)
-      .order('created_at', { ascending: false })
+      .order('timestamp', { ascending: false })
       .range(offset, offset + limit - 1)
 
     if (error) {
@@ -212,20 +208,27 @@ export async function getActionAuditLogs(
     }
 
     // Transform the data to match our interface
-    return data?.map((log: DbAuditLog) => ({
+    return (data || []).map((log: DbAuditLog) => ({
+      id: log.id,
       userId: log.user_id,
       action: log.action,
-      resource: log.resource,
-      resourceId: log.resource_id,
+      resource: {
+        id: log.resource_id,
+        type: log.resource_type,
+      },
       metadata: log.metadata,
-      timestamp: new Date(log.created_at),
+      timestamp: new Date(log.timestamp),
     }))
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error getting audit logs:', error)
     return []
   }
 }
 
+/**
+ * Log an audit event with resource details
+ */
 export async function logAuditEvent(
   action: string,
   userId: string,
@@ -233,12 +236,19 @@ export async function logAuditEvent(
   resourceType: string,
   details?: Record<string, unknown>,
 ): Promise<void> {
-  await createResourceAuditLog(
+  const { error } = await supabase.from('audit_logs').insert({
+    id: crypto.randomUUID(),
+    user_id: userId,
     action,
-    userId,
-    { id: resourceId, type: resourceType },
-    details || {},
-  )
+    resource_id: resourceId,
+    resource_type: resourceType,
+    metadata: details || {},
+    timestamp: new Date().toISOString(),
+  })
+
+  if (error) {
+    console.error('Error logging audit event:', error)
+  }
 }
 
 /**
@@ -251,30 +261,29 @@ export async function createResourceAuditLog(
   metadata: AuditMetadata,
 ): Promise<AuditLogEntry> {
   const timestamp = new Date()
+  const id = crypto.randomUUID()
 
-  const dbLog: DbAuditLog = {
-    id: crypto.randomUUID(),
-    timestamp,
-    action,
+  const { error } = await supabase.from('audit_logs').insert({
+    id,
     user_id: userId,
+    action,
     resource_id: resource.id,
     resource_type: resource.type,
     metadata,
+    timestamp: timestamp.toISOString(),
+  })
+
+  if (error) {
+    throw new Error(`Failed to create audit log: ${error.message}`)
   }
 
-  // Save to database
-  await db.auditLogs.create(dbLog)
-
   return {
-    id: dbLog.id,
-    timestamp: dbLog.timestamp,
-    action: dbLog.action,
-    userId: dbLog.user_id,
-    resource: {
-      id: dbLog.resource_id,
-      type: dbLog.resource_type,
-    },
-    metadata: dbLog.metadata,
+    id,
+    timestamp,
+    action,
+    userId,
+    resource,
+    metadata,
   }
 }
 
@@ -284,13 +293,20 @@ export async function createResourceAuditLog(
 export async function getAuditLogsByUser(
   userId: string,
 ): Promise<AuditLogEntry[]> {
-  const logs = await db.auditLogs.findMany({
-    where: { user_id: userId },
-  })
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .eq('user_id', userId)
+    .order('timestamp', { ascending: false })
 
-  return logs.map((log) => ({
+  if (error) {
+    console.error('Error getting user audit logs:', error)
+    return []
+  }
+
+  return (data || []).map((log: DbAuditLog) => ({
     id: log.id,
-    timestamp: log.timestamp,
+    timestamp: new Date(log.timestamp),
     action: log.action,
     userId: log.user_id,
     resource: {
@@ -305,11 +321,19 @@ export async function getAuditLogsByUser(
  * Gets all audit logs
  */
 export async function getAuditLogs(): Promise<AuditLogEntry[]> {
-  const logs = await db.auditLogs.findMany()
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .order('timestamp', { ascending: false })
 
-  return logs.map((log) => ({
+  if (error) {
+    console.error('Error getting audit logs:', error)
+    return []
+  }
+
+  return (data || []).map((log: DbAuditLog) => ({
     id: log.id,
-    timestamp: log.timestamp,
+    timestamp: new Date(log.timestamp),
     action: log.action,
     userId: log.user_id,
     resource: {

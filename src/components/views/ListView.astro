@@ -37,7 +37,7 @@ let sortedBlogItems: CollectionEntry<'blog' | 'changelog'>[] = []
 if (collectionType === 'blog' || collectionType === 'changelog') {
   const postType =
     collectionType === 'blog' ? 'blog' : ('docs' as PostCollectionType)
-  blogItems = await getFilteredPosts(postType)
+  blogItems = (await getFilteredPosts(postType)) as CollectionEntry<'blog' | 'changelog'>[]
   sortedBlogItems = blogItems.sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   )

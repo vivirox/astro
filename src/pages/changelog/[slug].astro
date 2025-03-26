@@ -1,17 +1,30 @@
 ---
+import type { CollectionEntry } from 'astro:content'
 import { getCollection } from 'astro:content'
-import Layout from '../../layouts/Layout.astro'
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import Toc from '~/components/toc/Toc.astro'
+import ShareLink from '~/components/widgets/ShareLink.astro'
+import Warning from '~/components/base/Warning.astro'
 import { formatDate } from '~/utils/datetime'
 import { FEATURES } from '~/config'
-import type { CollectionEntry } from 'astro:content'
+
+// Define frontmatter interface
+interface Frontmatter {
+  title: string
+  description: string
+  pubDate: Date
+  lastModDate?: Date
+  ogImage?: string | boolean
+  toc?: boolean
+  share?: boolean
+}
 
 // Set prerender to true for static generation
 export const prerender = true
 
 export async function getStaticPaths() {
-  const { getCollection } = await import('astro:content')
   const posts = await getCollection('changelog')
-
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
@@ -19,65 +32,50 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props as { post: CollectionEntry<'changelog'> }
-const { data: frontmatter } = post
+const { data: frontmatter } = post as { data: Frontmatter }
 const { Content, headings } = await post.render()
 const { share, toc } = FEATURES
 
-const pubDate = frontmatter.pubDate.toISOString()
-const lastModDate =
-  frontmatter.lastModDate && frontmatter.lastModDate.toISOString()
+// Format dates
+const pubDate = frontmatter.pubDate?.toISOString()
+const updatedDate = frontmatter.lastModDate?.toISOString()
 
-/* Warning message */
-const warningHTML = `This article is not yet available.
+// Warning message for unpublished posts
+const UNPUBLISHED_WARNING = `This article is not yet available.
 Please check back later.`
 ---
 
-<Layout title={frontmatter.title} description={frontmatter.description}>
-  <article class="prose prose-lg mx-auto">
-    <h1>{frontmatter.title}</h1>
-
-    <div class="text-sm text-gray-500 mb-6">
-      {
-        frontmatter.pubDate && (
-          <div>
-            <time datetime={pubDate}>{formatDate(pubDate)}</time>
-            {lastModDate && (
-              <div>
-                <time datetime={lastModDate}>
-                  Updated: {formatDate(lastModDate)}
-                </time>
-              </div>
-            )}
-          </div>
-        )
-      }
-
-      {
-        new Date(frontmatter.pubDate) > new Date() && (
-          <div class="bg-yellow-100 text-yellow-800 p-3 my-4 rounded">
-            {warningHTML}
-          </div>
-        )
-      }
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  ogImage={frontmatter.ogImage}
+  {pubDate}
+  lastModDate={updatedDate}
+>
+  <StandardLayout title={frontmatter.title}>
+    <div slot="head">
+      {pubDate && (
+        <p class="mt--6! op-50">
+          <time datetime={pubDate}>{formatDate(pubDate)}</time>
+          {updatedDate && (
+            <time datetime={updatedDate}>
+              | Updated: {formatDate(updatedDate)}
+            </time>
+          )}
+        </p>
+      )}
+      {frontmatter.pubDate && new Date(frontmatter.pubDate) > new Date() && (
+        <Warning rawHTMLString={UNPUBLISHED_WARNING} />
+      )}
     </div>
-
-    {
-      frontmatter.toc && (
-        <nav class="table-of-contents">
-          <h2>Table of Contents</h2>
-          <ul>
-            {headings.map(
-              (heading: { depth: number; slug: string; text: string }) => (
-                <li class={`depth-${heading.depth}`}>
-                  <a href={`#${heading.slug}`}>{heading.text}</a>
-                </li>
-              ),
-            )}
-          </ul>
-        </nav>
-      )
-    }
-
-    <Content />
-  </article>
-</Layout>
+    <div slot="article">
+      {Array.isArray(toc) && toc[0] && frontmatter.toc && <Toc {headings} />}
+      <Content />
+    </div>
+  </StandardLayout>
+  <div slot="share">
+    {Array.isArray(share) && share[0] && frontmatter.share && (
+      <ShareLink config={share[1]} />
+    )}
+  </div>
+</BaseLayout>

@@ -5,7 +5,7 @@ import type {
   AIService,
   AIServiceResponse,
   AIStreamChunk,
-} from '../models/ai-types'
+} from '~/lib/ai/models/ai-types'
 
 /**
  * Response Generation Result interface
@@ -63,8 +63,8 @@ export class ResponseGenerationService {
     this.model = config.model || 'mistralai/Mixtral-8x7B-Instruct-v0.2'
     this.temperature = config.temperature || 0.7
     this.maxResponseTokens = config.maxResponseTokens || 1024
-    this.systemPromp =
-      config.systemPromp ||
+    this.systemPrompt =
+      config.systemPrompt ||
       `You are a supportive and empathetic assistant. Your responses should:
       - Supportive without being judgmental
       - Empathetic and understanding
@@ -174,7 +174,7 @@ export class ResponseGenerationService {
   ): Promise<ResponseGenerationResult> {
     const temperature = options?.temperature ?? this.temperature
     const maxTokens = options?.maxResponseTokens ?? this.maxResponseTokens
-    const systemPrompt = options?.systemPrompt ?? this.systemPromp
+    const systemPrompt = options?.systemPrompt ?? this.systemPrompt
 
     // Ensure the first message is a system message with our prompt
     const messagesWithSystem = [...messages]
@@ -187,7 +187,8 @@ export class ResponseGenerationService {
         content: systemPrompt,
         name: '',
       })
-    } else {
+    }
+    else {
       messagesWithSystem[0] = {
         role: 'system',
         content: systemPrompt,
@@ -270,7 +271,7 @@ export class ResponseGenerationService {
   ): Promise<ResponseGenerationResult> {
     const temperature = options?.temperature ?? this.temperature
     const maxTokens = options?.maxResponseTokens ?? this.maxResponseTokens
-    const systemPrompt = options?.systemPrompt ?? this.systemPromp
+    const systemPrompt = options?.systemPrompt ?? this.systemPrompt
 
     // Ensure the first message is a system message with our prompt
     const messagesWithSystem = [...messages]
@@ -283,7 +284,8 @@ export class ResponseGenerationService {
         content: systemPrompt,
         name: '',
       })
-    } else {
+    }
+    else {
       messagesWithSystem[0] = {
         role: 'system',
         content: systemPrompt,
@@ -312,7 +314,8 @@ export class ResponseGenerationService {
           onChunk(content)
         }
       }
-    } else {
+    }
+    else {
       // Handle non-streaming response
       const nonStreamingResponse = response as AICompletionResponse
       const content = nonStreamingResponse.choices?.[0]?.message?.content ?? ''

@@ -1,21 +1,21 @@
 ---
+import type { BgType } from '~/types'
+
 const frontmatter = {
   title: 'AstroEco is Releasing...',
   description:
     'Example: Displaying GitHub releases using astro-loader-github-releases',
   subtitle: '',
-  bgType: 'plum',
+  bgType: 'plum' as BgType,
   toc: false,
   ogImage: true,
 }
 
-import { BgType } from '~/types'
+import Link from '~/components/base/Link.astro'
+import GithubView from '~/components/views/GithubView.astro'
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
 ---
-
-import BaseLayout from '~/layouts/BaseLayout.astro' import StandardLayout from
-'~/layouts/StandardLayout.astro' import GithubView from
-'~/components/views/GithubView.astro' import Link from
-'~/components/base/Link.astro'
 
 <BaseLayout
   title={frontmatter.title}
@@ -23,7 +23,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro' import StandardLayout from
   bgType={frontmatter.bgType}
   ogImage={frontmatter.ogImage}
 >
-  <StandardLayout isCentered={true} isWideMargin={true}>
+  <StandardLayout isCentered={true}>
     <Fragment slot="head">
       <h1 class="ml-12 lt-sm:ml-0">
         AstroEco is <span class="animate-pulse">Releasing...</span>

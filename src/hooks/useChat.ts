@@ -2,6 +2,16 @@ import type { ChatOptions, Message } from '@/types/chat'
 import type { ChangeEvent } from 'react'
 import { useState } from 'react'
 
+interface LocalMessage {
+  id?: string
+  role: 'user' | 'assistant' | 'system'
+  content: string
+  name: string
+  encrypted?: boolean
+  verified?: boolean
+  isError?: boolean
+}
+
 export function useChat(options: ChatOptions) {
   const {
     initialMessages = [],
@@ -11,7 +21,7 @@ export function useChat(options: ChatOptions) {
     onError,
   } = options
 
-  const [messages, setMessages] = useState<Message[]>(initialMessages)
+  const [messages, setMessages] = useState<LocalMessage[]>(initialMessages)
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -25,10 +35,11 @@ export function useChat(options: ChatOptions) {
     if (!input.trim()) return
 
     // Add user message
-    const userMessage: Message = {
+    const userMessage: LocalMessage = {
       id: crypto.randomUUID(),
       role: 'user',
       content: input,
+      name: 'User',
     }
 
     setMessages((prev) => [...prev, userMessage])
@@ -62,7 +73,7 @@ export function useChat(options: ChatOptions) {
       const responseData = await response.json()
 
       // Add assistant message from response
-      const assistantMessage: Message = {
+      const assistantMessage: LocalMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
         content:
@@ -72,6 +83,7 @@ export function useChat(options: ChatOptions) {
           'No response content',
         encrypted: responseData.encrypted,
         verified: responseData.verified,
+        name: 'Assistant',
       }
 
       setMessages((prev) => [...prev, assistantMessage])
@@ -79,11 +91,12 @@ export function useChat(options: ChatOptions) {
       console.error('Error in chat:', error)
 
       // Add error message
-      const errorMessage: Message = {
+      const errorMessage: LocalMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
         content: `Error: ${(error as Error).message}`,
         isError: true,
+        name: 'Error',
       }
 
       setMessages((prev) => [...prev, errorMessage])

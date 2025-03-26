@@ -18,12 +18,12 @@ export function useAnalytics() {
         priority: data.priority || EventPriority.NORMAL,
         properties: data.properties,
         timestamp: Date.now(),
+        metadata: {}
       })
     } catch (error) {
       console.error('Failed to track analytics event:', error)
     }
   }
-
   const trackMetric = async (data: {
     name: string
     value: number

@@ -78,7 +78,7 @@ async function runTest(
 }
 
 /**
- * Generate HTML repor
+ * Generate HTML report
  */
 async function generateReport(suites: TestSuite[]): Promise<string> {
   const totalTests = suites.reduce(
@@ -267,7 +267,7 @@ async function main() {
     passed: webResults.every((r) => r.passed),
   })
 
-  // Generate and save repor
+  // Generate and save report
   console.log('\n📊 Generating security report...')
   const reportPath = await generateReport(results)
   console.log(`📝 Report saved to: ${reportPath}`)

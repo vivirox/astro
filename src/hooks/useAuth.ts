@@ -226,7 +226,7 @@ export function useAuth(): UseAuthReturn {
         // Convert AuthService response to AuthResul
         return {
           success: true,
-          user: response.user || null,
+          user: response.user || undefined,
           session: response.session || null,
           error: null,
         }
@@ -269,7 +269,7 @@ export function useAuth(): UseAuthReturn {
           : { error: new Error('Profile update not implemented') }
 
       if (result.error) {
-        setError(result.error)
+        setError(result.error instanceof Error ? result.error : new Error('Unknown error'))
         throw result.error
       }
 

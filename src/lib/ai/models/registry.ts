@@ -138,6 +138,19 @@ const models: AIModel[] = [
       output: 0.015,
     },
   },
+  {
+    id: 'nebius-llama-3-1-70b-instruct',
+    name: 'Nebius Llama 3.1 70B Instruct',
+    provider: 'nebius',
+    capabilities: ['chat', 'sentiment', 'crisis', 'intervention'],
+    contextWindow: 128000,
+    maxTokens: 4096,
+    nebiusModelId: 'meta-llama/Meta-Llama-3.1-70B-Instruct-fast',
+    costPer1KTokens: {
+      input: 0.0009,
+      output: 0.0009,
+    },
+  },
 ]
 
 /**

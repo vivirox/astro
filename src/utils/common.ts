@@ -24,8 +24,8 @@ export function slug(text: string) {
 export function extractIconsStartingWithI(data: ProjectGroupsSchema): string[] {
   const icons = new Set<string>()
 
-  for (const group of data.groups) {
-    for (const project of group.projects) {
+  for (const [_, projects] of Object.entries(data)) {
+    for (const project of projects) {
       if (project.icon?.startsWith('i')) {
         icons.add(project.icon)
       }

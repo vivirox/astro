@@ -7,9 +7,10 @@ import type {
 import type { AdvancedPerformanceOptions } from './performance-optimizations'
 import { createAdvancedOptimizedAIService } from './performance-optimizations'
 import { createTogetherAIService } from './services/together'
+import { NebiusProvider } from './providers/nebius'
 
 export interface AIServiceFactoryOptions {
-  provider: 'together'
+  provider: 'together' | 'nebius'
   apiKey?: string
   baseUrl?: string
   enableOptimization?: boolean
@@ -77,15 +78,36 @@ export function createAIService(
   options: AIServiceFactoryOptions = { provider: 'together' },
 ): AIService {
   if (!options.apiKey) {
-    throw new Error('API key is required for TogetherAI provider')
+    throw new Error('API key is required')
   }
 
-  // Create base service
-  const baseService = createBaseAIService(options.apiKey)
+  // Create base service based on provider
+  let baseService: AIService
+  switch (options.provider) {
+    case 'together':
+      baseService = createTogetherAIService({
+        apiKey: options.apiKey,
+        togetherApiKey: options.apiKey,
+        togetherBaseUrl: options.baseUrl,
+      })
+      break
+    case 'nebius':
+      const nebiusProvider = new NebiusProvider({
+        apiKey: options.apiKey,
+        baseUrl: options.baseUrl,
+      })
+      baseService = {
+        createChatCompletion: nebiusProvider.createChatCompletion.bind(nebiusProvider),
+        createStreamingChatCompletion: nebiusProvider.createStreamingChatCompletion.bind(nebiusProvider),
+        dispose: nebiusProvider.dispose.bind(nebiusProvider),
+      }
+      break
+    default:
+      throw new Error(`Unsupported provider: ${options.provider}`)
+  }
 
   // Apply advanced optimizations if enabled
   if (options.enableAdvancedOptimization) {
-    // Convert to unknown first, then to the desired type
     const optimizedService = createAdvancedOptimizedAIService(
       baseService as unknown as import('./models/ai-types').AIService,
       options.advancedPerformanceOptions,
@@ -94,7 +116,6 @@ export function createAIService(
   }
   // Apply standard optimizations (enabled by default)
   else if (options.enableOptimization !== false) {
-    // Convert to unknown first, then to the desired type
     const optimizedService = createAdvancedOptimizedAIService(
       baseService as unknown as import('./models/ai-types').AIService,
       {

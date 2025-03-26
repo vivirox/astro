@@ -1,11 +1,7 @@
 import type {
-  AICapability,
-  AICompletionOptions,
   AICompletionRequest,
   AICompletionResponse,
   AIMessage,
-  AIModelType,
-  AIProvider,
   AIRole,
   AIService as AIServiceInterface,
   AIServiceOptions,
@@ -18,6 +14,8 @@ import type { CacheConfig } from './cache-service'
 import type { ConnectionPoolConfig } from './connection-pool'
 import type { FallbackServiceConfig } from './fallback-service'
 import type { PromptOptimizerConfig } from './prompt-optimizer'
+import process from 'node:process'
+import { AICapability as AICapabilityEnum, AIModelType as AIModelTypeEnum, AIProvider as AIProviderEnum } from '../models/types'
 import { AICacheService } from './cache-service'
 import { ConnectionPoolManager } from './connection-pool'
 import { FallbackService } from './fallback-service'
@@ -31,7 +29,7 @@ interface ServiceResponse {
   created?: number
   content: string
   choices?: {
-    message: { role: string; content: string }
+    message: { role: string, content: string }
     finishReason?: string
   }[]
   usage?: {
@@ -103,11 +101,11 @@ export class AIService implements AIServiceInterface {
     models.set('gpt-4', {
       id: 'gpt-4',
       name: 'GPT-4',
-      provider: AIProvider.OpenAI,
-      type: AIModelType.Chat,
+      provider: AIProviderEnum.OpenAI,
+      type: AIModelTypeEnum.Chat,
       contextWindow: 8192,
       maxTokens: 4096,
-      capabilities: [AICapability.Chat, AICapability.Completion],
+      capabilities: [AICapabilityEnum.Chat, AICapabilityEnum.Completion],
       pricing: {
         input: 0.03,
         output: 0.06,
@@ -125,11 +123,11 @@ export class AIService implements AIServiceInterface {
     models.set('claude-3', {
       id: 'claude-3',
       name: 'Claude 3',
-      provider: AIProvider.Anthropic,
-      type: AIModelType.Chat,
+      provider: AIProviderEnum.Anthropic,
+      type: AIModelTypeEnum.Chat,
       contextWindow: 100000,
       maxTokens: 4096,
-      capabilities: [AICapability.Chat, AICapability.Completion],
+      capabilities: [AICapabilityEnum.Chat, AICapabilityEnum.Completion],
       pricing: {
         input: 0.02,
         output: 0.04,
@@ -160,19 +158,22 @@ export class AIService implements AIServiceInterface {
    */
   async createChatCompletion(
     messages: AIMessage[],
-    options?: AICompletionOptions,
+    options?: AIServiceOptions,
   ): Promise<AICompletionResponse> {
     const response = await this.togetherService.createChatCompletion(
       messages,
       options,
     )
     return {
-      id: response.id,
+      id: response.id || `chat-${Date.now()}`,
       model: response.model,
-      choices: response.choices.map((choice) => ({
+      provider: AIProviderEnum.Together,
+      created: Date.now(),
+      content: response.choices?.[0]?.message?.content || '',
+      choices: (response.choices || []).map(choice => ({
         message: {
-          role: choice.message.role as AIRole,
-          content: choice.message.content,
+          role: choice.message?.role as AIRole || 'assistant',
+          content: choice.message?.content || '',
         },
         finishReason: choice.finishReason,
       })),
@@ -199,27 +200,24 @@ export class AIService implements AIServiceInterface {
       async start(controller) {
         try {
           for await (const chunk of await stream) {
-            controller.enqueue({
+            const streamChunk: AIStreamChunk = {
               id: chunk.id,
               model: chunk.model,
-              provider: chunk.provider,
-              isComplete: chunk.isComplete,
-              choices: chunk.choices.map((choice) => ({
+              provider: AIProviderEnum.Together,
+              isComplete: true,
+              choices: chunk.choices?.map(choice => ({
                 message: {
-                  role: choice.message.role as AIRole,
-                  content: choice.message.content,
+                  role: (choice.delta?.role || 'assistant') as AIRole,
+                  content: choice.delta?.content || '',
                 },
-                finishReason: choice.finishReason,
-              })),
-              usage: chunk.usage && {
-                promptTokens: chunk.usage.promptTokens,
-                completionTokens: chunk.usage.completionTokens,
-                totalTokens: chunk.usage.totalTokens,
-              },
-            })
+                finishReason: choice.finishReason || undefined,
+              })) || [],
+            }
+            controller.enqueue(streamChunk)
           }
           controller.close()
-        } catch (error) {
+        }
+        catch (error) {
           controller.error(error)
         }
       },
@@ -238,21 +236,24 @@ export class AIService implements AIServiceInterface {
       options,
     )) as ServiceResponse
 
-    // Construct a fully compliant AICompletionResponse
     return {
       id: response.id || `gen-${Date.now()}`,
       model: response.model,
       created: response.created || Date.now(),
-      provider: 'together',
+      provider: AIProviderEnum.Together,
       content: response.content,
-      choices: response.choices.map((choice) => ({
+      choices: (response.choices || []).map(choice => ({
         message: {
           role: choice.message.role as AIRole,
           content: choice.message.content,
         },
         finishReason: choice.finishReason,
       })),
-      usage: response.usage,
+      usage: response.usage && {
+        promptTokens: response.usage.promptTokens || 0,
+        completionTokens: response.usage.completionTokens || 0,
+        totalTokens: response.usage.totalTokens || 0,
+      },
     }
   }
 
@@ -263,27 +264,29 @@ export class AIService implements AIServiceInterface {
     messages: AIMessage[],
     options?: AIServiceOptions,
   ): Promise<AICompletionResponse> {
-    const response =
-      (await this.togetherService.createChatCompletionWithTracking(
-        messages,
-        options,
-      )) as ServiceResponse
+    const response = (await this.togetherService.createChatCompletionWithTracking(
+      messages,
+      options,
+    )) as ServiceResponse
 
-    // Construct a fully compliant AICompletionResponse
     return {
       id: response.id || `track-${Date.now()}`,
       model: response.model,
       created: response.created || Date.now(),
-      provider: 'together',
+      provider: AIProviderEnum.Together,
       content: response.content,
-      choices: response.choices.map((choice) => ({
+      choices: (response.choices || []).map(choice => ({
         message: {
           role: choice.message.role as AIRole,
           content: choice.message.content,
         },
         finishReason: choice.finishReason,
       })),
-      usage: response.usage,
+      usage: response.usage && {
+        promptTokens: response.usage.promptTokens || 0,
+        completionTokens: response.usage.completionTokens || 0,
+        totalTokens: response.usage.totalTokens || 0,
+      },
     }
   }
 
@@ -307,7 +310,7 @@ export class AIService implements AIServiceInterface {
   }
 
   getDefaultRequest(): Partial<AICompletionRequest> {
-    return this.defaultReques
+    return this.defaultRequest
   }
 
   async createStreamingChatCompletion(
@@ -318,7 +321,27 @@ export class AIService implements AIServiceInterface {
       messages,
       options,
     )
-    return stream
+
+    const enhancedStream = async function* () {
+      for await (const chunk of stream) {
+        const streamChunk: AIStreamChunk = {
+          id: chunk.id,
+          model: chunk.model,
+          provider: AIProviderEnum.Together,
+          isComplete: true,
+          choices: chunk.choices?.map(choice => ({
+            message: {
+              role: (choice.delta?.role || 'assistant') as AIRole,
+              content: choice.delta?.content || '',
+            },
+            finishReason: choice.finishReason || undefined,
+          })) || [],
+        }
+        yield streamChunk
+      }
+    }
+
+    return enhancedStream()
   }
 
   async dispose(): Promise<void> {

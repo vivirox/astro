@@ -1,6 +1,6 @@
-import { createAuditLog } from '../audit/log'
-import { supabase } from '../db/supabase'
-import { getDateKey } from '../utils'
+import { createAuditLog } from '~/lib/audit/log'
+import { supabase } from '~/lib/db/supabase'
+import { getDateKey } from '~/lib/utils'
 
 /**
  * Interface for AI usage statistics
@@ -47,17 +47,17 @@ export async function getAIUsageStats(
 
   try {
     // Log the analytics request
-    await createAuditLog({
-      userId: userId || 'system',
-      action: 'ai.analytics.request',
-      resource: 'ai_analytics',
-      metadata: {
+    await createAuditLog(
+      userId || 'system',
+      'ai.analytics.request',
+      'analytics',
+      {
         period,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
         limit,
       },
-    })
+    )
 
     // Get all usage logs for the period
     const { data: logs, error } = await supabase
@@ -102,32 +102,33 @@ export async function getAIUsageStats(
       // Update totals
       statsByDate[date].totalRequests++
       statsByDate[date].totalTokens += log.total_tokens
-      statsByDate[date].totalCost += log.cos
+      statsByDate[date].totalCost += log.cost
 
       // Update model usage
       statsByDate[date].modelUsage[log.model].requests++
       statsByDate[date].modelUsage[log.model].tokens += log.total_tokens
-      statsByDate[date].modelUsage[log.model].cost += log.cos
+      statsByDate[date].modelUsage[log.model].cost += log.cost
     }
 
     // Convert to array and sort by date
     return Object.values(statsByDate)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, limit)
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error retrieving AI usage statistics:', error)
 
     // Log the error
-    await createAuditLog({
-      userId: userId || 'system',
-      action: 'ai.analytics.error',
-      resource: 'ai_analytics',
-      metadata: {
+    await createAuditLog(
+      userId || 'system',
+      'ai.analytics.error',
+      'analytics',
+      {
         error: error instanceof Error ? error?.message : String(error),
         period,
         userId,
       },
-    })
+    )
 
     throw error
   }
@@ -139,15 +140,15 @@ export async function getAIUsageStats(
 export async function getModelUsageBreakdown(
   options: AIUsageStatsOptions,
 ): Promise<
-  Record<
-    string,
-    {
-      requests: number
-      tokens: number
-      cost: number
-    }
-  >
-> {
+    Record<
+      string,
+      {
+        requests: number
+        tokens: number
+        cost: number
+      }
+    >
+  > {
   const stats = await getAIUsageStats(options)
 
   // Aggregate model usage across all dates
@@ -173,7 +174,7 @@ export async function getModelUsageBreakdown(
 
       modelUsage[model].requests += usage.requests
       modelUsage[model].tokens += usage.tokens
-      modelUsage[model].cost += usage.cos
+      modelUsage[model].cost += usage.cost
     }
   }
 
@@ -194,9 +195,9 @@ export async function getUsageTrends(options: AIUsageStatsOptions): Promise<{
   stats.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   return {
-    dates: stats.map((stat) => stat.date),
-    requests: stats.map((stat) => stat.totalRequests),
-    tokens: stats.map((stat) => stat.totalTokens),
-    costs: stats.map((stat) => stat.totalCost),
+    dates: stats.map(stat => stat.date),
+    requests: stats.map(stat => stat.totalRequests),
+    tokens: stats.map(stat => stat.totalTokens),
+    costs: stats.map(stat => stat.totalCost),
   }
 }

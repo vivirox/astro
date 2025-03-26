@@ -6,35 +6,30 @@ import { hasRolePrivilege } from './config/auth.config'
 import { getCurrentUser, isAuthenticated } from './lib/auth'
 import { getLogger } from './lib/logging'
 
+// Initialize logger
+const logger = getLogger()
+
 // Define AstroLocals interface for type casting
 interface AstroLocals {
-  headers: Record<string, string>
-  isPrerendered: boolean
-  isSSR: boolean
-  userPreferences: {
-    language: string
-    darkMode: boolean
-    reducedMotion: boolean
-    userAgent: string
-    ip: string
-    isIOS: boolean
-    isAndroid: boolean
-    isMobile: boolean
-  }
   user?: {
     id: string
-    name?: string
-    email?: string
-    role?: string
+    role: AuthRole
+  }
+  requestId: string
+  userAgent: {
+    browser: string
+    os: string
+    isMobile: boolean
   }
 }
 
 // Protected routes configuration
 const PROTECTED_ROUTES = [
-  { path: '/dashboard', roles: ['admin', 'therapist', 'client'] },
+  { path: '/dashboard', roles: ['admin', 'therapist', 'client', 'user'] },
   { path: '/admin', roles: ['admin'] },
   { path: '/therapist', roles: ['admin', 'therapist'] },
-  { path: '/client', roles: ['admin', 'client'] },
+  { path: '/chat', roles: ['admin', 'therapist', 'client', 'user'] },
+  { path: '/simulator', roles: ['admin', 'therapist', 'client', 'user'] },
 ]
 
 // Public routes that don't need authentication
@@ -50,20 +45,12 @@ const PUBLIC_ROUTES = [
   '/terms',
 ]
 
-/**
- * Header safety middleware
- *
- * This middleware adds a local variable to Astro.locals to indicate if headers can be accessed
- * This helps prevent warnings in prerendered pages
- */
-export const onRequest: MiddlewareHandler = defineMiddleware(
-  async (context: APIContext, next: MiddlewareNext) => {
-    const { request, cookies, locals, redirect } = context
-    // Type cast locals to our interface to avoid TypeScript errors
-    const typedLocals = locals as unknown as AstroLocals
+export const onRequest = defineMiddleware(
+  async ({ request, cookies, locals, redirect }, next) => {
+    const typedLocals = locals as AstroLocals
 
     // Generate or get request ID
-    const requestId = context.request.headers.get('x-request-id') || uuidv4()
+    const requestId = request.headers.get('x-request-id') || uuidv4()
 
     // Create a logger for this request
     const logger = getLogger({ prefix: requestId })
@@ -76,30 +63,14 @@ export const onRequest: MiddlewareHandler = defineMiddleware(
     const referer = request.headers.get('referer') || 'direct'
     const ip =
       request.headers.get('x-forwarded-for') ||
-      request.headers.get('cf-connecting-ip') ||
+      request.headers.get('x-real-ip') ||
       'unknown'
 
-    // Store headers in locals for safe access in components
-    typedLocals.headers = {}
-    request.headers.forEach((value: string, key: string) => {
-      typedLocals.headers[key.toLowerCase()] = value
-    })
-
-    // Add helper functions to check environment
-    typedLocals.isPrerendered = !import.meta.env.SSR
-    typedLocals.isSSR = import.meta.env.SSR
-
-    // Store browser preferences in locals - safer than direct header access
-    typedLocals.userPreferences = {
-      language:
-        request.headers.get('accept-language')?.split(',')[0] || 'en-US',
-      darkMode: request.headers.get('sec-ch-prefers-color-scheme') === 'dark',
-      reducedMotion:
-        request.headers.get('sec-ch-prefers-reduced-motion') === 'reduce',
-      userAgent,
-      ip,
-      isIOS: userAgent.includes('iPhone') || userAgent.includes('iPad'),
-      isAndroid: userAgent.includes('Android'),
+    // Add request context to locals
+    typedLocals.requestId = requestId
+    typedLocals.userAgent = {
+      browser: getBrowser(userAgent),
+      os: getOS(userAgent),
       isMobile: /iPhone|iPad|Android|Mobile/.test(userAgent),
     }
 
@@ -132,8 +103,13 @@ export const onRequest: MiddlewareHandler = defineMiddleware(
     // Check if user is authenticated
     const authenticated = await isAuthenticated(cookies)
     if (!authenticated) {
+      logger.info(`Redirecting unauthenticated user from ${path} to login`)
       return redirect(`/login?redirect=${encodeURIComponent(path)}`)
     }
+
+    // Get user for role checks
+    const user = await getCurrentUser(cookies)
+    typedLocals.user = user
 
     // For protected routes, check role-based access
     const protectedRoute = PROTECTED_ROUTES.find(
@@ -141,8 +117,8 @@ export const onRequest: MiddlewareHandler = defineMiddleware(
     )
 
     if (protectedRoute) {
-      const user = await getCurrentUser(cookies)
       if (!user) {
+        logger.warn(`User not found for authenticated session on ${path}`)
         return redirect(`/login?redirect=${encodeURIComponent(path)}`)
       }
 
@@ -152,15 +128,19 @@ export const onRequest: MiddlewareHandler = defineMiddleware(
       )
 
       if (!hasRequiredRole) {
-        // Redirect to unauthorized page or dashboard
+        logger.warn(
+          `User ${user.id} with role ${user.role} attempted to access ${path}`,
+        )
         return redirect('/unauthorized')
       }
+
+      logger.info(`User ${user.id} authorized for ${path}`)
     }
 
     // Continue to the route
     const response = await next()
 
-    // Log completion if needed
+    // Log completion
     logger.info(`${method} ${path} completed`, {
       status: response.status,
     })
@@ -168,3 +148,20 @@ export const onRequest: MiddlewareHandler = defineMiddleware(
     return response
   },
 )
+
+function getBrowser(userAgent: string): string {
+  if (userAgent.includes('Chrome')) return 'Chrome'
+  if (userAgent.includes('Firefox')) return 'Firefox'
+  if (userAgent.includes('Safari')) return 'Safari'
+  if (userAgent.includes('Edge')) return 'Edge'
+  return 'Other'
+}
+
+function getOS(userAgent: string): string {
+  if (userAgent.includes('Windows')) return 'Windows'
+  if (userAgent.includes('Mac')) return 'macOS'
+  if (userAgent.includes('Linux')) return 'Linux'
+  if (userAgent.includes('Android')) return 'Android'
+  if (userAgent.includes('iOS')) return 'iOS'
+  return 'Other'
+}

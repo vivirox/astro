@@ -228,6 +228,7 @@ const releaseSchema = z.object({
   link: z.string().url(),
   desc: z.string(),
   icon: z.string().regex(/^i-[\w-]+(:?[\w-]+)?$/),
+  publishedAt: z.string().optional(),
 })
 
 const releaseGroupsSchema = z.record(z.array(releaseSchema))
@@ -270,3 +271,13 @@ export type PrsSchema = z.infer<typeof prsSchema>
 
 export type StreamGroupsSchema = z.infer<typeof streamGroupsSchema>
 export type StreamsSchema = z.infer<typeof streamsSchema>
+
+export interface ProjectGroupsSchema {
+  groups: Array<{
+    projects: Array<{
+      icon?: string
+      [key: string]: unknown
+    }>
+    [key: string]: unknown
+  }>
+}

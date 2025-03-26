@@ -1,5 +1,9 @@
 import type { Redis } from 'ioredis'
-import { logger } from '@/lib/logger'
+import { getLogger } from '../logging'
+import { RedisService } from '../services/redis'
+
+// Initialize logger
+const logger = getLogger()
 
 interface InvalidationRule {
   pattern: string
@@ -9,7 +13,7 @@ interface InvalidationRule {
 }
 
 interface InvalidationOptions {
-  redis: Redis
+  redis: Redis | RedisService
   prefix?: string
   defaultTTL?: number
 }
@@ -20,7 +24,7 @@ export class CacheInvalidation {
   private defaultTTL: number
 
   constructor(options: InvalidationOptions) {
-    this.redis = options.redis
+    this.redis = options.redis instanceof RedisService ? options.redis.getClient() : options.redis
     this.prefix = options.prefix || 'cache:'
     this.defaultTTL = options.defaultTTL || 3600 // 1 hour
   }
@@ -35,6 +39,10 @@ export class CacheInvalidation {
 
   private getDependencyKey(dependency: string): string {
     return `${this.prefix}dep:${dependency}`
+  }
+
+  private formatErrorMessage(operation: string, error: unknown): string {
+    return `Failed to ${operation}: ${error instanceof Error ? error.message : String(error)}`
   }
 
   async set(
@@ -73,8 +81,9 @@ export class CacheInvalidation {
 
       // Execute the transaction
       await multi.exec()
-    } catch (error) {
-      logger.error('Failed to set cache:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('set cache', error))
       throw error
     }
   }
@@ -84,8 +93,9 @@ export class CacheInvalidation {
       const cacheKey = this.getKey(key)
       const value = await this.redis.get(cacheKey)
       return value ? JSON.parse(value) : null
-    } catch (error) {
-      logger.error('Failed to get cache:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('get cache', error))
       throw error
     }
   }
@@ -94,8 +104,9 @@ export class CacheInvalidation {
     try {
       const cacheKey = this.getKey(key)
       await this.redis.del(cacheKey)
-    } catch (error) {
-      logger.error('Failed to invalidate cache key:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('invalidate cache key', error))
       throw error
     }
   }
@@ -106,8 +117,9 @@ export class CacheInvalidation {
       if (keys.length) {
         await this.redis.del(...keys)
       }
-    } catch (error) {
-      logger.error('Failed to invalidate cache pattern:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('invalidate cache pattern', error))
       throw error
     }
   }
@@ -123,8 +135,9 @@ export class CacheInvalidation {
         multi.del(tagKey)
         await multi.exec()
       }
-    } catch (error) {
-      logger.error('Failed to invalidate cache tag:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('invalidate cache tag', error))
       throw error
     }
   }
@@ -140,8 +153,9 @@ export class CacheInvalidation {
         multi.del(depKey)
         await multi.exec()
       }
-    } catch (error) {
-      logger.error('Failed to invalidate cache dependency:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('invalidate cache dependency', error))
       throw error
     }
   }
@@ -152,8 +166,9 @@ export class CacheInvalidation {
       if (keys.length) {
         await this.redis.del(...keys)
       }
-    } catch (error) {
-      logger.error('Failed to clear cache:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('clear cache', error))
       throw error
     }
   }
@@ -167,8 +182,9 @@ export class CacheInvalidation {
       const value = await getValue()
       await this.set(key, value, rule)
       return value
-    } catch (error) {
-      logger.error('Failed to refresh cache:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('refresh cache', error))
       throw error
     }
   }
@@ -187,8 +203,9 @@ export class CacheInvalidation {
       const value = await getValue()
       await this.set(key, value, rule)
       return value
-    } catch (error) {
-      logger.error('Failed to get or set cache:', error)
+    }
+    catch (error) {
+      logger.error(this.formatErrorMessage('get or set cache', error))
       throw error
     }
   }

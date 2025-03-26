@@ -1,6 +1,6 @@
 ---
-import { requirePermission } from '../../../lib/access-control'
-import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { requirePermission } from '~/lib/access-control'
+import BaseLayout from '~/layouts/BaseLayout.astro'
 
 // Check if user has admin permission
 const checkPermission = requirePermission('read:admin')
@@ -134,7 +134,8 @@ const period = Astro.url.searchParams.get('period') || 'daily'
 
       const data = await response.json()
       return data.stats
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error fetching usage statistics:', error)
       return []
     }
@@ -154,7 +155,7 @@ const period = Astro.url.searchParams.get('period') || 'daily'
     }).format(amount)
   }
 
-  // Create a line char
+  // Create a line chart
   function createLineChart(
     elementId: string,
     labels: string[],
@@ -165,7 +166,7 @@ const period = Astro.url.searchParams.get('period') || 'daily'
     const element = document.querySelector(`#${elementId} .stat-chart`)
     if (!element) return null
 
-    const canvas = element as HTMLCanvasElemen
+    const canvas = element as HTMLCanvasElement
     const ctx = canvas.getContext('2d')
     if (!ctx) return null
 
@@ -214,7 +215,7 @@ const period = Astro.url.searchParams.get('period') || 'daily'
     const element = document.querySelector(`#${elementId} .stat-chart-large`)
     if (!element) return null
 
-    const canvas = element as HTMLCanvasElemen
+    const canvas = element as HTMLCanvasElement
     const ctx = canvas.getContext('2d')
     if (!ctx) return null
 
@@ -249,7 +250,7 @@ const period = Astro.url.searchParams.get('period') || 'daily'
           },
           tooltip: {
             callbacks: {
-              label: function (context: unknown) {
+              label(context: unknown) {
                 const typedContext = context as {
                   label: string
                   raw: number

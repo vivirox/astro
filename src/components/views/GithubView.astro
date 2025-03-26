@@ -49,74 +49,80 @@ let releases: CollectionEntry<'releases'>[] = []
 let extendedReleases: ExtendedReleaseData[] = []
 
 if (collectionType === 'releases') {
-  releases = await getCollection(collectionType)
-  const pkgCountMap: Record<string, number> = {}
+  try {
+    releases = await getCollection(collectionType)
+    const pkgCountMap: Record<string, number> = {}
 
-  // Get all releases from all items
-  const allReleases = releases.flatMap((item) => {
-    const releasesData = item.data.projects.releases || []
-    return releasesData
-  })
-
-  // Process each release
-  extendedReleases = allReleases
-    .map((release: ReleaseData) => {
-      // Extract repo details from the link or generate defaults
-      const repoInfo =
-        release.link?.match(/github\.com\/([^/]+)\/([^/]+)/) || []
-      const repoOwner = repoInfo[1] || 'unknown'
-      const repoName = repoInfo[2] || release.name || ''
-      const repoNameWithOwner = `${repoOwner}/${repoName}`
-
-      // Extract version from name or use a default
-      const versionMatch = (release.name || '').match(
-        /v?(\d+\.\d+\.\d+(?:-[\w.]+)?)/,
-      ) || ['', '0.0.0']
-      const versionNum = versionMatch[1]
-      const tagName = `${release.name || ''}@${versionNum}`
-
-      const isInMonorepo = monorepos.includes(
-        repoNameWithOwner as RepoWithOwner,
-      )
-      const pkgName = isInMonorepo ? extractPackageName(tagName) : repoName
-
-      const mainLogo =
-        matchLogo(pkgName, mainLogoOverrides) ||
-        `https://github.com/${repoOwner}.png`
-      const subLogo = matchLogo(pkgName, subLogoMatches)
-
-      const [versionType, ...versionParts] = processVersion(versionNum)
-
-      // Use current date as fallback for publishedAt
-      const publishedAt = new Date().toISOString()
-
-      return {
-        ...release,
-        repoOwner,
-        repoName,
-        repoNameWithOwner,
-        versionNum,
-        tagName,
-        isInMonorepo,
-        pkgName,
-        mainLogo,
-        subLogo,
-        versionType,
-        versionParts,
-        publishedAt,
-      }
+    // Get all releases from all items
+    const allReleases = releases.flatMap((item) => {
+      const releasesData = item.data.projects.releases || []
+      return releasesData
     })
-    // filters releases to ensure each pkg has no more than a specified maximum number
-    .filter((item) => {
-      if ((pkgCountMap[item.pkgName] || 0) < MAX_PER_PKG) {
-        pkgCountMap[item.pkgName] = (pkgCountMap[item.pkgName] || 0) + 1
-        return true
-      }
-      return false
-    })
-    .sort((a, b) => {
-      return +new Date(b.publishedAt) - +new Date(a.publishedAt)
-    })
+
+    // Process each release
+    extendedReleases = allReleases
+      .map((release: ReleaseData): ExtendedReleaseData => {
+        // Extract repo details from the link or generate defaults
+        const repoInfo =
+          release.link?.match(/github\.com\/([^/]+)\/([^/]+)/) || []
+        const repoOwner = repoInfo[1] || 'unknown'
+        const repoName = repoInfo[2] || release.name || ''
+        const repoNameWithOwner = `${repoOwner}/${repoName}`
+
+        // Extract version from name or use a default
+        const versionMatch = (release.name || '').match(
+          /v?(\d+\.\d+\.\d+(?:-[\w.]+)?)/,
+        ) || ['', '0.0.0']
+        const versionNum = versionMatch[1]
+        const tagName = `${release.name || ''}@${versionNum}`
+
+        const isInMonorepo = monorepos.includes(
+          repoNameWithOwner as RepoWithOwner,
+        )
+        const pkgName = isInMonorepo ? extractPackageName(tagName) : repoName
+
+        const mainLogo =
+          matchLogo(pkgName, mainLogoOverrides) ||
+          `https://github.com/${repoOwner}.png`
+        const subLogo = matchLogo(pkgName, subLogoMatches)
+
+        const [versionType, ...versionParts] = processVersion(versionNum)
+
+        // Use current date if publishedAt is not available
+        const currentDate = new Date().toISOString()
+        const publishedAt = (release as any).publishedAt || currentDate
+
+        return {
+          ...release,
+          repoOwner,
+          repoName,
+          repoNameWithOwner,
+          versionNum,
+          tagName,
+          isInMonorepo,
+          pkgName,
+          mainLogo,
+          subLogo,
+          versionType,
+          versionParts: versionParts as [string, string],
+          publishedAt,
+        }
+      })
+      // filters releases to ensure each pkg has no more than a specified maximum number
+      .filter((item) => {
+        if ((pkgCountMap[item.pkgName] || 0) < MAX_PER_PKG) {
+          pkgCountMap[item.pkgName] = (pkgCountMap[item.pkgName] || 0) + 1
+          return true
+        }
+        return false
+      })
+      .sort((a, b) => {
+        return +new Date(b.publishedAt) - +new Date(a.publishedAt)
+      })
+  } catch (error) {
+    console.error('Error processing releases:', error)
+    extendedReleases = []
+  }
 }
 
 /* PRs */
@@ -124,77 +130,81 @@ let prs: CollectionEntry<'prs'>[] = []
 let extendedPrs: ExtendedPrData[] = []
 
 if (collectionType === 'prs') {
-  prs = await getCollection(collectionType)
+  try {
+    prs = await getCollection(collectionType)
 
-  // Get PRs from the nested structure
-  const allPrs = prs.flatMap((item) => item.data.projects.pull_requests || [])
+    // Get PRs from the nested structure
+    const allPrs = prs.flatMap((item) => item.data.projects.pull_requests || [])
 
-  extendedPrs = allPrs
-    .filter(
-      (item) =>
-        item.state !== 'CLOSED' &&
-        !item.isDraft &&
-        !/\b(?:chore|docs|i18n)\b/.test(item.title),
-    )
-    .map((item) => {
-      const mainLogo =
-        matchLogo(item.repository.name, mainLogoOverrides) ||
-        `https://github.com/${item.repository.owner.login}.png`
-      const subLogo = matchLogo(item.repository.name, subLogoMatches)
+    extendedPrs = allPrs
+      .filter(
+        (item) =>
+          item.state !== 'CLOSED' &&
+          !item.isDraft &&
+          !/\b(?:chore|docs|i18n)\b/.test(item.title),
+      )
+      .map((item): ExtendedPrData => {
+        const mainLogo =
+          matchLogo(item.repository.name, mainLogoOverrides) ||
+          `https://github.com/${item.repository.owner.login}.png`
+        const subLogo = matchLogo(item.repository.name, subLogoMatches)
 
-      return {
-        ...item,
-        mainLogo,
-        subLogo,
-      }
-    })
-    .sort((a, b) => {
-      return +new Date(b.createdAt) - +new Date(a.createdAt)
-    })
+        return {
+          ...item,
+          mainLogo,
+          subLogo,
+        }
+      })
+      .sort((a, b) => {
+        return +new Date(b.createdAt) - +new Date(a.createdAt)
+      })
+  } catch (error) {
+    console.error('Error processing PRs:', error)
+    extendedPrs = []
+  }
 }
 ---
 
-<div class="flex flex-col gap-8 lt-sm:gap-6 mt-16.8">
+<div class="flex flex-col gap-8 lt-sm:gap-6 mt-16.8" role="feed" aria-label={`GitHub ${collectionType}`}>
   {
-    collectionType === 'releases' && extendedReleases.length > 0
-      ? extendedReleases.map((item, idx) => (
-          <GithubItem
-            collectionType={collectionType}
-            idx={idx}
-            item={item}
-            isDiffMonth={isDiffMonth(
-              item.publishedAt,
-              extendedReleases[idx - 1]
-                ? extendedReleases[idx - 1].publishedAt
-                : undefined,
-            )}
-          />
-        ))
-      : collectionType === 'releases' && (
-          <p class="text-center op-50">No releases found</p>
-        )
+    collectionType === 'releases' && extendedReleases.length > 0 ? (
+      extendedReleases.map((item, idx) => (
+        <GithubItem
+          collectionType={collectionType}
+          idx={idx}
+          item={item}
+          isDiffMonth={isDiffMonth(
+            item.publishedAt,
+            extendedReleases[idx - 1]?.publishedAt,
+          )}
+        />
+      ))
+    ) : collectionType === 'releases' ? (
+      <p class="text-center op-50" role="status">No releases found</p>
+    ) : null
   }
   {
-    collectionType === 'prs' && extendedPrs.length > 0
-      ? extendedPrs.map((item, idx) => (
-          <GithubItem
-            collectionType={collectionType}
-            idx={idx}
-            item={item}
-            isDiffMonth={isDiffMonth(
-              item.createdAt,
-              extendedPrs[idx - 1] ? extendedPrs[idx - 1].createdAt : undefined,
-            )}
-          />
-        ))
-      : collectionType === 'prs' && (
-          <p class="text-center op-50">No pull requests found</p>
-        )
+    collectionType === 'prs' && extendedPrs.length > 0 ? (
+      extendedPrs.map((item, idx) => (
+        <GithubItem
+          collectionType={collectionType}
+          idx={idx}
+          item={item}
+          isDiffMonth={isDiffMonth(
+            item.createdAt,
+            extendedPrs[idx - 1]?.createdAt,
+          )}
+        />
+      ))
+    ) : collectionType === 'prs' ? (
+      <p class="text-center op-50" role="status">No pull requests found</p>
+    ) : null
   }
 </div>
 
 <div
   class="prose flex flex-col items-center mx-a op-50 text-center text-3.75! lt-sm:text-sm!"
+  role="contentinfo"
 >
   <hr class="mt-3em!" />
   <p class="flex lt-sm:flex-col items-center my-0! lt-sm:my-1.5!">
@@ -204,7 +214,8 @@ if (collectionType === 'prs') {
         class="inline-block text-[var(--fg-deeper)]"
         datetime={new Date().toISOString()}
         title={new Date().toISOString()}
-        >{formatDate(new Date(), false)}
+      >
+        {formatDate(new Date(), false)}
       </time>
     </span>
     <span class="lt-sm:hidden">&nbsp;|&nbsp;</span>

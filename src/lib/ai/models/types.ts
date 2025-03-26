@@ -12,6 +12,7 @@ export enum AIProvider {
   OpenAI = 'openai',
   Anthropic = 'anthropic',
   Together = 'together',
+  Nebius = 'nebius',
 }
 
 /**

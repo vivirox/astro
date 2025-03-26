@@ -11,7 +11,7 @@ import { fheService } from './index'
 import { EncryptionMode, FHEOperation as FHEOpType } from './types'
 
 // Initialize logger
-const logger = getLogger()
+const logger = getLogger({ prefix: 'analytics' })
 
 /**
  * Operation types for FHE processing (our local enum)

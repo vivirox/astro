@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react'
 
-interface FeatureSupport {
-  feature: string
-  supported: boolean | string
-  notes?: string
-}
 
 interface FeatureTest {
   name: string
@@ -39,7 +34,7 @@ export function BrowserCompatibilityTester() {
       hasTouch: 'ontouchstart' in window,
     })
 
-    // Test feature suppor
+    // Test feature support
     const featureTests: FeatureTest[] = [
       {
         name: 'ES2024 Features',
@@ -47,11 +42,12 @@ export function BrowserCompatibilityTester() {
           try {
             // Test for specific ES2024 features safely
             return (
-              typeof Promise.withResolvers === 'function' &&
-              typeof Array.prototype.groupBy === 'function' &&
-              typeof Array.prototype.findLast === 'function'
+              typeof Promise.withResolvers === 'function'
+              && 'groupBy' in Array.prototype
+              && typeof Array.prototype.findLast === 'function'
             )
-          } catch {
+          }
+          catch {
             return false
           }
         },
@@ -59,9 +55,9 @@ export function BrowserCompatibilityTester() {
       {
         name: 'WebCrypto',
         test: () =>
-          typeof window !== 'undefined' &&
-          'crypto' in window &&
-          'subtle' in window.crypto,
+          typeof window !== 'undefined'
+          && 'crypto' in window
+          && 'subtle' in window.crypto,
       },
       {
         name: 'WebWorkers',
@@ -81,7 +77,8 @@ export function BrowserCompatibilityTester() {
     featureTests.forEach(({ name, test }) => {
       try {
         testResults[name] = test()
-      } catch {
+      }
+      catch {
         testResults[name] = false
       }
     })
@@ -90,47 +87,10 @@ export function BrowserCompatibilityTester() {
   }, [])
 
   // Helper functions for feature detection
-  function testCSSProperty(property: string): boolean {
-    const element = document.createElement('div')
-    return property in element.style
-  }
 
-  function testLocalStorage(): boolean {
-    try {
-      localStorage.setItem('test', 'test')
-      localStorage.removeItem('test')
-      return true
-    } catch {
-      return false
-    }
-  }
 
-  function testAsyncAwait(): boolean {
-    try {
-      // Test async/await support without eval
-      const AsyncFunction = (async () => {}).constructor
-      new AsyncFunction()
-      return true
-    } catch {
-      return false
-    }
-  }
 
-  function testReducedMotion(): string {
-    if (typeof window.matchMedia !== 'function') return 'Not supported'
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      ? 'Active'
-      : 'Supported'
-  }
 
-  function testHighContrastMode(): string {
-    if (typeof window.matchMedia !== 'function') return 'Not supported'
-    // Different browsers have different ways to detect high contrast mode
-    const isHighContras =
-      window.matchMedia('(forced-colors: active)').matches ||
-      window.matchMedia('-ms-high-contrast: active').matches
-    return isHighContrast ? 'Active' : 'Supported'
-  }
 
   return (
     <div className="browser-compatibility-tester">
@@ -140,32 +100,48 @@ export function BrowserCompatibilityTester() {
         <h3 id="browser-info-heading">Browser Information</h3>
         <ul>
           <li>
-            <strong>User Agent:</strong> {browserInfo.userAgent}
+            <strong>User Agent:</strong>
+            {' '}
+            {browserInfo.userAgent}
           </li>
           <li>
-            <strong>Platform:</strong> {browserInfo.platform}
+            <strong>Platform:</strong>
+            {' '}
+            {browserInfo.platform}
           </li>
           <li>
-            <strong>Language:</strong> {browserInfo.language}
+            <strong>Language:</strong>
+            {' '}
+            {browserInfo.language}
           </li>
           <li>
-            <strong>Vendor:</strong> {browserInfo.vendor}
+            <strong>Vendor:</strong>
+            {' '}
+            {browserInfo.vendor}
           </li>
           <li>
-            <strong>Cookies Enabled:</strong>{' '}
+            <strong>Cookies Enabled:</strong>
+            {' '}
             {browserInfo.cookiesEnabled ? 'Yes' : 'No'}
           </li>
           <li>
-            <strong>Screen Size:</strong> {browserInfo.screenSize}
+            <strong>Screen Size:</strong>
+            {' '}
+            {browserInfo.screenSize}
           </li>
           <li>
-            <strong>Pixel Ratio:</strong> {browserInfo.pixelRatio}
+            <strong>Pixel Ratio:</strong>
+            {' '}
+            {browserInfo.pixelRatio}
           </li>
           <li>
-            <strong>Touch Points:</strong> {browserInfo.touchPoints}
+            <strong>Touch Points:</strong>
+            {' '}
+            {browserInfo.touchPoints}
           </li>
           <li>
-            <strong>Touch Support:</strong>{' '}
+            <strong>Touch Support:</strong>
+            {' '}
             {browserInfo.hasTouch ? 'Yes' : 'No'}
           </li>
         </ul>

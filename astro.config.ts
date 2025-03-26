@@ -13,6 +13,42 @@ import { SITE } from './src/config'
 export default defineConfig({
   site: SITE.website,
   base: SITE.base,
+  vite: {
+    resolve: {
+      alias: {
+        '~': '/src',
+        '@': path.resolve('./src')
+      },
+      mainFields: ['module', 'jsnext:main', 'jsnext', 'main'],
+      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
+    },
+    optimizeDeps: {
+      include: ['unocss'],
+      exclude: []
+    },
+    build: {
+      chunkSizeWarningLimit: 1500,
+      cssCodeSplit: true,
+      cssMinify: true,
+      assetsInlineLimit: 4096,
+      manifest: true,
+      rollupOptions: {
+        output: {
+          assetFileNames: 'assets/[name].[hash][extname]',
+          chunkFileNames: 'assets/[name].[hash].js',
+          entryFileNames: 'assets/[name].[hash].js',
+          manualChunks: {
+            'three-bundle': ['three'],
+            'vendor': []
+          }
+        }
+      }
+    },
+    plugins: [],
+    ssr: {
+      noExternal: ['react']
+    }
+  },
   integrations: [
     react({
       include: ['**/*.tsx', '**/*.jsx'],
@@ -38,40 +74,5 @@ export default defineConfig({
     syntaxHighlight: false,
     remarkPlugins,
     rehypePlugins,
-  },
-  vite: {
-    optimizeDeps: {
-      include: ['unocss'],
-      exclude: [],
-    },
-    build: {
-      chunkSizeWarningLimit: 1500,
-      cssCodeSplit: true,
-      cssMinify: true,
-      assetsInlineLimit: 4096,
-      manifest: true,
-      rollupOptions: {
-        output: {
-          assetFileNames: 'assets/[name].[hash][extname]',
-          chunkFileNames: 'assets/[name].[hash].js',
-          entryFileNames: 'assets/[name].[hash].js',
-          manualChunks: {
-            'three-bundle': ['three'],
-            'vendor': [
-              // Add other large dependencies here
-            ],
-          },
-        },
-      },
-    },
-    plugins: [],
-    ssr: {
-      noExternal: ['react'],
-    },
-    resolve: {
-      alias: [{ find: '@', replacement: path.resolve('./src') }],
-      mainFields: ['module', 'jsnext:main', 'jsnext', 'main'],
-      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
-    },
   },
 })

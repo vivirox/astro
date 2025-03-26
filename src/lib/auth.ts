@@ -190,3 +190,24 @@ export async function requireRole({
 
   return null
 }
+
+export class Auth {
+  async verifySession(request: Request) {
+    const cookies = this.getCookiesFromRequest(request)
+    const user = await getCurrentUser(cookies)
+    return user ? { userId: user.id } : null
+  }
+
+  private getCookiesFromRequest(request: Request): AstroCookies {
+    // Convert Request headers to AstroCookies format
+    const cookieHeader = request.headers.get('cookie') || ''
+    return {
+      get: (name: string) => {
+        const match = cookieHeader.match(new RegExp(`${name}=([^;]+)`))
+        return match ? { value: match[1] } : undefined
+      }
+    } as AstroCookies
+  }
+}
+
+export const auth = new Auth()

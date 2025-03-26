@@ -6,10 +6,11 @@
  * Uses differential privacy techniques and aggregation to ensure HIPAA compliance.
  */
 
+import process from 'node:process'
 import { getLogger } from './logging'
 
 // Initialize logger
-const logger = getLogger()
+const logger = getLogger({ prefix: 'analytics' })
 
 // Analytics event types
 export enum AnalyticsEventType {
@@ -29,7 +30,7 @@ export type AnalyticsValue =
   | boolean
   | null
   | undefined
-  | AnalyticsObjec
+  | AnalyticsObject
   | AnalyticsArray
 export interface AnalyticsObject {
   [key: string]: AnalyticsValue
@@ -128,9 +129,10 @@ export class AnalyticsService {
       return `server-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
     }
 
-    // Try to get from storage firs
+    // Try to get from storage first
     const storedId = sessionStorage.getItem('analytics_session_id')
-    if (storedId) return storedId
+    if (storedId)
+      return storedId
 
     // Generate a new one if not found
     const newId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
@@ -146,9 +148,10 @@ export class AnalyticsService {
       return `anon-${Math.random().toString(36).substring(2, 9)}`
     }
 
-    // Try to get from storage firs
+    // Try to get from storage first
     const storedId = localStorage.getItem('analytics_anonymous_id')
-    if (storedId) return storedId
+    if (storedId)
+      return storedId
 
     // Generate a new one if not found
     const newId = `anon-${Math.random().toString(36).substring(2, 16)}`
@@ -197,8 +200,10 @@ export class AnalyticsService {
       if (this.config.debugMode) {
         logger.debug(`Flushed ${events.length} analytics events`)
       }
-    } catch (error) {
-      logger.error('Failed to flush analytics events', error)
+    }
+    catch (error: unknown) {
+      const errorObj = error instanceof Error ? { message: error.message, stack: error.stack } : { message: String(error) }
+      logger.error('Failed to flush analytics events', errorObj)
 
       // Put events back in buffer
       this.eventBuffer = [...events, ...this.eventBuffer]
@@ -216,7 +221,7 @@ export class AnalyticsService {
    */
   private applyDifferentialPrivacy(events: AnalyticsEvent[]): AnalyticsEvent[] {
     return events.map((event) => {
-      // Create a deep copy of the even
+      // Create a deep copy of the event
       const newEvent = { ...event, data: { ...event.data } }
 
       // Add noise to sensitive numeric values
@@ -226,13 +231,13 @@ export class AnalyticsService {
         // Add Laplace noise to numeric values
         if (typeof value === 'number') {
           const sensitivity = 1.0 // Assume sensitivity of 1
-          const epsilon = this.config.privacyBudge
+          const epsilon = this.config.privacyBudget
           const noise = this.laplacianNoise(sensitivity / epsilon)
           newEvent.data[key] = Math.round((value + noise) * 100) / 100
         }
       })
 
-      return newEven
+      return newEvent
     })
   }
 
@@ -245,10 +250,11 @@ export class AnalyticsService {
   }
 
   /**
-   * Send events to the analytics endpoin
+   * Send events to the analytics endpoint
    */
   private async sendToEndpoint(events: AnalyticsEvent[]): Promise<void> {
-    if (!this.config.endpointUrl) return
+    if (!this.config.endpointUrl)
+      return
 
     try {
       const response = await fetch(this.config.endpointUrl, {
@@ -270,8 +276,10 @@ export class AnalyticsService {
           `Analytics API response: ${response.status} ${response.statusText}`,
         )
       }
-    } catch (error) {
-      logger.error('Failed to send analytics to endpoint', error)
+    }
+    catch (error: unknown) {
+      const errorObj = error instanceof Error ? { message: error.message, stack: error.stack } : { message: String(error) }
+      logger.error('Failed to send analytics to endpoint', errorObj)
       throw error
     }
   }
@@ -299,8 +307,10 @@ export class AnalyticsService {
 
       // Save back to storage
       localStorage.setItem('analytics_events', JSON.stringify(trimmedEvents))
-    } catch (error) {
-      logger.error('Failed to save analytics to local storage', error)
+    }
+    catch (error: unknown) {
+      const errorObj = error instanceof Error ? { message: error.message, stack: error.stack } : { message: String(error) }
+      logger.error('Failed to save analytics to local storage', errorObj)
     }
   }
 
@@ -347,27 +357,31 @@ export class AnalyticsService {
       if (typeof value === 'string') {
         // Check if this is a sensitive field
         if (
-          sensitiveFields.some((field) =>
+          sensitiveFields.some(field =>
             key.toLowerCase().includes(field.toLowerCase()),
           )
         ) {
           result[key] = '[REDACTED]'
-        } else if (value.length > 100) {
+        }
+        else if (value.length > 100) {
           // Likely a text content, sanitize i
           result[key] = this.sanitizeTextContent(value)
-        } else {
+        }
+        else {
           result[key] = value
         }
-      } else if (typeof value === 'object' && value !== null) {
+      }
+      else if (typeof value === 'object' && value !== null) {
         // Recursively anonymize nested objects
         result[key] = Array.isArray(value)
-          ? value.map((item) =>
+          ? value.map(item =>
               typeof item === 'object' && item !== null
                 ? this.anonymizeData(item as AnalyticsObject)
                 : item,
             )
           : this.anonymizeData(value as AnalyticsObject)
-      } else {
+      }
+      else {
         // Numbers, booleans, etc. are safe to pass through
         result[key] = value
       }
@@ -402,7 +416,7 @@ export class AnalyticsService {
   }
 
   /**
-   * Record an analytics even
+   * Record an analytics event
    */
   public recordEvent(
     eventName: string,
@@ -417,7 +431,7 @@ export class AnalyticsService {
       // Anonymize the data
       const safeData = this.anonymizeData(data)
 
-      // Create the even
+      // Create the event
       const event: AnalyticsEvent = {
         eventType,
         eventName,
@@ -450,8 +464,10 @@ export class AnalyticsService {
       if (this.config.debugMode) {
         logger.debug(`Recorded analytics event: ${eventName}`, safeData)
       }
-    } catch (error) {
-      logger.error(`Failed to record analytics event: ${eventName}`, error)
+    }
+    catch (error: unknown) {
+      const errorObj = error instanceof Error ? { message: error.message, stack: error.stack } : { message: String(error) }
+      logger.error(`Failed to record analytics event: ${eventName}`, errorObj)
     }
   }
 
@@ -464,8 +480,8 @@ export class AnalyticsService {
       {
         page,
         referrer:
-          referrer ||
-          (typeof document !== 'undefined' ? document.referrer : 'unknown'),
+          referrer
+          || (typeof document !== 'undefined' ? document.referrer : 'unknown'),
         title: typeof document !== 'undefined' ? document.title : 'unknown',
       },
       AnalyticsEventType.PAGE_VIEW,
@@ -559,8 +575,10 @@ export class AnalyticsService {
     try {
       const eventsJson = localStorage.getItem('analytics_events')
       return eventsJson ? JSON.parse(eventsJson) : []
-    } catch (error) {
-      logger.error('Failed to get analytics events', error)
+    }
+    catch (error: unknown) {
+      const errorObj = error instanceof Error ? { message: error.message, stack: error.stack } : { message: String(error) }
+      logger.error('Failed to get analytics events', errorObj)
       return []
     }
   }
@@ -577,8 +595,10 @@ export class AnalyticsService {
       localStorage.removeItem('analytics_events')
       this.eventBuffer = []
       logger.info('Analytics events cleared')
-    } catch (error) {
-      logger.error('Failed to clear analytics events', error)
+    }
+    catch (error: unknown) {
+      const errorObj = error instanceof Error ? { message: error.message, stack: error.stack } : { message: String(error) }
+      logger.error('Failed to clear analytics events', errorObj)
     }
   }
 

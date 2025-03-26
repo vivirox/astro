@@ -173,12 +173,12 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
       (window.requestIdleCallback || ((cb) => setTimeout(cb, 1)))(cb)
 
     #onIntersect = (entries: IntersectionObserverEntry[]) => {
-      // get latest trigger heading elemen
+      // get latest trigger heading element
       const sortedEntries = entries.sort((a, b) => b.time - a.time)
-      const latestTriggerHeading = sortedEntries[0]?.targe
+      const latestTriggerHeading = sortedEntries[0]?.target
       if (!latestTriggerHeading) return
 
-      // get need to highlight heading elemen
+      // get need to highlight heading element
       // (avoid highlight next heading when scrolling up)
       const isLocatedBelow =
         latestTriggerHeading.getBoundingClientRect().top >
@@ -203,8 +203,8 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
       return level ? parseInt(level, 10) : undefined
     }
 
-    #getElements = (selector: string, _fromDocument = true) => {
-      return _fromDocumen
+    #getElements = (selector: string, fromDocument = true) => {
+      return fromDocument
         ? Array.from(document.querySelectorAll(selector))
         : Array.from(this.querySelectorAll(selector))
     }

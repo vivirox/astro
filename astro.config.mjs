@@ -5,6 +5,7 @@ import tailwind from '@astrojs/tailwind'
 import vercel from '@astrojs/vercel'
 import UnoCSS from '@unocss/astro'
 import { defineConfig } from 'astro/config'
+import path from 'path'
 
 export default defineConfig({
   site: 'https://vivi.rocks',
@@ -19,9 +20,12 @@ export default defineConfig({
     }),
     tailwind(),
   ],
+  content: {
+    collections: ['blog', 'docs']
+  },
   vite: {
     optimizeDeps: {
-      include: ['unocss'],
+      include: ['unocss', 'three'],
       exclude: [],
     },
     build: {
@@ -40,6 +44,7 @@ export default defineConfig({
           manualChunks: {
             'react-vendor': ['react', 'react-dom'],
             'ui-vendor': ['@radix-ui/react-icons', '@radix-ui/react-slot'],
+            'three-vendor': ['three'],
             'vendor': ['dayjs', 'nprogress', 'html-entities'],
           },
           assetFileNames: 'assets/[name].[hash][extname]',
@@ -49,14 +54,17 @@ export default defineConfig({
       },
     },
     resolve: {
-      alias: [
-        { find: '@', replacement: '/src' },
-        { find: '@lib', replacement: '/src/lib' },
-        { find: '@components', replacement: '/src/components' },
-        { find: '@layouts', replacement: '/src/layouts' },
-        { find: '@pages', replacement: '/src/pages' },
-        { find: '@utils', replacement: '/src/utils' },
-      ],
+      alias: {
+        '~': path.resolve('./src'),
+        '@': path.resolve('./src'),
+        '@components': path.resolve('./src/components'),
+        '@layouts': path.resolve('./src/layouts'),
+        '@utils': path.resolve('./src/utils'),
+        '@lib': path.resolve('./src/lib')
+      }
+    },
+    ssr: {
+      noExternal: ['react'],
     },
   },
   output: 'server',
@@ -80,4 +88,12 @@ export default defineConfig({
       },
     ],
   },
+  typescript: {
+    // Enable TypeScript strict mode
+    strict: true,
+    // Allow JavaScript files
+    allowJS: true,
+    // Show TypeScript errors in dev server
+    reportTypeErrors: true
+  }
 })

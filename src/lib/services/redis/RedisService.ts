@@ -25,6 +25,10 @@ export class RedisService extends EventEmitter {
     this.client = this.createClient()
   }
 
+  public getClient(): Redis {
+    return this.client
+  }
+
   private validateConfig(config: RedisServiceConfig): void {
     if (!config.url) {
       throw new RedisServiceError(

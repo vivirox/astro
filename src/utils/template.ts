@@ -14,7 +14,7 @@ export async function previewTemplate(
   templateName: string,
   data: Record<
     string,
-    string | { platform: string; url: string | undefined }[] | undefined
+    string | { platform: string, url: string | undefined }[] | undefined
   > = {},
 ): Promise<string> {
   logger.info('Previewing email template', {
@@ -35,7 +35,8 @@ export async function previewTemplate(
     })
 
     return renderedHtml
-  } catch (error) {
+  }
+  catch (error) {
     logger.error('Failed to render template', error as Error, {
       context: 'Template',
       data: { templateName },

@@ -1,12 +1,6 @@
 import { feedLoader } from '@ascorbic/feed-loader'
 import { glob } from 'astro/loaders'
-
 import { defineCollection, z } from 'astro:content'
-// Comment out unused imports to fix linter errors
-// import { githubReleasesLoader } from 'astro-loader-github-releases'
-// import { githubPrsLoader } from 'astro-loader-github-prs'
-// import { blueskyPostsLoader } from 'astro-loader-bluesky-posts'
-
 import {
   pageSchema,
   postSchema,
@@ -15,23 +9,44 @@ import {
   streamsSchema,
 } from './schema'
 
+// Comment out unused imports to fix linter errors
+// import { githubReleasesLoader } from 'astro-loader-github-releases'
+// import { githubPrsLoader } from 'astro-loader-github-prs'
+// import { blueskyPostsLoader } from 'astro-loader-bluesky-posts'
+
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/pages' }),
   schema: pageSchema,
 })
 
 const blog = defineCollection({
-  type: 'content',
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/blog',
+  }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    pubDate: z.date(),
-    lastModDate: z.date().optional(),
-    toc: z.boolean().default(false),
-    share: z.boolean().default(true),
-    ogImage: z.boolean().optional(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    ogImage: z.union([z.string(), z.boolean()]).optional(),
+    toc: z.boolean().optional(),
+    share: z.boolean().optional(),
     tags: z.array(z.string()).optional(),
-    author: z.string().optional(),
+    minutesRead: z.number().optional(),
+  }),
+})
+
+const docs = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/docs',
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
   }),
 })
 
@@ -77,6 +92,7 @@ const highlights = defineCollection({
 export const collections = {
   pages,
   blog,
+  docs,
   projects,
   changelog,
   streams,

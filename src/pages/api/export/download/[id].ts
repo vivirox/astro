@@ -73,7 +73,7 @@ export const GET: APIRoute = async ({ params, request }) => {
       },
     })
   } catch (error) {
-    logger.error('Export download API error:', error)
+    logger.error('Export download API error:', { error: error instanceof Error ? error.message : String(error) })
     return new Response(JSON.stringify({ error: 'Download failed' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

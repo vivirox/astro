@@ -1,5 +1,6 @@
 import { fheService } from '@/lib/fhe'
 import { AnalyticsType, fheAnalytics } from '@/lib/fhe/analytics'
+import { EncryptionMode } from '@/lib/fhe/exports'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import AnalyticsDashboard from '../AnalyticsDashboard'
@@ -47,9 +48,9 @@ vi.mock('../icons', () => ({
 
 describe('analyticsDashboard', () => {
   const mockMessages = [
-    { role: 'user', content: 'Hello', encrypted: true, verified: true },
-    { role: 'assistant', content: 'Hi there', encrypted: true, verified: true },
-    { role: 'user', content: 'How are you?', encrypted: true, verified: true },
+    { role: 'user' as const, content: 'Hello', encrypted: true, verified: true, name: 'User' },
+    { role: 'assistant' as const, content: 'Hi there', encrypted: true, verified: true, name: 'Assistant' },
+    { role: 'user' as const, content: 'How are you?', encrypted: true, verified: true, name: 'User' },
   ]
 
   const mockAnalyticsData = [
@@ -65,6 +66,8 @@ describe('analyticsDashboard', () => {
         errorCount: 0,
       },
       isEncrypted: false,
+      timestamp: Date.now(),
+      encryptionMode: EncryptionMode.NONE
     },
   ]
 
@@ -210,7 +213,7 @@ describe('analyticsDashboard', () => {
 
     const newMessages = [
       ...mockMessages,
-      { role: 'user', content: 'New message', encrypted: true, verified: true },
+      { role: 'user' as const, content: 'New message', encrypted: true, verified: true, name: 'User' },
     ]
     await act(async () => {
       rerender(<AnalyticsDashboard {...defaultProps} messages={newMessages} />)

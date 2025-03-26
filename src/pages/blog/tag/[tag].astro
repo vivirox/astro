@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 
   // Get all unique tags
   const allTags = [
-    ...new Set(allBlogPosts.flatMap((post) => post.data.tags || [])),
+    ...new Set(allBlogPosts.flatMap((post) => post.data?.tags ?? [])),
   ]
 
   // Create a path for each tag

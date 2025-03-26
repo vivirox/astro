@@ -14,7 +14,7 @@ export interface BrowserInfo {
 
 /**
  * Detects current browser information
- * @returns Browser information objec
+ * @returns Browser information object
  */
 export function detectBrowser(): BrowserInfo {
   if (typeof window === 'undefined') {
@@ -29,7 +29,7 @@ export function detectBrowser(): BrowserInfo {
     }
   }
 
-  const userAgent = navigator.userAgen
+  const userAgent = navigator.userAgent
   let browserName = 'Unknown'
   let browserVersion = 'Unknown'
   let os = 'Unknown'
@@ -38,7 +38,8 @@ export function detectBrowser(): BrowserInfo {
   if (userAgent.includes('Firefox')) {
     browserName = 'Firefox'
     browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)?.[1] || 'Unknown'
-  } else if (userAgent.includes('Edg')) {
+  }
+  else if (userAgent.includes('Edg')) {
     browserName = 'Edge'
     browserVersion = userAgent.match(/Edg\/([0-9.]+)/)?.[1] || 'Unknown'
   } else if (userAgent.includes('Chrome')) {
@@ -55,7 +56,8 @@ export function detectBrowser(): BrowserInfo {
   // Detect OS
   if (userAgent.includes('Windows')) {
     os = 'Windows'
-  } else if (userAgent.includes('Mac')) {
+  }
+  else if (userAgent.includes('Mac')) {
     os = 'macOS'
   } else if (userAgent.includes('Linux')) {
     os = 'Linux'
@@ -74,7 +76,7 @@ export function detectBrowser(): BrowserInfo {
   const supportsReducedMotion =
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)') !== null
-  const supportsHighContras =
+  const supportsHighContrast =
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(forced-colors: active)') !== null
   const supportsFocusVisible =

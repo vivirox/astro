@@ -1,24 +1,28 @@
-import type { CollectionEntry } from 'astro:content'
+import type { CollectionEntry as AstroCollectionEntry } from 'astro:content'
 
-export type PostCollectionType = 'blog' | 'docs'
-
+// Define the base data interface that matches our schema
 export interface PostData {
-  title?: string
-  description?: string
-  toc?: boolean
-  ogImage?: string
+  title: string
+  description: string
   pubDate: Date
+  share?: boolean
+  toc?: boolean
+  ogImage?: boolean
+  lastModDate?: Date
+  updatedDate?: Date
   tags?: string[]
   author?: string
-  lastModDate?: Date
-  share?: boolean
+  minutesRead?: number
   draft?: boolean
 }
 
-export function filterDrafts<T extends { data: { draft?: boolean } }>(
-  entries: T[],
-): T[] {
-  return entries.filter((entry) => !entry.data.draft)
+export type PostCollectionType = 'blog' | 'docs'
+
+// Helper type for our collection entries
+export type PostCollectionEntry = AstroCollectionEntry<'blog'> | AstroCollectionEntry<'docs'>
+
+export function filterDrafts(entries: PostCollectionEntry[]): PostCollectionEntry[] {
+  return entries.filter(entry => !('draft' in entry.data) || !entry.data.draft)
 }
 
 export function sortByDate<T extends { data: { pubDate: Date } }>(
@@ -29,26 +33,27 @@ export function sortByDate<T extends { data: { pubDate: Date } }>(
   )
 }
 
-export async function getCollection(
+export async function getPosts(
   contentCollectionType: PostCollectionType,
-  filterFn?: (entry: CollectionEntry<'blog' | 'docs'>) => boolean,
-): Promise<CollectionEntry<'blog' | 'docs'>[]> {
+  filterFn?: (entry: PostCollectionEntry) => boolean,
+): Promise<PostCollectionEntry[]> {
   const { getCollection } = await import('astro:content')
-  const entries = await getCollection(contentCollectionType, filterFn)
-  return entries
+  return getCollection(contentCollectionType, filterFn)
 }
 
 export function sortPosts(
-  posts: CollectionEntry<'blog' | 'docs'>[],
-): CollectionEntry<'blog' | 'docs'>[] {
+  posts: PostCollectionEntry[],
+): PostCollectionEntry[] {
   return posts.sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   )
 }
 
 export function filterDraftPosts() {
-  return function (entry: CollectionEntry<'blog' | 'docs'>) {
-    return !entry.data.draft
+  return function filterDraftPosts(
+    entry: PostCollectionEntry,
+  ) {
+    return !('draft' in entry.data) || !entry.data.draft
   }
 }
 
@@ -60,14 +65,14 @@ export function filterDraftPosts() {
  */
 export async function getFilteredPosts(
   collectionType: PostCollectionType,
-  filterFn?: (entry: CollectionEntry<'blog' | 'docs'>) => boolean,
-): Promise<CollectionEntry<'blog' | 'docs'>[]> {
+  filterFn?: (entry: PostCollectionEntry) => boolean,
+): Promise<PostCollectionEntry[]> {
   // Get all posts
-  const posts = await getCollection(collectionType, filterFn)
+  const posts = await getPosts(collectionType, filterFn)
 
   // Filter out drafts in production (unless explicitly filtered)
-  const filteredPosts =
-    process.env.NODE_ENV === 'production' && !filterFn
+  const filteredPosts
+    = import.meta.env.PROD && !filterFn
       ? filterDrafts(posts)
       : posts
 
@@ -83,8 +88,8 @@ export async function getFilteredPosts(
  */
 export async function getSortedPosts(
   collectionType: PostCollectionType,
-  filterFn?: (entry: CollectionEntry<'blog' | 'docs'>) => boolean,
-): Promise<CollectionEntry<'blog' | 'docs'>[]> {
-  const posts = await getCollection(collectionType, filterFn)
+  filterFn?: (entry: PostCollectionEntry) => boolean,
+): Promise<PostCollectionEntry[]> {
+  const posts = await getPosts(collectionType, filterFn)
   return sortPosts(posts)
 }

@@ -2,12 +2,37 @@
 import ChatLayout from '../../layouts/ChatLayout.astro'
 import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester'
 import AIChat from '../../components/AIChat'
+import { LOADING_SIZES, SEVERITY_STYLES } from '../../constants/testing'
+import type { CompatibilityIssue, TestSections } from '../../types/testing'
 
-// Define size map outside component
-const sizeMap = {
-  small: { width: 50, height: 20 },
-  medium: { width: 100, height: 30 },
-  large: { width: 150, height: 40 },
+const TEST_SECTIONS: TestSections = {
+  browserInfo: {
+    title: 'Browser Information',
+    component: BrowserCompatibilityTester,
+  },
+  aiChat: {
+    title: 'AI Chat Component Test',
+    component: AIChat,
+    instructions: [
+      'Verify that the chat interface loads correctly',
+      'Test keyboard navigation (Tab, Enter, Arrow keys)',
+      'Test screen reader compatibility',
+      'Verify that messages display correctly',
+      'Test sending and receiving messages',
+      'Verify loading states and animations',
+      'Test with reduced motion preference if available',
+      'Test with high contrast mode if available',
+    ],
+  },
+  loadingIndicator: {
+    title: 'Loading Indicator Test',
+    instructions: [
+      'Verify that loading indicators display correctly',
+      'Test with screen readers to verify announcements',
+      'Test with reduced motion preference if available',
+      'Verify that animations work correctly',
+    ],
+  },
 }
 ---
 
@@ -20,81 +45,46 @@ const sizeMap = {
       Firefox, Safari, and Edge to verify compatibility.
     </p>
 
-    <section class="test-section">
-      <h2>Browser Information</h2>
-      <BrowserCompatibilityTester client:load />
-    </section>
-
-    <section class="test-section">
-      <h2>AI Chat Component Test</h2>
-      <div class="component-test">
-        <h3>Test Instructions</h3>
-        <ul>
-          <li>Verify that the chat interface loads correctly</li>
-          <li>Test keyboard navigation (Tab, Enter, Arrow keys)</li>
-          <li>Test screen reader compatibility</li>
-          <li>Verify that messages display correctly</li>
-          <li>Test sending and receiving messages</li>
-          <li>Verify loading states and animations</li>
-          <li>Test with reduced motion preference if available</li>
-          <li>Test with high contrast mode if available</li>
-        </ul>
-        <div class="component-container">
-          <AIChat client:load />
-        </div>
-      </div>
-    </section>
-
-    <section class="test-section">
-      <h2>Loading Indicator Test</h2>
-      <div class="component-test">
-        <h3>Test Instructions</h3>
-        <ul>
-          <li>Verify that loading indicators display correctly</li>
-          <li>Test with screen readers to verify announcements</li>
-          <li>Test with reduced motion preference if available</li>
-          <li>Verify that animations work correctly</li>
-        </ul>
-        <div class="loading-indicators-test">
-          <div>
-            <h4>Small</h4>
-            <div class="loading-indicator" aria-live="polite">
-              <div
-                class="loading-skeleton"
-                style={`width: ${sizeMap.small.width}px; height: ${sizeMap.small.height}px;`}
-              >
+    {Object.entries(TEST_SECTIONS).map(([key, section]) => (
+      <section class="test-section" aria-labelledby={`${key}-title`}>
+        <h2 id={`${key}-title`}>{section.title}</h2>
+        <div class="component-test">
+          {section.instructions && (
+            <>
+              <h3>Test Instructions</h3>
+              <ul>
+                {section.instructions.map((instruction) => (
+                  <li>{instruction}</li>
+                ))}
+              </ul>
+            </>
+          )}
+          <div class="component-container">
+            {section.component && <section.component client:load />}
+            {key === 'loadingIndicator' && (
+              <div class="loading-indicators-test">
+                {Object.entries(LOADING_SIZES).map(([size, dimensions]) => (
+                  <div>
+                    <h4>{size}</h4>
+                    <div class="loading-indicator" aria-live="polite">
+                      <div
+                        class="loading-skeleton"
+                        style={`width: ${dimensions.width}px; height: ${dimensions.height}px;`}
+                      >
+                      </div>
+                      <p class="loading-message">Loading {size.toLowerCase()}...</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p class="loading-message">Loading small...</p>
-            </div>
-          </div>
-          <div>
-            <h4>Medium</h4>
-            <div class="loading-indicator" aria-live="polite">
-              <div
-                class="loading-skeleton"
-                style={`width: ${sizeMap.medium.width}px; height: ${sizeMap.medium.height}px;`}
-              >
-              </div>
-              <p class="loading-message">Loading medium...</p>
-            </div>
-          </div>
-          <div>
-            <h4>Large</h4>
-            <div class="loading-indicator" aria-live="polite">
-              <div
-                class="loading-skeleton"
-                style={`width: ${sizeMap.large.width}px; height: ${sizeMap.large.height}px;`}
-              >
-              </div>
-              <p class="loading-message">Loading large...</p>
-            </div>
+            )}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    ))}
 
-    <section class="test-section">
-      <h2>Compatibility Issues Log</h2>
+    <section class="test-section" aria-labelledby="compatibility-log-title">
+      <h2 id="compatibility-log-title">Compatibility Issues Log</h2>
       <div class="compatibility-log">
         <form id="compatibility-form" class="compatibility-form">
           <div class="form-group">
@@ -105,9 +95,9 @@ const sizeMap = {
             <label for="component">Component</label>
             <select id="component" name="component" required>
               <option value="">Select a component</option>
-              <option value="ai-chat">AI Chat</option>
-              <option value="loading-indicator">Loading Indicator</option>
-              <option value="other">Other</option>
+              {Object.entries(TEST_SECTIONS).map(([key, section]) => (
+                <option value={key}>{section.title}</option>
+              ))}
             </select>
           </div>
           <div class="form-group">
@@ -118,8 +108,7 @@ const sizeMap = {
             <label for="severity">Severity</label>
             <select id="severity" name="severity" required>
               <option value="">Select severity</option>
-              <option value="critical">Critical - Blocking functionality</option
-              >
+              <option value="critical">Critical - Blocking functionality</option>
               <option value="major">Major - Significant impact</option>
               <option value="minor">Minor - Cosmetic issues</option>
             </select>
@@ -140,10 +129,31 @@ const sizeMap = {
   </div>
 
   <style>
+    :root {
+      --border-color: #e2e8f0;
+      --input-border: #cbd5e1;
+      --primary: #3b82f6;
+      --error: #ef4444;
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --bg-hover: #f8fafc;
+    }
+
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
+      color: var(--text-primary);
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: var(--text-secondary);
+      line-height: 1.5;
     }
 
     .test-section {
@@ -151,6 +161,7 @@ const sizeMap = {
       padding: 20px;
       border: 1px solid var(--border-color);
       border-radius: 8px;
+      background-color: white;
     }
 
     .component-test {
@@ -168,6 +179,7 @@ const sizeMap = {
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
+      margin-top: 1rem;
     }
 
     .loading-skeleton {
@@ -177,10 +189,31 @@ const sizeMap = {
       border-radius: 4px;
     }
 
+    @keyframes loading {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .loading-message {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
     .compatibility-log {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .compatibility-log {
+        grid-template-columns: 1fr;
+      }
     }
 
     .compatibility-form {
@@ -197,6 +230,7 @@ const sizeMap = {
       display: block;
       margin-bottom: 5px;
       font-weight: 500;
+      color: var(--text-primary);
     }
 
     .form-group input,
@@ -206,6 +240,15 @@ const sizeMap = {
       padding: 8px;
       border: 1px solid var(--input-border);
       border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
     }
 
     .form-actions {
@@ -217,6 +260,12 @@ const sizeMap = {
       border-radius: 4px;
       border: none;
       cursor: pointer;
+      font-size: 1rem;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
     }
 
     .btn-primary {
@@ -238,6 +287,7 @@ const sizeMap = {
       padding: 15px;
       border: 1px solid var(--border-color);
       border-radius: 4px;
+      background-color: white;
     }
 
     .issue-item {
@@ -245,153 +295,77 @@ const sizeMap = {
       border: 1px solid var(--border-color);
       border-radius: 4px;
       margin-bottom: 10px;
+      background-color: var(--bg-hover);
     }
 
     .issue-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 5px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .issue-title {
+      font-weight: 500;
+      color: var(--text-primary);
     }
 
     .issue-severity {
+      font-size: 0.875rem;
       padding: 2px 6px;
       border-radius: 4px;
-      font-size: 14px;
+      background-color: var(--primary);
+      color: white;
     }
 
-    .critical {
+    .issue-severity.critical {
       background-color: var(--error);
-      color: white;
     }
 
-    .major {
-      background-color: var(--warning);
-      color: black;
+    .issue-severity.major {
+      background-color: #f59e0b;
     }
 
-    .minor {
-      background-color: var(--info);
-      color: white;
+    .issue-severity.minor {
+      background-color: #6b7280;
     }
 
-    .issue-actions {
-      margin-top: 10px;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    @keyframes loading {
-      0% {
-        background-position: 200% 0;
-      }
-      100% {
-        background-position: -200% 0;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .compatibility-log {
-        grid-template-columns: 1fr;
-      }
+    .issue-description {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.5;
     }
   </style>
 </ChatLayout>
 
 <script>
-  // Define the issue type
-  interface Issue {
-    browser: string
-    component: string
-    issue: string
-    severity: string
-    timestamp: string
+  import { addIssue, removeIssue, displayIssues } from '../../utils/compatibility-testing'
+  import type { CompatibilityIssue } from '../../types/testing'
+
+  // Initialize the issues array in localStorage if it doesn't exist
+  if (!localStorage.getItem('compatibility-issues')) {
+    localStorage.setItem('compatibility-issues', '[]')
   }
 
-  // Client-side script to handle form submission and display issues
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('compatibility-form') as HTMLFormElemen
-    const issuesContainer = document.getElementById(
-      'issues-container',
-    ) as HTMLDivElemen
+  // Form submission handler
+  const form = document.getElementById('compatibility-form') as HTMLFormElement
+  form?.addEventListener('submit', (e: SubmitEvent) => {
+    e.preventDefault()
+    const formElement = e.target as HTMLFormElement
+    const formData = new FormData(formElement)
 
-    if (!form || !issuesContainer) {
-      console.error('Required elements not found')
-      return
+    const issue: CompatibilityIssue = {
+      browser: formData.get('browser') as string,
+      component: formData.get('component') as string,
+      description: formData.get('issue') as string,
+      severity: formData.get('severity') as 'critical' | 'major' | 'minor',
+      timestamp: new Date().toISOString()
     }
 
-    // Load existing issues from localStorage
-    const loadIssues = () => {
-      const issues = JSON.parse(
-        localStorage.getItem('compatibility-issues') || '[]',
-      )
-      if (issues.length === 0) {
-        issuesContainer.innerHTML = '<p>No issues reported yet.</p>'
-        return
-      }
-
-      issuesContainer.innerHTML = ''
-      issues.forEach((issue: Issue, index: number) => {
-        const issueElement = document.createElement('div')
-        issueElement.className = 'issue-item'
-        issueElement.innerHTML = `
-          <div class="issue-header">
-            <span class="issue-browser">${issue.browser}</span>
-            <span class="issue-component">${issue.component}</span>
-            <span class="issue-severity ${issue.severity}">${issue.severity}</span>
-          </div>
-          <div class="issue-body">
-            <p>${issue.issue}</p>
-          </div>
-          <div class="issue-actions">
-            <button class="btn btn-sm btn-danger delete-issue" data-index="${index}">Delete</button>
-          </div>
-        `
-        issuesContainer.appendChild(issueElement)
-      })
-
-      // Add event listeners to delete buttons
-      document.querySelectorAll('.delete-issue').forEach((button) => {
-        button.addEventListener('click', (e) => {
-          const target = e.currentTarget as HTMLElemen
-          if (!target) return
-
-          const index = parseInt(target.getAttribute('data-index') || '0')
-          const issues = JSON.parse(
-            localStorage.getItem('compatibility-issues') || '[]',
-          )
-          issues.splice(index, 1)
-          localStorage.setItem('compatibility-issues', JSON.stringify(issues))
-          loadIssues()
-        })
-      })
-    }
-
-    // Handle form submission
-    form.addEventListener('submit', (e) => {
-      e.preventDefault()
-
-      const formData = new FormData(form)
-      const issue = {
-        browser: formData.get('browser'),
-        component: formData.get('component'),
-        issue: formData.get('issue'),
-        severity: formData.get('severity'),
-        timestamp: new Date().toISOString(),
-      }
-
-      // Save to localStorage
-      const issues = JSON.parse(
-        localStorage.getItem('compatibility-issues') || '[]',
-      )
-      issues.push(issue)
-      localStorage.setItem('compatibility-issues', JSON.stringify(issues))
-
-      // Reset form and reload issues
-      form.reset()
-      loadIssues()
-    })
-
-    // Load issues on page load
-    loadIssues()
+    addIssue(issue)
+    formElement.reset()
   })
+
+  // Initial display of issues
+  displayIssues()
 </script>

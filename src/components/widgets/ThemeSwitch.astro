@@ -70,7 +70,7 @@
 
     /* Handle user toggle button */
     const handleToggle = (event: MouseEvent) => {
-      const currentTarget = event.currentTarge
+      const currentTarget = event.currentTarget
 
       const toggle = () => {
         document.documentElement.classList.toggle('dark')
@@ -81,8 +81,7 @@
       }
 
       const isAppearanceTransition =
-        //   (View Transitions API)
-        document.startViewTransition &&
+        typeof document.startViewTransition === 'function' &&
         !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
       if (!isAppearanceTransition) {
@@ -97,7 +96,6 @@
         Math.max(y, innerHeight - y),
       )
 
-      //   (View Transitions API)
       const transition = document.startViewTransition(() => toggle())
 
       transition.ready.then(() => {

@@ -13,7 +13,7 @@ import { atUriToPostUri } from 'astro-loader-bluesky-posts'
 
 // Define the types for Bluesky embed views
 type AppBskyEmbedImagesView = ReturnType<typeof AppBskyEmbedImages.isView> & {
-  images: { thumb: string; alt: string }[]
+  images: { thumb: string, alt: string }[]
 }
 
 type AppBskyEmbedVideoView = ReturnType<typeof AppBskyEmbedVideo.isView> & {
@@ -100,7 +100,7 @@ interface BlueskyReply {
 
 // Custom interface for the highlights data structure
 interface HighlightDataWithBluesky {
-  post?: BlueskyPos
+  post?: BlueskyPost
   replies?: BlueskyReply[]
 }
 
@@ -109,7 +109,7 @@ interface HighlightDataWithBluesky {
 export interface HighlightData {
   projects?: Record<
     string,
-    { name: string; link: string; desc: string; icon: string }[]
+    { name: string, link: string, desc: string, icon: string }[]
   >
 }
 
@@ -133,7 +133,8 @@ export function matchLogo(
       if (input === pattern) {
         return logo
       }
-    } else if (pattern instanceof RegExp) {
+    }
+    else if (pattern instanceof RegExp) {
       if (pattern.test(input)) {
         return logo
       }
@@ -147,7 +148,8 @@ export function matchLogo(
  */
 export function extractPackageName(tagName: string) {
   const match = tagName.match(/(^@?[^@]+)@/)
-  if (match) return match[1]
+  if (match)
+    return match[1]
   return tagName
 }
 
@@ -157,7 +159,8 @@ export function extractPackageName(tagName: string) {
 export function extractVersionNum(tagName: string) {
   // Use a more specific pattern to avoid backtracking
   const match = tagName.match(/^\D*(\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)/i)
-  if (match) return match[1]
+  if (match)
+    return match[1]
   return tagName
 }
 
@@ -183,11 +186,14 @@ export function processVersion(
 
   if (highlightedIndex === 0) {
     versionType = 'major'
-  } else if (highlightedIndex === 2) {
+  }
+  else if (highlightedIndex === 2) {
     versionType = 'minor'
-  } else if (highlightedIndex === 4) {
+  }
+  else if (highlightedIndex === 4) {
     versionType = 'patch'
-  } else {
+  }
+  else {
     versionType = 'pre'
   }
 
@@ -210,11 +216,12 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
 
       // Skip if post is undefined
       if (!post) {
+        // Log a warning message
         console.warn('Skipping undefined post')
         continue
       }
 
-      const { indexedAt, html, link, embed, author } = pos
+      const { indexedAt, html, link, embed, author } = post
 
       // Skip if required fields are missing
       if (!indexedAt || !html || !link || !author) {
@@ -232,7 +239,7 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
         if (AppBskyEmbedImages.isView(embed)) {
           const typedEmbed = embed as unknown as AppBskyEmbedImagesView
           card.images = typedEmbed.images.map(
-            (img: { thumb: string; alt: string }) => ({
+            (img: { thumb: string, alt: string }) => ({
               src: img.thumb,
               alt: img.alt,
             }),
@@ -286,7 +293,7 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
             if (AppBskyEmbedImages.isView(media)) {
               const typedMedia = media as unknown as AppBskyEmbedImagesView
               card.images = typedMedia.images.map(
-                (img: { thumb: string; alt: string }) => ({
+                (img: { thumb: string, alt: string }) => ({
                   src: img.thumb,
                   alt: img.alt,
                 }),
@@ -314,8 +321,8 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
           }
 
           if (
-            record?.record &&
-            AppBskyEmbedRecord.isViewRecord(record.record)
+            record?.record
+            && AppBskyEmbedRecord.isViewRecord(record.record)
           ) {
             const { uri, value, author: recordAuthor } = record.record
 
@@ -340,11 +347,12 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
           .filter(
             (reply): reply is { html: string } => reply?.html !== undefined,
           )
-          .map((reply) => reply.html)
+          .map(reply => reply.html)
       }
 
       cards.push(card)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error processing Bluesky post:', error)
       continue
     }
@@ -374,7 +382,7 @@ export function validateId(id: string): boolean {
   return ALPHANUMERIC_ID_PATTERN.test(id)
 }
 
-export interface CardItemData {
+export interface ExampleCardData {
   title: string
   description?: string
   image?: string
@@ -384,7 +392,7 @@ export interface CardItemData {
   author?: string
 }
 
-export function getCardData(): CardItemData[] {
+export function getCardData(): ExampleCardData[] {
   return [
     {
       title: 'Example Card',
