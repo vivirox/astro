@@ -4,7 +4,8 @@
  * Provides token creation and validation functions for export integrity
  */
 
-import { Buffer } from 'node:buffer'
+// Use browser-compatible base64 encoding/decoding instead of Node.js Buffer
+
 import { getLogger } from '../logging'
 
 const logger = getLogger()
@@ -24,7 +25,9 @@ export function createSignedVerificationToken(payload: unknown): string {
       exp: timestamp + 3600000, // 1 hour expiration
     }
 
-    const encodedToken = Buffer.from(JSON.stringify(token)).toString('base64')
+    // Use btoa for browser compatibility instead of Buffer
+    const jsonString = JSON.stringify(token)
+    const encodedToken = btoa(jsonString)
     return encodedToken
   } catch (error) {
     logger.error('Failed to create verification token', { error })
@@ -40,8 +43,8 @@ export function createSignedVerificationToken(payload: unknown): string {
  */
 export function verifyToken(token: string): unknown | null {
   try {
-    // Decode token
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString())
+    // Use atob for browser compatibility instead of Buffer
+    const decoded = JSON.parse(atob(token))
 
     // Check expiration
     if (decoded.exp < Date.now()) {

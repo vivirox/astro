@@ -45,8 +45,8 @@ export const GET: APIRoute = async () => {
 
     // Check memory usage
     const memoryUsage = process.memoryUsage()
-    const usedMemoryPercentage
-      = (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
+    const usedMemoryPercentage =
+      (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
 
     if (error) {
       return new Response(
@@ -102,8 +102,7 @@ export const GET: APIRoute = async () => {
         },
       },
     )
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Health check failed:', error)
 
     return new Response(

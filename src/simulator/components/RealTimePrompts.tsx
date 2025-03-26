@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { getTherapeuticPrompts } from '../utils/speechRecognition';
-import { cn } from '../../lib/utils';
+import React, { useEffect, useState } from 'react'
+import { getTherapeuticPrompts } from '../utils/speechRecognition'
+import { cn } from '../../lib/utils'
 
 interface RealTimePromptsProps {
-  detectedKeywords: string[];
-  domain?: string;
-  className?: string;
-  maxPrompts?: number;
-  onPromptClick?: (prompt: string) => void;
+  detectedKeywords: string[]
+  domain?: string
+  className?: string
+  maxPrompts?: number
+  onPromptClick?: (prompt: string) => void
 }
 
 /**
@@ -19,53 +19,55 @@ export default function RealTimePrompts({
   domain = 'general',
   className = '',
   maxPrompts = 3,
-  onPromptClick
+  onPromptClick,
 }: RealTimePromptsProps) {
-  const [prompts, setPrompts] = useState<string[]>([]);
-  const [selectedPrompt, setSelectedPrompt] = useState<number | null>(null);
+  const [prompts, setPrompts] = useState<string[]>([])
+  const [selectedPrompt, setSelectedPrompt] = useState<number | null>(null)
 
   // Generate prompts when keywords change
   useEffect(() => {
     if (detectedKeywords.length > 0) {
       // Get prompts based on the keywords
-      const newPrompts = getTherapeuticPrompts(detectedKeywords, domain);
+      const newPrompts = getTherapeuticPrompts(detectedKeywords, domain)
 
       // Only update if we have new prompts
       if (newPrompts.length > 0) {
-        setPrompts(prev => {
+        setPrompts((prev) => {
           // Combine with existing prompts but avoid duplicates
-          const combined = [...newPrompts, ...prev];
-          const unique = [...new Set(combined)];
+          const combined = [...newPrompts, ...prev]
+          const unique = [...new Set(combined)]
 
           // Limit to max number of prompts
-          return unique.slice(0, maxPrompts);
-        });
+          return unique.slice(0, maxPrompts)
+        })
       }
     }
-  }, [detectedKeywords, domain, maxPrompts]);
+  }, [detectedKeywords, domain, maxPrompts])
 
   // Handle prompt selection
   const handlePromptClick = (prompt: string, index: number) => {
-    setSelectedPrompt(index);
+    setSelectedPrompt(index)
     if (onPromptClick) {
-      onPromptClick(prompt);
+      onPromptClick(prompt)
     }
-  };
+  }
 
   // If no prompts, show a placeholder
   if (prompts.length === 0) {
     return (
-      <div className={cn(
-        "mt-2 p-3 rounded-md bg-gray-50 text-gray-400 text-sm italic border border-gray-200",
-        className
-      )}>
+      <div
+        className={cn(
+          'mt-2 p-3 rounded-md bg-gray-50 text-gray-400 text-sm italic border border-gray-200',
+          className,
+        )}
+      >
         Suggested therapeutic prompts will appear here as you speak...
       </div>
-    );
+    )
   }
 
   return (
-    <div className={cn("mt-2", className)}>
+    <div className={cn('mt-2', className)}>
       <div className="text-sm font-medium text-gray-700 mb-2">
         Suggested Therapeutic Responses:
       </div>
@@ -74,10 +76,10 @@ export default function RealTimePrompts({
           <div
             key={index}
             className={cn(
-              "p-3 rounded-md border text-sm cursor-pointer transition-colors",
+              'p-3 rounded-md border text-sm cursor-pointer transition-colors',
               selectedPrompt === index
-                ? "bg-blue-50 border-blue-200 text-blue-700"
-                : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+                ? 'bg-blue-50 border-blue-200 text-blue-700'
+                : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50',
             )}
             onClick={() => handlePromptClick(prompt, index)}
           >
@@ -86,5 +88,5 @@ export default function RealTimePrompts({
         ))}
       </div>
     </div>
-  );
+  )
 }

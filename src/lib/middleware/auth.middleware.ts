@@ -4,7 +4,7 @@ import type { AuthRole } from '../../config/auth.config'
 import type { AuditMetadata, AuditResource } from '../audit/types'
 import type { AuthUser } from '../auth'
 import { authConfig, hasRolePrivilege } from '../../config/auth.config'
-import { createAuditLog } from '../audit/log'
+import { createResourceAuditLog } from '../audit/log'
 import { getCurrentUser } from '../auth'
 
 // Define locals interface for Astro context
@@ -17,7 +17,7 @@ interface APIContextWithUser extends APIContext {
   locals: AstroLocals
 }
 
-// Helper function to create resource objec
+// Helper function to create resource object
 function createResource(id: string, type: string): AuditResource {
   return { id, type }
 }
@@ -31,7 +31,7 @@ export async function authGuard(
   const user = await getCurrentUser(context.cookies)
 
   if (!user) {
-    await createAuditLog(
+    await createResourceAuditLog(
       'route_access_denied',
       'system',
       createResource(new URL(context.request.url).pathname, 'route'),
@@ -72,7 +72,7 @@ export function roleGuard(role: AuthRole) {
     const user = await getCurrentUser(context.cookies)
 
     if (!user) {
-      await createAuditLog(
+      await createResourceAuditLog(
         'route_access_denied',
         'system',
         createResource(new URL(context.request.url).pathname, 'route'),
@@ -103,7 +103,7 @@ export function roleGuard(role: AuthRole) {
     const hasRequiredRole = hasRolePrivilege(user.role, role)
 
     if (!hasRequiredRole) {
-      await createAuditLog(
+      await createResourceAuditLog(
         'route_access_denied',
         'system',
         createResource(new URL(context.request.url).pathname, 'route'),
@@ -152,7 +152,7 @@ export async function apiAuthGuard(
   // Check for Authorization header (Bearer token)
   const authHeader = request.headers.get('Authorization')
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    await createAuditLog(
+    await createResourceAuditLog(
       'api_access_denied',
       'system',
       createResource(new URL(request.url).pathname, 'api'),
@@ -188,7 +188,7 @@ export async function apiAuthGuard(
   ).then((rest) => rest.json())
 
   if (error || !data?.user) {
-    await createAuditLog(
+    await createResourceAuditLog(
       'api_access_denied',
       'system',
       createResource(new URL(request.url).pathname, 'api'),
@@ -213,7 +213,7 @@ export async function apiAuthGuard(
   context.user = data.user as AuthUser
 
   // Log the successful authentication
-  await createAuditLog(
+  await createResourceAuditLog(
     'api_authenticated',
     data.user.id,
     createResource(new URL(request.url).pathname, 'api'),
@@ -246,7 +246,7 @@ export function apiRoleGuard(role: AuthRole) {
 
     // Check if the user has the required role
     if (!hasRolePrivilege(user.role, role)) {
-      await createAuditLog(
+      await createResourceAuditLog(
         'api_access_denied',
         user.id,
         createResource(new URL(request.url).pathname, 'api'),

@@ -233,13 +233,18 @@ export async function logAuditEvent(
   resourceType: string,
   details?: Record<string, unknown>,
 ): Promise<void> {
-  await createAuditLog(action, userId, resourceId, resourceType, details)
+  await createResourceAuditLog(
+    action,
+    userId,
+    { id: resourceId, type: resourceType },
+    details || {},
+  )
 }
 
 /**
  * Creates an audit log entry
  */
-export async function createAuditLog(
+export async function createResourceAuditLog(
   action: string,
   userId: string,
   resource: AuditResource,

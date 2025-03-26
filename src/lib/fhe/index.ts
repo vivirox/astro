@@ -92,7 +92,7 @@ const DEFAULT_CONFIG: FHEConfig = {
 // This service provides APIs for encrypting, processing, and decrypting data
 // while preserving privacy through fully homomorphic encryption
 
-class FHEService {
+export class FHEService {
   private static instance: FHEService
   private initialized = false
   private config: FHEConfig

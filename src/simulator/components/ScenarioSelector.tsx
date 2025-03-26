@@ -1,62 +1,81 @@
-import React, { useState, useMemo } from 'react';
-import { Scenario, TherapeuticDomain, ScenarioDifficulty, ScenarioSelectorProps } from '../types';
-import { getAllScenarios } from '../data/scenarios';
+import React, { useState, useMemo } from 'react'
+import {
+  Scenario,
+  TherapeuticDomain,
+  ScenarioDifficulty,
+  ScenarioSelectorProps,
+} from '../types'
+import { getAllScenarios } from '../data/scenarios'
 
 /**
  * Component for selecting scenarios to practice
  * Provides filtering options by domain and difficulty
  */
 export function ScenarioSelector({ onSelectScenario }: ScenarioSelectorProps) {
-  const [selectedDomain, setSelectedDomain] = useState<string>('all');
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedDomain, setSelectedDomain] = useState<string>('all')
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState<string>('')
 
   // Get all available scenarios
-  const allScenarios = useMemo(() => getAllScenarios(), []);
+  const allScenarios = useMemo(() => getAllScenarios(), [])
 
   // Filter scenarios based on selected filters
   const filteredScenarios = useMemo(() => {
-    return allScenarios.filter(scenario => {
+    return allScenarios.filter((scenario) => {
       // Filter by domain if selected
-      const domainMatch = selectedDomain === 'all' || scenario.domain === selectedDomain;
+      const domainMatch =
+        selectedDomain === 'all' || scenario.domain === selectedDomain
 
       // Filter by difficulty if selected
-      const difficultyMatch = selectedDifficulty === 'all' || scenario.difficulty === selectedDifficulty;
+      const difficultyMatch =
+        selectedDifficulty === 'all' ||
+        scenario.difficulty === selectedDifficulty
 
       // Filter by search query
-      const searchMatch = searchQuery === '' ||
+      const searchMatch =
+        searchQuery === '' ||
         scenario.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        scenario.description.toLowerCase().includes(searchQuery.toLowerCase());
+        scenario.description.toLowerCase().includes(searchQuery.toLowerCase())
 
-      return domainMatch && difficultyMatch && searchMatch;
-    });
-  }, [allScenarios, selectedDomain, selectedDifficulty, searchQuery]);
+      return domainMatch && difficultyMatch && searchMatch
+    })
+  }, [allScenarios, selectedDomain, selectedDifficulty, searchQuery])
 
   // Get unique domains for filter dropdown
   const domains = useMemo(() => {
-    const uniqueDomains = new Set(allScenarios.map(scenario => scenario.domain));
-    return Array.from(uniqueDomains);
-  }, [allScenarios]);
+    const uniqueDomains = new Set(
+      allScenarios.map((scenario) => scenario.domain),
+    )
+    return Array.from(uniqueDomains)
+  }, [allScenarios])
 
   // Get unique difficulties for filter dropdown
   const difficulties = useMemo(() => {
-    const uniqueDifficulties = new Set(allScenarios.map(scenario => scenario.difficulty));
-    return Array.from(uniqueDifficulties);
-  }, [allScenarios]);
+    const uniqueDifficulties = new Set(
+      allScenarios.map((scenario) => scenario.difficulty),
+    )
+    return Array.from(uniqueDifficulties)
+  }, [allScenarios])
 
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Select a Practice Scenario</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+          Select a Practice Scenario
+        </h2>
         <p className="text-gray-600">
-          Choose a scenario to practice your therapeutic skills. All interactions are processed in real-time with zero data retention.
+          Choose a scenario to practice your therapeutic skills. All
+          interactions are processed in real-time with zero data retention.
         </p>
       </div>
 
       {/* Filters */}
       <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label htmlFor="domain-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="domain-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Therapeutic Domain
           </label>
           <select
@@ -75,7 +94,10 @@ export function ScenarioSelector({ onSelectScenario }: ScenarioSelectorProps) {
         </div>
 
         <div>
-          <label htmlFor="difficulty-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="difficulty-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Difficulty Level
           </label>
           <select
@@ -94,7 +116,10 @@ export function ScenarioSelector({ onSelectScenario }: ScenarioSelectorProps) {
         </div>
 
         <div>
-          <label htmlFor="search-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="search-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Search Scenarios
           </label>
           <input
@@ -120,38 +145,50 @@ export function ScenarioSelector({ onSelectScenario }: ScenarioSelectorProps) {
           ))
         ) : (
           <div className="col-span-2 p-6 text-center bg-gray-50 rounded-lg">
-            <p className="text-gray-500">No scenarios found matching your filters.</p>
+            <p className="text-gray-500">
+              No scenarios found matching your filters.
+            </p>
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }
 
 // Helper component for displaying a scenario card
-function ScenarioCard({ scenario, onSelect }: { scenario: Scenario; onSelect: () => void }) {
+function ScenarioCard({
+  scenario,
+  onSelect,
+}: {
+  scenario: Scenario
+  onSelect: () => void
+}) {
   // Function to get appropriate color based on difficulty
   const getDifficultyColor = (difficulty: ScenarioDifficulty) => {
     switch (difficulty) {
       case ScenarioDifficulty.BEGINNER:
-        return 'text-green-700 bg-green-100';
+        return 'text-green-700 bg-green-100'
       case ScenarioDifficulty.INTERMEDIATE:
-        return 'text-yellow-700 bg-yellow-100';
+        return 'text-yellow-700 bg-yellow-100'
       case ScenarioDifficulty.ADVANCED:
-        return 'text-orange-700 bg-orange-100';
+        return 'text-orange-700 bg-orange-100'
       case ScenarioDifficulty.EXPERT:
-        return 'text-red-700 bg-red-100';
+        return 'text-red-700 bg-red-100'
       default:
-        return 'text-gray-700 bg-gray-100';
+        return 'text-gray-700 bg-gray-100'
     }
-  };
+  }
 
   return (
     <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-800">{scenario.title}</h3>
-          <span className={`px-2 py-1 rounded-md text-xs font-medium ${getDifficultyColor(scenario.difficulty)}`}>
+          <h3 className="text-lg font-semibold text-gray-800">
+            {scenario.title}
+          </h3>
+          <span
+            className={`px-2 py-1 rounded-md text-xs font-medium ${getDifficultyColor(scenario.difficulty)}`}
+          >
             {scenario.difficulty}
           </span>
         </div>
@@ -174,5 +211,5 @@ function ScenarioCard({ scenario, onSelect }: { scenario: Scenario; onSelect: ()
         </div>
       </div>
     </div>
-  );
+  )
 }

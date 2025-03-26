@@ -1,4 +1,5 @@
 ---
+/// <reference path="../types/astro.d.ts" />
 import '@unocss/reset/tailwind.css'
 import '@/styles/main.css'
 import '@/styles/prose.css'
@@ -20,6 +21,9 @@ import { UI, FEATURES } from '@/config'
 
 import type { BgType } from '@/types'
 
+// Import global JSX declarations to fix TypeScript errors
+import '../types/astro-jsx.d.ts'
+
 interface Props {
   title?: string
   description?: string
@@ -29,7 +33,8 @@ interface Props {
   lastModDate?: string
 }
 
-const { bgType } = Astro.props
+const { bgType, title, description, ogImage, pubDate, lastModDate } =
+  Astro.props
 
 let style: Record<string, string> = {}
 
@@ -45,25 +50,48 @@ const hasCustomCursor =
   newTab && cursorType.length > 0 && cursorType !== 'pointer'
 if (hasCustomCursor) style['--external-link-cursor'] = cursorType
 
-// Remove direct access to Astro.request.headers
+// Safely get current path without accessing headers directly
 const currentPath = Astro.url.pathname
+
+// Use type assertion to specify the structure of locals
+const locals = Astro.locals as {
+  isSSR?: boolean
+  isPrerendered?: boolean
+  userPreferences?: {
+    darkMode?: boolean
+    language?: string
+    userAgent?: string
+    isMobile?: boolean
+  }
+}
+
+// Set page data for client-side usage
+const pageData = {
+  isSSR: locals.isSSR === true,
+  isPrerendered: locals.isPrerendered === true,
+  darkMode: locals.userPreferences?.darkMode || false,
+  language: locals.userPreferences?.language || 'en-US',
+  userAgent: locals.userPreferences?.userAgent || '',
+  path: currentPath,
+  isMobile: locals.userPreferences?.isMobile || false,
+}
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-ssr={locals.isSSR} data-prerendered={locals.isPrerendered}>
   <head>
-    <Head
-      title={Astro.props.title}
-      description={Astro.props.description}
-      ogImage={Astro.props.ogImage}
-      pubDate={Astro.props.pubDate}
-      lastModDate={Astro.props.lastModDate}
-    />
+    <Head {title} {description} {ogImage} {pubDate} {lastModDate} />
     <script
       src="https://cdn.peasy.so/peasy.js"
       data-website-id="01jq3eyvd9by7mkcx6dq4a77n3"
       async></script>
     <Monitoring />
+
+    <!-- Pass page data to client-side scripts -->
+    <script define:vars={{ pageData }}>
+      // Make page data available to all client scripts
+      window.pageData = pageData
+    </script>
   </head>
 
   <body
@@ -72,7 +100,7 @@ const currentPath = Astro.url.pathname
     style={Object.keys(style).length !== 0 ? style : undefined}
     data-no-sliding={!enableSlideEnterAnim ? true : undefined}
   >
-    <!-- Browser Info - Avoid using Astro.request.headers in prerendered pages -->
+    <!-- Browser Info component - uses client-side detection instead of headers -->
     <BrowserInfo />
 
     <!-- Background -->

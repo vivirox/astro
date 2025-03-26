@@ -1,4 +1,5 @@
-import { AuditEventType, createAuditLog } from '../audit'
+import { AuditEventType } from '../audit'
+import { createResourceAuditLog } from '../audit/log'
 import { supabase } from '../db/supabase'
 
 export interface PerformanceMetric {
@@ -39,12 +40,12 @@ export async function trackPerformance(
     })
 
     // Log audit event for tracking purposes
+    // Only log if user_id is provided
     if (metric.user_id) {
-      await createAuditLog(
+      await createResourceAuditLog(
         AuditEventType.AI_OPERATION,
-        'track_ai_performance',
         metric.user_id,
-        'ai_service',
+        { id: 'ai_service', type: 'ai' },
         {
           model: metric.model,
           success: metric.success,

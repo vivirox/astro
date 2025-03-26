@@ -72,8 +72,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } },
     )
-  }
-  catch (error) {
+  } catch (error) {
     getLogger().error(`Key rotation API error: ${(error as Error).message}`)
 
     return new Response(

@@ -320,10 +320,18 @@ export class AdminService {
       // Extract token from cookies
       const tokenFromCookie = astro.cookies.get('token')?.value
 
-      // Only attempt to access headers if we're in a server context
-      // This prevents errors in prerendered pages
+      // Use locals.headers when available (set by middleware)
+      // Or fallback to direct headers access in SSR context only
       let tokenFromHeader: string | undefined
-      if (import.meta.env.SSR) {
+
+      if (astro.locals.headers?.authorization) {
+        // Use the headers from locals (safer approach)
+        tokenFromHeader = astro.locals.headers.authorization.replace(
+          'Bearer ',
+          '',
+        )
+      } else if (import.meta.env.SSR && astro.request.headers) {
+        // Fallback to direct header access only in SSR context
         tokenFromHeader = astro.request.headers
           .get('Authorization')
           ?.replace('Bearer ', '')

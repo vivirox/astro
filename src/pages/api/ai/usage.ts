@@ -104,8 +104,7 @@ export const GET: APIRoute = async ({ request }) => {
         'Cache-Control': 'private, max-age=60', // Cache for 1 minute
       },
     })
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error in AI usage API:', error)
 
     // Create audit log for the error

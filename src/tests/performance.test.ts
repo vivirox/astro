@@ -88,7 +88,7 @@ interface EvaluatedMetrics {
   resourceSize: number
 }
 
-// Pages to tes
+// Pages to test
 const TEST_PAGES = [
   { path: '/', name: 'Home Page' },
   { path: '/app/dashboard', name: 'Dashboard' },
@@ -96,7 +96,7 @@ const TEST_PAGES = [
   { path: '/app/settings', name: 'Settings' },
 ]
 
-// API endpoints to tes
+// API endpoints to test
 const API_ENDPOINTS = [
   {
     path: '/api/ai/completion',
@@ -199,7 +199,7 @@ describe('performance Tests', () => {
         )
 
         // Get FCP
-        const firstContentfulPain
+        const firstContentfulPaint
           = paintEntries.find(entry => entry.name === 'first-contentful-paint')
             ?.startTime || 0
 
@@ -207,7 +207,7 @@ describe('performance Tests', () => {
           // Core Web Vitals
           LCP: lcpEntry.startTime,
           CLS: cumulativeLayoutShift,
-          // We'll measure FID through interaction in a separate tes
+          // We'll measure FID through interaction in a separate test
 
           // Additional metrics
           FCP: firstContentfulPaint,
@@ -271,7 +271,7 @@ describe('performance Tests', () => {
       // Wait for the page to be fully interactive
       await page.waitForTimeout(500)
 
-      // Find a clickable elemen
+      // Find a clickable element
       const button = await page.$('button, a, input, [role="button"]')
 
       if (button) {
@@ -302,7 +302,7 @@ describe('performance Tests', () => {
         // Store result
         results.pages[name].FID = inputDelay
 
-        // Asser
+        // Assert
         expect(inputDelay).toBeLessThan(PERFORMANCE_THRESHOLDS.FID)
       }
       else {
@@ -363,10 +363,10 @@ describe('performance Tests', () => {
       results.api[path] = {
         method,
         responseTime: apiResponseTime,
-        status: response?.status,
+        status: response?.status ?? 0,
       }
 
-      // Asser
+      // Assert
       expect(apiResponseTime).toBeLessThan(
         PERFORMANCE_THRESHOLDS.apiResponseTime,
       )
@@ -376,7 +376,7 @@ describe('performance Tests', () => {
     })
   })
 
-  // Historical comparison tes
+  // Historical comparison test
   it('performance regression test', async () => {
     const resultsDir = join(process.cwd(), 'performance-results')
 
@@ -431,12 +431,13 @@ describe('performance Tests', () => {
         }
       }
     }
-    catch (_err) {
-      // First run or other error, skip comparison
-      console.log('No previous performance results to compare with.')
+    catch (err) {
+      console.error('Error in performance regression test:', err)
+      throw err
     }
   })
 })
+
 export async function simulateUserInteraction(page: Page) {
   // Simulate scrolling
   await page.evaluate(() => {
@@ -444,7 +445,7 @@ export async function simulateUserInteraction(page: Page) {
   })
   await page.waitForTimeout(200)
 
-  // Find and click an interactive elemen
+  // Find and click an interactive element
   const button = await page.$('button:not([disabled]), a:not([disabled])')
   if (button) {
     await button.click()

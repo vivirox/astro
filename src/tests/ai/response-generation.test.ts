@@ -47,8 +47,8 @@ describe('responseGenerationService', () => {
         { role: 'user', content: 'Hello, how are you?', name: 'user' },
       ]
 
-      const result
-        = await responseService.generateResponseFromMessages(messages)
+      const result =
+        await responseService.generateResponseFromMessages(messages)
 
       // Verify the result
       expect(result).toEqual({
@@ -206,7 +206,7 @@ describe('responseGenerationService', () => {
         { role: 'user', content: 'Hello, how are you?', name: 'user' },
         {
           role: 'assistant',
-          content: 'I\'m doing well, thank you! How can I help you today?',
+          content: "I'm doing well, thank you! How can I help you today?",
           name: 'assistant',
         },
         {
@@ -276,8 +276,7 @@ describe('responseGenerationService', () => {
             next: async () => {
               if (index < chunks.length) {
                 return { done: false, value: chunks[index++] }
-              }
-              else {
+              } else {
                 return { done: true, value: undefined }
               }
             },

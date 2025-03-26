@@ -135,7 +135,7 @@ const scenarios: Scenario[] = [
       'Create space for grief emotions while building windows of tolerance',
       'Explore how avoiding grief is impacting current functioning',
       'Identify small steps toward re-engagement with meaningful life activities',
-      'Discuss what honoring their spouse's memory means in the context of creating a new life'
+      'Discuss what honoring their spouse\'s memory means in the context of creating a new life'
     ]
   },
   {

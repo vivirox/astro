@@ -6,12 +6,13 @@
  */
 
 import type { FHEOperation, HomomorphicOperationResult } from './fhe/types'
-import { Buffer } from 'node:buffer'
+// Import process properly
 import process from 'node:process'
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { fheService } from './fhe'
 import { EncryptionMode } from './fhe/types'
+
 import { getLogger } from './logging'
 
 // Initialize logger
@@ -45,7 +46,10 @@ interface EnhancedFHEService {
 const enhancedFHEService = fheService as unknown as EnhancedFHEService
 
 // Secret key for signatures
-const SECRET_KEY = process.env.SECRET_KEY || 'default-secret-key'
+const SECRET_KEY =
+  typeof process !== 'undefined' && process.env
+    ? process.env.SECRET_KEY || 'default-secret-key'
+    : 'default-secret-key'
 
 /**
  * Initialize security system
@@ -70,7 +74,10 @@ export async function initializeSecurity(): Promise<void> {
     // Set up other security features as needed
     logger.info('Security system initialized successfully')
   } catch (error) {
-    logger.error('Failed to initialize security system:', error)
+    const errorDetails: Record<string, unknown> = {
+      message: error instanceof Error ? error.message : String(error),
+    }
+    logger.error('Failed to initialize security system:', errorDetails)
     throw new Error(
       `Security initialization failed: ${error instanceof Error ? error.message : String(error)}`,
     )
@@ -97,10 +104,10 @@ export async function initializeEncryption(level = 'medium'): Promise<boolean> {
       enableDebug: process.env.NODE_ENV === 'development',
     })
 
-    // For FHE mode, also set up key managemen
+    // For FHE mode, also set up key management - fix typo and safely handle optional method
     if (
       encryptionMode === EncryptionMode.FHE &&
-      enhancedFHEService.setupKeyManagemen
+      enhancedFHEService.setupKeyManagement
     ) {
       const keyId = await enhancedFHEService.setupKeyManagement({
         rotationPeriodDays: 7,
@@ -115,7 +122,10 @@ export async function initializeEncryption(level = 'medium'): Promise<boolean> {
     )
     return true
   } catch (error) {
-    logger.error('Failed to initialize encryption:', error)
+    const errorDetails: Record<string, unknown> = {
+      message: error instanceof Error ? error.message : String(error),
+    }
+    logger.error('Failed to initialize encryption:', errorDetails)
     return false
   }
 }
@@ -128,7 +138,10 @@ export async function encryptMessage(message: string): Promise<string> {
     const encrypted = await enhancedFHEService.encrypt(message)
     return encrypted
   } catch (error) {
-    logger.error('Encryption error:', error)
+    const errorDetails: Record<string, unknown> = {
+      message: error instanceof Error ? error.message : String(error),
+    }
+    logger.error('Encryption error:', errorDetails)
     throw error
   }
 }
@@ -151,7 +164,10 @@ export async function decryptMessage(
 
     return decrypted
   } catch (error) {
-    logger.error('Decryption error:', error)
+    const errorDetails: Record<string, unknown> = {
+      message: error instanceof Error ? error.message : String(error),
+    }
+    logger.error('Decryption error:', errorDetails)
     throw error
   }
 }
@@ -182,7 +198,10 @@ export async function processEncryptedMessage(
     // Convert result to string format for return
     return result.result || JSON.stringify(result)
   } catch (error) {
-    logger.error('FHE operation error:', error)
+    const errorDetails: Record<string, unknown> = {
+      message: error instanceof Error ? error.message : String(error),
+    }
+    logger.error('FHE operation error:', errorDetails)
     throw error
   }
 }
@@ -203,7 +222,10 @@ export async function createVerificationToken(
     const data = `${message}:${timestamp}`
     return `${createSignature(data)}.${timestamp}`
   } catch (error) {
-    logger.error('Verification token generation error:', error)
+    const errorDetails: Record<string, unknown> = {
+      message: error instanceof Error ? error.message : String(error),
+    }
+    logger.error('Verification token generation error:', errorDetails)
     throw error
   }
 }
@@ -319,7 +341,10 @@ export function generateSecureToken(length = 32): string {
       )
     }
   } catch (error) {
-    logger.error('Token generation error:', error)
+    const errorDetails: Record<string, unknown> = {
+      message: error instanceof Error ? error.message : String(error),
+    }
+    logger.error('Token generation error:', errorDetails)
     return ''
   }
 }
@@ -340,14 +365,17 @@ export function createSignature(data: string): string {
         ),
       )
     } else {
-      // Node.js implementation - use dynamic import for build compatibility
-      // In an actual implementation, use a proper crypto library compatible with build
+      // Server-side implementation without Node.js Buffer
       const encoder = new TextEncoder()
       const dataWithKey = encoder.encode(data + SECRET_KEY)
-      return Buffer.from(dataWithKey).toString('base64')
+      // Convert Uint8Array to base64 string without using Buffer
+      return btoa(String.fromCharCode.apply(null, Array.from(dataWithKey)))
     }
   } catch (error) {
-    logger.error('Signature creation error:', error)
+    const errorDetails: Record<string, unknown> = {
+      message: error instanceof Error ? error.message : String(error),
+    }
+    logger.error('Signature creation error:', errorDetails)
     return ''
   }
 }
@@ -381,7 +409,8 @@ export function createSecureToken(
   }
 
   const dataString = JSON.stringify(tokenData)
-  const encodedData = Buffer.from(dataString).toString('base64')
+  // Use btoa instead of Buffer
+  const encodedData = btoa(dataString)
   const signature = createSignature(encodedData)
 
   return `${encodedData}.${signature}`
@@ -407,8 +436,8 @@ export function verifySecureToken(
       return null
     }
 
-    // Decode payload
-    const dataString = Buffer.from(encodedData, 'base64').toString()
+    // Decode payload using atob instead of Buffer
+    const dataString = atob(encodedData)
     const payload = JSON.parse(dataString)
 
     // Check expiration

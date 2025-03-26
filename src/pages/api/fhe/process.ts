@@ -8,13 +8,13 @@ import { rateLimit } from '@/lib/middleware/rate-limit'
 export const POST: APIRoute = async ({ request }) => {
   try {
     // Get client IP for rate limiting
-    const clientIp
-      = request.headers.get('x-forwarded-for')
-        || request.headers.get('cf-connecting-ip')
-        || 'anonymous'
+    const clientIp =
+      request.headers.get('x-forwarded-for') ||
+      request.headers.get('cf-connecting-ip') ||
+      'anonymous'
 
-    // Check rate limi
-    const rateLimitResult = rateLimit.check(clientIp, 'anonymous')
+    // Check rate limit
+    const rateLimitResult = await rateLimit.check(clientIp, 'anonymous')
 
     if (!rateLimitResult.allowed) {
       return new Response(
@@ -38,7 +38,7 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json()
     const { encryptedData, operation, params = {} } = body
 
-    // Validate inpu
+    // Validate input
     if (!encryptedData) {
       return new Response(
         JSON.stringify({
@@ -83,8 +83,7 @@ export const POST: APIRoute = async ({ request }) => {
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } },
     )
-  }
-  catch (error) {
+  } catch (error) {
     getLogger().error(`FHE API error: ${(error as Error).message}`)
 
     return new Response(

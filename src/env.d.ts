@@ -28,3 +28,21 @@ declare global {
         Partial<Record<AttributifyNames<Prefix>, string>> {}
   }
 }
+
+declare namespace App {
+  interface Locals {
+    headers: Record<string, string>
+    isPrerendered: boolean
+    isSSR: boolean
+    userPreferences: {
+      language: string
+      darkMode: boolean
+      reducedMotion: boolean
+      userAgent: string
+      ip: string
+      isIOS: boolean
+      isAndroid: boolean
+      isMobile: boolean
+    }
+  }
+}

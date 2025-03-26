@@ -34,7 +34,10 @@ export async function registerPIIDetection(
 
     logger.info('PII detection service registered and initialized')
   } catch (error) {
-    logger.error('Failed to register PII detection service', error)
+    logger.error(
+      'Failed to register PII detection service',
+      error as Record<string, unknown>,
+    )
     throw error
   }
 }
@@ -90,7 +93,7 @@ function getEnvironmentConfig(): Partial<PIIMiddlewareConfig> {
   if (process.env.NODE_ENV === 'test') {
     return {
       ...baseConfig,
-      // Disable blocking in tes
+      // Disable blocking in test
       blockRequests: false,
       // Disable auditing in test to avoid test pollution
       auditDetections: false,
@@ -120,7 +123,10 @@ export function registerPIIMiddleware(
 
     logger.info('PII detection middleware registered')
   } catch (error) {
-    logger.error('Failed to register PII detection middleware', error)
+    logger.error(
+      'Failed to register PII detection middleware',
+      error as Record<string, unknown>,
+    )
     throw error
   }
 }
@@ -142,7 +148,10 @@ export async function registerPIIDetectionSystem(
 
     logger.info('PII detection system registered and initialized')
   } catch (error) {
-    logger.error('Failed to register PII detection system', error)
+    logger.error(
+      'Failed to register PII detection system',
+      error as Record<string, unknown>,
+    )
     throw error
   }
 }

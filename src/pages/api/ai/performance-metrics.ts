@@ -52,15 +52,15 @@ export const GET: APIRoute = async ({ request, url }) => {
         p_model: model,
         p_limit: limit,
       })
-      .then(response => response.data)
+      .then((response) => response.data)
 
     if (error) {
       throw error
     }
 
     // Process and format the results
-    const metrics
-      = results?.map(
+    const metrics =
+      results?.map(
         (row: {
           date_trunc: string
           model: string
@@ -101,7 +101,7 @@ export const GET: APIRoute = async ({ request, url }) => {
         p_start_date: startDate.toISOString(),
         p_end_date: endDate.toISOString(),
       })
-      .then(response => response.data)
+      .then((response) => response.data)
 
     if (modelBreakdownError) {
       throw modelBreakdownError
@@ -113,7 +113,7 @@ export const GET: APIRoute = async ({ request, url }) => {
         p_start_date: startDate.toISOString(),
         p_end_date: endDate.toISOString(),
       })
-      .then(response => response.data)
+      .then((response) => response.data)
 
     if (errorBreakdownError) {
       throw errorBreakdownError
@@ -150,7 +150,7 @@ export const GET: APIRoute = async ({ request, url }) => {
           ) ?? [],
         errorBreakdown:
           errorBreakdown?.map(
-            (row: { error_code: string, error_count: number }) => ({
+            (row: { error_code: string; error_count: number }) => ({
               errorCode: row.error_code,
               count: Number(row.error_count),
             }),
@@ -163,8 +163,7 @@ export const GET: APIRoute = async ({ request, url }) => {
         },
       },
     )
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error fetching AI performance metrics:', error)
 
     return new Response(

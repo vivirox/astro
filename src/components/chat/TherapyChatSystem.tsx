@@ -7,7 +7,7 @@ import { clientScenarios } from '@/data/scenarios'
 import { useStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
 import { useEffect, useRef, useState } from 'react'
-import { AnalyticsDashboard } from './AnalyticsDashboard'
+import AnalyticsDashboard from './AnalyticsDashboard'
 import { ChatContainer } from './ChatContainer'
 import { MentalHealthInsights } from '@/components/MentalHealthInsights'
 import {

@@ -55,18 +55,18 @@ export async function GET({ request, cookies }: RequestContext) {
 
     // Filter by type
     if (
-      type
-      && type !== 'all'
-      && Object.values(SecurityEventType).includes(type as SecurityEventType)
+      type &&
+      type !== 'all' &&
+      Object.values(SecurityEventType).includes(type as SecurityEventType)
     ) {
       query = query.eq('type', type)
     }
 
     // Filter by severity
     if (
-      severity
-      && severity !== 'all'
-      && Object.values(SecurityEventSeverity).includes(
+      severity &&
+      severity !== 'all' &&
+      Object.values(SecurityEventSeverity).includes(
         severity as SecurityEventSeverity,
       )
     ) {
@@ -107,7 +107,7 @@ export async function GET({ request, cookies }: RequestContext) {
     }
 
     // Transform results to match the SecurityEvent interface
-    const events = (result || []).map(row => ({
+    const events = (result || []).map((row) => ({
       type: row.type,
       userId: row.user_id,
       ip: row.ip_address,
@@ -128,8 +128,7 @@ export async function GET({ request, cookies }: RequestContext) {
     return new Response(JSON.stringify(events), {
       headers: { 'Content-Type': 'application/json' },
     })
-  }
-  catch (error) {
+  } catch (error) {
     // Log error
     logger.error('Error fetching security events', {
       message: error instanceof Error ? error.message : String(error),

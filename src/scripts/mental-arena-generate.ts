@@ -14,16 +14,24 @@ import { program } from 'commander'
 import { promises as fs } from 'fs'
 import {
   MentalArenaFactory,
-  MentalArenaPythonBridge
+  MentalArenaPythonBridge,
 } from '../lib/ai/mental-arena'
 
 // Parse command line arguments
 program
   .option('-n, --num-sessions <number>', 'Number of sessions to generate', '10')
-  .option('-o, --output-path <path>', 'Output path for generated data', './data/mental-arena-synthetic.jsonl')
+  .option(
+    '-o, --output-path <path>',
+    'Output path for generated data',
+    './data/mental-arena-synthetic.jsonl',
+  )
   .option('-m, --model <name>', 'Base model to use', 'llama-3-8b-instruct')
   .option('-p, --python-path <path>', 'Path to Python executable', 'python')
-  .option('--use-python-bridge', 'Use Python bridge instead of TypeScript implementation', false)
+  .option(
+    '--use-python-bridge',
+    'Use Python bridge instead of TypeScript implementation',
+    false,
+  )
   .parse(process.argv)
 
 const options = program.opts()
@@ -45,7 +53,10 @@ async function main() {
       console.log('Using Python bridge implementation')
 
       const mentalArenaPath = path.join(process.cwd(), 'mental-arena')
-      const pythonBridge = new MentalArenaPythonBridge(mentalArenaPath, options.pythonPath)
+      const pythonBridge = new MentalArenaPythonBridge(
+        mentalArenaPath,
+        options.pythonPath,
+      )
 
       // Initialize (clone repo if needed)
       console.log('Initializing MentalArena Python environment...')
@@ -56,12 +67,11 @@ async function main() {
       await pythonBridge.generateData({
         baseModel: options.model,
         outputFile: options.outputPath,
-        numSessions: parseInt(options.numSessions)
+        numSessions: parseInt(options.numSessions),
       })
 
       console.log('Data generation complete!')
-    }
-    else {
+    } else {
       // Use TypeScript implementation
       console.log('Using TypeScript implementation')
 
@@ -74,20 +84,23 @@ async function main() {
         numSessions: parseInt(options.numSessions),
         maxTurns: 5,
         disorders: ['anxiety', 'depression', 'ptsd', 'adhd', 'ocd'],
-        outputPath: options.outputPath
+        outputPath: options.outputPath,
       })
 
       // Save data to file
-      const jsonlData = syntheticData.map(session => JSON.stringify(session)).join('\n')
+      const jsonlData = syntheticData
+        .map((session) => JSON.stringify(session))
+        .join('\n')
       await fs.writeFile(options.outputPath, jsonlData)
 
-      console.log(`Generated ${syntheticData.length} synthetic therapy sessions`)
+      console.log(
+        `Generated ${syntheticData.length} synthetic therapy sessions`,
+      )
       console.log(`Data saved to ${options.outputPath}`)
     }
 
     console.log('✅ Data generation complete')
-  }
-  catch (error) {
+  } catch (error) {
     console.error('❌ Error generating data:', error)
     process.exit(1)
   }

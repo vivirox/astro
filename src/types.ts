@@ -471,7 +471,7 @@ export interface Ui {
    *
    * Used in `src/components/base/NavBar.astro`.
    */
-  navBarLayout: NavBarLayou
+  navBarLayout: NavBarLayout
 
   /**
    * Enables and configures for tabs within a tabbed layout.

@@ -20,11 +20,9 @@ export class AuthService {
         password,
       })
 
-      if (error)
-        throw error
+      if (error) throw error
       return { user: this.mapToAuthUser(data.user), session: data.session }
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error signing in:', error)
       throw error
     }
@@ -42,11 +40,9 @@ export class AuthService {
         options: redirectTo ? { redirectTo } : undefined,
       })
 
-      if (error)
-        throw error
+      if (error) throw error
       return data
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error signing in with OAuth:', error)
       throw error
     }
@@ -73,11 +69,9 @@ export class AuthService {
         },
       })
 
-      if (error)
-        throw error
+      if (error) throw error
       return { user: this.mapToAuthUser(data.user), session: data.session }
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error signing up:', error)
       throw error
     }
@@ -89,11 +83,9 @@ export class AuthService {
   static async signOut() {
     try {
       const { error } = await supabase.auth.signOut()
-      if (error)
-        throw error
+      if (error) throw error
       return true
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error signing out:', error)
       throw error
     }
@@ -106,12 +98,10 @@ export class AuthService {
   static async getCurrentUser() {
     try {
       const { data } = await supabase.auth.getUser()
-      if (!data.user)
-        return null
+      if (!data.user) return null
 
       return this.mapToAuthUser(data.user)
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error getting current user:', error)
       return null
     }
@@ -128,11 +118,9 @@ export class AuthService {
         redirectTo,
       })
 
-      if (error)
-        throw error
+      if (error) throw error
       return true
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error resetting password:', error)
       throw error
     }
@@ -148,11 +136,9 @@ export class AuthService {
         password,
       })
 
-      if (error)
-        throw error
+      if (error) throw error
       return true
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error updating password:', error)
       throw error
     }
@@ -189,8 +175,7 @@ export class AuthService {
    * @returns AuthUser objec
    */
   private static mapToAuthUser(user: User): AuthUser {
-    if (!user)
-      return null
+    if (!user) return null
 
     return {
       id: user.id,
@@ -251,12 +236,10 @@ export class AuthService {
         user_metadata: updates.data,
       })
 
-      if (error)
-        throw error
+      if (error) throw error
 
       return { success: true }
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error updating profile:', error)
       return { error }
     }
@@ -287,16 +270,14 @@ export class AuthService {
           type: 'sms',
         })
 
-        if (error)
-          throw error
+        if (error) throw error
 
         return {
           success: true,
           user: data?.user ? this.mapToAuthUser(data.user) : null,
           session: data?.session || null,
         }
-      }
-      else {
+      } else {
         // For email-based verification types
         if (!params.email) {
           throw new Error('Email is required for email verification')
@@ -308,8 +289,7 @@ export class AuthService {
           type: params.type || 'recovery',
         })
 
-        if (error)
-          throw error
+        if (error) throw error
 
         return {
           success: true,
@@ -317,8 +297,7 @@ export class AuthService {
           session: data?.session || null,
         }
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error verifying OTP:', error)
       return { success: false, error }
     }

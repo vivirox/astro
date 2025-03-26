@@ -10,13 +10,13 @@ export {
   sanitizeText,
   cleanupTemporaryData,
   verifyPrivacySettings,
-  generateConsentForm
-} from './privacy';
+  generateConsentForm,
+} from './privacy'
 
 // Export scenario utilities
 export {
   getScenarios,
   getScenarioById,
   filterScenarios,
-  getRecommendedScenario
-} from './scenarios';
+  getRecommendedScenario,
+} from './scenarios'

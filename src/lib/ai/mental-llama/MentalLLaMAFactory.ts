@@ -1,8 +1,10 @@
 import { FHEService } from '../../fhe'
 import { EmotionLlamaProvider } from '../providers/EmotionLlamaProvider'
-import { logger } from '../../utils/logger'
+import { createLogger } from '../../../utils/logger'
 import { MentalLLaMAAdapter } from './MentalLLaMAAdapter'
 import { MentalLLaMAPythonBridge } from './PythonBridge'
+
+const logger = createLogger({ context: 'MentalLLaMAFactory' })
 
 export interface MentalLLaMAConfig {
   baseUrl: string

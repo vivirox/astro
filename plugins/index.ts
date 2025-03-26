@@ -88,8 +88,8 @@ export const rehypePlugins: RehypePlugins = [
         }
       },
       properties: (el: Parameters<CreateProperties>[0]) => {
-        const props: ReturnType<CreateProperties> = {}
-        const href = el.properties.href
+        const props: Record<string, unknown> = {}
+        const href = el.properties?.href
 
         if (!href || typeof href !== 'string') return props
 
@@ -100,7 +100,7 @@ export const rehypePlugins: RehypePlugins = [
             UI.externalLink.cursorType.length > 0 &&
             UI.externalLink.cursorType !== 'pointer'
           ) {
-            props.className = Array.isArray(el.properties.className)
+            props.className = Array.isArray(el.properties?.className)
               ? [...el.properties.className, 'external-link-cursor']
               : ['external-link-cursor']
           }

@@ -90,7 +90,7 @@ async function main() {
     const setupOnly = args.includes('--setup-only')
 
     // Remove our custom flags so they don't get passed to Playwrigh
-    const filteredArgs = args.filter(arg => arg !== '--setup-only')
+    const filteredArgs = args.filter((arg) => arg !== '--setup-only')
 
     // Check if Playwright browsers are installed
     const isInstalled = checkPlaywrightInstallation()
@@ -98,8 +98,7 @@ async function main() {
     // Install if needed
     if (!isInstalled) {
       installPlaywright()
-    }
-    else {
+    } else {
       console.log('✅ Playwright browsers already installed')
     }
 
@@ -113,8 +112,7 @@ async function main() {
     runTests(filteredArgs)
 
     process.exit(0)
-  }
-  catch {
+  } catch {
     console.error('\n❌ Error')
     process.exit(1)
   }

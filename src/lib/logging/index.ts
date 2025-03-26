@@ -236,7 +236,7 @@ let globalLogger: Logger | null = null
  */
 export function getLogger(options?: Partial<LoggerOptions>): Logger {
   if (!globalLogger || options) {
-    globalLogger = new Logger(options)
+    globalLogger = new Logger(options || {})
   }
   return globalLogger
 }

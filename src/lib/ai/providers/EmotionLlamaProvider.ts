@@ -7,7 +7,9 @@ import type {
   TherapyAIResponse,
   TherapySession,
 } from '../interfaces/therapy'
-import { logger } from '../../utils/logger'
+import { createLogger } from '../../../utils/logger'
+
+const logger = createLogger({ context: 'EmotionLlamaProvider' })
 
 export class EmotionLlamaProvider implements TherapyAIProvider {
   private fheService: FHEService

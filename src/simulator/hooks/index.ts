@@ -3,5 +3,5 @@
  * This file simplifies importing hooks from this module
  */
 
-export { useAnonymizedMetrics } from './useAnonymizedMetrics';
-export { useSimulator } from '../context/SimulatorContext';
+export { useAnonymizedMetrics } from './useAnonymizedMetrics'
+export { useSimulator } from '../context/SimulatorContext'

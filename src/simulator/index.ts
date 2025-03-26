@@ -6,19 +6,22 @@
  */
 
 // Components
-export { SimulationContainer } from './components/SimulationContainer';
-export { EnhancedSimulationContainer } from './components/EnhancedSimulationContainer';
-export { ScenarioSelector } from './components/ScenarioSelector';
-export { default as EmpathyMeter } from './components/EmpathyMeter';
-export { default as RealTimeFeedbackPanel } from './components/RealTimeFeedbackPanel';
+export { SimulationContainer } from './components/SimulationContainer'
+export { EnhancedSimulationContainer } from './components/EnhancedSimulationContainer'
+export { ScenarioSelector } from './components/ScenarioSelector'
+export { default as EmpathyMeter } from './components/EmpathyMeter'
+export { default as RealTimeFeedbackPanel } from './components/RealTimeFeedbackPanel'
 
 // Context and Provider
-export { SimulatorProvider, useSimulatorContext } from './context/SimulatorProvider';
+export {
+  SimulatorProvider,
+  useSimulatorContext,
+} from './context/SimulatorProvider'
 
 // Hooks
-export { useSimulator } from './hooks/useSimulator';
-export { useAnonymizedMetrics } from './hooks/useAnonymizedMetrics';
-export { useRealTimeAnalysis } from './hooks/useRealTimeAnalysis';
+export { useSimulator } from './hooks/useSimulator'
+export { useAnonymizedMetrics } from './hooks/useAnonymizedMetrics'
+export { useRealTimeAnalysis } from './hooks/useRealTimeAnalysis'
 
 // Types
 export type {
@@ -29,35 +32,40 @@ export type {
   SimulationContainerProps,
   ScenarioSelectorProps,
   AnonymizedMetrics,
-  RealTimeFeedback
-} from './types';
+  RealTimeFeedback,
+} from './types'
 
 export {
   TherapeuticDomain,
   ScenarioDifficulty,
   TherapeuticTechnique,
-  FeedbackType
-} from './types';
+  FeedbackType,
+} from './types'
 
 // Utils and Data
-export { getAllScenarios, getScenarioById, getScenariosByDomain, getScenariosByDifficulty } from './data/scenarios';
+export {
+  getAllScenarios,
+  getScenarioById,
+  getScenariosByDomain,
+  getScenariosByDifficulty,
+} from './data/scenarios'
 export {
   getUserConsentPreference,
   setUserConsentPreference,
   checkBrowserCompatibility,
   anonymizeFeedback,
-  generateConsentForm
-} from './utils/privacy';
+  generateConsentForm,
+} from './utils/privacy'
 
 // Export main simulator components
-export { default as FeedbackPanel } from './components/FeedbackPanel';
-export { default as ScenarioInfo } from './components/ScenarioInfo';
-export { default as VideoDisplay } from './components/VideoDisplay';
-export { default as ControlPanel } from './components/ControlPanel';
+export { default as FeedbackPanel } from './components/FeedbackPanel'
+export { default as ScenarioInfo } from './components/ScenarioInfo'
+export { default as VideoDisplay } from './components/VideoDisplay'
+export { default as ControlPanel } from './components/ControlPanel'
 
 // Export services
-export { WebRTCService } from './services/WebRTCService';
-export { FeedbackService } from './services/FeedbackService';
+export { WebRTCService } from './services/WebRTCService'
+export { FeedbackService } from './services/FeedbackService'
 
 /**
  * Real-Time Healthcare Simulation Module

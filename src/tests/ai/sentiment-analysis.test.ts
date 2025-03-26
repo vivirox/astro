@@ -135,7 +135,7 @@ describe('sentimentAnalysisService', () => {
         content: JSON.stringify({
           sentiment: 'neutral',
           score: 0.1,
-          explanation: 'The text is factual and doesn\'t express emotion.',
+          explanation: "The text is factual and doesn't express emotion.",
         }),
         model: 'test-model',
         provider: 'openai',
@@ -153,7 +153,7 @@ describe('sentimentAnalysisService', () => {
       expect(result).toEqual({
         sentiment: 'neutral',
         score: 0.1,
-        explanation: 'The text is factual and doesn\'t express emotion.',
+        explanation: "The text is factual and doesn't express emotion.",
         model: 'test-model',
         processingTime: expect.any(Number),
       })
@@ -277,7 +277,7 @@ describe('sentimentAnalysisService', () => {
           ...mockAIService,
           createChatCompletion: async (messages, options) => {
             // Ensure all messages have the required name property
-            const messagesWithName = messages.map(msg => ({
+            const messagesWithName = messages.map((msg) => ({
               ...msg,
               name: msg.name || '', // Add default empty name if missing
             }))
@@ -304,7 +304,7 @@ describe('sentimentAnalysisService', () => {
         aiService: {
           ...mockAIService,
           createChatCompletion: async (messages, options) => {
-            const messagesWithName = messages.map(msg => ({
+            const messagesWithName = messages.map((msg) => ({
               ...msg,
               name: msg.name || '',
             }))

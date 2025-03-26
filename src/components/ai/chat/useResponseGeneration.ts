@@ -89,7 +89,7 @@ export function useResponseGeneration({
           onComplete(responseContent)
         }
 
-        return responseConten
+        return responseContent
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'An unknown error occurred'
@@ -160,7 +160,7 @@ export function useResponseGeneration({
           onComplete(responseContent)
         }
 
-        return responseConten
+        return responseContent
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'An unknown error occurred'
@@ -233,7 +233,7 @@ export function useResponseGeneration({
           onComplete(responseContent)
         }
 
-        return responseConten
+        return responseContent
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'An unknown error occurred'

@@ -28,7 +28,7 @@ export const POST: APIRoute = async ({ request }) => {
     console.log('Contact form submission:', data)
 
     // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
     return new Response(
       JSON.stringify({
@@ -38,8 +38,7 @@ export const POST: APIRoute = async ({ request }) => {
       }),
       { status: 200 },
     )
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error processing contact form:', error)
     return new Response(
       JSON.stringify({

@@ -25,8 +25,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
       }
 
       return redirect(data?.url)
-    }
-    catch (error) {
+    } catch (error) {
       console.error('OAuth error:', error)
       return new Response('An unexpected error occurred', { status: 500 })
     }
@@ -77,8 +76,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
           email: data.user.email,
         },
         ip_address:
-          request.headers.get('x-forwarded-for')
-          || request.headers.get('x-real-ip'),
+          request.headers.get('x-forwarded-for') ||
+          request.headers.get('x-real-ip'),
         user_agent: request.headers.get('user-agent'),
       })
 
@@ -91,8 +90,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     }
 
     return new Response('Authentication failed', { status: 401 })
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Sign in error:', error)
     return new Response('An unexpected error occurred', { status: 500 })
   }

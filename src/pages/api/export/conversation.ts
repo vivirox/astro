@@ -95,8 +95,7 @@ export const POST: APIRoute = async ({ request }) => {
         headers: { 'Content-Type': 'application/json' },
       },
     )
-  }
-  catch (error) {
+  } catch (error) {
     logger.error('Export API error:', error)
     return new Response(JSON.stringify({ error: 'Export failed' }), {
       status: 500,
@@ -135,7 +134,7 @@ async function getSessionMessages(sessionId: string): Promise<ChatMessage[]> {
     {
       id: '2',
       role: 'user',
-      content: 'I\'ve been feeling anxious lately.',
+      content: "I've been feeling anxious lately.",
       timestamp: Date.now() - 3500000,
     },
     {

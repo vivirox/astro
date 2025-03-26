@@ -5,7 +5,7 @@
  * In production, this would be replaced with the actual TFHE module.
  */
 
-import { Buffer } from 'node:buffer'
+// Use browser-compatible base64 encoding/decoding instead of Node.js Buffer
 
 // Mock key objects
 export interface MockClientKey {
@@ -100,7 +100,7 @@ export function createPublicKey(clientKey: unknown): unknown {
 export function encrypt(data: string, key: unknown): unknown {
   // Include key id in mock encryption for traceability
   const keyId = (key as MockKey)?.id || 'unknown'
-  return `mock-encrypted:${keyId}:${Buffer.from(data).toString('base64')}`
+  return `mock-encrypted:${keyId}:${btoa(data)}`
 }
 
 /**
@@ -116,7 +116,7 @@ export function decrypt(data: unknown, key: unknown): string {
     if ((key as MockKey)?.id && keyId !== (key as MockKey).id) {
       throw new Error('Invalid key for decryption')
     }
-    return Buffer.from(base64Data, 'base64').toString()
+    return atob(base64Data)
   }
   return String(data)
 }

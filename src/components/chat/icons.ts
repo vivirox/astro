@@ -1,13 +1,17 @@
 import {
   AlertTriangle,
+  BarChart,
   Brain,
   ChevronDown,
+  LineChart,
   Lock,
   Maximize,
   MessageSquare,
   Minimize,
+  PieChart,
   RefreshCw,
   Send,
+  Settings,
   ShieldCheck,
   UserCircle,
 } from 'lucide-react'
@@ -22,7 +26,9 @@ export const IconMessage = MessageSquare
 export const IconBrain = Brain
 export const IconUserCircle = UserCircle
 export const IconRefresh = RefreshCw
-export const IconBarChart = BarChar
-export const IconPieChart = PieChar
-export const IconLineChart = LineChar
+export const IconBarChart = BarChart
+export const IconPieChart = PieChart
+export const IconLineChart = LineChart
 export const IconAlertTriangle = AlertTriangle
+export const IconSettings = Settings
+export const IconMental = Brain // Using Brain icon as a placeholder for mental health

@@ -1,25 +1,25 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useRouter } from 'next/router';
-import { cn } from '../../lib/utils';
-import { checkBrowserCompatibility } from '../utils/privacy';
-import { Scenario, ScenarioDifficulty, TherapeuticDomain } from '../types';
-import { useSimulator } from '../hooks/useSimulator';
-import { useRealTimeAnalysis } from '../hooks/useRealTimeAnalysis';
-import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { useRouter } from 'next/router'
+import { cn } from '../../lib/utils'
+import { checkBrowserCompatibility } from '../utils/privacy'
+import { Scenario, ScenarioDifficulty, TherapeuticDomain } from '../types'
+import { useSimulator } from '../hooks/useSimulator'
+import { useRealTimeAnalysis } from '../hooks/useRealTimeAnalysis'
+import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 
 // Components
-import FeedbackPanel from './FeedbackPanel';
-import ScenarioInfo from './ScenarioInfo';
-import VideoDisplay from './VideoDisplay';
-import ControlPanel from './ControlPanel';
-import RealTimeFeedbackPanel from './RealTimeFeedbackPanel';
-import EmpathyMeter from './EmpathyMeter';
-import RealTimePrompts from './RealTimePrompts';
+import FeedbackPanel from './FeedbackPanel'
+import ScenarioInfo from './ScenarioInfo'
+import VideoDisplay from './VideoDisplay'
+import ControlPanel from './ControlPanel'
+import RealTimeFeedbackPanel from './RealTimeFeedbackPanel'
+import EmpathyMeter from './EmpathyMeter'
+import RealTimePrompts from './RealTimePrompts'
 
 interface EnhancedSimulationContainerProps {
-  scenarioId: string;
-  className?: string;
-  onBackToScenarios?: () => void;
+  scenarioId: string
+  className?: string
+  onBackToScenarios?: () => void
 }
 
 /**
@@ -33,28 +33,29 @@ export function EnhancedSimulationContainer({
   onBackToScenarios,
 }: EnhancedSimulationContainerProps) {
   // State
-  const [userResponse, setUserResponse] = useState<string>('');
-  const [conversationHistory, setConversationHistory] = useState<Array<{role: 'user' | 'system', text: string}>>([]);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isCompatible, setIsCompatible] = useState<boolean>(true);
-  const [compatibilityError, setCompatibilityError] = useState<string[]>([]);
-  const [empathyScore, setEmpathyScore] = useState<number>(0.5);
-  const [techniqueScores, setTechniqueScores] = useState<Record<string, number>>({});
-  const [autoScroll, setAutoScroll] = useState<boolean>(true);
-  const [showTechniqueHighlights, setShowTechniqueHighlights] = useState<boolean>(true);
-  const [currentPrompt, setCurrentPrompt] = useState<string>('');
+  const [userResponse, setUserResponse] = useState<string>('')
+  const [conversationHistory, setConversationHistory] = useState<
+    Array<{ role: 'user' | 'system'; text: string }>
+  >([])
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [isCompatible, setIsCompatible] = useState<boolean>(true)
+  const [compatibilityError, setCompatibilityError] = useState<string[]>([])
+  const [empathyScore, setEmpathyScore] = useState<number>(0.5)
+  const [techniqueScores, setTechniqueScores] = useState<
+    Record<string, number>
+  >({})
+  const [autoScroll, setAutoScroll] = useState<boolean>(true)
+  const [showTechniqueHighlights, setShowTechniqueHighlights] =
+    useState<boolean>(true)
+  const [currentPrompt, setCurrentPrompt] = useState<string>('')
 
   // Get scenario details and simulator functions
-  const { getScenarioById, submitResponse, endSimulation } = useSimulator();
-  const scenario = getScenarioById(scenarioId);
+  const { getScenarioById, submitResponse, endSimulation } = useSimulator()
+  const scenario = getScenarioById(scenarioId)
 
   // Real-time analysis
-  const {
-    startAnalysis,
-    stopAnalysis,
-    isAnalyzing,
-    feedback
-  } = useRealTimeAnalysis(scenario);
+  const { startAnalysis, stopAnalysis, isAnalyzing, feedback } =
+    useRealTimeAnalysis(scenario)
 
   // Speech recognition
   const {
@@ -69,121 +70,122 @@ export function EnhancedSimulationContainer({
     startListening,
     stopListening,
     resetTranscript,
-    toggleListening
+    toggleListening,
   } = useSpeechRecognition({
     domain: scenario?.domain.toLowerCase() || 'general',
     onFinalResult: (result) => {
       // Update user response with the final recognized text
       if (result.text.trim()) {
-        setUserResponse(prev => `${prev} ${result.text}`.trim());
+        setUserResponse((prev) => `${prev} ${result.text}`.trim())
 
         // Update technique scores based on detected techniques
         if (Object.keys(result.detectedTechniques).length > 0) {
-          setTechniqueScores(prev => ({
+          setTechniqueScores((prev) => ({
             ...prev,
-            ...result.detectedTechniques
-          }));
+            ...result.detectedTechniques,
+          }))
 
           // Calculate overall empathy score
           // This is a simplified calculation - in a real app this would be more sophisticated
           if (result.detectedTechniques['empathy']) {
-            setEmpathyScore(prev => Math.min(1, prev + 0.1));
+            setEmpathyScore((prev) => Math.min(1, prev + 0.1))
           } else if (result.detectedTechniques['validation']) {
-            setEmpathyScore(prev => Math.min(1, prev + 0.05));
+            setEmpathyScore((prev) => Math.min(1, prev + 0.05))
           } else if (result.detectedTechniques['reflection']) {
-            setEmpathyScore(prev => Math.min(1, prev + 0.05));
+            setEmpathyScore((prev) => Math.min(1, prev + 0.05))
           }
         }
       }
-    }
-  });
+    },
+  })
 
   // Refs
-  const formRef = useRef<HTMLFormElement>(null);
-  const conversationEndRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null)
+  const conversationEndRef = useRef<HTMLDivElement>(null)
 
   // Effect to start simulation when component mounts
   useEffect(() => {
     if (scenario) {
       // Add initial scenario prompt to conversation history
-      setConversationHistory([
-        { role: 'system', text: scenario.initialPrompt }
-      ]);
+      setConversationHistory([{ role: 'system', text: scenario.initialPrompt }])
 
       // Start real-time analysis
-      startAnalysis();
+      startAnalysis()
     }
 
     return () => {
       // Stop analysis and speech recognition when component unmounts
-      stopAnalysis();
-      stopListening();
-    };
-  }, [scenario, startAnalysis, stopAnalysis, stopListening]);
+      stopAnalysis()
+      stopListening()
+    }
+  }, [scenario, startAnalysis, stopAnalysis, stopListening])
 
   // Auto-scroll to bottom of conversation when new messages are added
   useEffect(() => {
     if (autoScroll && conversationEndRef.current) {
-      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      conversationEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [conversationHistory, autoScroll]);
+  }, [conversationHistory, autoScroll])
 
   // Check browser compatibility
   useEffect(() => {
-    const { compatible, missingFeatures } = checkBrowserCompatibility();
-    setIsCompatible(compatible);
-    setCompatibilityError(missingFeatures);
-  }, []);
+    const { compatible, missingFeatures } = checkBrowserCompatibility()
+    setIsCompatible(compatible)
+    setCompatibilityError(missingFeatures)
+  }, [])
 
   // Handle form submission
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault()
 
-    if (!userResponse.trim() || isSubmitting) return;
+      if (!userResponse.trim() || isSubmitting) return
 
-    setIsSubmitting(true);
+      setIsSubmitting(true)
 
-    // Add user response to conversation history
-    setConversationHistory(prev => [
-      ...prev,
-      { role: 'user', text: userResponse }
-    ]);
-
-    // Simulate API call for response
-    setTimeout(() => {
-      // In a real app, this would call an API to get a response
-      // based on the scenario and user input
-      const simulatedResponse = {
-        text: "Thank you for sharing that. How has this been affecting your daily life?",
-        feedbackPoints: [
-          {
-            type: "positive",
-            text: "Good use of open-ended question"
-          },
-          {
-            type: "suggestion",
-            text: "Consider reflecting back feelings to show understanding"
-          }
-        ]
-      };
-
-      // Add system response to conversation history
-      setConversationHistory(prev => [
+      // Add user response to conversation history
+      setConversationHistory((prev) => [
         ...prev,
-        { role: 'system', text: simulatedResponse.text }
-      ]);
+        { role: 'user', text: userResponse },
+      ])
 
-      // Reset user response
-      setUserResponse('');
-      setIsSubmitting(false);
-    }, 1000);
-  }, [userResponse, isSubmitting]);
+      // Simulate API call for response
+      setTimeout(() => {
+        // In a real app, this would call an API to get a response
+        // based on the scenario and user input
+        const simulatedResponse = {
+          text: 'Thank you for sharing that. How has this been affecting your daily life?',
+          feedbackPoints: [
+            {
+              type: 'positive',
+              text: 'Good use of open-ended question',
+            },
+            {
+              type: 'suggestion',
+              text: 'Consider reflecting back feelings to show understanding',
+            },
+          ],
+        }
+
+        // Add system response to conversation history
+        setConversationHistory((prev) => [
+          ...prev,
+          { role: 'system', text: simulatedResponse.text },
+        ])
+
+        // Reset user response
+        setUserResponse('')
+        setIsSubmitting(false)
+      }, 1000)
+    },
+    [userResponse, isSubmitting],
+  )
 
   // Handle prompt selection
   const handlePromptSelect = useCallback((prompt: string) => {
-    setUserResponse(prompt);
-    setCurrentPrompt(prompt);
-  }, []);
+    setUserResponse(prompt)
+    setCurrentPrompt(prompt)
+  }, [])
 
   // If scenario not found, show error
   if (!scenario) {
@@ -202,7 +204,7 @@ export function EnhancedSimulationContainer({
           Return to Scenario Selection
         </button>
       </div>
-    );
+    )
   }
 
   // If browser not compatible, show warning
@@ -217,7 +219,9 @@ export function EnhancedSimulationContainer({
         </p>
         <ul className="list-disc pl-5 mb-4">
           {compatibilityError.map((error, i) => (
-            <li key={i} className="text-gray-600">{error}</li>
+            <li key={i} className="text-gray-600">
+              {error}
+            </li>
           ))}
         </ul>
         <p className="text-gray-700 mb-4">
@@ -230,11 +234,11 @@ export function EnhancedSimulationContainer({
           Return to Scenario Selection
         </button>
       </div>
-    );
+    )
   }
 
   return (
-    <div className={cn("flex flex-col h-full overflow-hidden", className)}>
+    <div className={cn('flex flex-col h-full overflow-hidden', className)}>
       {/* Header with scenario information */}
       <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
         <ScenarioInfo
@@ -259,14 +263,19 @@ export function EnhancedSimulationContainer({
           </div>
 
           <div className="flex items-center">
-            <label htmlFor="showTechniques" className="text-sm text-gray-600 mr-2">
+            <label
+              htmlFor="showTechniques"
+              className="text-sm text-gray-600 mr-2"
+            >
               Show Techniques
             </label>
             <input
               type="checkbox"
               id="showTechniques"
               checked={showTechniqueHighlights}
-              onChange={() => setShowTechniqueHighlights(!showTechniqueHighlights)}
+              onChange={() =>
+                setShowTechniqueHighlights(!showTechniqueHighlights)
+              }
               className="h-4 w-4 text-blue-600 rounded border-gray-300"
             />
           </div>
@@ -276,8 +285,19 @@ export function EnhancedSimulationContainer({
             className="text-gray-500 hover:text-gray-700"
             aria-label="Back to scenarios"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -293,15 +313,11 @@ export function EnhancedSimulationContainer({
               <div
                 key={index}
                 className={cn(
-                  "flex p-3 rounded-lg max-w-3/4",
-                  message.role === 'user'
-                    ? "bg-blue-50 ml-auto"
-                    : "bg-gray-50"
+                  'flex p-3 rounded-lg max-w-3/4',
+                  message.role === 'user' ? 'bg-blue-50 ml-auto' : 'bg-gray-50',
                 )}
               >
-                <div className="text-sm">
-                  {message.text}
-                </div>
+                <div className="text-sm">{message.text}</div>
               </div>
             ))}
 
@@ -339,21 +355,45 @@ export function EnhancedSimulationContainer({
                   type="button"
                   onClick={toggleListening}
                   className={cn(
-                    "absolute right-3 bottom-3 p-2 rounded-full",
+                    'absolute right-3 bottom-3 p-2 rounded-full',
                     isListening
-                      ? "bg-red-100 text-red-600 animate-pulse"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      ? 'bg-red-100 text-red-600 animate-pulse'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200',
                   )}
-                  title={isListening ? "Stop listening" : "Start voice input"}
-                  aria-label={isListening ? "Stop listening" : "Start voice input"}
+                  title={isListening ? 'Stop listening' : 'Start voice input'}
+                  aria-label={
+                    isListening ? 'Stop listening' : 'Start voice input'
+                  }
                 >
                   {isListening ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -380,13 +420,13 @@ export function EnhancedSimulationContainer({
                 type="submit"
                 disabled={!userResponse.trim() || isSubmitting}
                 className={cn(
-                  "px-4 py-2 rounded-md text-white",
+                  'px-4 py-2 rounded-md text-white',
                   !userResponse.trim() || isSubmitting
-                    ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-600"
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-blue-500 hover:bg-blue-600',
                 )}
               >
-                {isSubmitting ? "Sending..." : "Send Response"}
+                {isSubmitting ? 'Sending...' : 'Send Response'}
               </button>
             </div>
           </form>
@@ -417,8 +457,13 @@ export function EnhancedSimulationContainer({
               <div className="space-y-2">
                 {Object.entries(techniqueScores).length > 0 ? (
                   Object.entries(techniqueScores).map(([technique, score]) => (
-                    <div key={technique} className="flex justify-between items-center">
-                      <span className="text-xs capitalize">{technique.replace('_', ' ')}</span>
+                    <div
+                      key={technique}
+                      className="flex justify-between items-center"
+                    >
+                      <span className="text-xs capitalize">
+                        {technique.replace('_', ' ')}
+                      </span>
                       <div className="h-2 w-24 bg-gray-200 rounded overflow-hidden">
                         <div
                           className="h-full bg-blue-500"
@@ -429,7 +474,8 @@ export function EnhancedSimulationContainer({
                   ))
                 ) : (
                   <div className="text-xs text-gray-500 italic">
-                    No techniques detected yet. Try using reflection, validation, or open questions.
+                    No techniques detected yet. Try using reflection,
+                    validation, or open questions.
                   </div>
                 )}
               </div>
@@ -442,7 +488,10 @@ export function EnhancedSimulationContainer({
               Real-time Feedback
             </h3>
 
-            <RealTimeFeedbackPanel feedback={feedback} showTechniqueHighlights={showTechniqueHighlights} />
+            <RealTimeFeedbackPanel
+              feedback={feedback}
+              showTechniqueHighlights={showTechniqueHighlights}
+            />
           </div>
 
           {/* Controls */}
@@ -452,12 +501,12 @@ export function EnhancedSimulationContainer({
                 onClick={() => {
                   // Reset conversation
                   setConversationHistory([
-                    { role: 'system', text: scenario.initialPrompt }
-                  ]);
-                  setUserResponse('');
-                  setEmpathyScore(0.5);
-                  setTechniqueScores({});
-                  resetTranscript();
+                    { role: 'system', text: scenario.initialPrompt },
+                  ])
+                  setUserResponse('')
+                  setEmpathyScore(0.5)
+                  setTechniqueScores({})
+                  resetTranscript()
                 }}
                 className="px-3 py-1.5 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
               >
@@ -466,9 +515,9 @@ export function EnhancedSimulationContainer({
 
               <button
                 onClick={() => {
-                  stopAnalysis();
-                  stopListening();
-                  onBackToScenarios?.();
+                  stopAnalysis()
+                  stopListening()
+                  onBackToScenarios?.()
                 }}
                 className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
               >
@@ -479,5 +528,5 @@ export function EnhancedSimulationContainer({
         </div>
       </div>
     </div>
-  );
+  )
 }

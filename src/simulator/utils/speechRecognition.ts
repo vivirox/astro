@@ -223,7 +223,7 @@ export function getTherapeuticPrompts(
     ],
     'panic': [
       'What happens just before you experience panic?',
-      'What helps you when you're feeling panicked?'
+      'What helps you when you\'re feeling panicked?'
     ],
 
     // Depression domain

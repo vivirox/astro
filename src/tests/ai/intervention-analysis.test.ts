@@ -105,7 +105,7 @@ describe('interventionAnalysisService', () => {
       const conversation: AIMessage[] = [
         {
           role: 'user',
-          content: 'I\'ve been feeling really anxious lately.',
+          content: "I've been feeling really anxious lately.",
           name: 'user',
         },
         {
@@ -116,11 +116,11 @@ describe('interventionAnalysisService', () => {
         },
       ]
 
-      const interventionMessage
-        = 'It sounds like you\'re experiencing some significant anxiety. Have you considered trying mindfulness techniques to help manage these feelings?'
+      const interventionMessage =
+        "It sounds like you're experiencing some significant anxiety. Have you considered trying mindfulness techniques to help manage these feelings?"
 
-      const userResponse
-        = 'That\'s a good idea. I\'ve heard about mindfulness but haven\'t really tried it consistently. Do you have any specific exercises you would recommend?'
+      const userResponse =
+        "That's a good idea. I've heard about mindfulness but haven't really tried it consistently. Do you have any specific exercises you would recommend?"
 
       const result = await interventionService.analyzeIntervention(
         conversation,
@@ -200,8 +200,8 @@ describe('interventionAnalysisService', () => {
 
       const userResponse = 'Test response'
 
-      const customPromp
-        = 'Focus on analyzing the therapeutic alliance in this intervention.'
+      const customPromp =
+        'Focus on analyzing the therapeutic alliance in this intervention.'
 
       await interventionService.analyzeIntervention(
         conversation,

@@ -10,11 +10,11 @@ interface Props {
 const { collectionType, slug, pageToc } = Astro.props
 
 // Handle content rendering at the global scope to avoid TypeScript errors
-let contentResul
-let tocComponen
+let contentResult
+let tocComponent
 
 try {
-  // Just do direct imports here to avoid fighting with TypeScrip
+  // Just do direct imports here to avoid fighting with TypeScript
   if (collectionType === 'blog') {
     const component = await import('../../content/blog/' + slug + '.md')
     contentResult = component.Content

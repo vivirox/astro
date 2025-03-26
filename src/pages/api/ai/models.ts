@@ -30,34 +30,31 @@ export const GET: APIRoute = async ({ request, url }) => {
     if (provider === 'together') {
       if (capability) {
         // Filter together models by capability
-        models = getModelsByProvider('together').filter(model =>
+        models = getModelsByProvider('together').filter((model) =>
           model.capabilities.includes(
             capability as
-            | 'chat'
-            | 'sentiment'
-            | 'crisis'
-            | 'response'
-            | 'intervention',
+              | 'chat'
+              | 'sentiment'
+              | 'crisis'
+              | 'response'
+              | 'intervention',
           ),
         )
-      }
-      else {
+      } else {
         // Get all together models
         models = getModelsByProvider('together')
       }
-    }
-    else if (capability) {
+    } else if (capability) {
       // Get models by capability regardless of provider
       models = getModelsByCapability(
         capability as
-        | 'chat'
-        | 'sentiment'
-        | 'crisis'
-        | 'response'
-        | 'intervention',
+          | 'chat'
+          | 'sentiment'
+          | 'crisis'
+          | 'response'
+          | 'intervention',
       )
-    }
-    else {
+    } else {
       // Get all models
       models = getAllModels()
     }
@@ -67,8 +64,7 @@ export const GET: APIRoute = async ({ request, url }) => {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
-  }
-  catch (error: unknown) {
+  } catch (error: unknown) {
     console.error('Error retrieving AI models:', error)
 
     // Return error response

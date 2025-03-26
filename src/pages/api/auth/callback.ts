@@ -78,8 +78,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     }
 
     return redirect('/dashboard')
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Auth callback error:', error)
     return new Response('An unexpected error occurred', { status: 500 })
   }

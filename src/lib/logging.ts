@@ -1,7 +1,6 @@
 /**
  * Logging utility for the application
  */
-import { env } from 'node:process'
 
 /**
  * Log levels in order of increasing severity
@@ -34,16 +33,40 @@ export interface Logger {
 }
 
 /**
+ * Options for creating a logger
+ */
+export interface LoggerOptions {
+  prefix?: string
+}
+
+// Helper function to check environment
+const isServer = typeof window === 'undefined'
+const isDevelopment = isServer
+  ? process.env.NODE_ENV === 'development'
+  : window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+
+// Helper function to get log level from environment
+const getEnvLogLevel = (): LogLevel => {
+  if (isServer) {
+    return (process.env.LOG_LEVEL as LogLevel) || LogLevel.INFO
+  }
+  return LogLevel.INFO
+}
+
+/**
  * Console-based logger implementation that respects log levels
  * and provides structured logging capabilities
  */
 class ConsoleLogger implements Logger {
   private logLevel: LogLevel
   private isDevelopment: boolean
+  private prefix?: string
 
-  constructor(level: LogLevel = LogLevel.INFO) {
+  constructor(level: LogLevel = LogLevel.INFO, prefix?: string) {
     this.logLevel = level
-    this.isDevelopment = env.NODE_ENV === 'development'
+    this.isDevelopment = isDevelopment
+    this.prefix = prefix
   }
 
   private createLogEntry(
@@ -52,7 +75,7 @@ class ConsoleLogger implements Logger {
     metadata?: Record<string, unknown>,
   ): LogData {
     return {
-      message,
+      message: this.prefix ? `[${this.prefix}] ${message}` : message,
       level,
       timestamp: Date.now(),
       metadata,
@@ -134,12 +157,19 @@ let loggerInstance: Logger
 
 /**
  * Get the logger instance, creating it if necessary
+ * @param options Optional configuration options for the logger
  */
-export function getLogger(): Logger {
+export function getLogger(options?: LoggerOptions): Logger {
   if (!loggerInstance) {
-    const envLogLevel = (env.LOG_LEVEL as LogLevel) || LogLevel.INFO
+    const envLogLevel = getEnvLogLevel()
     loggerInstance = new ConsoleLogger(envLogLevel)
   }
+
+  // If a prefix is provided, create a new logger with that prefix
+  if (options?.prefix) {
+    return new ConsoleLogger(getEnvLogLevel(), options.prefix)
+  }
+
   return loggerInstance
 }
 

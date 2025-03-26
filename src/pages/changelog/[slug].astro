@@ -2,14 +2,15 @@
 import { getCollection } from 'astro:content'
 import Layout from '../../layouts/Layout.astro'
 import { formatDate } from '~/utils/datetime'
-import { getFilteredPosts } from '~/utils/post'
 import { FEATURES } from '~/config'
+import type { CollectionEntry } from 'astro:content'
 
 // Set prerender to true for static generation
 export const prerender = true
 
 export async function getStaticPaths() {
-  const posts = await getFilteredPosts('changelog')
+  const { getCollection } = await import('astro:content')
+  const posts = await getCollection('changelog')
 
   return posts.map((post) => ({
     params: { slug: post.slug },
@@ -17,8 +18,8 @@ export async function getStaticPaths() {
   }))
 }
 
-const { post } = Astro.props
-const { data: frontmatter } = pos
+const { post } = Astro.props as { post: CollectionEntry<'changelog'> }
+const { data: frontmatter } = post
 const { Content, headings } = await post.render()
 const { share, toc } = FEATURES
 
@@ -65,11 +66,13 @@ Please check back later.`
         <nav class="table-of-contents">
           <h2>Table of Contents</h2>
           <ul>
-            {headings.map((heading) => (
-              <li class={`depth-${heading.depth}`}>
-                <a href={`#${heading.slug}`}>{heading.text}</a>
-              </li>
-            ))}
+            {headings.map(
+              (heading: { depth: number; slug: string; text: string }) => (
+                <li class={`depth-${heading.depth}`}>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </li>
+              ),
+            )}
           </ul>
         </nav>
       )

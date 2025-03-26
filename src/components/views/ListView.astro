@@ -16,6 +16,7 @@ import type {
   DataCollectionKey,
 } from 'astro:content'
 import type { StreamGroupsSchema } from '~/content/schema'
+import type { PostCollectionType } from '~/utils/post'
 
 interface Props {
   collectionType: ContentCollectionKey | DataCollectionKey
@@ -34,8 +35,12 @@ let blogItems: CollectionEntry<'blog' | 'changelog'>[] = []
 let sortedBlogItems: CollectionEntry<'blog' | 'changelog'>[] = []
 
 if (collectionType === 'blog' || collectionType === 'changelog') {
-  blogItems = await getFilteredPosts(collectionType as 'blog' | 'changelog')
-  sortedBlogItems = getSortedPosts(blogItems)
+  const postType =
+    collectionType === 'blog' ? 'blog' : ('docs' as PostCollectionType)
+  blogItems = await getFilteredPosts(postType)
+  sortedBlogItems = blogItems.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  )
 
   if (tocEnabled) {
     const yearsSet = new Set<number>()
@@ -123,7 +128,11 @@ const warningHTML = `The '${collectionType}' collection type does no
           const { data, slug } = item
           const { remarkPluginFrontmatter } = await item.render()
           const minutesRead =
-            data.minutesRead || remarkPluginFrontmatter.minutesRead
+            'minutesRead' in data
+              ? data.minutesRead
+              : 'minutesRead' in remarkPluginFrontmatter
+                ? remarkPluginFrontmatter.minutesRead
+                : undefined
 
           return (
             <>
@@ -140,14 +149,14 @@ const warningHTML = `The '${collectionType}' collection type does no
               <ListItem
                 {idx}
                 {collectionType}
-                redirect={data.redirect}
+                redirect={'redirect' in data ? data.redirect : undefined}
                 postSlug={slug}
                 title={data.title}
-                video={data.video}
-                radio={data.radio}
+                video={'video' in data ? data.video : undefined}
+                radio={'radio' in data ? data.radio : undefined}
                 date={data.pubDate}
                 {minutesRead}
-                platform={data.platform}
+                platform={'platform' in data ? data.platform : undefined}
               />
             </>
           )

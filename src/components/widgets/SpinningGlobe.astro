@@ -1,5 +1,4 @@
 ---
-
 ---
 
 <div
@@ -46,14 +45,14 @@
     for (let i = 0; i < numPoints; i++) {
       const y = 1 - (i / (numPoints - 1)) * 2 // y goes from 1 to -1
       const radius_at_y = Math.sqrt(1 - y * y) // radius at y position
-      const theta = phi * i // golden angle incremen
+      const theta = phi * i // golden angle increment
 
       const x = Math.cos(theta) * radius_at_y
       const z = Math.sin(theta) * radius_at_y
 
       positions.push(x * radius, y * radius, z * radius)
 
-      // Slightly randomize dot color for visual interes
+      // Slightly randomize dot color for visual interest
       const intensity = 0.3 + Math.random() * 0.1
       color.setRGB(intensity, intensity, intensity)
       colors.push(color.r, color.g, color.b)
@@ -80,7 +79,7 @@
     const globe = new THREE.Points(dotGeometry, dotMaterial)
     scene.add(globe)
 
-    // Add subtle glow effec
+    // Add subtle glow effect
     const glowGeometry = new THREE.SphereGeometry(radius * 1.05, 32, 32)
     const glowMaterial = new THREE.MeshBasicMaterial({
       color: 0x888888,
@@ -112,12 +111,20 @@
     animate()
 
     // Handle window resize
-    window.addEventListener('resize', () => {
-      const size = Math.min(250, window.innerWidth * 0.8)
+    const updateSize = () => {
+      const container = document.getElementById('globe-container')
+      if (!container) return
+
+      const containerWidth = container.clientWidth
+      const size = Math.min(250, containerWidth)
       renderer.setSize(size, size)
       camera.aspect = 1
       camera.updateProjectionMatrix()
-    })
+    }
+
+    window.addEventListener('resize', updateSize)
+    // Initial size update
+    updateSize()
 
     // Handle visibility change
     document.addEventListener('visibilitychange', () => {
@@ -141,8 +148,33 @@
     })
   }
 
-  // Initialize when the component mounts
-  document.addEventListener('DOMContentLoaded', initGlobe)
+  // Initialize when the component mounts and handle cleanup
+  let initialized = false;
+
+  const init = () => {
+    if (!initialized) {
+      initialized = true;
+      initGlobe();
+    }
+  };
+
+  // Check if the element is in viewport and initialize
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        init();
+        // Once initialized, no need to keep observing
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('globe-container');
+    if (container) {
+      observer.observe(container);
+    }
+  });
 </script>
 
 <style>
@@ -155,12 +187,26 @@
     height: 250px;
     position: relative;
     z-index: 0;
+    overflow: hidden;
+  }
+
+  #globe-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
   @media (max-width: 640px) {
     .globe-wrapper {
       width: 200px;
       height: 200px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .globe-wrapper {
+      width: 180px;
+      height: 180px;
     }
   }
 </style>

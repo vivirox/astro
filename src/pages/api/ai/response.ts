@@ -79,9 +79,9 @@ export const POST: APIRoute = async ({ request }) => {
               message: {
                 role: 'assistant',
                 content:
-                  typeof response === 'object'
-                  && response !== null
-                  && 'content' in response
+                  typeof response === 'object' &&
+                  response !== null &&
+                  'content' in response
                     ? (response as { content: string }).content
                     : '',
                 name: 'assistant',
@@ -90,9 +90,9 @@ export const POST: APIRoute = async ({ request }) => {
             },
           ],
           usage:
-            typeof response === 'object'
-            && response !== null
-            && 'usage' in response
+            typeof response === 'object' &&
+            response !== null &&
+            'usage' in response
               ? {
                   promptTokens: Number(
                     (response.usage as { promptTokens: number })
@@ -103,8 +103,8 @@ export const POST: APIRoute = async ({ request }) => {
                       ?.completionTokens || 0,
                   ),
                   totalTokens: Number(
-                    (response.usage as { totalTokens: number })?.totalTokens
-                    || 0,
+                    (response.usage as { totalTokens: number })?.totalTokens ||
+                      0,
                   ),
                 }
               : {
@@ -114,9 +114,9 @@ export const POST: APIRoute = async ({ request }) => {
                 },
           provider: 'together',
           content:
-            typeof response === 'object'
-            && response !== null
-            && 'content' in response
+            typeof response === 'object' &&
+            response !== null &&
+            'content' in response
               ? (response as { content: string }).content
               : '',
         }
@@ -152,9 +152,9 @@ export const POST: APIRoute = async ({ request }) => {
               message: {
                 role: 'assistant',
                 content:
-                  typeof response === 'object'
-                  && response !== null
-                  && 'content' in response
+                  typeof response === 'object' &&
+                  response !== null &&
+                  'content' in response
                     ? (response as { content: string }).content
                     : '',
                 name: 'assistant',
@@ -163,9 +163,9 @@ export const POST: APIRoute = async ({ request }) => {
             },
           ],
           usage:
-            typeof response === 'object'
-            && response !== null
-            && 'usage' in response
+            typeof response === 'object' &&
+            response !== null &&
+            'usage' in response
               ? {
                   promptTokens: Number(
                     (response.usage as { promptTokens: number })
@@ -176,8 +176,8 @@ export const POST: APIRoute = async ({ request }) => {
                       ?.completionTokens || 0,
                   ),
                   totalTokens: Number(
-                    (response.usage as { totalTokens: number })?.totalTokens
-                    || 0,
+                    (response.usage as { totalTokens: number })?.totalTokens ||
+                      0,
                   ),
                 }
               : {
@@ -187,9 +187,9 @@ export const POST: APIRoute = async ({ request }) => {
                 },
           provider: 'together',
           content:
-            typeof response === 'object'
-            && response !== null
-            && 'content' in response
+            typeof response === 'object' &&
+            response !== null &&
+            'content' in response
               ? (response as { content: string }).content
               : '',
         }
@@ -249,8 +249,7 @@ export const POST: APIRoute = async ({ request }) => {
         messages,
         instructions,
       )
-    }
-    else {
+    } else {
       result = await responseService.generateResponseWithInstructions(
         [currentMessage],
         instructions,
@@ -298,8 +297,7 @@ export const POST: APIRoute = async ({ request }) => {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
-  }
-  catch (error: unknown) {
+  } catch (error: unknown) {
     console.error('Error in response generation API:', error)
 
     // Create audit log for the error

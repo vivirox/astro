@@ -7,10 +7,12 @@ import type {
   TherapyAIResponse,
   TherapySession,
 } from '../types'
-import { logger } from '../../utils/logger'
+import { createLogger } from '../../../utils/logger'
 import { EmotionLlamaProvider } from './EmotionLlamaProvider'
 import { MentalLLaMAAdapter } from '../mental-llama/MentalLLaMAAdapter'
 import { MentalLLaMAFactory } from '../mental-llama/MentalLLaMAFactory'
+
+const logger = createLogger({ context: 'EmotionLlamaEnhanced' })
 
 /**
  * Enhanced EmotionLlama provider that integrates MentalLLaMA capabilities

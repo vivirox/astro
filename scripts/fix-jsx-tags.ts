@@ -15,6 +15,17 @@ const commonJsxTags = new Map([
   ['heade', 'header'],
   ['foote', 'footer'],
   ['conten', 'content'],
+  ['impor', 'import'],
+  ['implemen', 'implement'],
+  ['componen', 'component'],
+  ['expor', 'export'],
+  ['oupu', 'output'],
+  ['taile', 'tailent'],
+  ['artical', 'article'],
+  ['aler', 'alert'],
+  ['forma', 'format'],
+  ['inser', 'insert'],
+  ['targe', 'target'],
 ])
 
 async function fixFile(filePath: string): Promise<boolean> {
@@ -57,7 +68,11 @@ async function processDirectory(dir: string) {
       if (!['node_modules', '.git', 'dist', '.next'].includes(entry.name)) {
         fixedFiles += await processDirectory(fullPath)
       }
-    } else if (entry.name.endsWith('.tsx') || entry.name.endsWith('.jsx')) {
+    } else if (
+      entry.name.endsWith('.tsx') ||
+      entry.name.endsWith('.jsx') ||
+      entry.name.endsWith('.astro')
+    ) {
       if (await fixFile(fullPath)) {
         console.log(chalk.green(`✓ Fixed JSX tags in: ${fullPath}`))
         fixedFiles++

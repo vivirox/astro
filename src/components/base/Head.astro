@@ -21,17 +21,17 @@ const pageDescription = description || SITE.description
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
-const generatedOgImage = checkFileExistsInDir(
+const generatedOgImage = (await checkFileExistsInDir(
   'public/og-images',
   `${basename(Astro.url.pathname)}.png`,
-)
+))
   ? getUrl('og-images', `${basename(Astro.url.pathname)}.png`)
   : undefined
 
 const assignedOgImage =
   ogImage &&
   ogImage !== true &&
-  checkFileExistsInDir('public/og-images', ogImage)
+  (await checkFileExistsInDir('public/og-images', ogImage))
     ? getUrl('og-images', ogImage)
     : undefined
 
@@ -87,10 +87,10 @@ const webPageData = {
 <meta name="color-scheme" content="light dark" />
 
 <!-- Three.js -->
-<scrip
+<script
   is:inline
   src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"
-></scrip>
+></script>
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={pubDate ? 'article' : 'website'} />
@@ -142,13 +142,13 @@ const webPageData = {
 <!-- Google JSON-LD Structured Data -->
 {
   pubDate ? (
-    <scrip
+    <script
       is:inline
       type="application/ld+json"
       set:html={JSON.stringify(blogPostingData)}
     />
   ) : (
-    <scrip
+    <script
       is:inline
       type="application/ld+json"
       set:html={JSON.stringify(webPageData)}

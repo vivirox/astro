@@ -105,7 +105,7 @@ describe('crisisDetectionService', () => {
       } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
-        'I can\'t take it anymore. I\'m thinking of ending it all tonight.',
+        "I can't take it anymore. I'm thinking of ending it all tonight.",
       )
 
       // Verify the result
@@ -127,7 +127,7 @@ describe('crisisDetectionService', () => {
           expect.objectContaining({
             role: 'user',
             content: expect.stringContaining(
-              'I can\'t take it anymore. I\'m thinking of ending it all tonight.',
+              "I can't take it anymore. I'm thinking of ending it all tonight.",
             ),
           }),
         ]),
@@ -217,7 +217,7 @@ describe('crisisDetectionService', () => {
       } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
-        'I\'ve been feeling really down lately. Nothing seems to matter.',
+        "I've been feeling really down lately. Nothing seems to matter.",
       )
 
       // Verify the result
@@ -346,7 +346,7 @@ describe('crisisDetectionService', () => {
 
       // Test with high sensitivity
       await crisisService.detectCrisis(
-        'I\'m feeling really anxious about everything.',
+        "I'm feeling really anxious about everything.",
         { sensitivityLevel: 'high' },
       )
 
@@ -373,7 +373,7 @@ describe('crisisDetectionService', () => {
           category: null,
           confidence: 0.75,
           recommendedAction:
-            'The text indicates anxiety symptoms but doesn\'t meet low sensitivity threshold.',
+            "The text indicates anxiety symptoms but doesn't meet low sensitivity threshold.",
         }),
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
@@ -387,7 +387,7 @@ describe('crisisDetectionService', () => {
                 category: null,
                 confidence: 0.75,
                 recommendedAction:
-                  'The text indicates anxiety symptoms but doesn\'t meet low sensitivity threshold.',
+                  "The text indicates anxiety symptoms but doesn't meet low sensitivity threshold.",
               }),
             },
           },
@@ -396,7 +396,7 @@ describe('crisisDetectionService', () => {
 
       // Test with low sensitivity
       await crisisService.detectCrisis(
-        'I\'m feeling really anxious about everything.',
+        "I'm feeling really anxious about everything.",
         { sensitivityLevel: 'low' },
       )
 
@@ -478,7 +478,7 @@ describe('crisisDetectionService', () => {
         } as AIServiceResponse)
 
       const results = await crisisService.detectBatch([
-        'I can\'t take it anymore',
+        "I can't take it anymore",
         'I had a good day today',
       ])
 
@@ -529,7 +529,7 @@ describe('crisisDetectionService', () => {
 
       await expect(
         crisisService.detectBatch([
-          'I can\'t take it anymore',
+          "I can't take it anymore",
           'I had a good day today',
         ]),
       ).rejects.toThrow()

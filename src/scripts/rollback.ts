@@ -61,8 +61,7 @@ async function sendNotification(message: string, environment: string) {
     }
 
     console.log('✓ Notifications sent')
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Failed to send notification:', error)
   }
 }
@@ -93,8 +92,7 @@ async function getLastStableVersion(
         const rollbackTag = tags[1]
         console.log(`Using tag ${rollbackTag} for rollback`)
         return rollbackTag
-      }
-      else if (tags.length === 1) {
+      } else if (tags.length === 1) {
         console.log(`Only one production tag found: ${tags[0]}`)
         // Use it if explicitly allowed through options
         if (options.fallbackBranch === 'use-current-tag') {
@@ -102,8 +100,7 @@ async function getLastStableVersion(
           return tags[0]
         }
       }
-    }
-    else {
+    } else {
       console.log('No production tags found')
     }
 
@@ -129,14 +126,14 @@ async function getLastStableVersion(
 
     // Find last successful deployment (not the current failing one)
     const lastStable = deployments.find(
-      d => d.state === 'READY' && !d.meta?.rollback,
+      (d) => d.state === 'READY' && !d.meta?.rollback,
     )
 
     if (!lastStable) {
       // If no stable version found and a fallback branch is specified, use i
       if (
-        options.fallbackBranch
-        && options.fallbackBranch !== 'use-current-tag'
+        options.fallbackBranch &&
+        options.fallbackBranch !== 'use-current-tag'
       ) {
         console.log(
           `No stable version found in deployments, using fallback branch: ${options.fallbackBranch}`,
@@ -148,14 +145,13 @@ async function getLastStableVersion(
 
     console.log(`Found stable deployment: ${lastStable.url}`)
     return lastStable.url
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error finding last stable version:', error)
 
     // If fallback branch is specified, use i
     if (
-      options.fallbackBranch
-      && options.fallbackBranch !== 'use-current-tag'
+      options.fallbackBranch &&
+      options.fallbackBranch !== 'use-current-tag'
     ) {
       console.log(`Using fallback branch: ${options.fallbackBranch}`)
       return options.fallbackBranch
@@ -172,16 +168,16 @@ async function performRollback(options: RollbackOptions) {
     console.log(`=== Initiating Rollback for ${options.environment} ===`)
 
     // Get version to roll back to
-    const version
-      = options.version
-        || (await getLastStableVersion(options.environment, options))
+    const version =
+      options.version ||
+      (await getLastStableVersion(options.environment, options))
     console.log(`Target rollback version: ${version}`)
 
     // Determine rollback method based on version forma
     if (
-      version.startsWith('production-')
-      || version === 'main'
-      || (options.fallbackBranch && version === options.fallbackBranch)
+      version.startsWith('production-') ||
+      version === 'main' ||
+      (options.fallbackBranch && version === options.fallbackBranch)
     ) {
       // Git tag or branch rollback
       console.log(`Performing git-based rollback to ${version}...`)
@@ -206,8 +202,7 @@ async function performRollback(options: RollbackOptions) {
       if (deployResult.status !== 0) {
         throw new Error(`Deployment failed: ${deployResult.stderr.toString()}`)
       }
-    }
-    else {
+    } else {
       // Vercel URL-based rollback
       console.log('Performing Vercel-based rollback...')
       const rollback = spawnSync('pnpm', [
@@ -242,8 +237,7 @@ async function performRollback(options: RollbackOptions) {
           options.environment,
         )
       }
-    }
-    else {
+    } else {
       console.log('✓ Rollback verification successful')
 
       if (options.notify) {
@@ -255,8 +249,7 @@ async function performRollback(options: RollbackOptions) {
     }
 
     return true
-  }
-  catch (error) {
+  } catch (error) {
     console.error('\n❌ Rollback failed:', error)
 
     if (options.notify) {
@@ -291,8 +284,7 @@ async function main() {
 
     const success = await performRollback(options)
     process.exit(success ? 0 : 1)
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Unhandled error:', error)
     process.exit(1)
   }

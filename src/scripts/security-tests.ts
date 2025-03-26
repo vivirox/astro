@@ -64,8 +64,7 @@ async function runTest(
 
   try {
     return JSON.parse(result?.stdout)
-  }
-  catch (error) {
+  } catch (error) {
     console.error(`Failed to parse test results for ${name}:`, error)
     return [
       {
@@ -87,7 +86,7 @@ async function generateReport(suites: TestSuite[]): Promise<string> {
     0,
   )
   const passedTests = suites.reduce(
-    (sum, suite) => sum + suite.results.filter(r => r.passed).length,
+    (sum, suite) => sum + suite.results.filter((r) => r.passed).length,
     0,
   )
   const failedTests = totalTests - passedTests
@@ -189,13 +188,13 @@ async function generateReport(suites: TestSuite[]): Promise<string> {
 
   ${suites
     .map(
-      suite => `
+      (suite) => `
     <div class="suite">
       <h2>${suite.name}</h2>
       <p>Duration: ${((suite.endTime - suite.startTime) / 1000).toFixed(2)}s</p>
       ${suite.results
         .map(
-          test => `
+          (test) => `
         <div class="test ${test.passed ? 'passed' : 'failed'}">
           <h3>
             ${test.passed ? '✅' : '❌'} ${test.name}
@@ -239,7 +238,7 @@ async function main() {
     results: endpointResults,
     startTime,
     endTime: Date.now(),
-    passed: endpointResults.every(r => r.passed),
+    passed: endpointResults.every((r) => r.passed),
   })
 
   // 2. Authentication Bypass Tests
@@ -252,7 +251,7 @@ async function main() {
     results: authResults,
     startTime: authStartTime,
     endTime: Date.now(),
-    passed: authResults.every(r => r.passed),
+    passed: authResults.every((r) => r.passed),
   })
 
   // 3. Web Vulnerability Tests
@@ -265,7 +264,7 @@ async function main() {
     results: webResults,
     startTime: webStartTime,
     endTime: Date.now(),
-    passed: webResults.every(r => r.passed),
+    passed: webResults.every((r) => r.passed),
   })
 
   // Generate and save repor
@@ -274,9 +273,9 @@ async function main() {
   console.log(`📝 Report saved to: ${reportPath}`)
 
   // Check if any critical or high severity issues
-  const criticalIssues = results.flatMap(suite =>
+  const criticalIssues = results.flatMap((suite) =>
     suite.results.filter(
-      r => !r.passed && (r.severity === 'critical' || r.severity === 'high'),
+      (r) => !r.passed && (r.severity === 'critical' || r.severity === 'high'),
     ),
   )
 
@@ -290,7 +289,7 @@ async function main() {
   }
 
   // Check overall test status
-  const allPassed = results.every(suite => suite.passed)
+  const allPassed = results.every((suite) => suite.passed)
   if (!allPassed) {
     console.error(
       '\n❌ Some security tests failed. Check the report for details.',

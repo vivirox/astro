@@ -1,10 +1,10 @@
 import { fheChat, ChatMessage, ChatMessageWithFHE } from './fheChat'
 import { EmotionLlamaEnhancedProvider } from '../ai/providers/EmotionLlamaEnhancedProvider'
 import { MentalLLaMAFactory } from '../ai/mental-llama'
-import { getLogger } from '../utils/logger'
+import { createLogger } from '../../utils/logger'
 import { FHEService } from '../fhe'
 
-const logger = getLogger('MentalHealthChat')
+const logger = createLogger({ context: 'MentalHealthChat' })
 
 /**
  * Mental health analysis result for a chat message

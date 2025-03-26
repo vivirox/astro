@@ -121,7 +121,7 @@ class KeyStorage {
 
   async generateKey(
     purpose: string,
-  ): Promise<{ keyId: string, keyData: KeyData }> {
+  ): Promise<{ keyId: string; keyData: KeyData }> {
     const keyId = `${this.namespace}:${purpose}:${Date.now()}`
     const keyData: KeyData = {
       key: `generated-key-${Date.now()}`,
@@ -138,7 +138,7 @@ class KeyStorage {
 
   async rotateKey(
     keyId: string,
-  ): Promise<{ keyId: string, keyData: KeyData } | null> {
+  ): Promise<{ keyId: string; keyData: KeyData } | null> {
     const keyData = this.keys.get(keyId)
     if (!keyData) {
       return null
@@ -409,8 +409,8 @@ describe('keyStorage', () => {
   })
 
   it('should retrieve a stored key', async () => {
-    const { keyId, keyData: originalData }
-      = await keyStorage.generateKey('patient-data')
+    const { keyId, keyData: originalData } =
+      await keyStorage.generateKey('patient-data')
 
     const retrievedData = await keyStorage.getKey(keyId)
 
@@ -418,8 +418,8 @@ describe('keyStorage', () => {
   })
 
   it('should rotate a key', async () => {
-    const { keyId, keyData: originalData }
-      = await keyStorage.generateKey('patient-data')
+    const { keyId, keyData: originalData } =
+      await keyStorage.generateKey('patient-data')
 
     const rotatedKey = await keyStorage.rotateKey(keyId)
 
@@ -628,17 +628,17 @@ describe('createCryptoSystem', () => {
         ),
         scheduledRotation: options.enableScheduledRotation
           ? new ScheduledKeyRotation({
-            namespace: options.namespace,
-            checkIntervalMs: 1000,
-            onRotation: (oldKeyId: string, newKeyId: string) => {
-              /* Implementation for test */
-              console.log(`Rotated ${oldKeyId} to ${newKeyId}`)
-            },
-            onError: (error: Error) => {
-              /* Implementation for test */
-              console.error('Rotation error:', error)
-            },
-          })
+              namespace: options.namespace,
+              checkIntervalMs: 1000,
+              onRotation: (oldKeyId: string, newKeyId: string) => {
+                /* Implementation for test */
+                console.log(`Rotated ${oldKeyId} to ${newKeyId}`)
+              },
+              onError: (error: Error) => {
+                /* Implementation for test */
+                console.error('Rotation error:', error)
+              },
+            })
           : null,
         rotateExpiredKeys: async () => ['test-key'],
         stopScheduledRotation: () => {

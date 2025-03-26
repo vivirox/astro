@@ -48,6 +48,43 @@ export function sortPosts(
 
 export function filterDraftPosts() {
   return function (entry: CollectionEntry<'blog' | 'docs'>) {
-    return !entry.data.draf
+    return !entry.data.draft
   }
+}
+
+/**
+ * Get filtered and sorted posts for a collection
+ * @param collectionType The collection type ('blog' or 'docs')
+ * @param filterFn Optional custom filter function
+ * @returns Filtered and sorted posts
+ */
+export async function getFilteredPosts(
+  collectionType: PostCollectionType,
+  filterFn?: (entry: CollectionEntry<'blog' | 'docs'>) => boolean,
+): Promise<CollectionEntry<'blog' | 'docs'>[]> {
+  // Get all posts
+  const posts = await getCollection(collectionType, filterFn)
+
+  // Filter out drafts in production (unless explicitly filtered)
+  const filteredPosts =
+    process.env.NODE_ENV === 'production' && !filterFn
+      ? filterDrafts(posts)
+      : posts
+
+  // Sort by date
+  return sortPosts(filteredPosts)
+}
+
+/**
+ * Get sorted posts for a collection (without draft filtering)
+ * @param collectionType The collection type ('blog' or 'docs')
+ * @param filterFn Optional custom filter function
+ * @returns Sorted posts
+ */
+export async function getSortedPosts(
+  collectionType: PostCollectionType,
+  filterFn?: (entry: CollectionEntry<'blog' | 'docs'>) => boolean,
+): Promise<CollectionEntry<'blog' | 'docs'>[]> {
+  const posts = await getCollection(collectionType, filterFn)
+  return sortPosts(posts)
 }

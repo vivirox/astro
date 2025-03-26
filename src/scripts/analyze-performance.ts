@@ -26,9 +26,9 @@ async function generateReport(days = 7): Promise<PerformanceReport> {
 
   // Calculate metrics
   const totalRequests = metrics.length
-  const successfulRequests = metrics.filter(m => m.success).length
-  const cachedRequests = metrics.filter(m => m.cached).length
-  const latencies = metrics.map(m => m.latency).sort((a, b) => a - b)
+  const successfulRequests = metrics.filter((m) => m.success).length
+  const cachedRequests = metrics.filter((m) => m.cached).length
+  const latencies = metrics.map((m) => m.latency).sort((a, b) => a - b)
   const p95Index = Math.floor(latencies.length * 0.95)
   const p99Index = Math.floor(latencies.length * 0.99)
 
@@ -38,8 +38,8 @@ async function generateReport(days = 7): Promise<PerformanceReport> {
 
   metrics.forEach((metric) => {
     if (!metric.success && metric.errorCode) {
-      errorDistribution[metric.errorCode]
-        = (errorDistribution[metric.errorCode] || 0) + 1
+      errorDistribution[metric.errorCode] =
+        (errorDistribution[metric.errorCode] || 0) + 1
     }
     modelDistribution[metric.model] = (modelDistribution[metric.model] || 0) + 1
   })
@@ -92,8 +92,7 @@ async function main() {
 
     // Cleanup old logs
     await PerformanceLogger.getInstance().cleanup()
-  }
-  catch (error) {
+  } catch (error) {
     logger.error('Failed to generate performance report:', error)
     process.exit(1)
   }

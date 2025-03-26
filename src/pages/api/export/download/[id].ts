@@ -55,8 +55,8 @@ export const GET: APIRoute = async ({ params, request }) => {
     }
 
     // Prepare response
-    const responseData
-      = typeof exportData.data === 'string'
+    const responseData =
+      typeof exportData.data === 'string'
         ? exportData.data
         : new Uint8Array(exportData.data)
 
@@ -72,8 +72,7 @@ export const GET: APIRoute = async ({ params, request }) => {
         'X-Verification-Token': exportData.verificationToken || '',
       },
     })
-  }
-  catch (error) {
+  } catch (error) {
     logger.error('Export download API error:', error)
     return new Response(JSON.stringify({ error: 'Download failed' }), {
       status: 500,

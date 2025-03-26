@@ -36,8 +36,7 @@ export async function POST(request: Request) {
   if (body.isEncrypted) {
     await fheChat.encryptMessage(messageData)
     // ... store encrypted message ...
-  }
-  else {
+  } else {
     // ... store message with security signature ...
   }
 

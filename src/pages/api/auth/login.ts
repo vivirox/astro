@@ -20,7 +20,7 @@ interface User {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as LoginReques
+    const body = (await request.json()) as LoginRequest
 
     // Authenticate user (replace with your actual auth logic)
     const user: User = {
@@ -106,8 +106,7 @@ export async function POST(request: Request) {
         },
       },
     )
-  }
-  catch (error) {
+  } catch (error) {
     // Handle the error properly
     logger.error('Login error:', {
       message: error instanceof Error ? error?.message : String(error),
