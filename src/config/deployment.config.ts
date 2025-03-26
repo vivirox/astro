@@ -16,43 +16,43 @@ export const deploymentConfig = {
      * Get the current deployment environment (development, preview, production)
      */
     getEnvironment: (): string => {
-      return process.env.VERCEL_ENV || 'development'
+      return config.deployment.vercelEnv() || 'development'
     },
 
     /**
-     * Check if the application is running in a Vercel environmen
+     * Check if the application is running in a Vercel environment
      */
     isVercelEnvironment: (): boolean => {
-      return !!process.env.VERCEL
+      return !!config.deployment.isVercel()
     },
 
     /**
-     * Check if the application is running in a Vercel production environmen
+     * Check if the application is running in a Vercel production environment
      */
     isProduction: (): boolean => {
-      return process.env.VERCEL_ENV === 'production'
+      return config.deployment.vercelEnv() === 'production'
     },
 
     /**
-     * Check if the application is running in a Vercel preview environmen
+     * Check if the application is running in a Vercel preview environment
      */
     isPreview: (): boolean => {
-      return process.env.VERCEL_ENV === 'preview'
+      return config.deployment.vercelEnv() === 'preview'
     },
 
     /**
-     * Check if the application is running in a Vercel development environmen
+     * Check if the application is running in a Vercel development environment
      */
     isDevelopment: (): boolean => {
-      return process.env.VERCEL_ENV === 'development'
+      return config.deployment.vercelEnv() === 'development'
     },
 
     /**
      * Get the URL of the current deploymen
      */
     getDeploymentUrl: (): string => {
-      if (process.env.VERCEL_URL) {
-        return `https://${process.env.VERCEL_URL}`
+      if (config.deployment.vercelUrl()) {
+        return `https://${config.deployment.vercelUrl()}`
       }
       return config.client.apiUrl() || ''
     },
@@ -63,8 +63,8 @@ export const deploymentConfig = {
    */
   getApiBaseUrl: (): string => {
     // Use the deployment URL if running in Vercel
-    if (process.env.VERCEL_URL) {
-      return `https://${process.env.VERCEL_URL}/api`
+    if (config.deployment.vercelUrl()) {
+      return `https://${config.deployment.vercelUrl()}/api`
     }
 
     // Otherwise use the configured API URL
@@ -72,21 +72,21 @@ export const deploymentConfig = {
   },
 
   /**
-   * Check if the application is running in a development environmen
+   * Check if the application is running in a development environment
    */
   isDevelopment: (): boolean => {
     return config.isDevelopment() || deploymentConfig.vercel.isDevelopment()
   },
 
   /**
-   * Check if the application is running in a production environmen
+   * Check if the application is running in a production environment
    */
   isProduction: (): boolean => {
     return config.isProduction() || deploymentConfig.vercel.isProduction()
   },
 
   /**
-   * Check if the application is running in a test environmen
+   * Check if the application is running in a test environment
    */
   isTest: (): boolean => {
     return config.isTest()

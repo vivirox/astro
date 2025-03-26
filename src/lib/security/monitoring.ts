@@ -1,6 +1,7 @@
-import { createAuditLog, type AuditMetadata } from '../audit/log'
-import { getLogger } from '../logging'
 import type { Database } from '../../types/supabase'
+import type { AuditMetadata } from '../audit/log'
+import { createAuditLog } from '../audit/log'
+import { getLogger } from '../logging'
 
 const logger = getLogger()
 
@@ -89,6 +90,7 @@ export class SecurityMonitoringService {
   private config: SecurityMonitoringConfig
   private failedLogins: Map<string, { count: number; firstAttempt: Date }> =
     new Map<string, { count: number; firstAttempt: Date }>()
+
   private lockedAccounts: Map<string, Date> = new Map<string, Date>()
   private cleanupInterval: NodeJS.Timeout
 
@@ -105,7 +107,7 @@ export class SecurityMonitoringService {
   }
 
   /**
-   * Track a security event
+   * Track a security even
    */
   public async trackSecurityEvent(event: SecurityEvent): Promise<void> {
     try {
@@ -115,11 +117,13 @@ export class SecurityMonitoringService {
       })
 
       // In a real implementation, this would persist the event to a database
-      // For now, we'll just log it
+      // For now, we'll just log i
 
       return Promise.resolve()
     } catch (error) {
-      logger.error('Failed to track security event', error)
+      logger.error('Failed to track security event', {
+        error: error instanceof Error ? error.message : String(error),
+      })
       throw error
     }
   }
@@ -156,24 +160,24 @@ export class SecurityMonitoringService {
       return
     }
 
-    // Check if we should lock the account
+    // Check if we should lock the accoun
     if (record.count >= this.config.maxFailedLoginAttempts) {
       await this.lockAccount(key, event)
     }
   }
 
   /**
-   * Lock an account
+   * Lock an accoun
    */
   private async lockAccount(
     userId: string,
-    event: SecurityEvent
+    event: SecurityEvent,
   ): Promise<void> {
     const now = new Date()
     this.lockedAccounts.set(userId, now)
 
     try {
-      // Create account lockout event
+      // Create account lockout even
       await this.trackSecurityEvent({
         type: SecurityEventType.ACCESS_DENIED,
         userId,
@@ -190,17 +194,17 @@ export class SecurityMonitoringService {
       // Reset failed login counter
       this.failedLogins.delete(userId)
 
-      // Log account lockout
+      // Log account lockou
       logger.warn(`Account locked: ${userId}`, {
         userId,
         duration: this.config.accountLockoutDuration,
         until: new Date(
-          now.getTime() + this.config.accountLockoutDuration * 1000
+          now.getTime() + this.config.accountLockoutDuration * 1000,
         ),
       })
     } catch (error) {
       throw new DatabaseError(
-        `Failed to update user lock status: ${error instanceof Error ? error.message : String(error)}`
+        `Failed to update user lock status: ${error instanceof Error ? error.message : String(error)}`,
       )
     }
   }
@@ -215,7 +219,7 @@ export class SecurityMonitoringService {
     const now = new Date()
     const elapsedSeconds = (now.getTime() - lockTime.getTime()) / 1000
 
-    // If lock duration has passed, unlock the account
+    // If lock duration has passed, unlock the accoun
     if (elapsedSeconds >= this.config.accountLockoutDuration) {
       this.lockedAccounts.delete(userId)
       return false
@@ -238,29 +242,19 @@ export class SecurityMonitoringService {
       // 3. Notify admins if the pattern persists
 
       // Log the excessive requests to the security events table
-      await createAuditLog({
-        userId: event.userId,
-        action: 'security.rate_limit',
-        resource: 'api',
-        metadata: {
-          ip: event.ip,
-          userAgent: event.userAgent,
-          details: JSON.stringify(event.metadata), // Convert to string to ensure it's a valid type
-        } as AuditMetadata,
-      })
+      await createAuditLog(event.userId, 'security.rate_limit', 'api', {
+        ip: event.ip,
+        userAgent: event.userAgent,
+        details: JSON.stringify(event.metadata), // Convert to string to ensure it's a valid type
+      } as AuditMetadata)
     } else if (event.ip) {
       // If we don't have a user ID but have an IP, apply IP-based restrictions
       // Log anonymous excessive requests
-      await createAuditLog({
-        userId: 'anonymous',
-        action: 'security.rate_limit',
-        resource: 'api',
-        metadata: {
-          ip: event.ip,
-          userAgent: event.userAgent,
-          details: JSON.stringify(event.metadata), // Convert to string to ensure it's a valid type
-        } as AuditMetadata,
-      })
+      await createAuditLog('anonymous', 'security.rate_limit', 'api', {
+        ip: event.ip,
+        userAgent: event.userAgent,
+        details: JSON.stringify(event.metadata), // Convert to string to ensure it's a valid type
+      } as AuditMetadata)
     }
   }
 
@@ -274,18 +268,13 @@ export class SecurityMonitoringService {
     // Handle API abuse with more severe restrictions than excessive requests
     const userId = event.userId || 'anonymous'
 
-    // Log the API abuse event
-    await createAuditLog({
-      userId,
-      action: 'security.api_abuse',
-      resource: 'api',
-      metadata: {
-        ip: event.ip,
-        userAgent: event.userAgent,
-        abuseType: String(event.metadata?.abuseType || 'unknown'),
-        details: JSON.stringify(event.metadata), // Convert to string to ensure it's a valid type
-      } as AuditMetadata,
-    })
+    // Log the API abuse even
+    await createAuditLog(userId, 'security.api_abuse', 'api', {
+      ip: event.ip,
+      userAgent: event.userAgent,
+      abuseType: String(event.metadata?.abuseType || 'unknown'),
+      details: JSON.stringify(event.metadata), // Convert to string to ensure it's a valid type
+    } as AuditMetadata)
 
     // If this is a high severity event, trigger additional protections
     if (
@@ -293,13 +282,13 @@ export class SecurityMonitoringService {
       event.severity === SecurityEventSeverity.CRITICAL
     ) {
       // Potential additional measures:
-      // 1. Add IP to block list
-      // 2. Temporarily suspend user account
+      // 1. Add IP to block lis
+      // 2. Temporarily suspend user accoun
       // 3. Require additional verification for future requests
       // 4. Apply strict rate limiting
 
       logger.error(
-        `Implementing protective measures for API abuse from ${userId}`
+        `Implementing protective measures for API abuse from ${userId}`,
       )
     }
   }
@@ -309,7 +298,7 @@ export class SecurityMonitoringService {
    */
   private async triggerAlert(event: SecurityEvent): Promise<void> {
     logger.error(
-      `SECURITY ALERT: ${event.type} (${event.severity}) - User: ${event.userId || 'unknown'}, IP: ${event.ip || 'unknown'}, Metadata: ${JSON.stringify(event.metadata)}`
+      `SECURITY ALERT: ${event.type} (${event.severity}) - User: ${event.userId || 'unknown'}, IP: ${event.ip || 'unknown'}, Metadata: ${JSON.stringify(event.metadata)}`,
     )
   }
 
@@ -318,7 +307,7 @@ export class SecurityMonitoringService {
    */
   public async getUserSecurityEvents(
     userId: string,
-    limit = 100
+    limit = 100,
   ): Promise<SecurityEvent[]> {
     const { supabase } = await import('../supabase')
 
@@ -341,11 +330,11 @@ export class SecurityMonitoringService {
           metadata: row.metadata,
           severity: row.severity as SecurityEventSeverity,
           timestamp: new Date(row.created_at),
-        })
+        }),
       )
     } catch (error) {
       throw new DatabaseError(
-        `Failed to get user security events: ${error instanceof Error ? error.message : String(error)}`
+        `Failed to get user security events: ${error instanceof Error ? error.message : String(error)}`,
       )
     }
   }
@@ -355,7 +344,7 @@ export class SecurityMonitoringService {
    */
   public async getSecurityEventsByType(
     type: SecurityEventType,
-    limit = 100
+    limit = 100,
   ): Promise<SecurityEvent[]> {
     const { supabase } = await import('../supabase')
 
@@ -378,11 +367,11 @@ export class SecurityMonitoringService {
           metadata: row.metadata,
           severity: row.severity as SecurityEventSeverity,
           timestamp: new Date(row.created_at),
-        })
+        }),
       )
     } catch (error) {
       throw new DatabaseError(
-        `Failed to get security events by type: ${error instanceof Error ? error.message : String(error)}`
+        `Failed to get security events by type: ${error instanceof Error ? error.message : String(error)}`,
       )
     }
   }
@@ -393,7 +382,7 @@ export class SecurityMonitoringService {
   private cleanupStaleRecords(): void {
     const now = new Date()
     const staleLoginThreshold = new Date(
-      now.getTime() - this.config.failedLoginWindow
+      now.getTime() - this.config.failedLoginWindow,
     )
 
     // Clean up failed login attempts
@@ -408,7 +397,7 @@ export class SecurityMonitoringService {
     const lockedAccountEntries = Array.from(this.lockedAccounts.entries())
     for (const [key, lockTime] of lockedAccountEntries) {
       const lockExpiry = new Date(
-        lockTime.getTime() + this.config.accountLockoutDuration
+        lockTime.getTime() + this.config.accountLockoutDuration,
       )
       if (now > lockExpiry) {
         this.lockedAccounts.delete(key)

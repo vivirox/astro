@@ -60,7 +60,7 @@ export interface AuthConfig {
 }
 
 /**
- * Authentication configuration object
+ * Authentication configuration objec
  */
 export const authConfig: AuthConfig = {
   sessionDuration: 7 * 24 * 60 * 60, // 1 week in seconds
@@ -101,7 +101,7 @@ export const authConfig: AuthConfig = {
  */
 export function hasRolePrivilege(
   userRole: AuthRole,
-  requiredRole: AuthRole
+  requiredRole: AuthRole,
 ): boolean {
   const { hierarchy } = authConfig.roles
 

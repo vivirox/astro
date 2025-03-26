@@ -165,7 +165,7 @@ export function getModelsByProvider(provider: 'together'): AIModel[] {
  * Get models by capability
  */
 export function getModelsByCapability(
-  capability: 'chat' | 'sentiment' | 'crisis' | 'response' | 'intervention'
+  capability: 'chat' | 'sentiment' | 'crisis' | 'response' | 'intervention',
 ): AIModel[] {
   return models.filter((model) => model.capabilities.includes(capability))
 }
@@ -174,7 +174,7 @@ export function getModelsByCapability(
  * Get default model for a capability
  */
 export function getDefaultModelForCapability(
-  capability: 'chat' | 'sentiment' | 'crisis' | 'response' | 'intervention'
+  capability: 'chat' | 'sentiment' | 'crisis' | 'response' | 'intervention',
 ): AIModel {
   // First try to find a model with the specific capability
   const capableModels = getModelsByCapability(capability)

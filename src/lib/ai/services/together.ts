@@ -1,13 +1,13 @@
 import type {
-  AIService,
-  AIServiceResponse,
-  AIMessage,
-  AIServiceOptions,
   AICompletionResponse,
+  AIMessage,
+  AIModel,
+  AIProvider,
+  AIService,
+  AIServiceOptions,
+  AIServiceResponse,
   AIStreamChunk,
   AIUsageRecord,
-  AIProvider,
-  AIModel,
 } from '../models/ai-types'
 
 // TogetherAI API configuration
@@ -21,15 +21,15 @@ interface TogetherAIConfig {
 // TogetherAI service interface
 export interface TogetherAIService
   extends Omit<AIService, 'generateCompletion'> {
-  generateCompletion(
+  generateCompletion: (
     messages: AIMessage[],
     options?: {
       model?: string
       temperature?: number
       maxTokens?: number
       stop?: string[]
-    }
-  ): Promise<AIServiceResponse>
+    },
+  ) => Promise<AIServiceResponse>
 }
 
 /**
@@ -38,7 +38,7 @@ export interface TogetherAIService
  * @returns A TogetherAI service
  */
 export function createTogetherAIService(
-  config: TogetherAIConfig
+  config: TogetherAIConfig,
 ): TogetherAIService {
   const baseUrl = config.togetherBaseUrl || 'https://api.together.xyz/v1'
   const apiKey = config.apiKey || config.togetherApiKey
@@ -49,7 +49,7 @@ export function createTogetherAIService(
 
   async function generateCompletion(
     messages: AIMessage[],
-    options: AIServiceOptions = {}
+    options: AIServiceOptions = {},
   ): Promise<AICompletionResponse> {
     try {
       const {
@@ -83,7 +83,7 @@ export function createTogetherAIService(
       if (!response?.ok) {
         const error = await response?.json()
         throw new Error(
-          `TogetherAI API error: ${error.error?.message || response.statusText}`
+          `TogetherAI API error: ${error.error?.message || response.statusText}`,
         )
       }
 
@@ -128,7 +128,7 @@ export function createTogetherAIService(
         temperature?: number
         maxTokens?: number
         stop?: string[]
-      }
+      },
     ): Promise<AIServiceResponse> => {
       const response = await generateCompletion(messages, options)
       return {
@@ -145,17 +145,17 @@ export function createTogetherAIService(
     },
     createChatCompletion: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ): Promise<AICompletionResponse> => {
       return generateCompletion(messages, options)
     },
 
     createStreamingChatCompletion: async (
       _messages: AIMessage[],
-      _options?: AIServiceOptions
+      _options?: AIServiceOptions,
     ): Promise<AsyncGenerator<AIStreamChunk, void, void>> => {
       async function* generator() {
-        // Yield minimal valid chunk before throwing to satisfy the generator requirement
+        // Yield minimal valid chunk before throwing to satisfy the generator requiremen
         yield {
           id: `together_${Date.now()}`,
           model: _options?.model || 'unknown',
@@ -181,7 +181,7 @@ export function createTogetherAIService(
 
     createChatCompletionWithTracking: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ): Promise<AICompletionResponse> => {
       const response = await generateCompletion(messages, options)
       if (config.onUsage && response?.usage) {

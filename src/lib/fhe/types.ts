@@ -22,6 +22,8 @@ export interface EncryptionOptions {
   keySize?: number
   securityLevel?: string
   enableDebug?: boolean
+  keyRotationPeriod?: number
+  enableBackup?: boolean
 }
 
 /**
@@ -89,7 +91,7 @@ export interface KeyManagementOptions {
 }
 
 /**
- * TFHE key pair for storage and management
+ * TFHE key pair for storage and managemen
  */
 export interface TFHEKeyPair {
   id: string
@@ -270,7 +272,7 @@ export enum TherapyCategory {
 }
 
 /**
- * Therapy content sentiment
+ * Therapy content sentimen
  */
 export enum TherapySentiment {
   POSITIVE = 'positive',
@@ -315,4 +317,25 @@ export enum FHEOperationType {
   PROCESS = 'process',
   KEY_GENERATION = 'key_generation',
   REENCRYPTION = 'reencryption',
+}
+
+export interface FHEServiceInterface {
+  initialize: (options: FHEInitOptions) => Promise<void>
+  encrypt: (data: unknown) => Promise<string>
+  decrypt: (encryptedData: string) => Promise<unknown>
+  processEncrypted: (
+    encryptedData: string,
+    operation: string,
+  ) => Promise<string>
+  rotateKeys: () => Promise<void>
+  getMode: () => EncryptionMode
+  encryptData: (data: unknown) => Promise<string>
+  dispose: () => void
+}
+
+export interface FHEInitOptions {
+  mode: EncryptionMode
+  securityLevel: 'low' | 'medium' | 'high'
+  keyRotationPeriod?: number
+  enableBackup?: boolean
 }

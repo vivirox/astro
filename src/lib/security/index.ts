@@ -1,10 +1,8 @@
+import type { SecurityEventType } from './monitoring'
+import { Buffer } from 'node:buffer'
 import { initializeSecurityDatabase } from '../../db/security/initialize'
-import {
-  SecurityMonitoringService,
-  SecurityEventType,
-  SecurityEventSeverity,
-} from './monitoring'
 import { getLogger } from '../logging'
+import { SecurityEventSeverity, SecurityMonitoringService } from './monitoring'
 
 const logger = getLogger()
 
@@ -33,7 +31,11 @@ export async function initializeSecurity(): Promise<void> {
     logger.info('Security module initialized successfully')
   } catch (error) {
     const typedError = error instanceof Error ? error : new Error(String(error))
-    logger.error('Failed to initialize security module', typedError)
+    logger.error('Failed to initialize security module', {
+      module: 'security',
+      error: typedError.message,
+      stack: typedError.stack,
+    })
     throw typedError
   }
 }
@@ -46,7 +48,7 @@ export function getSecurityMonitoring(): SecurityMonitoringService {
   if (!securityMonitoringService) {
     securityMonitoringService = new SecurityMonitoringService()
     logger.warn(
-      'Security monitoring service created without proper initialization'
+      'Security monitoring service created without proper initialization',
     )
   }
   return securityMonitoringService
@@ -57,7 +59,7 @@ export function getSecurityMonitoring(): SecurityMonitoringService {
  */
 export function logSecurityEvent(
   type: string,
-  metadata: Record<string, unknown>
+  metadata: Record<string, unknown>,
 ): void {
   if (!securityMonitoringService) {
     logger.warn('Security monitoring service not initialized')
@@ -72,7 +74,13 @@ export function logSecurityEvent(
       timestamp: new Date(),
     })
     .catch((error) => {
-      logger.error('Failed to log security event', error)
+      const typedError =
+        error instanceof Error ? error : new Error(String(error))
+      logger.error('Failed to log security event', {
+        eventType: type,
+        error: typedError.message,
+        stack: typedError.stack,
+      })
     })
 }
 
@@ -89,7 +97,10 @@ export async function initializeEncryption(): Promise<void> {
     logger.info('FHE encryption system initialized successfully')
   } catch (error) {
     const typedError = error instanceof Error ? error : new Error(String(error))
-    logger.error('Failed to initialize FHE encryption', typedError)
+    logger.error('Failed to initialize FHE encryption', {
+      error: typedError.message,
+      stack: typedError.stack,
+    })
     throw typedError
   }
 }
@@ -105,8 +116,13 @@ export async function encryptMessage(message: string): Promise<string> {
     // For now, we're using a simulated implementation
     return await simulateEncrypt(message)
   } catch (error) {
-    logger.error('Failed to encrypt message', error)
-    throw error
+    const typedError = error instanceof Error ? error : new Error(String(error))
+    logger.error('Failed to encrypt message', {
+      operation: 'encrypt',
+      error: typedError.message,
+      stack: typedError.stack,
+    })
+    throw typedError
   }
 }
 
@@ -121,8 +137,13 @@ export async function decryptMessage(ciphertext: string): Promise<string> {
     // For now, we're using a simulated implementation
     return await simulateDecrypt(ciphertext)
   } catch (error) {
-    logger.error('Failed to decrypt message', error)
-    throw error
+    const typedError = error instanceof Error ? error : new Error(String(error))
+    logger.error('Failed to decrypt message', {
+      operation: 'decrypt',
+      error: typedError.message,
+      stack: typedError.stack,
+    })
+    throw typedError
   }
 }
 
@@ -134,15 +155,20 @@ export async function decryptMessage(ciphertext: string): Promise<string> {
  */
 export async function processEncryptedMessage(
   ciphertext: string,
-  operation: string
+  operation: string,
 ): Promise<string> {
   try {
     // In production, this would use real FHE libraries to perform
     // operations on the encrypted data without decrypting i
     return await simulateHomomorphicOperation(ciphertext, operation)
   } catch (error) {
-    logger.error('Failed to process encrypted message', error)
-    throw error
+    const typedError = error instanceof Error ? error : new Error(String(error))
+    logger.error('Failed to process encrypted message', {
+      operation,
+      error: typedError.message,
+      stack: typedError.stack,
+    })
+    throw typedError
   }
 }
 
@@ -188,7 +214,7 @@ async function simulateDecrypt(ciphertext: string): Promise<string> {
 
 async function simulateHomomorphicOperation(
   ciphertext: string,
-  operation: string
+  operation: string,
 ): Promise<string> {
   if (!ciphertext.startsWith('FHE:')) {
     throw new Error('Invalid FHE ciphertext format')
@@ -206,10 +232,10 @@ async function simulateHomomorphicOperation(
     case 'sentiment': {
       // Simple sentiment analysis simulation
       const positive = ['good', 'great', 'excellent', 'happy', 'positive'].some(
-        (word) => decrypted.toLowerCase().includes(word)
+        (word) => decrypted.toLowerCase().includes(word),
       )
       const negative = ['bad', 'terrible', 'sad', 'negative', 'anxious'].some(
-        (word) => decrypted.toLowerCase().includes(word)
+        (word) => decrypted.toLowerCase().includes(word),
       )
       result =
         positive && !negative ? 'positive' : negative ? 'negative' : 'neutral'
@@ -219,7 +245,7 @@ async function simulateHomomorphicOperation(
     case 'summarize':
       // Simple summarization simulation
       result =
-        decrypted.length > 100 ? decrypted.substring(0, 100) + '...' : decrypted
+        decrypted.length > 100 ? `${decrypted.substring(0, 100)}...` : decrypted
       break
 
     case 'tokenize':
@@ -238,8 +264,8 @@ async function simulateHomomorphicOperation(
 
 // Export security types and utilities
 export {
-  SecurityEventType,
   SecurityEventSeverity,
+  SecurityEventType,
   SecurityMonitoringService,
 } from './monitoring'
 

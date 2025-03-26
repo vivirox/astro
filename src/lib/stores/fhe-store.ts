@@ -1,11 +1,11 @@
-import { create } from 'zustand'
-import { fheService } from '../fhe'
 import type {
   EncryptionMode,
   EncryptionOptions,
   FHEOperation,
   HomomorphicOperationResult,
 } from '../fhe/types'
+import { create } from 'zustand'
+import { fheService } from '../fhe'
 // Make EncryptionMode available as a value for runtime use
 import { EncryptionMode as EncryptionModeEnum } from '../fhe/types'
 
@@ -17,7 +17,7 @@ interface EnhancedFHEService {
   processEncrypted?: (
     encryptedMessage: string,
     operation: FHEOperation,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ) => Promise<HomomorphicOperationResult>
   exportPublicKey?: () => string
   [key: string]: unknown
@@ -47,7 +47,7 @@ interface FHEState {
   processEncrypted: (
     encryptedMessage: string,
     operation: string,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ) => Promise<HomomorphicOperationResult>
   exportPublicKey: () => string | null
   clearState: () => void
@@ -96,7 +96,7 @@ export const useFHEStore = create<FHEState>((set, get) => ({
         try {
           // Note: We're using a mock implementation for setupKeyManagement
           // since the actual method might not exist in the fheService
-          const keyId = 'key-' + Math.random().toString(36).substring(2, 15)
+          const keyId = `key-${Math.random().toString(36).substring(2, 15)}`
           set({ keyId })
         } catch (error) {
           console.error('Key management setup error:', error)
@@ -194,7 +194,7 @@ export const useFHEStore = create<FHEState>((set, get) => ({
   processEncrypted: async (
     encryptedMessage: string,
     operation: string,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ) => {
     if (!get().isInitialized) {
       throw new Error('FHE service not initialized')
@@ -213,13 +213,13 @@ export const useFHEStore = create<FHEState>((set, get) => ({
         result = await enhancedFHEService.processEncrypted(
           encryptedMessage,
           operation as unknown as FHEOperation,
-          params
+          params,
         )
       } else {
         // Create a mock result
         result = {
           success: true,
-          result: 'processed:' + encryptedMessage,
+          result: `processed:${encryptedMessage}`,
           operationType: operation,
           timestamp: Date.now(),
         }
@@ -256,7 +256,7 @@ export const useFHEStore = create<FHEState>((set, get) => ({
         return enhancedFHEService.exportPublicKey()
       } else {
         // Return a mock public key
-        return 'mock-public-key-' + get().keyId
+        return `mock-public-key-${get().keyId}`
       }
     } catch (error) {
       console.error('FHE public key export error:', error)

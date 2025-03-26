@@ -37,7 +37,7 @@ export function reportWebVitals(): void {
 
 // Define interfaces for Performance entries
 interface LargestContentfulPaintEntry extends PerformanceEntry {
-  element?: Element
+  element?: Elemen
   size: number
   renderTime?: number
   loadTime?: number
@@ -178,7 +178,7 @@ function reportTTFB(): void {
     if (navigationEntries.length > 0) {
       const navigationEntry =
         navigationEntries[0] as PerformanceNavigationTiming
-      const ttfb = navigationEntry.responseStart
+      const ttfb = navigationEntry.responseStar
 
       console.log('TTFB:', {
         value: Math.round(ttfb),
@@ -293,7 +293,7 @@ export function optimizeCLS(): void {
  */
 export function setupContainment(
   selector: string,
-  containmentValue = 'content'
+  containmentValue = 'content',
 ): void {
   if (typeof document === 'undefined') return
 
@@ -312,7 +312,7 @@ export function initializeOptimizations(
     lcpResources?: string[]
     clsSelectors?: string[]
     containmentSelectors?: Record<string, string>
-  } = {}
+  } = {},
 ): void {
   if (typeof window === 'undefined') return
 
@@ -329,7 +329,7 @@ export function initializeOptimizations(
     Object.entries(options.containmentSelectors).forEach(
       ([selector, value]) => {
         setupContainment(selector, value)
-      }
+      },
     )
   }
 
@@ -349,7 +349,7 @@ export function initializeOptimizations(
 function garbageCollection(): void {
   // Remove unnecessary event listeners
   const cleanupElements = document.querySelectorAll(
-    '[data-cleanup-events="true"]'
+    '[data-cleanup-events="true"]',
   )
   cleanupElements.forEach((el) => {
     // Clone the node to remove all listeners

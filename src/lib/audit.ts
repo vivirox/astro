@@ -6,8 +6,9 @@
  * It supports both local storage and forwarding to compliance services.
  */
 
+import type { EncryptionMode } from './fhe/types'
+import process from 'node:process'
 import { getLogger } from './logging'
-import { EncryptionMode } from './fhe/types'
 
 // Initialize logger
 const logger = getLogger()
@@ -21,7 +22,7 @@ export enum AuditEventType {
   EXPORT = 'export', // Exporting/downloading PHI
   SHARE = 'share', // Sharing PHI with another user/system
   LOGIN = 'login', // User login
-  LOGOUT = 'logout', // User logou
+  LOGOUT = 'logout', // User logout
   SYSTEM = 'system', // System level events
   SECURITY = 'security', // Security related events
   ADMIN = 'admin', // Administrative actions
@@ -56,16 +57,16 @@ export type AuditDetails = Record<string, AuditDetailValue>
 
 // Audit log entry interface
 export interface AuditLogEntry {
-  id: string // Unique identifier for the event
-  timestamp: string // ISO timestamp of the event
+  id: string // Unique identifier for the even
+  timestamp: string // ISO timestamp of the even
   userId: string // User who performed the action
   userRole?: string // Role of the user
   action: string // Specific action performed
-  eventType: AuditEventType // Type of event
+  eventType: AuditEventType // Type of even
   status: AuditEventStatus // Outcome status
   resource: string // Resource/data that was accessed/modified
   resourceId?: string // ID of the resource if applicable
-  details?: AuditDetails // Additional details about the event
+  details?: AuditDetails // Additional details about the even
   ipAddress?: string // Source IP address
   userAgent?: string // User agent information
   sessionId?: string // Session identifier
@@ -98,7 +99,6 @@ const DEFAULT_CONFIG: AuditServiceConfig = {
   batchSize: 100,
   debugMode: process.env.NODE_ENV === 'development',
 }
-
 // Queue of pending log entries for batch processing
 let logQueue: AuditLogEntry[] = []
 
@@ -112,7 +112,7 @@ let config: AuditServiceConfig = { ...DEFAULT_CONFIG }
  * Initialize the audit service with custom configuration
  */
 export function initializeAuditService(
-  customConfig?: Partial<AuditServiceConfig>
+  customConfig?: Partial<AuditServiceConfig>,
 ): void {
   config = { ...DEFAULT_CONFIG, ...customConfig }
 
@@ -152,7 +152,10 @@ async function processBatch(): Promise<void> {
     try {
       await sendLogsToRemoteEndpoint(batch)
     } catch (error) {
-      logger.error('Failed to send audit logs to remote endpoint', error)
+      logger.error(
+        'Failed to send audit logs to remote endpoint',
+        error as Record<string, unknown>,
+      )
 
       // Put the logs back in the queue for retry
       logQueue = [...batch, ...logQueue]
@@ -182,7 +185,7 @@ async function sendLogsToRemoteEndpoint(logs: AuditLogEntry[]): Promise<void> {
 
     if (!response.ok) {
       throw new Error(
-        `Remote logging failed: ${response.status} ${response.statusText}`
+        `Remote logging failed: ${response.status} ${response.statusText}`,
       )
     }
 
@@ -190,7 +193,10 @@ async function sendLogsToRemoteEndpoint(logs: AuditLogEntry[]): Promise<void> {
       logger.debug(`Sent ${logs.length} audit logs to remote endpoint`)
     }
   } catch (error) {
-    logger.error('Error sending logs to remote endpoint', error)
+    logger.error(
+      'Error sending logs to remote endpoint',
+      error as Record<string, unknown>,
+    )
     throw error
   }
 }
@@ -199,9 +205,7 @@ async function sendLogsToRemoteEndpoint(logs: AuditLogEntry[]): Promise<void> {
  * Generate a unique ID for audit logs
  */
 function generateAuditId(): string {
-  return (
-    'audit-' + Date.now() + '-' + Math.random().toString(36).substring(2, 9)
-  )
+  return `audit-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
 }
 
 /**
@@ -238,8 +242,7 @@ function getSessionId(): string {
   let sessionId = localStorage.getItem('therapy-chat-session-id')
 
   if (!sessionId) {
-    sessionId =
-      'session-' + Date.now() + '-' + Math.random().toString(36).substring(2, 9)
+    sessionId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
     localStorage.setItem('therapy-chat-session-id', sessionId)
   }
 
@@ -275,7 +278,10 @@ function storeLocalAuditLog(entry: AuditLogEntry): void {
     // Save back to localStorage
     localStorage.setItem('hipaa-audit-logs', JSON.stringify(filteredLogs))
   } catch (error) {
-    logger.error('Failed to store audit log locally', error)
+    logger.error(
+      'Failed to store audit log locally',
+      error as Record<string, unknown>,
+    )
   }
 }
 
@@ -288,7 +294,7 @@ export async function createAuditLog(
   userId: string,
   resource: string,
   details?: AuditDetails,
-  status: AuditEventStatus = AuditEventStatus.SUCCESS
+  status: AuditEventStatus = AuditEventStatus.SUCCESS,
 ): Promise<AuditLogEntry> {
   return await createHIPAACompliantAuditLog({
     userId,
@@ -301,14 +307,14 @@ export async function createAuditLog(
 }
 
 /**
- * Log an audit event
+ * Log an audit even
  */
 export function logAuditEvent(
   eventType: AuditEventType,
   action: string,
   userId: string,
   resourceId?: string,
-  details?: AuditDetails
+  details?: AuditDetails,
 ): void {
   createHIPAACompliantAuditLog({
     userId,
@@ -403,7 +409,10 @@ export function getAuditLogs(): AuditLogEntry[] {
     const logsJson = localStorage.getItem('hipaa-audit-logs')
     return logsJson ? JSON.parse(logsJson) : []
   } catch (error) {
-    logger.error('Failed to retrieve audit logs', error)
+    logger.error(
+      'Failed to retrieve audit logs',
+      error as Record<string, unknown>,
+    )
     return []
   }
 }
@@ -420,7 +429,7 @@ export function clearAuditLogs(): void {
     localStorage.removeItem('hipaa-audit-logs')
     logger.info('Audit logs cleared from local storage')
   } catch (error) {
-    logger.error('Failed to clear audit logs', error)
+    logger.error('Failed to clear audit logs', error as Record<string, unknown>)
   }
 }
 
@@ -436,7 +445,7 @@ export function exportAuditLogs(): string {
  * Configure the audit service
  */
 export function configureAuditService(
-  newConfig: Partial<AuditServiceConfig>
+  newConfig: Partial<AuditServiceConfig>,
 ): void {
   config = { ...config, ...newConfig }
 

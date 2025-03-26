@@ -1,6 +1,6 @@
+import type { UserRole } from '../../types/auth'
 import React from 'react'
 import { useAuth } from '../../hooks/useAuth'
-import type { UserRole } from '../../types/auth'
 
 export interface NavigationItem {
   label: string
@@ -27,6 +27,7 @@ const defaultItems: NavigationItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Dashboard', href: '/dashboard', requiresAuth: true },
   { label: 'Chat', href: '/chat', requiresAuth: true },
+  { label: 'Simulator', href: '/simulator', requiresAuth: true },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
   { label: 'Login', href: '/login', requiresGuest: true },
@@ -55,7 +56,7 @@ export function Navigation({
 
       // Check if the user has any of the required roles
       const hasRequiredRole = user.roles.some((role) =>
-        item.roles?.includes(role)
+        item.roles?.includes(role),
       )
 
       if (!hasRequiredRole) return false

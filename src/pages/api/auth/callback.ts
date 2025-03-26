@@ -20,7 +20,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     const { access_token, refresh_token } = data?.session
     const { user } = data
 
-    // Set cookies for session management
+    // Set cookies for session managemen
     cookies.set('sb-access-token', access_token, {
       path: '/',
       httpOnly: true,
@@ -78,7 +78,8 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     }
 
     return redirect('/dashboard')
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Auth callback error:', error)
     return new Response('An unexpected error occurred', { status: 500 })
   }

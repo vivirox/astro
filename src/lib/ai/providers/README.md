@@ -32,7 +32,7 @@ Modal is a cloud platform that provides convenient, on-demand access to serverle
 ## Usage
 
 ```typescript
-import { createAIService } from '../lib/ai';
+import { createAIService } from '../lib/ai'
 
 // Create AI service with Modal provider
 const aiService = createAIService({
@@ -41,7 +41,7 @@ const aiService = createAIService({
     apiKey: process.env.MODAL_API_KEY,
   },
   defaultProvider: 'modal'
-});
+})
 
 // Use the service
 const response = await aiService.createChatCompletion(
@@ -60,7 +60,7 @@ const response = await aiService.createChatCompletion(
     temperature: 0.7,
     maxTokens: 1000
   }
-);
+)
 ```
 
 ## Available Models
@@ -95,4 +95,4 @@ You can test the Modal provider using the provided test page at `/admin/modal-te
 
 The Modal provider implements the same interface as other providers like OpenAI and Anthropic, making it easy to switch between providers. It supports both streaming and non-streaming responses, and handles errors gracefully.
 
-The provider communicates with the Modal-deployed model using the OpenAI-compatible API, which makes it compatible with the existing AI service infrastructure. 
+The provider communicates with the Modal-deployed model using the OpenAI-compatible API, which makes it compatible with the existing AI service infrastructure.

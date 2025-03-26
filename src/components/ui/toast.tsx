@@ -1,5 +1,6 @@
+import type { ToastOptions } from 'react-hot-toast'
 import React from 'react'
-import { Toaster, type ToastOptions, toast as hotToast } from 'react-hot-toast'
+import { toast as hotToast, Toaster } from 'react-hot-toast'
 import { cn } from '../../lib/utils'
 
 // Types for toast options
@@ -30,12 +31,12 @@ export function Toast({
       toastOptions={{
         className: cn(
           'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-lg rounded-md',
-          className
+          className,
         ),
         success: {
           className: cn(
             'bg-white dark:bg-gray-800 border-l-4 border-green-500',
-            className
+            className,
           ),
           iconTheme: {
             primary: '#10B981',
@@ -45,7 +46,7 @@ export function Toast({
         error: {
           className: cn(
             'bg-white dark:bg-gray-800 border-l-4 border-red-500',
-            className
+            className,
           ),
           iconTheme: {
             primary: '#EF4444',
@@ -75,7 +76,7 @@ export const toast = {
           className={cn(
             'flex items-center p-4 bg-white dark:bg-gray-800 rounded-md shadow-md',
             'max-w-md w-full',
-            t.visible ? 'animate-enter' : 'animate-leave'
+            t.visible ? 'animate-enter' : 'animate-leave',
           )}
         >
           {icon && <div className="flex-shrink-0 mr-3">{icon}</div>}
@@ -104,11 +105,11 @@ export const toast = {
       {
         ...defaultOptions,
         ...options,
-      }
+      },
     )
   },
 
-  // Success toast
+  // Success toas
   success: (message: string, options?: Partial<ToastOptions>) => {
     return hotToast.success(message, {
       ...defaultOptions,
@@ -116,7 +117,7 @@ export const toast = {
     })
   },
 
-  // Error toast
+  // Error toas
   error: (message: string, options?: Partial<ToastOptions>) => {
     return hotToast.error(message, {
       ...defaultOptions,
@@ -124,7 +125,7 @@ export const toast = {
     })
   },
 
-  // Info toast
+  // Info toas
   info: (message: string, options?: Partial<ToastOptions>) => {
     return hotToast(message, {
       ...defaultOptions,
@@ -146,7 +147,7 @@ export const toast = {
     })
   },
 
-  // Warning toast
+  // Warning toas
   warning: (message: string, options?: Partial<ToastOptions>) => {
     return hotToast(message, {
       ...defaultOptions,
@@ -168,7 +169,7 @@ export const toast = {
     })
   },
 
-  // Loading toast
+  // Loading toas
   loading: (message: string, options?: Partial<ToastOptions>) => {
     return hotToast.loading(message, {
       ...defaultOptions,
@@ -180,7 +181,7 @@ export const toast = {
   promise: function promiseToast<T>(
     promise: Promise<T>,
     messages: ToastPromiseMessages<T>,
-    options?: Partial<ToastOptions>
+    options?: Partial<ToastOptions>,
   ) {
     return hotToast.promise(
       promise,
@@ -192,14 +193,14 @@ export const toast = {
       {
         ...defaultOptions,
         ...options,
-      }
+      },
     )
   },
 
-  // Dismiss toast
+  // Dismiss toas
   dismiss: (toastId?: string) => {
     hotToast.dismiss(toastId)
   },
 }
 
-export default Toast
+export default Toas

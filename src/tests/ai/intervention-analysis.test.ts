@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { InterventionAnalysisService } from '../../lib/ai/services/intervention-analysis.ts'
 import type { AIMessage } from '../../lib/ai/models/types.ts'
-
 // Import AIService type to make sure our mock is compatible
 import type { AIService } from '../../lib/ai/models/types.ts'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { InterventionAnalysisService } from '../../lib/ai/services/intervention-analysis.ts'
 
 // Define types for mocked responses
 interface AIServiceResponse {
@@ -32,10 +32,35 @@ const mockAIService = {
   getModelInfo: vi.fn(),
   createChatCompletionWithTracking: vi.fn(),
   generateCompletion: vi.fn(),
+  createChatStream: vi.fn().mockReturnValue(
+    new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: 'test-id',
+          model: 'test-model',
+          choices: [
+            {
+              message: {
+                role: 'assistant' as const,
+                content: 'test content',
+              },
+              finishReason: 'stop',
+            },
+          ],
+          usage: {
+            promptTokens: 10,
+            completionTokens: 20,
+            totalTokens: 30,
+          },
+        })
+        controller.close()
+      },
+    }),
+  ),
   dispose: vi.fn(),
-} as AIService
+} as unknown as AIService
 
-describe('InterventionAnalysisService', () => {
+describe('interventionAnalysisService', () => {
   let interventionService: InterventionAnalysisService
 
   beforeEach(() => {
@@ -80,7 +105,7 @@ describe('InterventionAnalysisService', () => {
       const conversation: AIMessage[] = [
         {
           role: 'user',
-          content: "I've been feeling really anxious lately.",
+          content: 'I\'ve been feeling really anxious lately.',
           name: 'user',
         },
         {
@@ -91,16 +116,16 @@ describe('InterventionAnalysisService', () => {
         },
       ]
 
-      const interventionMessage =
-        "It sounds like you're experiencing some significant anxiety. Have you considered trying mindfulness techniques to help manage these feelings?"
+      const interventionMessage
+        = 'It sounds like you\'re experiencing some significant anxiety. Have you considered trying mindfulness techniques to help manage these feelings?'
 
-      const userResponse =
-        "That's a good idea. I've heard about mindfulness but haven't really tried it consistently. Do you have any specific exercises you would recommend?"
+      const userResponse
+        = 'That\'s a good idea. I\'ve heard about mindfulness but haven\'t really tried it consistently. Do you have any specific exercises you would recommend?'
 
       const result = await interventionService.analyzeIntervention(
         conversation,
         interventionMessage,
-        userResponse
+        userResponse,
       )
 
       // Define expected result type
@@ -139,7 +164,7 @@ describe('InterventionAnalysisService', () => {
             content: expect.stringContaining('analyze the effectiveness'),
           }),
         ]),
-        expect.objectContaining({ model: 'test-model' })
+        expect.objectContaining({ model: 'test-model' }),
       )
     })
 
@@ -175,14 +200,14 @@ describe('InterventionAnalysisService', () => {
 
       const userResponse = 'Test response'
 
-      const customPrompt =
-        'Focus on analyzing the therapeutic alliance in this intervention.'
+      const customPromp
+        = 'Focus on analyzing the therapeutic alliance in this intervention.'
 
       await interventionService.analyzeIntervention(
         conversation,
         interventionMessage,
         userResponse,
-        { customPrompt }
+        { customPrompt },
       )
 
       // Verify the AI service was called with custom prompt
@@ -193,7 +218,7 @@ describe('InterventionAnalysisService', () => {
             content: expect.stringContaining(customPrompt),
           }),
         ]),
-        expect.any(Object)
+        expect.any(Object),
       )
     })
 
@@ -227,8 +252,8 @@ describe('InterventionAnalysisService', () => {
         interventionService.analyzeIntervention(
           conversation,
           interventionMessage,
-          userResponse
-        )
+          userResponse,
+        ),
       ).rejects.toThrow()
     })
 
@@ -253,8 +278,8 @@ describe('InterventionAnalysisService', () => {
         interventionService.analyzeIntervention(
           conversation,
           interventionMessage,
-          userResponse
-        )
+          userResponse,
+        ),
       ).rejects.toThrow('AI service error')
     })
   })
@@ -387,7 +412,7 @@ describe('InterventionAnalysisService', () => {
       ]
 
       await expect(
-        interventionService.analyzeBatch(interventions)
+        interventionService.analyzeBatch(interventions),
       ).rejects.toThrow()
     })
   })
@@ -415,7 +440,7 @@ describe('InterventionAnalysisService', () => {
         config: { systemPrompt: string }
       }
       expect(
-        (service as unknown as ServiceConfigWithPrompt).config.systemPrompt
+        (service as unknown as ServiceConfigWithPrompt).config.systemPrompt,
       ).toBe(customPrompt)
     })
   })

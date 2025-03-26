@@ -162,13 +162,13 @@ it('should handle transaction', async () => {
 import { rest } from 'msw'
 
 const server = setupServer(
-  rest.post('/api/*', async (req, res, ctx) => {
+  rest.post('/api/*', async (req, rest, ctx) => {
     console.log('Request:', {
       url: req.url.toString(),
       body: await req.json(),
       headers: Object.fromEntries(req.headers),
     })
-    return res(ctx.json({ success: true }))
+    return rest(ctx.json({ success: true }))
   })
 )
 ```

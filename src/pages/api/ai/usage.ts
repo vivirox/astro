@@ -1,8 +1,9 @@
+import type { AuditMetadata } from '@/lib/audit/log'
 import type { APIRoute } from 'astro'
-import { getSession } from '../../../lib/auth/session'
+import { createAuditLog } from '@/lib/audit/log'
 import { getAIUsageStats } from '../../../lib/ai/analytics'
-import { createAuditLog, type AuditMetadata } from '@/lib/audit/log'
 import { handleApiError } from '../../../lib/ai/error-handling'
+import { getSession } from '../../../lib/auth/session'
 import { validateQueryParams } from '../../../lib/validation/index'
 import { UsageStatsRequestSchema } from '../../../lib/validation/schemas'
 
@@ -32,7 +33,7 @@ export const GET: APIRoute = async ({ request }) => {
     // Validate query parameters
     const [params, validationError] = validateQueryParams(
       new URL(request.url),
-      UsageStatsRequestSchema
+      UsageStatsRequestSchema,
     )
 
     if (validationError) {
@@ -69,7 +70,7 @@ export const GET: APIRoute = async ({ request }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
     }
 
@@ -103,7 +104,8 @@ export const GET: APIRoute = async ({ request }) => {
         'Cache-Control': 'private, max-age=60', // Cache for 1 minute
       },
     })
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error in AI usage API:', error)
 
     // Create audit log for the error

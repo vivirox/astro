@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
 import type { AIMessage } from '../../../lib/ai'
+import { useCallback, useState } from 'react'
 
 interface UseResponseGenerationOptions {
   apiEndpoint?: string
@@ -16,11 +16,11 @@ interface UseResponseGenerationResult {
   error: string | null
   generateResponse: (messages: AIMessage[]) => Promise<string | null>
   generateResponseWithContext: (
-    currentMessage: string
+    currentMessage: string,
   ) => Promise<string | null>
   generateResponseWithInstructions: (
     messages: AIMessage[],
-    instructions: string
+    instructions: string,
   ) => Promise<string | null>
   reset: () => void
 }
@@ -89,7 +89,7 @@ export function useResponseGeneration({
           onComplete(responseContent)
         }
 
-        return responseContent
+        return responseConten
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'An unknown error occurred'
@@ -113,7 +113,7 @@ export function useResponseGeneration({
       apiEndpoint,
       onError,
       onComplete,
-    ]
+    ],
   )
 
   // Generate response with context from current message
@@ -145,7 +145,7 @@ export function useResponseGeneration({
         if (!response?.ok) {
           const errorData = await response?.json()
           throw new Error(
-            errorData.error || 'Failed to generate response with context'
+            errorData.error || 'Failed to generate response with context',
           )
         }
 
@@ -160,7 +160,7 @@ export function useResponseGeneration({
           onComplete(responseContent)
         }
 
-        return responseContent
+        return responseConten
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'An unknown error occurred'
@@ -184,7 +184,7 @@ export function useResponseGeneration({
       apiEndpoint,
       onError,
       onComplete,
-    ]
+    ],
   )
 
   // Generate response with additional instructions
@@ -218,7 +218,7 @@ export function useResponseGeneration({
         if (!response?.ok) {
           const errorData = await response?.json()
           throw new Error(
-            errorData.error || 'Failed to generate response with instructions'
+            errorData.error || 'Failed to generate response with instructions',
           )
         }
 
@@ -233,7 +233,7 @@ export function useResponseGeneration({
           onComplete(responseContent)
         }
 
-        return responseContent
+        return responseConten
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'An unknown error occurred'
@@ -257,7 +257,7 @@ export function useResponseGeneration({
       apiEndpoint,
       onError,
       onComplete,
-    ]
+    ],
   )
 
   return {

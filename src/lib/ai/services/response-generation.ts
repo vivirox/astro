@@ -1,9 +1,9 @@
 import type { ReadableStream } from 'node:stream/web'
 import type {
-  AIService,
-  AIMessage,
-  AIServiceResponse,
   AICompletionResponse,
+  AIMessage,
+  AIService,
+  AIServiceResponse,
   AIStreamChunk,
 } from '../models/ai-types'
 
@@ -43,7 +43,7 @@ export interface ResponseGenerationConfig {
  * Type guard to check if response is AICompletionResponse
  */
 function isAICompletionResponse(
-  response: AICompletionResponse | ReadableStream<AIStreamChunk>
+  response: AICompletionResponse | ReadableStream<AIStreamChunk>,
 ): response is AICompletionResponse {
   return 'choices' in response
 }
@@ -63,8 +63,8 @@ export class ResponseGenerationService {
     this.model = config.model || 'mistralai/Mixtral-8x7B-Instruct-v0.2'
     this.temperature = config.temperature || 0.7
     this.maxResponseTokens = config.maxResponseTokens || 1024
-    this.systemPrompt =
-      config.systemPrompt ||
+    this.systemPromp =
+      config.systemPromp ||
       `You are a supportive and empathetic assistant. Your responses should:
       - Supportive without being judgmental
       - Empathetic and understanding
@@ -83,7 +83,7 @@ export class ResponseGenerationService {
    */
   async generateResponseFromMessages(
     messages: AIMessage[],
-    instructions?: string
+    instructions?: string,
   ): Promise<AIServiceResponse> {
     // Add system instructions if provided
     const messagesWithInstructions = [...messages]
@@ -101,7 +101,7 @@ export class ResponseGenerationService {
         model: this.model,
         temperature: this.temperature,
         maxTokens: this.maxResponseTokens,
-      }
+      },
     )
 
     if (!isAICompletionResponse(response)) {
@@ -137,7 +137,7 @@ export class ResponseGenerationService {
   async generateResponse(
     currentMessage: string,
     previousMessages: AIMessage[] = [],
-    instructions?: string
+    instructions?: string,
   ): Promise<AIServiceResponse> {
     // Format messages
     const messages = [...previousMessages]
@@ -170,11 +170,11 @@ export class ResponseGenerationService {
       temperature?: number
       maxResponseTokens?: number
       systemPrompt?: string
-    }
+    },
   ): Promise<ResponseGenerationResult> {
     const temperature = options?.temperature ?? this.temperature
     const maxTokens = options?.maxResponseTokens ?? this.maxResponseTokens
-    const systemPrompt = options?.systemPrompt ?? this.systemPrompt
+    const systemPrompt = options?.systemPrompt ?? this.systemPromp
 
     // Ensure the first message is a system message with our prompt
     const messagesWithSystem = [...messages]
@@ -201,7 +201,7 @@ export class ResponseGenerationService {
         model: this.model,
         temperature,
         maxTokens,
-      }
+      },
     )
 
     if (!isAICompletionResponse(response)) {
@@ -245,7 +245,7 @@ export class ResponseGenerationService {
     options?: {
       temperature?: number
       maxResponseTokens?: number
-    }
+    },
   ): Promise<ResponseGenerationResult> {
     // Combine system prompt with instructions
     const systemPrompt = `${this.systemPrompt}\n\nAdditional instructions: ${instructions}`
@@ -266,11 +266,11 @@ export class ResponseGenerationService {
       temperature?: number
       maxResponseTokens?: number
       systemPrompt?: string
-    }
+    },
   ): Promise<ResponseGenerationResult> {
     const temperature = options?.temperature ?? this.temperature
     const maxTokens = options?.maxResponseTokens ?? this.maxResponseTokens
-    const systemPrompt = options?.systemPrompt ?? this.systemPrompt
+    const systemPrompt = options?.systemPrompt ?? this.systemPromp
 
     // Ensure the first message is a system message with our prompt
     const messagesWithSystem = [...messages]
@@ -297,7 +297,7 @@ export class ResponseGenerationService {
         model: this.model,
         temperature,
         maxTokens,
-      }
+      },
     )
 
     let fullResponse = ''

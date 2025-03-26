@@ -3,9 +3,10 @@ import type {
   Provider,
   VerifyOtpParams,
 } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
-import { authConfig, type AuthRole } from '../config/auth.config'
+import type { AuthRole } from '../config/auth.config'
+import { authConfig } from '../config/auth.config'
 import { createAuthAuditLog } from '../lib/auth'
+import { supabase } from '../lib/supabase'
 
 /**
  * Authentication service for managing user authentication
@@ -14,7 +15,7 @@ export class AuthService {
   private static instance: AuthService
   private loginAttempts = new Map<
     string,
-    { count: number; timestamp: number }
+    { count: number, timestamp: number }
   >()
 
   /**
@@ -33,7 +34,7 @@ export class AuthService {
   public async signInWithPassword(
     email: string,
     password: string,
-    options?: { captchaToken?: string; redirectTo?: string }
+    options?: { captchaToken?: string, redirectTo?: string },
   ): Promise<AuthResponse> {
     // Check rate limiting
     this.checkRateLimit(email)
@@ -50,14 +51,16 @@ export class AuthService {
       if (response.error) {
         this.incrementLoginAttempt(email)
         await this.logAuthEvent('login_failed', email)
-      } else {
+      }
+      else {
         this.resetLoginAttempts(email)
         await this.updateLastLogin(response.data.user?.id)
         await this.logAuthEvent('login_success', email, response.data.user?.id)
       }
 
       return response
-    } catch (error) {
+    }
+    catch (error) {
       this.incrementLoginAttempt(email)
       await this.logAuthEvent('login_error', email, undefined, {
         error: String(error),
@@ -71,8 +74,8 @@ export class AuthService {
    */
   public async signInWithOAuth(
     provider: Provider,
-    options?: { redirectTo?: string; scopes?: string }
-  ): Promise<{ url: string; provider: Provider; error: Error | null }> {
+    options?: { redirectTo?: string, scopes?: string },
+  ): Promise<{ url: string, provider: Provider, error: Error | null }> {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
@@ -84,7 +87,8 @@ export class AuthService {
 
       if (error) {
         await this.logAuthEvent('oauth_failed', `provider:${provider}`)
-      } else {
+      }
+      else {
         await this.logAuthEvent('oauth_initiated', `provider:${provider}`)
       }
 
@@ -93,12 +97,13 @@ export class AuthService {
         provider,
         error,
       }
-    } catch (error) {
+    }
+    catch (error) {
       await this.logAuthEvent(
         'oauth_error',
         `provider:${provider}`,
         undefined,
-        { error: String(error) }
+        { error: String(error) },
       )
       throw error
     }
@@ -116,17 +121,19 @@ export class AuthService {
 
       if (response.error) {
         await this.logAuthEvent('otp_verification_failed', identifier)
-      } else {
+      }
+      else {
         await this.updateLastLogin(response.data.user?.id)
         await this.logAuthEvent(
           'otp_verification_success',
           identifier,
-          response.data.user?.id
+          response.data.user?.id,
         )
       }
 
       return response
-    } catch (error) {
+    }
+    catch (error) {
       await this.logAuthEvent('otp_verification_error', identifier, undefined, {
         error: String(error),
       })
@@ -143,12 +150,14 @@ export class AuthService {
 
       if (error) {
         await this.logAuthEvent('logout_failed', '')
-      } else {
+      }
+      else {
         await this.logAuthEvent('logout_success', '')
       }
 
       return { error }
-    } catch (error) {
+    }
+    catch (error) {
       await this.logAuthEvent('logout_error', '', undefined, {
         error: String(error),
       })
@@ -166,7 +175,7 @@ export class AuthService {
       avatarUrl?: string
       role?: AuthRole
       metadata?: Record<string, unknown>
-    }
+    },
   ): Promise<{ error: Error | null }> {
     try {
       // Update auth metadata if needed
@@ -193,7 +202,8 @@ export class AuthService {
 
       await this.logAuthEvent('profile_updated', '', userId)
       return { error: null }
-    } catch (error) {
+    }
+    catch (error) {
       await this.logAuthEvent('profile_update_error', '', userId, {
         error: String(error),
       })
@@ -206,7 +216,7 @@ export class AuthService {
    */
   public async resetPassword(
     email: string,
-    redirectTo?: string
+    redirectTo?: string,
   ): Promise<{ error: Error | null }> {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -216,12 +226,14 @@ export class AuthService {
 
       if (error) {
         await this.logAuthEvent('password_reset_failed', email)
-      } else {
+      }
+      else {
         await this.logAuthEvent('password_reset_requested', email)
       }
 
       return { error }
-    } catch (error) {
+    }
+    catch (error) {
       await this.logAuthEvent('password_reset_error', email, undefined, {
         error: String(error),
       })
@@ -230,7 +242,7 @@ export class AuthService {
   }
 
   /**
-   * Create a new user account
+   * Create a new user accoun
    */
   public async signUp(
     email: string,
@@ -239,7 +251,7 @@ export class AuthService {
       fullName?: string
       redirectTo?: string
       captchaToken?: string
-    }
+    },
   ): Promise<AuthResponse> {
     try {
       const response = await supabase.auth.signUp({
@@ -257,7 +269,8 @@ export class AuthService {
 
       if (response.error) {
         await this.logAuthEvent('signup_failed', email)
-      } else {
+      }
+      else {
         // Create initial profile
         await supabase.from('profiles').insert({
           id: response.data.user?.id,
@@ -272,7 +285,8 @@ export class AuthService {
       }
 
       return response
-    } catch (error) {
+    }
+    catch (error) {
       await this.logAuthEvent('signup_error', email, undefined, {
         error: String(error),
       })
@@ -289,15 +303,16 @@ export class AuthService {
     if (attempt && attempt.count >= authConfig.rateLimit.maxLoginAttempts) {
       // Check if the lockout period has expired
       const now = Date.now()
-      const lockoutExpires =
-        attempt.timestamp + authConfig.rateLimit.lockoutDuration * 1000
+      const lockoutExpires
+        = attempt.timestamp + authConfig.rateLimit.lockoutDuration * 1000
 
       if (now < lockoutExpires) {
         const secondsRemaining = Math.ceil((lockoutExpires - now) / 1000)
         throw new Error(
-          `Too many login attempts. Please try again in ${secondsRemaining} seconds.`
+          `Too many login attempts. Please try again in ${secondsRemaining} seconds.`,
         )
-      } else {
+      }
+      else {
         // Lockout period has expired, reset attempts
         this.resetLoginAttempts(identifier)
       }
@@ -313,7 +328,8 @@ export class AuthService {
     if (attempt) {
       attempt.count += 1
       attempt.timestamp = Date.now()
-    } else {
+    }
+    else {
       this.loginAttempts.set(identifier, { count: 1, timestamp: Date.now() })
     }
   }
@@ -329,29 +345,31 @@ export class AuthService {
    * Update the last login timestamp for a user
    */
   private async updateLastLogin(userId?: string): Promise<void> {
-    if (!userId) return
+    if (!userId)
+      return
 
     try {
       await supabase
         .from('profiles')
         .update({ last_login: new Date().toISOString() })
         .eq('id', userId)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error updating last login:', error)
     }
   }
 
   /**
-   * Log an authentication event
+   * Log an authentication even
    */
   private async logAuthEvent(
     action: string,
     identifier: string,
     userId?: string,
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, unknown>,
   ): Promise<void> {
     await createAuthAuditLog({
-      userId: userId,
+      userId,
       action,
       resource: 'auth',
       resourceId: userId || identifier,

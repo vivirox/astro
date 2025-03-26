@@ -56,6 +56,7 @@ export class RateLimiter {
     string,
     { count: number; resetTime: number }
   >()
+
   private readonly defaultLimit: number
   private readonly windowMs: number
   private readonly userLimits: Record<string, number> = {
@@ -65,7 +66,7 @@ export class RateLimiter {
   }
 
   constructor(defaultLimit = 30, windowMs = 60 * 1000) {
-    this.defaultLimit = defaultLimit
+    this.defaultLimit = defaultLimi
     this.windowMs = windowMs
   }
 
@@ -76,7 +77,7 @@ export class RateLimiter {
     identifier: string,
     role = 'anonymous',
     pathSpecificLimits?: Record<string, number>,
-    customWindowMs?: number
+    customWindowMs?: number,
   ): { allowed: boolean; limit: number; remaining: number; reset: number } {
     const now = Date.now()
     // Create a compound key that includes the path information
@@ -87,8 +88,8 @@ export class RateLimiter {
 
     const entry = this.storage.get(storageKey)
     // Use path-specific limits if provided, otherwise use default
-    const limit =
-      pathSpecificLimits?.[role] || this.userLimits[role] || this.defaultLimit
+    const limi =
+      pathSpecificLimits?.[role] || this.userLimits[role] || this.defaultLimi
     const windowMs = customWindowMs || this.windowMs
 
     // If no entry exists or the entry has expired, create a new one
@@ -98,7 +99,7 @@ export class RateLimiter {
       return { allowed: true, limit, remaining: limit - 1, reset: resetTime }
     }
 
-    // Check if the entry has reached its limit
+    // Check if the entry has reached its limi
     if (entry.count >= limit) {
       return { allowed: false, limit, remaining: 0, reset: entry.resetTime }
     }
@@ -142,7 +143,7 @@ setInterval(() => {
 function findMatchingConfig(path: string): RateLimitConfig | undefined {
   // Sort configs by specificity (longest path first)
   const sortedConfigs = [...rateLimitConfigs].sort(
-    (a, b) => b.path.length - a.path.length
+    (a, b) => b.path.length - a.path.length,
   )
 
   // Find the first config that matches the path
@@ -193,12 +194,12 @@ export const rateLimitMiddleware = defineMiddleware(
     // Create a composite identifier that includes the API path type
     const compositeIdentifier = `${identifier}:${config.path}`
 
-    // Check rate limit
+    // Check rate limi
     const { allowed, limit, remaining, reset } = rateLimiter.check(
       compositeIdentifier,
       role,
       config.limits,
-      config.windowMs
+      config.windowMs,
     )
 
     if (!allowed) {
@@ -223,7 +224,7 @@ export const rateLimitMiddleware = defineMiddleware(
             'X-RateLimit-Reset': reset.toString(),
             'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
           },
-        }
+        },
       )
     }
 
@@ -236,7 +237,7 @@ export const rateLimitMiddleware = defineMiddleware(
     response?.headers.set('X-RateLimit-Reset', reset.toString())
 
     return response
-  }
+  },
 )
 
 // Export the instance for direct use in API routes

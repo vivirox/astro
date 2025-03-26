@@ -1,9 +1,9 @@
+import { AnalyticsEventType, AnalyticsService } from '@/lib/analytics'
+import { createHIPAACompliantAuditLog } from '@/lib/audit'
+import { getSession } from '@/lib/auth/session'
 import { fheService } from '@/lib/fhe'
 import { EncryptionMode, FHEOperation } from '@/lib/fhe/types'
-import { getSession } from '@/lib/auth/session'
 import { getLogger } from '@/lib/logging'
-import { createHIPAACompliantAuditLog } from '@/lib/audit'
-import { AnalyticsService, AnalyticsEventType } from '@/lib/analytics'
 
 // Create logger instance
 const logger = getLogger()
@@ -65,7 +65,7 @@ export async function POST(req: Request): Promise<Response> {
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -79,7 +79,7 @@ export async function POST(req: Request): Promise<Response> {
       : EncryptionMode.NONE
 
     logger.info(
-      `Initializing therapy chat with encryption mode: ${encryptionMode}`
+      `Initializing therapy chat with encryption mode: ${encryptionMode}`,
     )
 
     try {
@@ -96,7 +96,7 @@ export async function POST(req: Request): Promise<Response> {
         enableDebug: process.env.NODE_ENV === 'development',
       })
 
-      // For FHE mode, setup advanced key management
+      // For FHE mode, setup advanced key managemen
       if (encryptionMode === EncryptionMode.FHE) {
         // Assuming these methods need to be implemented
         // or using alternative available methods
@@ -106,7 +106,7 @@ export async function POST(req: Request): Promise<Response> {
         // In a real implementation, these would be properly implemented
 
         logger.info(
-          `FHE initialized with key ID: ${keyId} using enhanced security`
+          `FHE initialized with key ID: ${keyId} using enhanced security`,
         )
       }
 
@@ -127,7 +127,7 @@ export async function POST(req: Request): Promise<Response> {
       // Using underscore prefix to denote this variable is processed but unused in the mock implementation
       const _processedMessages = await Promise.all(
         messages.map(async (message: { role: string; content: string }) => {
-          // If content should be encrypted, encrypt it
+          // If content should be encrypted, encrypt i
           if (encryptionEnabled && message.role === 'user') {
             try {
               // For high security, use stronger encryption parameters
@@ -139,15 +139,15 @@ export async function POST(req: Request): Promise<Response> {
                 const [sentiment, toxicity, pii] = await Promise.all([
                   fheService.processEncrypted(
                     encryptedContent,
-                    FHEOperation.SENTIMENT
+                    FHEOperation.SENTIMENT,
                   ),
                   fheService.processEncrypted(
                     encryptedContent,
-                    FHEOperation.FILTER
+                    FHEOperation.FILTER,
                   ),
                   fheService.processEncrypted(
                     encryptedContent,
-                    FHEOperation.TOKENIZE
+                    FHEOperation.TOKENIZE,
                   ),
                 ])
 
@@ -159,7 +159,7 @@ export async function POST(req: Request): Promise<Response> {
                 ])
 
                 // Take action based on results
-                if (parseFloat(decryptedResults[1]) > 0.8) {
+                if (Number.parseFloat(decryptedResults[1]) > 0.8) {
                   // High toxicity
                   logger.warn('High toxicity message detected', {
                     userId,
@@ -175,20 +175,20 @@ export async function POST(req: Request): Promise<Response> {
                       score: decryptedResults[1],
                       timestamp: Date.now(),
                     },
-                    AnalyticsEventType.SECURITY
+                    AnalyticsEventType.SECURITY,
                   )
                 }
 
                 // If PII detected, apply additional protections
                 if (decryptedResults[2] === 'true') {
                   logger.info(
-                    'PII detected in message, applying additional protections'
+                    'PII detected in message, applying additional protections',
                   )
 
                   // Apply additional homomorphic redaction/protection
                   await fheService.processEncrypted(
                     encryptedContent,
-                    FHEOperation.FILTER
+                    FHEOperation.FILTER,
                   )
                 }
 
@@ -215,7 +215,7 @@ export async function POST(req: Request): Promise<Response> {
                 : {
                     ...message,
                     content: message.content, // Original content for demo/dev
-                    // In production, use: content: encryptedContent
+                    // In production, use: content: encryptedConten
                   }
             } catch (error) {
               logger.error('Failed to encrypt message', error)
@@ -224,7 +224,7 @@ export async function POST(req: Request): Promise<Response> {
           }
 
           return message
-        })
+        }),
       )
 
       // Generate system message based on scenario - adding underscore prefix as it's unused in mock implementation
@@ -241,7 +241,7 @@ export async function POST(req: Request): Promise<Response> {
       const encoder = new TextEncoder()
       const stream = new ReadableStream({
         start(controller) {
-          const responseText =
+          const responseTex =
             "I understand you're looking for support. As a therapy assistant, I'm here to listen and provide guidance based on evidence-based approaches. How can I help you today?"
 
           // Simulate streaming response
@@ -250,7 +250,7 @@ export async function POST(req: Request): Promise<Response> {
 
           function push() {
             if (i < chunks.length) {
-              const chunk = chunks[i] + ' '
+              const chunk = `${chunks[i]} `
               controller.enqueue(encoder.encode(chunk))
               i++
               setTimeout(push, 100)
@@ -297,7 +297,7 @@ export async function POST(req: Request): Promise<Response> {
         {
           status: 500,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
   } catch (error: unknown) {
@@ -312,7 +312,7 @@ export async function POST(req: Request): Promise<Response> {
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
   }
 }
@@ -321,44 +321,44 @@ export async function POST(req: Request): Promise<Response> {
  * Generate a system prompt based on scenario and security level
  */
 function generateSystemPrompt(scenario: string, securityLevel: string): string {
-  const basePrompt =
+  const basePromp =
     'You are TherapistGPT, an AI assistant specialized in mental health support. '
 
   // Add scenario-specific instructions
-  let scenarioPrompt = ''
+  const scenarioPrompt = ''
   switch (scenario) {
     case 'anxiety':
-      scenarioPrompt =
+      scenarioPromp =
         'Focus on helping users manage anxiety symptoms using evidence-based techniques like deep breathing, cognitive reframing, and mindfulness. Provide calm, measured responses.'
       break
     case 'depression':
-      scenarioPrompt =
+      scenarioPromp =
         'Offer supportive responses for users experiencing depression. Emphasize self-care, small achievable goals, and recognition of negative thought patterns. Be compassionate but encourage healthy behaviors.'
       break
     case 'trauma':
-      scenarioPrompt =
+      scenarioPromp =
         'Use trauma-informed approaches, avoiding potential triggers. Focus on safety, establishing trust, and gentle guidance toward professional support. Validate experiences without forcing disclosure.'
       break
     case 'relationship':
-      scenarioPrompt =
+      scenarioPromp =
         'Help with relationship challenges by encouraging healthy communication, boundary-setting, and perspective-taking. Remain neutral and avoid taking sides.'
       break
     case 'stress':
-      scenarioPrompt =
+      scenarioPromp =
         'Provide stress management techniques including time management, prioritization, relaxation methods, and cognitive strategies for reframing stressful situations.'
       break
     default:
-      scenarioPrompt =
+      scenarioPromp =
         'Provide supportive and thoughtful responses to users seeking mental health guidance. Use evidence-based approaches and maintain an empathetic tone.'
   }
 
   // Add security-specific instructions
-  let securityPrompt = ''
+  const securityPrompt = ''
   if (securityLevel === 'high') {
-    securityPrompt =
+    securityPromp =
       '\n\nMaintain the highest level of confidentiality. Do not reference personal details from previous messages unless the user mentions them first. Prioritize privacy in all responses.'
   } else if (securityLevel === 'medium') {
-    securityPrompt =
+    securityPromp =
       '\n\nMaintain confidentiality and be mindful of privacy concerns. Avoid unnecessary references to sensitive personal information.'
   }
 

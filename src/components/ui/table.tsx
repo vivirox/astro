@@ -41,7 +41,7 @@ function Table({
             'w-full': fullWidth,
             'border border-gray-200 dark:border-gray-700': bordered,
           },
-          className
+          className,
         )}
         {...restProps}
       >
@@ -86,7 +86,7 @@ export interface TableFooterProps
 
 function TableFooter({ className, ...props }: TableFooterProps) {
   return (
-    <tfoot
+    <tfoo
       className={cn('bg-gray-50 dark:bg-gray-800 font-medium', className)}
       {...props}
     />
@@ -108,7 +108,7 @@ function TableRow({ selected = false, className, ...props }: TableRowProps) {
           'hover:bg-gray-100 dark:hover:bg-gray-800/50': true,
           'bg-blue-50 dark:bg-blue-900/20': selected,
         },
-        className
+        className,
       )}
       {...props}
     />
@@ -143,7 +143,7 @@ function TableHead({
         'h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-gray-400',
         'border-b border-gray-200 dark:border-gray-700',
         { 'cursor-pointer select-none': sortable },
-        className
+        className,
       )}
       onClick={sortable ? onSort : undefined}
       {...props}
@@ -256,7 +256,7 @@ function TablePagination({
     <div
       className={cn(
         'flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 px-4 py-3 dark:border-gray-700',
-        className
+        className,
       )}
       {...props}
     >
@@ -283,7 +283,7 @@ function TablePagination({
             'flex h-8 w-8 items-center justify-center rounded-md',
             'text-gray-500 dark:text-gray-400',
             'hover:bg-gray-100 dark:hover:bg-gray-800',
-            'disabled:opacity-50 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent'
+            'disabled:opacity-50 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent',
           )}
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
@@ -314,7 +314,7 @@ function TablePagination({
                 'bg-primary text-white': currentPage === page,
                 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800':
                   currentPage !== page,
-              }
+              },
             )}
             onClick={() => onPageChange(page)}
             aria-label={`Page ${page}`}
@@ -329,7 +329,7 @@ function TablePagination({
             'flex h-8 w-8 items-center justify-center rounded-md',
             'text-gray-500 dark:text-gray-400',
             'hover:bg-gray-100 dark:hover:bg-gray-800',
-            'disabled:opacity-50 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent'
+            'disabled:opacity-50 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent',
           )}
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
@@ -362,11 +362,11 @@ function TablePagination({
 
 export {
   Table,
-  TableHeader,
   TableBody,
-  TableFooter,
-  TableRow,
-  TableHead,
   TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
   TablePagination,
+  TableRow,
 }

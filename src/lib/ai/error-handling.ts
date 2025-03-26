@@ -1,12 +1,12 @@
-import { createAuditLog } from '../audit'
+import type { ReadableStream } from 'node:stream/web'
 import type {
-  AIMessage,
   AICompletionResponse,
-  ModelInfo,
+  AIMessage,
   AIServiceOptions,
   AIStreamChunk,
+  ModelInfo,
 } from './models/ai-types'
-import type { ReadableStream } from 'node:stream/web'
+import { createAuditLog } from '../audit'
 
 /**
  * Standard error types for AI service operations
@@ -30,15 +30,15 @@ export enum AIErrorType {
 export interface AIService {
   createChatCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ) => Promise<AICompletionResponse>
   createStreamingChatCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ) => Promise<ReadableStream<AIStreamChunk>>
   generateStreamingCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ) => Promise<ReadableStream<AIStreamChunk>>
   getModelInfo: (model: string) => ModelInfo
 }
@@ -65,7 +65,7 @@ export class AIError extends Error {
     message: string,
     type: AIErrorType = AIErrorType.UNKNOWN,
     status?: number,
-    details?: AIErrorDetails
+    details?: AIErrorDetails,
   ) {
     super(message)
     this.name = 'AIError'
@@ -121,7 +121,7 @@ export const AIErrorCodes = {
  */
 export function handleAIServiceError(
   error: unknown,
-  context?: Record<string, unknown>
+  context?: Record<string, unknown>,
 ): AIError {
   // If it's already an AIError, just return i
   if (error instanceof AIError) {
@@ -141,7 +141,7 @@ export function handleAIServiceError(
       originalError: originalError.message,
       stack: originalError.stack,
       context,
-    }
+    },
   )
 
   // Handle AI provider specific errors
@@ -154,7 +154,7 @@ export function handleAIServiceError(
         originalError: originalError.message,
         stack: originalError.stack,
         context,
-      }
+      },
     )
   } else if (originalError.message.includes('Rate limit')) {
     aiError = new AIError(
@@ -165,7 +165,7 @@ export function handleAIServiceError(
         originalError: originalError.message,
         stack: originalError.stack,
         context,
-      }
+      },
     )
   } else if (originalError.message.includes('content filter')) {
     aiError = new AIError(
@@ -176,7 +176,7 @@ export function handleAIServiceError(
         originalError: originalError.message,
         stack: originalError.stack,
         context,
-      }
+      },
     )
   } else if (originalError.message.includes('token limit')) {
     aiError = new AIError(
@@ -187,7 +187,7 @@ export function handleAIServiceError(
         originalError: originalError.message,
         stack: originalError.stack,
         context,
-      }
+      },
     )
   } else if (originalError.message.includes('authentication')) {
     aiError = new AIError(
@@ -198,7 +198,7 @@ export function handleAIServiceError(
         originalError: originalError.message,
         stack: originalError.stack,
         context,
-      }
+      },
     )
   } else if (
     originalError.message.includes('not available') ||
@@ -212,7 +212,7 @@ export function handleAIServiceError(
         originalError: originalError.message,
         stack: originalError.stack,
         context,
-      }
+      },
     )
   } else if (originalError.message.includes('invalid model')) {
     aiError = new AIError(
@@ -223,7 +223,7 @@ export function handleAIServiceError(
         originalError: originalError.message,
         stack: originalError.stack,
         context,
-      }
+      },
     )
   }
 
@@ -246,7 +246,7 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
   return {
     createChatCompletion: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ) => {
       try {
         return await aiService.createChatCompletion(messages, options)
@@ -258,23 +258,30 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
 
         // Create audit log for the error
         await createAuditLog({
+          action: 'ai_error',
           userId: 'system',
-          action: 'ai.error',
-          resource: 'ai',
-          metadata: {
-            error: error instanceof Error ? error?.message : String(error),
-            model: options?.model,
-            context,
+          resourceType: 'ai_service',
+          resourceId: error.id,
+          details: {
+            message: 'An unexpected error occurred with the AI service',
+            originalError: (error as Error).message || String(error),
+            metadata: {
+              ...context,
+            },
           },
         })
 
-        throw handleAIServiceError(error, context)
+        handleStreamError(error, context)
+
+        if (error instanceof Error) {
+          throw handleAIServiceError(error, context)
+        }
       }
     },
 
     createStreamingChatCompletion: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ) => {
       try {
         return await aiService.createStreamingChatCompletion(messages, options)
@@ -287,23 +294,30 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
 
         // Create audit log for the error
         await createAuditLog({
+          action: 'ai_error',
           userId: 'system',
-          action: 'ai.error',
-          resource: 'ai',
-          metadata: {
-            error: error instanceof Error ? error?.message : String(error),
-            model: options?.model,
-            context,
+          resourceType: 'ai_service',
+          resourceId: error.id,
+          details: {
+            message: 'An unexpected error occurred with the AI service',
+            originalError: (error as Error).message || String(error),
+            metadata: {
+              ...context,
+            },
           },
         })
 
-        throw handleAIServiceError(error, context)
+        handleStreamError(error, context)
+
+        if (error instanceof Error) {
+          throw handleAIServiceError(error, context)
+        }
       }
     },
 
     generateStreamingCompletion: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ) => {
       try {
         return await aiService.generateStreamingCompletion(messages, options)
@@ -316,17 +330,24 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
 
         // Create audit log for the error
         await createAuditLog({
+          action: 'ai_error',
           userId: 'system',
-          action: 'ai.error',
-          resource: 'ai',
-          metadata: {
-            error: error instanceof Error ? error?.message : String(error),
-            model: options?.model,
-            context,
+          resourceType: 'ai_service',
+          resourceId: error.id,
+          details: {
+            message: 'An unexpected error occurred with the AI service',
+            originalError: (error as Error).message || String(error),
+            metadata: {
+              ...context,
+            },
           },
         })
 
-        throw handleAIServiceError(error, context)
+        handleStreamError(error, context)
+
+        if (error instanceof Error) {
+          throw handleAIServiceError(error, context)
+        }
       }
     },
 
@@ -335,7 +356,10 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
         return aiService.getModelInfo(model)
       } catch (error) {
         const context = { model }
-        throw handleAIServiceError(error, context)
+        if (error instanceof Error) {
+          throw handleAIServiceError(error, context)
+        }
+        throw new Error('Unknown error occurred')
       }
     },
   }
@@ -367,7 +391,7 @@ export function safeJsonParse<T>(jsonString: string): T {
               innerError instanceof Error
                 ? innerError
                 : new Error(String(innerError)),
-          }
+          },
         )
       }
     }
@@ -381,7 +405,7 @@ export function safeJsonParse<T>(jsonString: string): T {
         response: jsonString,
         originalError:
           error instanceof Error ? error : new Error(String(error)),
-      }
+      },
     )
   }
 }
@@ -392,7 +416,7 @@ export function safeJsonParse<T>(jsonString: string): T {
 export function validateJsonResponse<T>(
   data: unknown,
   validator: (data: unknown) => data is T,
-  errorMessage = 'Invalid response structure from AI service'
+  errorMessage = 'Invalid response structure from AI service',
 ): T {
   if (!validator(data)) {
     throw new AIError(errorMessage, AIErrorType.INVALID_RESPONSE, 500, {
@@ -413,7 +437,7 @@ export async function withRetry<T>(
     maxDelay?: number
     factor?: number
     retryableErrors?: string[]
-  } = {}
+  } = {},
 ): Promise<T> {
   const {
     maxRetries = 3,
@@ -447,8 +471,8 @@ export async function withRetry<T>(
 
       // Calculate delay with exponential backoff and jitter
       const delay = Math.min(
-        initialDelay * Math.pow(factor, attempt) + Math.random() * 100,
-        maxDelay
+        initialDelay * factor ** attempt + Math.random() * 100,
+        maxDelay,
       )
 
       console.warn(
@@ -457,7 +481,7 @@ export async function withRetry<T>(
           error: lastError.message,
           attempt: attempt + 1,
           maxRetries,
-        }
+        },
       )
 
       // Wait before retrying
@@ -486,7 +510,7 @@ export function handleApiError(error: unknown): Response {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 
@@ -517,7 +541,7 @@ export function handleApiError(error: unknown): Response {
           'Content-Type': 'application/json',
           'Retry-After': String(rateLimitError.retryAfter || 60),
         },
-      }
+      },
     )
   }
 
@@ -534,7 +558,7 @@ export function handleApiError(error: unknown): Response {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 
@@ -550,7 +574,7 @@ export function handleApiError(error: unknown): Response {
       headers: {
         'Content-Type': 'application/json',
       },
-    }
+    },
   )
 }
 
@@ -560,8 +584,18 @@ export function handleApiError(error: unknown): Response {
 export function createAIError(
   message: string,
   type: AIErrorType = AIErrorType.UNKNOWN,
-  details?: AIErrorDetails
+  details?: AIErrorDetails,
 ): AIError {
   const status = errorTypeToStatusCode[type] || 500
   return new AIError(message, type, status, details)
+}
+
+export function handleStreamError(
+  error: unknown,
+  context: AIErrorContext = {},
+): never {
+  if (error instanceof Error) {
+    throw handleAIServiceError(error, context)
+  }
+  throw new Error('Unknown error occurred')
 }

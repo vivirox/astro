@@ -13,13 +13,13 @@ export const POST: APIRoute = async ({ request }) => {
             success: false,
             message: `Missing required field: ${field}`,
           }),
-          { status: 400 }
+          { status: 400 },
         )
       }
     }
 
     // In a real application, you would:
-    // 1. Validate the email format
+    // 1. Validate the email forma
     // 2. Check for spam
     // 3. Store the message in a database
     // 4. Send an email notification
@@ -28,7 +28,7 @@ export const POST: APIRoute = async ({ request }) => {
     console.log('Contact form submission:', data)
 
     // Simulate processing delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise(resolve => setTimeout(resolve, 500))
 
     return new Response(
       JSON.stringify({
@@ -36,9 +36,10 @@ export const POST: APIRoute = async ({ request }) => {
         message:
           'Your message has been received. We will get back to you soon!',
       }),
-      { status: 200 }
+      { status: 200 },
     )
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error processing contact form:', error)
     return new Response(
       JSON.stringify({
@@ -49,7 +50,7 @@ export const POST: APIRoute = async ({ request }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 }

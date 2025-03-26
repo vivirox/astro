@@ -2,6 +2,8 @@
  * Email template utilities
  */
 
+import { logger } from './logger'
+
 /**
  * Preview an email template with the given data
  * @param templateName The name of the template to preview
@@ -13,11 +15,33 @@ export async function previewTemplate(
   data: Record<
     string,
     string | { platform: string; url: string | undefined }[] | undefined
-  > = {}
+  > = {},
 ): Promise<string> {
-  // Implementation would typically load the template and render it with the data
-  console.log(`Previewing template: ${templateName} with data:`, data)
-  return `<html><body><h1>Template: ${templateName}</h1><pre>${JSON.stringify(data, null, 2)}</pre></body></html>`
+  logger.info('Previewing email template', {
+    context: 'Template',
+    data: {
+      templateName,
+      data,
+    },
+  })
+
+  try {
+    // Implementation would typically load the template and render it with the data
+    const renderedHtml = `<html><body><h1>Template: ${templateName}</h1><pre>${JSON.stringify(data, null, 2)}</pre></body></html>`
+
+    logger.debug('Template rendered successfully', {
+      context: 'Template',
+      data: { templateName },
+    })
+
+    return renderedHtml
+  } catch (error) {
+    logger.error('Failed to render template', error as Error, {
+      context: 'Template',
+      data: { templateName },
+    })
+    throw error
+  }
 }
 
 /**

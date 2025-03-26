@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface FeatureSupport {
   feature: string
@@ -6,8 +6,12 @@ interface FeatureSupport {
   notes?: string
 }
 
+interface FeatureTest {
+  name: string
+  test: () => boolean
+}
+
 export function BrowserCompatibilityTester() {
-  const [features, setFeatures] = useState<FeatureSupport[]>([])
   const [browserInfo, setBrowserInfo] = useState({
     userAgent: '',
     platform: '',
@@ -19,6 +23,7 @@ export function BrowserCompatibilityTester() {
     touchPoints: 0,
     hasTouch: false,
   })
+  const [results, setResults] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     // Collect browser information
@@ -34,86 +39,54 @@ export function BrowserCompatibilityTester() {
       hasTouch: 'ontouchstart' in window,
     })
 
-    // Test feature support
-    const featureTests: FeatureSupport[] = [
+    // Test feature suppor
+    const featureTests: FeatureTest[] = [
       {
-        feature: 'CSS Grid',
-        supported: testCSSProperty('grid-template-columns'),
-        notes: 'Used for layout in chat interface',
+        name: 'ES2024 Features',
+        test: () => {
+          try {
+            // Test for specific ES2024 features safely
+            return (
+              typeof Promise.withResolvers === 'function' &&
+              typeof Array.prototype.groupBy === 'function' &&
+              typeof Array.prototype.findLast === 'function'
+            )
+          } catch {
+            return false
+          }
+        },
       },
       {
-        feature: 'CSS Flexbox',
-        supported: testCSSProperty('flex-direction'),
-        notes: 'Used for component layouts',
+        name: 'WebCrypto',
+        test: () =>
+          typeof window !== 'undefined' &&
+          'crypto' in window &&
+          'subtle' in window.crypto,
       },
       {
-        feature: 'CSS Variables',
-        supported: testCSSProperty('--test'),
-        notes: 'Used for theming',
+        name: 'WebWorkers',
+        test: () => typeof window !== 'undefined' && 'Worker' in window,
       },
       {
-        feature: 'Fetch API',
-        supported: typeof fetch !== 'undefined',
-        notes: 'Used for API requests',
+        name: 'SharedArrayBuffer',
+        test: () => typeof SharedArrayBuffer === 'function',
       },
       {
-        feature: 'IntersectionObserver',
-        supported: typeof IntersectionObserver !== 'undefined',
-        notes: 'Used for lazy loading',
-      },
-      {
-        feature: 'Web Animations API',
-        supported: typeof document.createElement('div').animate !== 'undefined',
-        notes: 'Used for UI animations',
-      },
-      {
-        feature: 'ResizeObserver',
-        supported: typeof ResizeObserver !== 'undefined',
-        notes: 'Used for responsive components',
-      },
-      {
-        feature: 'LocalStorage',
-        supported: testLocalStorage(),
-        notes: 'Used for storing preferences',
-      },
-      {
-        feature: 'WebSockets',
-        supported: typeof WebSocket !== 'undefined',
-        notes: 'Used for real-time updates',
-      },
-      {
-        feature: 'ARIA Support',
-        supported: 'role' in document.createElement('div'),
-        notes: 'Critical for accessibility',
-      },
-      {
-        feature: 'Async/Await',
-        supported: testAsyncAwait(),
-        notes: 'Used throughout codebase',
-      },
-      {
-        feature: 'CSS Transitions',
-        supported: testCSSProperty('transition'),
-        notes: 'Used for UI animations',
-      },
-      {
-        feature: 'CSS Animations',
-        supported: testCSSProperty('animation'),
-        notes: 'Used for loading indicators',
-      },
-      {
-        feature: 'Reduced Motion Support',
-        supported: testReducedMotion(),
-        notes: 'Used for accessibility',
-      },
-      {
-        feature: 'High Contrast Mode',
-        supported: testHighContrastMode(),
-        notes: 'Used for accessibility',
+        name: 'WebAssembly',
+        test: () => typeof WebAssembly === 'object',
       },
     ]
 
-    setFeatures(featureTests)
+    const testResults: Record<string, boolean> = {}
+    featureTests.forEach(({ name, test }) => {
+      try {
+        testResults[name] = test()
+      } catch {
+        testResults[name] = false
+      }
+    })
+
+    setResults(testResults)
   }, [])
 
   // Helper functions for feature detection
@@ -134,7 +107,9 @@ export function BrowserCompatibilityTester() {
 
   function testAsyncAwait(): boolean {
     try {
-      eval('(async () => {})()')
+      // Test async/await support without eval
+      const AsyncFunction = (async () => {}).constructor
+      new AsyncFunction()
       return true
     } catch {
       return false
@@ -151,7 +126,7 @@ export function BrowserCompatibilityTester() {
   function testHighContrastMode(): string {
     if (typeof window.matchMedia !== 'function') return 'Not supported'
     // Different browsers have different ways to detect high contrast mode
-    const isHighContrast =
+    const isHighContras =
       window.matchMedia('(forced-colors: active)').matches ||
       window.matchMedia('-ms-high-contrast: active').matches
     return isHighContrast ? 'Active' : 'Supported'
@@ -207,17 +182,29 @@ export function BrowserCompatibilityTester() {
             </tr>
           </thead>
           <tbody>
-            {features.map((feature, index) => (
-              <tr key={index}>
-                <td>{feature.feature}</td>
+            {Object.entries(results).map(([feature, supported]) => (
+              <tr key={feature}>
+                <td>{feature}</td>
                 <td>
-                  {typeof feature.supported === 'boolean'
-                    ? feature.supported
+                  {typeof supported === 'boolean'
+                    ? supported
                       ? '✅ Yes'
                       : '❌ No'
-                    : feature.supported}
+                    : 'Not Supported'}
                 </td>
-                <td>{feature.notes}</td>
+                <td>
+                  {feature === 'ES2024 Features'
+                    ? 'Used for modern JavaScript features'
+                    : feature === 'WebCrypto'
+                      ? 'Used for secure encryption'
+                      : feature === 'WebWorkers'
+                        ? 'Used for background processing'
+                        : feature === 'SharedArrayBuffer'
+                          ? 'Used for high-performance data sharing'
+                          : feature === 'WebAssembly'
+                            ? 'Used for high-performance code execution'
+                            : ''}
+                </td>
               </tr>
             ))}
           </tbody>

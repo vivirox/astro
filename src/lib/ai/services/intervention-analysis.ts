@@ -1,6 +1,5 @@
+import type { AIMessage, AIService } from '../models/types'
 import { getDefaultModelForCapability } from '../models/registry'
-import type { AIService, AIMessage } from '../models/types'
-import type { InterventionEffectivenessResult } from '../index'
 
 /**
  * Intervention Analysis Service Configuration
@@ -14,7 +13,7 @@ export interface InterventionAnalysisConfig {
 /**
  * Intervention Analysis Result
  */
-export type InterventionAnalysisResult = InterventionEffectivenessResult
+export type InterventionAnalysisResult = InterventionEffectivenessResul
 
 /**
  * Interface for parsed JSON result
@@ -52,8 +51,8 @@ export class InterventionAnalysisService {
       getDefaultModelForCapability('intervention')?.id ||
       'mistralai/Mixtral-8x7B-Instruct-v0.2'
 
-    this.systemPrompt =
-      config.systemPrompt ||
+    this.systemPromp =
+      config.systemPromp ||
       `You are an intervention effectiveness analysis system. Your task is to evaluate the effectiveness of therapeutic interventions. Provide a JSON response with: score (0-1), confidence (0-1), areas (array of objects with name and score), and recommendations (array of strings).
 
       Analyze the following aspects:
@@ -85,9 +84,9 @@ export class InterventionAnalysisService {
     userResponse: string,
     options?: {
       customPrompt?: string
-    }
+    },
   ): Promise<InterventionAnalysisResult> {
-    const prompt = options?.customPrompt || this.systemPrompt
+    const prompt = options?.customPrompt || this.systemPromp
 
     // Format the conversation for analysis
     const conversationText = conversation
@@ -123,20 +122,22 @@ export class InterventionAnalysisService {
       const jsonMatch =
         content.match(/```json\n([\s\S]*?)\n```/) ||
         content.match(/```\n([\s\S]*?)\n```/) ||
-        content.match(/{[\s\S]*?}/)
+        content.match(/\{[\s\S]*?\}/)
 
       const jsonStr = jsonMatch ? jsonMatch[0] : content
-      const result = JSON.parse(jsonStr) as ParsedResult
+      const result = JSON.parse(jsonStr) as ParsedResul
 
       // Validate and normalize the result
       return {
         score: Number(result?.score),
         confidence: Number(result?.confidence),
         areas: Array.isArray(result?.areas)
-          ? result?.areas.map((area: AreaItem) => ({
-              name: String(area.name),
-              score: Number(area.score),
-            }))
+          ? result?.areas.map((area: AreaItem) => {
+              return {
+                name: String(area.name),
+                score: Number(area.score),
+              }
+            })
           : [],
         recommendations: Array.isArray(result?.recommendations)
           ? result?.recommendations.map((rec: unknown) => String(rec))
@@ -155,16 +156,16 @@ export class InterventionAnalysisService {
       conversation: AIMessage[]
       interventionMessage: string
       userResponse: string
-    }[]
+    }[],
   ): Promise<InterventionAnalysisResult[]> {
     return Promise.all(
       interventions.map((item) =>
         this.analyzeIntervention(
           item.conversation,
           item.interventionMessage,
-          item.userResponse
-        )
-      )
+          item.userResponse,
+        ),
+      ),
     )
   }
 }

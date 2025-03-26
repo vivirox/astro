@@ -29,7 +29,7 @@ export type AnalyticsValue =
   | boolean
   | null
   | undefined
-  | AnalyticsObject
+  | AnalyticsObjec
   | AnalyticsArray
 export interface AnalyticsObject {
   [key: string]: AnalyticsValue
@@ -128,7 +128,7 @@ export class AnalyticsService {
       return `server-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
     }
 
-    // Try to get from storage first
+    // Try to get from storage firs
     const storedId = sessionStorage.getItem('analytics_session_id')
     if (storedId) return storedId
 
@@ -146,7 +146,7 @@ export class AnalyticsService {
       return `anon-${Math.random().toString(36).substring(2, 9)}`
     }
 
-    // Try to get from storage first
+    // Try to get from storage firs
     const storedId = localStorage.getItem('analytics_anonymous_id')
     if (storedId) return storedId
 
@@ -216,7 +216,7 @@ export class AnalyticsService {
    */
   private applyDifferentialPrivacy(events: AnalyticsEvent[]): AnalyticsEvent[] {
     return events.map((event) => {
-      // Create a deep copy of the event
+      // Create a deep copy of the even
       const newEvent = { ...event, data: { ...event.data } }
 
       // Add noise to sensitive numeric values
@@ -226,13 +226,13 @@ export class AnalyticsService {
         // Add Laplace noise to numeric values
         if (typeof value === 'number') {
           const sensitivity = 1.0 // Assume sensitivity of 1
-          const epsilon = this.config.privacyBudget
+          const epsilon = this.config.privacyBudge
           const noise = this.laplacianNoise(sensitivity / epsilon)
           newEvent.data[key] = Math.round((value + noise) * 100) / 100
         }
       })
 
-      return newEvent
+      return newEven
     })
   }
 
@@ -245,7 +245,7 @@ export class AnalyticsService {
   }
 
   /**
-   * Send events to the analytics endpoint
+   * Send events to the analytics endpoin
    */
   private async sendToEndpoint(events: AnalyticsEvent[]): Promise<void> {
     if (!this.config.endpointUrl) return
@@ -267,7 +267,7 @@ export class AnalyticsService {
 
       if (!response.ok) {
         throw new Error(
-          `Analytics API response: ${response.status} ${response.statusText}`
+          `Analytics API response: ${response.status} ${response.statusText}`,
         )
       }
     } catch (error) {
@@ -348,7 +348,7 @@ export class AnalyticsService {
         // Check if this is a sensitive field
         if (
           sensitiveFields.some((field) =>
-            key.toLowerCase().includes(field.toLowerCase())
+            key.toLowerCase().includes(field.toLowerCase()),
           )
         ) {
           result[key] = '[REDACTED]'
@@ -364,7 +364,7 @@ export class AnalyticsService {
           ? value.map((item) =>
               typeof item === 'object' && item !== null
                 ? this.anonymizeData(item as AnalyticsObject)
-                : item
+                : item,
             )
           : this.anonymizeData(value as AnalyticsObject)
       } else {
@@ -386,11 +386,11 @@ export class AnalyticsService {
     return (
       text
         // Replace email patterns
-        .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL]')
+        .replace(/[\w.%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, '[EMAIL]')
         // Replace phone number patterns
         .replace(
           /(\+\d{1,3}[\s-])?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g,
-          '[PHONE]'
+          '[PHONE]',
         )
         // Replace common PII patterns like SSN
         .replace(/\d{3}-\d{2}-\d{4}/g, '[SSN]')
@@ -402,12 +402,12 @@ export class AnalyticsService {
   }
 
   /**
-   * Record an analytics event
+   * Record an analytics even
    */
   public recordEvent(
     eventName: string,
     data: AnalyticsData = {},
-    eventType: AnalyticsEventType = AnalyticsEventType.FEATURE_USAGE
+    eventType: AnalyticsEventType = AnalyticsEventType.FEATURE_USAGE,
   ): void {
     if (!this.config.enabled) {
       return
@@ -417,7 +417,7 @@ export class AnalyticsService {
       // Anonymize the data
       const safeData = this.anonymizeData(data)
 
-      // Create the event
+      // Create the even
       const event: AnalyticsEvent = {
         eventType,
         eventName,
@@ -468,7 +468,7 @@ export class AnalyticsService {
           (typeof document !== 'undefined' ? document.referrer : 'unknown'),
         title: typeof document !== 'undefined' ? document.title : 'unknown',
       },
-      AnalyticsEventType.PAGE_VIEW
+      AnalyticsEventType.PAGE_VIEW,
     )
   }
 
@@ -478,7 +478,7 @@ export class AnalyticsService {
   public recordFeatureUsage(
     feature: string,
     action: string,
-    extraData: AnalyticsData = {}
+    extraData: AnalyticsData = {},
   ): void {
     this.recordEvent(
       'feature_usage',
@@ -487,7 +487,7 @@ export class AnalyticsService {
         action,
         ...extraData,
       },
-      AnalyticsEventType.FEATURE_USAGE
+      AnalyticsEventType.FEATURE_USAGE,
     )
   }
 
@@ -498,7 +498,7 @@ export class AnalyticsService {
     errorType: string,
     message: string,
     stack?: string,
-    extraData: AnalyticsData = {}
+    extraData: AnalyticsData = {},
   ): void {
     this.recordEvent(
       'error',
@@ -508,7 +508,7 @@ export class AnalyticsService {
         stack,
         ...extraData,
       },
-      AnalyticsEventType.ERROR
+      AnalyticsEventType.ERROR,
     )
   }
 
@@ -518,7 +518,7 @@ export class AnalyticsService {
   public recordPerformance(
     metric: string,
     value: number,
-    extraData: AnalyticsData = {}
+    extraData: AnalyticsData = {},
   ): void {
     this.recordEvent(
       'performance',
@@ -527,7 +527,7 @@ export class AnalyticsService {
         value,
         ...extraData,
       },
-      AnalyticsEventType.PERFORMANCE
+      AnalyticsEventType.PERFORMANCE,
     )
   }
 

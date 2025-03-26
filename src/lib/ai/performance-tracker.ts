@@ -1,5 +1,5 @@
+import { AuditEventType, createAuditLog } from '../audit'
 import { supabase } from '../db/supabase'
-import { createAuditLog } from '../audit'
 
 export interface PerformanceMetric {
   model: string
@@ -20,7 +20,7 @@ export interface PerformanceMetric {
  * Track AI performance metrics in the database
  */
 export async function trackPerformance(
-  metric: PerformanceMetric
+  metric: PerformanceMetric,
 ): Promise<void> {
   try {
     await supabase.from('ai_performance_metrics').insert({
@@ -40,18 +40,18 @@ export async function trackPerformance(
 
     // Log audit event for tracking purposes
     if (metric.user_id) {
-      await createAuditLog({
-        userId: metric.user_id,
-        action: 'track_ai_performance',
-        resource: 'ai_service',
-        resourceId: metric.request_id,
-        metadata: {
+      await createAuditLog(
+        AuditEventType.AI_OPERATION,
+        'track_ai_performance',
+        metric.user_id,
+        'ai_service',
+        {
           model: metric.model,
           success: metric.success,
           cached: metric.cached,
           optimized: metric.optimized,
         },
-      })
+      )
     }
   } catch (error) {
     console.error('Error tracking AI performance:', error)
@@ -63,7 +63,7 @@ export async function trackPerformance(
  */
 export async function getModelPerformance(
   model: string,
-  days: number = 30
+  days = 30,
 ): Promise<any> {
   try {
     const { data, error } = await supabase
@@ -72,10 +72,12 @@ export async function getModelPerformance(
       .eq('model', model)
       .gte(
         'created_at',
-        new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+        new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString(),
       )
 
-    if (error) throw error
+    if (error) {
+      throw error
+    }
 
     // Calculate aggregated metrics
     const avgLatency =
@@ -109,17 +111,19 @@ export async function getModelPerformance(
 /**
  * Get overall AI performance metrics
  */
-export async function getOverallPerformance(days: number = 30): Promise<any> {
+export async function getOverallPerformance(days = 30): Promise<any> {
   try {
     const { data, error } = await supabase
       .from('ai_performance_metrics')
       .select('*')
       .gte(
         'created_at',
-        new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+        new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString(),
       )
 
-    if (error) throw error
+    if (error) {
+      throw error
+    }
 
     // Calculate aggregated metrics
     const avgLatency =

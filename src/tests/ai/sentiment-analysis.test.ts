@@ -1,30 +1,43 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { SentimentAnalysisService } from '../../lib/ai/services/sentiment-analysis'
 import type { AIService } from '../../lib/ai/models/types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { SentimentAnalysisService } from '../../lib/ai/services/sentiment-analysis'
 
 // Mock AI service with type assertion to handle incompatible interfaces
 const mockAIService = {
   generateCompletion: vi.fn(),
-  createChatCompletion: vi.fn().mockImplementation(async () => ({
-    id: 'mock-id',
-    model: 'test-model',
-    created: Date.now(),
-    content: '',
-    provider: 'openai',
-    choices: [
-      {
-        message: { role: 'assistant', content: '' },
-      },
-    ],
-    usage: { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
-  })),
+  createChatCompletion: vi.fn(),
   createStreamingChatCompletion: vi.fn(),
   getModelInfo: vi.fn(),
   createChatCompletionWithTracking: vi.fn(),
+  createChatStream: vi.fn().mockReturnValue(
+    new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: 'test-id',
+          model: 'test-model',
+          choices: [
+            {
+              message: {
+                role: 'assistant' as const,
+                content: 'test content',
+              },
+              finishReason: 'stop',
+            },
+          ],
+          usage: {
+            promptTokens: 10,
+            completionTokens: 20,
+            totalTokens: 30,
+          },
+        })
+        controller.close()
+      },
+    }),
+  ),
   dispose: vi.fn(),
-} as AIService
+} as unknown as AIService
 
-describe('SentimentAnalysisService', () => {
+describe('sentimentAnalysisService', () => {
   let sentimentService: SentimentAnalysisService
 
   beforeEach(() => {
@@ -55,7 +68,7 @@ describe('SentimentAnalysisService', () => {
       })
 
       const result = await sentimentService.analyzeSentiment(
-        'I am feeling great today! Thank you for your help.'
+        'I am feeling great today! Thank you for your help.',
       )
 
       // Verify the result
@@ -74,11 +87,11 @@ describe('SentimentAnalysisService', () => {
           expect.objectContaining({
             role: 'user',
             content: expect.stringContaining(
-              'I am feeling great today! Thank you for your help.'
+              'I am feeling great today! Thank you for your help.',
             ),
           }),
         ]),
-        expect.objectContaining({ model: 'test-model' })
+        expect.objectContaining({ model: 'test-model' }),
       )
     })
 
@@ -101,7 +114,7 @@ describe('SentimentAnalysisService', () => {
       })
 
       const result = await sentimentService.analyzeSentiment(
-        'I am really frustrated with this situation. Nothing is working.'
+        'I am really frustrated with this situation. Nothing is working.',
       )
 
       // Verify the result
@@ -122,7 +135,7 @@ describe('SentimentAnalysisService', () => {
         content: JSON.stringify({
           sentiment: 'neutral',
           score: 0.1,
-          explanation: "The text is factual and doesn't express emotion.",
+          explanation: 'The text is factual and doesn\'t express emotion.',
         }),
         model: 'test-model',
         provider: 'openai',
@@ -133,14 +146,14 @@ describe('SentimentAnalysisService', () => {
       })
 
       const result = await sentimentService.analyzeSentiment(
-        'The sky is blue. The temperature is 72 degrees.'
+        'The sky is blue. The temperature is 72 degrees.',
       )
 
       // Verify the result
       expect(result).toEqual({
         sentiment: 'neutral',
         score: 0.1,
-        explanation: "The text is factual and doesn't express emotion.",
+        explanation: 'The text is factual and doesn\'t express emotion.',
         model: 'test-model',
         processingTime: expect.any(Number),
       })
@@ -168,7 +181,7 @@ describe('SentimentAnalysisService', () => {
       })
 
       await expect(
-        sentimentService.analyzeSentiment('Test text')
+        sentimentService.analyzeSentiment('Test text'),
       ).rejects.toThrow()
     })
 
@@ -179,7 +192,7 @@ describe('SentimentAnalysisService', () => {
       ).mockRejectedValue(new Error('AI service error'))
 
       await expect(
-        sentimentService.analyzeSentiment('Test text')
+        sentimentService.analyzeSentiment('Test text'),
       ).rejects.toThrow('AI service error')
     })
   })
@@ -252,7 +265,7 @@ describe('SentimentAnalysisService', () => {
         .mockRejectedValueOnce(new Error('AI service error'))
 
       await expect(
-        sentimentService.analyzeBatch(['I am happy', 'I am sad'])
+        sentimentService.analyzeBatch(['I am happy', 'I am sad']),
       ).rejects.toThrow()
     })
   })
@@ -264,14 +277,14 @@ describe('SentimentAnalysisService', () => {
           ...mockAIService,
           createChatCompletion: async (messages, options) => {
             // Ensure all messages have the required name property
-            const messagesWithName = messages.map((msg) => ({
+            const messagesWithName = messages.map(msg => ({
               ...msg,
               name: msg.name || '', // Add default empty name if missing
             }))
             return {
               ...(await mockAIService.createChatCompletion(
                 messagesWithName,
-                options
+                options,
               )),
               provider: 'openai', // Add required provider property
             }
@@ -281,7 +294,7 @@ describe('SentimentAnalysisService', () => {
 
       // Use a non-public method to test the model
       expect(
-        (service as unknown as { config: { model: string } }).config.model
+        (service as unknown as { config: { model: string } }).config.model,
       ).toBe('gpt-4o')
     })
 
@@ -291,14 +304,14 @@ describe('SentimentAnalysisService', () => {
         aiService: {
           ...mockAIService,
           createChatCompletion: async (messages, options) => {
-            const messagesWithName = messages.map((msg) => ({
+            const messagesWithName = messages.map(msg => ({
               ...msg,
               name: msg.name || '',
             }))
             return {
               ...(await mockAIService.createChatCompletion(
                 messagesWithName,
-                options
+                options,
               )),
               provider: 'openai', // Add required provider property
             }
@@ -309,7 +322,7 @@ describe('SentimentAnalysisService', () => {
 
       expect(
         (service as unknown as { config: { defaultPrompt: string } }).config
-          .defaultPrompt
+          .defaultPrompt,
       ).toBe(customPrompt)
     })
   })

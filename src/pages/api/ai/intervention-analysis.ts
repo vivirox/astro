@@ -1,12 +1,12 @@
-import { type APIRoute } from 'astro'
-import { getSession } from '../../../lib/auth/session.js'
-import { createTogetherAIService } from '../../../lib/ai/services/together.js'
-import { createAuditLog } from '../../../lib/audit/log.js'
-import { aiRepository } from '../../../lib/db/ai/index.js'
+import type { APIRoute } from 'astro'
 import type { AIMessage } from '../../../lib/ai/models/ai-types.js'
-import { InterventionAnalysisService } from '../../../lib/ai/services/intervention-analysis.js'
 // Import the type expected by InterventionAnalysisService
 import type { AIService } from '../../../lib/ai/models/types.js'
+import { InterventionAnalysisService } from '../../../lib/ai/services/intervention-analysis.js'
+import { createTogetherAIService } from '../../../lib/ai/services/together.js'
+import { createAuditLog } from '../../../lib/audit/log.js'
+import { getSession } from '../../../lib/auth/session.js'
+import { aiRepository } from '../../../lib/db/ai/index.js'
 
 /**
  * API route for intervention effectiveness analysis
@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request }) => {
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -55,8 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Create intervention analysis service
     const interventionService = new InterventionAnalysisService({
-      // Force the type to match what InterventionAnalysisService expects
-      aiService: aiService as unknown as AIService,
+      aiService: aiService as unknown as AIService, // Force the type to match what InterventionAnalysisService expects
       model: modelId,
     })
 
@@ -72,7 +71,7 @@ export const POST: APIRoute = async ({ request }) => {
       },
     })
 
-    // Start timer for latency measurement
+    // Start timer for latency measuremen
     const startTime = Date.now()
 
     // Process the request
@@ -81,14 +80,14 @@ export const POST: APIRoute = async ({ request }) => {
       result = await interventionService.analyzeBatch(batch)
 
       // Store each result in the database
-      for (let i = 0; i < result?.length; i++) {
+      for (let i = 0; i < result?.length; i += 1) {
         const analysis = result[i]
         const latencyMs = Date.now() - startTime
         const batchItem = batch[i]
 
         await aiRepository.storeInterventionAnalysis({
           userId: session?.user?.id,
-          modelId: modelId,
+          modelId,
           modelProvider: 'together',
           requestTokens: 0, // No usage information available
           responseTokens: 0, // No usage information available
@@ -122,7 +121,7 @@ export const POST: APIRoute = async ({ request }) => {
       result = await interventionService.analyzeIntervention(
         conversationMessages,
         interventionMessage,
-        userResponse
+        userResponse,
       )
 
       const latencyMs = Date.now() - startTime
@@ -130,7 +129,7 @@ export const POST: APIRoute = async ({ request }) => {
       // Store the result in the database
       await aiRepository.storeInterventionAnalysis({
         userId: session?.user?.id || 'anonymous',
-        modelId: modelId,
+        modelId,
         modelProvider: 'together',
         requestTokens: 0, // No usage information available
         responseTokens: 0, // No usage information available
@@ -140,7 +139,7 @@ export const POST: APIRoute = async ({ request }) => {
         error: null,
         conversation: JSON.stringify(conversationMessages),
         intervention: interventionMessage,
-        userResponse: userResponse,
+        userResponse,
         effectiveness: result.score,
         insights: JSON.stringify({
           areas: result.areas || [],
@@ -195,7 +194,7 @@ export const POST: APIRoute = async ({ request }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 }

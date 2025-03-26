@@ -14,7 +14,7 @@ export interface BrowserInfo {
 
 /**
  * Detects current browser information
- * @returns Browser information object
+ * @returns Browser information objec
  */
 export function detectBrowser(): BrowserInfo {
   if (typeof window === 'undefined') {
@@ -29,45 +29,42 @@ export function detectBrowser(): BrowserInfo {
     }
   }
 
-  const userAgent = navigator.userAgent
+  const userAgent = navigator.userAgen
   let browserName = 'Unknown'
   let browserVersion = 'Unknown'
   let os = 'Unknown'
 
   // Detect browser
-  if (userAgent.indexOf('Firefox') > -1) {
+  if (userAgent.includes('Firefox')) {
     browserName = 'Firefox'
     browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)?.[1] || 'Unknown'
-  } else if (userAgent.indexOf('Edg') > -1) {
+  } else if (userAgent.includes('Edg')) {
     browserName = 'Edge'
     browserVersion = userAgent.match(/Edg\/([0-9.]+)/)?.[1] || 'Unknown'
-  } else if (userAgent.indexOf('Chrome') > -1) {
+  } else if (userAgent.includes('Chrome')) {
     browserName = 'Chrome'
     browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)?.[1] || 'Unknown'
-  } else if (userAgent.indexOf('Safari') > -1) {
+  } else if (userAgent.includes('Safari')) {
     browserName = 'Safari'
     browserVersion = userAgent.match(/Version\/([0-9.]+)/)?.[1] || 'Unknown'
-  } else if (
-    userAgent.indexOf('MSIE') > -1 ||
-    userAgent.indexOf('Trident') > -1
-  ) {
+  } else if (userAgent.includes('MSIE') || userAgent.includes('Trident')) {
     browserName = 'Internet Explorer'
     browserVersion = userAgent.match(/(?:MSIE |rv:)([0-9.]+)/)?.[1] || 'Unknown'
   }
 
   // Detect OS
-  if (userAgent.indexOf('Windows') > -1) {
+  if (userAgent.includes('Windows')) {
     os = 'Windows'
-  } else if (userAgent.indexOf('Mac') > -1) {
+  } else if (userAgent.includes('Mac')) {
     os = 'macOS'
-  } else if (userAgent.indexOf('Linux') > -1) {
+  } else if (userAgent.includes('Linux')) {
     os = 'Linux'
-  } else if (userAgent.indexOf('Android') > -1) {
+  } else if (userAgent.includes('Android')) {
     os = 'Android'
   } else if (
-    userAgent.indexOf('iOS') > -1 ||
-    userAgent.indexOf('iPhone') > -1 ||
-    userAgent.indexOf('iPad') > -1
+    userAgent.includes('iOS') ||
+    userAgent.includes('iPhone') ||
+    userAgent.includes('iPad')
   ) {
     os = 'iOS'
   }
@@ -77,7 +74,7 @@ export function detectBrowser(): BrowserInfo {
   const supportsReducedMotion =
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)') !== null
-  const supportsHighContrast =
+  const supportsHighContras =
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(forced-colors: active)') !== null
   const supportsFocusVisible =

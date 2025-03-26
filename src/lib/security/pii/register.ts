@@ -5,11 +5,12 @@
  * and middleware for use in the application.
  */
 
-import { piiDetectionService } from './'
 import type { PIIDetectionConfig } from './'
-import { createPIIMiddleware } from './middleware'
 import type { PIIMiddlewareConfig } from './middleware'
+import process from 'node:process'
 import { getLogger } from '../../logging'
+import { piiDetectionService } from './'
+import { createPIIMiddleware } from './middleware'
 
 // Initialize logger
 const logger = getLogger()
@@ -18,7 +19,7 @@ const logger = getLogger()
  * Register and configure the PII detection service
  */
 export async function registerPIIDetection(
-  config: Partial<PIIDetectionConfig> = {}
+  config: Partial<PIIDetectionConfig> = {},
 ): Promise<void> {
   try {
     logger.info('Registering PII detection service')
@@ -42,7 +43,7 @@ export async function registerPIIDetection(
  * Create a configured middleware for PII detection
  */
 export function createConfiguredPIIMiddleware(
-  config: Partial<PIIMiddlewareConfig> = {}
+  config: Partial<PIIMiddlewareConfig> = {},
 ) {
   // Merge with any environment-specific configuration
   const environmentConfig = getEnvironmentConfig()
@@ -89,7 +90,7 @@ function getEnvironmentConfig(): Partial<PIIMiddlewareConfig> {
   if (process.env.NODE_ENV === 'test') {
     return {
       ...baseConfig,
-      // Disable blocking in test
+      // Disable blocking in tes
       blockRequests: false,
       // Disable auditing in test to avoid test pollution
       auditDetections: false,
@@ -104,7 +105,7 @@ function getEnvironmentConfig(): Partial<PIIMiddlewareConfig> {
  */
 export function registerPIIMiddleware(
   app: unknown,
-  config: Partial<PIIMiddlewareConfig> = {}
+  config: Partial<PIIMiddlewareConfig> = {},
 ) {
   try {
     logger.info('Registering PII detection middleware')
@@ -130,10 +131,10 @@ export function registerPIIMiddleware(
 export async function registerPIIDetectionSystem(
   app: unknown,
   serviceConfig: Partial<PIIDetectionConfig> = {},
-  middlewareConfig: Partial<PIIMiddlewareConfig> = {}
+  middlewareConfig: Partial<PIIMiddlewareConfig> = {},
 ): Promise<void> {
   try {
-    // Register the service first
+    // Register the service firs
     await registerPIIDetection(serviceConfig)
 
     // Then register the middleware

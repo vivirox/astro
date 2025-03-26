@@ -1,8 +1,15 @@
 import type { APIRoute } from 'astro'
-import { AdminService } from '../../../lib/admin'
-import { AdminPermission } from '../../../lib/admin'
+import { AdminPermission, AdminService } from '../../../lib/admin'
 import { adminGuard } from '../../../lib/admin/middleware'
 import { getLogger } from '../../../lib/logging'
+
+interface AdminLocals {
+  admin: {
+    userId: string
+    isAdmin: boolean
+    hasPermission: boolean
+  }
+}
 
 // Initialize logger
 const logger = getLogger()
@@ -14,7 +21,7 @@ const logger = getLogger()
 export const GET: APIRoute = async (context) => {
   // Apply admin middleware to check for admin status and required permission
   const middlewareResponse = await adminGuard(AdminPermission.MANAGE_SESSIONS)(
-    context
+    context,
   )
   if (middlewareResponse) {
     return middlewareResponse
@@ -22,12 +29,12 @@ export const GET: APIRoute = async (context) => {
 
   try {
     // Get admin user ID from middleware context
-    const { userId } = context.locals.admin
+    const { userId } = (context.locals as AdminLocals).admin
 
     // Parse query parameters for pagination and filtering
     const url = new URL(context.request.url)
-    const limit = parseInt(url.searchParams.get('limit') || '10', 10)
-    const offset = parseInt(url.searchParams.get('offset') || '0', 10)
+    const limit = Number.parseInt(url.searchParams.get('limit') || '10', 10)
+    const offset = Number.parseInt(url.searchParams.get('offset') || '0', 10)
     const therapistId = url.searchParams.get('therapistId') || undefined
     const clientId = url.searchParams.get('clientId') || undefined
     const startDate = url.searchParams.get('startDate') || undefined
@@ -55,7 +62,7 @@ export const GET: APIRoute = async (context) => {
         success: true,
         sessions: sessionsResult.sessions,
         pagination: {
-          total: sessionsResult.total,
+          total: sessionsResult?.total ?? 0,
           limit,
           offset,
           hasMore: offset + limit < sessionsResult.total,
@@ -64,10 +71,10 @@ export const GET: APIRoute = async (context) => {
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
-  } catch (error) {
-    logger.error('Error fetching sessions:', error)
+  } catch {
+    logger.error('Error fetching sessions')
     return new Response(JSON.stringify({ error: 'Failed to fetch sessions' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
@@ -82,7 +89,7 @@ export const GET: APIRoute = async (context) => {
 export const POST: APIRoute = async (context) => {
   // Apply admin middleware to check for admin status and required permission
   const middlewareResponse = await adminGuard(AdminPermission.MANAGE_SESSIONS)(
-    context
+    context,
   )
   if (middlewareResponse) {
     return middlewareResponse
@@ -90,7 +97,7 @@ export const POST: APIRoute = async (context) => {
 
   try {
     // Get admin user ID from middleware context
-    const { userId: adminId } = context.locals.admin
+    const { userId: adminId } = (context.locals as AdminLocals).admin
 
     // Parse the request body
     const requestData = await context.request.json()
@@ -102,7 +109,7 @@ export const POST: APIRoute = async (context) => {
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -130,7 +137,7 @@ export const POST: APIRoute = async (context) => {
 
     // Log action for audi
     logger.info(
-      `Admin user ${adminId} performed action "${action}" on session ${sessionId}`
+      `Admin user ${adminId} performed action "${action}" on session ${sessionId}`,
     )
 
     // Return result
@@ -138,8 +145,8 @@ export const POST: APIRoute = async (context) => {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
-  } catch (error) {
-    logger.error('Error managing session:', error)
+  } catch {
+    logger.error('Error managing session')
     return new Response(JSON.stringify({ error: 'Failed to manage session' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

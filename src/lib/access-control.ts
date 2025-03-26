@@ -1,6 +1,6 @@
 import type { AstroCookies } from 'astro'
-import { getCurrentUser, hasRole } from './auth'
 import { createAuditLog } from './audit/log'
+import { getCurrentUser, hasRole } from './auth'
 
 // Define permission types
 export type Resource =
@@ -17,7 +17,7 @@ export const ROLES = {
   USER: 'user',
   STAFF: 'staff',
   ADMIN: 'admin',
-} as const
+} as cons
 
 export type Role = (typeof ROLES)[keyof typeof ROLES]
 
@@ -86,7 +86,7 @@ export function roleHasPermission(role: Role, permission: Permission): boolean {
  */
 export async function hasPermission(
   cookies: AstroCookies,
-  permission: Permission
+  permission: Permission,
 ): Promise<boolean> {
   const user = await getCurrentUser(cookies)
 
@@ -147,8 +147,9 @@ export function requirePermission(permission: Permission) {
 
     if (!user) {
       return redirect(
-        '/signin?error=' +
-          encodeURIComponent('You must be signed in to access this page')
+        `/signin?error=${encodeURIComponent(
+          'You must be signed in to access this page',
+        )}`,
       )
     }
 
@@ -169,8 +170,9 @@ export function requirePermission(permission: Permission) {
 
     if (!hasPermission) {
       return redirect(
-        '/dashboard?error=' +
-          encodeURIComponent('You do not have permission to access this page')
+        `/dashboard?error=${encodeURIComponent(
+          'You do not have permission to access this page',
+        )}`,
       )
     }
 

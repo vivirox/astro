@@ -1,0 +1,331 @@
+---
+title: Redis Configuration Guide
+description: Detailed guide for configuring the Redis service
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import { Steps } from '@astrojs/starlight/components'
+import { Card, CardGrid } from '@astrojs/starlight/components'
+import { LinkCard } from '@astrojs/starlight/components'
+
+# Redis Configuration Guide
+
+## Overview
+
+This guide provides detailed information about configuring the Redis service for optimal performance and reliability in the Gradiant application.
+
+## Basic Configuration
+
+<Steps>
+1. Set up environment variables in your `.env` file:
+   ```bash
+   REDIS_URL=redis://localhost:6379
+   REDIS_KEY_PREFIX=gradiant:
+   ```
+
+2. Create a configuration object:
+   ```typescript
+   import { RedisServiceConfig } from '@/lib/services/redis/types'
+
+   const config: RedisServiceConfig = {
+     url: process.env.REDIS_URL,
+     keyPrefix: process.env.REDIS_KEY_PREFIX,
+   }
+   ```
+
+3. Initialize the service:
+   ```typescript
+   import { RedisService } from '@/lib/services/redis'
+
+   const redis = new RedisService(config)
+   await redis.connect()
+   ```
+</Steps>
+
+## Configuration Options
+
+### Connection Settings
+
+| Option | Description | Default | Recommended |
+|--------|-------------|---------|-------------|
+| `url` | Redis connection URL | Required | - |
+| `keyPrefix` | Prefix for all keys | undefined | `"app:"` |
+| `maxRetries` | Maximum retry attempts | 3 | 3-5 |
+| `retryDelay` | Delay between retries (ms) | 1000 | 1000-5000 |
+| `connectTimeout` | Connection timeout (ms) | 5000 | 5000-10000 |
+
+### Connection Pool Settings
+
+| Option | Description | Default | Recommended |
+|--------|-------------|---------|-------------|
+| `maxConnections` | Maximum connections | 10 | 10-50 |
+| `minConnections` | Minimum connections | 2 | 2-5 |
+| `healthCheckInterval` | Health check interval (ms) | 30000 | 30000-60000 |
+
+## Environment-Specific Configurations
+
+### Development
+
+```typescript
+const devConfig: RedisServiceConfig = {
+  url: 'redis://localhost:6379',
+  keyPrefix: 'dev:',
+  maxRetries: 3,
+  retryDelay: 1000,
+  connectTimeout: 5000,
+  maxConnections: 10,
+  minConnections: 2,
+  healthCheckInterval: 30000,
+}
+```
+
+### Production
+
+```typescript
+const prodConfig: RedisServiceConfig = {
+  url: process.env.REDIS_URL,
+  keyPrefix: 'prod:',
+  maxRetries: 5,
+  retryDelay: 2000,
+  connectTimeout: 10000,
+  maxConnections: 50,
+  minConnections: 5,
+  healthCheckInterval: 30000,
+}
+```
+
+### Testing
+
+```typescript
+const testConfig: RedisServiceConfig = {
+  url: 'redis://localhost:6379',
+  keyPrefix: 'test:',
+  maxRetries: 1,
+  retryDelay: 100,
+  connectTimeout: 1000,
+  maxConnections: 5,
+  minConnections: 1,
+  healthCheckInterval: 5000,
+}
+```
+
+## Performance Tuning
+
+### Connection Pool Sizing
+
+The connection pool size should be configured based on your application's needs:
+
+```typescript
+const config: RedisServiceConfig = {
+  // ... other options
+  maxConnections: Math.max(10, Math.ceil(os.cpus().length * 2)),
+  minConnections: Math.max(2, Math.ceil(os.cpus().length / 2)),
+}
+```
+
+### Health Check Configuration
+
+Adjust health check frequency based on your reliability requirements:
+
+```typescript
+const config: RedisServiceConfig = {
+  // ... other options
+  healthCheckInterval: process.env.NODE_ENV === 'production'
+    ? 30000  // 30 seconds in production
+    : 60000, // 1 minute in development
+}
+```
+
+## Security Configuration
+
+### TLS Configuration
+
+For secure Redis connections:
+
+```typescript
+const config: RedisServiceConfig = {
+  url: 'rediss://your-redis-host:6379', // Note the 'rediss://' protocol
+  tls: {
+    rejectUnauthorized: true,
+    ca: fs.readFileSync('path/to/ca.crt'),
+    cert: fs.readFileSync('path/to/client.crt'),
+    key: fs.readFileSync('path/to/client.key'),
+  },
+}
+```
+
+### Authentication
+
+When using Redis with authentication:
+
+```typescript
+const config: RedisServiceConfig = {
+  url: `redis://:${encodeURIComponent(process.env.REDIS_PASSWORD)}@your-redis-host:6379`,
+}
+```
+
+## High Availability Configuration
+
+### Sentinel Configuration
+
+For Redis Sentinel setup:
+
+```typescript
+const config: RedisServiceConfig = {
+  url: 'redis://your-sentinel-host:26379',
+  sentinels: [
+    { host: 'sentinel-1', port: 26379 },
+    { host: 'sentinel-2', port: 26379 },
+    { host: 'sentinel-3', port: 26379 },
+  ],
+  name: 'mymaster',
+}
+```
+
+### Cluster Configuration
+
+For Redis Cluster setup:
+
+```typescript
+const config: RedisServiceConfig = {
+  cluster: true,
+  nodes: [
+    { host: 'node-1', port: 6379 },
+    { host: 'node-2', port: 6379 },
+    { host: 'node-3', port: 6379 },
+  ],
+}
+```
+
+## Monitoring Configuration
+
+### Logging Configuration
+
+Configure logging levels and formats:
+
+```typescript
+const config: RedisServiceConfig = {
+  // ... other options
+  logger: {
+    level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
+    prefix: '[Redis]',
+  },
+}
+```
+
+### Metrics Configuration
+
+Enable detailed metrics collection:
+
+```typescript
+const config: RedisServiceConfig = {
+  // ... other options
+  enableMetrics: true,
+  metricsInterval: 60000, // Collect metrics every minute
+}
+```
+
+## Best Practices
+
+1. Environment Variables
+   - Use environment variables for sensitive configuration
+   - Include reasonable defaults
+   - Validate all configuration values
+
+2. Connection Management
+   - Configure appropriate timeouts
+   - Set up retry policies
+   - Implement connection pooling
+
+3. Security
+   - Use TLS in production
+   - Implement proper authentication
+   - Set appropriate access controls
+
+4. Monitoring
+   - Configure health checks
+   - Set up logging
+   - Enable metrics collection
+
+## Troubleshooting
+
+### Common Issues
+
+1. Connection Timeouts
+   ```typescript
+   const config: RedisServiceConfig = {
+     connectTimeout: 10000, // Increase timeout
+     maxRetries: 5,        // Increase retries
+     retryDelay: 2000,     // Increase delay
+   }
+   ```
+
+2. Pool Exhaustion
+   ```typescript
+   const config: RedisServiceConfig = {
+     maxConnections: 50,    // Increase pool size
+     minConnections: 10,    // Increase minimum connections
+   }
+   ```
+
+3. Memory Issues
+   ```typescript
+   const config: RedisServiceConfig = {
+     maxMemory: '2gb',     // Set maximum memory
+     maxMemoryPolicy: 'allkeys-lru',
+   }
+   ```
+
+## Configuration Examples
+
+### Basic Development Setup
+
+```typescript
+const config: RedisServiceConfig = {
+  url: 'redis://localhost:6379',
+  keyPrefix: 'dev:',
+  maxRetries: 3,
+  retryDelay: 1000,
+}
+```
+
+### Production High-Availability Setup
+
+```typescript
+const config: RedisServiceConfig = {
+  url: process.env.REDIS_URL,
+  keyPrefix: 'prod:',
+  maxRetries: 5,
+  retryDelay: 2000,
+  connectTimeout: 10000,
+  maxConnections: 50,
+  minConnections: 5,
+  healthCheckInterval: 30000,
+  tls: {
+    rejectUnauthorized: true,
+  },
+  sentinels: [
+    { host: process.env.SENTINEL_HOST_1, port: 26379 },
+    { host: process.env.SENTINEL_HOST_2, port: 26379 },
+    { host: process.env.SENTINEL_HOST_3, port: 26379 },
+  ],
+  name: 'mymaster',
+  enableMetrics: true,
+  metricsInterval: 60000,
+}
+```
+
+### Testing Setup
+
+```typescript
+const config: RedisServiceConfig = {
+  url: 'redis://localhost:6379',
+  keyPrefix: 'test:',
+  maxRetries: 1,
+  retryDelay: 100,
+  connectTimeout: 1000,
+  maxConnections: 5,
+  minConnections: 1,
+  healthCheckInterval: 5000,
+}
+```

@@ -1,5 +1,5 @@
-import { initializeAITables } from './schema'
 import { createAuditLog } from '../../audit/log'
+import { initializeAITables } from './schema'
 
 /**
  * Initialize the AI database tables
@@ -19,7 +19,7 @@ export async function initializeAIDatabase() {
       'database',
       {
         timestamp: new Date().toISOString(),
-      }
+      },
     )
 
     console.log('AI database tables initialized successfully')
@@ -27,7 +27,7 @@ export async function initializeAIDatabase() {
   } catch (error) {
     console.error(
       'Failed to initialize AI database:',
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(String(error)),
     )
 
     // Log initialization failure
@@ -38,7 +38,7 @@ export async function initializeAIDatabase() {
       {
         error: error instanceof Error ? error?.message : String(error),
         timestamp: new Date().toISOString(),
-      }
+      },
     )
 
     throw error instanceof Error ? error : new Error(String(error))

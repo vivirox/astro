@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../../../types/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
@@ -227,7 +227,7 @@ export async function initializeAITables() {
   } catch (error) {
     console.error(
       'Failed to initialize AI tables:',
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(String(error)),
     )
     throw error instanceof Error ? error : new Error(String(error))
   }

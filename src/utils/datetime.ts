@@ -29,7 +29,7 @@ export function getYear(a: Date | string | number) {
  */
 export function isSameYear(
   a?: Date | string | number,
-  b?: Date | string | number
+  b?: Date | string | number,
 ) {
   return a && b && getYear(a) === getYear(b)
 }
@@ -53,4 +53,8 @@ export function isDiffMonth(currentTime: string, preTime?: string) {
   return preTime
     ? new Date(currentTime).getMonth() !== new Date(preTime!).getMonth()
     : false
+}
+
+export function isValidDate(date: unknown): date is Date {
+  return date instanceof Date && !Number.isNaN(date.getTime())
 }

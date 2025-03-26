@@ -11,25 +11,25 @@ The Plugin System uses VM2 to create a secure sandbox for plugin execution:
 ```typescript
 interface SandboxOptions {
   // Memory limits
-  memoryLimit: number;  // in MB
-  
+  memoryLimit: number // in MB
+
   // CPU limits
-  cpuLimit: number;     // percentage
-  
+  cpuLimit: number // percentage
+
   // Network access
-  allowedHosts: string[];
-  maxConcurrentRequests: number;
-  
+  allowedHosts: string[]
+  maxConcurrentRequests: number
+
   // File system access
-  allowedPaths: string[];
-  readOnly: boolean;
-  
+  allowedPaths: string[]
+  readOnly: boolean
+
   // API access
-  allowedAPIs: string[];
-  
+  allowedAPIs: string[]
+
   // Timeout settings
-  executionTimeout: number;  // in ms
-  idleTimeout: number;       // in ms
+  executionTimeout: number // in ms
+  idleTimeout: number // in ms
 }
 
 const defaultSandboxOptions: SandboxOptions = {
@@ -42,7 +42,7 @@ const defaultSandboxOptions: SandboxOptions = {
   allowedAPIs: ['patients', 'appointments'],
   executionTimeout: 5000,
   idleTimeout: 30000
-};
+}
 ```
 
 ### Permission System
@@ -52,35 +52,35 @@ Plugins must declare required permissions in their metadata:
 ```typescript
 interface PluginPermissions {
   // Patient data access
-  'patients:read': boolean;
-  'patients:write': boolean;
-  'patients:delete': boolean;
-  
+  'patients:read': boolean
+  'patients:write': boolean
+  'patients:delete': boolean
+
   // Appointment management
-  'appointments:read': boolean;
-  'appointments:write': boolean;
-  'appointments:delete': boolean;
-  
+  'appointments:read': boolean
+  'appointments:write': boolean
+  'appointments:delete': boolean
+
   // Provider management
-  'providers:read': boolean;
-  'providers:write': boolean;
-  
+  'providers:read': boolean
+  'providers:write': boolean
+
   // System access
-  'system:events': boolean;
-  'system:storage': boolean;
-  'system:network': boolean;
+  'system:events': boolean
+  'system:storage': boolean
+  'system:network': boolean
 }
 
 interface PluginMetadata {
-  name: string;
-  version: string;
-  permissions: Partial<PluginPermissions>;
+  name: string
+  version: string
+  permissions: Partial<PluginPermissions>
   securityPolicy: {
-    requireCodeSigning: boolean;
-    allowNetworkAccess: boolean;
-    allowStorageAccess: boolean;
-    allowEventEmission: boolean;
-  };
+    requireCodeSigning: boolean
+    allowNetworkAccess: boolean
+    allowStorageAccess: boolean
+    allowEventEmission: boolean
+  }
 }
 ```
 
@@ -90,23 +90,23 @@ All plugins must be digitally signed:
 
 ```typescript
 interface CodeSignature {
-  algorithm: 'RSA-SHA256' | 'ECDSA-P256-SHA256';
-  signature: string;
-  publicKey: string;
-  timestamp: string;
+  algorithm: 'RSA-SHA256' | 'ECDSA-P256-SHA256'
+  signature: string
+  publicKey: string
+  timestamp: string
   metadata: {
-    author: string;
-    organization: string;
-    certificateId: string;
-  };
+    author: string
+    organization: string
+    certificateId: string
+  }
 }
 
 // Verify plugin signature
 const isValid = await pluginService.verifySignature({
   pluginId: 'appointment-scheduler',
-  signature: signature,
-  publicKey: publicKey
-});
+  signature,
+  publicKey
+})
 ```
 
 ### Audit Logging
@@ -115,21 +115,21 @@ All plugin actions are logged for HIPAA compliance:
 
 ```typescript
 interface AuditEvent {
-  timestamp: string;
-  pluginId: string;
-  action: string;
-  resource: string;
-  userId: string;
+  timestamp: string
+  pluginId: string
+  action: string
+  resource: string
+  userId: string
   details: {
-    method: string;
-    params: object;
-    result: string;
-  };
+    method: string
+    params: object
+    result: string
+  }
   security: {
-    permissions: string[];
-    ipAddress: string;
-    userAgent: string;
-  };
+    permissions: string[]
+    ipAddress: string
+    userAgent: string
+  }
 }
 
 // Log audit event
@@ -143,7 +143,7 @@ await auditService.log({
     params: { patientId: '123', time: '2024-04-01T09:00:00Z' },
     result: 'success'
   }
-});
+})
 ```
 
 ## Security Measures
@@ -171,12 +171,12 @@ const resourceLimits = {
     requestsPerMinute: 100,
     bandwidth: '1MB/s'
   }
-};
+}
 
 // Monitor resource usage
 pluginService.on('resource:threshold', ({ pluginId, resource, usage }) => {
-  console.warn(`Plugin ${pluginId} approaching ${resource} limit: ${usage}`);
-});
+  console.warn(`Plugin ${pluginId} approaching ${resource} limit: ${usage}`)
+})
 ```
 
 ### 2. Network Security
@@ -185,18 +185,18 @@ Control and monitor network access:
 
 ```typescript
 interface NetworkPolicy {
-  allowedHosts: string[];
-  allowedPorts: number[];
-  maxConcurrentConnections: number;
+  allowedHosts: string[]
+  allowedPorts: number[]
+  maxConcurrentConnections: number
   rateLimits: {
-    requestsPerMinute: number;
-    dataTransferLimit: number;
-  };
+    requestsPerMinute: number
+    dataTransferLimit: number
+  }
   timeouts: {
-    connection: number;
-    read: number;
-    write: number;
-  };
+    connection: number
+    read: number
+    write: number
+  }
 }
 
 // Apply network policy
@@ -208,7 +208,7 @@ await pluginService.setNetworkPolicy('appointment-scheduler', {
     requestsPerMinute: 100,
     dataTransferLimit: 1024 * 1024 // 1MB
   }
-});
+})
 ```
 
 ### 3. Data Protection
@@ -218,19 +218,19 @@ Ensure data security and privacy:
 ```typescript
 interface DataProtection {
   encryption: {
-    algorithm: string;
-    keySize: number;
-    mode: string;
-  };
+    algorithm: string
+    keySize: number
+    mode: string
+  }
   storage: {
-    location: string;
-    retention: number;
-    backup: boolean;
-  };
+    location: string
+    retention: number
+    backup: boolean
+  }
   access: {
-    readOnly: boolean;
-    allowedOperations: string[];
-  };
+    readOnly: boolean
+    allowedOperations: string[]
+  }
 }
 
 // Configure data protection
@@ -249,7 +249,7 @@ await pluginService.setDataProtection('appointment-scheduler', {
     readOnly: true,
     allowedOperations: ['read', 'list']
   }
-});
+})
 ```
 
 ## Security Best Practices
@@ -261,36 +261,37 @@ await pluginService.setDataProtection('appointment-scheduler', {
 const secureDefaults = {
   // Always validate input
   validateInput: (data: any) => {
-    if (!data) throw new Error('Invalid input');
+    if (!data)
+      throw new Error('Invalid input')
     // Add more validation
   },
-  
+
   // Use prepared statements
   query: async (sql: string, params: any[]) => {
-    return await db.execute(sql, params);
+    return await db.execute(sql, params)
   },
-  
+
   // Implement rate limiting
   rateLimiter: new RateLimiter({
     maxRequests: 100,
     timeWindow: 60000 // 1 minute
   }),
-  
+
   // Handle errors securely
   errorHandler: (error: Error) => {
     // Log error securely
     logger.error('Error occurred', {
       error: error.message,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
-    
+    })
+
     // Return safe error message
     return {
       error: 'An error occurred',
       code: 'INTERNAL_ERROR'
-    };
+    }
   }
-};
+}
 ```
 
 ### 2. Data Handling
@@ -301,21 +302,22 @@ const secureDataHandling = {
   // Sanitize data before processing
   sanitize: (data: any) => {
     // Implement sanitization
-    return sanitizedData;
+    return sanitizedData
   },
-  
+
   // Encrypt sensitive data
   encrypt: async (data: any) => {
-    const encrypted = await encryption.encrypt(data);
-    return encrypted;
+    const encrypted = await encryption.encrypt(data)
+    return encrypted
   },
-  
+
   // Implement access control
   checkAccess: async (userId: string, resource: string) => {
-    const hasAccess = await accessControl.check(userId, resource);
-    if (!hasAccess) throw new Error('Access denied');
+    const hasAccess = await accessControl.check(userId, resource)
+    if (!hasAccess)
+      throw new Error('Access denied')
   }
-};
+}
 ```
 
 ### 3. Error Handling
@@ -324,7 +326,8 @@ const secureDataHandling = {
 // Secure error handling
 try {
   // Plugin operation
-} catch (error) {
+}
+catch (error) {
   if (error instanceof SecurityError) {
     // Log security violation
     await auditService.logSecurityEvent({
@@ -332,14 +335,14 @@ try {
       pluginId: plugin.id,
       error: error.message,
       severity: 'HIGH'
-    });
-    
+    })
+
     // Take appropriate action
-    await pluginService.disablePlugin(plugin.id);
+    await pluginService.disablePlugin(plugin.id)
   }
-  
+
   // Handle other errors
-  throw new PluginError('Operation failed', 'SECURITY_ERROR');
+  throw new PluginError('Operation failed', 'SECURITY_ERROR')
 }
 ```
 
@@ -374,4 +377,4 @@ try {
 - [Plugin API Reference](api.md)
 - [Plugin Lifecycle](lifecycle.md)
 - [Best Practices](best-practices.md)
-- [HIPAA Compliance](../security/audit/hipaa.md) 
+- [HIPAA Compliance](../security/audit/hipaa.md)

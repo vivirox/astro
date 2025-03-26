@@ -129,7 +129,10 @@ export class KeyRotationManager {
    */
   reencryptWithLatestKey(encryptedData: string, keyId: string): string {
     // Get the version from the encrypted data
-    const version = parseInt(encryptedData.split(':')[0].substring(1), 10)
+    const version = Number.parseInt(
+      encryptedData.split(':')[0].substring(1),
+      10,
+    )
 
     // Get the current active key
     const { key: currentKey, metadata: currentMetadata } =

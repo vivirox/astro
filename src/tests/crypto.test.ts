@@ -5,13 +5,11 @@
  *
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import {
-  type CryptoSystem,
-  type CryptoSystemOptions,
-  createCryptoSystem,
-} from '../lib/crypto'
-import { createFHESystem, type SessionData } from '../lib/fhe'
+import type { CryptoSystem, CryptoSystemOptions } from '../lib/crypto'
+import type { SessionData } from '../lib/fhe'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createCryptoSystem } from '../lib/crypto'
+import { createFHESystem } from '../lib/fhe'
 
 // Mock implementations for testing
 class Encryption {
@@ -122,8 +120,8 @@ class KeyStorage {
   }
 
   async generateKey(
-    purpose: string
-  ): Promise<{ keyId: string; keyData: KeyData }> {
+    purpose: string,
+  ): Promise<{ keyId: string, keyData: KeyData }> {
     const keyId = `${this.namespace}:${purpose}:${Date.now()}`
     const keyData: KeyData = {
       key: `generated-key-${Date.now()}`,
@@ -139,8 +137,8 @@ class KeyStorage {
   }
 
   async rotateKey(
-    keyId: string
-  ): Promise<{ keyId: string; keyData: KeyData } | null> {
+    keyId: string,
+  ): Promise<{ keyId: string, keyData: KeyData } | null> {
     const keyData = this.keys.get(keyId)
     if (!keyData) {
       return null
@@ -239,17 +237,20 @@ interface ExtendedCryptoSystem extends CryptoSystem {
   keyStorage: KeyStorage
   keyRotationManager: KeyRotationManager
   scheduledRotation: ScheduledKeyRotation | null
-  rotateExpiredKeys(): Promise<string[]>
-  stopScheduledRotation(): void
+  rotateExpiredKeys: () => Promise<string[]>
+  stopScheduledRotation: () => void
 }
 
 // Extended FHE System for testing
 interface ExtendedFHESystem {
-  verifySender(senderId: string, authorizedSenders: string[]): Promise<boolean>
-  processEncrypted(
+  verifySender: (
+    senderId: string,
+    authorizedSenders: string[],
+  ) => Promise<boolean>
+  processEncrypted: (
     data: string,
-    operation: string
-  ): Promise<{
+    operation: string,
+  ) => Promise<{
     success: boolean
     metadata: {
       operation: string
@@ -264,11 +265,11 @@ interface ExtendedFHESystem {
 // while still having usable test values
 function getTestKey(id = '') {
   return (
-    `test-${id}-` + 'mock-key-' + new Date().getTime().toString().substring(5)
+    `test-${id}-` + `mock-key-${new Date().getTime().toString().substring(5)}`
   )
 }
 
-describe('Encryption', () => {
+describe('encryption', () => {
   it('should encrypt and decrypt data correctly', () => {
     const data = 'Sensitive patient data'
     // Mock test key - DO NOT USE IN PRODUCTION
@@ -305,7 +306,7 @@ describe('Encryption', () => {
   })
 })
 
-describe('KeyRotationManager', () => {
+describe('keyRotationManager', () => {
   let keyManager: KeyRotationManager
 
   beforeEach(() => {
@@ -391,7 +392,7 @@ describe('KeyRotationManager', () => {
   })
 })
 
-describe('KeyStorage', () => {
+describe('keyStorage', () => {
   let keyStorage: KeyStorage
 
   beforeEach(() => {
@@ -408,8 +409,8 @@ describe('KeyStorage', () => {
   })
 
   it('should retrieve a stored key', async () => {
-    const { keyId, keyData: originalData } =
-      await keyStorage.generateKey('patient-data')
+    const { keyId, keyData: originalData }
+      = await keyStorage.generateKey('patient-data')
 
     const retrievedData = await keyStorage.getKey(keyId)
 
@@ -417,8 +418,8 @@ describe('KeyStorage', () => {
   })
 
   it('should rotate a key', async () => {
-    const { keyId, keyData: originalData } =
-      await keyStorage.generateKey('patient-data')
+    const { keyId, keyData: originalData }
+      = await keyStorage.generateKey('patient-data')
 
     const rotatedKey = await keyStorage.rotateKey(keyId)
 
@@ -456,7 +457,7 @@ describe('KeyStorage', () => {
   })
 })
 
-describe('ScheduledKeyRotation', () => {
+describe('scheduledKeyRotation', () => {
   let scheduledRotation: ScheduledKeyRotation
   let onRotationMock: ReturnType<typeof vi.fn>
   let onErrorMock: ReturnType<typeof vi.fn>
@@ -559,14 +560,14 @@ describe('ScheduledKeyRotation', () => {
 
 describe('createCryptoSystem', () => {
   it('should create a complete crypto system', () => {
-    // Update mock implementation for this test
+    // Update mock implementation for this tes
     const originalCreateCryptoSystem = createCryptoSystem
 
     // Mock createCryptoSystem to return extended version for testing
     // Use proper type-safe mocking approach
     const originalGlobalThis = { ...globalThis }
     const mockCreateCryptoSystem = (
-      options: CryptoSystemOptions
+      options: CryptoSystemOptions,
     ): ExtendedCryptoSystem => {
       const base = originalCreateCryptoSystem(options)
       return {
@@ -603,7 +604,7 @@ describe('createCryptoSystem', () => {
   })
 
   it('should enable scheduled rotation when specified', () => {
-    // Update mock implementation for this test
+    // Update mock implementation for this tes
     const originalCreateCryptoSystem = createCryptoSystem
     const originalGlobalThis = { ...globalThis }
 
@@ -615,7 +616,7 @@ describe('createCryptoSystem', () => {
 
     // Mock createCryptoSystem to return extended version for testing
     const mockCreateCryptoSystem = (
-      options: ExtendedOptions
+      options: ExtendedOptions,
     ): ExtendedCryptoSystem => {
       const base = originalCreateCryptoSystem(options)
       return {
@@ -623,21 +624,21 @@ describe('createCryptoSystem', () => {
         encryption: Encryption,
         keyStorage: new KeyStorage({ namespace: options.namespace }),
         keyRotationManager: new KeyRotationManager(
-          options.keyRotationDays || 90
+          options.keyRotationDays || 90,
         ),
         scheduledRotation: options.enableScheduledRotation
           ? new ScheduledKeyRotation({
-              namespace: options.namespace,
-              checkIntervalMs: 1000,
-              onRotation: (oldKeyId: string, newKeyId: string) => {
-                /* Implementation for test */
-                console.log(`Rotated ${oldKeyId} to ${newKeyId}`)
-              },
-              onError: (error: Error) => {
-                /* Implementation for test */
-                console.error('Rotation error:', error)
-              },
-            })
+            namespace: options.namespace,
+            checkIntervalMs: 1000,
+            onRotation: (oldKeyId: string, newKeyId: string) => {
+              /* Implementation for test */
+              console.log(`Rotated ${oldKeyId} to ${newKeyId}`)
+            },
+            onError: (error: Error) => {
+              /* Implementation for test */
+              console.error('Rotation error:', error)
+            },
+          })
           : null,
         rotateExpiredKeys: async () => ['test-key'],
         stopScheduledRotation: () => {
@@ -672,16 +673,16 @@ describe('createCryptoSystem', () => {
     const originalCreateCryptoSystem = createCryptoSystem
     const originalGlobalThis = { ...globalThis }
 
-    // Mock implementation for this test
+    // Mock implementation for this tes
     const mockCreateCryptoSystem = (
-      options: CryptoSystemOptions
+      options: CryptoSystemOptions,
     ): CryptoSystem => {
       return {
         ...originalCreateCryptoSystem(options),
         // Override decrypt to use the parameters
         async decrypt(
           encryptedData: string,
-          context?: string
+          context?: string,
         ): Promise<string> {
           // Use parameters in mock implementation
           const mockContext = context || 'default-context'
@@ -728,7 +729,7 @@ describe('createCryptoSystem', () => {
     const originalCreateCryptoSystem = createCryptoSystem
     const originalGlobalThis = { ...globalThis }
 
-    // Extended crypto system for this test
+    // Extended crypto system for this tes
     const extendedCrypto: ExtendedCryptoSystem = {
       ...originalCreateCryptoSystem({ namespace: 'test' }),
       encryption: Encryption,
@@ -750,7 +751,7 @@ describe('createCryptoSystem', () => {
       },
     }
 
-    // Mock implementation for this test
+    // Mock implementation for this tes
     const mockCreateCryptoSystem = () => extendedCrypto
 
     // Apply the mock
@@ -796,7 +797,7 @@ describe('createCryptoSystem', () => {
   })
 })
 
-describe('Fully Homomorphic Encryption Integration Tests', () => {
+describe('fully Homomorphic Encryption Integration Tests', () => {
   let crypto: CryptoSystem
   let fhe: ExtendedFHESystem
 

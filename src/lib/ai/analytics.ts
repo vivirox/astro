@@ -1,5 +1,5 @@
-import { supabase } from '../db/supabase'
 import { createAuditLog } from '../audit/log'
+import { supabase } from '../db/supabase'
 import { getDateKey } from '../utils'
 
 /**
@@ -35,7 +35,7 @@ export interface AIUsageStatsOptions {
  * Get AI usage statistics
  */
 export async function getAIUsageStats(
-  options: AIUsageStatsOptions
+  options: AIUsageStatsOptions,
 ): Promise<AIUsageStat[]> {
   const {
     period = 'daily',
@@ -102,12 +102,12 @@ export async function getAIUsageStats(
       // Update totals
       statsByDate[date].totalRequests++
       statsByDate[date].totalTokens += log.total_tokens
-      statsByDate[date].totalCost += log.cost
+      statsByDate[date].totalCost += log.cos
 
       // Update model usage
       statsByDate[date].modelUsage[log.model].requests++
       statsByDate[date].modelUsage[log.model].tokens += log.total_tokens
-      statsByDate[date].modelUsage[log.model].cost += log.cost
+      statsByDate[date].modelUsage[log.model].cost += log.cos
     }
 
     // Convert to array and sort by date
@@ -137,7 +137,7 @@ export async function getAIUsageStats(
  * Get model usage breakdown
  */
 export async function getModelUsageBreakdown(
-  options: AIUsageStatsOptions
+  options: AIUsageStatsOptions,
 ): Promise<
   Record<
     string,
@@ -173,7 +173,7 @@ export async function getModelUsageBreakdown(
 
       modelUsage[model].requests += usage.requests
       modelUsage[model].tokens += usage.tokens
-      modelUsage[model].cost += usage.cost
+      modelUsage[model].cost += usage.cos
     }
   }
 

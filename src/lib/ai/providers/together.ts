@@ -1,13 +1,13 @@
-import { ReadableStream } from 'node:stream/web'
+import type { ReadableStream } from 'node:stream/web'
 import type {
-  AIProvider,
   AICompletionResponse,
-  AIMessage,
-  AIStreamChunk,
   AIError,
+  AIMessage,
+  AIProvider,
+  AIStreamChunk,
   AIUsageRecord,
 } from '../models/ai-types'
-import { ConnectionPoolManager } from '../services/connection-pool'
+import type { ConnectionPoolManager } from '../services/connection-pool'
 
 /**
  * TogetherAI Provider Configuration
@@ -43,7 +43,7 @@ export class TogetherAIProvider {
       maxTokens?: number
       stream?: boolean
     },
-    provider: AIProvider
+    provider: AIProvider,
   ): Promise<AICompletionResponse | ReadableStream<AIStreamChunk>> {
     try {
       const { model, temperature = 0.7, maxTokens, stream = false } = options
@@ -96,7 +96,7 @@ export class TogetherAIProvider {
 
         const errorData = await response?.json().catch(() => ({}))
         throw new Error(
-          `TogetherAI API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`
+          `TogetherAI API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`,
         )
       }
 
@@ -175,13 +175,14 @@ export class TogetherAIProvider {
       throw aiError
     }
   }
+
   /**
    * Handle streaming response from TogetherAI
    */
   private async *handleStream(
     response: Response,
     model: string,
-    connectionId?: string
+    connectionId?: string,
   ): AsyncGenerator<AIStreamChunk, void, void> {
     if (!response?.body) {
       // Release connection if no body
@@ -270,7 +271,7 @@ export class TogetherAIProvider {
   private processStreamResponse(
     response: Response,
     model: string,
-    connectionId?: string
+    connectionId?: string,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const streamGenerator = this.handleStream(response, model, connectionId)

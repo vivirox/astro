@@ -18,13 +18,13 @@ This module provides a comprehensive encryption and key rotation system for HIPA
 The `Encryption` class provides methods for encrypting and decrypting data using AES encryption. It includes support for key versioning to facilitate key rotation.
 
 ```typescript
-import { Encryption } from './lib/crypto';
+import { Encryption } from './lib/crypto'
 
 // Encrypt data
-const encrypted = Encryption.encrypt('sensitive data', 'encryption-key', 1);
+const encrypted = Encryption.encrypt('sensitive data', 'encryption-key', 1)
 
 // Decrypt data
-const decrypted = Encryption.decrypt(encrypted, 'encryption-key');
+const decrypted = Encryption.decrypt(encrypted, 'encryption-key')
 ```
 
 ### Key Rotation Manager
@@ -32,19 +32,19 @@ const decrypted = Encryption.decrypt(encrypted, 'encryption-key');
 The `KeyRotationManager` class manages encryption keys and their rotation. It tracks key versions, expiration dates, and active status.
 
 ```typescript
-import { KeyRotationManager } from './lib/crypto';
+import { KeyRotationManager } from './lib/crypto'
 
 // Create a key rotation manager with 90-day rotation interval
-const keyManager = new KeyRotationManager(90);
+const keyManager = new KeyRotationManager(90)
 
 // Add a key
-const metadata = keyManager.addKey('key-id', 'encryption-key');
+const metadata = keyManager.addKey('key-id', 'encryption-key')
 
 // Rotate a key
-const newMetadata = keyManager.rotateKey('key-id', 'new-encryption-key');
+const newMetadata = keyManager.rotateKey('key-id', 'new-encryption-key')
 
 // Check for keys that need rotation
-const keysToRotate = keyManager.checkForRotationNeeded();
+const keysToRotate = keyManager.checkForRotationNeeded()
 ```
 
 ### Key Storage
@@ -52,22 +52,22 @@ const keysToRotate = keyManager.checkForRotationNeeded();
 The `KeyStorage` class provides secure storage for encryption keys. It supports in-memory storage for development and can be extended to use secure key vaults in production.
 
 ```typescript
-import { KeyStorage } from './lib/crypto';
+import { KeyStorage } from './lib/crypto'
 
 // Create a key storage instance
-const keyStorage = new KeyStorage({ namespace: 'app' });
+const keyStorage = new KeyStorage({ namespace: 'app' })
 
 // Generate a new key
-const { keyId, keyData } = await keyStorage.generateKey('patient-data');
+const { keyId, keyData } = await keyStorage.generateKey('patient-data')
 
 // Retrieve a key
-const key = await keyStorage.getKey(keyId);
+const key = await keyStorage.getKey(keyId)
 
 // Rotate a key
-const rotatedKey = await keyStorage.rotateKey(keyId);
+const rotatedKey = await keyStorage.rotateKey(keyId)
 
 // List keys by purpose
-const keys = await keyStorage.listKeys('patient-data');
+const keys = await keyStorage.listKeys('patient-data')
 ```
 
 ### Scheduled Key Rotation
@@ -75,25 +75,25 @@ const keys = await keyStorage.listKeys('patient-data');
 The `ScheduledKeyRotation` class provides automatic key rotation based on expiration dates. It can be configured to check for expired keys at regular intervals.
 
 ```typescript
-import { ScheduledKeyRotation } from './lib/crypto';
+import { ScheduledKeyRotation } from './lib/crypto'
 
 // Create a scheduled rotation service
 const scheduler = new ScheduledKeyRotation({
   namespace: 'app',
   checkIntervalMs: 60 * 60 * 1000, // Check every hour
   onRotation: (oldKeyId, newKeyId) => {
-    console.log(`Key rotated: ${oldKeyId} -> ${newKeyId}`);
+    console.log(`Key rotated: ${oldKeyId} -> ${newKeyId}`)
   },
-});
+})
 
 // Start the scheduler
-scheduler.start();
+scheduler.start()
 
 // Stop the scheduler
-scheduler.stop();
+scheduler.stop()
 
 // Force rotate a specific key
-const newKeyId = await scheduler.forceRotateKey('key-id');
+const newKeyId = await scheduler.forceRotateKey('key-id')
 ```
 
 ### Complete Crypto System
@@ -101,26 +101,26 @@ const newKeyId = await scheduler.forceRotateKey('key-id');
 The `createCryptoSystem` function creates a complete crypto system with encryption, key storage, and rotation.
 
 ```typescript
-import { createCryptoSystem } from './lib/crypto';
+import { createCryptoSystem } from './lib/crypto'
 
 // Create a crypto system
 const crypto = createCryptoSystem({
   namespace: 'app',
   keyRotationDays: 90,
   enableScheduledRotation: true,
-});
+})
 
 // Encrypt data with automatic key management
-const encrypted = await crypto.encrypt('sensitive data', 'patient-data');
+const encrypted = await crypto.encrypt('sensitive data', 'patient-data')
 
 // Decrypt data
-const decrypted = await crypto.decrypt(encrypted);
+const decrypted = await crypto.decrypt(encrypted)
 
 // Rotate expired keys
-const rotatedKeys = await crypto.rotateExpiredKeys();
+const rotatedKeys = await crypto.rotateExpiredKeys()
 
 // Stop scheduled rotation
-crypto.stopScheduledRotation();
+crypto.stopScheduledRotation()
 ```
 
 ## Scheduled Key Rotation Script
@@ -178,4 +178,4 @@ Keys have an expiration date based on the configured rotation interval. When a k
 
 ### Secure Key Storage
 
-In production, encryption keys should be stored in a secure key vault such as AWS KMS, Azure Key Vault, or HashiCorp Vault. The `KeyStorage` class can be extended to use these services. 
+In production, encryption keys should be stored in a secure key vault such as AWS KMS, Azure Key Vault, or HashiCorp Vault. The `KeyStorage` class can be extended to use these services.

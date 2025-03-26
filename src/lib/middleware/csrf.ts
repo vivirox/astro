@@ -1,7 +1,7 @@
-import { defineMiddleware } from 'astro:middleware'
-import { generateSecureToken } from '../security'
-import { getLogger } from '../logging'
 import type { AstroCookies } from 'astro'
+import { defineMiddleware } from 'astro:middleware'
+import { getLogger } from '../logging'
+import { generateSecureToken } from '../security'
 
 // Initialize logger
 const logger = getLogger()
@@ -69,7 +69,7 @@ function generateCSRFToken(): string {
 function setCSRFCookie(
   cookies: AstroCookies,
   token: string,
-  config: CSRFConfig
+  config: CSRFConfig,
 ): void {
   cookies.set(config.cookieName, token, {
     path: config.cookiePath,
@@ -100,7 +100,7 @@ function isExcludedPath(path: string, excludePaths: string[]): boolean {
 function isValidReferer(
   referer: string | null,
   request: Request,
-  trustedOrigins: string[]
+  trustedOrigins: string[],
 ): boolean {
   if (!referer) {
     return false
@@ -118,7 +118,7 @@ function isValidReferer(
   return trustedOrigins.some((origin) => {
     if (origin.includes('*')) {
       const pattern = new RegExp(
-        '^' + origin.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$'
+        `^${origin.replace(/\./g, '\\.').replace(/\*/g, '.*')}$`,
       )
       return pattern.test(refererUrl.origin)
     }
@@ -173,7 +173,7 @@ export const csrfMiddleware = defineMiddleware(
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -208,7 +208,7 @@ export const csrfMiddleware = defineMiddleware(
       }
     }
 
-    // If no token found in request, reject
+    // If no token found in request, rejec
     if (!requestToken) {
       logger.warn('CSRF token missing from request', {
         path,
@@ -222,7 +222,7 @@ export const csrfMiddleware = defineMiddleware(
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -240,7 +240,7 @@ export const csrfMiddleware = defineMiddleware(
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -266,14 +266,14 @@ export const csrfMiddleware = defineMiddleware(
           {
             status: 403,
             headers: { 'Content-Type': 'application/json' },
-          }
+          },
         )
       }
     }
 
     // CSRF validation passed, continue to the next middleware
     return next()
-  }
+  },
 )
 
 // Export default for convenience

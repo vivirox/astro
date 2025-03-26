@@ -69,7 +69,7 @@ export class FallbackService {
     options: {
       onRetry?: (attempt: number, error: Error) => void
       shouldRetry?: (error: unknown) => boolean
-    } = {}
+    } = {},
   ): Promise<T> {
     if (!this.enabled) {
       return operation()
@@ -96,7 +96,7 @@ export class FallbackService {
 
         // Wait before retrying
         if (attempt < this.maxRetries - 1) {
-          await this.delay(this.retryDelay * Math.pow(2, attempt))
+          await this.delay(this.retryDelay * 2 ** attempt)
         }
       }
     }
@@ -148,7 +148,7 @@ export class FallbackService {
    */
   generateFallbackResponse(
     request: AICompletionRequest,
-    error: AIError
+    error: AIError,
   ): AICompletionResponse | null {
     if (!this.enabled || !this.enableFallbackResponses) {
       return null
@@ -196,6 +196,7 @@ export class FallbackService {
       usage,
     }
   }
+
   /**
    * Create appropriate fallback content based on the error
    */
@@ -225,6 +226,6 @@ export class FallbackService {
    * Clean up resources
    */
   dispose() {
-    // Nothing to clean up yet
+    // Nothing to clean up ye
   }
 }

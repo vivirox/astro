@@ -8,21 +8,22 @@
  * to work with Astro's SSR/CSR hybrid approach.
  */
 
-// Import dependencies
-import { getLogger } from '../logging'
-import keyRotationService from './key-rotation'
-import homomorphicOps from './homomorphic-ops'
-import { EncryptionMode, FHEOperation } from './types'
 import type {
   EncryptionOptions,
-  HomomorphicOperationResult as ImportedHomomorphicOperationResult,
+  FHEOperation,
   FHEConfig as ImportedFHEConfig,
+  HomomorphicOperationResult as ImportedHomomorphicOperationResult,
   TFHEContext as ImportedTFHEContext,
   TFHESecurityLevel,
 } from './types'
-
+// Import dependencies
+import { getLogger } from '../logging'
+import homomorphicOps from './homomorphic-ops'
+import keyRotationService from './key-rotation'
 // Use the mock implementation to avoid build errors
 import * as tfheMock from './mock'
+
+import { EncryptionMode } from './types'
 
 // Type definitions for dynamic imports
 // We use a facade pattern for typed dynamic imports
@@ -117,7 +118,7 @@ class FHEService {
     this.isClient = typeof window !== 'undefined'
 
     logger.info(
-      `FHE Service initialized in ${this.isServer ? 'server' : 'client'} environment`
+      `FHE Service initialized in ${this.isServer ? 'server' : 'client'} environment`,
     )
   }
 
@@ -194,7 +195,7 @@ class FHEService {
   }
 
   /**
-   * Load TFHE library dynamically based on environmen
+   * Load TFHE library dynamically based on environment
    */
   private async ensureTFHELoaded(): Promise<void> {
     if (tfhe) return
@@ -210,7 +211,7 @@ class FHEService {
         } catch (error) {
           logger.warn(
             'Failed to load TFHE WASM, using mock implementation',
-            error
+            error,
           )
           tfhe = this.createServerMock()
         }
@@ -260,7 +261,7 @@ class FHEService {
       // Convert security level to appropriate parameters
       const securityParams = this.getSecurityParams(params.securityLevel)
 
-      // In Astro, we need to handle key generation differently based on environmen
+      // In Astro, we need to handle key generation differently based on environment
       if (this.isClient) {
         // Client-side key generation
         const clientKey = await tfhe.createClientKey(securityParams)
@@ -318,7 +319,7 @@ class FHEService {
    * Get security parameters based on security level
    */
   private getSecurityParams(
-    level: string | TFHESecurityLevel
+    level: string | TFHESecurityLevel,
   ): Record<string, unknown> {
     // Convert string levels to appropriate TFHE parameters
     const numericLevel =
@@ -434,7 +435,7 @@ class FHEService {
       }
 
       logger.info(
-        `Initializing key rotation with period: ${config.rotationPeriodDays} days`
+        `Initializing key rotation with period: ${config.rotationPeriodDays} days`,
       )
       await keyRotationService.initialize()
 
@@ -445,10 +446,10 @@ class FHEService {
       getLogger().info('Key rotation service initialized successfully')
     } catch (error) {
       getLogger().error(
-        `Failed to initialize key rotation: ${(error as Error).message}`
+        `Failed to initialize key rotation: ${(error as Error).message}`,
       )
       throw new Error(
-        `Key rotation initialization failed: ${(error as Error).message}`
+        `Key rotation initialization failed: ${(error as Error).message}`,
       )
     }
   }
@@ -464,14 +465,14 @@ class FHEService {
 
       this.homomorphicOpsInitialized = true
       getLogger().info(
-        'Homomorphic operations service initialized successfully'
+        'Homomorphic operations service initialized successfully',
       )
     } catch (error) {
       getLogger().error(
-        `Failed to initialize homomorphic operations: ${(error as Error).message}`
+        `Failed to initialize homomorphic operations: ${(error as Error).message}`,
       )
       throw new Error(
-        `Homomorphic operations initialization failed: ${(error as Error).message}`
+        `Homomorphic operations initialization failed: ${(error as Error).message}`,
       )
     }
   }
@@ -496,7 +497,7 @@ class FHEService {
   public async processEncrypted(
     encryptedData: string,
     operation: FHEOperation,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ): Promise<HomomorphicOperationResult> {
     this.checkInitialized()
 
@@ -512,7 +513,7 @@ class FHEService {
         encryptedData,
         operation,
         this.encryptionMode,
-        params
+        params,
       )
 
       // Add required metadata field to match our extended interface
@@ -529,7 +530,7 @@ class FHEService {
       }
     } catch (error) {
       getLogger().error(
-        `Failed to process encrypted data: ${(error as Error).message}`
+        `Failed to process encrypted data: ${(error as Error).message}`,
       )
 
       return {
@@ -628,7 +629,7 @@ class FHEService {
         hash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
       } else {
         // In Node.js environment, use the crypto module
-        const cryptoModule = await import('crypto')
+        const cryptoModule = await import('node:crypto')
         hash = cryptoModule.default
           .createHash('sha256')
           .update(data)
@@ -687,17 +688,17 @@ export function createFHESystem(options: {
 
     processEncrypted: async (
       encryptedData: string,
-      operation: string
+      operation: string,
     ): Promise<HomomorphicOperationResult> => {
       return await fheService.processEncrypted(
         encryptedData,
-        operation as FHEOperation
+        operation as FHEOperation,
       )
     },
 
     verifySender: async (
       senderId: string,
-      authorizedSenders: string[]
+      authorizedSenders: string[],
     ): Promise<boolean> => {
       return authorizedSenders.includes(senderId)
     },

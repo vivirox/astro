@@ -5,16 +5,16 @@
 // FHE service entry point - exports all required types and functions
 // for use in the application
 
+import { FHEAnalyticsService } from './analytics'
 // Main FHE service instance
-export { fheService } from './index'
-
 // Import core services
 import { HomomorphicOperations } from './homomorphic-ops'
 import { KeyRotationService } from './key-rotation'
-import { FHEAnalyticsService } from './analytics'
+
+export { fheService } from './index'
 
 // Re-export classes
-export { HomomorphicOperations, KeyRotationService, FHEAnalyticsService }
+export { FHEAnalyticsService, HomomorphicOperations, KeyRotationService }
 
 // Initialization functions
 export async function initializeHomomorphicOps(): Promise<void> {
@@ -34,8 +34,8 @@ export async function initializeFHEAnalytics(): Promise<void> {
 
 // Re-export types explicitly to avoid ambiguity
 export type {
-  FHEConfig,
   EncryptionOptions,
+  FHEConfig,
   HomomorphicOperationResult,
   TFHEContext,
 } from './types'

@@ -1,9 +1,16 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import type {
+  EncryptionMode,
+  HomomorphicOperationResult,
+} from '@/lib/fhe/types'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { fheService } from '@/lib/fhe'
-import { EncryptionMode, FHEOperation } from '@/lib/fhe/types'
-import { Button } from '../ui/button'
+import { FHEOperation } from '@/lib/fhe/types'
+import { useEffect, useState } from 'react'
+import { Badge } from '../ui/badge'
 import {
   Card,
   CardContent,
@@ -13,10 +20,10 @@ import {
   CardTitle,
 } from '../ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
-import { Badge } from '../ui/badge'
 
+/**
+ * FHE Demo Component for demonstrating Fully Homomorphic Encryption capabilities
+ */
 export interface FHEDemoProps {
   defaultMessage?: string
 }
@@ -29,10 +36,8 @@ export function FHEDemo({
   const [encryptedMessage, setEncryptedMessage] = useState('')
   const [decryptedMessage, setDecryptedMessage] = useState('')
   const [operation, setOperation] = useState<string>(FHEOperation.SENTIMENT)
-  const [operationResult, setOperationResult] = useState<Record<
-    string,
-    unknown
-  > | null>(null)
+  const [operationResult, setOperationResult] =
+    useState<HomomorphicOperationResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [encryptionMode, setEncryptionMode] =
@@ -60,7 +65,9 @@ export function FHEDemo({
   }, [])
 
   const handleEncrypt = async () => {
-    if (!message) return
+    if (!message) {
+      return
+    }
 
     setLoading(true)
     setError(null)
@@ -76,7 +83,9 @@ export function FHEDemo({
   }
 
   const handleDecrypt = async () => {
-    if (!encryptedMessage) return
+    if (!encryptedMessage) {
+      return
+    }
 
     setLoading(true)
     setError(null)
@@ -92,7 +101,9 @@ export function FHEDemo({
   }
 
   const handleProcess = async () => {
-    if (!encryptedMessage) return
+    if (!encryptedMessage) {
+      return
+    }
 
     setLoading(true)
     setError(null)
@@ -104,7 +115,7 @@ export function FHEDemo({
       try {
         result = await fheService.processEncrypted(
           encryptedMessage,
-          operation as FHEOperation
+          operation as FHEOperation,
         )
       } catch (clientError) {
         console.warn('Client-side processing failed, trying API:', clientError)
@@ -151,7 +162,7 @@ export function FHEDemo({
       } catch (clientError) {
         console.warn(
           'Client-side key rotation failed, trying API:',
-          clientError
+          clientError,
         )
 
         // Fall back to API rotation
@@ -190,8 +201,14 @@ export function FHEDemo({
           <Badge variant={initialized ? 'default' : 'destructive'}>
             {initialized ? 'FHE Initialized' : 'Not Initialized'}
           </Badge>
-          <Badge variant="outline">Mode: {encryptionMode}</Badge>
-          <Badge variant="outline">Key ID: {keyId.substring(0, 8)}...</Badge>
+          <Badge variant="outline">
+            Mode:
+            {encryptionMode}
+          </Badge>
+          <Badge variant="outline">
+            Key ID: {keyId.substring(0, 8)}
+            ...
+          </Badge>
         </div>
       </CardHeader>
       <CardContent>

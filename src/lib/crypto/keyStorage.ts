@@ -95,12 +95,12 @@ export class KeyStorage {
   async generateKey(
     purpose: string,
     algorithm = 'AES-256',
-    expiresInDays = 90
+    expiresInDays = 90,
   ): Promise<{ keyId: string; keyData: StoredKeyData }> {
     // Generate a secure random key
     // In production, use a cryptographically secure random generator
     const key = Array.from({ length: 32 }, () =>
-      Math.floor(Math.random() * 36).toString(36)
+      Math.floor(Math.random() * 36).toString(36),
     ).join('')
 
     const keyId = this.generateKeyId(purpose)
@@ -130,7 +130,7 @@ export class KeyStorage {
    * @returns New key ID and key data
    */
   async rotateKey(
-    keyId: string
+    keyId: string,
   ): Promise<{ keyId: string; keyData: StoredKeyData } | null> {
     const existingKeyData = await this.getKey(keyId)
 
@@ -140,9 +140,9 @@ export class KeyStorage {
 
     // Generate a new key with the same properties
     const { purpose, algorithm } = existingKeyData
-    const expiresInDays = existingKeyData.expiresAt
+    const expiresInDays = existingKeyData.expiresA
       ? Math.floor(
-          (existingKeyData.expiresAt - Date.now()) / (24 * 60 * 60 * 1000)
+          (existingKeyData.expiresAt - Date.now()) / (24 * 60 * 60 * 1000),
         )
       : 90
 
@@ -170,7 +170,7 @@ export class KeyStorage {
       // In production, list keys from secure storage
       // Example: const keys = await secureStorage.list(`${this.namespace}:${purpose || '*'}`);
       console.log(
-        `Listing keys for purpose ${purpose || 'all'} from secure storage`
+        `Listing keys for purpose ${purpose || 'all'} from secure storage`,
       )
     }
 

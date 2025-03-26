@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 
 export interface UserMenuProps {
@@ -15,7 +15,7 @@ export function UserMenu({ className = '' }: UserMenuProps) {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
-        dropdownRef.current &&
+        dropdownRef.curren &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false)
@@ -107,7 +107,7 @@ export function UserMenu({ className = '' }: UserMenuProps) {
             onClick={() => signOut()}
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            Sign out
+            Sign ou
           </button>
         </div>
       )}

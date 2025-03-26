@@ -1,16 +1,17 @@
+import type { BgType } from '../../src/types'
 import { html } from 'satori-html'
 import backgroundBase64 from './base64'
-import type { BgType } from '../../src/types'
 
-export const ogImageMarkup = (
+export function ogImageMarkup(
   authorOrBrand: string,
   title: string,
-  bgType: BgType
-) => {
-  if (!['plum', 'dot', 'rose', 'particle'].includes(bgType))
+  bgType: BgType,
+) {
+  if (!['plum', 'dot', 'rose', 'particle'].includes(bgType)) {
     throw new Error(
-      "The value of 'bgType' must be one of the following: 'plum', 'dot', 'rose', 'particle'."
+      "The value of 'bgType' must be one of the following: 'plum', 'dot', 'rose', 'particle'.",
     )
+  }
 
   return html`<div
     tw="relative flex justify-center items-center w-full h-full"

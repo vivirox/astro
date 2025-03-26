@@ -1,6 +1,6 @@
+import { exec } from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { exec } from 'node:child_process'
 import { promisify } from 'node:util'
 
 const execAsync = promisify(exec)
@@ -91,7 +91,7 @@ export class LogRotationService {
 
     try {
       // Append to log file
-      await fs.appendFile(filename, entry + '\n')
+      await fs.appendFile(filename, `${entry}\n`)
 
       // Check file size and rotate if needed
       await this.checkAndRotate(filename)
@@ -174,7 +174,7 @@ export class LogRotationService {
         rotatedFiles.map(async (file) => {
           const stats = await fs.stat(file.path)
           return { ...file, mtime: stats.mtime }
-        })
+        }),
       )
 
       filesWithStats.sort((a, b) => b.mtime.getTime() - a.mtime.getTime())
@@ -199,7 +199,7 @@ export class LogRotationService {
     output: string,
     pattern = '*',
     startDate?: Date,
-    endDate?: Date
+    endDate?: Date,
   ): Promise<void> {
     try {
       await this.ensureLogDir()

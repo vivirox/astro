@@ -7,7 +7,7 @@
  * It performs various checks to ensure the deployment is working correctly.
  */
 
-import { spawnSync } from 'child_process'
+import { spawnSync } from 'node:child_process'
 import fetch from 'node-fetch'
 
 interface HealthCheckResponse {
@@ -15,14 +15,13 @@ interface HealthCheckResponse {
   version: string
   environment: string
   services: {
-    database: boolean
-    cache: boolean
-    storage: boolean
+    [key: string]: {
+      status: string
+      latency: number
+    }
   }
   metrics: {
-    responseTime: number
-    errorRate: number
-    successRate: number
+    [key: string]: number
   }
 }
 
@@ -52,18 +51,42 @@ async function main() {
     if (!healthResponse.ok) {
       throw new Error(`Health check failed: ${healthResponse.statusText}`)
     }
-    const healthData: HealthCheckResponse = await healthResponse.json()
+    const healthData = (await healthResponse.json()) as HealthCheckResponse
 
     if (healthData.status !== 'ok') {
       throw new Error(
-        `Health check returned non-ok status: ${healthData.status}`
+        `Health check returned non-ok status: ${healthData.status}`,
       )
     }
     console.log('✓ Application health verified')
     console.log(`  - Version: ${healthData.version}`)
     console.log(`  - Environment: ${healthData.environment}`)
     console.log(`  - Services: ${JSON.stringify(healthData.services, null, 2)}`)
-    console.log(`  - Metrics: ${JSON.stringify(healthData.metrics, null, 2)}`)
+
+    // Helper function to safely get metric values
+    const getMetricValue = (
+      metrics: Record<string, number>,
+      name: string,
+    ): number => {
+      return metrics[name] || 0
+    }
+
+    console.log('Health check response:', healthData)
+    console.log(
+      'Response time:',
+      getMetricValue(healthData.metrics, 'responseTime'),
+      'ms',
+    )
+    console.log(
+      'Success rate:',
+      getMetricValue(healthData.metrics, 'successRate'),
+      '%',
+    )
+    console.log(
+      'Error rate:',
+      getMetricValue(healthData.metrics, 'errorRate'),
+      '%',
+    )
 
     // 3. Check database connectivity
     console.log('\n[3/5] Checking database connectivity...')
@@ -99,7 +122,7 @@ async function main() {
       const response = await fetch(`https://api.gradiant.health${endpoint}`)
       if (!response.ok) {
         throw new Error(
-          `Endpoint check failed for ${endpoint}: ${response.statusText}`
+          `Endpoint check failed for ${endpoint}: ${response.statusText}`,
         )
       }
       console.log(`✓ Endpoint ${endpoint} verified`)
@@ -108,12 +131,10 @@ async function main() {
     // Final verification
     console.log('\n=== Verification Summary ===')
     console.log('✓ All checks passed successfully')
-    console.log(`✓ Response Time: ${healthData.metrics.responseTime}ms`)
-    console.log(`✓ Success Rate: ${healthData.metrics.successRate}%`)
-    console.log(`✓ Error Rate: ${healthData.metrics.errorRate}%`)
 
     process.exit(0)
-  } catch (error) {
+  }
+  catch (error) {
     console.error('\n❌ Verification failed:', error)
     process.exit(1)
   }

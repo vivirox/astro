@@ -48,9 +48,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       className = '',
       ...props
     },
-    ref
+    ref,
   ) => {
-    // Base classes for select
+    // Base classes for selec
     const baseSelectClasses =
       'block bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md border border-gray-300 dark:border-gray-700 appearance-none focus:border-primary focus:ring-primary disabled:opacity-60 disabled:cursor-not-allowed'
 
@@ -157,9 +157,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 Select.displayName = 'Select'
 
-export default Select
+export default Selec

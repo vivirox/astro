@@ -24,7 +24,7 @@ export interface ChatThread {
   name: string
   createdAt: number
   updatedAt: number
-  messages: ChatMessage[]
+  messages: Message[]
   metadata?: {
     scenario?: string
     securityLevel?: 'standard' | 'hipaa' | 'maximum'
@@ -44,4 +44,21 @@ export interface ChatSession {
   activeThreadId: string
   createdAt: number
   updatedAt: number
+}
+
+export interface Message {
+  role: 'user' | 'assistant' | 'system'
+  content: string
+  name: string
+  encrypted?: boolean
+  verified?: boolean
+  isError?: boolean
+}
+
+export interface ChatOptions {
+  initialMessages?: Message[]
+  api?: string
+  body?: Record<string, unknown>
+  onResponse?: (response: Response) => void
+  onError?: (error: Error) => void
 }

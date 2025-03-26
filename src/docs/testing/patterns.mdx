@@ -62,8 +62,8 @@ import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 
 const server = setupServer(
-  rest.post('/api/analytics', (req, res, ctx) => {
-    return res(ctx.json({ success: true }))
+  rest.post('/api/analytics', (req, rest, ctx) => {
+    return rest(ctx.json({ success: true }))
   })
 )
 

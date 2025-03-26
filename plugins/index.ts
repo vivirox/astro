@@ -1,22 +1,22 @@
-import { visit } from 'unist-util-visit'
+import type { RehypePlugins, RemarkPlugins } from 'astro'
+import type { CreateProperties } from 'rehype-external-links'
+import { rehypeHeadingIds } from '@astrojs/markdown-remark'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeCallouts from 'rehype-callouts'
+import rehypeExternalLinks from 'rehype-external-links'
+import rehypeKatex from 'rehype-katex'
 import remarkDirective from 'remark-directive'
-import remarkDirectiveSugar from './remark-directive-sugar'
-import remarkImageContainer from './remark-image-container'
+
 import remarkImgattr from 'remark-imgattr'
 import remarkMath from 'remark-math'
-import remarkReadingTime from './remark-reading-time'
+import { visit } from 'unist-util-visit'
+import { FEATURES, UI } from '../src/config'
+import remarkDirectiveSugar from './remark-directive-sugar'
+
 import remarkGenerateOgImage from './remark-generate-og-image'
 
-import { rehypeHeadingIds } from '@astrojs/markdown-remark'
-import rehypeCallouts from 'rehype-callouts'
-import rehypeKatex from 'rehype-katex'
-import rehypeExternalLinks from 'rehype-external-links'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-
-import { UI, FEATURES } from '../src/config'
-
-import type { RemarkPlugins, RehypePlugins } from 'astro'
-import type { CreateProperties } from 'rehype-external-links'
+import remarkImageContainer from './remark-image-container'
+import remarkReadingTime from './remark-reading-time'
 
 export const remarkPlugins: RemarkPlugins = [
   // https://github.com/remarkjs/remark-directive

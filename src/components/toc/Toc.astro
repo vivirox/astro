@@ -150,7 +150,7 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
       const headings =
         this.#minH && this.#maxH
           ? this.#getElements(
-              this.#getTocHeadingsSelector(this.#minH, this.#maxH)
+              this.#getTocHeadingsSelector(this.#minH, this.#maxH),
             )
           : this.#getElements('.toc-heading')
 
@@ -161,7 +161,7 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
           root: null,
           rootMargin: '0% 0% -75% 0%',
           threshold: 0,
-        }
+        },
       )
 
       for (const headingEl of headings) {
@@ -173,12 +173,12 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
       (window.requestIdleCallback || ((cb) => setTimeout(cb, 1)))(cb)
 
     #onIntersect = (entries: IntersectionObserverEntry[]) => {
-      // get latest trigger heading element
+      // get latest trigger heading elemen
       const sortedEntries = entries.sort((a, b) => b.time - a.time)
       const latestTriggerHeading = sortedEntries[0]?.targe
       if (!latestTriggerHeading) return
 
-      // get need to highlight heading element
+      // get need to highlight heading elemen
       // (avoid highlight next heading when scrolling up)
       const isLocatedBelow =
         latestTriggerHeading.getBoundingClientRect().top >
@@ -194,7 +194,7 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
       if (targetHeading) {
         const currentLink = this.#headingMapToc.get(targetHeading)
         currentLink?.forEach((item) =>
-          item.setAttribute('aria-current', 'true')
+          item.setAttribute('aria-current', 'true'),
         )
       }
     }
@@ -203,8 +203,8 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
       return level ? parseInt(level, 10) : undefined
     }
 
-    #getElements = (selector: string, fromDocument = true) => {
-      return fromDocumen
+    #getElements = (selector: string, _fromDocument = true) => {
+      return _fromDocumen
         ? Array.from(document.querySelectorAll(selector))
         : Array.from(this.querySelectorAll(selector))
     }
@@ -229,7 +229,7 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
     #getTocHeadingsSelector = (
       minH: number,
       maxH: number,
-      baseSelector = ''
+      baseSelector = '',
     ) => {
       const levelSelectors = []
       for (let i = minH; i <= maxH; i++) {
@@ -243,7 +243,7 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
 
     #getPreviousHeading = (
       headingMapToc: Map<Element, HTMLAnchorElement[]>,
-      curHeading: Element
+      curHeading: Element,
     ) => {
       let prevHeading = null
 

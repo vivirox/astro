@@ -13,10 +13,10 @@ export const GET: APIRoute = async ({ request, url }) => {
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
-    const user = session.user
+    const { user } = session
 
     // Get query parameters
     const period = url.searchParams.get('period') || 'weekly'
@@ -27,7 +27,7 @@ export const GET: APIRoute = async ({ request, url }) => {
       ? new Date(url.searchParams.get('endDate')!)
       : new Date()
     const model = url.searchParams.get('model') || undefined
-    const limit = parseInt(url.searchParams.get('limit') || '100', 10)
+    const limit = Number.parseInt(url.searchParams.get('limit') || '100', 10)
 
     // Log the analytics request
     await createAuditLog({
@@ -52,15 +52,15 @@ export const GET: APIRoute = async ({ request, url }) => {
         p_model: model,
         p_limit: limit,
       })
-      .then((response) => response.data)
+      .then(response => response.data)
 
     if (error) {
       throw error
     }
 
     // Process and format the results
-    const metrics =
-      results?.map(
+    const metrics
+      = results?.map(
         (row: {
           date_trunc: string
           model: string
@@ -92,7 +92,7 @@ export const GET: APIRoute = async ({ request, url }) => {
           cacheHitRate: Number(row.cached_count) / Number(row.request_count),
           optimizationRate:
             Number(row.optimized_count) / Number(row.request_count),
-        })
+        }),
       ) ?? []
 
     // Get model breakdown
@@ -101,7 +101,7 @@ export const GET: APIRoute = async ({ request, url }) => {
         p_start_date: startDate.toISOString(),
         p_end_date: endDate.toISOString(),
       })
-      .then((response) => response.data)
+      .then(response => response.data)
 
     if (modelBreakdownError) {
       throw modelBreakdownError
@@ -113,7 +113,7 @@ export const GET: APIRoute = async ({ request, url }) => {
         p_start_date: startDate.toISOString(),
         p_end_date: endDate.toISOString(),
       })
-      .then((response) => response.data)
+      .then(response => response.data)
 
     if (errorBreakdownError) {
       throw errorBreakdownError
@@ -146,14 +146,14 @@ export const GET: APIRoute = async ({ request, url }) => {
                 Number(row.cached_count) / Number(row.request_count),
               optimizationRate:
                 Number(row.optimized_count) / Number(row.request_count),
-            })
+            }),
           ) ?? [],
         errorBreakdown:
           errorBreakdown?.map(
-            (row: { error_code: string; error_count: number }) => ({
+            (row: { error_code: string, error_count: number }) => ({
               errorCode: row.error_code,
               count: Number(row.error_count),
-            })
+            }),
           ) ?? [],
       }),
       {
@@ -161,9 +161,10 @@ export const GET: APIRoute = async ({ request, url }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error fetching AI performance metrics:', error)
 
     return new Response(
@@ -176,7 +177,7 @@ export const GET: APIRoute = async ({ request, url }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 }

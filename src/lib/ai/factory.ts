@@ -1,16 +1,14 @@
-import { createTogetherAIService } from './services/together'
 import type {
+  AIMessage,
   AIService,
+  AIServiceOptions,
   AICompletionResponse as TypesAICompletionResponse,
 } from './models/ai-types'
-import {
-  createAdvancedOptimizedAIService,
-  type AdvancedPerformanceOptions,
-} from './performance-optimizations'
-import type { AIMessage, AICompletionResponse } from './models/ai-types'
-import type { AIServiceOptions } from './models/ai-types'
+import type { AdvancedPerformanceOptions } from './performance-optimizations'
+import { createAdvancedOptimizedAIService } from './performance-optimizations'
+import { createTogetherAIService } from './services/together'
 
-export type AIServiceFactoryOptions = {
+export interface AIServiceFactoryOptions {
   provider: 'together'
   apiKey?: string
   baseUrl?: string
@@ -32,13 +30,13 @@ function createBaseAIService(apiKey: string): AIService {
 /**
  * Creates an enhanced AI service with tracking capabilities.
  */
-function createEnhancedAIService(apiKey: string): AIService {
+function _createEnhancedAIService(apiKey: string): AIService {
   const baseService = createBaseAIService(apiKey)
   return {
     ...baseService,
     createChatCompletionWithTracking: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ): Promise<TypesAICompletionResponse> => {
       const response = await baseService.createChatCompletion(messages, options)
 
@@ -48,19 +46,20 @@ function createEnhancedAIService(apiKey: string): AIService {
         model: response?.model,
         created: response?.created,
         content: response?.content,
-        choices: (response?.choices?.map((choice) => ({
-          message: choice.message
-            ? {
-                role: (choice.message.role || 'assistant') as
-                  | 'system'
-                  | 'user'
-                  | 'assistant',
-                content: choice.message.content || '',
-                name: choice.message.name || '', // Provide default empty string to satisfy type constrain
-              }
-            : undefined,
-          finishReason: choice.finishReason,
-        })) || []) as TypesAICompletionResponse['choices'],
+        choices:
+          response?.choices?.map((choice) => ({
+            message: choice.message
+              ? {
+                  role: (choice.message.role || 'assistant') as
+                    | 'system'
+                    | 'user'
+                    | 'assistant',
+                  content: choice.message.content || '',
+                  name: choice.message.name || '', // Provide default empty string to satisfy type constrain
+                }
+              : undefined,
+            finishReason: choice.finishReason,
+          })) || ([] as TypesAICompletionResponse['choices']),
         provider: 'openai',
       }
       if (response?.usage) {
@@ -75,7 +74,7 @@ function createEnhancedAIService(apiKey: string): AIService {
  * Create an AI service using the provided options.
  */
 export function createAIService(
-  options: AIServiceFactoryOptions = { provider: 'together' }
+  options: AIServiceFactoryOptions = { provider: 'together' },
 ): AIService {
   if (!options.apiKey) {
     throw new Error('API key is required for TogetherAI provider')
@@ -89,7 +88,7 @@ export function createAIService(
     // Convert to unknown first, then to the desired type
     const optimizedService = createAdvancedOptimizedAIService(
       baseService as unknown as import('./models/ai-types').AIService,
-      options.advancedPerformanceOptions
+      options.advancedPerformanceOptions,
     )
     return optimizedService as unknown as AIService
   }
@@ -107,7 +106,7 @@ export function createAIService(
           enabled: true,
         },
         maxContextLength: 4000,
-      }
+      },
     )
     return optimizedService as unknown as AIService
   }

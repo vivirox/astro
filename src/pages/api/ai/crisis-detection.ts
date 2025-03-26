@@ -1,7 +1,7 @@
-import { type APIRoute } from 'astro'
-import { getSession } from '../../../lib/auth/session'
+import type { APIRoute } from 'astro'
 import { createTogetherAIService } from '../../../lib/ai/services/together'
 import { createAuditLog } from '../../../lib/audit/log'
+import { getSession } from '../../../lib/auth/session'
 import { aiRepository } from '../../../lib/db/ai/index'
 
 /**
@@ -31,7 +31,7 @@ export const POST: APIRoute = async ({ request }) => {
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -58,7 +58,7 @@ export const POST: APIRoute = async ({ request }) => {
               name: '',
             },
           ],
-          { model: model || 'mistralai/Mixtral-8x7B-Instruct-v0.1' }
+          { model: model || 'mistralai/Mixtral-8x7B-Instruct-v0.1' },
         )
 
         // Parse the response
@@ -76,7 +76,7 @@ export const POST: APIRoute = async ({ request }) => {
       },
       detectBatch: async (texts: string[]) => {
         return Promise.all(
-          texts.map((text) => crisisService.detectCrisis(text))
+          texts.map((text) => crisisService.detectCrisis(text)),
         )
       },
       model: model || 'mistralai/Mixtral-8x7B-Instruct-v0.1',
@@ -96,7 +96,7 @@ export const POST: APIRoute = async ({ request }) => {
       },
     })
 
-    // Start timer for latency measurement
+    // Start timer for latency measuremen
     const startTime = Date.now()
 
     // Process the request
@@ -214,7 +214,7 @@ export const POST: APIRoute = async ({ request }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 }

@@ -87,7 +87,7 @@ export function Progress({
             'w-full',
             baseBackgroundClasses,
             sizeClasses[size],
-            bgClassName
+            bgClassName,
           )}
         >
           <div
@@ -98,7 +98,7 @@ export function Progress({
                 'animate-pulse': indeterminate,
                 'animate-progress-indeterminate w-3/4': indeterminate,
               },
-              valueClassName
+              valueClassName,
             )}
             style={{ width: indeterminate ? undefined : `${percentage}%` }}
           />
@@ -188,7 +188,7 @@ export function ProgressCircular({
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={
-            indeterminate ? circumference * 0.25 : strokeDashoffset
+            indeterminate ? circumference * 0.25 : strokeDashoffse
           }
           strokeLinecap="round"
           fill="none"

@@ -96,7 +96,7 @@ export class ScheduledKeyRotation {
 
       // Also rotate keys that will expire in the next 24 hours
       const expiresWithin24Hours =
-        keyData.expiresAt &&
+        keyData.expiresA &&
         keyData.expiresAt > now &&
         keyData.expiresAt <= now + 24 * 60 * 60 * 1000
 
@@ -115,7 +115,7 @@ export class ScheduledKeyRotation {
         } catch (error) {
           if (this.onError) {
             this.onError(
-              error instanceof Error ? error : new Error(String(error))
+              error instanceof Error ? error : new Error(String(error)),
             )
           } else {
             console.error(`Error rotating key ${keyId}:`, error)

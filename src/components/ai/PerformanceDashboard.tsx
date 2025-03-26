@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // Define interface for the expected AIService in this component
 interface AIServiceProps {
@@ -110,7 +110,7 @@ export default function PerformanceDashboard({
     // Set up interval for refreshing metrics
     const intervalId = setInterval(fetchMetrics, refreshInterval)
 
-    // Clean up interval on unmount
+    // Clean up interval on unmoun
     return () => clearInterval(intervalId)
   }, [aiService, refreshInterval])
 
@@ -156,7 +156,7 @@ export default function PerformanceDashboard({
                 Cache Size:
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {metrics.cache.size} / {metrics.cache.maxSize}
+                {metrics.cache.size} /{metrics.cache.maxSize}
               </span>
             </div>
 
@@ -240,21 +240,24 @@ export default function PerformanceDashboard({
             <div className="flex justify-between">
               <span className="text-gray-600 dark:text-gray-300">Average:</span>
               <span className="text-gray-800 dark:text-gray-200">
-                {metrics.responseTime.average}ms
+                {metrics.responseTime.average}
+                ms
               </span>
             </div>
 
             <div className="flex justify-between">
               <span className="text-gray-600 dark:text-gray-300">Min:</span>
               <span className="text-gray-800 dark:text-gray-200">
-                {metrics.responseTime.min}ms
+                {metrics.responseTime.min}
+                ms
               </span>
             </div>
 
             <div className="flex justify-between">
               <span className="text-gray-600 dark:text-gray-300">Max:</span>
               <span className="text-gray-800 dark:text-gray-200">
-                {metrics.responseTime.max}ms
+                {metrics.responseTime.max}
+                ms
               </span>
             </div>
 

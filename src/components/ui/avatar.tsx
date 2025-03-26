@@ -22,6 +22,8 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   borderColor?: string
   /** Additional classes for styling */
   className?: string
+  /** Fallback content to display when image fails to load */
+  fallback?: React.ReactNode
 }
 
 export function Avatar({
@@ -35,9 +37,10 @@ export function Avatar({
   statusPosition = 'bottom-right',
   borderColor,
   className,
+  fallback,
   ...props
 }: AvatarProps) {
-  const [imageError, setImageError] = useState(false)
+  const [hasError, setHasError] = useState(false)
 
   // Size classes or custom size
   const sizeClasses = {
@@ -100,31 +103,13 @@ export function Avatar({
     return colors[hash % colors.length]
   }
 
-  return (
-    <div
-      className={cn(
-        'relative inline-flex flex-shrink-0 items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800',
-        typeof size === 'string' ? sizeClasses[size] : '',
-        shapeClasses,
-        className
-      )}
-      style={{ ...sizeStyle, ...borderStyle }}
-      {...props}
-    >
-      {/* Image */}
-      {src && !imageError ? (
-        <img
-          src={src}
-          alt={alt}
-          className="h-full w-full object-cover"
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        /* Fallback: Initials or placeholder */
+  const renderContent = () => {
+    if (hasError || !src) {
+      return (
         <div
           className={cn(
             'flex h-full w-full items-center justify-center text-white',
-            getInitialsBackgroundColor(initials)
+            getInitialsBackgroundColor(initials),
           )}
         >
           {initials ? (
@@ -144,7 +129,30 @@ export function Avatar({
             </svg>
           )}
         </div>
+      )
+    }
+    return (
+      <img
+        src={src}
+        alt={alt}
+        onError={() => setHasError(true)}
+        className="h-full w-full object-cover"
+      />
+    )
+  }
+
+  return (
+    <div
+      className={cn(
+        'relative inline-flex flex-shrink-0 items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800',
+        typeof size === 'string' ? sizeClasses[size] : '',
+        shapeClasses,
+        className,
       )}
+      style={{ ...sizeStyle, ...borderStyle }}
+      {...props}
+    >
+      {renderContent()}
 
       {/* Status indicator */}
       {status && (
@@ -152,7 +160,7 @@ export function Avatar({
           className={cn(
             'absolute h-2.5 w-2.5 rounded-full ring-2 ring-white dark:ring-gray-800',
             statusClasses[status],
-            statusPositionClasses[statusPosition]
+            statusPositionClasses[statusPosition],
           )}
         />
       )}

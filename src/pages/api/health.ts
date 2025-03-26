@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro'
 import { createClient } from '@supabase/supabase-js'
 
 /**
- * Health check API endpoint
+ * Health check API endpoin
  *
  * This endpoint will check:
  * 1. API server availability
@@ -31,7 +31,7 @@ export const GET: APIRoute = async () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
     }
 
@@ -45,8 +45,8 @@ export const GET: APIRoute = async () => {
 
     // Check memory usage
     const memoryUsage = process.memoryUsage()
-    const usedMemoryPercentage =
-      (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
+    const usedMemoryPercentage
+      = (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
 
     if (error) {
       return new Response(
@@ -60,9 +60,8 @@ export const GET: APIRoute = async () => {
             memory: usedMemoryPercentage < 85 ? 'ok' : 'warning',
             memoryUsage: {
               percentage: usedMemoryPercentage.toFixed(2),
-              heapUsed: (memoryUsage.heapUsed / 1024 / 1024).toFixed(2) + ' MB',
-              heapTotal:
-                (memoryUsage.heapTotal / 1024 / 1024).toFixed(2) + ' MB',
+              heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
+              heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
             },
           },
         }),
@@ -71,7 +70,7 @@ export const GET: APIRoute = async () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
     }
 
@@ -90,8 +89,8 @@ export const GET: APIRoute = async () => {
           memory: usedMemoryPercentage < 85 ? 'ok' : 'warning',
           memoryUsage: {
             percentage: usedMemoryPercentage.toFixed(2),
-            heapUsed: (memoryUsage.heapUsed / 1024 / 1024).toFixed(2) + ' MB',
-            heapTotal: (memoryUsage.heapTotal / 1024 / 1024).toFixed(2) + ' MB',
+            heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
+            heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
           },
         },
       }),
@@ -101,9 +100,10 @@ export const GET: APIRoute = async () => {
           'Content-Type': 'application/json',
           'Cache-Control': 'no-store, max-age=0',
         },
-      }
+      },
     )
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Health check failed:', error)
 
     return new Response(
@@ -122,7 +122,7 @@ export const GET: APIRoute = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 }

@@ -51,22 +51,22 @@ export interface AIStreamChunk {
 }
 
 export interface AIService {
-  generateCompletion(
+  generateCompletion: (
     messages: AIMessage[],
-    options: CompletionOptions
-  ): Promise<AICompletionResponse>
-  createChatCompletion(
+    options: CompletionOptions,
+  ) => Promise<AICompletionResponse>
+  createChatCompletion: (
     messages: AIMessage[],
-    options: CompletionOptions
-  ): Promise<AICompletionResponse>
-  createStreamingChatCompletion?(
+    options: CompletionOptions,
+  ) => Promise<AICompletionResponse>
+  createStreamingChatCompletion?: (
     messages: AIMessage[],
-    options: CompletionOptions
-  ): Promise<AsyncGenerator<AIStreamChunk, void, void>>
-  getModelInfo?(modelId: string): Promise<ModelInfo>
-  createChatCompletionWithTracking?(
+    options: CompletionOptions,
+  ) => Promise<AsyncGenerator<AIStreamChunk, void, void>>
+  getModelInfo?: (modelId: string) => Promise<ModelInfo>
+  createChatCompletionWithTracking?: (
     messages: AIMessage[],
-    options: CompletionOptions
-  ): Promise<AICompletionResponse>
-  dispose?(): void
+    options: CompletionOptions,
+  ) => Promise<AICompletionResponse>
+  dispose?: () => void
 }

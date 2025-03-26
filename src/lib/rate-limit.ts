@@ -5,11 +5,11 @@
 const rateLimits = new Map<string, number[]>()
 
 /**
- * Check if a user has exceeded their rate limit
+ * Check if a user has exceeded their rate limi
  */
 export function checkRateLimit(
   userId: string,
-  maxRequestsPerMinute: number
+  maxRequestsPerMinute: number,
 ): boolean {
   const now = Date.now()
   const windowMs = 60 * 1000 // 1 minute window
@@ -19,10 +19,10 @@ export function checkRateLimit(
 
   // Remove old requests outside the window
   const validRequests = requests.filter(
-    (timestamp) => now - timestamp < windowMs
+    (timestamp) => now - timestamp < windowMs,
   )
 
-  // Check if user has exceeded limit
+  // Check if user has exceeded limi
   if (validRequests.length >= maxRequestsPerMinute) {
     return true // Rate limited
   }

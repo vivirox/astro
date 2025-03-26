@@ -15,14 +15,14 @@ export function RegisterForm({
   const [password, setPassword] = useState<string>('')
   const [fullName, setFullName] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false)
   const [acceptTerms, setAcceptTerms] = useState<boolean>(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    setErrorMessage('')
+    setErrorMessage(null)
 
     if (!acceptTerms) {
       setErrorMessage('You must accept the Terms of Service and Privacy Policy')
@@ -32,7 +32,6 @@ export function RegisterForm({
 
     try {
       const metadata = { fullName }
-
       const response = await signUp(email, password, metadata)
 
       if (response.error) {
@@ -40,13 +39,12 @@ export function RegisterForm({
         return
       }
 
-      if (redirectTo) {
-        window.location.href = redirectTo
+      const data = await response.data
+      if (data?.url) {
+        window.location.href = data.url
       }
-
-      setIsSuccessful(true)
     } catch (error) {
-      setErrorMessage((error as Error).message)
+      setErrorMessage('An unexpected error occurred')
     } finally {
       setIsLoading(false)
     }
@@ -75,7 +73,7 @@ export function RegisterForm({
       <div className="auth-success">
         <h2>Registration Successful</h2>
         <p>
-          Please check your email to verify your account. If you don't see it
+          Please check your email to verify your account. If you don't see i
           within a few minutes, check your spam folder.
         </p>
       </div>

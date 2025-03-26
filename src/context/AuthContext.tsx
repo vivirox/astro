@@ -1,8 +1,8 @@
+import type { ReactNode } from 'react'
+import type { AuthResult, AuthState, Provider, UserRole } from '../types/auth'
 // Import necessary libraries and types
 import { createContext, useContext } from 'react'
-import type { ReactNode } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import type { AuthState, UserRole, Provider, AuthResult } from '../types/auth'
 
 // Create the full context type with auth methods
 interface AuthContextType extends AuthState {
@@ -10,7 +10,7 @@ interface AuthContextType extends AuthState {
   signUp: (
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
   ) => Promise<AuthResult>
   signOut: () => Promise<void>
   signInWithOAuth: (provider: Provider, redirectTo?: string) => Promise<void>

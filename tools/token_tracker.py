@@ -1,5 +1,17 @@
-
 #!/usr/bin/env python3
+
+"""
+Token Tracker - A tool to track and analyze token usage for LLM API requests.
+
+This script provides a command-line interface to track and analyze token usage for LLM API requests.
+It supports tracking token usage for OpenAI and Anthropic APIs, and provides various options for filtering and summarizing the data.
+
+Usage:
+    python token_tracker.py [options]
+
+Options:
+    -h, --help            Show this help message and exit
+"""
 
 import argparse
 import json
@@ -8,7 +20,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union, TypedDict, cast
 
 # Try to import tabulate directly
 try:
@@ -30,12 +42,11 @@ class TokenUsage:
     """Token usage information for an LLM API request.
 
     Attributes:
-        prompt_tokens: Number of tokens in the input prompt
-        completion_tokens: Number of tokens in the model's response
-        total_tokens: Total number of tokens used (prompt + completion)
-        reasoning_tokens: Number of tokens used for reasoning (only available for OpenAI's o1 model)
-            This is a special field that's only populated when using OpenAI's o1 model.
-            For all other models (including other OpenAI models), this will be None.
+        prompt_tokens (int): Number of tokens in the input prompt
+        completion_tokens (int): Number of tokens in the model's response
+        total_tokens (int): Total number of tokens used (prompt + completion)
+        reasoning_tokens (Optional[int]): Number of tokens used for reasoning
+            (only available for OpenAI's o1 model)
     """
 
     prompt_tokens: int
@@ -46,6 +57,17 @@ class TokenUsage:
 
 @dataclass
 class APIResponse:
+    """Response from an LLM API request.
+
+    Attributes:
+        content (str): The response content from the model
+        token_usage (TokenUsage): Token usage statistics for the request
+        cost (float): Cost of the API request in USD
+        thinking_time (float): Time taken by the model to generate the response
+        provider (str): The API provider (e.g., "openai", "anthropic")
+        model (str): The specific model used for the request
+    """
+
     content: str
     token_usage: TokenUsage
     cost: float
@@ -54,14 +76,83 @@ class APIResponse:
     model: str = "unknown"
 
 
+class TokenUsageDict(TypedDict):
+    prompt_tokens: int
+    completion_tokens: int
+    total_tokens: int
+    reasoning_tokens: Optional[int]
+
+
+class RequestDict(TypedDict):
+    timestamp: float
+    provider: str
+    model: str
+    token_usage: TokenUsageDict
+    cost: float
+    thinking_time: float
+
+
+class ProviderStats(TypedDict):
+    requests: int
+    total_tokens: int
+    total_cost: float
+
+
+class SummaryDict(TypedDict):
+    total_requests: int
+    total_prompt_tokens: int
+    total_completion_tokens: int
+    total_tokens: int
+    total_cost: float
+    total_thinking_time: float
+    provider_stats: Dict[str, ProviderStats]
+    session_duration: float
+
+
+class SessionData(TypedDict):
+    session_id: str
+    summary: SummaryDict
+    requests: List[RequestDict]
+
+
+class SessionSummary(TypedDict):
+    session_duration: float
+    total_requests: int
+    total_prompt_tokens: int
+    total_completion_tokens: int
+    total_tokens: int
+    total_cost: float
+    provider_stats: Dict[str, ProviderStats]
+
+
 class TokenTracker:
+    """A class to track and analyze token usage for LLM API requests.
+
+    This class manages token usage tracking for a session, including saving and loading
+    session data, calculating costs, and generating usage summaries.
+
+    Attributes:
+        session_id (str): Unique identifier for the tracking session
+        session_start (float): Unix timestamp when the session started
+        requests (List[Dict]): List of tracked API requests
+        logs_dir (Path): Directory where session logs are stored
+        session_file (Path): Path to the current session's log file
+    """
+
     def __init__(
         self, session_id: Optional[str] = None, logs_dir: Optional[Path] = None
-    ):
-        # If no session_id provided, use today's date
+    ) -> None:
+        """Initialize a new TokenTracker instance.
+
+        Args:
+            session_id: Optional unique identifier for the session. If not provided,
+                      uses today's date in YYYY-MM-DD format.
+            logs_dir: Optional directory path for storing session logs. If not provided,
+                     uses './token_logs'.
+        """
         self.session_id = session_id or datetime.now().strftime("%Y-%m-%d")
         self.session_start = time.time()
-        self.requests: List[Dict] = []
+        self.requests: List[RequestDict] = []
 
         # Create logs directory if it doesn't exist
         self._logs_dir = logs_dir or Path("token_logs")
@@ -181,7 +272,7 @@ class TokenTracker:
         if response.provider.lower() not in ["openai", "anthropic"]:
             return
 
-        request_data = {
+        request_data: RequestDict = {
             "timestamp": time.time(),
             "provider": response.provider,
             "model": response.model,
@@ -197,7 +288,7 @@ class TokenTracker:
         self.requests.append(request_data)
         self._save_session()
 
-    def get_session_summary(self) -> Dict:
+    def get_session_summary(self) -> SummaryDict:
         """Get summary of token usage and costs for the current session"""
         total_prompt_tokens = sum(
             r["token_usage"]["prompt_tokens"] for r in self.requests
@@ -210,7 +301,7 @@ class TokenTracker:
         total_thinking_time = sum(r["thinking_time"] for r in self.requests)
 
         # Group by provider
-        provider_stats = {}
+        provider_stats: Dict[str, ProviderStats] = {}
         for r in self.requests:
             provider = r["provider"]
             if provider not in provider_stats:
@@ -270,12 +361,27 @@ def get_token_tracker(
 
 # Viewing functionality (moved from view_usage.py)
 def format_cost(cost: float) -> str:
-    """Format a cost value in dollars"""
+    """Format a cost value in dollars.
+
+    Args:
+        cost: The cost value to format
+
+    Returns:
+        A string representation of the cost in dollars with 6 decimal places
+    """
     return f"${cost:.6f}"
 
 
 def format_duration(seconds: float) -> str:
-    """Format duration in a human-readable format"""
+    """Format duration in a human-readable format.
+
+    Args:
+        seconds: The duration in seconds to format
+
+    Returns:
+        A string representation of the duration in seconds, minutes, or hours
+        with appropriate units
+    """
     if seconds < 60:
         return f"{seconds:.2f}s"
     minutes = seconds / 60
@@ -285,19 +391,19 @@ def format_duration(seconds: float) -> str:
     return f"{hours:.2f}h"
 
 
-def load_session(session_file: Path) -> Optional[Dict]:
-    """Load a session file and return its contents"""
+def load_session(session_file: Path) -> Optional[SessionData]:
+    """Load a session file and return its contents."""
     try:
         with open(session_file, "r") as f:
-            return json.load(f)
+            return cast(SessionData, json.load(f))
     except Exception as e:
         print(f"Error loading session file {session_file}: {e}", file=sys.stderr)
         return None
 
 
-def display_session_summary(session_data: Dict, show_requests: bool = False):
-    """Display a summary of the session"""
-    summary = session_data["summary"]
+def display_session_summary(session_data: SessionData, show_requests: bool = False) -> None:
+    """Display a summary of the session."""
+    summary = cast(SessionSummary, session_data["summary"])
 
     # Print session overview
     print("\nSession Overview")
@@ -359,8 +465,8 @@ def display_session_summary(session_data: Dict, show_requests: bool = False):
         )
 
 
-def list_sessions(logs_dir: Path):
-    """List all available session files"""
+def list_sessions(logs_dir: Path) -> None:
+    """List all available session files."""
     session_files = sorted(logs_dir.glob("session_*.json"))
     if not session_files:
         print("No session files found.")
@@ -369,7 +475,7 @@ def list_sessions(logs_dir: Path):
     for session_file in session_files:
         session_data = load_session(session_file)
         if session_data:
-            summary = session_data["summary"]
+            summary = cast(SessionSummary, session_data["summary"])
             print(f"\nSession: {session_data['session_id']}")
             print(f"Duration: {format_duration(summary['session_duration'])}")
             print(f"Requests: {summary['total_requests']}")
@@ -377,7 +483,8 @@ def list_sessions(logs_dir: Path):
             print(f"Total Tokens: {summary['total_tokens']:,}")
 
 
-def main():
+def main() -> None:
+    """Main entry point for the token tracker CLI."""
     parser = argparse.ArgumentParser(description="View LLM API usage statistics")
     parser.add_argument("--session", type=str, help="Session ID to view details for")
     parser.add_argument(

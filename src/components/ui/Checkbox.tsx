@@ -36,7 +36,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       className = '',
       ...props
     },
-    ref
+    ref,
   ) => {
     // Base checkbox classes
     const baseCheckboxClasses =
@@ -135,7 +135,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 Checkbox.displayName = 'Checkbox'

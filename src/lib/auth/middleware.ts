@@ -1,7 +1,7 @@
-import { getSession } from './session'
-import { fheService } from '../fhe'
 import type { AuthContext } from './types'
+import { fheService } from '../fhe'
 import { getLogger } from '../logging'
+import { getSession } from './session'
 
 // Initialize logger
 const logger = getLogger()
@@ -9,10 +9,10 @@ const logger = getLogger()
 /**
  * Middleware to verify message security and integrity
  */
-export const verifyMessageSecurity = async (
+export async function verifyMessageSecurity(
   request: Request,
-  context: AuthContext
-) => {
+  context: AuthContext,
+) {
   try {
     // Get the session from the context
     const session = await getSession(request)
@@ -31,7 +31,7 @@ export const verifyMessageSecurity = async (
         {
           status: 401,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -45,7 +45,7 @@ export const verifyMessageSecurity = async (
         {
           status: 401,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -67,7 +67,7 @@ export const verifyMessageSecurity = async (
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
   }
 }
@@ -75,7 +75,7 @@ export const verifyMessageSecurity = async (
 /**
  * Middleware to verify admin access
  */
-export const verifyAdmin = async (request: Request) => {
+export async function verifyAdmin(request: Request, context: AuthContext) {
   try {
     // Get the session from the context
     const session = await getSession(request)
@@ -104,7 +104,7 @@ export const verifyAdmin = async (request: Request) => {
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
   }
 }
@@ -112,10 +112,10 @@ export const verifyAdmin = async (request: Request) => {
 /**
  * Middleware to enforce HIPAA compliance
  */
-export const enforceHIPAACompliance = async (
+export async function enforceHIPAACompliance(
   request: Request,
-  context: AuthContext
-) => {
+  context: AuthContext,
+) {
   try {
     // Get the session from the context
     const session = await getSession(request)
@@ -134,7 +134,7 @@ export const enforceHIPAACompliance = async (
         {
           status: 500,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -154,7 +154,7 @@ export const enforceHIPAACompliance = async (
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
   }
 }

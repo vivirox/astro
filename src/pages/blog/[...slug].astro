@@ -9,7 +9,7 @@ import { getFilteredPosts } from '~/utils/post'
 import { FEATURES } from '~/config'
 
 // Add prerender directive
-export const prerender = true;
+export const prerender = true
 
 export async function getStaticPaths() {
   const posts = await getFilteredPosts('blog')
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props
-const { data: frontmatter } = post
+const { data: frontmatter } = pos
 const { Content, headings, remarkPluginFrontmatter } = await post.render()
 const { share, toc } = FEATURES
 
@@ -55,7 +55,11 @@ Please check back later when it's available.`
           </p>
         )
       }
-      {(new Date(frontmatter.pubDate) > new Date()) && <Warning rawHTMLString={warningHTML} />}
+      {
+        new Date(frontmatter.pubDate) > new Date() && (
+          <Warning rawHTMLString={warningHTML} />
+        )
+      }
     </div>
     <div slot="article">
       {Array.isArray(toc) && toc[0] && frontmatter.toc && <Toc {headings} />}

@@ -3,6 +3,7 @@
  * This file demonstrates how to use the encryption, key storage, and rotation features
  */
 
+import { appLogger as logger } from '../logging'
 import { createCryptoSystem, ScheduledKeyRotation } from './index'
 import { KeyStorage } from './keyStorage'
 
@@ -21,15 +22,17 @@ async function basicEncryptionExample() {
   const sensitiveData = 'This is sensitive patient information'
   const encrypted = await crypto.encrypt(sensitiveData)
 
-  console.log('Encrypted data:', encrypted)
+  logger.info('Data encrypted successfully', { encrypted })
 
   // Decrypt the data
   const decrypted = await crypto.decrypt(encrypted)
 
-  console.log('Decrypted data:', decrypted)
+  logger.info('Data decrypted successfully', { decrypted })
 
   // Verify the decryption worked correctly
-  console.log('Decryption successful:', decrypted === sensitiveData)
+  logger.info('Decryption verification', {
+    success: decrypted === sensitiveData,
+  })
 }
 
 /**
@@ -45,24 +48,22 @@ async function manualKeyRotationExample() {
   // Generate a key
   const { keyId, keyData } = await keyStorage.generateKey('patient-data')
 
-  console.log('Generated key:', keyId, 'with version:', keyData.version)
+  logger.info('Key generated', { keyId, version: keyData.version })
 
   // Rotate the key
   const rotatedKey = await keyStorage.rotateKey(keyId)
 
   if (rotatedKey) {
-    console.log(
-      'Rotated key:',
-      rotatedKey.keyId,
-      'with version:',
-      rotatedKey.keyData.version
-    )
+    logger.info('Key rotated', {
+      keyId: rotatedKey.keyId,
+      version: rotatedKey.keyData.version,
+    })
   }
 
   // List all keys
   const keys = await keyStorage.listKeys()
 
-  console.log('All keys:', keys)
+  logger.info('Key listing complete', { keys })
 }
 
 /**
@@ -75,17 +76,19 @@ function scheduledKeyRotationExample() {
     useSecureStorage: true,
     checkIntervalMs: 5 * 60 * 1000, // Check every 5 minutes
     onRotation: (oldKeyId, newKeyId) => {
-      console.log(`Key rotated: ${oldKeyId} -> ${newKeyId}`)
+      logger.info('Key rotation completed', { oldKeyId, newKeyId })
     },
     onError: (error) => {
-      console.error('Rotation error:', error)
+      logger.error('Key rotation failed', { error })
     },
   })
 
   // Start the scheduler
   scheduler.start()
 
-  console.log('Scheduled key rotation started')
+  logger.info('Key rotation scheduler started', {
+    checkIntervalMs: 5 * 60 * 1000,
+  })
 
   // To stop the scheduler later:
   // scheduler.stop();
@@ -106,7 +109,7 @@ async function reencryptionExample() {
   const sensitiveData = 'This is sensitive patient information'
   const encrypted = await crypto.encrypt(sensitiveData)
 
-  console.log('Original encrypted data:', encrypted)
+  logger.info('Original data encrypted', { encrypted })
 
   // Extract key ID from the encrypted data
   const keyId = encrypted.split(':')[0]
@@ -119,17 +122,21 @@ async function reencryptionExample() {
   const rotatedKey = await keyStorage.rotateKey(keyId)
 
   if (rotatedKey) {
-    console.log('Key rotated to version:', rotatedKey.keyData.version)
+    logger.info('Key rotated for re-encryption', {
+      version: rotatedKey.keyData.version,
+    })
 
     // Re-encrypt the data with the new key
     const decrypted = await crypto.decrypt(encrypted)
     const reencrypted = await crypto.encrypt(decrypted)
 
-    console.log('Re-encrypted data:', reencrypted)
+    logger.info('Data re-encrypted with new key', { reencrypted })
 
     // Verify the re-encryption worked correctly
     const redecrypted = await crypto.decrypt(reencrypted)
-    console.log('Re-decryption successful:', redecrypted === sensitiveData)
+    logger.info('Re-encryption verification', {
+      success: redecrypted === sensitiveData,
+    })
   }
 }
 
@@ -137,17 +144,21 @@ async function reencryptionExample() {
  * Run all examples
  */
 async function runExamples() {
-  console.log('=== Basic Encryption Example ===')
+  logger.info('Starting encryption examples')
+
+  logger.info('Running basic encryption example')
   await basicEncryptionExample()
 
-  console.log('\n=== Manual Key Rotation Example ===')
+  logger.info('Running manual key rotation example')
   await manualKeyRotationExample()
 
-  console.log('\n=== Scheduled Key Rotation Example ===')
+  logger.info('Running scheduled key rotation example')
   scheduledKeyRotationExample()
 
-  console.log('\n=== Re-encryption Example ===')
+  logger.info('Running re-encryption example')
   await reencryptionExample()
+
+  logger.info('All examples completed')
 }
 
 // Uncomment to run the examples
@@ -156,7 +167,7 @@ async function runExamples() {
 export {
   basicEncryptionExample,
   manualKeyRotationExample,
-  scheduledKeyRotationExample,
   reencryptionExample,
   runExamples,
+  scheduledKeyRotationExample,
 }

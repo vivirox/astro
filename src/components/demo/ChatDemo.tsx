@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import type { AIMessage } from '../../lib/ai'
+import type { CrisisDetectionResult } from '../../lib/ai/models/types'
+import React, { useState } from 'react'
 import {
   ChatContainer,
   useChatCompletion,
-  useSentimentAnalysis,
   useCrisisDetection,
+  useSentimentAnalysis,
 } from '../ai'
-import type { AIMessage } from '../../lib/ai'
-import type { CrisisDetectionResult } from '../../lib/ai/models/types'
 
 /**
  * Demo component for showcasing the chat interface
@@ -95,7 +95,10 @@ export function ChatDemo() {
               <h3 className="font-semibold mb-2">Sentiment Analysis</h3>
               {sentimentResult ? (
                 <div>
-                  <p>Sentiment: {String(sentimentResult.sentiment)}</p>
+                  <p>
+                    Sentiment:
+                    {String(sentimentResult.sentiment)}
+                  </p>
                   <p>
                     Confidence: {(sentimentResult.confidence * 100).toFixed(0)}%
                   </p>
@@ -106,9 +109,9 @@ export function ChatDemo() {
                         {Object.entries(sentimentResult.emotions).map(
                           ([emotion, score]) => (
                             <li key={emotion}>
-                              {emotion}: {(Number(score) * 100).toFixed(0)}%
+                              {emotion}:{(Number(score) * 100).toFixed(0)}%
                             </li>
-                          )
+                          ),
                         )}
                       </ul>
                     </div>
@@ -126,18 +129,30 @@ export function ChatDemo() {
               <h3 className="font-semibold mb-2">Crisis Detection</h3>
               {crisisResult ? (
                 <div>
-                  <p>Crisis Detected: {crisisResult.isCrisis ? 'Yes' : 'No'}</p>
+                  <p>
+                    Crisis Detected:
+                    {crisisResult.isCrisis ? 'Yes' : 'No'}
+                  </p>
                   <p>
                     Confidence: {(crisisResult.confidence * 100).toFixed(0)}%
                   </p>
                   {crisisResult.category && (
-                    <p>Crisis Type: {crisisResult.category}</p>
+                    <p>
+                      Crisis Type:
+                      {crisisResult.category}
+                    </p>
                   )}
                   {crisisResult.severity && (
-                    <p>Risk Level: {crisisResult.severity}</p>
+                    <p>
+                      Risk Level:
+                      {crisisResult.severity}
+                    </p>
                   )}
                   {crisisResult.recommendedAction && (
-                    <p>Reasoning: {crisisResult.recommendedAction}</p>
+                    <p>
+                      Reasoning:
+                      {crisisResult.recommendedAction}
+                    </p>
                   )}
                 </div>
               ) : (

@@ -1,6 +1,6 @@
-import { supabase } from '../supabase.js'
 import type { Database } from '../../types/supabase.js'
 import { logAuditEvent } from '../audit/log.js'
+import { supabase } from '../supabase.js'
 
 export type UserSettings = Database['public']['Tables']['user_settings']['Row']
 export type NewUserSettings =
@@ -12,7 +12,7 @@ export type UpdateUserSettings =
  * Get user settings
  */
 export async function getUserSettings(
-  userId: string
+  userId: string,
 ): Promise<UserSettings | null> {
   const { data, error } = await supabase
     .from('user_settings')
@@ -34,7 +34,7 @@ export async function getUserSettings(
  */
 export async function createUserSettings(
   settings: NewUserSettings,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   const { data, error } = await supabase
     .from('user_settings')
@@ -49,14 +49,14 @@ export async function createUserSettings(
 
   // Log the event for HIPAA compliance
   await logAuditEvent(
-    settings.user_id,
     'user_settings_created',
+    settings.user_id,
     'user_settings',
+    data?.id,
     {
-      userSettingsId: data?.id,
       ipAddress: request?.headers.get('x-forwarded-for'),
       userAgent: request?.headers.get('user-agent'),
-    }
+    },
   )
 
   return data
@@ -68,7 +68,7 @@ export async function createUserSettings(
 export async function updateUserSettings(
   userId: string,
   updates: UpdateUserSettings,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   const { data, error } = await supabase
     .from('user_settings')
@@ -86,12 +86,17 @@ export async function updateUserSettings(
   }
 
   // Log the event for HIPAA compliance
-  await logAuditEvent(userId, 'user_settings_updated', 'user_settings', {
-    userSettingsId: data?.id,
-    updates,
-    ipAddress: request?.headers.get('x-forwarded-for'),
-    userAgent: request?.headers.get('user-agent'),
-  })
+  await logAuditEvent(
+    'user_settings_updated',
+    userId,
+    'user_settings',
+    data?.id,
+    {
+      updates,
+      ipAddress: request?.headers.get('x-forwarded-for'),
+      userAgent: request?.headers.get('user-agent'),
+    },
+  )
 
   return data
 }
@@ -101,7 +106,7 @@ export async function updateUserSettings(
  */
 export async function getOrCreateUserSettings(
   userId: string,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   // Try to get existing settings
   const settings = await getUserSettings(userId)
@@ -134,7 +139,7 @@ export async function getOrCreateUserSettings(
 export async function updateTheme(
   userId: string,
   theme: string,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   return updateUserSettings(userId, { theme }, request)
 }
@@ -145,7 +150,7 @@ export async function updateTheme(
 export async function updateLanguage(
   userId: string,
   language: string,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   return updateUserSettings(userId, { language }, request)
 }
@@ -156,7 +161,7 @@ export async function updateLanguage(
 export async function toggleNotifications(
   userId: string,
   enabled: boolean,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   return updateUserSettings(userId, { notifications_enabled: enabled }, request)
 }
@@ -167,7 +172,7 @@ export async function toggleNotifications(
 export async function toggleEmailNotifications(
   userId: string,
   enabled: boolean,
-  request?: Request
+  request?: Request,
 ): Promise<UserSettings> {
   return updateUserSettings(userId, { email_notifications: enabled }, request)
 }

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { CrisisDetectionService } from '../../lib/ai/services/crisis-detection'
 import type { AIService } from '../../lib/ai/models/types.ts'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { CrisisDetectionService } from '../../lib/ai/services/crisis-detection'
 
 // Define types for mocked responses
 interface AIServiceResponse {
@@ -32,10 +32,35 @@ const mockAIService = {
   getModelInfo: vi.fn(),
   createChatCompletionWithTracking: vi.fn(),
   generateCompletion: vi.fn(),
+  createChatStream: vi.fn().mockReturnValue(
+    new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: 'test-id',
+          model: 'test-model',
+          choices: [
+            {
+              message: {
+                role: 'assistant' as const,
+                content: 'test content',
+              },
+              finishReason: 'stop',
+            },
+          ],
+          usage: {
+            promptTokens: 10,
+            completionTokens: 20,
+            totalTokens: 30,
+          },
+        })
+        controller.close()
+      },
+    }),
+  ),
   dispose: vi.fn(),
-} as AIService
+} as unknown as AIService
 
-describe('CrisisDetectionService', () => {
+describe('crisisDetectionService', () => {
   let crisisService: CrisisDetectionService
 
   beforeEach(() => {
@@ -80,7 +105,7 @@ describe('CrisisDetectionService', () => {
       } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
-        "I can't take it anymore. I'm thinking of ending it all tonight."
+        'I can\'t take it anymore. I\'m thinking of ending it all tonight.',
       )
 
       // Verify the result
@@ -102,11 +127,11 @@ describe('CrisisDetectionService', () => {
           expect.objectContaining({
             role: 'user',
             content: expect.stringContaining(
-              "I can't take it anymore. I'm thinking of ending it all tonight."
+              'I can\'t take it anymore. I\'m thinking of ending it all tonight.',
             ),
           }),
         ]),
-        expect.objectContaining({ model: 'test-model' })
+        expect.objectContaining({ model: 'test-model' }),
       )
     })
 
@@ -143,7 +168,7 @@ describe('CrisisDetectionService', () => {
       } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
-        'Sometimes I think about hurting myself when I feel overwhelmed.'
+        'Sometimes I think about hurting myself when I feel overwhelmed.',
       )
 
       // Verify the result
@@ -192,7 +217,7 @@ describe('CrisisDetectionService', () => {
       } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
-        "I've been feeling really down lately. Nothing seems to matter."
+        'I\'ve been feeling really down lately. Nothing seems to matter.',
       )
 
       // Verify the result
@@ -241,7 +266,7 @@ describe('CrisisDetectionService', () => {
       } as AIServiceResponse)
 
       const result = await crisisService.detectCrisis(
-        'I had a good day today. The weather was nice and I enjoyed my walk.'
+        'I had a good day today. The weather was nice and I enjoyed my walk.',
       )
 
       // Verify the result
@@ -285,7 +310,7 @@ describe('CrisisDetectionService', () => {
       ).mockRejectedValue(new Error('AI service error'))
 
       await expect(crisisService.detectCrisis('Test text')).rejects.toThrow(
-        'AI service error'
+        'AI service error',
       )
     })
 
@@ -321,8 +346,8 @@ describe('CrisisDetectionService', () => {
 
       // Test with high sensitivity
       await crisisService.detectCrisis(
-        "I'm feeling really anxious about everything.",
-        { sensitivityLevel: 'high' }
+        'I\'m feeling really anxious about everything.',
+        { sensitivityLevel: 'high' },
       )
 
       // Verify the AI service was called with sensitivity parameter
@@ -334,7 +359,7 @@ describe('CrisisDetectionService', () => {
           }),
           expect.objectContaining({ role: 'user' }),
         ]),
-        expect.objectContaining({ model: 'test-model' })
+        expect.objectContaining({ model: 'test-model' }),
       )
 
       // Reset mocks
@@ -348,7 +373,7 @@ describe('CrisisDetectionService', () => {
           category: null,
           confidence: 0.75,
           recommendedAction:
-            "The text indicates anxiety symptoms but doesn't meet low sensitivity threshold.",
+            'The text indicates anxiety symptoms but doesn\'t meet low sensitivity threshold.',
         }),
         model: 'test-model',
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
@@ -362,7 +387,7 @@ describe('CrisisDetectionService', () => {
                 category: null,
                 confidence: 0.75,
                 recommendedAction:
-                  "The text indicates anxiety symptoms but doesn't meet low sensitivity threshold.",
+                  'The text indicates anxiety symptoms but doesn\'t meet low sensitivity threshold.',
               }),
             },
           },
@@ -371,8 +396,8 @@ describe('CrisisDetectionService', () => {
 
       // Test with low sensitivity
       await crisisService.detectCrisis(
-        "I'm feeling really anxious about everything.",
-        { sensitivityLevel: 'low' }
+        'I\'m feeling really anxious about everything.',
+        { sensitivityLevel: 'low' },
       )
 
       // Verify the AI service was called with sensitivity parameter
@@ -384,7 +409,7 @@ describe('CrisisDetectionService', () => {
           }),
           expect.objectContaining({ role: 'user' }),
         ]),
-        expect.objectContaining({ model: 'test-model' })
+        expect.objectContaining({ model: 'test-model' }),
       )
     })
   })
@@ -453,7 +478,7 @@ describe('CrisisDetectionService', () => {
         } as AIServiceResponse)
 
       const results = await crisisService.detectBatch([
-        "I can't take it anymore",
+        'I can\'t take it anymore',
         'I had a good day today',
       ])
 
@@ -504,9 +529,9 @@ describe('CrisisDetectionService', () => {
 
       await expect(
         crisisService.detectBatch([
-          "I can't take it anymore",
+          'I can\'t take it anymore',
           'I had a good day today',
-        ])
+        ]),
       ).rejects.toThrow()
     })
   })
@@ -519,7 +544,7 @@ describe('CrisisDetectionService', () => {
 
       // Use a non-public method to test the model
       expect(
-        (service as unknown as { config: { model: string } }).config.model
+        (service as unknown as { config: { model: string } }).config.model,
       ).toBe('gpt-4o')
     })
 
@@ -532,7 +557,7 @@ describe('CrisisDetectionService', () => {
 
       expect(
         (service as unknown as { config: { defaultPrompt: string } }).config
-          .defaultPrompt
+          .defaultPrompt,
       ).toBe(customPrompt)
     })
   })

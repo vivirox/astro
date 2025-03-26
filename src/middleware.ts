@@ -1,7 +1,7 @@
-import { defineMiddleware } from 'astro:middleware'
-import { isAuthenticated, getCurrentUser } from './lib/auth'
-import { hasRolePrivilege } from './config/auth.config'
 import type { AuthRole } from './config/auth.config'
+import { defineMiddleware } from 'astro:middleware'
+import { hasRolePrivilege } from './config/auth.config'
+import { getCurrentUser, isAuthenticated } from './lib/auth'
 
 // Protected routes configuration
 const PROTECTED_ROUTES = [
@@ -32,7 +32,7 @@ export const onRequest = defineMiddleware(
     // Skip auth check for public routes
     if (
       PUBLIC_ROUTES.some(
-        (route) => pathname === route || pathname.startsWith(route + '/')
+        (route) => pathname === route || pathname.startsWith(`${route}/`),
       )
     ) {
       return next()
@@ -52,7 +52,7 @@ export const onRequest = defineMiddleware(
     // For protected routes, check role-based access
     const protectedRoute = PROTECTED_ROUTES.find(
       (route) =>
-        pathname === route.path || pathname.startsWith(route.path + '/')
+        pathname === route.path || pathname.startsWith(`${route.path}/`),
     )
 
     if (protectedRoute) {
@@ -63,7 +63,7 @@ export const onRequest = defineMiddleware(
 
       // Check if user has required role
       const hasRequiredRole = protectedRoute.roles.some((role) =>
-        hasRolePrivilege(user.role, role as AuthRole)
+        hasRolePrivilege(user.role, role as AuthRole),
       )
 
       if (!hasRequiredRole) {
@@ -74,5 +74,5 @@ export const onRequest = defineMiddleware(
 
     // Continue to the route
     return next()
-  }
+  },
 )

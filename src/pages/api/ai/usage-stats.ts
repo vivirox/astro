@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro'
-import { getAIUsageStats } from '../../../lib/ai/analytics'
-import { createAuditLog } from '../../../lib/audit/log'
-import { handleApiError } from '../../../lib/ai/error-handling'
-import { getSession } from '../../../lib/auth/session'
 import { requirePermission } from '../../../lib/access-control'
+import { getAIUsageStats } from '../../../lib/ai/analytics'
+import { handleApiError } from '../../../lib/ai/error-handling'
+import { createAuditLog } from '../../../lib/audit/log'
+import { getSession } from '../../../lib/auth/session'
 
 /**
  * API route for AI usage statistics
@@ -84,7 +84,8 @@ export const GET: APIRoute = async ({ request, cookies, url }) => {
         'Cache-Control': 'private, max-age=60', // Cache for 1 minute
       },
     })
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error in AI usage stats API:', error)
 
     // Create audit log for the error

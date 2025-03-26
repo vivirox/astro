@@ -1,4 +1,3 @@
-
 # Gradiant Ascent
 
 ![Gradiant Ascent](https://gradiantascent.com/cube.png)

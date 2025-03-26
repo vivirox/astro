@@ -12,7 +12,7 @@ Fully Homomorphic Encryption (FHE) allows computation on encrypted data without 
 - **WebAssembly integration** for client-side FHE operations
 - **Homomorphic Operations**: Perform operations on encrypted data:
   - Sentiment analysis
-  - Text categorization 
+  - Text categorization
   - Content summarization
   - Text tokenization
   - Content filtering
@@ -45,10 +45,10 @@ The module supports different encryption modes:
 ### Initialize the FHE Service
 
 ```typescript
-import { fheService, EncryptionMode } from '@/lib/fhe';
+import { EncryptionMode, fheService } from '@/lib/fhe'
 
 // Initialize with default settings
-await fheService.initialize();
+await fheService.initialize()
 
 // Or with custom settings
 await fheService.initialize({
@@ -56,58 +56,58 @@ await fheService.initialize({
   keySize: 2048,
   securityLevel: 'high',
   enableDebug: true
-});
+})
 ```
 
 ### Encrypt a Message
 
 ```typescript
-const plaintext = "Client message with sensitive information";
-const encrypted = await fheService.encrypt(plaintext);
+const plaintext = 'Client message with sensitive information'
+const encrypted = await fheService.encrypt(plaintext)
 ```
 
 ### Decrypt a Message
 
 ```typescript
-const decrypted = await fheService.decrypt(encrypted);
-console.log(decrypted); // "Client message with sensitive information"
+const decrypted = await fheService.decrypt(encrypted)
+console.log(decrypted) // "Client message with sensitive information"
 ```
 
 ### Process Encrypted Data
 
 ```typescript
-import { FHEOperation } from '@/lib/fhe';
+import { FHEOperation } from '@/lib/fhe'
 
 // Analyze sentiment without decryption
 const sentimentResult = await fheService.processEncrypted(
   encrypted,
   FHEOperation.SENTIMENT
-);
+)
 
 // The result is still encrypted
-const sentiment = await fheService.decrypt(sentimentResult);
-console.log(sentiment); // "positive", "negative", or "neutral"
+const sentiment = await fheService.decrypt(sentimentResult)
+console.log(sentiment) // "positive", "negative", or "neutral"
 ```
 
 ### Generate Analytics on Encrypted Conversations
 
 ```typescript
-import { fheAnalytics, AnalyticsType } from '@/lib/fhe/analytics';
+import { AnalyticsType, fheAnalytics } from '@/lib/fhe/analytics'
 
 // Initialize analytics service
-await fheAnalytics.initialize();
+await fheAnalytics.initialize()
 
 // Analyze sentiment trends in encrypted messages
-const sentimentTrend = await fheAnalytics.analyzeSentimentTrend(messages);
+const sentimentTrend = await fheAnalytics.analyzeSentimentTrend(messages)
 
 // Create a full analytics dashboard
-const dashboard = await fheAnalytics.createAnalyticsDashboard(messages);
+const dashboard = await fheAnalytics.createAnalyticsDashboard(messages)
 ```
 
 ### Export Public Key for External Use
 
 ```typescript
-const publicKey = fheService.exportPublicKey();
+const publicKey = fheService.exportPublicKey()
 // Share this key with external systems that need to encrypt data
 // that your system will process homomorphically
 ```
@@ -148,4 +148,4 @@ In the therapy chat context, FHE enables:
 1. AI models to analyze encrypted therapy transcripts without seeing the content
 2. Detection of concerning patterns without compromising patient privacy
 3. Generation of insights while maintaining HIPAA compliance
-4. Secure collaboration between different healthcare providers 
+4. Secure collaboration between different healthcare providers

@@ -9,9 +9,9 @@
  * FHE capabilities when available.
  */
 
-import { getLogger } from '../../logging'
 import { fheService } from '../../fhe'
 import { FHEOperation } from '../../fhe/types'
+import { getLogger } from '../../logging'
 
 // Initialize logger
 const logger = getLogger()
@@ -84,18 +84,18 @@ class PIIDetectionService {
 
     // Initialize base patterns for detection
     this.patterns = {
-      [PIIType.EMAIL]: [/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g],
+      [PIIType.EMAIL]: [/[\w.%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi],
       [PIIType.PHONE]: [
         /(\+\d{1,3}[\s-])?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g,
         /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g,
       ],
-      [PIIType.SSN]: [/\b\d{3}[-]?\d{2}[-]?\d{4}\b/g],
+      [PIIType.SSN]: [/\b\d{3}-?\d{2}-?\d{4}\b/g],
       [PIIType.CREDIT_CARD]: [
         /\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g,
-        /\b\d{4}[\s-]?\d{6}[\s-]?\d{5}\b/g, // AMEX format
+        /\b\d{4}[\s-]?\d{6}[\s-]?\d{5}\b/g, // AMEX forma
       ],
       [PIIType.ADDRESS]: [
-        /\d+\s+([A-Za-z]+\s+){1,3}(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Court|Ct|Lane|Ln|Way|Parkway|Pkwy)\.?(\s|,)/gi,
+        /\d+\s+([A-Z]+\s+){1,3}(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Court|Ct|Lane|Ln|Way|Parkway|Pkwy)\.?(\s|,)/gi,
         /P\.?O\.?\s+Box\s+\d+/gi,
       ],
       [PIIType.NAME]: [/\b([A-Z][a-z]+)(\s+[A-Z][a-z]+){1,2}\b/g],
@@ -105,7 +105,7 @@ class PIIDetectionService {
       ],
       [PIIType.IP_ADDRESS]: [
         /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g,
-        /\b([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}\b/g, // IPv6
+        /\b([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}\b/gi, // IPv6
       ],
       [PIIType.MEDICAL_RECORD]: [
         /\bMRN:?\s*\d+\b/gi,
@@ -113,8 +113,8 @@ class PIIDetectionService {
       ],
       [PIIType.PATIENT_ID]: [/\bPatient ID:?\s*\d+\b/gi, /\bPID:?\s*\d+\b/gi],
       [PIIType.INSURANCE_ID]: [
-        /\bInsurance ID:?\s*[\w\d-]+\b/gi,
-        /\bPolicy Number:?\s*[\w\d-]+\b/gi,
+        /\bInsurance ID:?\s*[\w-]+\b/gi,
+        /\bPolicy Number:?\s*[\w-]+\b/gi,
       ],
       [PIIType.OTHER]: [],
     }
@@ -126,7 +126,7 @@ class PIIDetectionService {
    * Get the singleton instance of the PII detection service
    */
   public static getInstance(
-    config?: Partial<PIIDetectionConfig>
+    config?: Partial<PIIDetectionConfig>,
   ): PIIDetectionService {
     if (!PIIDetectionService.instance) {
       PIIDetectionService.instance = new PIIDetectionService(config)
@@ -166,7 +166,7 @@ class PIIDetectionService {
             } else {
               this.patterns[PIIType.OTHER].push(pattern)
             }
-          }
+          },
         )
       }
 
@@ -217,7 +217,7 @@ class PIIDetectionService {
     options: {
       redact?: boolean
       types?: PIIType[]
-    } = {}
+    } = {},
   ): Promise<PIIDetectionResult> {
     if (!this.config.enabled) {
       return {
@@ -229,7 +229,7 @@ class PIIDetectionService {
     }
 
     // Handle default options
-    const redact = options.redact ?? this.config.redactByDefault
+    const redact = options.redact ?? this.config.redactByDefaul
     const typesToCheck = options.types ?? this.config.enabledTypes
 
     try {
@@ -248,7 +248,7 @@ class PIIDetectionService {
         for (const pattern of this.patterns[type]) {
           if (pattern.test(text)) {
             detectedPII.push(type)
-            break // Found a match for this type, move to next
+            break // Found a match for this type, move to nex
           }
         }
       }
@@ -296,7 +296,7 @@ class PIIDetectionService {
         // Cap confidence at 1.0
         mlConfidence = Math.min(mlConfidence, 1.0)
 
-        // If ML detects PII with high confidence but pattern matching missed it
+        // If ML detects PII with high confidence but pattern matching missed i
         if (
           mlConfidence > this.config.minConfidence &&
           detectedPII.length === 0
@@ -346,7 +346,7 @@ class PIIDetectionService {
    * Detect PII in encrypted text using FHE
    */
   private async detectEncrypted(
-    encryptedText: string
+    encryptedText: string,
   ): Promise<PIIDetectionResult> {
     try {
       // Ensure FHE service is available
@@ -364,7 +364,7 @@ class PIIDetectionService {
           patterns: Object.values(this.patterns)
             .flat()
             .map((p) => p.source),
-        }
+        },
       )
 
       // Parse the result
@@ -373,7 +373,8 @@ class PIIDetectionService {
 
       const hasPII = (result.data as { hasPII: string }).hasPII === 'true'
       const confidence =
-        parseFloat((result.data as { confidence: string }).confidence) || 0
+        Number.parseFloat((result.data as { confidence: string }).confidence) ||
+        0
 
       // Create types array from comma-separated string
       const types =
@@ -412,6 +413,7 @@ class PIIDetectionService {
       }
     }
   }
+
   /**
    * Redact identified PII in text
    */
@@ -423,7 +425,7 @@ class PIIDetectionService {
       for (const pattern of this.patterns[type]) {
         redactedText = redactedText.replace(
           pattern,
-          this.getRedactionReplacement(type)
+          this.getRedactionReplacement(type),
         )
       }
     }
@@ -472,14 +474,14 @@ class PIIDetectionService {
       redact?: boolean
       types?: PIIType[]
       sensitiveKeys?: string[]
-    } = {}
+    } = {},
   ): Promise<{ processed: T; hasPII: boolean }> {
     if (!this.config.enabled) {
       return { processed: data, hasPII: false }
     }
 
     // Handle default options
-    const redact = options.redact ?? this.config.redactByDefault
+    const redact = options.redact ?? this.config.redactByDefaul
     const typesToCheck = options.types ?? this.config.enabledTypes
     const sensitiveKeys = options.sensitiveKeys ?? []
 
@@ -490,7 +492,7 @@ class PIIDetectionService {
     // Process the object recursively
     const processValue = async (
       value: unknown,
-      key?: string
+      key?: string,
     ): Promise<unknown> => {
       // Skip null or undefined values
       if (value === null || value === undefined) {
@@ -501,12 +503,12 @@ class PIIDetectionService {
       const isSensitiveKey =
         key &&
         sensitiveKeys.some((sensitiveKey) =>
-          key.toLowerCase().includes(sensitiveKey.toLowerCase())
+          key.toLowerCase().includes(sensitiveKey.toLowerCase()),
         )
 
       // Handle different types
       if (typeof value === 'string') {
-        // If it's a sensitive key, always redact
+        // If it's a sensitive key, always redac
         if (isSensitiveKey) {
           detectedPII = true
           return redact ? '[REDACTED]' : value
@@ -543,14 +545,14 @@ class PIIDetectionService {
           processedObject[objKey] = await processValue(objValue, objKey)
         }
 
-        return processedObject
+        return processedObjec
       }
 
       // Other types (number, boolean, etc.) are returned as is
       return value
     }
 
-    // Process the root object
+    // Process the root objec
     const processed = (await processValue(result)) as T
 
     return { processed, hasPII: detectedPII }

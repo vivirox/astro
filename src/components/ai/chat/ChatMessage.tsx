@@ -1,4 +1,4 @@
-import { type AIMessage } from '../../../lib/ai/index'
+import type { AIMessage } from '../../../lib/ai/index'
 
 export interface ChatMessageProps {
   message: AIMessage

@@ -33,7 +33,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
       className = '',
       ...props
     },
-    ref
+    ref,
   ) => {
     // Base radio classes
     const baseRadioClasses =
@@ -121,7 +121,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 Radio.displayName = 'Radio'

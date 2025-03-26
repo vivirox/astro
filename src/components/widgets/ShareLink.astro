@@ -2,7 +2,7 @@
 import Link from '~/components/base/Link.astro'
 import type { ShareConfig } from '~/types'
 
-interface ShareLink {
+interface _ShareLink {
   baseUrl: string
   formatUrl: (postUrl: URL, config?: [boolean, string?]) => string
   label: string
@@ -18,12 +18,12 @@ const { config } = Astro.props
 // We'll get the full URL on the client side
 const postUrlString = Astro.url.toString()
 
-const SHARE_LINKS: Record<string, ShareLink> = {
+const SHARE_LINKS: Record<string, _ShareLink> = {
   twitter: {
     baseUrl: 'https://twitter.com/intent/tweet?text=',
     formatUrl: (url, cfg) =>
       `${SHARE_LINKS.twitter.baseUrl}${encodeURIComponent(
-        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`
+        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`,
       )}`,
     label: 'twitter',
     title: 'Tweet this post',
@@ -32,7 +32,7 @@ const SHARE_LINKS: Record<string, ShareLink> = {
     baseUrl: 'https://bsky.app/intent/compose?text=',
     formatUrl: (url, cfg) =>
       `${SHARE_LINKS.bluesky.baseUrl}${encodeURIComponent(
-        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}. I think...`
+        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}. I think...`,
       )}`,
     label: 'bluesky',
     title: 'Share this post on Bluesky',
@@ -41,7 +41,7 @@ const SHARE_LINKS: Record<string, ShareLink> = {
     baseUrl: 'https://elk.zone/intent/post?text=',
     formatUrl: (url, cfg) =>
       `${SHARE_LINKS.mastodon.baseUrl}${encodeURIComponent(
-        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`
+        `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`,
       )}`,
     label: 'mastodon',
     title: 'Share this post on Mastodon',
@@ -97,37 +97,40 @@ const linkProviders = Object.entries(config)
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    interface ShareLink {
-      url: string;
-      label: string;
-      title: string;
+    interface _ShareLink {
+      url: string
+      label: string
+      title: string
     }
 
     // Get the share links container
-    const shareLinksContainer = document.getElementById('share-links');
-    if (!shareLinksContainer) return;
+    const shareLinksContainer = document.getElementById('share-links')
+    if (!shareLinksContainer) return
 
     // Get the post URL from the data attribute
-    const postUrlString = shareLinksContainer.getAttribute('data-post-url');
-    if (!postUrlString) return;
+    const postUrlString = shareLinksContainer.getAttribute('data-post-url')
+    if (!postUrlString) return
 
-    const postUrl = new URL(postUrlString);
+    const postUrl = new URL(postUrlString)
 
     // Clear existing content
-    shareLinksContainer.innerHTML = '';
+    shareLinksContainer.innerHTML = ''
 
     // Re-add the share links
-    const shareLinks: Record<string, {
-      baseUrl: string;
-      formatUrl: (url: URL, cfg?: [boolean, string?]) => string;
-      label: string;
-      title: string;
-    }> = {
+    const shareLinks: Record<
+      string,
+      {
+        baseUrl: string
+        formatUrl: (url: URL, cfg?: [boolean, string?]) => string
+        label: string
+        title: string
+      }
+    > = {
       twitter: {
         baseUrl: 'https://twitter.com/intent/tweet?text=',
         formatUrl: (url, cfg) =>
           `${shareLinks.twitter.baseUrl}${encodeURIComponent(
-            `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`
+            `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`,
           )}`,
         label: 'twitter',
         title: 'Tweet this post',
@@ -136,7 +139,7 @@ const linkProviders = Object.entries(config)
         baseUrl: 'https://bsky.app/intent/compose?text=',
         formatUrl: (url, cfg) =>
           `${shareLinks.bluesky.baseUrl}${encodeURIComponent(
-            `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}. I think...`
+            `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}. I think...`,
           )}`,
         label: 'bluesky',
         title: 'Share this post on Bluesky',
@@ -145,7 +148,7 @@ const linkProviders = Object.entries(config)
         baseUrl: 'https://elk.zone/intent/post?text=',
         formatUrl: (url, cfg) =>
           `${shareLinks.mastodon.baseUrl}${encodeURIComponent(
-            `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`
+            `Reading ${cfg?.[1] ? `${cfg[1]}'s ` : ''}${url}\n\nI think...`,
           )}`,
         label: 'mastodon',
         title: 'Share this post on Mastodon',
@@ -186,60 +189,62 @@ const linkProviders = Object.entries(config)
         label: 'email',
         title: 'Share this post via email',
       },
-    };
+    }
 
     // Get the config information from data-* attributes
-    const linkProviderElements = Array.from(document.querySelectorAll('[data-provider-key]'));
+    const linkProviderElements = Array.from(
+      document.querySelectorAll('[data-provider-key]'),
+    )
 
     // Create the link elements
     linkProviderElements.forEach((providerEl, idx) => {
-      const key = providerEl.getAttribute('data-provider-key');
-      const cfgStr = providerEl.getAttribute('data-provider-config');
-      const cfg = cfgStr ? JSON.parse(cfgStr) : null;
+      const key = providerEl.getAttribute('data-provider-key')
+      const cfgStr = providerEl.getAttribute('data-provider-config')
+      const cfg = cfgStr ? JSON.parse(cfgStr) : null
 
-      if (!key || !shareLinks[key]) return;
+      if (!key || !shareLinks[key]) return
 
-      const linkConfig = shareLinks[key];
-      const linkUrl = linkConfig.formatUrl(postUrl, cfg);
+      const linkConfig = shareLinks[key]
+      const linkUrl = linkConfig.formatUrl(postUrl, cfg)
 
-      const linkEl = document.createElement('a');
-      linkEl.href = linkUrl;
-      linkEl.textContent = linkConfig.label;
-      linkEl.className = 'op-50! hover:op-75! op-transition';
-      linkEl.title = linkConfig.title;
-      linkEl.rel = 'noopener noreferrer';
-      linkEl.target = '_blank';
+      const linkEl = document.createElement('a')
+      linkEl.href = linkUrl
+      linkEl.textContent = linkConfig.label
+      linkEl.className = 'op-50! hover:op-75! op-transition'
+      linkEl.title = linkConfig.title
+      linkEl.rel = 'noopener noreferrer'
+      linkEl.target = '_blank'
 
-      shareLinksContainer.appendChild(linkEl);
+      shareLinksContainer.appendChild(linkEl)
 
-      // Add separator if not the last element
+      // Add separator if not the last elemen
       if (idx < linkProviderElements.length - 1) {
-        const separator = document.createElement('span');
-        separator.className = 'op-25';
-        separator.textContent = '/';
-        shareLinksContainer.appendChild(separator);
+        const separator = document.createElement('span')
+        separator.className = 'op-25'
+        separator.textContent = '/'
+        shareLinksContainer.appendChild(separator)
       }
-    });
-  });
+    })
+  })
 </script>
 
 {
-  // Render hidden elements with provider data for client-side script
-  linkProviders.map((provider, idx) => (
+  // Render hidden elements with provider data for client-side scrip
+  linkProviders.map((provider, _idx) => (
     <span
       data-provider-key={provider.key}
       data-provider-config={JSON.stringify(provider.cfg)}
       style="display: none;"
-    ></span>
+    />
   ))
 }
 
 {
   // Pre-render links for initial state (for SSR and SEO)
   linkProviders.map((provider, idx) => {
-    const linkConfig = SHARE_LINKS[provider.key];
+    const linkConfig = SHARE_LINKS[provider.key]
     // For initial SSR, create a URL object from the string
-    const initialPostUrl = new URL(postUrlString);
+    const initialPostUrl = new URL(postUrlString)
     return (
       <>
         <Link
@@ -252,6 +257,6 @@ const linkProviders = Object.entries(config)
         </Link>
         {idx < linkProviders.length - 1 && <span class="op-25">/</span>}
       </>
-    );
+    )
   })
 }

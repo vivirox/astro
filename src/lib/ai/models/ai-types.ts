@@ -135,21 +135,21 @@ export interface AIServiceOptions {
 export interface AIService {
   createChatCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ) => Promise<AICompletionResponse>
   createStreamingChatCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ) => Promise<AsyncGenerator<AIStreamChunk, void, void>>
   getModelInfo: (model: string) => AIModel | null
   createChatCompletionWithTracking: (
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ) => Promise<AICompletionResponse>
   generateCompletion: (
     messages: AIMessage[],
     options: AIServiceOptions,
-    provider: AIProvider
+    provider: AIProvider,
   ) => Promise<AICompletionResponse | ReadableStream<AIStreamChunk>>
   dispose: () => void
 }
@@ -165,4 +165,18 @@ export interface AIServiceResponse {
     completionTokens: number
     totalTokens: number
   }
+}
+
+export interface ModelInfo {
+  name: string
+  provider: string
+  type: string
+  contextWindow: number
+  maxTokens: number
+  capabilities: string[]
+  pricing?: {
+    input: number
+    output: number
+  }
+  parameters?: Record<string, unknown>
 }

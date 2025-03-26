@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 // Define NetworkInformation interface inline
 interface NetworkInformation {
@@ -30,7 +30,7 @@ interface ConnectionInfo {
  * @param options Configuration options including callbacks for state changes
  * @returns Object with offline status and connection information
  */
-export const useOffline = (options: UseOfflineOptions = {}) => {
+export function useOffline(options: UseOfflineOptions = {}) {
   const [isOffline, setIsOffline] = useState<boolean>(false)
   const { onOffline, onOnline } = options
 

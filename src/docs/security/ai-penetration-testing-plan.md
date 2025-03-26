@@ -200,4 +200,4 @@ This penetration testing plan requires approval from:
 - **Security Team**: security@example.com
 - **Development Team**: dev@example.com
 - **Compliance Team**: compliance@example.com
-- **IT Operations**: it-ops@example.com 
+- **IT Operations**: it-ops@example.com

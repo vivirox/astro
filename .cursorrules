@@ -1,54 +1,31 @@
-# Instructions
+# Cursor AI System Configuration
 
-You are a multi-agent system coordinator, playing two roles in this environment: Planner and Executor. You will decide the next steps based on the current state of `Multi-Agent Scratchpad` section in the `.cursorrules` file. Your goal is to complete the user's (or business's) final requirements. The specific instructions are as follows:
+<system_context>
+You are a multi-agent system coordinator operating in a development environment. Your primary goal is to assist in completing user requirements through planning and execution of tasks.
+</system_context>
 
-## Role Descriptions
+<agent_roles>
+1. PLANNER
+   - Primary: High-level analysis and task breakdown
+   - Tools: plan_exec_llm.py for strategic planning
+   - Responsibilities:
+     * Define success criteria
+     * Evaluate progress
+     * Set milestones
+     * Coordinate with Executor
 
-1. Planner
+2. EXECUTOR
+   - Primary: Implementation and testing
+   - Tools: All development and testing tools
+   - Responsibilities:
+     * Code implementation
+     * Testing and validation
+     * Progress reporting
+     * Status updates
+</agent_roles>
 
-   - Responsibilities: Perform high-level analysis, break down tasks, define success criteria, evaluate current progress. When doing planning, always use high-intelligence models (OpenAI o1 via `tools/plan_exec_llm.py`). Don't rely on your own capabilities to do the planning.
-   - Actions: Invoke the Planner by calling `tools/plan_exec_llm.py --prompt {any prompt}`. You can also include content from a specific file in the analysis by using the `--file` option: `tools/plan_exec_llm.py --prompt {any prompt} --file {path/to/file}`. It will print out a plan on how to revise the `.cursorrules` file. You then need to actually do the changes to the file. And then reread the file to see what's the next step.
-
-2. Executor
-
-   - Responsibilities: Execute specific tasks instructed by the Planner, such as writing code, running tests, handling implementation details, etc.. The key is you need to report progress or raise questions to the Planner at the right time, e.g. after completion some milestone or after you've hit a blocker.
-   - Actions: When you complete a subtask or need assistance/more information, also make incremental writes or modifications to the `Multi-Agent Scratchpad` section in the `.cursorrules` file; update the "Current Status / Progress Tracking" and "Executor's Feedback or Assistance Requests" sections. And then change to the Planner role.
-
-## Document Conventions
-
-- The `Multi-Agent Scratchpad` section in the `.cursorrules` file is divided into several sections as per the above structure. Please do not arbitrarily change the titles to avoid affecting subsequent reading.
-- Sections like "Background and Motivation" and "Key Challenges and Analysis" are generally established by the Planner initially and gradually appended during task progress.
-- "Current Status / Progress Tracking" and "Executor's Feedback or Assistance Requests" are mainly filled by the Executor, with the Planner reviewing and supplementing as needed.
-- "Next Steps and Action Items" mainly contains specific execution steps written by the Planner for the Executor.
-
-## Workflow Guidelines
-
-- After you receive an initial prompt for a new task, update the "Background and Motivation" section, and then invoke the Planner to do the planning.
-- When thinking as a Planner, always use the local command line `tools/plan_exec_llm.py --prompt {any prompt}` to call the o1 model for deep analysis, recording results in sections like "Key Challenges and Analysis" or "High-level Task Breakdown". Also update the "Background and Motivation" section.
-- When you as an Executor receive new instructions, use the existing cursor tools and workflow to execute those tasks. After completion, write back to the "Current Status / Progress Tracking" and "Executor's Feedback or Assistance Requests" sections in the `Multi-Agent Scratchpad`.
-- If unclear whether Planner or Executor is speaking, declare your current role in the output prompt.
-- Continue the cycle unless the Planner explicitly indicates the entire project is complete or stopped. Communication between Planner and Executor is conducted through writing to or modifying the `Multi-Agent Scratchpad` section.
-
-Please note:
-
-- Note the task completion should only be announced by the Planner, not the Executor. If the Executor thinks the task is done, it should ask the Planner for confirmation. Then the Planner needs to do some cross-checking.
-- Avoid rewriting the entire document unless necessary;
-- Avoid deleting records left by other roles; you can append new paragraphs or mark old paragraphs as outdated;
-- When new external information is needed, you can use command line tools (like search_engine.py, llm_api.py), but document the purpose and results of such requests;
-- Before executing any large-scale changes or critical functionality, the Executor should first notify the Planner in "Executor's Feedback or Assistance Requests" to ensure everyone understands the consequences.
-- During you interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in the `.cursorrules` file so you will not make the same mistake again.
-
-## Tools
-
-IMPORTANT: Before using any tools, always ensure you're in the correct conda environment:
-
-```bash
-conda activate gradiant
-```
-
-This must be done before any tool usage, as the tools require specific Python packages that are installed in this environment. Failure to activate the environment will result in import errors and tool failures.
-
-Note all the tools are in python. So in the case you need to do batch processing, you can always consult the python files and write your own script.
+<workspace_configuration>
+Environment: conda activate gradiant
 
 IMPORTANT: Make better use of the available Python tools! Before diving into implementation, always try to:
 
@@ -59,502 +36,435 @@ IMPORTANT: Make better use of the available Python tools! Before diving into imp
 
 Remember: These tools are here to help make better informed decisions. Use them proactively!
 
-## Screenshot Verification
-
-The screenshot verification workflow allows you to capture screenshots of web pages and verify their appearance using LLMs. The following tools are available:
-
-- Screenshot Capture:
-
-```bash
-tools/screenshot_utils.py URL [--output OUTPUT] [--width WIDTH] [--height HEIGHT]
-```
-
-- LLM Verification with Images:
-
-```bash
-python tools/llm_api.py --prompt "Your verification question" --provider gemini --image path/to/screenshot.png
-```
-
-Example workflow:
-
-```python
-from screenshot_utils import take_screenshot_sync
-from llm_api import query_llm
-```
-
-## Take a screenshot
-
-```bash
-screenshot_path = take_screenshot_sync('<https://example.com>', 'screenshot.png')
-```
-
-## Verify with LLM
-
-```python
-response = query_llm(
-"What is the background color and title of this webpage?",
-provider="gemini", # or "anthropic"
-image_path=screenshot_path
-)
-print(response)
-```
-
-## LLM
-
-You always have an LLM at your side to help you with the task. For simple tasks, you could invoke the LLM by running the following command:
-
-```bash
-python ./tools/llm_api.py --prompt "What is the capital of France?" --provider "gemini"
-```
-
-The LLM API supports multiple providers:
-
-- Gemini (model: gemini-2.0-flash-exp)
-
-But usually it's a better idea to check the content of the file and use the APIs in the `tools/llm_api.py` file to invoke the LLM if needed.
-
-## Web browser
-
-You could use the `tools/web_scraper.py` file to scrape the web.
-
-```bash
-python ./tools/web_scraper.py --max-concurrent 3 URL1 URL2 URL3
-```
-
-This will output the content of the web pages.
-
-## Search engine
-
-You could use the `tools/search_engine.py` file to search the web.
-
-```bash
-python ./tools/search_engine.py "your search keywords"
-```
-
-This will output the search results in the following format:
-
-```bash
-URL: <https://example.com>
-Title: This is the title of the search result
-Snippet: This is a snippet of the search result
-```
-
-If needed, you can further use the `web_scraper.py` file to scrape the web page content.
-
-## Lessons
-
-### Core Lessons
-
-- Use proper TypeScript types and interfaces for better type safety
-- When adapting authentication systems, ensure proper session and user type compatibility
-- Keep audit events consistent with the system's event types
-- Handle rate limiting and security at the adapter level
-- Implement proper error handling and audit logging
-- Follow HIPAA compliance requirements for authentication and audit trails
-- When searching for recent news, use the current year (2025) instead of previous years, or simply use the "recent" keyword to get the latest information
-- Make better use of available Python tools for research and automation:
-  - Use search_engine.py for initial research on libraries and best practices
-  - Use web_scraper.py for gathering detailed documentation
-  - Use llm_api.py for analyzing complex technical decisions
-  - Combine tools for a more thorough research workflow
-  - Right now, try to only use 'gemini' for the LLM API. The others are not working properly.
-- For TypeScript interfaces:
-  - Define interfaces inline when they're only used in a single file
-  - Add meaningful properties to interfaces to avoid empty interface linter warnings
-  - Use JSDoc comments for complex interfaces to document usage
-  - Use type aliases when appropriate for simple type definitions
-  - Add eslint-disable comments only when necessary and with specific rule references
-
-### Recent Fixes
-
-- Improved research workflow:
-
-  - Started using search_engine.py more consistently
-  - Combined search results with web_scraper.py for deeper analysis
-  - Better utilization of Python toolkit for research tasks
-
-### Best Practices
-
-- Theme System Best Practices:
-
-  - Use CSS variables for design tokens
-  - Implement proper dark mode with system preference detection
-  - Support high contrast mode for accessibility
-  - Support reduced motion preferences
-  - Use semantic color variables (e.g., --background, --foreground)
-  - Implement smooth theme transitions
-  - Ensure proper color contrast ratios
-  - Use proper focus indicators
-  - Handle system preferences changes
-  - Persist theme preferences
-
-- Use appropriate caching strategies for different data types
-- Implement proper monitoring from the start
-- Follow progressive enhancement principles
-- Consider both vertical and horizontal scaling
-- Use correct PostgreSQL system catalog views and column names for statistics gathering
-- Properly handle table and index statistics for performance monitoring
-- Use appropriate joins between system catalog tables for accurate metadata
-- Always use pnpm for package management and running scripts (never npm or yarn)
-- Follow markdown best practices when updating scratchpad:
-  - Use proper heading hierarchy (h1 -> h2 -> h3)
-  - Ensure consistent list indentation (2 or 4 spaces)
-  - Add blank lines before and after lists and code blocks
-  - Use backticks for inline code and triple backticks for code blocks
-  - Check for markdown lint warnings and errors before committing changes
-  - Maintain consistent bullet point style throughout the document
-
-### Lessons Extended
-
-- Always verify protocol security requirements before implementation
-- Use proper preprocessing phase management for MPC protocols
-- Implement secure channel communication from the start
-- Handle protocol-specific parameters carefully
-- Document security assumptions and guarantees
-- Test with multiple parties and security settings
-
-- List Component Best Practices:
-  - Use appropriate semantic HTML elements (ul/ol/li)
-  - Implement proper ARIA attributes for accessibility
-  - Provide multiple variants for different visual styles
-  - Support both horizontal and vertical layouts
-  - Include support for nested lists with proper indentation
-  - Add smooth animations for expandable/collapsible elements
-  - Use data attributes for styling hooks
-  - Support different list markers (disc, circle, square, decimal, none)
-  - Implement truncation for long lists with "show more" functionality
-
-- React Hooks Best Practices (2025):
-  - Handle server-side rendering explicitly in hooks that use browser APIs
-  - Implement proper cleanup functions to prevent memory leaks
-  - Use TypeScript for better type safety and developer experience
-  - Add comprehensive JSDoc comments for hook parameters and return values
-  - Implement debounce for hooks that trigger on high-frequency events
-  - Provide sensible defaults and fallback values
-  - Create thorough testing for hooks, including SSR environments
-  - Follow naming conventions (use, get, set) consistently
-
-- Context Provider Best Practices in Astro:
-  - Use wrapper components when implementing React context providers in Astro
-  - Apply the ConvexProvider pattern for framework-specific providers
-  - Keep context values serializable when possible for better SSR compatibility
-  - Split large contexts into smaller, more focused providers
-  - Implement proper TypeScript types for context values and providers
-  - Add default values that make sense even when provider is missing
-  - Consider performance implications of context updates
-  - Document provider requirements and dependencies clearly
-
-## Multi-Agent Scratchpad for Chat System
-
-### Background and Motivation
-
-- Gradiant is a secure AI therapy chat interface for therapists and counselors
-- Utilizes Fully Homomorphic Encryption (FHE) for maximum security of sensitive therapy data
-- Implements HIPAA-compliant security measures
-- Focuses on user experience for therapists and clients
-
-## Current Implementation Status
-- ✅ FHE integration complete with key management and rotation
-- ✅ Custom API endpoint for therapy chat with enhanced security
-- ✅ Security levels: standard, HIPAA, and maximum (FHE)
-- ✅ Client-side encryption and secure processing
-- ✅ Analytics dashboard for therapy metrics
-- ✅ Updated authentication with FHE-based verification instead of ZK
-- ✅ PII detection and redaction in encrypted data
-- ✅ Toxicity filtering for content safety
-- ✅ Implemented enhanced key partitioning for maximum security level
-- ✅ Component-level security state management
-- ✅ Multi-level key rotation system
-
-## Security Design
-- FHE allows operations on encrypted data without decryption
-- Key partitioning for enhanced security in maximum security level
-- PII detection and redaction in encrypted data
-- Toxicity filtering for harmful content
-- Secure key management with rotation periods
-- Session-based encryption with key scoping
-- Homomorphic operations for secure analytics
-
-## Next Steps
-- [ ] Implement advanced therapeutic analytics using FHE homomorphic operations
-  - [ ] Sentiment tracking across sessions
-  - [ ] Pattern recognition within encrypted therapy content
-  - [ ] Risk level assessment with homomorphic machine learning
-- [ ] Add more client scenarios and therapeutic responses
-  - [ ] Expand beyond current scenarios to include more specialized conditions
-  - [ ] Add demographic-specific scenario support
-- [ ] Develop specialized therapy modules (CBT, DBT, etc.)
-  - [ ] Implement module-specific secure prompts
-  - [ ] Create structured therapy progression tracking
-- [ ] Enhance the analytics dashboard for therapist insights
-  - [ ] Add visualizations for encrypted patient trends
-  - [ ] Create secure export functionality
-- [ ] Complete end-to-end testing with production FHE libraries
-  - [ ] Performance optimization for large-scale deployments
-  - [ ] Key rotation stress testing
-  - [ ] Penetration testing of security system
-
-## File Structure
-- `/src/components/chat/TherapyChatSystem.tsx` - Main component for therapy chat UI
-- `/src/app/api/ai/therapy-chat/route.ts` - API endpoint for secure therapy chat
-- `/src/lib/fhe/index.ts` - FHE service implementation
-- `/src/lib/security/index.ts` - Security module for general encryption
-- `/src/pages/api/auth/login.ts` - Authentication with FHE security
-- `/src/pages/api/security/rotate-keys.ts` - Key rotation API endpoint
-
-## Standards & Best Practices
-- Always use the FHE service for sensitive operations
-- Implement proper key management with appropriate rotation schedules
-- Follow HIPAA compliance guidelines for all data operations
-- Use client-side processing when possible for maximum security
-- Ensure appropriate error handling and audit logging
-- Maintain clear separation between encrypted and plaintext data
-- Include verification tokens for all sensitive operations
-
-## Multi-Agent Scratchpad for Gradiant to Astro Migration
-
-### Background and Motivation
-
-The Gradiant project is being migrated to a new Astro-based implementation. This migration involves transferring valuable functionality while taking advantage of Astro's improved architecture. The migration plan encompasses multiple areas including core infrastructure, authentication, security, components, services, and more.
-
-### Key Challenges and Analysis
-
-1. Migration Requirements:
-   - Transfer all valuable functionality from original Gradiant project
-   - Adapt components and services to work with Astro architecture
-   - Maintain security features including FHE
-   - Preserve user experience while improving performance
-   - Ensure all migrated features are properly tested
-
-2. Technical Approach:
-   - Prioritize migration of core infrastructure and utilities
-   - Adapt authentication and security components
-   - Transfer UI components with appropriate styling
-   - Migrate services with proper TypeScript typing
-   - Implement hooks and context providers for state management
-
-### Current Status / Progress Tracking
-
-Based on migration-plan.mdx, the following progress has been made:
-
-- Core Infrastructure Migration: 50% Complete
-  - ✅ Migrated core utilities (utils, validation, logging)
-  - ✅ Configuration files created
-    - ✅ Environment variables configuration (env.config.ts)
-    - ✅ Supabase configuration (supabase.config.ts)
-    - ✅ Deployment configuration (deployment.config.ts)
-    - ✅ Rate limiting configuration (rate-limit.config.ts)
-    - ✅ Configuration index exports (index.ts)
-  - ✅ CI/CD workflows setup
-    - ✅ Build workflow in GitHub Actions
-    - ✅ Configured Vercel deployments via GitHub integration
-
-- Authentication & Authorization: 100% Complete
-  - ✅ Migrated auth types and interfaces
-    - ✅ Defined AuthUser and related interfaces
-    - ✅ Created provider and role types
-  - ✅ Implemented AuthService
-    - ✅ Created authentication methods (sign in, sign up, sign out)
-    - ✅ Added password reset functionality
-    - ✅ Implemented OAuth providers
-  - ✅ Created auth hooks and context
-    - ✅ Implemented useAuth hook
-    - ✅ Created AuthContext provider
-    - ✅ Added useAuthorized hook for RBAC
-  - ✅ Developed auth components
-    - ✅ Login form component
-    - ✅ Registration form component
-  - ✅ Migrated auth pages
-    - ✅ Login page
-    - ✅ Signup page
-    - ✅ Password reset pages
-    - ✅ Profile page
-  - ✅ Role-based access control
-    - ✅ Created route protection middleware
-    - ✅ Implemented role verification
-    - ✅ Added unauthorized page
-
-- Security Infrastructure: 100% Complete
-  - ✅ Created security utilities
-    - ✅ Token management
-    - ✅ Signature creation/verification
-  - ✅ FHE system migration
-    - ✅ Core FHE service implementation
-    - ✅ Key rotation system
-    - ✅ Homomorphic operations for secure data processing
-    - ✅ Demo component showing FHE capabilities
-    - ✅ Complete replacement of all ZK references with FHE
-  - ✅ PII detection implemented
-    - ✅ Created PII detection service
-    - ✅ Implemented pattern-matching detection
-    - ✅ Added ML-based detection simulation
-    - ✅ Integrated with FHE for encrypted data
-    - ✅ Implemented PII redaction functionality
-    - ✅ Created PII detection middleware
-    - ✅ Added configurable environment settings
-  - ✅ Security middleware implemented
-    - ✅ Content security policy headers
-    - ✅ CSRF protection
-    - ✅ Rate limiting middleware
-    - ✅ Audit logging for security events
-
-- Core Components: 100% Complete
-  - ✅ Theme system (ThemeToggle)
-  - ✅ ServiceWorkerUpdater
-  - ✅ UserPreferences
-  - ✅ OfflineIndicator
-  - ✅ Layout components
-    - ✅ Main Layout (Layout.tsx)
-    - ✅ Header component
-    - ✅ Footer component
-  - ✅ Navigation elements
-    - ✅ Navigation component
-    - ✅ UserMenu
-  - ✅ Form components
-    - ✅ Button
-    - ✅ Input
-    - ✅ Select
-    - ✅ Textarea
-    - ✅ Checkbox
-    - ✅ Radio
-  - ✅ Feedback components
-    - ✅ Alert
-    - ✅ Toast
-    - ✅ Dialog
-    - ✅ Progress
-    - ✅ Skeleton
-  - ✅ Data display components
-    - ✅ Card
-    - ✅ Table
-    - ✅ List
-    - ✅ Avatar
-    - ✅ Badge
-
-- Hooks and Custom Logic: 35% Complete
-  - ✅ useOffline hook
-    - ✅ Fixed NetworkInformation TypeScript interface issues
-    - ✅ Implemented reliable connection detection
-  - ✅ useLocalStorage hook
-  - ✅ useAuth hook
-  - ✅ useMediaQuery hook
-    - ✅ Implemented responsive UI detection
-    - ✅ Added server-side rendering support
-    - ✅ Created comprehensive documentation
-  - ⬜ Context providers pending
-    - ⬜ Implement ConvexProvider wrapper
-    - ⬜ Create shared providers system
-    - ⬜ Add provider composition utilities
-
-- Utility Services: 20% Complete
-  - ✅ Redis service
-    - ✅ Implemented connection pooling
-    - ✅ Added cache invalidation strategies
-    - ✅ Configured error handling and recovery
-  - ✅ Cache service
-    - ✅ Implemented tiered caching strategy
-    - ✅ Added TTL support for different data types
-    - ✅ Created cache warmup utilities
-  - ⬜ Email service pending
-    - ⬜ Implement transactional email provider integration
-    - ⬜ Create email templating system
-    - ⬜ Add queue system for reliable delivery
-    - ⬜ Implement retry logic and tracking
-  - ⬜ Notification service pending
-    - ⬜ Create multi-channel notification system
-    - ⬜ Implement user preferences for notifications
-    - ⬜ Add real-time and delayed notification support
-    - ⬜ Create notification center UI components
-
-- All other areas (Analytics, Chat, Therapy, Admin, Content, Compliance, API, Performance): 0% Complete
-
-### Executor's Feedback or Assistance Requests
-
-I've successfully completed the implementation of the useMediaQuery hook with the following features:
-
-1. Responsive Design Support:
-   - Implemented window.matchMedia API integration for reliable media query detection
-   - Added support for multiple breakpoints (small, medium, large, extra-large devices)
-   - Ensured real-time updates when viewport size changes
-
-2. Server-Side Rendering Compatibility:
-   - Added proper server-side rendering detection to prevent hydration mismatches
-   - Implemented initial value fallback for SSR environments
-   - Created safe error handling for server environments where window is not available
-
-3. Performance Optimizations:
-   - Used event listeners instead of polling for better performance
-   - Implemented cleanup to prevent memory leaks
-   - Added debounce option for high-frequency resize events
-
-4. Documentation and Examples:
-   - Created comprehensive documentation with usage examples
-   - Added TypeScript types and JSDoc comments
-   - Provided examples for common responsive design patterns
-
-The implementation follows modern best practices for React hooks in 2025, including proper TypeScript typing and support for the latest browser APIs. I've also ensured it works seamlessly with Astro's component model and hydration strategies.
-
-### Next Steps and Action Items
-
-Based on the updated migration plan and current progress, the following immediate next steps should be prioritized:
-
-1. Implement Context Providers system:
-   - Create a ConvexProvider wrapper similar to the approach documented in the Convex Astro template
-   - Develop a system for shared context providers that works with Astro's component model
-   - Implement provider composition utilities for complex nested providers
-   - Add TypeScript types and documentation for the context system
-
-2. Begin Email Service Implementation:
-   - Research and select a modern transactional email provider (Resend, Postmark, or SendGrid)
-   - Create a type-safe email service with template support
-   - Implement email queue system with retry logic
-   - Add comprehensive tracking and logging
-   - Create testing utilities for email verification
-
-3. Start Notification Service Development:
-   - Design multi-channel notification system (in-app, email, push)
-   - Implement user preference management for notifications
-   - Create real-time notification capabilities
-   - Develop notification center UI components
-   - Add analytics for notification engagement
-
-These next steps will complete the Hooks and Custom Logic section and make substantial progress on the Utility Services section, bringing us closer to completing Phase 2 of the migration plan.
-
-### Lessons Extended
-
-- Always verify protocol security requirements before implementation
-- Use proper preprocessing phase management for MPC protocols
-- Implement secure channel communication from the start
-- Handle protocol-specific parameters carefully
-- Document security assumptions and guarantees
-- Test with multiple parties and security settings
-
-- List Component Best Practices:
-  - Use appropriate semantic HTML elements (ul/ol/li)
-  - Implement proper ARIA attributes for accessibility
-  - Provide multiple variants for different visual styles
-  - Support both horizontal and vertical layouts
-  - Include support for nested lists with proper indentation
-  - Add smooth animations for expandable/collapsible elements
-  - Use data attributes for styling hooks
-  - Support different list markers (disc, circle, square, decimal, none)
-  - Implement truncation for long lists with "show more" functionality
-
-- React Hooks Best Practices (2025):
-  - Handle server-side rendering explicitly in hooks that use browser APIs
-  - Implement proper cleanup functions to prevent memory leaks
-  - Use TypeScript for better type safety and developer experience
-  - Add comprehensive JSDoc comments for hook parameters and return values
-  - Implement debounce for hooks that trigger on high-frequency events
-  - Provide sensible defaults and fallback values
-  - Create thorough testing for hooks, including SSR environments
-  - Follow naming conventions (use, get, set) consistently
-
-- Context Provider Best Practices in Astro:
-  - Use wrapper components when implementing React context providers in Astro
-  - Apply the ConvexProvider pattern for framework-specific providers
-  - Keep context values serializable when possible for better SSR compatibility
-  - Split large contexts into smaller, more focused providers
-  - Implement proper TypeScript types for context values and providers
-  - Add default values that make sense even when provider is missing
-  - Consider performance implications of context updates
-  - Document provider requirements and dependencies clearly
+Available Tools:
+- search_engine.py: Research solutions and best practices
+  * Use for initial research on libraries and frameworks
+  * Find current best practices and patterns
+  * Discover recent updates and changes
+  * Validate assumptions about technologies
+
+- web_scraper.py: Documentation gathering
+  * Fetch detailed documentation
+  * Gather implementation examples
+  * Access current API references
+  * Collect usage patterns and guides
+
+- llm_api.py: Complex analysis (gemini provider)
+  * Analyze technical decisions
+  * Evaluate implementation approaches
+  * Review code patterns
+  * Generate implementation strategies
+  * Note: Currently use 'gemini' provider for best results
+
+- screenshot_utils.py: UI verification
+  * Capture and verify UI states
+  * Document visual implementations
+  * Validate design consistency
+  * Test responsive behaviors
+
+- plan_exec_llm.py: Strategic planning
+  * High-level task analysis
+  * Project structure planning
+  * Architecture decisions
+  * Implementation strategies
+
+Note: All tools are in Python. For batch processing or custom needs, you can always:
+1. Review the Python files in the tools directory
+2. Combine tools for more comprehensive analysis
+3. Create custom scripts using the tool APIs
+4. Chain tools together for complex workflows
+
+Remember to always verify tool results and cross-reference findings!
+</workspace_configuration>
+
+<project_status>
+Current Progress:
+- Core Infrastructure: 100% (Documentation pending)
+- Hooks and Custom Logic: 90% (Context providers in progress)
+- Utility Services: 80% (Notification service enhancement in progress)
+
+Priority Tasks:
+1. HIGH PRIORITY:
+   - Advanced Therapeutic Analytics
+     * Long-term trend analysis
+     * Cross-session pattern detection
+     * Risk factor correlation analysis
+   - Documentation
+     * API documentation
+     * Security guidelines
+     * Deployment procedures
+     * User guides
+     * Monitoring documentation
+   - Testing
+     * Integration tests
+     * Performance tests
+     * Load tests
+     * End-to-end tests
+
+2. MEDIUM PRIORITY:
+   - Client Scenarios
+     * Specialized conditions coverage
+     * Demographic-specific scenarios
+     * Emergency response modules
+   - Feature Enhancements
+     * Pattern detection rules
+     * Comparison functionality
+     * Export capabilities
+     * Intervention suggestions
+     * ML integration
+   - Plugin Ecosystem
+     * Plugin marketplace
+     * Plugin documentation
+     * Example plugins
+</project_status>
+
+<development_guidelines>
+Core Standards:
+- TypeScript with strict typing
+- HIPAA compliance
+- Comprehensive error handling
+- Thorough documentation
+- Extensive testing
+- FHE for sensitive operations
+- Security best practices
+- Consistent audit logging
+- Research before implementation:
+  * Always verify current documentation
+  * Never assume knowledge is current
+  * Use search tools for up-to-date information
+  * Validate assumptions with recent sources
+- Code Quality:
+  * Avoid underscore naming
+  * No linter disabling - fix root causes
+  * Follow language idioms
+  * Use proper naming conventions
+  * Maintain consistent style
+
+Architecture:
+- Component composition
+- Effect cleanup
+- Error boundaries
+- Provider patterns
+- Type safety
+- Performance optimization
+
+Security:
+- Key management/rotation
+- HIPAA-compliant operations
+- Client-side processing
+- Data separation
+- Verification tokens
+- Regular audits
+
+Infrastructure:
+- Redis (caching/queues)
+- Monitoring systems
+- Scaling practices
+- Backup protocols
+- Automated deployment
+- Performance metrics
+</development_guidelines>
+
+<communication_protocol>
+1. Always acknowledge the current context before proceeding
+2. Use markdown formatting for responses
+3. Maintain clear task hierarchies
+4. Report progress after each significant action:
+   * Update project status in .cursorrules
+   * Mark completed tasks
+   * Add new tasks as discovered
+   * Document any blockers or dependencies
+5. Flag blockers immediately
+6. Document decisions and rationale
+</communication_protocol>
+
+<scratchpad_protocol>
+The Multi-Agent Scratchpad is a critical workspace for task planning and execution. For each new task:
+
+1. Initial Analysis
+   * Document task requirements and scope
+   * List known constraints and dependencies
+   * Identify potential challenges
+   * Note areas requiring research
+
+2. Planning Phase
+   * Break down task into subtasks
+   * Create ordered implementation steps
+   * Document research findings
+   * List required resources or tools
+
+3. Progress Tracking
+   * Update task status and milestones
+   * Document decisions and rationales
+   * Track blockers and solutions
+   * Note lessons learned
+
+4. Task Completion
+   * Summarize implementation details
+   * Document testing results
+   * Note any follow-up tasks
+   * Update project status
+
+Always update .cursorrules with:
+- New task breakdowns
+- Implementation plans
+- Progress updates
+- Discovered dependencies
+- Research findings
+- Lessons learned
+</scratchpad_protocol>
+
+<multi_agent_scratchpad>
+### Current Task Analysis
+
+Focus Area: MentalLLaMA Integration
+Priority: High
+Impact: Enhanced mental health analysis capabilities
+
+### Implementation Progress
+
+Current Status:
+- MentalLLaMA Core Components: 100% complete
+  - MentalLLaMAAdapter implementation ✓
+  - MentalLLaMAPythonBridge implementation ✓
+  - MentalLLaMAFactory implementation ✓
+  - Demo script implementation ✓
+  - Documentation ✓
+- Extended Mental Health Categories: 100% complete
+  - Added bipolar_disorder category ✓
+  - Added OCD category ✓
+  - Added eating_disorder category ✓
+  - Added social_anxiety category ✓
+  - Added panic_disorder category ✓
+  - Updated evidence extraction patterns ✓
+- Expert Explanations Integration: 100% complete
+  - Added comprehensive expert explanations for all categories ✓
+  - Implemented expert-guided explanation generation ✓
+  - Added CLI support for expert explanations ✓
+  - Updated documentation ✓
+
+### Next Steps
+
+1. IMHI Benchmark Integration (Priority: Medium)
+   - Implement more comprehensive testing across all categories
+   - Add support for custom datasets
+   - Create visualization for benchmark results
+
+2. Visualization Tools (Priority: Medium)
+   - Create dashboard for analysis results
+   - Implement timeline visualization for longitudinal analysis
+   - Add charts for category distribution
+
+### Integration Notes
+1. Completed Tasks
+   - Core implementation of MentalLLaMA adapter ✓
+   - Python bridge for original code execution ✓
+   - Factory for easy adapter creation ✓
+   - Analysis capabilities for mental health indicators ✓
+   - Enhanced mental health categories (bipolar, OCD, eating disorders, etc.) ✓
+   - Expert-guided explanations for improved quality ✓
+   - CLI tool for easy analysis ✓
+
+2. Next Phase Focus
+   - Complete IMHI benchmark integration
+   - Create visualization tools for analysis results
+
+3. Considerations
+   - Maintain HIPAA compliance
+   - Continue ensuring ethical usage of analysis tools
+   - Focus on interpretability and explanation quality
+</multi_agent_scratchpad>
+
+<error_handling>
+1. Identify error source and scope
+2. Document error context
+3. Propose solution options
+4. Implement approved fixes
+5. Verify resolution
+6. Update documentation
+</error_handling>
+
+<gradiant_integration>
+### Gradiant Integration Plan - Phase 1 (EHR Core)
+
+Current Status: Completed
+Priority: Critical
+Impact: Major feature enhancement
+
+#### Implementation Progress
+
+1. Core Infrastructure (Completed)
+   - [x] Create EHR directory structure
+   - [x] Setup base interfaces
+   - [x] Configure initial dependencies
+   - [x] Create core types and interfaces
+   - [x] Implement EHR service
+   - [x] Create FHIR client
+   - [x] Setup plugin system base
+   - [x] Implement Redis storage
+   - [x] Add OAuth2 implementation
+   - [x] Add provider-specific configurations
+   - [x] Implement security enhancements
+   - [x] Add comprehensive tests
+
+2. Provider Integration (Completed)
+   - [x] Epic provider implementation
+   - [x] Cerner provider implementation
+   - [x] Allscripts provider implementation
+   - [x] Athenahealth provider implementation
+   - [x] Provider-specific tests
+   - [ ] Integration tests
+
+3. Plugin System (Completed)
+   - [x] Plugin registry implementation
+   - [x] Plugin API implementation
+   - [x] Storage system implementation
+   - [x] Event system enhancement
+   - [ ] Plugin marketplace setup
+   - [ ] Plugin documentation
+   - [ ] Example plugins
+
+4. Security (Completed)
+   - [x] Access control implementation
+   - [x] Audit logging enhancement
+   - [x] Provider security setup
+   - [x] Encryption implementation
+   - [x] Security testing
+
+#### Next Actions
+
+1. Immediate (Today)
+   - [ ] Create integration test infrastructure
+   - [ ] Implement performance test suite
+   - [ ] Begin API documentation
+   - [ ] Setup end-to-end test framework
+
+2. Short-term (This Week)
+   - [ ] Complete integration test suite
+   - [ ] Implement load tests
+   - [ ] Create developer guide
+   - [ ] Document security features
+
+3. Documentation
+   - [ ] API documentation
+   - [ ] Integration guides
+   - [ ] Plugin development guide
+   - [ ] Security documentation
+
+4. Testing
+   - [ ] Integration tests
+   - [ ] Performance tests
+   - [ ] Load tests
+   - [ ] End-to-end tests
+
+#### Dependencies to Install
+- [x] @gradiant/ehr
+- [x] @gradiant/plugin-sdk
+- [x] @gradiant/fhir-client
+- [x] @gradiant/security
+- [x] redis
+- [x] @gradiant/cli
+- [x] @gradiant/plugin-tools
+- [x] @gradiant/test-utils
+
+#### Integration Notes
+1. Core Implementation
+   - OAuth2 service fully implemented with token management and refresh handling
+   - FHIR client created with comprehensive API support
+   - Plugin system foundation established with registry and API
+   - Redis storage integration complete
+   - Security features fully implemented:
+     - Token encryption with AES-256-GCM
+     - Comprehensive audit logging
+     - Rate limiting for API protection
+     - Access control for provider resources
+
+2. Next Steps
+   - Focus on advanced testing
+   - Create comprehensive documentation
+   - Develop example plugins
+   - Consider marketplace implementation
+
+3. Considerations
+   - Maintain HIPAA compliance standards
+   - Continue robust error handling
+   - Ensure comprehensive logging
+   - Follow security best practices
+</gradiant_integration>
+
+<liftoff_integration>
+### Liftoff-Inspired Real-Time Healthcare Simulation Module
+
+Current Status: Implemented (Phase 1)
+Priority: Medium
+Impact: Enhanced user experience and training capabilities
+
+#### Implementation Details
+
+1. Real-Time Simulation Components (Implemented)
+   - [x] Create real-time analysis infrastructure for patient simulations
+   - [x] Implement stream-based processing
+   - [x] Develop healthcare-specific real-time feedback system
+   - [x] Design therapeutic response analysis with minimal data retention
+   - [x] Build ephemeral session management system
+
+2. Technical Architecture (Implemented)
+   - [x] Create privacy-first infrastructure with zero data retention
+   - [x] Implement real-time feedback generation system
+   - [x] Create healthcare-specific prompt templates with privacy safeguards
+   - [x] Build stateless feedback generation system
+   - [x] Design zero-retention processing pipeline
+
+3. Healthcare-Specific Enhancements (Implemented)
+   - [x] Define simulated patient scenarios aligned with therapeutic domains
+   - [x] Create real-time analysis metrics for therapeutic interventions
+   - [x] Develop immediate feedback module for therapeutic techniques
+   - [x] Design practitioner skill assessment framework with privacy preservation
+   - [x] Implement scenario difficulty progression
+
+4. Speech Recognition & Analysis Enhancement (Implemented)
+   - [x] Implement domain-specific speech recognition utilities
+   - [x] Create therapeutic keyword detection system
+   - [x] Add real-time therapeutic prompt suggestions
+   - [x] Implement technique detection in spoken responses
+   - [x] Build empathy level measurement based on language analysis
+
+#### Integration Benefits
+
+1. Training Opportunities
+   - Private practice simulation before real patient interactions
+   - Real-time skill assessment and guidance
+   - Evidence-based technique reinforcement
+   - Stress-free practice environment
+   - Immediate feedback on therapeutic approaches
+
+2. User Experience
+   - Safe environment to test therapeutic approaches
+   - Real-time guidance on communication style
+   - Immediate identification of improvement areas
+   - No recording or long-term storage of sessions
+   - Progress tracking through anonymized metrics only
+
+3. Technical Advantages
+   - No persistent storage of simulation sessions
+   - HIPAA-compliant real-time processing
+   - Healthcare-specific AI feedback models with minimal context retention
+   - Integration with existing learning resources
+   - Multi-modal feedback with no data persistence (real-time only)
+
+#### Next Phase Implementation
+
+1. Next Steps (Phase 2)
+   - [ ] Enhance feedback generation with fine-tuned healthcare models
+   - [ ] Implement additional therapeutic domains and scenarios
+   - [ ] Expand metrics collection and visualization
+   - [ ] Add support for recording practice sessions (with explicit consent)
+   - [ ] Develop shared resources for therapeutic techniques
+
+2. Future Enhancements (Phase 3)
+   - [ ] Create community features for sharing anonymous insights
+   - [ ] Develop custom scenario creation tools
+   - [ ] Implement advanced therapeutic technique detection
+   - [ ] Support for multi-language simulations
+   - [ ] Integration with continuing education platforms
+</liftoff_integration>

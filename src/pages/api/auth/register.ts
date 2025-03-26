@@ -51,8 +51,8 @@ export const POST: APIRoute = async ({ request, redirect }) => {
           email: authData.user.email,
         },
         ip_address:
-          request.headers.get('x-forwarded-for') ||
-          request.headers.get('x-real-ip'),
+          request.headers.get('x-forwarded-for')
+          || request.headers.get('x-real-ip'),
         user_agent: request.headers.get('user-agent'),
       })
 
@@ -64,7 +64,8 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 
     // Redirect to sign in page
     return redirect('/signin?registered=true')
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Registration error:', error)
     return new Response('An unexpected error occurred', { status: 500 })
   }

@@ -1,8 +1,8 @@
 import { defineMiddleware } from 'astro:middleware'
-import { getLogger } from '../logging'
-import { createAuditLog } from '../audit/log'
 import { v4 as uuidv4 } from 'uuid'
+import { createAuditLog } from '../audit/log'
 import { getSession } from '../auth/session'
+import { getLogger } from '../logging'
 
 // Initialize logger
 const logger = getLogger()
@@ -84,7 +84,7 @@ function pathMatchesPatterns(path: string, patterns: string[]): boolean {
  */
 async function getSafeRequestBody(
   request: Request,
-  maxLength: number
+  maxLength: number,
 ): Promise<string | null> {
   try {
     // Only process specific content types to avoid binary data
@@ -109,7 +109,13 @@ async function getSafeRequestBody(
     } else if (contentType.includes('application/x-www-form-urlencoded')) {
       // Parse as form data
       const formData = await clonedRequest.formData()
-      const formObj = Object.fromEntries(formData.entries())
+      const formObj: Record<string, string> = {}
+
+      // Use a more TypeScript-friendly approach
+      formData.forEach((value, key) => {
+        formObj[key] = value.toString()
+      })
+
       body = JSON.stringify(formObj)
     } else {
       // Get as text
@@ -118,7 +124,7 @@ async function getSafeRequestBody(
 
     // Truncate if too long
     if (body.length > maxLength) {
-      body = body.substring(0, maxLength) + '...[truncated]'
+      body = `${body.substring(0, maxLength)}...[truncated]`
     }
 
     return body
@@ -134,7 +140,7 @@ async function getSafeRequestBody(
 function determineSecurityEventType(
   path: string,
   method: string,
-  statusCode: number
+  statusCode: number,
 ): SecurityEventType {
   // Authentication paths
   if (path.includes('/api/auth/')) {
@@ -225,7 +231,7 @@ export const auditLoggingMiddleware = defineMiddleware(
     // Determine if we should log this request
     const isSensitivePath = pathMatchesPatterns(
       path,
-      config.sensitivePathPatterns
+      config.sensitivePathPatterns,
     )
     const shouldLog = config.logAllRequests || isSensitivePath
 
@@ -239,7 +245,7 @@ export const auditLoggingMiddleware = defineMiddleware(
       method,
       path,
       query: Object.fromEntries(url.searchParams),
-      headers: {},
+      headers: {} as Record<string, string>,
       userAgent: request.headers.get('user-agent') || 'unknown',
       referer: request.headers.get('referer') || 'direct',
       ipAddress:
@@ -258,13 +264,12 @@ export const auditLoggingMiddleware = defineMiddleware(
       'cf-ipcountry',
       'accept-language',
     ]
-
-    for (const header of headersToLog) {
+    headersToLog.forEach((header) => {
       const value = request.headers.get(header)
       if (value) {
-        metadata.headers[header] = value
+        ;(metadata.headers as Record<string, string>)[header] = value
       }
-    }
+    })
 
     // Log request body for sensitive actions if enabled
     if (config.logRequestBodies && (isSensitivePath || method !== 'GET')) {
@@ -296,29 +301,31 @@ export const auditLoggingMiddleware = defineMiddleware(
     const eventType = determineSecurityEventType(
       path,
       method,
-      response?.status || 200
+      response?.status || 200,
     )
 
     // Create an audit log
     try {
-      await createAuditLog({
+      await createAuditLog(
+        eventType,
         userId,
-        action: eventType,
-        resource: 'security',
-        resourceId: path,
-        metadata: {
+        {
+          id: path,
+          type: 'security',
+        },
+        {
           ...metadata,
           userRole,
           eventType,
         },
-      })
+      )
     } catch {
       // Log error but don't break the response flow
       logger.error('Failed to create security audit log')
     }
 
     return response
-  }
+  },
 )
 
 // Export default for convenience

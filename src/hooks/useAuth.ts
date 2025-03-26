@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback } from 'react'
-import { AuthService } from '../services/auth.service'
+import type { AuthRole } from '../config/auth.config'
 import type {
+  AuthResult,
   AuthState,
   AuthUser,
-  UserRole,
   Provider,
-  AuthResult,
+  UserRole,
 } from '../types/auth'
-import type { AuthRole } from '../config/auth.config'
+import { useCallback, useEffect, useState } from 'react'
+import { AuthService } from '../services/auth.service'
 
 // Type mapping between AuthRole and UserRole for compatibility
 type RoleMapping = Record<AuthRole, UserRole>
@@ -27,11 +27,11 @@ export interface UseAuthReturn extends AuthState {
   signUp: (
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
   ) => Promise<AuthResult>
   signOut: () => Promise<void>
   signInWithOAuth: (provider: Provider, redirectTo?: string) => Promise<void>
-  resetPassword: (email: string, redirectTo?: string) => Promise<boolean>
+  _resetPassword: (email: string, redirectTo?: string) => Promise<boolean>
   verifyOtp?: (params: {
     token: string
     type?: 'email' | 'sms' | 'recovery' | 'email_change'
@@ -81,10 +81,10 @@ export function useAuth(): UseAuthReturn {
 
       return user.roles.includes(mappedRole)
     },
-    [user]
+    [user],
   )
 
-  // Load user on initial mount
+  // Load user on initial moun
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -105,13 +105,13 @@ export function useAuth(): UseAuthReturn {
   // Sign in with email and password
   const signIn = async (
     email: string,
-    password: string
+    password: string,
   ): Promise<AuthResult> => {
     try {
       setLoading(true)
       const { user, session } = await AuthService.signInWithEmail(
         email,
-        password
+        password,
       )
       setUser(user)
 
@@ -137,7 +137,7 @@ export function useAuth(): UseAuthReturn {
   const signUp = async (
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
   ): Promise<AuthResult> => {
     try {
       setLoading(true)
@@ -167,7 +167,7 @@ export function useAuth(): UseAuthReturn {
   // Sign in with OAuth provider
   const signInWithOAuth = async (
     provider: Provider,
-    redirectTo?: string
+    redirectTo?: string,
   ): Promise<void> => {
     try {
       setLoading(true)
@@ -181,7 +181,7 @@ export function useAuth(): UseAuthReturn {
     }
   }
 
-  // Sign out
+  // Sign ou
   const signOut = async (): Promise<void> => {
     try {
       setLoading(true)
@@ -196,18 +196,16 @@ export function useAuth(): UseAuthReturn {
   }
 
   // Reset password
-  const resetPassword = async (
+  const _resetPassword = async (
     email: string,
-    redirectTo?: string
+    redirectTo?: string,
   ): Promise<boolean> => {
     try {
-      setLoading(true)
+      setError(null)
       return await AuthService.resetPassword(email, redirectTo)
     } catch (error) {
       console.error('Reset password error:', error)
       throw error
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -225,7 +223,7 @@ export function useAuth(): UseAuthReturn {
       // Use the correct method from AuthService if it exists, or implement a fallback
       if (typeof AuthService.verifyOtp === 'function') {
         const response = await AuthService.verifyOtp(params)
-        // Convert AuthService response to AuthResult
+        // Convert AuthService response to AuthResul
         return {
           success: true,
           user: response.user || null,
@@ -308,7 +306,7 @@ export function useAuth(): UseAuthReturn {
     signInWithOAuth,
     signUp,
     verifyOtp,
-    resetPassword,
+    _resetPassword,
     signOut,
     updateProfile,
   }

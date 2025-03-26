@@ -1,3 +1,12 @@
+import type {
+  IconNavItem,
+  IconSocialItem,
+  ResponsiveNavItem,
+  ResponsiveSocialItem,
+} from './src/types'
+import transformerDirectives from '@unocss/transformer-directives'
+import transformerVariantGroup from '@unocss/transformer-variant-group'
+
 import {
   defineConfig,
   presetAttributify,
@@ -5,41 +14,32 @@ import {
   presetUno,
   presetWebFonts,
 } from 'unocss'
-import transformerDirectives from '@unocss/transformer-directives'
-import transformerVariantGroup from '@unocss/transformer-variant-group'
-
 import { UI } from './src/config'
-import { extractIconsStartingWithI } from './src/utils/common'
 import projecstData from './src/content/projects/data.json'
-import { VERSION_COLOR } from './src/utils/data'
+import { extractIconsStartingWithI } from './src/utils/common'
 
-import type {
-  IconNavItem,
-  ResponsiveNavItem,
-  IconSocialItem,
-  ResponsiveSocialItem,
-} from './src/types'
+import { VERSION_COLOR } from './src/utils/data'
 
 const { internalNavs, socialLinks, githubView } = UI
 const navIcons = internalNavs
   .filter(
     (item) =>
       item.displayMode !== 'alwaysText' &&
-      item.displayMode !== 'textHiddenOnMobile'
+      item.displayMode !== 'textHiddenOnMobile',
   )
   .map((item) => (item as IconNavItem | ResponsiveNavItem).icon)
 const socialIcons = socialLinks
   .filter(
     (item) =>
       item.displayMode !== 'alwaysText' &&
-      item.displayMode !== 'textHiddenOnMobile'
+      item.displayMode !== 'textHiddenOnMobile',
   )
   .map((item) => (item as IconSocialItem | ResponsiveSocialItem).icon)
 
 const projectIcons = extractIconsStartingWithI(projecstData.projects)
 
 const versionClass = Object.values(VERSION_COLOR).flatMap((colorString) =>
-  colorString.split(' ')
+  colorString.split(' '),
 )
 
 const subLogoIcons = githubView.subLogoMatches.map((item) => item[1])

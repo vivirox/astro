@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro'
-import { ExportService, ExportFormat } from '../../../lib/export'
-import { fheService } from '../../../lib/fhe'
-import { getLogger } from '../../../lib/logging'
-import { getSession } from '../../../lib/auth/session'
-import { EncryptionMode } from '../../../lib/fhe/types'
 import type { ChatMessage } from '../../../types/chat'
+import { getSession } from '../../../lib/auth/session'
+import { ExportFormat, ExportService } from '../../../lib/export'
+import { fheService } from '../../../lib/fhe'
+import { EncryptionMode } from '../../../lib/fhe/types'
+import { getLogger } from '../../../lib/logging'
 
 // Initialize logger
 const logger = getLogger()
@@ -43,7 +43,7 @@ export const POST: APIRoute = async ({ request }) => {
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -77,7 +77,7 @@ export const POST: APIRoute = async ({ request }) => {
       session.user.id,
       sessionId,
       exportResult.id,
-      exportFormat
+      exportFormat,
     )
 
     // Return export information
@@ -93,9 +93,10 @@ export const POST: APIRoute = async ({ request }) => {
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
-  } catch (error) {
+  }
+  catch (error) {
     logger.error('Export API error:', error)
     return new Response(JSON.stringify({ error: 'Export failed' }), {
       status: 500,
@@ -109,7 +110,7 @@ export const POST: APIRoute = async ({ request }) => {
  */
 async function checkSessionAccess(
   userId: string,
-  sessionId: string
+  sessionId: string,
 ): Promise<boolean> {
   // In a real implementation, this would check the database for access permissions
   // For this example, we'll assume the check passes
@@ -134,7 +135,7 @@ async function getSessionMessages(sessionId: string): Promise<ChatMessage[]> {
     {
       id: '2',
       role: 'user',
-      content: "I've been feeling anxious lately.",
+      content: 'I\'ve been feeling anxious lately.',
       timestamp: Date.now() - 3500000,
     },
     {
@@ -161,11 +162,11 @@ async function recordExportAction(
   userId: string,
   sessionId: string,
   exportId: string,
-  format: ExportFormat
+  format: ExportFormat,
 ): Promise<void> {
   // In a real implementation, this would record the export action in the audit log
   logger.info(
-    `User ${userId} exported session ${sessionId} in ${format} format with ID ${exportId}`
+    `User ${userId} exported session ${sessionId} in ${format} format with ID ${exportId}`,
   )
 }
 

@@ -1,6 +1,6 @@
+import type { Session, User } from '@supabase/supabase-js'
 // Import necessary libraries and types
 import { createClient } from '@supabase/supabase-js'
-import type { Session, User } from '@supabase/supabase-js'
 
 import { createAuditLog } from '../audit/log.js'
 
@@ -15,14 +15,14 @@ export interface SessionData {
  * @returns The session data or null if not authenticated
  */
 export async function getSession(
-  request: Request
+  request: Request,
 ): Promise<SessionData | null> {
   try {
     console.log('Processing request:', request.url)
     // Create a Supabase client
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     )
 
     // Get the session from the session cookie
@@ -53,7 +53,7 @@ export async function createSession(user: User): Promise<SessionData | null> {
   try {
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     )
 
     // Create a new session
@@ -64,14 +64,16 @@ export async function createSession(user: User): Promise<SessionData | null> {
     }
 
     // Log the session creation
-    await createAuditLog({
-      userId: user.id,
-      action: 'auth.session.created',
-      resource: 'session',
-      metadata: {
-        sessionId: data?.session.access_token.substring(0, 8),
+    await createAuditLog(
+      'session_created',
+      user.id,
+      data?.session.access_token.substring(0, 8),
+      'session',
+      {
+        ip: request.ip,
+        userAgent: request.headers['user-agent'],
       },
-    })
+    )
 
     // Return the session data
     return {
@@ -91,25 +93,20 @@ export async function createSession(user: User): Promise<SessionData | null> {
  */
 export async function endSession(
   sessionId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   try {
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     )
 
     // Sign out the user
     await supabase.auth.signOut()
 
     // Log the session end
-    await createAuditLog({
-      userId,
-      action: 'auth.session.ended',
-      resource: 'session',
-      metadata: {
-        sessionId,
-      },
+    await createAuditLog('session_destroyed', userId, sessionId, 'session', {
+      reason: 'user_logout',
     })
   } catch (error) {
     console.error('Error ending session:', error)

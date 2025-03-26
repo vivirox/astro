@@ -100,7 +100,7 @@ interface BlueskyReply {
 
 // Custom interface for the highlights data structure
 interface HighlightDataWithBluesky {
-  post?: BlueskyPost
+  post?: BlueskyPos
   replies?: BlueskyReply[]
 }
 
@@ -126,7 +126,7 @@ export const VERSION_COLOR = {
  */
 export function matchLogo(
   input: string,
-  logos: GitHubView['mainLogoOverrides'] | GitHubView['subLogoMatches']
+  logos: GitHubView['mainLogoOverrides'] | GitHubView['subLogoMatches'],
 ) {
   for (const [pattern, logo] of logos) {
     if (typeof pattern === 'string') {
@@ -146,7 +146,7 @@ export function matchLogo(
  * Extracts the package name (before the `@` version part) from a `tagName`.
  */
 export function extractPackageName(tagName: string) {
-  const match = tagName.match(/(^@?[^@]+?)(?:@)/)
+  const match = tagName.match(/(^@?[^@]+)@/)
   if (match) return match[1]
   return tagName
 }
@@ -155,7 +155,8 @@ export function extractPackageName(tagName: string) {
  * Extracts the version number from a `tagName`.
  */
 export function extractVersionNum(tagName: string) {
-  const match = tagName.match(/.+(\d+\.\d+\.\d+(?:-[\w.]+)?)(?:\s|$)/)
+  // Use a more specific pattern to avoid backtracking
+  const match = tagName.match(/^\D*(\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)/i)
   if (match) return match[1]
   return tagName
 }
@@ -164,7 +165,7 @@ export function extractVersionNum(tagName: string) {
  * Processes the version number and return the highlighted and non-highlighted parts.
  */
 export function processVersion(
-  versionNum: string
+  versionNum: string,
 ): ['major' | 'minor' | 'patch' | 'pre', string, string] {
   const parts = versionNum.split(/(\.)/g)
   let highlightedIndex = -1
@@ -213,7 +214,7 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
         continue
       }
 
-      const { indexedAt, html, link, embed, author } = post
+      const { indexedAt, html, link, embed, author } = pos
 
       // Skip if required fields are missing
       if (!indexedAt || !html || !link || !author) {
@@ -223,8 +224,8 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
 
       const card: CardItemData = {
         date: indexedAt,
-        html: html,
-        link: link,
+        html,
+        link,
       }
 
       if (embed) {
@@ -234,7 +235,7 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
             (img: { thumb: string; alt: string }) => ({
               src: img.thumb,
               alt: img.alt,
-            })
+            }),
           )
         }
 
@@ -288,7 +289,7 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
                 (img: { thumb: string; alt: string }) => ({
                   src: img.thumb,
                   alt: img.alt,
-                })
+                }),
               )
             }
 
@@ -337,7 +338,7 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
       if (replies && Array.isArray(replies) && replies.length > 0) {
         card.details = replies
           .filter(
-            (reply): reply is { html: string } => reply?.html !== undefined
+            (reply): reply is { html: string } => reply?.html !== undefined,
           )
           .map((reply) => reply.html)
       }
@@ -349,4 +350,50 @@ export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
     }
   }
   return cards
+}
+
+// Replace problematic regex with more efficient patterns
+const ID_PATTERN = /^[a-z0-9][-a-z0-9]*?\d$/
+const NUMERIC_ID_PATTERN = /^\d+$/
+const ALPHANUMERIC_ID_PATTERN = /^[a-z0-9][-a-z0-9]*$/
+
+export function extractId(input: string): number | null {
+  if (NUMERIC_ID_PATTERN.test(input)) {
+    return Number.parseInt(input, 10)
+  }
+
+  const match = ID_PATTERN.exec(input)
+  if (match) {
+    return Number.parseInt(match[2], 10)
+  }
+
+  return null
+}
+
+export function validateId(id: string): boolean {
+  return ALPHANUMERIC_ID_PATTERN.test(id)
+}
+
+export interface CardItemData {
+  title: string
+  description?: string
+  image?: string
+  link?: string
+  tags?: string[]
+  date?: Date
+  author?: string
+}
+
+export function getCardData(): CardItemData[] {
+  return [
+    {
+      title: 'Example Card',
+      description: 'This is an example card',
+      image: '/images/example.jpg',
+      link: '/example',
+      tags: ['example', 'card'],
+      date: new Date(),
+      author: 'John Doe',
+    },
+  ]
 }

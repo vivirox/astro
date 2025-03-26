@@ -1,6 +1,6 @@
 import { getLogger } from './logging'
-import { initializeSecurity } from './security'
 import { LogRotationService } from './logging/rotation'
+import { initializeSecurity } from './security'
 
 const logger = getLogger()
 

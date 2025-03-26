@@ -12,7 +12,7 @@
 export function toggleFadeEffect(
   elementId: string,
   visible: boolean,
-  hiddenClass: string
+  hiddenClass: string,
 ) {
   const element = document.getElementById(elementId)
   if (!element) return
@@ -36,7 +36,7 @@ export function toggleFadeEffect(
         element.classList.remove('fade-in', 'fade-out')
         element.classList.add(hiddenClass)
       },
-      { once: true }
+      { once: true },
     )
   }
 }

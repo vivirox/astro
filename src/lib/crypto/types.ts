@@ -12,11 +12,11 @@ export interface KeyData {
 }
 
 export interface CryptoSystem {
-  encrypt(data: string, purpose: string): Promise<string>
-  decrypt(encryptedData: string, purpose?: string): Promise<string>
-  hash(data: string): Promise<string>
-  sign(data: string): Promise<string>
-  verify(data: string, signature: string): Promise<boolean>
-  rotateExpiredKeys(): Promise<string[]>
-  stopScheduledRotation(): void
+  encrypt: (data: string, purpose: string) => Promise<string>
+  decrypt: (encryptedData: string, purpose?: string) => Promise<string>
+  hash: (data: string) => Promise<string>
+  sign: (data: string) => Promise<string>
+  verify: (data: string, signature: string) => Promise<boolean>
+  rotateExpiredKeys: () => Promise<string[]>
+  stopScheduledRotation: () => void
 }

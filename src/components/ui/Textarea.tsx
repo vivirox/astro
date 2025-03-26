@@ -36,7 +36,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       className = '',
       ...props
     },
-    ref
+    ref,
   ) => {
     // Base classes for textarea
     const baseTextareaClasses =
@@ -104,7 +104,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 Textarea.displayName = 'Textarea'

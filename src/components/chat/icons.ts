@@ -1,18 +1,15 @@
 import {
-  Send,
-  ChevronDown,
-  Maximize,
-  Minimize,
-  Lock,
-  ShieldCheck,
-  MessageSquare,
-  Brain,
-  UserCircle,
-  RefreshCw,
-  BarChart,
-  PieChart,
-  LineChart,
   AlertTriangle,
+  Brain,
+  ChevronDown,
+  Lock,
+  Maximize,
+  MessageSquare,
+  Minimize,
+  RefreshCw,
+  Send,
+  ShieldCheck,
+  UserCircle,
 } from 'lucide-react'
 
 export const IconSend = Send
@@ -25,7 +22,7 @@ export const IconMessage = MessageSquare
 export const IconBrain = Brain
 export const IconUserCircle = UserCircle
 export const IconRefresh = RefreshCw
-export const IconBarChart = BarChart
-export const IconPieChart = PieChart
-export const IconLineChart = LineChart
+export const IconBarChart = BarChar
+export const IconPieChart = PieChar
+export const IconLineChart = LineChar
 export const IconAlertTriangle = AlertTriangle

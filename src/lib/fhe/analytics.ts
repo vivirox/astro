@@ -5,10 +5,10 @@
  * using Fully Homomorphic Encryption, allowing for insights without compromising privacy.
  */
 
+import type { ChatMessage } from '../../types/chat'
 import { getLogger } from '../logging'
 import { fheService } from './index'
 import { EncryptionMode, FHEOperation as FHEOpType } from './types'
-import type { ChatMessage } from '../../types/chat'
 
 // Initialize logger
 const logger = getLogger()
@@ -130,7 +130,10 @@ export class FHEAnalyticsService {
       this.initialized = true
       logger.info('FHE Analytics service initialized')
     } catch (error) {
-      logger.error('Failed to initialize FHE Analytics service', error)
+      logger.error(
+        'Failed to initialize FHE Analytics service',
+        error as Record<string, unknown>,
+      )
       throw error
     }
   }
@@ -144,7 +147,7 @@ export class FHEAnalyticsService {
    */
   public async analyzeSentimentTrend(
     messages: ChatMessage[],
-    config: AnalyticsConfig = DEFAULT_CONFIG
+    config: AnalyticsConfig = DEFAULT_CONFIG,
   ): Promise<AnalyticsResult> {
     await this.ensureInitialized()
 
@@ -170,7 +173,7 @@ export class FHEAnalyticsService {
                 // Process sentiment analysis on the encrypted message
                 const sentimentResult = await fheService.processEncrypted(
                   message.content,
-                  mapOperation(FHEOperation.SENTIMENT)
+                  mapOperation(FHEOperation.SENTIMENT),
                 )
 
                 // We can work with the encrypted result directly in FHE mode
@@ -184,7 +187,7 @@ export class FHEAnalyticsService {
                 const encrypted = await fheService.encrypt(message.content)
                 const sentimentResult = await fheService.processEncrypted(
                   encrypted,
-                  mapOperation(FHEOperation.SENTIMENT)
+                  mapOperation(FHEOperation.SENTIMENT),
                 )
 
                 return {
@@ -196,7 +199,7 @@ export class FHEAnalyticsService {
             } catch (error) {
               logger.error(
                 `Failed to analyze sentiment for message ${index}`,
-                error
+                error as Record<string, unknown>,
               )
               return {
                 messageIndex: index,
@@ -204,7 +207,7 @@ export class FHEAnalyticsService {
                 timestamp: message.timestamp || Date.now(),
               }
             }
-          })
+          }),
       )
 
       // Create the result object
@@ -223,7 +226,7 @@ export class FHEAnalyticsService {
 
       const endTime = performance.now()
       logger.info(
-        `Sentiment trend analysis completed in ${endTime - startTime}ms`
+        `Sentiment trend analysis completed in ${endTime - startTime}ms`,
       )
 
       // Encrypt the results if configured
@@ -238,7 +241,7 @@ export class FHEAnalyticsService {
       if (config.encryptResults) {
         // Convert the encrypted string to a record to satisfy the type
         const encryptedData = await fheService.encrypt(
-          JSON.stringify(analyticsData)
+          JSON.stringify(analyticsData),
         )
         finalResult.data = { encrypted: encryptedData } as Record<
           string,
@@ -249,7 +252,10 @@ export class FHEAnalyticsService {
 
       return finalResult
     } catch (error) {
-      logger.error('Failed to analyze sentiment trends', error)
+      logger.error(
+        'Failed to analyze sentiment trends',
+        error as Record<string, unknown>,
+      )
       throw error
     }
   }
@@ -263,7 +269,7 @@ export class FHEAnalyticsService {
    */
   public async analyzeTopicClusters(
     messages: ChatMessage[],
-    config: AnalyticsConfig = DEFAULT_CONFIG
+    config: AnalyticsConfig = DEFAULT_CONFIG,
   ): Promise<AnalyticsResult> {
     await this.ensureInitialized()
 
@@ -297,7 +303,7 @@ export class FHEAnalyticsService {
                     work: ['job', 'career', 'boss'],
                     health: ['pain', 'illness', 'doctor'],
                   },
-                }
+                },
               )
 
               return {
@@ -308,7 +314,7 @@ export class FHEAnalyticsService {
             } catch (error) {
               logger.error(
                 `Failed to analyze topics for message ${index}`,
-                error
+                error as Record<string, unknown>,
               )
               return {
                 messageIndex: index,
@@ -316,7 +322,7 @@ export class FHEAnalyticsService {
                 timestamp: message.timestamp || Date.now(),
               }
             }
-          })
+          }),
       )
 
       // Create result object
@@ -341,7 +347,7 @@ export class FHEAnalyticsService {
       if (config.encryptResults) {
         // Convert the encrypted string to a record to satisfy the type
         const encryptedData = await fheService.encrypt(
-          JSON.stringify(analyticsData)
+          JSON.stringify(analyticsData),
         )
         finalResult.data = { encrypted: encryptedData } as Record<
           string,
@@ -352,7 +358,10 @@ export class FHEAnalyticsService {
 
       return finalResult
     } catch (error) {
-      logger.error('Failed to analyze topic clusters', error)
+      logger.error(
+        'Failed to analyze topic clusters',
+        error as Record<string, unknown>,
+      )
       throw error
     }
   }
@@ -367,7 +376,7 @@ export class FHEAnalyticsService {
    */
   public async performRiskAssessment(
     messages: ChatMessage[],
-    config: AnalyticsConfig = DEFAULT_CONFIG
+    config: AnalyticsConfig = DEFAULT_CONFIG,
   ): Promise<AnalyticsResult> {
     await this.ensureInitialized()
 
@@ -399,7 +408,7 @@ export class FHEAnalyticsService {
                     riskPatterns: ['self_harm', 'suicidal', 'violent', 'abuse'],
                     threshold: 0.7,
                   },
-                }
+                },
               )
 
               return {
@@ -408,14 +417,17 @@ export class FHEAnalyticsService {
                 timestamp: message.timestamp || Date.now(),
               }
             } catch (error) {
-              logger.error(`Failed to analyze risk for message ${index}`, error)
+              logger.error(
+                `Failed to analyze risk for message ${index}`,
+                error as Record<string, unknown>,
+              )
               return {
                 messageIndex: index,
                 error: true,
                 timestamp: message.timestamp || Date.now(),
               }
             }
-          })
+          }),
       )
 
       // Create the alert level based on risk detection
@@ -444,7 +456,7 @@ export class FHEAnalyticsService {
       if (config.encryptResults) {
         // Convert the encrypted string to a record to satisfy the type
         const encryptedData = await fheService.encrypt(
-          JSON.stringify(analyticsData)
+          JSON.stringify(analyticsData),
         )
         finalResult.data = { encrypted: encryptedData } as Record<
           string,
@@ -455,7 +467,10 @@ export class FHEAnalyticsService {
 
       return finalResult
     } catch (error) {
-      logger.error('Failed to perform risk assessment', error)
+      logger.error(
+        'Failed to perform risk assessment',
+        error as Record<string, unknown>,
+      )
       throw error
     }
   }
@@ -470,7 +485,7 @@ export class FHEAnalyticsService {
    */
   public async analyzeInterventionEffectiveness(
     messages: ChatMessage[],
-    config: AnalyticsConfig = DEFAULT_CONFIG
+    config: AnalyticsConfig = DEFAULT_CONFIG,
   ): Promise<AnalyticsResult> {
     await this.ensureInitialized()
 
@@ -520,13 +535,13 @@ export class FHEAnalyticsService {
                   supportive: ['support', 'with you', 'make sense'],
                   directive: ['suggest', 'could try', 'recommend'],
                 },
-              }
+              },
             )
 
             // Analyze client response sentiment
             const responseSentiment = await fheService.processEncrypted(
               clientContent,
-              mapOperation(FHEOperation.SENTIMENT)
+              mapOperation(FHEOperation.SENTIMENT),
             )
 
             return {
@@ -536,14 +551,17 @@ export class FHEAnalyticsService {
               timestamp: exchange.client.timestamp || Date.now(),
             }
           } catch (error) {
-            logger.error(`Failed to analyze exchange ${index}`, error)
+            logger.error(
+              `Failed to analyze exchange ${index}`,
+              error as Record<string, unknown>,
+            )
             return {
               exchangeIndex: index,
               error: true,
               timestamp: Date.now(),
             }
           }
-        })
+        }),
       )
 
       // Create result object
@@ -568,7 +586,7 @@ export class FHEAnalyticsService {
       if (config.encryptResults) {
         // Convert the encrypted string to a record to satisfy the type
         const encryptedData = await fheService.encrypt(
-          JSON.stringify(analyticsData)
+          JSON.stringify(analyticsData),
         )
         finalResult.data = { encrypted: encryptedData } as Record<
           string,
@@ -579,7 +597,10 @@ export class FHEAnalyticsService {
 
       return finalResult
     } catch (error) {
-      logger.error('Failed to analyze intervention effectiveness', error)
+      logger.error(
+        'Failed to analyze intervention effectiveness',
+        error as Record<string, unknown>,
+      )
       throw error
     }
   }
@@ -593,7 +614,7 @@ export class FHEAnalyticsService {
    */
   public async analyzeEmotionalPatterns(
     messages: ChatMessage[],
-    config: AnalyticsConfig = DEFAULT_CONFIG
+    config: AnalyticsConfig = DEFAULT_CONFIG,
   ): Promise<AnalyticsResult> {
     await this.ensureInitialized()
 
@@ -631,7 +652,7 @@ export class FHEAnalyticsService {
           const windowMessages = userMessages.filter(
             (m) =>
               (m.timestamp || 0) >= window.startTime &&
-              (m.timestamp || 0) <= window.endTime
+              (m.timestamp || 0) <= window.endTime,
           )
 
           // Process each message in the window
@@ -656,7 +677,7 @@ export class FHEAnalyticsService {
                       surprise: ['shocked', 'surprised', 'unexpected'],
                       disgust: ['disgusted', 'repulsed', 'awful'],
                     },
-                  }
+                  },
                 )
 
                 return {
@@ -667,7 +688,7 @@ export class FHEAnalyticsService {
               } catch (error) {
                 logger.error(
                   `Failed to analyze emotion for message ${messageIndex}`,
-                  error
+                  error as Record<string, unknown>,
                 )
                 return {
                   messageIndex,
@@ -675,7 +696,7 @@ export class FHEAnalyticsService {
                   timestamp: message.timestamp || Date.now(),
                 }
               }
-            })
+            }),
           )
 
           return {
@@ -685,7 +706,7 @@ export class FHEAnalyticsService {
             messageCount: windowMessages.length,
             emotions: messageResults.filter((r) => !r.error),
           }
-        })
+        }),
       )
 
       // Create result object
@@ -711,7 +732,7 @@ export class FHEAnalyticsService {
       if (config.encryptResults) {
         // Convert the encrypted string to a record to satisfy the type
         const encryptedData = await fheService.encrypt(
-          JSON.stringify(analyticsData)
+          JSON.stringify(analyticsData),
         )
         finalResult.data = { encrypted: encryptedData } as Record<
           string,
@@ -722,7 +743,10 @@ export class FHEAnalyticsService {
 
       return finalResult
     } catch (error) {
-      logger.error('Failed to analyze emotional patterns', error)
+      logger.error(
+        'Failed to analyze emotional patterns',
+        error as Record<string, unknown>,
+      )
       throw error
     }
   }
@@ -736,7 +760,7 @@ export class FHEAnalyticsService {
    */
   public async createAnalyticsDashboard(
     messages: ChatMessage[],
-    config: AnalyticsConfig = DEFAULT_CONFIG
+    config: AnalyticsConfig = DEFAULT_CONFIG,
   ): Promise<AnalyticsResult[]> {
     await this.ensureInitialized()
 
@@ -766,7 +790,10 @@ export class FHEAnalyticsService {
         riskAssessment,
       ]
     } catch (error) {
-      logger.error('Failed to create analytics dashboard', error)
+      logger.error(
+        'Failed to create analytics dashboard',
+        error as Record<string, unknown>,
+      )
       throw error
     }
   }
@@ -776,7 +803,7 @@ export class FHEAnalyticsService {
    */
   private filterMessagesByTimeWindow(
     messages: ChatMessage[],
-    config: AnalyticsConfig
+    config: AnalyticsConfig,
   ): ChatMessage[] {
     const startTime = config.timeWindow?.startTime || 0
     const endTime = config.timeWindow?.endTime || Date.now()

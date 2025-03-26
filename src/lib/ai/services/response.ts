@@ -1,7 +1,7 @@
 import type { AIMessage } from '../models/ai-types'
 
 // Create an adapter for the TogetherAIService
-class TogetherAIAdapter {
+export class TogetherAIAdapter {
   private togetherService: any
 
   constructor(togetherService: any) {
@@ -18,7 +18,7 @@ class TogetherAIAdapter {
     // Call the service and return result
     const response = await this.togetherService.generateCompletion(
       adaptedMessages,
-      options
+      options,
     )
     // Add provider field required by AIServiceResponse
     return {

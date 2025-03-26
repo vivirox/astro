@@ -1,7 +1,11 @@
-import type { AIService, AIMessage, AIServiceOptions } from './models/ai-types'
-import type { AIProvider } from './models/ai-types'
-import { createAuditLog, AuditEventType } from '../audit'
+import type {
+  AIMessage,
+  AIProvider,
+  AIService,
+  AIServiceOptions,
+} from './models/ai-types'
 import { checkRateLimit } from '../../lib/rate-limit'
+import { AuditEventType, createAuditLog } from '../audit'
 
 /**
  * Interface for performance metrics
@@ -106,7 +110,7 @@ class AIResponseCache<T> {
    */
   private defaultKeyGenerator(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): string {
     const messagesStr = JSON.stringify(messages)
     const optionsStr = options
@@ -150,7 +154,7 @@ class AIResponseCache<T> {
   set(
     messages: AIMessage[],
     options: AIServiceOptions | undefined,
-    value: T
+    value: T,
   ): void {
     if (!this.options.enabled) return
 
@@ -201,7 +205,7 @@ export function createOptimizedAIService(
   performanceOptions: PerformanceMonitorOptions = {},
   cacheOptions: CacheOptions = {},
   enableRateLimit = false,
-  maxRequestsPerMinute = 10
+  maxRequestsPerMinute = 10,
 ): AIService {
   // Initialize the response cache
   const responseCache = new AIResponseCache<
@@ -254,14 +258,14 @@ export function createOptimizedAIService(
           errorCode: metrics.errorCode,
           cached: metrics.cached,
           optimized: metrics.optimized,
-        }
+        },
       )
     }
 
     // Check for slow requests
     if (metrics.latency > options.slowRequestThreshold) {
       console.warn(
-        `[AI Performance Warning] Slow request detected (${metrics.latency}ms) for model ${metrics.model}`
+        `[AI Performance Warning] Slow request detected (${metrics.latency}ms) for model ${metrics.model}`,
       )
     }
 
@@ -271,7 +275,7 @@ export function createOptimizedAIService(
       metrics.totalTokens > options.highTokenUsageThreshold
     ) {
       console.warn(
-        `[AI Performance Warning] High token usage detected (${metrics.totalTokens} tokens) for model ${metrics.model}`
+        `[AI Performance Warning] High token usage detected (${metrics.totalTokens} tokens) for model ${metrics.model}`,
       )
     }
 
@@ -286,7 +290,7 @@ export function createOptimizedAIService(
 
   return {
     createChatCompletion: async (messages, serviceOptions) => {
-      // Check cache first
+      // Check cache firs
       const cachedResponse = responseCache.get(messages, serviceOptions)
       if (cachedResponse) {
         return cachedResponse
@@ -302,7 +306,7 @@ export function createOptimizedAIService(
         if (enableRateLimit && serviceOptions?.userId) {
           const rateLimited = checkRateLimit(
             serviceOptions.userId,
-            maxRequestsPerMinute
+            maxRequestsPerMinute,
           )
           if (rateLimited) {
             errorCode = 'RATE_LIMITED'
@@ -310,7 +314,7 @@ export function createOptimizedAIService(
           }
         }
 
-        // Check cache first
+        // Check cache firs
         const cachedResponse = responseCache.get(messages, serviceOptions)
         if (cachedResponse) {
           cached = true
@@ -336,7 +340,7 @@ export function createOptimizedAIService(
         // Make the actual request
         const response = await aiService.createChatCompletion(
           messages,
-          serviceOptions
+          serviceOptions,
         )
         success = true
 
@@ -397,7 +401,7 @@ export function createOptimizedAIService(
         // Make the actual request
         const response = await aiService.createStreamingChatCompletion(
           messages,
-          serviceOptions
+          serviceOptions,
         )
         success = true
 
@@ -445,19 +449,19 @@ export function createOptimizedAIService(
     createChatCompletionWithTracking: async (messages, serviceOptions) => {
       return aiService.createChatCompletionWithTracking(
         messages,
-        serviceOptions
+        serviceOptions,
       )
     },
 
     generateCompletion: async (
       messages: AIMessage[],
       serviceOptions?: AIServiceOptions,
-      provider?: AIProvider
+      provider?: AIProvider,
     ) => {
       return aiService.generateCompletion(
         messages,
         serviceOptions,
-        provider as AIProvider
+        provider as AIProvider,
       )
     },
 
@@ -470,7 +474,7 @@ export function createOptimizedAIService(
 
 /**
  * Utility to estimate token count for a message
- * This is a rough estimate and not exact
+ * This is a rough estimate and not exac
  */
 export function estimateTokenCount(text: string): number {
   // A very rough estimate: 1 token ≈ 4 characters for English text
@@ -481,7 +485,7 @@ export function estimateTokenCount(text: string): number {
  * Utility to estimate token count for a set of messages
  */
 export function estimateMessagesTokenCount(messages: AIMessage[]): number {
-  // Base tokens for the messages format
+  // Base tokens for the messages forma
   let tokenCount = 3 // Every response is primed with <|start|>assistant<|message|>
 
   for (const message of messages) {
@@ -494,13 +498,13 @@ export function estimateMessagesTokenCount(messages: AIMessage[]): number {
 }
 
 /**
- * Truncates messages to fit within a token limit
+ * Truncates messages to fit within a token limi
  * Preserves the most recent messages and system messages
  */
 export function truncateMessages(
   messages: AIMessage[],
   maxTokens = 4000,
-  reserveTokens = 1000
+  reserveTokens = 1000,
 ): AIMessage[] {
   // If we don't have enough messages to worry about, return as is
   if (messages.length <= 2) return messages
@@ -537,14 +541,14 @@ export function truncateMessages(
       usedTokens += messageTokens
     } else {
       // If this is the first message and we can't fit it completely,
-      // truncate its content to fit within the limit
+      // truncate its content to fit within the limi
       if (i === nonSystemMessages.length - 1) {
         const availableForContent = availableTokens - 4 // -4 for message formatting
         if (availableForContent > 0) {
-          // Truncate the content to fit within the limit
+          // Truncate the content to fit within the limi
           const truncatedContent = message.content.slice(
             0,
-            availableForContent * 4
+            availableForContent * 4,
           )
           truncatedMessages.unshift({
             ...message,

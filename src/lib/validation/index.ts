@@ -27,13 +27,13 @@ export interface ValidationError {
 
 /**
  * Validates request body against a Zod schema
- * @param request The request object
- * @param schema The Zod schema to validate against
+ * @param request The request objec
+ * @param schema The Zod schema to validate agains
  * @returns A tuple of [data, error] where data is the validated data and error is the validation error
  */
 export async function validateRequestBody<T extends z.ZodType>(
   request: Request,
-  schema: T
+  schema: T,
 ): Promise<[z.infer<T> | null, ValidationError | null]> {
   try {
     // Parse request body as JSON
@@ -69,12 +69,12 @@ export async function validateRequestBody<T extends z.ZodType>(
 /**
  * Validates query parameters against a Zod schema
  * @param url The URL object containing query parameters
- * @param schema The Zod schema to validate against
+ * @param schema The Zod schema to validate agains
  * @returns A tuple of [data, error] where data is the validated data and error is the validation error
  */
 export function validateQueryParams<T extends z.ZodType>(
   url: URL,
-  schema: T
+  schema: T,
 ): [z.infer<T> | null, ValidationError | null] {
   try {
     // Create an object from URL search params
@@ -114,10 +114,10 @@ export function validateQueryParams<T extends z.ZodType>(
 export const sessionIdSchema = z
   .string()
   .uuid()
-  .or(z.string().regex(/^[a-zA-Z0-9-_]{21}$/)) // For Supabase/Firebase style IDs
+  .or(z.string().regex(/^[\w-]{21}$/)) // For Supabase/Firebase style IDs
 
 // Validate and sanitize session ID
-export const validateSessionId = (sessionId: unknown): string => {
+export function validateSessionId(sessionId: unknown): string {
   const result = sessionIdSchema.safeParse(sessionId)
   if (!result.success) {
     throw new Error('Invalid session ID format')
@@ -126,7 +126,7 @@ export const validateSessionId = (sessionId: unknown): string => {
 }
 
 // API path validation to prevent path traversal
-export const validateApiPath = (path: string): string => {
+export function validateApiPath(path: string): string {
   // Remove any path traversal attempts
   const sanitizedPath = path
     .replace(/\.\./g, '')
@@ -134,7 +134,7 @@ export const validateApiPath = (path: string): string => {
     .replace(/^\/+|\/+$/g, '')
 
   // Only allow alphanumeric characters, hyphens, and forward slashes
-  if (!/^[a-zA-Z0-9/-]+$/.test(sanitizedPath)) {
+  if (!/^[a-z0-9/-]+$/i.test(sanitizedPath)) {
     throw new Error('Invalid path format')
   }
 
@@ -142,7 +142,7 @@ export const validateApiPath = (path: string): string => {
 }
 
 // Combine both validations for API routes
-export const validateApiRoute = (path: string, sessionId: unknown): string => {
+export function validateApiRoute(path: string, sessionId: unknown): string {
   const validSessionId = validateSessionId(sessionId)
   const validPath = validateApiPath(path)
   return `${validPath}/${validSessionId}`

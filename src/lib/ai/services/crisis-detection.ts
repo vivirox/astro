@@ -1,4 +1,4 @@
-import type { AIService, AIMessage } from '../models/types'
+import type { AIMessage, AIService } from '../models/types'
 import type { CrisisDetectionResult } from '../types'
 import { getDefaultModelForCapability } from '../models/registry'
 
@@ -63,7 +63,7 @@ export class CrisisDetectionService {
     options?: {
       sensitivityLevel?: 'low' | 'medium' | 'high'
       customPrompt?: string
-    }
+    },
   ): Promise<CrisisDetectionResult> {
     const sensitivityLevel = options?.sensitivityLevel || this.sensitivityLevel
     let prompt = options?.customPrompt || this.defaultPrompt
@@ -72,7 +72,7 @@ export class CrisisDetectionService {
     if (sensitivityLevel !== this.sensitivityLevel && !options?.customPrompt) {
       prompt = prompt.replace(
         `The current sensitivity level is set to: ${this.sensitivityLevel.toUpperCase()}`,
-        `The current sensitivity level is set to: ${sensitivityLevel.toUpperCase()}`
+        `The current sensitivity level is set to: ${sensitivityLevel.toUpperCase()}`,
       )
     }
 
@@ -91,7 +91,7 @@ export class CrisisDetectionService {
       const jsonMatch =
         content.match(/```json\n([\s\S]*?)\n```/) ||
         content.match(/```\n([\s\S]*?)\n```/) ||
-        content.match(/{[\s\S]*?}/)
+        content.match(/\{[\s\S]*?\}/)
 
       const jsonStr = jsonMatch ? jsonMatch[0] : content
       const result = JSON.parse(jsonStr)
@@ -118,7 +118,7 @@ export class CrisisDetectionService {
     texts: string[],
     options?: {
       sensitivityLevel?: 'low' | 'medium' | 'high'
-    }
+    },
   ): Promise<CrisisDetectionResult[]> {
     return Promise.all(texts.map((text) => this.detectCrisis(text, options)))
   }

@@ -65,7 +65,7 @@ const pluginService = new PluginService({
   auditService,
   securityService,
   metricsService
-});
+})
 
 // Install a plugin
 await pluginService.installPlugin({
@@ -79,14 +79,14 @@ await pluginService.installPlugin({
     author: 'Developer Name',
     homepage: 'https://example.com/my-plugin'
   }
-});
+})
 ```
 
 ### Enabling a Plugin
 
 ```typescript
 // Enable an installed plugin
-await pluginService.enablePlugin('my-plugin');
+await pluginService.enablePlugin('my-plugin')
 ```
 
 ### Using the Marketplace
@@ -97,17 +97,17 @@ const marketplaceService = new PluginMarketplaceService({
   auditService,
   securityService,
   metricsService
-});
+})
 
 // Search for plugins
 const plugins = await marketplaceService.searchPlugins({
   query: 'appointment',
   tags: ['scheduling'],
   sort: 'downloads'
-});
+})
 
 // Download and install a plugin
-await marketplaceService.downloadAndInstall('appointment-scheduler', '1.0.0');
+await marketplaceService.downloadAndInstall('appointment-scheduler', '1.0.0')
 ```
 
 ## Plugin API
@@ -118,29 +118,29 @@ Plugins have access to a controlled set of APIs:
 interface PluginAPI {
   // EHR Data Access
   patients: {
-    search(criteria: SearchCriteria): Promise<Patient[]>;
-    get(id: string): Promise<Patient>;
-    update(id: string, data: Partial<Patient>): Promise<Patient>;
-  };
-  
+    search: (criteria: SearchCriteria) => Promise<Patient[]>
+    get: (id: string) => Promise<Patient>
+    update: (id: string, data: Partial<Patient>) => Promise<Patient>
+  }
+
   // Appointment Management
   appointments: {
-    schedule(appointment: Appointment): Promise<Appointment>;
-    cancel(id: string, reason: string): Promise<void>;
-    reschedule(id: string, newTime: Date): Promise<Appointment>;
-  };
-  
+    schedule: (appointment: Appointment) => Promise<Appointment>
+    cancel: (id: string, reason: string) => Promise<void>
+    reschedule: (id: string, newTime: Date) => Promise<Appointment>
+  }
+
   // Utilities
   logger: {
-    info(message: string, meta?: object): void;
-    error(message: string, error?: Error): void;
-  };
-  
+    info: (message: string, meta?: object) => void
+    error: (message: string, error?: Error) => void
+  }
+
   // Events
   events: {
-    on(event: string, handler: Function): void;
-    emit(event: string, data: any): void;
-  };
+    on: (event: string, handler: Function) => void
+    emit: (event: string, data: any) => void
+  }
 }
 ```
 
@@ -156,7 +156,7 @@ const defaultLimits = {
   networkCalls: 100, // per minute
   databaseQueries: 1000, // per minute
   executionTimeout: '5s'
-};
+}
 ```
 
 ## Events
@@ -166,26 +166,26 @@ The Plugin System emits events for various lifecycle stages:
 ```typescript
 // Plugin lifecycle events
 pluginService.on('plugin:installed', ({ pluginId, version }) => {
-  console.log(`Plugin ${pluginId}@${version} installed`);
-});
+  console.log(`Plugin ${pluginId}@${version} installed`)
+})
 
 pluginService.on('plugin:enabled', ({ pluginId }) => {
-  console.log(`Plugin ${pluginId} enabled`);
-});
+  console.log(`Plugin ${pluginId} enabled`)
+})
 
 pluginService.on('plugin:disabled', ({ pluginId }) => {
-  console.log(`Plugin ${pluginId} disabled`);
-});
+  console.log(`Plugin ${pluginId} disabled`)
+})
 
 // Error events
 pluginService.on('plugin:error', ({ pluginId, error }) => {
-  console.error(`Plugin ${pluginId} error:`, error);
-});
+  console.error(`Plugin ${pluginId} error:`, error)
+})
 
 // Resource usage events
 pluginService.on('plugin:resource:exceeded', ({ pluginId, resource, limit }) => {
-  console.warn(`Plugin ${pluginId} exceeded ${resource} limit of ${limit}`);
-});
+  console.warn(`Plugin ${pluginId} exceeded ${resource} limit of ${limit}`)
+})
 ```
 
 ## Best Practices
@@ -214,4 +214,4 @@ pluginService.on('plugin:resource:exceeded', ({ pluginId, resource, limit }) => 
 - Learn about [Plugin Lifecycle Management](lifecycle.md)
 - Understand [Plugin Security](security.md)
 - Review [Plugin Development Best Practices](best-practices.md)
-- Explore the [Plugin Marketplace](../marketplace/overview.md) 
+- Explore the [Plugin Marketplace](../marketplace/overview.md)

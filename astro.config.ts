@@ -1,18 +1,22 @@
-import { defineConfig } from 'astro/config'
-import sitemap from '@astrojs/sitemap'
-import robotsTxt from 'astro-robots-txt'
-import astroExpressiveCode from 'astro-expressive-code'
+import * as path from 'node:path'
 import mdx from '@astrojs/mdx'
+import react from '@astrojs/react'
+import sitemap from '@astrojs/sitemap'
 import UnoCSS from '@unocss/astro'
-import * as path from 'path'
+import astroExpressiveCode from 'astro-expressive-code'
+import robotsTxt from 'astro-robots-txt'
+import { defineConfig } from 'astro/config'
 
-import { remarkPlugins, rehypePlugins } from './plugins'
+import { rehypePlugins, remarkPlugins } from './plugins'
 import { SITE } from './src/config'
 
 export default defineConfig({
   site: SITE.website,
   base: SITE.base,
   integrations: [
+    react({
+      include: ['**/*.tsx', '**/*.jsx'],
+    }),
     sitemap(),
     robotsTxt(),
     UnoCSS({

@@ -1,4 +1,4 @@
-import type { User, Session } from '@supabase/supabase-js'
+import type { Session, User } from '@supabase/supabase-js'
 
 export interface SessionData {
   user: User
@@ -6,10 +6,10 @@ export interface SessionData {
 }
 
 export declare function getSession(
-  request: Request
+  request: Request,
 ): Promise<SessionData | null>
 export declare function createSession(user: User): Promise<SessionData | null>
 export declare function endSession(
   sessionId: string,
-  userId: string
+  userId: string,
 ): Promise<void>

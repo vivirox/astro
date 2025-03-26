@@ -60,7 +60,7 @@ if (collectionType === 'streams') {
     streamItems = streamData.data.streams
 
     sortedStreamItems = streamItems.sort(
-      (a, b) => b.pubDate.valueOf() - a.pubDate.valueOf()
+      (a, b) => b.pubDate.valueOf() - a.pubDate.valueOf(),
     )
 
     if (tocEnabled) {
@@ -129,7 +129,7 @@ const warningHTML = `The '${collectionType}' collection type does no
             <>
               {!isSameYear(
                 data.pubDate,
-                sortedBlogItems[idx - 1]?.data.pubDate
+                sortedBlogItems[idx - 1]?.data.pubDate,
               ) && (
                 <Categorizer
                   {idx}
@@ -168,7 +168,7 @@ const warningHTML = `The '${collectionType}' collection type does no
             <>
               {!isSameYear(
                 item.pubDate,
-                sortedStreamItems[idx - 1]?.pubDate
+                sortedStreamItems[idx - 1]?.pubDate,
               ) && (
                 <Categorizer
                   {idx}
@@ -204,18 +204,18 @@ const warningHTML = `The '${collectionType}' collection type does no
           const { data } = item
           if (!data.link)
             throw new Error(
-              `Feed item with id '${item.id}' is missing 'link' field.`
+              `Feed item with id '${item.id}' is missing 'link' field.`,
             )
           if (!data.title)
             throw new Error(
-              `Feed item with id '${item.id}' is missing 'title' field.`
+              `Feed item with id '${item.id}' is missing 'title' field.`,
             )
 
           return (
             <>
               {!isSameYear(
                 item.data.pubdate as Date,
-                sortedFeedItems[idx - 1]?.data.pubdate as Date
+                sortedFeedItems[idx - 1]?.data.pubdate as Date,
               ) && (
                 <Categorizer
                   {idx}

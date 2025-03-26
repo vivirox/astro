@@ -1,14 +1,14 @@
-import { type APIRoute } from 'astro'
-import { getSession } from '../../../lib/auth/session'
-import { createTogetherAIService } from '../../../lib/ai/services/together'
-import { ResponseGenerationService } from '../../../lib/ai/services/response-generation'
-import { createAuditLog } from '../../../lib/audit/log'
-import { aiRepository } from '../../../lib/db/ai/index'
+import type { APIRoute } from 'astro'
 import type {
-  AIService,
   AIMessage,
+  AIService,
   AIServiceOptions,
 } from '../../../lib/ai/models/ai-types'
+import { ResponseGenerationService } from '../../../lib/ai/services/response-generation'
+import { createTogetherAIService } from '../../../lib/ai/services/together'
+import { createAuditLog } from '../../../lib/audit/log'
+import { getSession } from '../../../lib/auth/session'
+import { aiRepository } from '../../../lib/db/ai/index'
 
 /**
  * API route for therapeutic response generation
@@ -46,7 +46,7 @@ export const POST: APIRoute = async ({ request }) => {
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -64,14 +64,14 @@ export const POST: APIRoute = async ({ request }) => {
     const serviceAdapter: AIService = {
       createChatCompletion: async (
         messages: AIMessage[],
-        options?: AIServiceOptions
+        options?: AIServiceOptions,
       ) => {
         const response = await togetherService.generateCompletion(
           messages,
-          options
+          options,
         )
         return {
-          id: 'together' + Date.now(),
+          id: `together${Date.now()}`,
           created: Date.now(),
           model: options?.model || modelId,
           choices: [
@@ -79,9 +79,9 @@ export const POST: APIRoute = async ({ request }) => {
               message: {
                 role: 'assistant',
                 content:
-                  typeof response === 'object' &&
-                  response !== null &&
-                  'content' in response
+                  typeof response === 'object'
+                  && response !== null
+                  && 'content' in response
                     ? (response as { content: string }).content
                     : '',
                 name: 'assistant',
@@ -90,21 +90,21 @@ export const POST: APIRoute = async ({ request }) => {
             },
           ],
           usage:
-            typeof response === 'object' &&
-            response !== null &&
-            'usage' in response
+            typeof response === 'object'
+            && response !== null
+            && 'usage' in response
               ? {
                   promptTokens: Number(
                     (response.usage as { promptTokens: number })
-                      ?.promptTokens || 0
+                      ?.promptTokens || 0,
                   ),
                   completionTokens: Number(
                     (response.usage as { completionTokens: number })
-                      ?.completionTokens || 0
+                      ?.completionTokens || 0,
                   ),
                   totalTokens: Number(
-                    (response.usage as { totalTokens: number })?.totalTokens ||
-                      0
+                    (response.usage as { totalTokens: number })?.totalTokens
+                    || 0,
                   ),
                 }
               : {
@@ -114,14 +114,17 @@ export const POST: APIRoute = async ({ request }) => {
                 },
           provider: 'together',
           content:
-            typeof response === 'object' &&
-            response !== null &&
-            'content' in response
+            typeof response === 'object'
+            && response !== null
+            && 'content' in response
               ? (response as { content: string }).content
               : '',
         }
       },
-      createStreamingChatCompletion: async () => {
+      createStreamingChatCompletion: async (
+        messages: AIMessage[],
+        options?: AIServiceOptions,
+      ) => {
         throw new Error('Streaming not supported yet')
       },
       getModelInfo: (model: string) => ({
@@ -134,14 +137,14 @@ export const POST: APIRoute = async ({ request }) => {
       }),
       createChatCompletionWithTracking: async (
         messages: AIMessage[],
-        options?: AIServiceOptions
+        options?: AIServiceOptions,
       ) => {
         const response = await togetherService.generateCompletion(
           messages,
-          options
+          options,
         )
         return {
-          id: 'together' + Date.now(),
+          id: `together${Date.now()}`,
           created: Date.now(),
           model: options?.model || modelId,
           choices: [
@@ -149,9 +152,9 @@ export const POST: APIRoute = async ({ request }) => {
               message: {
                 role: 'assistant',
                 content:
-                  typeof response === 'object' &&
-                  response !== null &&
-                  'content' in response
+                  typeof response === 'object'
+                  && response !== null
+                  && 'content' in response
                     ? (response as { content: string }).content
                     : '',
                 name: 'assistant',
@@ -160,21 +163,21 @@ export const POST: APIRoute = async ({ request }) => {
             },
           ],
           usage:
-            typeof response === 'object' &&
-            response !== null &&
-            'usage' in response
+            typeof response === 'object'
+            && response !== null
+            && 'usage' in response
               ? {
                   promptTokens: Number(
                     (response.usage as { promptTokens: number })
-                      ?.promptTokens || 0
+                      ?.promptTokens || 0,
                   ),
                   completionTokens: Number(
                     (response.usage as { completionTokens: number })
-                      ?.completionTokens || 0
+                      ?.completionTokens || 0,
                   ),
                   totalTokens: Number(
-                    (response.usage as { totalTokens: number })?.totalTokens ||
-                      0
+                    (response.usage as { totalTokens: number })?.totalTokens
+                    || 0,
                   ),
                 }
               : {
@@ -184,9 +187,9 @@ export const POST: APIRoute = async ({ request }) => {
                 },
           provider: 'together',
           content:
-            typeof response === 'object' &&
-            response !== null &&
-            'content' in response
+            typeof response === 'object'
+            && response !== null
+            && 'content' in response
               ? (response as { content: string }).content
               : '',
         }
@@ -194,7 +197,7 @@ export const POST: APIRoute = async ({ request }) => {
       generateCompletion: async (messages, options, provider) => {
         const response = await togetherService.generateCompletion(
           messages,
-          options
+          options,
         )
         return {
           ...response,
@@ -236,7 +239,7 @@ export const POST: APIRoute = async ({ request }) => {
       },
     })
 
-    // Start timer for latency measurement
+    // Start timer for latency measuremen
     const startTime = Date.now()
 
     // Process the request
@@ -244,12 +247,13 @@ export const POST: APIRoute = async ({ request }) => {
     if (messages) {
       result = await responseService.generateResponseWithInstructions(
         messages,
-        instructions
+        instructions,
       )
-    } else {
+    }
+    else {
       result = await responseService.generateResponseWithInstructions(
         [currentMessage],
-        instructions
+        instructions,
       )
     }
 
@@ -267,7 +271,7 @@ export const POST: APIRoute = async ({ request }) => {
       response: result?.content,
       context: '',
       instructions,
-      temperature: temperature,
+      temperature,
       maxTokens: maxResponseTokens,
       requestTokens: result?.usage?.promptTokens || 0,
       responseTokens: result?.usage?.completionTokens || 0,
@@ -294,7 +298,8 @@ export const POST: APIRoute = async ({ request }) => {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     console.error('Error in response generation API:', error)
 
     // Create audit log for the error
@@ -319,7 +324,7 @@ export const POST: APIRoute = async ({ request }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 }

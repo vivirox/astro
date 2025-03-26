@@ -192,4 +192,4 @@ This document outlines the verification process for ensuring HIPAA compliance of
 - [HHS HIPAA for Professionals](https://www.hhs.gov/hipaa/for-professionals/index.html)
 - [HIPAA Security Rule Guidance](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
 - [NIST Guide to HIPAA Security Rule](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-66r1.pdf)
-- [OCR Audit Protocol](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/audit/protocol/index.html) 
+- [OCR Audit Protocol](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/audit/protocol/index.html)

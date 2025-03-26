@@ -12,43 +12,34 @@ export function LoginForm({
   showSignup = true,
   showResetPassword = true,
 }: LoginFormProps) {
-  const { signIn, signInWithOAuth, resetPassword } = useAuth()
+  const { signIn, signInWithOAuth, _resetPassword } = useAuth()
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>('')
-  const [isSuccessful, setIsSuccessful] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [mode, setMode] = useState<'login' | 'reset'>('login')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    setErrorMessage('')
+    setErrorMessage(null)
 
     try {
-      if (mode === 'login') {
-        const response = await signIn(email, password)
-        if (response.error) {
-          setErrorMessage(response.error.message || 'Login failed')
-          return
-        }
+      const response = await signIn(email, password)
 
-        // Redirect if needed
-        if (redirectTo) {
-          window.location.href = redirectTo
-        }
+      if (response.error) {
+        setErrorMessage(response.error.message || 'Login failed')
+        return
+      }
 
-        setIsSuccessful(true)
-      } else if (mode === 'reset') {
-        try {
-          await resetPassword(email, redirectTo)
-          setIsSuccessful(true)
-        } catch (resetError) {
-          setErrorMessage((resetError as Error).message)
-        }
+      const data = await response.data
+      if (data?.url) {
+        window.location.href = data.url
       }
     } catch (error) {
-      setErrorMessage((error as Error).message)
+      setErrorMessage('An unexpected error occurred. Please try again.')
+      // Log error to error reporting service
+      console.error('Login error:', error)
     } finally {
       setIsLoading(false)
     }
@@ -74,12 +65,12 @@ export function LoginForm({
     }
   }
 
-  if (isSuccessful && mode === 'reset') {
+  if (mode === 'reset') {
     return (
       <div className="auth-success">
         <h2>Password Reset Email Sent</h2>
         <p>
-          Check your email for a link to reset your password. If it doesn't
+          Check your email for a link to reset your password. If it doesn'
           appear within a few minutes, check your spam folder.
         </p>
         <button

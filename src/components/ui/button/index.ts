@@ -1,7 +1,7 @@
 export {
   Button,
   type ButtonProps,
-  type ButtonVariant,
   type ButtonSize,
+  type ButtonVariant,
 } from '../button'
 export { default } from '../button'

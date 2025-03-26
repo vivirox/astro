@@ -40,7 +40,7 @@ const installation = await pluginService.installPlugin({
     author: 'Gradiant',
     homepage: 'https://example.com/plugins/scheduler'
   }
-});
+})
 ```
 
 ### 2. Initialization
@@ -76,7 +76,7 @@ await pluginService.enablePlugin('appointment-scheduler', {
       end: '17:00'
     }
   }
-});
+})
 ```
 
 ### 3. Execution
@@ -109,8 +109,8 @@ pluginService.on('plugin:resource:usage', ({ pluginId, metrics }) => {
     cpu: metrics.cpu,
     storage: metrics.storage,
     network: metrics.network
-  });
-});
+  })
+})
 ```
 
 ### 4. Deactivation
@@ -140,7 +140,7 @@ When a plugin is disabled:
 await pluginService.disablePlugin('appointment-scheduler', {
   saveState: true,
   timeout: 5000 // ms
-});
+})
 ```
 
 ### 5. Uninstallation
@@ -170,7 +170,7 @@ During plugin removal:
 await pluginService.uninstallPlugin('appointment-scheduler', {
   preserveData: false,
   force: false
-});
+})
 ```
 
 ## Lifecycle Events
@@ -180,48 +180,48 @@ The Plugin System emits events during lifecycle changes:
 ```typescript
 // Installation events
 pluginService.on('plugin:installing', ({ pluginId, version }) => {
-  console.log(`Installing plugin ${pluginId}@${version}`);
-});
+  console.log(`Installing plugin ${pluginId}@${version}`)
+})
 
 pluginService.on('plugin:installed', ({ pluginId, version }) => {
-  console.log(`Plugin ${pluginId}@${version} installed successfully`);
-});
+  console.log(`Plugin ${pluginId}@${version} installed successfully`)
+})
 
 // Initialization events
 pluginService.on('plugin:enabling', ({ pluginId }) => {
-  console.log(`Enabling plugin ${pluginId}`);
-});
+  console.log(`Enabling plugin ${pluginId}`)
+})
 
 pluginService.on('plugin:enabled', ({ pluginId }) => {
-  console.log(`Plugin ${pluginId} enabled successfully`);
-});
+  console.log(`Plugin ${pluginId} enabled successfully`)
+})
 
 // Execution events
 pluginService.on('plugin:error', ({ pluginId, error }) => {
-  console.error(`Plugin ${pluginId} error:`, error);
-});
+  console.error(`Plugin ${pluginId} error:`, error)
+})
 
 pluginService.on('plugin:warning', ({ pluginId, message }) => {
-  console.warn(`Plugin ${pluginId} warning:`, message);
-});
+  console.warn(`Plugin ${pluginId} warning:`, message)
+})
 
 // Deactivation events
 pluginService.on('plugin:disabling', ({ pluginId }) => {
-  console.log(`Disabling plugin ${pluginId}`);
-});
+  console.log(`Disabling plugin ${pluginId}`)
+})
 
 pluginService.on('plugin:disabled', ({ pluginId }) => {
-  console.log(`Plugin ${pluginId} disabled successfully`);
-});
+  console.log(`Plugin ${pluginId} disabled successfully`)
+})
 
 // Uninstallation events
 pluginService.on('plugin:uninstalling', ({ pluginId }) => {
-  console.log(`Uninstalling plugin ${pluginId}`);
-});
+  console.log(`Uninstalling plugin ${pluginId}`)
+})
 
 pluginService.on('plugin:uninstalled', ({ pluginId }) => {
-  console.log(`Plugin ${pluginId} uninstalled successfully`);
-});
+  console.log(`Plugin ${pluginId} uninstalled successfully`)
+})
 ```
 
 ## State Management
@@ -236,10 +236,10 @@ await plugin.setState({
     notifications: true,
     theme: 'dark'
   }
-});
+})
 
 // Load state
-const state = await plugin.getState();
+const state = await plugin.getState()
 ```
 
 ## Error Handling
@@ -248,20 +248,21 @@ The Plugin System handles various lifecycle errors:
 
 ```typescript
 try {
-  await pluginService.enablePlugin('appointment-scheduler');
-} catch (error) {
+  await pluginService.enablePlugin('appointment-scheduler')
+}
+catch (error) {
   switch (error.code) {
     case 'INITIALIZATION_FAILED':
-      console.error('Plugin failed to initialize:', error.message);
-      break;
+      console.error('Plugin failed to initialize:', error.message)
+      break
     case 'DEPENDENCY_MISSING':
-      console.error('Missing dependency:', error.details.dependency);
-      break;
+      console.error('Missing dependency:', error.details.dependency)
+      break
     case 'RESOURCE_EXHAUSTED':
-      console.error('Insufficient resources:', error.details.resource);
-      break;
+      console.error('Insufficient resources:', error.details.resource)
+      break
     default:
-      console.error('Unknown error:', error);
+      console.error('Unknown error:', error)
   }
 }
 ```
@@ -297,4 +298,4 @@ try {
 - [Plugin API Reference](api.md)
 - [Security Guidelines](security.md)
 - [Best Practices](best-practices.md)
-- [Plugin Examples](../examples/plugins.md) 
+- [Plugin Examples](../examples/plugins.md)

@@ -1,67 +1,68 @@
+import type { AIServiceConfig } from './services/ai-service'
+// Export error handling utilities
+import * as errorHandling from './error-handling'
 // Import AIService and AIServiceConfig explicitly
-import { AIService, type AIServiceConfig } from './services/ai-service'
-import { SentimentAnalysisService } from './services/sentiment-analysis'
+import { AIService } from './services/ai-service'
 import { CrisisDetectionService } from './services/crisis-detection'
-import { ResponseGenerationService } from './services/response-generation'
 import { InterventionAnalysisService } from './services/intervention-analysis'
+import { ResponseGenerationService } from './services/response-generation'
 
-// Export types
-export * from './models/ai-types'
-
-// Export model registry
-export * from './models/registry'
-
-// Export services
-export { AIService, type AIServiceConfig } from './services/ai-service'
-export { type AIServiceOptions } from './models/ai-types'
-export {
-  SentimentAnalysisService,
-  type SentimentAnalysisConfig,
-} from './services/sentiment-analysis'
-export {
-  CrisisDetectionService,
-  type CrisisDetectionConfig,
-} from './services/crisis-detection'
-export {
-  ResponseGenerationService,
-  type ResponseGenerationConfig,
-} from './services/response-generation'
-export {
-  InterventionAnalysisService,
-  type InterventionAnalysisConfig,
-  type InterventionAnalysisResult,
-} from './services/intervention-analysis'
-
-// Export performance optimization services
-export { AICacheService, type CacheConfig } from './services/cache-service'
-export {
-  PromptOptimizerService,
-  type PromptOptimizerConfig,
-} from './services/prompt-optimizer'
-export {
-  ConnectionPoolManager,
-  type ConnectionPoolConfig,
-} from './services/connection-pool'
-export {
-  FallbackService,
-  type FallbackServiceConfig,
-} from './services/fallback-service'
+import { SentimentAnalysisService } from './services/sentiment-analysis'
 
 // Export AI service factory
 export * from './factory'
 
-// Export AI services
-export * from './services/sentiment-analysis'
-export * from './services/crisis-detection'
-export * from './services/response-generation'
-export * from './services/intervention-analysis'
+// Export types
+export * from './models/ai-types'
 
-// Export error handling utilities
-import * as errorHandling from './error-handling'
-export { errorHandling }
-
+export { type AIServiceOptions } from './models/ai-types'
+// Export model registry
+export * from './models/registry'
 // Export performance optimization utilities
 export * from './performance-optimizations'
+// Export services
+export { AIService, type AIServiceConfig } from './services/ai-service'
+// Export performance optimization services
+export { AICacheService, type CacheConfig } from './services/cache-service'
+export {
+  type ConnectionPoolConfig,
+  ConnectionPoolManager,
+} from './services/connection-pool'
+
+export {
+  type CrisisDetectionConfig,
+  CrisisDetectionService,
+} from './services/crisis-detection'
+export * from './services/crisis-detection'
+export {
+  FallbackService,
+  type FallbackServiceConfig,
+} from './services/fallback-service'
+export {
+  type InterventionAnalysisConfig,
+  type InterventionAnalysisResult,
+  InterventionAnalysisService,
+} from './services/intervention-analysis'
+
+export * from './services/intervention-analysis'
+
+export {
+  type PromptOptimizerConfig,
+  PromptOptimizerService,
+} from './services/prompt-optimizer'
+export {
+  type ResponseGenerationConfig,
+  ResponseGenerationService,
+} from './services/response-generation'
+export * from './services/response-generation'
+export {
+  type SentimentAnalysisConfig,
+  SentimentAnalysisService,
+} from './services/sentiment-analysis'
+export { errorHandling }
+
+// Export AI services
+export * from './services/sentiment-analysis'
 
 // Define internal types
 interface TokenUsage {
@@ -83,7 +84,7 @@ export function createAIService(config: AIServiceConfig) {
 export function createSentimentAnalysisService(
   aiService: AIService,
   model?: string,
-  defaultPrompt?: string
+  defaultPrompt?: string,
 ) {
   return new SentimentAnalysisService({
     aiService,
@@ -99,7 +100,7 @@ export function createCrisisDetectionService(
   aiService: AIService,
   model?: string,
   defaultPrompt?: string,
-  sensitivityLevel?: 'low' | 'medium' | 'high'
+  sensitivityLevel?: 'low' | 'medium' | 'high',
 ) {
   return new CrisisDetectionService({
     aiService,
@@ -116,7 +117,7 @@ export function createResponseGenerationService(
   aiService: AIService,
   model?: string,
   maxResponseTokens?: number,
-  temperature?: number
+  temperature?: number,
 ) {
   return new ResponseGenerationService({
     aiService,
@@ -131,7 +132,7 @@ export function createResponseGenerationService(
  */
 export function createInterventionAnalysisService(
   aiService: AIService,
-  model?: string
+  model?: string,
 ) {
   return new InterventionAnalysisService({
     aiService,

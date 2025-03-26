@@ -1,7 +1,7 @@
-import { useRef, useEffect } from 'react'
-import { type AIMessage } from '../../../lib/ai/index'
-import { ChatMessage } from './ChatMessage'
+import type { AIMessage } from '../../../lib/ai/index'
+import { useEffect, useRef } from 'react'
 import { ChatInput } from './ChatInput'
+import { ChatMessage } from './ChatMessage'
 
 export interface ChatContainerProps {
   messages: AIMessage[]

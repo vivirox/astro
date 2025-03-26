@@ -2,7 +2,7 @@ import CryptoJS from 'crypto-js'
 
 /**
  * Crypto module for encryption, key management, and key rotation
- * Implements HIPAA-compliant encryption and key management
+ * Implements HIPAA-compliant encryption and key managemen
  */
 
 // Define key data interface
@@ -21,7 +21,7 @@ export class Encryption {
 
   static decrypt(data: string, key: string): string {
     const decrypted = CryptoJS.AES.decrypt(data, key).toString(
-      CryptoJS.enc.Utf8
+      CryptoJS.enc.Utf8,
     )
     return decrypted
   }
@@ -32,7 +32,7 @@ export class KeyRotationManager {
 
   needsRotation(createdAt: number): boolean {
     const now = Date.now()
-    const ageMs = now - createdAt
+    const ageMs = now - createdA
     const ageDays = ageMs / (1000 * 60 * 60 * 24)
     return ageDays >= this.rotationDays
   }
@@ -40,7 +40,7 @@ export class KeyRotationManager {
 
 export class KeyStorage {
   constructor(
-    private options: { namespace: string; useSecureStorage: boolean }
+    private options: { namespace: string; useSecureStorage: boolean },
   ) {}
 
   async listKeys(purpose?: string): Promise<string[]> {
@@ -65,7 +65,7 @@ export class KeyStorage {
   }
 
   async generateKey(
-    purpose?: string
+    purpose?: string,
   ): Promise<{ keyId: string; keyData: KeyData }> {
     // Generate a key with an optional purpose
     const keyId = purpose ? `${purpose}-${Date.now()}` : `key-${Date.now()}`
@@ -82,7 +82,7 @@ export class KeyStorage {
   }
 
   async rotateKey(
-    keyId: string
+    keyId: string,
   ): Promise<{ keyId: string; keyData: KeyData } | null> {
     return {
       keyId: `rotated-${keyId}`,
@@ -106,7 +106,7 @@ export class ScheduledKeyRotation {
       checkIntervalMs: number
       onRotation: (oldKeyId: string, newKeyId: string) => void
       onError: (error: Error) => void
-    }
+    },
   ) {}
 
   start(): void {
@@ -146,7 +146,7 @@ export function createCryptoSystem(options: CryptoSystemOptions = {}) {
   })
 
   const keyRotationManager = new KeyRotationManager(
-    options.keyRotationDays || 90
+    options.keyRotationDays || 90,
   )
 
   let scheduledRotation: ScheduledKeyRotation | null = null
@@ -176,7 +176,7 @@ export function createCryptoSystem(options: CryptoSystemOptions = {}) {
     scheduledRotation,
 
     /**
-     * Encrypts data with automatic key management
+     * Encrypts data with automatic key managemen
      * @param data - Data to encrypt
      * @returns Encrypted data
      */
@@ -211,7 +211,7 @@ export function createCryptoSystem(options: CryptoSystemOptions = {}) {
     },
 
     /**
-     * Decrypts data with automatic key management
+     * Decrypts data with automatic key managemen
      * @param encryptedData - Data to decrypt
      * @returns Decrypted data
      */

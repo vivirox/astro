@@ -1,4 +1,4 @@
-export type Database = {
+export interface Database {
   public: {
     Tables: {
       profiles: {
@@ -149,9 +149,7 @@ export type Database = {
         ]
       }
     }
-    Views: {
-      [_ in never]: never
-    }
+    Views: Record<never, never>
     Functions: {
       get_ai_metrics: {
         Args: {
@@ -161,7 +159,7 @@ export type Database = {
           p_model?: string
           p_limit: number
         }
-        Returns: Array<{
+        Returns: {
           date_trunc: string
           model: string
           request_count: number
@@ -174,35 +172,33 @@ export type Database = {
           avg_latency: number
           max_latency: number
           min_latency: number
-        }>
+        }[]
       }
       get_ai_model_breakdown: {
         Args: {
           p_start_date: string
           p_end_date: string
         }
-        Returns: Array<{
+        Returns: {
           model: string
           request_count: number
           success_count: number
           cached_count: number
           optimized_count: number
           total_tokens: number
-        }>
+        }[]
       }
       get_ai_error_breakdown: {
         Args: {
           p_start_date: string
           p_end_date: string
         }
-        Returns: Array<{
+        Returns: {
           error_code: string
           error_count: number
-        }>
+        }[]
       }
     }
-    Enums: {
-      [_ in never]: never
-    }
+    Enums: Record<never, never>
   }
 }

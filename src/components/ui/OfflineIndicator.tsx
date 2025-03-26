@@ -1,6 +1,6 @@
 import React from 'react'
-import { useOffline } from '../../hooks/useOffline'
 import { toast } from 'react-hot-toast'
+import { useOffline } from '../../hooks/useOffline'
 
 interface OfflineIndicatorProps {
   className?: string
@@ -52,7 +52,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
       bg-white dark:bg-gray-800
       rounded-lg shadow-lg
       p-4
-      transform transition-all duration-300 ease-in-out
+      transform transition-all duration-300 ease-in-ou
       ${className}
       ${isOffline ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}
     `}

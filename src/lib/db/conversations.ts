@@ -1,6 +1,6 @@
-import { supabase, supabaseAdmin } from '../supabase'
 import type { Database } from '../../types/supabase'
 import { createAuditLog } from '../audit/log'
+import { supabase, supabaseAdmin } from '../supabase'
 
 export type Conversation = Database['public']['Tables']['conversations']['Row']
 export type NewConversation =
@@ -12,7 +12,7 @@ export type UpdateConversation =
  * Get all conversations for a user
  */
 export async function getConversations(
-  userId: string
+  userId: string,
 ): Promise<Conversation[]> {
   const { data, error } = await supabase
     .from('conversations')
@@ -33,7 +33,7 @@ export async function getConversations(
  */
 export async function getConversation(
   id: string,
-  userId: string
+  userId: string,
 ): Promise<Conversation | null> {
   const { data, error } = await supabase
     .from('conversations')
@@ -56,7 +56,7 @@ export async function getConversation(
  */
 export async function createConversation(
   conversation: NewConversation,
-  request?: Request
+  request?: Request,
 ): Promise<Conversation> {
   const { data, error } = await supabase
     .from('conversations')
@@ -92,7 +92,7 @@ export async function updateConversation(
   id: string,
   userId: string,
   updates: UpdateConversation,
-  request?: Request
+  request?: Request,
 ): Promise<Conversation> {
   const { data, error } = await supabase
     .from('conversations')
@@ -129,7 +129,7 @@ export async function updateConversation(
 export async function deleteConversation(
   id: string,
   userId: string,
-  request?: Request
+  request?: Request,
 ): Promise<void> {
   const { error } = await supabase
     .from('conversations')

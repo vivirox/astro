@@ -17,7 +17,7 @@ if (import.meta.env.SSR) {
   } catch (error) {
     logger.error(
       'Failed to start application',
-      error instanceof Error ? error : undefined
+      error instanceof Error ? error : undefined,
     )
     // Cannot exit the process in Astro middleware, log the error instead
     console.error('Application failed to start properly')
@@ -37,7 +37,7 @@ async function handleShutdown() {
   } catch (error) {
     logger.error(
       'Error during shutdown',
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(String(error)),
     )
     process.exit(1)
   }

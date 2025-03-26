@@ -1,8 +1,10 @@
-import type { AIMessage, AIService, AIServiceOptions } from './models/ai-types'
 import type {
   AICompletionResponse,
+  AIMessage,
   AIModel,
   AIProvider,
+  AIService,
+  AIServiceOptions,
 } from './models/ai-types'
 import { estimateMessagesTokenCount, truncateMessages } from './performance'
 
@@ -174,13 +176,8 @@ export interface AdvancedPerformanceOptions {
  */
 function compressMessages(
   messages: AIMessage[],
-  maxTokens: number
+  maxTokens: number,
 ): AIMessage[] {
-  // This is a placeholder for a more sophisticated implementation
-  // In a real implementation, we would use an embedding model to compress messages
-  // while preserving semantic meaning
-
-  // For now, we'll just use the truncateMessages function
   return truncateMessages(messages, maxTokens)
 }
 
@@ -189,9 +186,8 @@ function compressMessages(
  */
 export function createAdvancedOptimizedAIService(
   aiService: AIService,
-  options: AdvancedPerformanceOptions = {}
+  options: AdvancedPerformanceOptions = {},
 ): AIService {
-  // Initialize token optimization options
   const {
     enabled: tokenOptimizationEnabled = true,
     maxContextTokens = 4000,
@@ -206,7 +202,9 @@ export function createAdvancedOptimizedAIService(
     messages: AIMessage[]
     optimized: boolean
   } {
-    if (!tokenOptimizationEnabled) return { messages, optimized: false }
+    if (!tokenOptimizationEnabled) {
+      return { messages, optimized: false }
+    }
 
     // Estimate token count
     const estimatedTokens = estimateMessagesTokenCount(messages)
@@ -228,11 +226,11 @@ export function createAdvancedOptimizedAIService(
    * Select the optimal model based on the request
    */
   function selectOptimalModel(requestedModel: string): string {
-    if (!options.enableAdaptiveModelSelection) return requestedModel
+    if (!options.enableAdaptiveModelSelection) {
+      return requestedModel
+    }
 
     // This is a placeholder for a more sophisticated implementation
-    // In a real implementation, we would analyze the messages and select the most
-    // appropriate model based on complexity, length, etc.
     return requestedModel
   }
 
@@ -241,25 +239,20 @@ export function createAdvancedOptimizedAIService(
    */
   function prepareRequest(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): {
     optimizedMessages: AIMessage[]
     model: string
   } {
     const { messages: optimizedMessages } = optimizeMessages(messages)
     const model = selectOptimalModel(options?.model || 'default-model')
-
-    return {
-      optimizedMessages,
-      model,
-    }
+    return { optimizedMessages, model }
   }
 
-  // Return the service implementation
   return {
     createChatCompletion: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ): Promise<AICompletionResponse> => {
       const { optimizedMessages, model } = prepareRequest(messages, options)
       return aiService.createChatCompletion(optimizedMessages, {
@@ -271,7 +264,7 @@ export function createAdvancedOptimizedAIService(
 
     createStreamingChatCompletion: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ) => {
       const { optimizedMessages, model } = prepareRequest(messages, options)
       return aiService.createStreamingChatCompletion(optimizedMessages, {
@@ -287,7 +280,7 @@ export function createAdvancedOptimizedAIService(
 
     createChatCompletionWithTracking: async (
       messages: AIMessage[],
-      options?: AIServiceOptions
+      options?: AIServiceOptions,
     ): Promise<AICompletionResponse> => {
       const { optimizedMessages, model } = prepareRequest(messages, options)
       return aiService.createChatCompletionWithTracking(optimizedMessages, {
@@ -300,7 +293,7 @@ export function createAdvancedOptimizedAIService(
     generateCompletion: async (
       messages: AIMessage[],
       options: AIServiceOptions,
-      provider: AIProvider
+      provider: AIProvider,
     ) => {
       const { optimizedMessages, model } = prepareRequest(messages, options)
       return aiService.generateCompletion(
@@ -310,7 +303,7 @@ export function createAdvancedOptimizedAIService(
           model,
           temperature: options?.temperature ?? 1.0,
         },
-        provider
+        provider,
       )
     },
 

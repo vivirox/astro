@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
+import { rateLimitConfig } from '@/config/rate-limit.config'
 import { fheService } from '@/lib/fhe'
 import { getLogger } from '@/lib/logging'
-import { rateLimitConfig } from '@/config/rate-limit.config'
 import { RateLimiter } from '@/lib/middleware/rate-limit'
 import { EncryptionMode } from '~/lib/fhe/types'
 
@@ -9,14 +9,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   // Create a rate limiter instance with specific config for sensitive operations
   const rateLimit = new RateLimiter(
     rateLimitConfig.sensitive.maxRequests,
-    rateLimitConfig.sensitive.windowMs
+    rateLimitConfig.sensitive.windowMs,
   )
 
   try {
     // Apply rate limiting (stricter for key rotation)
     const rateLimitResult = await rateLimit.check(
       request.headers.get('x-forwarded-for') || 'anonymous',
-      'key-rotation'
+      'key-rotation',
     )
 
     if (!rateLimitResult.allowed) {
@@ -33,7 +33,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
             'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
             'X-RateLimit-Reset': rateLimitResult.reset.toString(),
           },
-        }
+        },
       )
     }
 
@@ -47,7 +47,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           success: false,
           error: 'Authentication required',
         }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
+        { status: 401, headers: { 'Content-Type': 'application/json' } },
       )
     }
 
@@ -56,7 +56,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       await fheService.initialize({
         mode: EncryptionMode.FHE,
         securityLevel: 'high',
-        enableDebug: process.env.NODE_ENV !== 'production',
+        enableDebug: import.meta.env.PROD !== true,
       })
     }
 
@@ -70,9 +70,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         keyId: result,
         timestamp: Date.now(),
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
     )
-  } catch (error) {
+  }
+  catch (error) {
     getLogger().error(`Key rotation API error: ${(error as Error).message}`)
 
     return new Response(
@@ -80,11 +81,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         success: false,
         error: 'Failed to rotate encryption keys',
         message:
-          process.env.NODE_ENV !== 'production'
-            ? (error as Error).message
-            : undefined,
+          import.meta.env.PROD !== true ? (error as Error).message : undefined,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     )
   }
 }

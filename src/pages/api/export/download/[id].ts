@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
-import { getLogger } from '../../../../lib/logging'
-import { getSession } from '../../../../lib/auth/session'
 import type { ExportResult } from '../../../../lib/export'
+import { getSession } from '../../../../lib/auth/session'
+import { getLogger } from '../../../../lib/logging'
 
 // Initialize services
 const logger = getLogger()
@@ -50,17 +50,17 @@ export const GET: APIRoute = async ({ params, request }) => {
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
     // Prepare response
-    const responseData =
-      typeof exportData.data === 'string'
+    const responseData
+      = typeof exportData.data === 'string'
         ? exportData.data
         : new Uint8Array(exportData.data)
 
-    // Log download for audit
+    // Log download for audi
     await recordDownloadAction(session.user.id, id)
 
     // Return the file
@@ -72,7 +72,8 @@ export const GET: APIRoute = async ({ params, request }) => {
         'X-Verification-Token': exportData.verificationToken || '',
       },
     })
-  } catch (error) {
+  }
+  catch (error) {
     logger.error('Export download API error:', error)
     return new Response(JSON.stringify({ error: 'Download failed' }), {
       status: 500,
@@ -94,7 +95,7 @@ async function getExportById(id: string): Promise<ExportResult | undefined> {
  */
 async function checkExportAccess(
   _userId: string,
-  _exportId: string
+  _exportId: string,
 ): Promise<boolean> {
   // In a real implementation, this would check access permissions
   // For this example, we'll assume the check passes
@@ -106,7 +107,7 @@ async function checkExportAccess(
  */
 async function recordDownloadAction(
   userId: string,
-  exportId: string
+  exportId: string,
 ): Promise<void> {
   // In a real implementation, this would record the download in the audit log
   logger.info(`User ${userId} downloaded export ${exportId}`)
@@ -124,6 +125,6 @@ export async function storeExportData(exportData: ExportResult): Promise<void> {
     () => {
       exportStore.delete(exportData.id)
     },
-    60 * 60 * 1000
+    60 * 60 * 1000,
   )
 }

@@ -32,7 +32,7 @@ export const supabaseAdmin = supabaseServiceRole
   : null
 
 // Create a server client (from headers)
-export const createServerClient = (headers: Headers) => {
+export function createServerClient(headers: Headers) {
   const cookies = headers.get('cookie') || ''
 
   return createClient(supabaseUrl, supabaseAnonKey, {

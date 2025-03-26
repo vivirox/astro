@@ -1,10 +1,10 @@
-import {
-  createClient,
+import type {
   SupabaseClient,
-  type SupabaseClientOptions,
+  SupabaseClientOptions,
 } from '@supabase/supabase-js'
-import config from './env.config'
 import type { Database } from '../types/supabase'
+import { createClient } from '@supabase/supabase-js'
+import config from './env.config'
 
 /**
  * Supabase configuration options
@@ -38,14 +38,14 @@ export const supabaseClient = createClient<Database>(
     db: {
       schema: 'public',
     },
-  }
+  },
 )
 
 /**
  * Create a Supabase admin client with the service role key
  * This should ONLY be used in server-side code, never in the browser
  */
-export const createAdminClient = (): SupabaseClient<Database, 'public'> => {
+export function createAdminClient(): SupabaseClient<Database, 'public'> {
   if (!supabaseConfig.serviceRoleKey) {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY is not defined')
   }
@@ -62,7 +62,7 @@ export const createAdminClient = (): SupabaseClient<Database, 'public'> => {
       db: {
         schema: 'public' as const,
       },
-    } as SupabaseClientOptions<'public'>
+    } as SupabaseClientOptions<'public'>,
   )
 }
 
@@ -70,7 +70,7 @@ export const createAdminClient = (): SupabaseClient<Database, 'public'> => {
  * Create a new client with custom options
  * Useful for server-side rendering or custom configurations
  */
-export const createCustomClient = (options = {}): SupabaseClient<Database> => {
+export function createCustomClient(options = {}): SupabaseClient<Database> {
   return createClient<Database, 'public'>(
     supabaseConfig.url,
     supabaseConfig.anonKey,
@@ -80,7 +80,7 @@ export const createCustomClient = (options = {}): SupabaseClient<Database> => {
       db: {
         schema: 'public' as const,
       },
-    }
+    },
   )
 }
 

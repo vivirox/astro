@@ -1,13 +1,14 @@
-import { ReadableStream } from 'node:stream/web'
+import type { AIMessage } from '@/lib/ai/models/types'
+import type { AuditMetadata } from '@/lib/audit/log'
 import type { APIRoute } from 'astro'
+import type { SessionData } from '../../../lib/auth/session'
+import { ReadableStream } from 'node:stream/web'
+import { createAuditLog } from '@/lib/audit/log'
+import { handleApiError } from '../../../lib/ai/error-handling'
 import { createTogetherAIService } from '../../../lib/ai/services/together'
 import { getSession } from '../../../lib/auth/session'
-import type { SessionData } from '../../../lib/auth/session'
-import { createAuditLog, type AuditMetadata } from '@/lib/audit/log'
-import { handleApiError } from '../../../lib/ai/error-handling'
 import { validateRequestBody } from '../../../lib/validation/index'
 import { CompletionRequestSchema } from '../../../lib/validation/schemas'
-import type { AIMessage } from '@/lib/ai/models/types'
 
 /**
  * API route for AI chat completions
@@ -32,16 +33,17 @@ export const POST: APIRoute = async ({ request }) => {
     // Validate request body against schema
     const [data, validationError] = await validateRequestBody(
       request,
-      CompletionRequestSchema
+      CompletionRequestSchema,
     )
 
     if (validationError) {
       // Create audit log for validation error
       await createAuditLog({
+        id: crypto.randomUUID(),
+        timestamp: new Date(),
         userId: session?.user?.id || 'anonymous',
         action: 'ai.completion.validation_error',
-        resource: 'ai',
-        resourceId: undefined,
+        resource: { id: 'ai-completion', type: 'ai' },
         metadata: {
           error: validationError.error,
           details: JSON.stringify(validationError.details),
@@ -72,7 +74,7 @@ export const POST: APIRoute = async ({ request }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
     }
 
@@ -85,10 +87,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Create audit log for the request
     await createAuditLog({
+      id: crypto.randomUUID(),
+      timestamp: new Date(),
       userId: session?.user?.id || 'anonymous',
       action: 'ai.completion.request',
-      resource: 'ai',
-      resourceId: undefined,
+      resource: { id: 'ai-completion', type: 'ai' },
       metadata: {
         model: data?.model,
         messageCount: data?.messages?.length,
@@ -104,7 +107,7 @@ export const POST: APIRoute = async ({ request }) => {
         content: msg.content || '',
         // Include name if provided, but ensure it's optional
         ...(msg.name && { name: msg.name }),
-      })
+      }),
     )
 
     // Handle streaming response
@@ -122,8 +125,8 @@ export const POST: APIRoute = async ({ request }) => {
             // Send the response as a single chunk for now
             controller.enqueue(
               new TextEncoder().encode(
-                `data: ${JSON.stringify({ content: response.content, model: response.model })}\n\n`
-              )
+                `data: ${JSON.stringify({ content: response.content, model: response.model })}\n\n`,
+              ),
             )
             controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'))
             controller.close()
@@ -133,10 +136,11 @@ export const POST: APIRoute = async ({ request }) => {
 
             // Create audit log for streaming error
             createAuditLog({
+              id: crypto.randomUUID(),
+              timestamp: new Date(),
               userId: session?.user?.id || 'anonymous',
               action: 'ai.completion.stream_error',
-              resource: 'ai',
-              resourceId: undefined,
+              resource: { id: 'ai-completion', type: 'ai' },
               metadata: {
                 error: error instanceof Error ? error?.message : String(error),
                 status: 'error',
@@ -164,10 +168,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Create audit log for the completion
     await createAuditLog({
+      id: crypto.randomUUID(),
+      timestamp: new Date(),
       userId: session?.user?.id || 'anonymous',
       action: 'ai.completion.response',
-      resource: 'ai',
-      resourceId: undefined,
+      resource: { id: 'ai-completion', type: 'ai' },
       metadata: {
         model: completion.model,
         contentLength: completion.content.length,
@@ -187,10 +192,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Create audit log for the error
     await createAuditLog({
+      id: crypto.randomUUID(),
+      timestamp: new Date(),
       userId: session?.user?.id || 'anonymous',
       action: 'ai.completion.error',
-      resource: 'ai',
-      resourceId: undefined,
+      resource: { id: 'ai-completion', type: 'ai' },
       metadata: {
         error: error instanceof Error ? error?.message : String(error),
         stack: error instanceof Error ? error?.stack : undefined,

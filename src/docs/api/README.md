@@ -18,26 +18,26 @@ The JIFF adapter provides a JIFF-compatible interface for MP-SPDZ operations.
 
 ```typescript
 class JIFFAdapter {
-  constructor(config: JIFFAdapterConfig);
-  
+  constructor(config: JIFFAdapterConfig)
+
   // Share Operations
-  async share(value: number | bigint): Promise<JIFFShare>;
-  async open(share: JIFFShare): Promise<bigint>;
-  
+  async share(value: number | bigint): Promise<JIFFShare>
+  async open(share: JIFFShare): Promise<bigint>
+
   // Arithmetic Operations
-  async add(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
-  async subtract(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
-  async multiply(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
-  
+  async add(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
+  async subtract(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
+  async multiply(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
+
   // Comparison Operations
-  async lessThan(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
-  async greaterThan(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
-  async equals(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
-  
+  async lessThan(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
+  async greaterThan(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
+  async equals(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
+
   // Bitwise Operations
-  async xor(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
-  async and(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
-  async or(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>;
+  async xor(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
+  async and(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
+  async or(a: JIFFShare, b: JIFFShare): Promise<JIFFShare>
 }
 ```
 
@@ -45,11 +45,11 @@ class JIFFAdapter {
 
 ```typescript
 interface JIFFAdapterConfig {
-  partyId: number;
-  numParties: number;
-  threshold: number;
-  protocol: MPCProtocol;
-  prime?: bigint; // Optional, defaults to 2^64 - 1
+  partyId: number
+  numParties: number
+  threshold: number
+  protocol: MPCProtocol
+  prime?: bigint // Optional, defaults to 2^64 - 1
 }
 ```
 
@@ -57,11 +57,11 @@ interface JIFFAdapterConfig {
 
 ```typescript
 interface JIFFShare {
-  value: number | bigint;
-  sender: number;
-  receivers: number[];
-  threshold: number;
-  Zp: bigint;
+  value: number | bigint
+  sender: number
+  receivers: number[]
+  threshold: number
+  Zp: bigint
 }
 ```
 
@@ -73,18 +73,18 @@ Protocol handlers implement the core MPC functionality for each supported protoc
 
 ```typescript
 interface ProtocolHandler {
-  protocol: MPCProtocol;
-  
+  protocol: MPCProtocol
+
   // Message Handlers
-  handleShare(message: NetworkMessage<MPCShare>): Promise<void>;
-  handleMultiplication(message: NetworkMessage<{a: MPCShare, b: MPCShare}>): Promise<MPCShare>;
-  handleComparison(message: NetworkMessage<{a: MPCShare, b: MPCShare}>): Promise<MPCShare>;
-  handlePreprocessing(message: NetworkMessage<{type: string, data: Uint8Array}>): Promise<void>;
-  handleSync(message: NetworkMessage): Promise<void>;
-  handleProof(message: NetworkMessage<ProofData>): Promise<boolean>;
-  
+  handleShare: (message: NetworkMessage<MPCShare>) => Promise<void>
+  handleMultiplication: (message: NetworkMessage<{ a: MPCShare, b: MPCShare }>) => Promise<MPCShare>
+  handleComparison: (message: NetworkMessage<{ a: MPCShare, b: MPCShare }>) => Promise<MPCShare>
+  handlePreprocessing: (message: NetworkMessage<{ type: string, data: Uint8Array }>) => Promise<void>
+  handleSync: (message: NetworkMessage) => Promise<void>
+  handleProof: (message: NetworkMessage<ProofData>) => Promise<boolean>
+
   // Validation
-  validateMessage(message: NetworkMessage): boolean;
+  validateMessage: (message: NetworkMessage) => boolean
 }
 ```
 
@@ -133,14 +133,14 @@ enum MPCProtocol {
 
 ```typescript
 interface MPCShare {
-  id: string;
-  partyId: number;
-  value: Uint8Array;
+  id: string
+  partyId: number
+  value: Uint8Array
   metadata: {
-    type: string;
-    bitLength: number;
-    verified: boolean;
-  };
+    type: string
+    bitLength: number
+    verified: boolean
+  }
 }
 ```
 
@@ -148,11 +148,11 @@ interface MPCShare {
 
 ```typescript
 interface NetworkMessage<T = any> {
-  type: ProtocolMessageType;
-  sender: number;
-  receiver?: number;
-  data: T;
-  metadata: MessageMetadata;
+  type: ProtocolMessageType
+  sender: number
+  receiver?: number
+  data: T
+  metadata: MessageMetadata
 }
 ```
 
@@ -160,9 +160,9 @@ interface NetworkMessage<T = any> {
 
 ```typescript
 interface MessageMetadata {
-  timestamp: number;
-  sequence: number;
-  sessionId: string;
+  timestamp: number
+  sequence: number
+  sessionId: string
 }
 ```
 
@@ -170,10 +170,10 @@ interface MessageMetadata {
 
 ```typescript
 interface ProofData {
-  type: string;
-  data: Uint8Array;
-  challenge?: Uint8Array;
-  response?: Uint8Array;
+  type: string
+  data: Uint8Array
+  challenge?: Uint8Array
+  response?: Uint8Array
 }
 ```
 
@@ -183,11 +183,11 @@ interface ProofData {
 
 ```typescript
 interface TestConfig {
-  protocol: MPCProtocol;
-  numParties: number;
-  basePort: number;
-  preprocessingDir: string;
-  binaryDir: string;
+  protocol: MPCProtocol
+  numParties: number
+  basePort: number
+  preprocessingDir: string
+  binaryDir: string
 }
 ```
 
@@ -197,8 +197,8 @@ interface TestConfig {
 
 ```typescript
 class MPCError extends Error {
-  constructor(type: MPCErrorType, message: string);
-  readonly type: MPCErrorType;
+  constructor(type: MPCErrorType, message: string)
+  readonly type: MPCErrorType
 }
 ```
 
@@ -223,59 +223,60 @@ const adapter = new JIFFAdapter({
   numParties: 3,
   threshold: 1,
   protocol: MPCProtocol.SEMI2K
-});
+})
 
 // Share a value
-const share = await adapter.share(42);
+const share = await adapter.share(42)
 
 // Open a share
-const value = await adapter.open(share);
+const value = await adapter.open(share)
 ```
 
 ### Arithmetic Operations
 
 ```typescript
 // Multiplication
-const a = await adapter.share(5);
-const b = await adapter.share(3);
-const product = await adapter.multiply(a, b);
-const result = await adapter.open(product); // 15
+const a = await adapter.share(5)
+const b = await adapter.share(3)
+const product = await adapter.multiply(a, b)
+const result = await adapter.open(product) // 15
 
 // Addition
-const sum = await adapter.add(a, b);
-const sumResult = await adapter.open(sum); // 8
+const sum = await adapter.add(a, b)
+const sumResult = await adapter.open(sum) // 8
 ```
 
 ### Comparison Operations
 
 ```typescript
 // Greater than
-const isGreater = await adapter.greaterThan(a, b);
-const result = await adapter.open(isGreater); // 1 (true)
+const isGreater = await adapter.greaterThan(a, b)
+const result = await adapter.open(isGreater) // 1 (true)
 
 // Equality
-const areEqual = await adapter.equals(a, b);
-const equalResult = await adapter.open(areEqual); // 0 (false)
+const areEqual = await adapter.equals(a, b)
+const equalResult = await adapter.open(areEqual) // 0 (false)
 ```
 
 ## Error Handling2
 
 ```typescript
 try {
-  const share = await adapter.share(42);
-  const result = await adapter.multiply(share, share);
-} catch (error) {
+  const share = await adapter.share(42)
+  const result = await adapter.multiply(share, share)
+}
+catch (error) {
   if (error instanceof MPCError) {
     switch (error.type) {
       case MPCErrorType.PROTOCOL_ERROR:
         // Handle protocol errors
-        break;
+        break
       case MPCErrorType.NETWORK_ERROR:
         // Handle network errors
-        break;
+        break
       case MPCErrorType.SECURITY_ERROR:
         // Handle security violations
-        break;
+        break
     }
   }
 }
@@ -289,7 +290,7 @@ try {
    // Process multiple values in parallel
    const shares = await Promise.all(
      values.map(value => adapter.share(value))
-   );
+   )
    ```
 
 2. **Protocol Selection**

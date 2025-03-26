@@ -1,47 +1,47 @@
 import React, { useEffect, useState } from 'react'
 
-interface AccessibilityAnnouncerProps {
+interface Message {
+  /** The message to be announced */
   message: string
+  /** Whether to use assertive or polite announcement */
   assertive?: boolean
+  /** Delay in milliseconds before clearing the message */
   clearDelay?: number
 }
 
 /**
  * A component that announces messages to screen readers
  *
- * @param message - The message to announce
- * @param assertive - Whether to use assertive (true) or polite (false) announcements
- * @param clearDelay - How long to wait before clearing the message (ms)
+ * @param props - The component props
+ * @param props.message - The message to announce
+ * @param props.assertive - Whether to use assertive (true) or polite (false) announcements
+ * @param props.clearDelay - How long to wait before clearing the message (ms)
  */
-export default function AccessibilityAnnouncer({
+export function AccessibilityAnnouncer({
   message,
   assertive = false,
   clearDelay = 1000,
-}: AccessibilityAnnouncerProps) {
-  const [currentMessage, setCurrentMessage] = useState(message)
+}: Message) {
+  const [currentMessage, setCurrentMessage] = useState('')
 
   useEffect(() => {
-    setCurrentMessage(message)
-
-    // Clear the message after the specified delay
     if (message) {
-      const timer = setTimeout(() => {
-        setCurrentMessage('')
-      }, clearDelay)
-
-      return () => clearTimeout(timer)
+      setCurrentMessage(message)
+      if (clearDelay > 0) {
+        const timer = setTimeout(() => {
+          setCurrentMessage('')
+        }, clearDelay)
+        return () => clearTimeout(timer)
+      }
     }
   }, [message, clearDelay])
 
-  if (!currentMessage) {
-    return null
-  }
-
   return (
     <div
-      className="sr-only"
+      role="status"
       aria-live={assertive ? 'assertive' : 'polite'}
       aria-atomic="true"
+      className="sr-only"
     >
       {currentMessage}
     </div>
@@ -54,11 +54,11 @@ export default function AccessibilityAnnouncer({
  */
 export function announceToScreenReader(
   message: string,
-  options: { assertive?: boolean; clearDelay?: number } = {}
+  options: { assertive?: boolean; clearDelay?: number } = {},
 ): void {
   const { assertive = false, clearDelay = 1000 } = options
 
-  // Create a temporary element for the announcement
+  // Create a temporary element for the announcemen
   const announcer = document.createElement('div')
   announcer.className = 'sr-only'
   announcer.setAttribute('aria-live', assertive ? 'assertive' : 'polite')
@@ -78,4 +78,27 @@ export function announceToScreenReader(
       document.body.removeChild(announcer)
     }
   }, clearDelay + 100)
+}
+
+/**
+ * Announces messages to screen readers
+ * @param {object} message - The message configuration
+ * @param {string} message.message - The text to be announced
+ * @param {boolean} [message.assertive] - Whether to use assertive announcemen
+ * @param {number} [message.clearDelay] - Delay before clearing in milliseconds
+ */
+export function announce(message: Message): void {
+  const { assertive = false, clearDelay = 1000 } = message
+  const element = document.getElementById(
+    assertive ? 'assertive-announce' : 'polite-announce',
+  )
+
+  if (element) {
+    element.textContent = message.message
+    if (clearDelay > 0) {
+      setTimeout(() => {
+        element.textContent = ''
+      }, clearDelay)
+    }
+  }
 }

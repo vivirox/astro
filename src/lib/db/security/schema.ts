@@ -8,7 +8,7 @@ const supabaseAdmin = createClient(
       autoRefreshToken: false,
       persistSession: false,
     },
-  }
+  },
 )
 
 /**
@@ -46,7 +46,7 @@ export async function initializeSecurityTables(): Promise<void> {
   } catch (error) {
     console.error(
       'Failed to initialize security tables:',
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(String(error)),
     )
     throw error instanceof Error ? error : new Error(String(error))
   }
@@ -61,7 +61,7 @@ export async function initializeSecurityDatabase(): Promise<void> {
   } catch (error) {
     console.error(
       'Failed to initialize security database:',
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(String(error)),
     )
     throw error instanceof Error ? error : new Error(String(error))
   }

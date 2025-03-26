@@ -1,7 +1,10 @@
+import { useToast } from '@/hooks/useToast'
 import React, { useState } from 'react'
-import { List, ListItem, ListGroup, NestedListItem } from '../ui/list'
+import { List, ListGroup, ListItem, NestedListItem } from '../ui/list'
 
 export function ListDemo() {
+  const { showToast } = useToast()
+
   const [expandedGroups, setExpandedGroups] = useState({
     fruits: true,
     vegetables: false,
@@ -27,6 +30,30 @@ export function ListDemo() {
   }
 
   const longList = Array.from({ length: 15 }, (_, i) => `Item ${i + 1}`)
+
+  const handleAction1 = () => {
+    showToast({
+      title: 'Action 1',
+      description: 'You clicked Action 1',
+      type: 'info',
+    })
+  }
+
+  const handleAction2 = () => {
+    showToast({
+      title: 'Action 2',
+      description: 'You clicked Action 2',
+      type: 'success',
+    })
+  }
+
+  const handleAction3 = () => {
+    showToast({
+      title: 'Action 3',
+      description: 'You clicked Action 3',
+      type: 'warning',
+    })
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -216,13 +243,13 @@ export function ListDemo() {
       <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
         <h3 className="mb-4 text-lg font-semibold">Hoverable List</h3>
         <List hoverable>
-          <ListItem clickable onClick={() => alert('Clicked item 1')}>
+          <ListItem clickable onClick={handleAction1}>
             Clickable item 1
           </ListItem>
-          <ListItem clickable onClick={() => alert('Clicked item 2')}>
+          <ListItem clickable onClick={handleAction2}>
             Clickable item 2
           </ListItem>
-          <ListItem clickable onClick={() => alert('Clicked item 3')}>
+          <ListItem clickable onClick={handleAction3}>
             Clickable item 3
           </ListItem>
         </List>

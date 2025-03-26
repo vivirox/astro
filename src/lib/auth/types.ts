@@ -17,7 +17,7 @@ export interface SessionData {
 
 export interface AuthContext {
   session?: unknown
-  securityVerification?: SecurityVerificationResult
+  securityVerification?: SecurityVerificationResul
   hipaaCompliance?: HIPAAComplianceInfo
 }
 
@@ -45,4 +45,34 @@ export interface AuthenticationResult {
   message?: string
   token?: TokenData
   session?: SessionData
+}
+
+export interface AuthUser {
+  id: string
+  email: string
+  name?: string
+  role: string
+  permissions: string[]
+  metadata?: Record<string, unknown>
+}
+
+export interface AuthError {
+  message: string
+  code?: string
+  details?: Record<string, unknown>
+}
+
+export interface AuthResult {
+  error?: AuthError
+  data?: {
+    user?: AuthUser
+    url?: string
+    token?: string
+  }
+}
+
+export interface AuthOptions {
+  redirectUrl?: string
+  metadata?: Record<string, unknown>
+  mode?: 'login' | 'register' | 'reset'
 }

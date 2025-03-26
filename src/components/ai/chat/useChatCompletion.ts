@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
-import { type AIMessage, type AIStreamChunk } from '../../../lib/ai'
+import type { AIMessage, AIStreamChunk } from '../../../lib/ai'
+import { useCallback, useState } from 'react'
 
 interface UseChatCompletionOptions {
   apiEndpoint?: string
@@ -186,7 +186,7 @@ export function useChatCompletion({
       apiEndpoint,
       onError,
       onComplete,
-    ]
+    ],
   )
 
   return {

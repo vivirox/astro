@@ -13,16 +13,16 @@ Search for patients based on specified criteria.
 **Parameters:**
 ```typescript
 interface SearchCriteria {
-  name?: string;
-  dateOfBirth?: Date;
-  mrn?: string;
-  status?: 'active' | 'inactive';
-  limit?: number;
-  offset?: number;
+  name?: string
+  dateOfBirth?: Date
+  mrn?: string
+  status?: 'active' | 'inactive'
+  limit?: number
+  offset?: number
   sort?: {
-    field: string;
-    order: 'asc' | 'desc';
-  };
+    field: string
+    order: 'asc' | 'desc'
+  }
 }
 ```
 
@@ -38,7 +38,7 @@ const patients = await api.patients.search({
     field: 'lastName',
     order: 'asc'
   }
-});
+})
 ```
 
 #### `patients.get(id: string): Promise<Patient>`
@@ -52,7 +52,7 @@ Retrieve a specific patient by ID.
 
 **Example:**
 ```typescript
-const patient = await api.patients.get('123456');
+const patient = await api.patients.get('123456')
 ```
 
 #### `patients.update(id: string, data: Partial<Patient>): Promise<Patient>`
@@ -70,7 +70,7 @@ Update a patient's information.
 const updatedPatient = await api.patients.update('123456', {
   phoneNumber: '+1-555-0123',
   email: 'john.doe@example.com'
-});
+})
 ```
 
 ### Appointment Management
@@ -82,17 +82,17 @@ Schedule a new appointment.
 **Parameters:**
 ```typescript
 interface Appointment {
-  patientId: string;
-  providerId: string;
-  startTime: Date;
-  endTime: Date;
-  type: string;
-  status: 'scheduled' | 'confirmed' | 'cancelled';
-  notes?: string;
+  patientId: string
+  providerId: string
+  startTime: Date
+  endTime: Date
+  type: string
+  status: 'scheduled' | 'confirmed' | 'cancelled'
+  notes?: string
   location?: {
-    id: string;
-    name: string;
-  };
+    id: string
+    name: string
+  }
 }
 ```
 
@@ -108,7 +108,7 @@ const appointment = await api.appointments.schedule({
   type: 'initial-consultation',
   status: 'scheduled',
   notes: 'First visit'
-});
+})
 ```
 
 #### `appointments.cancel(id: string, reason: string): Promise<void>`
@@ -123,7 +123,7 @@ Cancel an existing appointment.
 
 **Example:**
 ```typescript
-await api.appointments.cancel('apt-123', 'Patient request');
+await api.appointments.cancel('apt-123', 'Patient request')
 ```
 
 #### `appointments.reschedule(id: string, newTime: Date): Promise<Appointment>`
@@ -141,7 +141,7 @@ Reschedule an existing appointment.
 const rescheduled = await api.appointments.reschedule(
   'apt-123',
   new Date('2024-04-02T14:00:00Z')
-);
+)
 ```
 
 ### Utility APIs
@@ -152,10 +152,10 @@ The logger API provides structured logging capabilities with HIPAA compliance.
 
 ```typescript
 interface Logger {
-  info(message: string, meta?: object): void;
-  warn(message: string, meta?: object): void;
-  error(message: string, error?: Error): void;
-  debug(message: string, meta?: object): void;
+  info: (message: string, meta?: object) => void
+  warn: (message: string, meta?: object) => void
+  error: (message: string, error?: Error) => void
+  debug: (message: string, meta?: object) => void
 }
 ```
 
@@ -164,9 +164,9 @@ interface Logger {
 api.logger.info('Processing patient data', {
   patientId: '123456',
   action: 'update'
-});
+})
 
-api.logger.error('Failed to schedule appointment', new Error('Conflict'));
+api.logger.error('Failed to schedule appointment', new Error('Conflict'))
 ```
 
 #### Events
@@ -175,10 +175,10 @@ The events API allows plugins to subscribe to and emit events.
 
 ```typescript
 interface Events {
-  on(event: string, handler: Function): void;
-  off(event: string, handler: Function): void;
-  emit(event: string, data: any): void;
-  once(event: string, handler: Function): void;
+  on: (event: string, handler: Function) => void
+  off: (event: string, handler: Function) => void
+  emit: (event: string, data: any) => void
+  once: (event: string, handler: Function) => void
 }
 ```
 
@@ -186,14 +186,14 @@ interface Events {
 ```typescript
 // Subscribe to events
 api.events.on('appointment:created', (appointment) => {
-  api.logger.info('New appointment created', { id: appointment.id });
-});
+  api.logger.info('New appointment created', { id: appointment.id })
+})
 
 // Emit events
 api.events.emit('custom:event', {
   type: 'reminder',
   patientId: '123456'
-});
+})
 ```
 
 ## Storage API
@@ -211,7 +211,7 @@ Retrieve a value from storage.
 
 **Example:**
 ```typescript
-const settings = await api.storage.get('plugin-settings');
+const settings = await api.storage.get('plugin-settings')
 ```
 
 ### `storage.set(key: string, value: any): Promise<void>`
@@ -229,7 +229,7 @@ Store a value in storage.
 await api.storage.set('plugin-settings', {
   notificationsEnabled: true,
   theme: 'dark'
-});
+})
 ```
 
 ## Configuration API
@@ -244,8 +244,8 @@ Retrieve the plugin's configuration.
 
 **Example:**
 ```typescript
-const config = await api.config.get();
-console.log(config.apiKey);
+const config = await api.config.get()
+console.log(config.apiKey)
 ```
 
 ### `config.update(updates: Partial<PluginConfig>): Promise<PluginConfig>`
@@ -262,7 +262,7 @@ Update the plugin's configuration.
 const updatedConfig = await api.config.update({
   apiKey: 'new-api-key',
   webhookUrl: 'https://example.com/webhook'
-});
+})
 ```
 
 ## Error Handling
@@ -276,7 +276,7 @@ class PluginError extends Error {
     public code: string,
     public details?: object
   ) {
-    super(message);
+    super(message)
   }
 }
 
@@ -287,7 +287,7 @@ type ErrorCode =
   | 'INVALID_ARGUMENT'
   | 'RATE_LIMIT_EXCEEDED'
   | 'RESOURCE_EXHAUSTED'
-  | 'INTERNAL_ERROR';
+  | 'INTERNAL_ERROR'
 ```
 
 **Example:**
@@ -295,10 +295,11 @@ type ErrorCode =
 try {
   await api.patients.update('123456', {
     status: 'invalid-status'
-  });
-} catch (error) {
+  })
+}
+catch (error) {
   if (error.code === 'INVALID_ARGUMENT') {
-    api.logger.error('Invalid patient status', error);
+    api.logger.error('Invalid patient status', error)
   }
 }
 ```
@@ -310,14 +311,14 @@ Each API method has associated rate limits:
 ```typescript
 const rateLimits = {
   'patients.search': 100, // requests per minute
-  'patients.get': 300,    // requests per minute
-  'patients.update': 50,  // requests per minute
+  'patients.get': 300, // requests per minute
+  'patients.update': 50, // requests per minute
   'appointments.schedule': 30, // requests per minute
-  'appointments.cancel': 30,   // requests per minute
+  'appointments.cancel': 30, // requests per minute
   'appointments.reschedule': 30, // requests per minute
-  'storage.get': 500,    // requests per minute
-  'storage.set': 100,    // requests per minute
-};
+  'storage.get': 500, // requests per minute
+  'storage.set': 100, // requests per minute
+}
 ```
 
 ## Best Practices
@@ -345,4 +346,4 @@ const rateLimits = {
 - [Plugin Lifecycle](lifecycle.md)
 - [Security Guidelines](security.md)
 - [Best Practices](best-practices.md)
-- [Plugin Examples](../examples/plugins.md) 
+- [Plugin Examples](../examples/plugins.md)

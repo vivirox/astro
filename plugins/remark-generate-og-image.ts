@@ -1,16 +1,16 @@
+import type { SatoriOptions } from 'satori'
+import type { BgType } from '../src/types'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { mkdir } from 'node:fs/promises'
+import { basename, dirname } from 'node:path'
 import chalk from 'chalk'
 import satori from 'satori'
 import sharp from 'sharp'
-import { basename, dirname } from 'node:path'
-import { readFileSync, writeFileSync } from 'node:fs'
-import { mkdir } from 'node:fs/promises'
-import { unescapeHTML, checkFileExistsInDir } from '../src/utils/common'
+import { FEATURES } from '../src/config'
+import { checkFileExistsInDir, unescapeHTML } from '../src/utils/common'
+
 import { getCurrentFormattedTime } from '../src/utils/datetime'
 import { ogImageMarkup } from './og-template/markup'
-import { FEATURES } from '../src/config'
-
-import type { SatoriOptions } from 'satori'
-import type { BgType } from '../src/types'
 
 const Inter = readFileSync('plugins/og-template/Inter-Regular-24pt.ttf')
 
@@ -32,19 +32,19 @@ async function generateOgImage(
   authorOrBrand: string,
   title: string,
   bgType: BgType,
-  output: string
+  output: string,
 ) {
   await mkdir(dirname(output), { recursive: true })
 
   console.log(
-    `${chalk.black(getCurrentFormattedTime())} ${chalk.green(`Generating ${output}...`)}`
+    `${chalk.black(getCurrentFormattedTime())} ${chalk.green(`Generating ${output}...`)}`,
   )
 
   try {
     const node = ogImageMarkup(authorOrBrand, title, bgType)
 
     const unescapedNode = unescapeHTML(
-      node
+      node,
     ) as unknown as import('react').ReactNode
 
     const svg = await satori(unescapedNode, satoriOptions)
@@ -59,7 +59,7 @@ async function generateOgImage(
     writeFileSync(output, compressedPngBuffer)
   } catch (e) {
     console.error(
-      `${chalk.black(getCurrentFormattedTime())} ${chalk.red(`[ERROR] Failed to generate og image for '${basename(output)}.'`)}`
+      `${chalk.black(getCurrentFormattedTime())} ${chalk.red(`[ERROR] Failed to generate og image for '${basename(output)}.'`)}`,
     )
     console.error(e)
   }
@@ -82,7 +82,7 @@ function remarkGenerateOgImage() {
         authorOrBrand,
         fallbackTitle,
         fallbackBgType,
-        'public/og-images/og-image.png'
+        'public/og-images/og-image.png',
       )
     }
 
@@ -115,8 +115,9 @@ function remarkGenerateOgImage() {
       ogImage &&
       ogImage !== true &&
       checkFileExistsInDir('public/og-images', basename(ogImage))
-    )
+    ) {
       return
+    }
 
     if (
       ogImage &&
@@ -124,7 +125,7 @@ function remarkGenerateOgImage() {
       !checkFileExistsInDir('public/og-images', basename(ogImage))
     ) {
       console.warn(
-        `${chalk.black(getCurrentFormattedTime())} ${chalk.yellow(`[WARN] The '${ogImage}' specified in '${file.path}' was not found.`)}\n  ${chalk.bold('Hint:')} See ${chalk.cyan.underline('https://astro-antfustyle-theme.vercel.app/blog/about-open-graph-images/#configuring-og-images')} for more information on og image.`
+        `${chalk.black(getCurrentFormattedTime())} ${chalk.yellow(`[WARN] The '${ogImage}' specified in '${file.path}' was not found.`)}\n  ${chalk.bold('Hint:')} See ${chalk.cyan.underline('https://astro-antfustyle-theme.vercel.app/blog/about-open-graph-images/#configuring-og-images')} for more information on og image.`,
       )
       return
     }
@@ -138,7 +139,7 @@ function remarkGenerateOgImage() {
       authorOrBrand,
       title.trim(),
       bgType,
-      `public/og-images/${nameWithoutExt}.png`
+      `public/og-images/${nameWithoutExt}.png`,
     )
   }
 }

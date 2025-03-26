@@ -32,9 +32,11 @@ const allBlogPosts = await getCollection('blog', ({ data }) => {
 
 // Sort by date (newest first)
 const posts = allBlogPosts
-  .filter(post => post.data.tags?.includes(tag))
+  .filter((post) => post.data.tags?.includes(tag))
   .sort((a, b) => {
-    return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+    return (
+      new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+    )
   })
 
 // Create page title and description
@@ -72,7 +74,9 @@ const description = `Articles tagged with #${tag} - Explore insights and guides 
                     {post.data.title}
                   </h3>
                 </a>
-                <p class="mt-3 text-gray-600 dark:text-gray-400">{post.data.description}</p>
+                <p class="mt-3 text-gray-600 dark:text-gray-400">
+                  {post.data.description}
+                </p>
                 <div class="mt-4 flex items-center justify-between">
                   <span class="text-sm text-gray-500 dark:text-gray-400">
                     {new Date(post.data.pubDate).toLocaleDateString()}

@@ -8,14 +8,11 @@ export * from './types.js'
 /**
  * AI Provider types
  */
-export type AIProvider =
-  | 'openai'
-  | 'anthropic'
-  | 'google'
-  | 'azure'
-  | 'deepseek'
-  | 'together'
-  | 'local'
+export enum AIProvider {
+  OpenAI = 'openai',
+  Anthropic = 'anthropic',
+  Together = 'together',
+}
 
 /**
  * AI Model types
@@ -40,6 +37,20 @@ export interface AIModel {
   }
 }
 
+export enum AIModelType {
+  Chat = 'chat',
+  Completion = 'completion',
+}
+
+export enum AICapability {
+  Chat = 'chat',
+  Completion = 'completion',
+  Sentiment = 'sentiment',
+  Crisis = 'crisis',
+  Response = 'response',
+  Intervention = 'intervention',
+}
+
 export type ModelCapability =
   | 'chat'
   | 'completion'
@@ -51,10 +62,16 @@ export type ModelCapability =
 /**
  * Message types
  */
+export type AIRole = 'system' | 'user' | 'assistant' | 'function'
+
 export interface AIMessage {
-  role: 'user' | 'assistant' | 'system'
+  role: AIRole
   content: string
   name?: string
+  functionCall?: {
+    name: string
+    arguments: string
+  }
 }
 
 /**
@@ -96,13 +113,10 @@ export interface AICompletionResponse {
   created: number
   content: string
   choices: {
-    message: {
-      role: string
-      content: string
-    }
+    message?: AIMessage
     finishReason?: string
   }[]
-  usage: {
+  usage?: {
     promptTokens: number
     completionTokens: number
     totalTokens: number
@@ -119,13 +133,16 @@ export interface AICompletionResponse {
 export interface AIStreamChunk {
   id: string
   model: string
-  provider: AIProvider
-  created: number
-  content: string
+  provider: string
   isComplete: boolean
-  functionCall?: {
-    name: string
-    arguments: string
+  choices: {
+    message: AIMessage
+    finishReason?: string
+  }[]
+  usage?: {
+    promptTokens: number
+    completionTokens: number
+    totalTokens: number
   }
 }
 
@@ -284,51 +301,37 @@ export interface ModelInfo {
   id: string
   name: string
   provider: AIProvider
+  type: AIModelType
   contextWindow: number
   maxTokens: number
-  tokenCostInput?: number
-  tokenCostOutput?: number
-  features?: string[]
-  capabilities?: {
-    streaming?: boolean
-    json?: boolean
-    functionCalling?: boolean
-    tools?: boolean
-    vision?: boolean
+  capabilities: AICapability[]
+  pricing: {
+    input: number
+    output: number
+    unit: 'token' | 'char'
+    currency: 'USD'
   }
-  training?: {
-    cutoffDate?: string
+  parameters: {
+    temperature: number
+    topP: number
+    frequencyPenalty: number
+    presencePenalty: number
   }
-  [key: string]: unknown
 }
 
 /**
  * AI Service Types
  */
 export interface AIService {
-  createChatCompletion(
+  getModelInfo: (model: string) => ModelInfo
+  createChatCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<AICompletionResponse>
-
-  createStreamingChatCompletion(
+    options?: AIStreamOptions,
+  ) => Promise<AICompletionResponse>
+  createChatStream: (
     messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<ReadableStream<AIStreamChunk>>
-
-  getModelInfo(model: string): ModelInfo
-
-  createChatCompletionWithTracking(
-    messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<AICompletionResponse>
-
-  generateCompletion(
-    messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<AICompletionResponse>
-
-  dispose(): void
+    options?: AIStreamOptions,
+  ) => ReadableStream<AIStreamChunk>
 }
 
 /**
@@ -340,4 +343,11 @@ export interface AIServiceOptions {
   maxTokens?: number
   stream?: boolean
   userId?: string
+}
+
+export interface AIStreamOptions {
+  temperature?: number
+  maxTokens?: number
+  stopSequences?: string[]
+  model?: string
 }

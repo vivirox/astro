@@ -4,10 +4,10 @@
  */
 /// <reference types="mdast-util-directive" />
 
-import { visit } from 'unist-util-visit'
+import type { Paragraph, PhrasingContent, Root } from 'mdast'
 
-import type { Root, Paragraph, PhrasingContent } from 'mdast'
 import type { VFile } from 'vfile'
+import { visit } from 'unist-util-visit'
 
 const IMAGE_DIR_REGEXP = /^image-(.*)/
 const VALID_TAGS_FOR_IMG = new Set<string>([
@@ -66,7 +66,7 @@ function remarkImageContainer() {
         } else {
           file.fail(
             'The figcaption text is missing in the `image-figure` directive. Specify it in the `[]` of `:::image-figure[]{}` or `![]()`.',
-            node
+            node,
           )
         }
 
@@ -83,11 +83,12 @@ function remarkImageContainer() {
         children.push(figcaptionNode)
       } else if (node.name === 'image-a') {
         /* image-a */
-        if (!node.attributes || !node.attributes.href)
+        if (!node.attributes || !node.attributes.href) {
           file.fail(
             'Unexpectedly missing `href` in the `image-a` directive.',
-            node
+            node,
           )
+        }
 
         const data = node.data || (node.data = {})
         const attributes = node.attributes || {}
@@ -108,7 +109,7 @@ function remarkImageContainer() {
         } else {
           file.fail(
             'The `image-*` directive failed to match a valid tag.',
-            node
+            node,
           )
         }
       }

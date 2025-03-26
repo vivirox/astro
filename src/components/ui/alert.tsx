@@ -5,7 +5,7 @@ export type AlertVariant = 'info' | 'success' | 'warning' | 'error'
 
 export interface AlertProps {
   /** Alert variant */
-  variant?: AlertVariant
+  variant?: AlertVarian
   /** Alert title */
   title?: string
   /** Alert description */
@@ -151,4 +151,4 @@ export function Alert({
   )
 }
 
-export default Alert
+export default Aler

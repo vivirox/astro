@@ -13,6 +13,8 @@ import BackLink from '@/components/widgets/BackLink.astro'
 import Footer from '@/components/base/Footer.astro'
 import ToTopButton from '@/components/widgets/ToTopButton.astro'
 import Backdrop from '@/components/base/Backdrop.astro'
+import BrowserInfo from '@/components/utils/BrowserInfo.astro'
+import Monitoring from '@/components/Monitoring.astro'
 
 import { UI, FEATURES } from '@/config'
 
@@ -57,6 +59,11 @@ const currentPath = Astro.url.pathname
       pubDate={Astro.props.pubDate}
       lastModDate={Astro.props.lastModDate}
     />
+    <script
+      src="https://cdn.peasy.so/peasy.js"
+      data-website-id="01jq3eyvd9by7mkcx6dq4a77n3"
+      async></script>
+    <Monitoring />
   </head>
 
   <body
@@ -65,6 +72,9 @@ const currentPath = Astro.url.pathname
     style={Object.keys(style).length !== 0 ? style : undefined}
     data-no-sliding={!enableSlideEnterAnim ? true : undefined}
   >
+    <!-- Browser Info - Avoid using Astro.request.headers in prerendered pages -->
+    <BrowserInfo />
+
     <!-- Background -->
     {bgType && <Background type={bgType} />}
 

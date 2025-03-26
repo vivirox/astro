@@ -1,18 +1,19 @@
+import type { FHEOperation } from '@/lib/fhe/types'
 import type { APIRoute } from 'astro'
 import { fheService } from '@/lib/fhe'
+import { EncryptionMode } from '@/lib/fhe/types'
 import { getLogger } from '@/lib/logging'
 import { rateLimit } from '@/lib/middleware/rate-limit'
-import { FHEOperation, EncryptionMode } from '@/lib/fhe/types'
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     // Get client IP for rate limiting
-    const clientIp =
-      request.headers.get('x-forwarded-for') ||
-      request.headers.get('cf-connecting-ip') ||
-      'anonymous'
+    const clientIp
+      = request.headers.get('x-forwarded-for')
+        || request.headers.get('cf-connecting-ip')
+        || 'anonymous'
 
-    // Check rate limit
+    // Check rate limi
     const rateLimitResult = rateLimit.check(clientIp, 'anonymous')
 
     if (!rateLimitResult.allowed) {
@@ -29,7 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
             'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
             'X-RateLimit-Reset': rateLimitResult.reset.toString(),
           },
-        }
+        },
       )
     }
 
@@ -37,14 +38,14 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json()
     const { encryptedData, operation, params = {} } = body
 
-    // Validate input
+    // Validate inpu
     if (!encryptedData) {
       return new Response(
         JSON.stringify({
           success: false,
           error: 'Encrypted data is required',
         }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       )
     }
 
@@ -54,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
           success: false,
           error: 'Operation is required',
         }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       )
     }
 
@@ -63,7 +64,7 @@ export const POST: APIRoute = async ({ request }) => {
       await fheService.initialize({
         mode: EncryptionMode.FHE,
         securityLevel: 'high',
-        enableDebug: process.env.NODE_ENV !== 'production',
+        enableDebug: import.meta.env.PROD !== true,
       })
     }
 
@@ -71,7 +72,7 @@ export const POST: APIRoute = async ({ request }) => {
     const result = await fheService.processEncrypted(
       encryptedData,
       operation as unknown as FHEOperation,
-      params
+      params,
     )
 
     // Return the result
@@ -80,9 +81,10 @@ export const POST: APIRoute = async ({ request }) => {
         success: true,
         result,
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
     )
-  } catch (error) {
+  }
+  catch (error) {
     getLogger().error(`FHE API error: ${(error as Error).message}`)
 
     return new Response(
@@ -90,11 +92,9 @@ export const POST: APIRoute = async ({ request }) => {
         success: false,
         error: 'Failed to process encrypted data',
         message:
-          process.env.NODE_ENV !== 'production'
-            ? (error as Error).message
-            : undefined,
+          import.meta.env.PROD !== true ? (error as Error).message : undefined,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     )
   }
 }

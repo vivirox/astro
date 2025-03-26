@@ -1,12 +1,12 @@
-import { supabase } from '../../supabase'
-import type {
-  SentimentAnalysisResult,
-  CrisisDetectionResult,
-  ResponseGenerationResult,
-  InterventionAnalysisResult,
-  AIUsageStats,
-} from './types'
 import type { Database } from '../../../types/supabase'
+import type {
+  AIUsageStats,
+  CrisisDetectionResult,
+  InterventionAnalysisResult,
+  ResponseGenerationResult,
+  SentimentAnalysisResult,
+} from './types'
+import { supabase } from '../../supabase'
 
 /**
  * Repository for AI analysis results
@@ -16,7 +16,7 @@ export class AIRepository {
    * Store a sentiment analysis result
    */
   async storeSentimentAnalysis(
-    result: Omit<SentimentAnalysisResult, 'id' | 'createdAt' | 'updatedAt'>
+    result: Omit<SentimentAnalysisResult, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<string> {
     const { data, error } = await supabase
       .from('ai_sentiment_analysis')
@@ -51,7 +51,7 @@ export class AIRepository {
    * Store a crisis detection result
    */
   async storeCrisisDetection(
-    result: Omit<CrisisDetectionResult, 'id' | 'createdAt' | 'updatedAt'>
+    result: Omit<CrisisDetectionResult, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<string> {
     const { data, error } = await supabase
       .from('ai_crisis_detection')
@@ -88,7 +88,7 @@ export class AIRepository {
    * Store a response generation result
    */
   async storeResponseGeneration(
-    result: Omit<ResponseGenerationResult, 'id' | 'createdAt' | 'updatedAt'>
+    result: Omit<ResponseGenerationResult, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<string> {
     const { data, error } = await supabase
       .from('ai_response_generation')
@@ -125,7 +125,7 @@ export class AIRepository {
    * Store an intervention analysis result
    */
   async storeInterventionAnalysis(
-    result: Omit<InterventionAnalysisResult, 'id' | 'createdAt' | 'updatedAt'>
+    result: Omit<InterventionAnalysisResult, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<string> {
     if (!result?.userId || !result?.modelId || !result?.modelProvider) {
       throw new Error('Missing required fields')
@@ -178,7 +178,7 @@ export class AIRepository {
       },
       {
         onConflict: 'user_id, period, date',
-      }
+      },
     )
 
     if (error) {
@@ -193,7 +193,7 @@ export class AIRepository {
   async getSentimentAnalysisByUser(
     userId: string,
     limit = 10,
-    offset = 0
+    offset = 0,
   ): Promise<SentimentAnalysisResult[]> {
     const { data, error } = await supabase
       .from('ai_sentiment_analysis')
@@ -234,7 +234,7 @@ export class AIRepository {
   async getCrisisDetectionByUser(
     userId: string,
     limit = 10,
-    offset = 0
+    offset = 0,
   ): Promise<CrisisDetectionResult[]> {
     const { data, error } = await supabase
       .from('ai_crisis_detection')
@@ -277,7 +277,7 @@ export class AIRepository {
   async getResponseGenerationByUser(
     userId: string,
     limit = 10,
-    offset = 0
+    offset = 0,
   ): Promise<ResponseGenerationResult[]> {
     const { data, error } = await supabase
       .from('ai_response_generation')
@@ -320,7 +320,7 @@ export class AIRepository {
   async getInterventionAnalysisByUser(
     userId: string,
     limit = 10,
-    offset = 0
+    offset = 0,
   ): Promise<InterventionAnalysisResult[]> {
     const { data, error } = await supabase
       .from('ai_intervention_analysis')
@@ -363,7 +363,7 @@ export class AIRepository {
   async getUsageStatsByUser(
     userId: string,
     period: 'daily' | 'weekly' | 'monthly',
-    limit = 30
+    limit = 30,
   ): Promise<AIUsageStats[]> {
     const { data, error } = await supabase
       .from('ai_usage_stats')
@@ -397,7 +397,7 @@ export class AIRepository {
    */
   async getAllUsageStats(
     period: 'daily' | 'weekly' | 'monthly',
-    limit = 30
+    limit = 30,
   ): Promise<AIUsageStats[]> {
     const { data, error } = await supabase
       .from('ai_usage_stats')
@@ -430,7 +430,7 @@ export class AIRepository {
    */
   async getHighRiskCrisisDetections(
     limit = 20,
-    offset = 0
+    offset = 0,
   ): Promise<CrisisDetectionResult[]> {
     const { data, error } = await supabase
       .from('ai_crisis_detection')

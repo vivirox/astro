@@ -1,6 +1,6 @@
+import type { Provider } from '@supabase/supabase-js'
 import type { APIRoute } from 'astro'
 import { supabase } from '../../../lib/supabase'
-import type { Provider } from '@supabase/supabase-js'
 
 export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   const formData = await request.formData()
@@ -25,7 +25,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
       }
 
       return redirect(data?.url)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('OAuth error:', error)
       return new Response('An unexpected error occurred', { status: 500 })
     }
@@ -47,7 +48,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
       return new Response(error?.message, { status: 401 })
     }
 
-    // Set cookies for session management
+    // Set cookies for session managemen
     if (data && data.session) {
       const { access_token, refresh_token } = data.session
       cookies.set('sb-access-token', access_token, {
@@ -76,8 +77,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
           email: data.user.email,
         },
         ip_address:
-          request.headers.get('x-forwarded-for') ||
-          request.headers.get('x-real-ip'),
+          request.headers.get('x-forwarded-for')
+          || request.headers.get('x-real-ip'),
         user_agent: request.headers.get('user-agent'),
       })
 
@@ -90,7 +91,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     }
 
     return new Response('Authentication failed', { status: 401 })
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Sign in error:', error)
     return new Response('An unexpected error occurred', { status: 500 })
   }

@@ -237,29 +237,29 @@ export interface AIModelInfo {
  * AI Service Interface
  */
 export interface AIService {
-  createChatCompletion(
+  createChatCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<AICompletionResponse>
+    options?: AIServiceOptions,
+  ) => Promise<AICompletionResponse>
 
-  createStreamingChatCompletion(
+  createStreamingChatCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<ReadableStream<AIStreamChunk>>
+    options?: AIServiceOptions,
+  ) => Promise<ReadableStream<AIStreamChunk>>
 
-  getModelInfo(model: string): AIModelInfo
+  getModelInfo: (model: string) => AIModelInfo
 
-  createChatCompletionWithTracking(
+  createChatCompletionWithTracking: (
     messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<AICompletionResponse>
+    options?: AIServiceOptions,
+  ) => Promise<AICompletionResponse>
 
-  generateCompletion(
+  generateCompletion: (
     messages: AIMessage[],
-    options?: AIServiceOptions
-  ): Promise<AICompletionResponse>
+    options?: AIServiceOptions,
+  ) => Promise<AICompletionResponse>
 
-  dispose(): void
+  dispose: () => void
 }
 
 /**

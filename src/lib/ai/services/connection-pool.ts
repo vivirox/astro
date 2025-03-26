@@ -44,7 +44,7 @@ interface PooledConnection {
  * Manages a pool of connections to reduce API latency
  */
 export class ConnectionPoolManager {
-  private connections: Map<string, PooledConnection> = new Map()
+  private connections = new Map<string, PooledConnection>()
   private maxConnections: number
   private connectionTimeout: number
   private idleTimeout: number
@@ -61,7 +61,7 @@ export class ConnectionPoolManager {
     if (this.enabled) {
       this.cleanupInterval = setInterval(
         () => this.cleanupIdleConnections(),
-        30000
+        30000,
       )
     }
   }
@@ -84,19 +84,27 @@ export class ConnectionPoolManager {
     }
 
     // Try to find an idle connection
-    for (const [id, conn] of this.connections.entries()) {
-      if (!conn.inUse) {
-        // Mark as in use
-        conn.inUse = true
-        conn.lastUsed = Date.now()
+    let foundConnection: PooledConnection | undefined
+    let foundId: string | undefined
 
-        return {
-          controller: conn.controller,
-          headers: {
-            'Connection': 'keep-alive',
-            'X-Connection-Id': id,
-          },
-        }
+    this.connections.forEach((conn, id) => {
+      if (!foundConnection && !conn.inUse) {
+        foundConnection = conn
+        foundId = id
+      }
+    })
+
+    if (foundConnection && foundId) {
+      // Mark as in use
+      foundConnection.inUse = true
+      foundConnection.lastUsed = Date.now()
+
+      return {
+        controller: foundConnection.controller,
+        headers: {
+          'Connection': 'keep-alive',
+          'X-Connection-Id': foundId,
+        },
       }
     }
 
@@ -173,13 +181,19 @@ export class ConnectionPoolManager {
   private cleanupIdleConnections(): void {
     const now = Date.now()
 
-    for (const [id, conn] of this.connections.entries()) {
+    const idsToDelete: string[] = []
+    this.connections.forEach((conn, id) => {
       // Remove connections that have been idle for too long
       if (!conn.inUse && now - conn.lastUsed > this.idleTimeout) {
         conn.controller.abort()
-        this.connections.delete(id)
+        idsToDelete.push(id)
       }
-    }
+    })
+
+    // Delete outside the forEach to avoid modifying the Map during iteration
+    idsToDelete.forEach((id) => {
+      this.connections.delete(id)
+    })
   }
 
   /**
@@ -189,12 +203,12 @@ export class ConnectionPoolManager {
     let oldestId: string | null = null
     let oldestTime = Infinity
 
-    for (const [id, conn] of this.connections.entries()) {
+    this.connections.forEach((conn, id) => {
       if (conn.lastUsed < oldestTime) {
         oldestId = id
         oldestTime = conn.lastUsed
       }
-    }
+    })
 
     return oldestId
   }
@@ -210,14 +224,21 @@ export class ConnectionPoolManager {
    * Get pool statistics
    */
   getStats() {
+    const activeConnections: PooledConnection[] = []
+    const idleConnections: PooledConnection[] = []
+
+    this.connections.forEach((conn) => {
+      if (conn.inUse) {
+        activeConnections.push(conn)
+      } else {
+        idleConnections.push(conn)
+      }
+    })
+
     return {
       totalConnections: this.connections.size,
-      activeConnections: Array.from(this.connections.values()).filter(
-        (c) => c.inUse
-      ).length,
-      idleConnections: Array.from(this.connections.values()).filter(
-        (c) => !c.inUse
-      ).length,
+      activeConnections: activeConnections.length,
+      idleConnections: idleConnections.length,
       maxConnections: this.maxConnections,
       enabled: this.enabled,
     }
@@ -228,9 +249,9 @@ export class ConnectionPoolManager {
    */
   dispose(): void {
     // Abort all connections
-    for (const conn of this.connections.values()) {
+    this.connections.forEach((conn) => {
       conn.controller.abort()
-    }
+    })
 
     // Clear the map
     this.connections.clear()

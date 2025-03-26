@@ -1,108 +1,133 @@
-import { decode } from 'html-entities'
-import { join } from 'node:path'
-import { existsSync } from 'node:fs'
-
-import type { html } from 'satori-html'
+import type { VNode } from 'vue'
+import type { NavBarLayout } from './types'
 import type { ProjectGroupsSchema } from '~/content/schema'
-import type { NavBarLayout } from '~/types'
+import { promises as fs } from 'node:fs'
+import { join } from 'node:path'
 
 /**
- * Converts a given text into a URL-friendly slug.
- * @export
+ * Slugify a string
  */
 export function slug(text: string) {
-  return text.toLowerCase().replace(/[\s\\/]+/g, '-')
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '')
 }
 
 /**
- * Extracts all icons from the project groups schema that start with the letter "i".
- * @export
+ * Extract icons starting with 'i' from project groups
  */
 export function extractIconsStartingWithI(data: ProjectGroupsSchema): string[] {
-  const icons: string[] = []
+  const icons = new Set<string>()
 
-  for (const key in data) {
-    const projects = data[key]
-    projects.forEach((project) => {
-      if (project.icon && project.icon.startsWith('i')) {
-        icons.push(project.icon)
+  for (const group of data.groups) {
+    for (const project of group.projects) {
+      if (project.icon?.startsWith('i')) {
+        icons.add(project.icon)
       }
-    })
+    }
   }
 
-  return icons
+  return Array.from(icons)
 }
 
 /**
- * Constructs a URL by joining base URL with given path segments.
- * Multiple slashes are replaced with a single slash.
- * @export
+ * Get URL from paths
  */
 export function getUrl(...paths: string[]): string {
-  const baseUrl = import.meta.env.BASE_URL
-  const fullPath = [baseUrl, ...paths].join('/').replace(/\/+/g, '/')
-
-  return fullPath
+  return paths.join('/')
 }
 
 /**
- * Ensures that a given pathname ends with a trailing slash.
- * @export
+ * Ensure trailing slash
  */
 export function ensureTrailingSlash(pathname: string): string {
-  return pathname.endsWith('/') ? pathname : pathname + '/'
+  return pathname.endsWith('/') ? pathname : `${pathname}/`
 }
 
-/**
- * Checks if a file exists in a specified directory.
- *
- * @param {string} path
- *  This path is relative to the current working directory.
- *  ('public/og-images' is equivalent to './public/og-images' and relative to the cwd)
- * @param {string} filename
- *  The name of the file to check for.
- * @export
- */
-export function checkFileExistsInDir(path: string, filename: string) {
-  const fullPath = join(process.cwd(), path, filename)
-
-  return existsSync(fullPath)
+export interface NavBarGroup {
+  name?: string
+  link?: string
+  desc?: string
+  icon?: string
+  projects?: Array<{
+    name?: string
+    link?: string
+    desc?: string
+    icon?: string
+  }>
 }
 
-/**
- * Recursively unescapes HTML entities in a given virtual DOM node's children.
- *
- * {@link https://github.com/natemoo-re/satori-html/issues/20#issuecomment-1999332693 Fix accidental HTML entity escaping in 'satori-html' }
- * @export
- */
-export function unescapeHTML(node: ReturnType<typeof html>) {
-  const children = node?.props?.children
-  if (!children) {
-    return
-  } else if (Array.isArray(children)) {
-    for (const n of children) {
-      unescapeHTML(n)
-    }
-  } else if (typeof children === 'object') {
-    unescapeHTML(children)
-  } else if (typeof children === 'string') {
-    node.props.children = decode(children)
+export function getNavBarGroups(): NavBarGroup[] {
+  return [
+    {
+      name: 'Projects',
+      link: '/projects',
+      desc: 'View all projects',
+      icon: 'folder',
+      projects: [
+        {
+          name: 'Sample Project',
+          link: '/projects/sample',
+          desc: 'A sample project',
+          icon: 'code',
+        },
+      ],
+    },
+  ]
+}
+
+export async function checkFileExistsInDir(
+  path: string,
+  filename: string,
+): Promise<boolean> {
+  try {
+    const fullPath = join(path, filename)
+    await fs.access(fullPath)
+    return true
+  } catch {
+    return false
   }
 }
 
 /**
- * Validates the navigation bar layout to ensure no duplicates between `left` and `right`.
- * @export
+ * Unescape HTML entities
+ */
+export function unescapeHTML(node: VNode): VNode {
+  if (typeof node.children === 'string') {
+    return {
+      ...node,
+      children: node.children
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'"),
+    }
+  }
+
+  if (Array.isArray(node.children)) {
+    return {
+      ...node,
+      children: node.children.map((child) =>
+        typeof child === 'object' ? unescapeHTML(child as VNode) : child,
+      ),
+    }
+  }
+
+  return node
+}
+
+/**
+ * Validate navbar layout
  */
 export function validateNavBarLayout(layout: NavBarLayout) {
-  const leftSet = new Set(layout.left)
-  const rightSet = new Set(layout.right)
-
-  for (const item of leftSet) {
-    if (rightSet.has(item)) {
-      throw new Error(
-        `Duplicate '${item}' found in both 'UI.navBarLayout.left' and 'UI.navBarLayout.right'.`
-      )
-    }
+  return {
+    isValid: layout.length > 0 && layout.length <= 3,
+    message: layout.length > 3 ? 'Maximum 3 items allowed' : '',
   }
 }

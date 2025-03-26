@@ -5,10 +5,10 @@
  * and maintaining security across the application.
  */
 
+import type { AstroGlobal } from 'astro'
+import type { User } from '../../types/user'
 import { getLogger } from '../logging'
 import { verifyToken } from '../security/verification'
-import type { User } from '../../types/user'
-import type { AstroGlobal } from 'astro'
 
 // Initialize logger
 const logger = getLogger()
@@ -20,31 +20,39 @@ export enum AdminRole {
   SUPER_ADMIN = 'super_admin', // Full system access
   CLINICAL_ADMIN = 'clinical_admin', // Access to therapist accounts and clinical data
   SECURITY_ADMIN = 'security_admin', // Manage security settings and audit logs
-  SUPPORT_ADMIN = 'support_admin', // Limited access for customer support
+  SUPPORT_ADMIN = 'support_admin', // Limited access for customer support,
 }
 
 /**
  * Admin permission types
  */
 export enum AdminPermission {
-  // User management
+  // User managemen
   VIEW_USERS = 'view_users',
   CREATE_USER = 'create_user',
   UPDATE_USER = 'update_user',
   DELETE_USER = 'delete_user',
 
-  // Session management
+  // Session managemen
   VIEW_SESSIONS = 'view_sessions',
   MANAGE_SESSIONS = 'manage_sessions',
 
-  // Security management
+  // Security managemen
   VIEW_AUDIT_LOGS = 'view_audit_logs',
   MANAGE_SECURITY = 'manage_security',
   ROTATE_KEYS = 'rotate_keys',
 
-  // System management
+  // System managemen
   VIEW_METRICS = 'view_metrics',
   CONFIGURE_SYSTEM = 'configure_system',
+}
+
+/**
+ * Interface for therapy session data
+ */
+export interface SessionsResult {
+  sessions: unknown[] // Replace with proper session type when available
+  total: number
 }
 
 /**
@@ -105,6 +113,45 @@ export class AdminService {
   }
 
   /**
+   * Get therapy sessions with filtering options
+   */
+  async getSessions(_options: {
+    limit: number
+    offset: number
+    therapistId?: string
+    clientId?: string
+    startDate?: Date
+    endDate?: Date
+  }): Promise<SessionsResult> {
+    // ... implementation ...
+    return {
+      sessions: [], // Your sessions array here
+      total: 0, // Total count of all sessions matching the filter
+    }
+  }
+
+  /**
+   * Lock a therapy session
+   */
+  lockSession(_sessionId: string): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+
+  /**
+   * Unlock a therapy session
+   */
+  unlockSession(_sessionId: string): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+
+  /**
+   * Archive a therapy session
+   */
+  archiveSession(_sessionId: string): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+
+  /**
    * Check if user has admin role
    */
   public async isAdmin(userId: string): Promise<boolean> {
@@ -136,11 +183,13 @@ export class AdminService {
    */
   public async hasPermission(
     userId: string,
-    permission: AdminPermission
+    permission: AdminPermission,
   ): Promise<boolean> {
     try {
       const user = await this.getAdminUser(userId)
-      if (!user) return false
+      if (!user) {
+        return false
+      }
 
       // Check custom permissions first if they exist
       if (user.permissions && user.permissions.includes(permission)) {
@@ -159,14 +208,18 @@ export class AdminService {
    * Verify admin authentication token
    */
   public async verifyAdminToken(
-    token: string
+    token: string,
   ): Promise<{ userId: string; role: AdminRole } | null> {
     try {
       const payload = (await verifyToken(token)) as { userId: string }
-      if (!payload || !payload.userId) return null
+      if (!payload || !payload.userId) {
+        return null
+      }
 
       const user = await this.getAdminUser(payload.userId)
-      if (!user) return null
+      if (!user) {
+        return null
+      }
 
       return {
         userId: user.id,
@@ -259,15 +312,24 @@ export class AdminService {
 
   /**
    * Check if the request is from an admin user
-   * @param astro - Astro global object
+   * @param astro - Astro global objec
    * @returns Boolean indicating if the request is from an admin
    */
   public async isAdminRequest(astro: AstroGlobal): Promise<boolean> {
     try {
-      // Extract token from cookies or Authorization header
-      const token =
-        astro.cookies.get('token')?.value ||
-        astro.request.headers.get('Authorization')?.replace('Bearer ', '')
+      // Extract token from cookies
+      const tokenFromCookie = astro.cookies.get('token')?.value
+
+      // Only attempt to access headers if we're in a server context
+      // This prevents errors in prerendered pages
+      let tokenFromHeader: string | undefined
+      if (import.meta.env.SSR) {
+        tokenFromHeader = astro.request.headers
+          .get('Authorization')
+          ?.replace('Bearer ', '')
+      }
+
+      const token = tokenFromCookie || tokenFromHeader
 
       if (!token) {
         return false

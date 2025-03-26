@@ -1,13 +1,11 @@
 // Import necessary libraries and types
 import type { APIContext } from 'astro'
-import {
-  authConfig,
-  type AuthRole,
-  hasRolePrivilege,
-} from '../../config/auth.config'
-import { getCurrentUser } from '../auth'
+import type { AuthRole } from '../../config/auth.config'
+import type { AuditMetadata, AuditResource } from '../audit/types'
 import type { AuthUser } from '../auth'
+import { authConfig, hasRolePrivilege } from '../../config/auth.config'
 import { createAuditLog } from '../audit/log'
+import { getCurrentUser } from '../auth'
 
 // Define locals interface for Astro context
 interface AstroLocals {
@@ -19,31 +17,42 @@ interface APIContextWithUser extends APIContext {
   locals: AstroLocals
 }
 
+// Helper function to create resource objec
+function createResource(id: string, type: string): AuditResource {
+  return { id, type }
+}
+
 /**
  * Middleware to ensure routes are authenticated
  */
 export async function authGuard(
-  context: APIContextWithUser
+  context: APIContextWithUser,
 ): Promise<Response | undefined> {
   const user = await getCurrentUser(context.cookies)
 
   if (!user) {
-    await createAuditLog({
-      action: 'auth_required_redirect',
-      resource: 'route',
-      resourceId: context.request.url,
-      metadata: {
+    await createAuditLog(
+      'route_access_denied',
+      'system',
+      createResource(new URL(context.request.url).pathname, 'route'),
+      {
+        reason: 'missing_token',
+        ipAddress:
+          context.request.headers.get('x-forwarded-for') ||
+          context.request.headers.get('x-real-ip') ||
+          'unknown',
+        userAgent: context.request.headers.get('user-agent') || 'unknown',
         method: context.request.method,
         path: new URL(context.request.url).pathname,
-      },
-    })
+      } as AuditMetadata,
+    )
 
     // Redirect to login page
     return new Response(null, {
       status: 302,
       headers: {
         Location: `${authConfig.redirects.authRequired}?redirect=${encodeURIComponent(
-          context.request.url
+          context.request.url,
         )}`,
       },
     })
@@ -63,22 +72,28 @@ export function roleGuard(role: AuthRole) {
     const user = await getCurrentUser(context.cookies)
 
     if (!user) {
-      await createAuditLog({
-        action: 'auth_required_redirect',
-        resource: 'route',
-        resourceId: context.request.url,
-        metadata: {
+      await createAuditLog(
+        'route_access_denied',
+        'system',
+        createResource(new URL(context.request.url).pathname, 'route'),
+        {
+          reason: 'missing_token',
+          ipAddress:
+            context.request.headers.get('x-forwarded-for') ||
+            context.request.headers.get('x-real-ip') ||
+            'unknown',
+          userAgent: context.request.headers.get('user-agent') || 'unknown',
           method: context.request.method,
           path: new URL(context.request.url).pathname,
-        },
-      })
+        } as AuditMetadata,
+      )
 
       // Redirect to login page
       return new Response(null, {
         status: 302,
         headers: {
           Location: `${authConfig.redirects.authRequired}?redirect=${encodeURIComponent(
-            context.request.url
+            context.request.url,
           )}`,
         },
       })
@@ -88,18 +103,23 @@ export function roleGuard(role: AuthRole) {
     const hasRequiredRole = hasRolePrivilege(user.role, role)
 
     if (!hasRequiredRole) {
-      await createAuditLog({
-        userId: user.id,
-        action: 'access_denied',
-        resource: 'route',
-        resourceId: context.request.url,
-        metadata: {
+      await createAuditLog(
+        'route_access_denied',
+        'system',
+        createResource(new URL(context.request.url).pathname, 'route'),
+        {
+          reason: 'insufficient_permissions',
+          ipAddress:
+            context.request.headers.get('x-forwarded-for') ||
+            context.request.headers.get('x-real-ip') ||
+            'unknown',
+          userAgent: context.request.headers.get('user-agent') || 'unknown',
           method: context.request.method,
           path: new URL(context.request.url).pathname,
-          userRole: user.role,
           requiredRole: role,
-        },
-      })
+          userRole: user.role,
+        } as AuditMetadata,
+      )
 
       // Redirect to forbidden page
       return new Response(null, {
@@ -127,22 +147,30 @@ interface ApiContextWithUser extends Record<string, unknown> {
  */
 export async function apiAuthGuard(
   request: Request,
-  context: Record<string, unknown>
+  context: Record<string, unknown>,
 ): Promise<Response | undefined> {
   // Check for Authorization header (Bearer token)
   const authHeader = request.headers.get('Authorization')
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return new Response(
-      JSON.stringify({
-        error: 'Authentication required',
-        message: 'Missing or invalid Authorization header',
-      }),
+    await createAuditLog(
+      'api_access_denied',
+      'system',
+      createResource(new URL(request.url).pathname, 'api'),
       {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+        reason: 'missing_token',
+        ipAddress:
+          request.headers.get('x-forwarded-for') ||
+          request.headers.get('x-real-ip') ||
+          'unknown',
+        userAgent: request.headers.get('user-agent') || 'unknown',
+        method: request.method,
+        path: new URL(request.url).pathname,
+      } as AuditMetadata,
+    )
+
+    return new Response(
+      JSON.stringify({ error: 'Missing or invalid authorization header' }),
+      { status: 401 },
     )
   }
 
@@ -156,38 +184,44 @@ export async function apiAuthGuard(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ token }),
-    }
-  ).then((res) => res.json())
+    },
+  ).then((rest) => rest.json())
 
   if (error || !data?.user) {
-    return new Response(
-      JSON.stringify({
-        error: 'Authentication failed',
-        message: error || 'Invalid or expired token',
-      }),
+    await createAuditLog(
+      'api_access_denied',
+      'system',
+      createResource(new URL(request.url).pathname, 'api'),
       {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+        reason: 'invalid_token',
+        ipAddress:
+          request.headers.get('x-forwarded-for') ||
+          request.headers.get('x-real-ip') ||
+          'unknown',
+        userAgent: request.headers.get('user-agent') || 'unknown',
+        method: request.method,
+        path: new URL(request.url).pathname,
+      } as AuditMetadata,
     )
+
+    return new Response(JSON.stringify({ error: 'Invalid token' }), {
+      status: 401,
+    })
   }
 
   // Set the user data in context
   context.user = data.user as AuthUser
 
   // Log the successful authentication
-  await createAuditLog({
-    userId: data.user.id,
-    action: 'api_authenticated',
-    resource: 'api',
-    resourceId: request.url,
-    metadata: {
+  await createAuditLog(
+    'api_authenticated',
+    data.user.id,
+    createResource(new URL(request.url).pathname, 'api'),
+    {
       method: request.method,
       path: new URL(request.url).pathname,
-    },
-  })
+    } as AuditMetadata,
+  )
 
   return undefined
 }
@@ -198,7 +232,7 @@ export async function apiAuthGuard(
 export function apiRoleGuard(role: AuthRole) {
   return async (
     request: Request,
-    context: Record<string, unknown>
+    context: Record<string, unknown>,
   ): Promise<Response | undefined> => {
     // First ensure the user is authenticated
     const authResponse = await apiAuthGuard(request, context)
@@ -212,30 +246,27 @@ export function apiRoleGuard(role: AuthRole) {
 
     // Check if the user has the required role
     if (!hasRolePrivilege(user.role, role)) {
-      await createAuditLog({
-        userId: user.id,
-        action: 'api_access_denied',
-        resource: 'api',
-        resourceId: request.url,
-        metadata: {
+      await createAuditLog(
+        'api_access_denied',
+        user.id,
+        createResource(new URL(request.url).pathname, 'api'),
+        {
+          reason: 'insufficient_permissions',
+          ipAddress:
+            request.headers.get('x-forwarded-for') ||
+            request.headers.get('x-real-ip') ||
+            'unknown',
+          userAgent: request.headers.get('user-agent') || 'unknown',
           method: request.method,
           path: new URL(request.url).pathname,
-          userRole: user.role,
           requiredRole: role,
-        },
-      })
+          userRole: user.role,
+        } as AuditMetadata,
+      )
 
       return new Response(
-        JSON.stringify({
-          error: 'Forbidden',
-          message: `This endpoint requires ${role} privileges`,
-        }),
-        {
-          status: 403,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+        JSON.stringify({ error: 'Insufficient permissions' }),
+        { status: 403 },
       )
     }
 

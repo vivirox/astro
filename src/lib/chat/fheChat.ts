@@ -49,14 +49,14 @@ class FHEChat {
 
   async verifySender(
     senderId: string,
-    authorizedSenders: string[]
+    authorizedSenders: string[],
   ): Promise<boolean> {
     // Verify if the sender is authorized
     return authorizedSenders.includes(senderId)
   }
 
   private async generateVerificationHash(
-    message: ChatMessage
+    message: ChatMessage,
   ): Promise<string> {
     // Generate a verification hash for the message
     const data = `${message.id}-${message.senderId}-${message.timestamp}`

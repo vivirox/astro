@@ -70,13 +70,13 @@ if (collectionType === 'releases') {
 
       // Extract version from name or use a default
       const versionMatch = (release.name || '').match(
-        /v?(\d+\.\d+\.\d+(?:-[\w.]+)?)/
+        /v?(\d+\.\d+\.\d+(?:-[\w.]+)?)/,
       ) || ['', '0.0.0']
       const versionNum = versionMatch[1]
       const tagName = `${release.name || ''}@${versionNum}`
 
       const isInMonorepo = monorepos.includes(
-        repoNameWithOwner as RepoWithOwner
+        repoNameWithOwner as RepoWithOwner,
       )
       const pkgName = isInMonorepo ? extractPackageName(tagName) : repoName
 
@@ -87,7 +87,7 @@ if (collectionType === 'releases') {
 
       const [versionType, ...versionParts] = processVersion(versionNum)
 
-      // Use current date as fallback for publishedAt
+      // Use current date as fallback for publishedA
       const publishedAt = new Date().toISOString()
 
       return {
@@ -134,7 +134,7 @@ if (collectionType === 'prs') {
       (item) =>
         item.state !== 'CLOSED' &&
         !item.isDraft &&
-        !/\b(?:chore|docs|i18n)\b/.test(item.title)
+        !/\b(?:chore|docs|i18n)\b/.test(item.title),
     )
     .map((item) => {
       const mainLogo =
@@ -165,8 +165,8 @@ if (collectionType === 'prs') {
             isDiffMonth={isDiffMonth(
               item.publishedAt,
               extendedReleases[idx - 1]
-                ? extendedReleases[idx - 1].publishedAt
-                : undefined
+                ? extendedReleases[idx - 1].publishedA
+                : undefined,
             )}
           />
         ))
@@ -183,7 +183,7 @@ if (collectionType === 'prs') {
             item={item}
             isDiffMonth={isDiffMonth(
               item.createdAt,
-              extendedPrs[idx - 1] ? extendedPrs[idx - 1].createdAt : undefined
+              extendedPrs[idx - 1] ? extendedPrs[idx - 1].createdAt : undefined,
             )}
           />
         ))

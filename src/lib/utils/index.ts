@@ -7,9 +7,7 @@
  * @returns A unique ID string
  */
 export function generateId(): string {
-  return (
-    'id_' +
-    Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15)
-  )
+  return `id_${Math.random()
+    .toString(36)
+    .substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`
 }

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import type { AICompletionRequest, AIService } from '../models/ai-types'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createAdvancedOptimizedAIService } from '../performance-optimizations'
-import type { AIService, AICompletionRequest } from '../models/ai-types'
 import * as performanceTracker from '../performance-tracker'
 
 // Mock the performance tracker
@@ -14,7 +14,7 @@ interface ExtendedAICompletionRequest extends AICompletionRequest {
   sessionId?: string
 }
 
-describe('Advanced Performance Optimizations', () => {
+describe('advanced performance optimizations', () => {
   let mockService: AIService
   let completeMock: ReturnType<typeof vi.fn>
 
@@ -68,7 +68,7 @@ describe('Advanced Performance Optimizations', () => {
       request.messages,
       expect.objectContaining({
         model: request.model,
-      })
+      }),
     )
   })
 
@@ -94,7 +94,7 @@ describe('Advanced Performance Optimizations', () => {
         cached: false,
         optimized: false,
         user_id: 'test-user',
-      })
+      }),
     )
   })
 
@@ -126,7 +126,7 @@ describe('Advanced Performance Optimizations', () => {
     // Different request should hit the service again
     await optimizedService.createChatCompletion(
       [{ role: 'user', content: 'Different message', name: 'user' }],
-      { model: request.model }
+      { model: request.model },
     )
     expect(completeMock).toHaveBeenCalledTimes(2)
   })
@@ -191,7 +191,7 @@ describe('Advanced Performance Optimizations', () => {
       ]),
       expect.objectContaining({
         model: 'test-model',
-      })
+      }),
     )
 
     // The optimized request should have fewer messages than the original
@@ -204,7 +204,7 @@ describe('Advanced Performance Optimizations', () => {
     // Last message should always be included
     const lastMessageIndex = calledWith.length - 1
     expect(calledWith[lastMessageIndex].content).toBe(
-      'Final message that should be included since it is recent.'
+      'Final message that should be included since it is recent.',
     )
   })
 
@@ -239,7 +239,7 @@ describe('Advanced Performance Optimizations', () => {
       optimizedService.createChatCompletion(request.messages, {
         model: request.model,
         userId: request.userId,
-      })
+      }),
     ).rejects.toThrow('Rate limit exceeded')
     expect(completeMock).toHaveBeenCalledTimes(2) // Still only called twice
 
@@ -249,7 +249,7 @@ describe('Advanced Performance Optimizations', () => {
       expect.objectContaining({
         success: false,
         error_code: 'RATE_LIMITED',
-      })
+      }),
     )
   })
 
@@ -287,14 +287,14 @@ describe('Advanced Performance Optimizations', () => {
 
     const response = await optimizedService.createChatCompletion(
       request.messages,
-      { model: request.model }
+      { model: request.model },
     )
 
     // Should have tried the fallback model
     expect(completeMock).toHaveBeenCalledWith(
       expect.objectContaining({
         model: 'fallback-model-1',
-      })
+      }),
     )
 
     // Should return the fallback response

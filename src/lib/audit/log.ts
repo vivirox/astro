@@ -3,6 +3,12 @@
  * Provides HIPAA-compliant audit logging
  */
 
+import type {
+  AuditLogEntry,
+  AuditMetadata,
+  AuditResource,
+  DbAuditLog,
+} from './types'
 import { createClient } from '@supabase/supabase-js'
 
 // Define structured metadata types to replace 'any'
@@ -15,26 +21,40 @@ export type AuditMetadataValue =
   | { [key: string]: AuditMetadataValue }
   | AuditMetadataValue[]
 
-export type AuditMetadata = Record<string, AuditMetadataValue>
+export interface AuditMetadata {
+  reason?: string
+  ipAddress?: string
+  userAgent?: string
+  requiredRole?: string
+  userRole?: string
+  method?: string
+  path?: string
+  sessionId?: string
+  [key: string]: unknown
+}
 
 // Define type for the database log record
-interface DbAuditLog {
+export interface DbAuditLog {
+  id: string
   user_id: string
   action: string
-  resource: string
-  resource_id?: string
+  resource_id: string
+  resource_type: string
   metadata: AuditMetadata
-  created_at: string | number | Date
+  created_at: Date
 }
 
 // Define audit log entry type
 export interface AuditLogEntry {
-  userId?: string
+  id: string
+  userId: string
   action: string
-  resource: string
-  resourceId?: string
-  metadata?: AuditMetadata
-  timestamp?: Date
+  resource: {
+    id: string
+    type: string
+  }
+  metadata: AuditMetadata
+  timestamp: Date
 }
 
 /**
@@ -47,7 +67,7 @@ export function createAuditLog(
   action: string,
   resource: string,
   metadata?: AuditMetadata,
-  request?: { headers: { get(name: string): string | null } }
+  request?: { headers: { get: (name: string) => string | null } },
 ): Promise<void>
 
 /**
@@ -58,12 +78,12 @@ export async function createAuditLog(
   action?: string,
   resource?: string,
   metadata: AuditMetadata = {},
-  request?: { headers: { get(name: string): string | null } }
+  request?: { headers: { get: (name: string) => string | null } },
 ): Promise<void> {
   try {
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     )
 
     // Add timestamp
@@ -87,9 +107,9 @@ export async function createAuditLog(
       // Insert the audit log entry
       const { error } = await supabase.from('audit_logs').insert({
         user_id: userId,
-        action: action,
-        resource: resource,
-        metadata: metadata,
+        action,
+        resource,
+        metadata,
         created_at: timestamp.toISOString(),
         ip_address,
         user_agent,
@@ -99,7 +119,7 @@ export async function createAuditLog(
         console.error('Error creating audit log:', error)
       }
     } else {
-      // Called with entry object
+      // Called with entry objec
       const entry = entryOrUserId
 
       // Insert the audit log entry
@@ -124,12 +144,12 @@ export async function createAuditLog(
 export async function getUserAuditLogs(
   userId: string,
   limit = 100,
-  offset = 0
+  offset = 0,
 ): Promise<AuditLogEntry[]> {
   try {
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     )
 
     // Get the audit logs
@@ -170,12 +190,12 @@ export async function getUserAuditLogs(
 export async function getActionAuditLogs(
   action: string,
   limit = 100,
-  offset = 0
+  offset = 0,
 ): Promise<AuditLogEntry[]> {
   try {
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
     )
 
     // Get the audit logs
@@ -204,4 +224,93 @@ export async function getActionAuditLogs(
     console.error('Error getting audit logs:', error)
     return []
   }
+}
+
+export async function logAuditEvent(
+  action: string,
+  userId: string,
+  resourceId: string,
+  resourceType: string,
+  details?: Record<string, unknown>,
+): Promise<void> {
+  await createAuditLog(action, userId, resourceId, resourceType, details)
+}
+
+/**
+ * Creates an audit log entry
+ */
+export async function createAuditLog(
+  action: string,
+  userId: string,
+  resource: AuditResource,
+  metadata: AuditMetadata,
+): Promise<AuditLogEntry> {
+  const timestamp = new Date()
+
+  const dbLog: DbAuditLog = {
+    id: crypto.randomUUID(),
+    timestamp,
+    action,
+    user_id: userId,
+    resource_id: resource.id,
+    resource_type: resource.type,
+    metadata,
+  }
+
+  // Save to database
+  await db.auditLogs.create(dbLog)
+
+  return {
+    id: dbLog.id,
+    timestamp: dbLog.timestamp,
+    action: dbLog.action,
+    userId: dbLog.user_id,
+    resource: {
+      id: dbLog.resource_id,
+      type: dbLog.resource_type,
+    },
+    metadata: dbLog.metadata,
+  }
+}
+
+/**
+ * Gets audit logs for a specific user
+ */
+export async function getAuditLogsByUser(
+  userId: string,
+): Promise<AuditLogEntry[]> {
+  const logs = await db.auditLogs.findMany({
+    where: { user_id: userId },
+  })
+
+  return logs.map((log) => ({
+    id: log.id,
+    timestamp: log.timestamp,
+    action: log.action,
+    userId: log.user_id,
+    resource: {
+      id: log.resource_id,
+      type: log.resource_type,
+    },
+    metadata: log.metadata,
+  }))
+}
+
+/**
+ * Gets all audit logs
+ */
+export async function getAuditLogs(): Promise<AuditLogEntry[]> {
+  const logs = await db.auditLogs.findMany()
+
+  return logs.map((log) => ({
+    id: log.id,
+    timestamp: log.timestamp,
+    action: log.action,
+    userId: log.user_id,
+    resource: {
+      id: log.resource_id,
+      type: log.resource_type,
+    },
+    metadata: log.metadata,
+  }))
 }

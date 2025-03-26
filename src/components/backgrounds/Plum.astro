@@ -16,7 +16,7 @@
     canvas: HTMLCanvasElement,
     width = 400,
     height = 400,
-    scale?: number
+    scale?: number,
   ) {
     const ctx = canvas.getContext('2d')!
     const dpr = window.devicePixelRatio || 1
@@ -27,7 +27,7 @@
     canvas.style.width = `${width}px`
     canvas.style.height = `${height}px`
     canvas.width = pixelRatio * width
-    canvas.height = pixelRatio * height
+    canvas.height = pixelRatio * heigh
     ctx.scale(pixelRatio, pixelRatio)
 
     return { ctx, pixelRatio }
@@ -54,7 +54,7 @@
         x: number,
         y: number,
         rad: number,
-        counter: { value: number } = { value: 0 }
+        counter: { value: number } = { value: 0 },
       ) => {
         // drawing a branch
         const length = random() * LEN
@@ -145,8 +145,8 @@
       let lastTime = performance.now()
 
       const width = window.innerWidth
-      const height = window.innerHeight
-      const canvas = this.querySelector('canvas') as HTMLCanvasElement
+      const height = window.innerHeigh
+      const canvas = this.querySelector('canvas') as HTMLCanvasElemen
       const { ctx } = initCanvas(canvas, width, height)
       ctx.lineWidth = 1
       ctx.strokeStyle = COLOR

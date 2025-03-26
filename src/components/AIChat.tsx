@@ -1,15 +1,15 @@
-import { useState, useRef, useEffect } from 'react'
-import type { AIMessage } from '../lib/ai/models/types'
 import type { AIUsageRecord } from '../lib/ai/models/ai-types'
-import type { AIModel } from '../lib/ai/models/types'
+import type { AIMessage, AIModel } from '../lib/ai/models/types'
+import { useEffect, useRef, useState } from 'react'
 import { getAllModels } from '../lib/ai/models/registry'
 import { createTogetherAIService } from '../lib/ai/services/together'
+import { logger } from '../utils/logger'
 
 // Initialize AI service
 const aiService = createTogetherAIService({
   apiKey: import.meta.env.TOGETHER_API_KEY ?? '',
   onUsage: async (usage: AIUsageRecord) => {
-    console.log('AI Usage:', usage)
+    logger.warn('AI Usage:', usage)
   },
   togetherApiKey: '',
 })
@@ -22,7 +22,7 @@ export default function AIChat() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [selectedModel, setSelectedModel] = useState(
-    availableModels[0]?.id || ''
+    availableModels[0]?.id || '',
   )
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -56,7 +56,7 @@ export default function AIChat() {
       const liveRegion = document.createElement('div')
       liveRegion.setAttribute('aria-live', 'polite')
       liveRegion.setAttribute('class', 'sr-only')
-      liveRegion.textContent = announcement
+      liveRegion.textContent = announcemen
 
       document.body.appendChild(liveRegion)
 
@@ -97,7 +97,7 @@ export default function AIChat() {
 
       const assistantMessage: AIMessage = {
         role: 'assistant',
-        content: content,
+        content,
         name: '',
       }
       setMessages((prev) => [...prev, assistantMessage])
@@ -113,7 +113,7 @@ export default function AIChat() {
         },
       ])
       setErrorMessage(
-        'An error occurred while getting the AI response. Please try again.'
+        'An error occurred while getting the AI response. Please try again.',
       )
     } finally {
       setIsLoading(false)
@@ -134,7 +134,7 @@ export default function AIChat() {
       aria-label="AI Chat Interface"
     >
       <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-        TogetherAI Chat
+        TogetherAI Cha
       </h2>
 
       {/* Model selector */}

@@ -6,7 +6,7 @@ import { getFilteredPosts } from '~/utils/post'
 import { FEATURES } from '~/config'
 
 // Set prerender to true for static generation
-export const prerender = true;
+export const prerender = true
 
 export async function getStaticPaths() {
   const posts = await getFilteredPosts('changelog')
@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props
-const { data: frontmatter } = post
+const { data: frontmatter } = pos
 const { Content, headings } = await post.render()
 const { share, toc } = FEATURES
 
@@ -31,10 +31,7 @@ const warningHTML = `This article is not yet available.
 Please check back later.`
 ---
 
-<Layout
-  title={frontmatter.title}
-  description={frontmatter.description}
->
+<Layout title={frontmatter.title} description={frontmatter.description}>
   <article class="prose prose-lg mx-auto">
     <h1>{frontmatter.title}</h1>
 
@@ -54,23 +51,29 @@ Please check back later.`
         )
       }
 
-      {new Date(frontmatter.pubDate) > new Date() &&
-        <div class="bg-yellow-100 text-yellow-800 p-3 my-4 rounded">
-          {warningHTML}
-        </div>
+      {
+        new Date(frontmatter.pubDate) > new Date() && (
+          <div class="bg-yellow-100 text-yellow-800 p-3 my-4 rounded">
+            {warningHTML}
+          </div>
+        )
       }
     </div>
 
-    {frontmatter.toc && <nav class="table-of-contents">
-      <h2>Table of Contents</h2>
-      <ul>
-        {headings.map(heading => (
-          <li class={`depth-${heading.depth}`}>
-            <a href={`#${heading.slug}`}>{heading.text}</a>
-          </li>
-        ))}
-      </ul>
-    </nav>}
+    {
+      frontmatter.toc && (
+        <nav class="table-of-contents">
+          <h2>Table of Contents</h2>
+          <ul>
+            {headings.map((heading) => (
+              <li class={`depth-${heading.depth}`}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
 
     <Content />
   </article>

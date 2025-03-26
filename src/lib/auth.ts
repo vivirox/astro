@@ -1,15 +1,9 @@
 import type { AstroCookies } from 'astro'
+import type { AuthRole } from '../config/auth.config'
+import type { AuditMetadata } from './audit/log'
+import { authConfig, hasRolePrivilege } from '../config/auth.config'
+import { createAuditLog } from './audit/log'
 import { supabase } from './supabase'
-import {
-  createAuditLog,
-  type AuditLogEntry,
-  type AuditMetadata,
-} from './audit/log'
-import {
-  authConfig,
-  type AuthRole,
-  hasRolePrivilege,
-} from '../config/auth.config'
 
 export interface AuthUser {
   id: string
@@ -25,7 +19,7 @@ export interface AuthUser {
  * Get the current authenticated user from cookies
  */
 export async function getCurrentUser(
-  cookies: AstroCookies
+  cookies: AstroCookies,
 ): Promise<AuthUser | null> {
   const accessToken = cookies.get(authConfig.cookies.accessToken)?.value
   const refreshToken = cookies.get(authConfig.cookies.refreshToken)?.value
@@ -87,7 +81,7 @@ export async function isAuthenticated(cookies: AstroCookies): Promise<boolean> {
  */
 export async function hasRole(
   cookies: AstroCookies,
-  requiredRole: AuthRole
+  requiredRole: AuthRole,
 ): Promise<boolean> {
   const user = await getCurrentUser(cookies)
   if (!user) return false
@@ -98,14 +92,24 @@ export async function hasRole(
 /**
  * Log an audit event from auth module
  */
-export async function createAuthAuditLog(entry: AuditLogEntry): Promise<void> {
+export async function createAuthAuditLog(entry: {
+  userId: string
+  action: string
+  resource: string
+  resourceId?: string
+  metadata?: AuditMetadata
+}): Promise<void> {
   try {
     await createAuditLog({
+      id: crypto.randomUUID(),
+      timestamp: new Date(),
       userId: entry.userId,
       action: entry.action,
-      resource: entry.resource,
-      resourceId: entry.resourceId,
-      metadata: entry.metadata,
+      resource: {
+        id: entry.resourceId || '',
+        type: entry.resource,
+      },
+      metadata: entry.metadata || {},
     })
   } catch (error) {
     console.error('Error logging auth audit event:', error)
@@ -120,14 +124,18 @@ export async function createAuditLogFromParams(
   action: string,
   resource: string,
   resourceId?: string | null,
-  metadata?: AuditMetadata | null
+  metadata?: AuditMetadata | null,
 ): Promise<void> {
   await createAuditLog({
-    userId: userId || undefined,
+    id: crypto.randomUUID(),
+    timestamp: new Date(),
+    userId: userId || 'system',
     action,
-    resource,
-    resourceId: resourceId || undefined,
-    metadata: metadata || undefined,
+    resource: {
+      id: resourceId || '',
+      type: resource,
+    },
+    metadata: metadata || {},
   })
 }
 

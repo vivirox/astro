@@ -1,9 +1,9 @@
-import { getDefaultModelForCapability } from '../models/registry'
 import type {
-  AIService,
   AIMessage,
+  AIService,
   SentimentAnalysisResult,
 } from '../models/types'
+import { getDefaultModelForCapability } from '../models/registry'
 
 /**
  * Sentiment Analysis Service Configuration
@@ -55,7 +55,7 @@ export class SentimentAnalysisService {
    */
   async analyzeSentiment(
     text: string,
-    customPrompt?: string
+    customPrompt?: string,
   ): Promise<SentimentAnalysisResult> {
     const startTime = Date.now()
     const prompt = customPrompt || this.defaultPrompt
@@ -75,8 +75,7 @@ export class SentimentAnalysisService {
       const jsonMatch =
         content.match(/```json\n([\s\S]*?)\n```/) ||
         content.match(/```\n([\s\S]*?)\n```/) ||
-        content.match(/{[\s\S]*?}/)
-
+        content.match(/\{[\s\S]*?\}/)
       const jsonStr = jsonMatch ? jsonMatch[0] : content
       const parsedResult = JSON.parse(jsonStr)
 

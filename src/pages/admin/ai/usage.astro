@@ -125,7 +125,7 @@ const period = Astro.url.searchParams.get('period') || 'daily'
       const period = urlParams.get('period') || 'daily'
 
       const response = await fetch(
-        `/api/ai/usage-stats?period=${period}&allUsers=true`
+        `/api/ai/usage-stats?period=${period}&allUsers=true`,
       )
 
       if (!response.ok) {
@@ -160,12 +160,12 @@ const period = Astro.url.searchParams.get('period') || 'daily'
     labels: string[],
     data: number[],
     label: string,
-    color: string
+    color: string,
   ): Chart | null {
     const element = document.querySelector(`#${elementId} .stat-chart`)
     if (!element) return null
 
-    const canvas = element as HTMLCanvasElement
+    const canvas = element as HTMLCanvasElemen
     const ctx = canvas.getContext('2d')
     if (!ctx) return null
 
@@ -209,12 +209,12 @@ const period = Astro.url.searchParams.get('period') || 'daily'
   function createModelUsageChart(
     elementId: string,
     models: string[],
-    data: number[]
+    data: number[],
   ): Chart | null {
     const element = document.querySelector(`#${elementId} .stat-chart-large`)
     if (!element) return null
 
-    const canvas = element as HTMLCanvasElement
+    const canvas = element as HTMLCanvasElemen
     const ctx = canvas.getContext('2d')
     if (!ctx) return null
 
@@ -251,10 +251,10 @@ const period = Astro.url.searchParams.get('period') || 'daily'
             callbacks: {
               label: function (context: unknown) {
                 const typedContext = context as {
-                  label: string;
-                  raw: number;
-                  parsed: number;
-                };
+                  label: string
+                  raw: number
+                  parsed: number
+                }
                 const label = typedContext.label || ''
                 const value = typedContext.raw
                 const percentage = typedContext.parsed
@@ -273,7 +273,7 @@ const period = Astro.url.searchParams.get('period') || 'daily'
 
     if (!stats || stats.length === 0) {
       const totalRequestsEl = document.querySelector(
-        '#total-requests .stat-value'
+        '#total-requests .stat-value',
       )
       const totalTokensEl = document.querySelector('#total-tokens .stat-value')
       const totalCostEl = document.querySelector('#total-cost .stat-value')
@@ -294,20 +294,20 @@ const period = Astro.url.searchParams.get('period') || 'daily'
     // Calculate totals
     const totalRequests = stats.reduce(
       (sum: number, day: DailyStats) => sum + day.totalRequests,
-      0
+      0,
     )
     const totalTokens = stats.reduce(
       (sum: number, day: DailyStats) => sum + day.totalTokens,
-      0
+      0,
     )
     const totalCost = stats.reduce(
       (sum: number, day: DailyStats) => sum + day.totalCost,
-      0
+      0,
     )
 
     // Update summary cards
     const totalRequestsEl = document.querySelector(
-      '#total-requests .stat-value'
+      '#total-requests .stat-value',
     )
     const totalTokensEl = document.querySelector('#total-tokens .stat-value')
     const totalCostEl = document.querySelector('#total-cost .stat-value')

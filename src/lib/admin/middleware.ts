@@ -5,14 +5,26 @@
  */
 
 import type { APIContext } from 'astro'
-import { AdminService, type AdminPermission } from './index'
+import type { AdminPermission } from './index'
+import { AdminService } from './index'
+
+// Extend APIContext.locals with our admin type
+declare module 'astro' {
+  interface Locals {
+    admin?: {
+      userId: string
+      isAdmin: boolean
+      hasPermission: boolean
+    }
+  }
+}
 
 /**
  * Verify that the request is from an authenticated admin user
  */
 export async function verifyAdmin(
   context: APIContext,
-  requiredPermission?: AdminPermission
+  requiredPermission?: AdminPermission,
 ): Promise<{
   userId: string
   isAdmin: boolean
@@ -39,12 +51,12 @@ export async function verifyAdmin(
       return null
     }
 
-    // If a specific permission is required, check for i
+    // If a specific permission is required, check for it
     let hasPermission = true
     if (requiredPermission) {
       hasPermission = await adminService.hasPermission(
         admin.userId,
-        requiredPermission
+        requiredPermission,
       )
     }
 
@@ -53,8 +65,7 @@ export async function verifyAdmin(
       isAdmin: true,
       hasPermission,
     }
-  } catch (error) {
-    console.error('Admin verification error:', error)
+  } catch {
     return null
   }
 }
@@ -80,13 +91,13 @@ export function adminGuard(requiredPermission?: AdminPermission) {
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
     // Continue with the request
     // Apply the admin context to the request for use in the route handler
-    context.locals.admin = admin
+    ;(context.locals as any).admin = admin
 
     return null // Allow the request to proceed
   }

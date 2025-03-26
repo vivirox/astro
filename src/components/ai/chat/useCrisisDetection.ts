@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
 import type { CrisisDetectionResult } from '../../../lib/ai/models/types'
+import { useCallback, useState } from 'react'
 
 interface UseCrisisDetectionOptions {
   apiEndpoint?: string
@@ -72,7 +72,7 @@ export function useCrisisDetection({
         }
 
         // Parse response
-        const data = (await response?.json()) as CrisisDetectionResult
+        const data = (await response?.json()) as CrisisDetectionResul
         setResult(data)
 
         // Call onCrisisDetected callback if crisis detected
@@ -109,7 +109,7 @@ export function useCrisisDetection({
       onError,
       onCrisisDetected,
       onComplete,
-    ]
+    ],
   )
 
   // Detect crisis in a batch of texts
@@ -186,7 +186,7 @@ export function useCrisisDetection({
       onError,
       onCrisisDetected,
       onComplete,
-    ]
+    ],
   )
 
   return {

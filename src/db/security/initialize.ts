@@ -4,14 +4,14 @@
  * This module provides functionality to initialize the security-related database tables.
  */
 
-import { getLogger } from '../../lib/logging'
+import { getLogger } from '../../lib/logging/index'
 
 const logger = getLogger()
 
 /**
  * Initialize the security database tables and indexes
  */
-export async function initializeSecurityDatabase(): Promise<void> {
+export async function initializeSecurityDatabase() {
   try {
     logger.info('Initializing security database...')
 
@@ -19,9 +19,9 @@ export async function initializeSecurityDatabase(): Promise<void> {
     // For now, we'll just simulate the initialization
 
     logger.info('Security database initialized successfully')
-    return Promise.resolve()
   } catch (error) {
-    logger.error('Failed to initialize security database', error)
-    throw error
+    const typedError = error instanceof Error ? error : new Error(String(error))
+    logger.error('Failed to initialize security database', typedError)
+    throw typedError
   }
 }

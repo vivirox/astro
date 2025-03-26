@@ -1,7 +1,7 @@
-import { type APIRoute } from 'astro'
+import type { APIRoute } from 'astro'
+import { createAuditLog } from '../../../lib/audit/log.js'
 import { getSession } from '../../../lib/auth/session.js'
 import { aiRepository } from '../../../lib/db/ai/index.js'
-import { createAuditLog } from '../../../lib/audit/log.js'
 
 export const GET: APIRoute = async ({ request, url }) => {
   let session
@@ -23,13 +23,13 @@ export const GET: APIRoute = async ({ request, url }) => {
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
     // Parse query parameters
-    const limit = parseInt(url.searchParams.get('limit') || '20', 10)
-    const offset = parseInt(url.searchParams.get('offset') || '0', 10)
+    const limit = Number.parseInt(url.searchParams.get('limit') || '20', 10)
+    const offset = Number.parseInt(url.searchParams.get('offset') || '0', 10)
 
     // Log the request
     await createAuditLog({
@@ -46,7 +46,7 @@ export const GET: APIRoute = async ({ request, url }) => {
     // Retrieve high-risk crisis detections
     const detections = await aiRepository.getHighRiskCrisisDetections(
       limit,
-      offset
+      offset,
     )
 
     // Log the response
@@ -78,7 +78,7 @@ export const GET: APIRoute = async ({ request, url }) => {
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
   }
 }

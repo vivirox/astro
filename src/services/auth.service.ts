@@ -1,7 +1,7 @@
-import { supabase } from '../lib/supabase'
+import type { User } from '@supabase/supabase-js'
 import type { AuthUser, Provider } from '../types/auth'
 import { createSecureToken, verifySecureToken } from '../lib/security'
-import type { User } from '@supabase/supabase-js'
+import { supabase } from '../lib/supabase'
 
 /**
  * AuthService provides methods for managing user authentication
@@ -20,9 +20,11 @@ export class AuthService {
         password,
       })
 
-      if (error) throw error
+      if (error)
+        throw error
       return { user: this.mapToAuthUser(data.user), session: data.session }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error signing in:', error)
       throw error
     }
@@ -40,9 +42,11 @@ export class AuthService {
         options: redirectTo ? { redirectTo } : undefined,
       })
 
-      if (error) throw error
+      if (error)
+        throw error
       return data
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error signing in with OAuth:', error)
       throw error
     }
@@ -58,7 +62,7 @@ export class AuthService {
   static async signUp(
     email: string,
     password: string,
-    metadata?: { fullName?: string }
+    metadata?: { fullName?: string },
   ) {
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -69,9 +73,11 @@ export class AuthService {
         },
       })
 
-      if (error) throw error
+      if (error)
+        throw error
       return { user: this.mapToAuthUser(data.user), session: data.session }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error signing up:', error)
       throw error
     }
@@ -83,9 +89,11 @@ export class AuthService {
   static async signOut() {
     try {
       const { error } = await supabase.auth.signOut()
-      if (error) throw error
+      if (error)
+        throw error
       return true
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error signing out:', error)
       throw error
     }
@@ -98,10 +106,12 @@ export class AuthService {
   static async getCurrentUser() {
     try {
       const { data } = await supabase.auth.getUser()
-      if (!data.user) return null
+      if (!data.user)
+        return null
 
       return this.mapToAuthUser(data.user)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error getting current user:', error)
       return null
     }
@@ -118,9 +128,11 @@ export class AuthService {
         redirectTo,
       })
 
-      if (error) throw error
+      if (error)
+        throw error
       return true
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error resetting password:', error)
       throw error
     }
@@ -136,9 +148,11 @@ export class AuthService {
         password,
       })
 
-      if (error) throw error
+      if (error)
+        throw error
       return true
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error updating password:', error)
       throw error
     }
@@ -172,10 +186,11 @@ export class AuthService {
   /**
    * Map Supabase user to AuthUser
    * @param user Supabase user
-   * @returns AuthUser object
+   * @returns AuthUser objec
    */
   private static mapToAuthUser(user: User): AuthUser {
-    if (!user) return null
+    if (!user)
+      return null
 
     return {
       id: user.id,
@@ -185,7 +200,7 @@ export class AuthService {
       role: user.app_metadata?.role || 'guest',
       fullName: user.user_metadata?.fullName || '',
       roles: user.app_metadata?.roles || [],
-      emailVerified: user.email_confirmed_at ? true : false,
+      emailVerified: !!user.email_confirmed_at,
       createdAt: user.created_at,
       lastSignIn: user.last_sign_in_at,
       avatarUrl: user.user_metadata?.avatarUrl || '',
@@ -205,10 +220,10 @@ export class AuthService {
       fullName?: string
       avatarUrl?: string
       metadata?: Record<string, unknown>
-    }
+    },
   ) {
     try {
-      // Create update object
+      // Create update objec
       const updates: {
         data: Record<string, unknown>
       } = {
@@ -236,10 +251,12 @@ export class AuthService {
         user_metadata: updates.data,
       })
 
-      if (error) throw error
+      if (error)
+        throw error
 
       return { success: true }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error updating profile:', error)
       return { error }
     }
@@ -270,14 +287,16 @@ export class AuthService {
           type: 'sms',
         })
 
-        if (error) throw error
+        if (error)
+          throw error
 
         return {
           success: true,
           user: data?.user ? this.mapToAuthUser(data.user) : null,
           session: data?.session || null,
         }
-      } else {
+      }
+      else {
         // For email-based verification types
         if (!params.email) {
           throw new Error('Email is required for email verification')
@@ -289,7 +308,8 @@ export class AuthService {
           type: params.type || 'recovery',
         })
 
-        if (error) throw error
+        if (error)
+          throw error
 
         return {
           success: true,
@@ -297,7 +317,8 @@ export class AuthService {
           session: data?.session || null,
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error verifying OTP:', error)
       return { success: false, error }
     }

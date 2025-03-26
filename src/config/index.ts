@@ -5,29 +5,28 @@
  * throughout the application.
  */
 
-// Environment variables configuration
-import { config as envConfig, type Env } from './env.config'
-export { envConfig, type Env }
+import type { AuthConfig, AuthRole } from './auth.config'
+import type { Env } from './env.config'
 
-// Supabase configuration
-import supabaseConfig from './supabase.config'
-export { supabaseConfig }
+import type { RateLimitOptions } from './rate-limit.config'
+
+// Authentication configuration
+import { authConfig, hasRolePrivilege } from './auth.config'
 
 // Deployment configuration
 import deploymentConfig from './deployment.config'
-export { deploymentConfig }
-
+// Environment variables configuration
+import { config as envConfig } from './env.config'
 // Rate limit configuration
-import rateLimitConfig, { type RateLimitOptions } from './rate-limit.config'
-export { rateLimitConfig, type RateLimitOptions }
+import rateLimitConfig from './rate-limit.config'
 
-// Authentication configuration
-import {
-  authConfig,
-  type AuthConfig,
-  type AuthRole,
-  hasRolePrivilege,
-} from './auth.config'
+// Supabase configuration
+import supabaseConfig from './supabase.config'
+
+export { type Env, envConfig }
+export { supabaseConfig }
+export { deploymentConfig }
+export { rateLimitConfig, type RateLimitOptions }
 export { authConfig, type AuthConfig, type AuthRole, hasRolePrivilege }
 
 // Default export for all configurations

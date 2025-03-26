@@ -117,7 +117,7 @@ export default function UserManagement() {
       (user) =>
         user.name.toLowerCase().includes(search) ||
         user.email.toLowerCase().includes(search) ||
-        user.id.toLowerCase().includes(search)
+        user.id.toLowerCase().includes(search),
     )
 
     setFilteredUsers(filtered)
@@ -284,7 +284,7 @@ export default function UserManagement() {
               filteredUsers.map((user) => (
                 <tr
                   key={user.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
                   onClick={() => handleUserClick(user)}
                 >
                   <td className="py-4 px-6 text-sm text-gray-800 dark:text-gray-200">

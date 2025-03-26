@@ -31,7 +31,7 @@ export const corsMiddleware = defineMiddleware(async ({ request }, next) => {
 
   const origin = request.headers.get('Origin')
 
-  // Process the request first
+  // Process the request firs
   const response = await next()
 
   // Apply CORS headers if origin is presen
@@ -39,7 +39,7 @@ export const corsMiddleware = defineMiddleware(async ({ request }, next) => {
     // Check if origin is allowed
     const isAllowed = corsOptions.allowedOrigins.some((allowedOrigin) => {
       if (allowedOrigin.includes('*')) {
-        const pattern = new RegExp('^' + allowedOrigin.replace('*', '.*') + '$')
+        const pattern = new RegExp(`^${allowedOrigin.replace('*', '.*')}$`)
         return pattern.test(origin)
       }
       return allowedOrigin === origin
@@ -56,21 +56,21 @@ export const corsMiddleware = defineMiddleware(async ({ request }, next) => {
       if (request.method === 'OPTIONS') {
         response?.headers.set(
           'Access-Control-Allow-Methods',
-          corsOptions.allowedMethods.join(', ')
+          corsOptions.allowedMethods.join(', '),
         )
         response?.headers.set(
           'Access-Control-Allow-Headers',
-          corsOptions.allowedHeaders.join(', ')
+          corsOptions.allowedHeaders.join(', '),
         )
         response?.headers.set(
           'Access-Control-Max-Age',
-          corsOptions.maxAge.toString()
+          corsOptions.maxAge.toString(),
         )
 
         if (corsOptions.exposedHeaders.length > 0) {
           response?.headers.set(
             'Access-Control-Expose-Headers',
-            corsOptions.exposedHeaders.join(', ')
+            corsOptions.exposedHeaders.join(', '),
           )
         }
 
@@ -85,7 +85,7 @@ export const corsMiddleware = defineMiddleware(async ({ request }, next) => {
       if (corsOptions.exposedHeaders.length > 0) {
         response?.headers.set(
           'Access-Control-Expose-Headers',
-          corsOptions.exposedHeaders.join(', ')
+          corsOptions.exposedHeaders.join(', '),
         )
       }
     }

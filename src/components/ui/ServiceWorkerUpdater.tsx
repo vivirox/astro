@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { serviceWorkerManager } from '../../utils/serviceWorkerRegistration'
 import { toast } from 'react-hot-toast'
+import { serviceWorkerManager } from '../../utils/serviceWorkerRegistration'
 
 interface ServiceWorkerUpdaterProps {
   onUpdateAvailable?: () => void
@@ -26,8 +26,8 @@ export const ServiceWorkerUpdater: React.FC<ServiceWorkerUpdaterProps> = ({
     }
 
     // Register service worker
-    serviceWorkerManager.register().catch((error) => {
-      console.error('Service Worker registration failed:', error)
+    serviceWorkerManager.register().catch(() => {
+      console.error('Service Worker registration failed')
     })
 
     // Listen for updates
@@ -72,19 +72,19 @@ export const ServiceWorkerUpdater: React.FC<ServiceWorkerUpdaterProps> = ({
         {
           duration: Infinity,
           position: 'bottom-right',
-        }
+        },
       )
     }
 
     window.addEventListener(
       'serviceWorkerUpdateAvailable',
-      handleUpdateAvailable
+      handleUpdateAvailable,
     )
 
     // Check for updates periodically
     const checkForUpdates = () => {
-      serviceWorkerManager.update().catch((error) => {
-        console.error('Service Worker update check failed:', error)
+      serviceWorkerManager.update().catch(() => {
+        console.error('Service Worker update check failed')
       })
     }
 
@@ -95,7 +95,7 @@ export const ServiceWorkerUpdater: React.FC<ServiceWorkerUpdaterProps> = ({
     return () => {
       window.removeEventListener(
         'serviceWorkerUpdateAvailable',
-        handleUpdateAvailable
+        handleUpdateAvailable,
       )
       clearInterval(updateInterval)
     }
@@ -106,12 +106,10 @@ export const ServiceWorkerUpdater: React.FC<ServiceWorkerUpdaterProps> = ({
     const requestNotificationPermission = async () => {
       if ('Notification' in window && Notification.permission === 'default') {
         try {
-          const permission = await Notification.requestPermission()
-          if (permission === 'granted') {
-            toast.success('Notifications enabled')
-          }
-        } catch (error) {
-          console.error('Failed to request notification permission:', error)
+          await Notification.requestPermission()
+          toast.success('Notifications enabled')
+        } catch {
+          console.error('Failed to request notification permission')
         }
       }
     }

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type { AIMessage, AIService } from '../../lib/ai/models/ai-types.ts'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ResponseGenerationService } from '../../lib/ai/services/response-generation.ts'
-import type { AIService, AIMessage } from '../../lib/ai/models/ai-types.ts'
 
 // Mock AI service
 const mockAIService: AIService = {
@@ -12,7 +12,7 @@ const mockAIService: AIService = {
   dispose: vi.fn(),
 } as AIService // Add type assertion to ensure compatibility
 
-describe('ResponseGenerationService', () => {
+describe('responseGenerationService', () => {
   let responseService: ResponseGenerationService
 
   beforeEach(() => {
@@ -47,8 +47,8 @@ describe('ResponseGenerationService', () => {
         { role: 'user', content: 'Hello, how are you?', name: 'user' },
       ]
 
-      const result =
-        await responseService.generateResponseFromMessages(messages)
+      const result
+        = await responseService.generateResponseFromMessages(messages)
 
       // Verify the result
       expect(result).toEqual({
@@ -94,7 +94,7 @@ describe('ResponseGenerationService', () => {
         expect.objectContaining({
           model: 'test-model',
           temperature: 0.2,
-        })
+        }),
       )
     })
 
@@ -131,7 +131,7 @@ describe('ResponseGenerationService', () => {
         expect.objectContaining({
           model: 'test-model',
           maxTokens: 500,
-        })
+        }),
       )
     })
 
@@ -161,7 +161,7 @@ describe('ResponseGenerationService', () => {
       const customPrompt = 'Custom system prompt'
       await responseService.generateResponseWithInstructions(
         messages,
-        customPrompt
+        customPrompt,
       )
 
       // Just verify the AI service was called
@@ -179,7 +179,7 @@ describe('ResponseGenerationService', () => {
       ]
 
       await expect(
-        responseService.generateResponseFromMessages(messages)
+        responseService.generateResponseFromMessages(messages),
       ).rejects.toThrow('AI service error')
     })
 
@@ -206,7 +206,7 @@ describe('ResponseGenerationService', () => {
         { role: 'user', content: 'Hello, how are you?', name: 'user' },
         {
           role: 'assistant',
-          content: "I'm doing well, thank you! How can I help you today?",
+          content: 'I\'m doing well, thank you! How can I help you today?',
           name: 'assistant',
         },
         {
@@ -250,7 +250,7 @@ describe('ResponseGenerationService', () => {
       const customPrompt = 'Custom system prompt'
       await responseService.generateResponseWithInstructions(
         messages,
-        customPrompt
+        customPrompt,
       )
 
       // Just verify the AI service was called
@@ -276,7 +276,8 @@ describe('ResponseGenerationService', () => {
             next: async () => {
               if (index < chunks.length) {
                 return { done: false, value: chunks[index++] }
-              } else {
+              }
+              else {
                 return { done: true, value: undefined }
               }
             },
@@ -318,7 +319,7 @@ describe('ResponseGenerationService', () => {
       const mockCallback = vi.fn()
 
       await expect(
-        responseService.generateStreamingResponse(messages, mockCallback)
+        responseService.generateStreamingResponse(messages, mockCallback),
       ).rejects.toThrow('Streaming error')
     })
   })
@@ -331,7 +332,7 @@ describe('ResponseGenerationService', () => {
 
       // Access the model directly
       expect((service as unknown as { model: string }).model).toBe(
-        'mistralai/Mixtral-8x7B-Instruct-v0.2'
+        'mistralai/Mixtral-8x7B-Instruct-v0.2',
       )
     })
 
@@ -341,7 +342,7 @@ describe('ResponseGenerationService', () => {
       })
 
       expect((service as unknown as { temperature: number }).temperature).toBe(
-        0.7
+        0.7,
       )
     })
 
@@ -351,7 +352,7 @@ describe('ResponseGenerationService', () => {
       })
 
       expect(
-        (service as unknown as { maxResponseTokens: number }).maxResponseTokens
+        (service as unknown as { maxResponseTokens: number }).maxResponseTokens,
       ).toBe(1024)
     })
 
@@ -363,7 +364,7 @@ describe('ResponseGenerationService', () => {
       })
 
       expect(
-        (service as unknown as { systemPrompt: string }).systemPrompt
+        (service as unknown as { systemPrompt: string }).systemPrompt,
       ).toBe(customPrompt)
     })
   })

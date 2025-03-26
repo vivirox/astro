@@ -1,5 +1,5 @@
+import { Moon, MousePointerClick, Sun, ZapIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Moon, Sun, ZapIcon, MousePointerClick } from 'lucide-react'
 
 interface ThemeToggleProps {
   className?: string
@@ -7,7 +7,7 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ className = '' }: ThemeToggleProps) {
   const [activeTheme, setTheme] = useState<'light' | 'dark' | 'system'>(
-    'system'
+    'system',
   )
   const [highContrast, setHighContrast] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
@@ -41,7 +41,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
 
   // Apply theme changes
   const applyTheme = (newTheme: string) => {
-    const root = document.documentElement
+    const root = document.documentElemen
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
       .matches
       ? 'dark'
@@ -68,7 +68,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
   // Handle high contrast toggle
   const handleHighContrastChange = (value: boolean) => {
     setHighContrast(value)
-    const root = document.documentElement
+    const root = document.documentElemen
 
     if (value) {
       root.classList.add('high-contrast')
@@ -82,7 +82,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
   // Handle reduced motion toggle
   const handleReducedMotionChange = (value: boolean) => {
     setReducedMotion(value)
-    const root = document.documentElement
+    const root = document.documentElemen
 
     if (value) {
       root.classList.add('reduced-motion')
@@ -116,7 +116,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
         >
           <div className="py-1" role="none">
             <button
-              className={`flex items-center w-full px-4 py-2 text-sm 
+              className={`flex items-center w-full px-4 py-2 text-sm
                 ${activeTheme === 'light' ? 'bg-gray-100 dark:bg-gray-700 font-medium' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
               onClick={() => handleThemeChange('light')}
               role="menuitem"
@@ -125,7 +125,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
               <span>Light</span>
             </button>
             <button
-              className={`flex items-center w-full px-4 py-2 text-sm 
+              className={`flex items-center w-full px-4 py-2 text-sm
                 ${activeTheme === 'dark' ? 'bg-gray-100 dark:bg-gray-700 font-medium' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
               onClick={() => handleThemeChange('dark')}
               role="menuitem"
@@ -134,7 +134,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
               <span>Dark</span>
             </button>
             <button
-              className={`flex items-center w-full px-4 py-2 text-sm 
+              className={`flex items-center w-full px-4 py-2 text-sm
                 ${activeTheme === 'system' ? 'bg-gray-100 dark:bg-gray-700 font-medium' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
               onClick={() => handleThemeChange('system')}
               role="menuitem"

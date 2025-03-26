@@ -1,6 +1,6 @@
-import { initializeSecurityTables } from './schema'
 import { createAuditLog } from '../../audit/log'
 import { getLogger } from '../../logging/index'
+import { initializeSecurityTables } from './schema'
 
 const logger = getLogger()
 
@@ -30,7 +30,7 @@ export async function initializeSecurityDatabase() {
   } catch (error) {
     logger.error(
       'Failed to initialize security database',
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(String(error)),
     )
 
     // Log initialization failure

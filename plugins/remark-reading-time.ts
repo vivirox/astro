@@ -1,5 +1,5 @@
-import getReadingTime from 'reading-time'
 import { toString } from 'mdast-util-to-string'
+import getReadingTime from 'reading-time'
 
 /**
  * Used to add a reading time property to the frontmatter of your Markdown or MDX files.

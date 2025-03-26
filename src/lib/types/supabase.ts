@@ -1,8 +1,8 @@
-import {
-  SecurityEventType,
+import type { Json } from '../../types/supabase'
+import type {
   SecurityEventSeverity,
+  SecurityEventType,
 } from '../security/monitoring'
-import { type Json } from '../../types/supabase'
 
 export interface Database {
   public: {

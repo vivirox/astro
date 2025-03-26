@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import { SendIcon, Loader2 } from 'lucide-react' // Lucide icons
+import { Loader2, SendIcon } from 'lucide-react' // Lucide icons
+import { useEffect, useRef, useState } from 'react'
 
 export interface ChatInputProps {
   onSendMessage: (message: string) => void

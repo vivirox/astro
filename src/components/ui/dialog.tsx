@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { cn } from '../../lib/utils'
 import { Button } from './button'
 
@@ -91,7 +91,7 @@ export function Dialog({
         onClose()
       }
     },
-    [closeOnOutsideClick, onClose]
+    [closeOnOutsideClick, onClose],
   )
 
   // Max width classes
@@ -110,7 +110,7 @@ export function Dialog({
     <div
       className={cn(
         'fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4',
-        backdropClassName
+        backdropClassName,
       )}
       onClick={handleBackdropClick}
       aria-modal="true"
@@ -121,7 +121,7 @@ export function Dialog({
           'w-full rounded-lg bg-white shadow-lg dark:bg-gray-800',
           'overflow-hidden flex flex-col',
           maxWidthClasses[maxWidth],
-          className
+          className,
         )}
         onClick={(e) => e.stopPropagation()}
       >
@@ -253,7 +253,7 @@ export function useConfirmDialog() {
         })
       })
     },
-    []
+    [],
   )
 
   const close = useCallback(() => {

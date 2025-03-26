@@ -5,9 +5,9 @@
  * on encrypted data without decryption.
  */
 
+import type { EncryptionMode, HomomorphicOperationResult } from './types'
 import { getLogger } from '../logging'
-import { EncryptionMode, FHEOperation } from './types'
-import type { HomomorphicOperationResult } from './types'
+import { FHEOperation } from './types'
 
 // Get logger
 const logger = getLogger()
@@ -25,7 +25,7 @@ export class FHEOperationError extends Error {
   constructor(
     message: string,
     operation: FHEOperation | string,
-    code = 'OPERATION_ERROR'
+    code = 'OPERATION_ERROR',
   ) {
     super(message)
     this.name = 'FHEOperationError'
@@ -86,7 +86,7 @@ export class HomomorphicOperations {
    */
   private constructor() {
     logger.info(
-      `Homomorphic Operations initialized in ${isServer ? 'server' : 'client'} environment`
+      `Homomorphic Operations initialized in ${isServer ? 'server' : 'client'} environment`,
     )
   }
 
@@ -118,7 +118,7 @@ export class HomomorphicOperations {
       throw new FHEOperationError(
         `Homomorphic operations initialization error: ${(error as Error).message}`,
         'initialize',
-        'INITIALIZATION_ERROR'
+        'INITIALIZATION_ERROR',
       )
     }
   }
@@ -134,7 +134,7 @@ export class HomomorphicOperations {
     encryptedData: string,
     operation: FHEOperation,
     encryptionMode: EncryptionMode,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ): Promise<HomomorphicOperationResult> {
     if (!this.initialized) {
       await this.initialize()
@@ -159,9 +159,9 @@ export class HomomorphicOperations {
 
       try {
         // This is just for simulation
-        // In a real implementation, we wouldn't have access to the plaintext
+        // In a real implementation, we wouldn't have access to the plaintex
         if (encryptedData.startsWith('eyJ')) {
-          // Base64 JSON format
+          // Base64 JSON forma
           const decoded = atob(encryptedData)
           const parsed = JSON.parse(decoded)
 
@@ -194,7 +194,7 @@ export class HomomorphicOperations {
         case FHEOperation.CATEGORIZE:
           result = await this.categorizeText(
             decodedData,
-            params?.categories as Record<string, string[]> | undefined
+            params?.categories as Record<string, string[]> | undefined,
           )
           metadata.categories = params?.categories || {}
           break
@@ -202,7 +202,7 @@ export class HomomorphicOperations {
         case FHEOperation.SUMMARIZE:
           result = await this.summarizeText(
             decodedData,
-            params?.maxLength as number | undefined
+            params?.maxLength as number | undefined,
           )
           metadata.originalLength = decodedData.length
           metadata.summaryLength = result.length
@@ -218,10 +218,10 @@ export class HomomorphicOperations {
         case FHEOperation.FILTER:
           result = await this.filterText(
             decodedData,
-            params?.filterTerms as string[] | undefined
+            params?.filterTerms as string[] | undefined,
           )
           metadata.filterTerms = params?.filterTerms || []
-          metadata.replacementsCount =
+          metadata.replacementsCoun =
             (decodedData.length - result.length) / '[FILTERED]'.length
           break
 
@@ -230,13 +230,13 @@ export class HomomorphicOperations {
             throw new FHEOperationError(
               'Custom operation requires a customOperation parameter',
               FHEOperation.CUSTOM,
-              'MISSING_PARAMETER'
+              'MISSING_PARAMETER',
             )
           }
           result = await this.performCustomOperation(
             decodedData,
             params.customOperation as string,
-            params
+            params,
           )
           metadata.customOperation = params.customOperation
           break
@@ -259,14 +259,14 @@ export class HomomorphicOperations {
             throw new FHEOperationError(
               'keywordDensity operation requires a keyword parameter',
               FHEOperation.KEYWORD_DENSITY,
-              'MISSING_PARAMETER'
+              'MISSING_PARAMETER',
             )
           }
           const keyword = params.keyword as string
           const lowerText = decodedData.toLowerCase()
           const words = lowerText.split(/\W+/).filter((w) => w.length > 0)
           const keywordCount = words.filter(
-            (w) => w === keyword.toLowerCase()
+            (w) => w === keyword.toLowerCase(),
           ).length
           const density = keywordCount / words.length
           result = density.toFixed(4)
@@ -303,12 +303,12 @@ export class HomomorphicOperations {
           throw new FHEOperationError(
             `Unsupported operation: ${operation}`,
             operation,
-            'UNSUPPORTED_OPERATION'
+            'UNSUPPORTED_OPERATION',
           )
       }
 
       // In a real implementation, this would encrypt the result
-      // For this example, we'll just wrap it in a JSON object
+      // For this example, we'll just wrap it in a JSON objec
 
       return {
         success: true,
@@ -322,7 +322,7 @@ export class HomomorphicOperations {
     } catch (error) {
       logger.error(
         `Failed to process encrypted data with operation ${operation}`,
-        error
+        error,
       )
 
       return {
@@ -361,7 +361,7 @@ export class HomomorphicOperations {
       }
     }
 
-    // Determine sentiment
+    // Determine sentimen
     if (positiveScore > negativeScore && positiveScore > neutralScore) {
       return 'positive'
     } else if (negativeScore > positiveScore && negativeScore > neutralScore) {
@@ -376,7 +376,7 @@ export class HomomorphicOperations {
    */
   private async categorizeText(
     text: string,
-    categories?: Record<string, string[]>
+    categories?: Record<string, string[]>,
   ): Promise<string> {
     if (!categories || Object.keys(categories).length === 0) {
       return 'unknown'
@@ -418,7 +418,7 @@ export class HomomorphicOperations {
    */
   private async summarizeText(
     text: string,
-    maxLength?: number
+    maxLength?: number,
   ): Promise<string> {
     // Simple extractive summarization for demonstration
     const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0)
@@ -444,7 +444,7 @@ export class HomomorphicOperations {
 
     // Enforce max length if specified
     if (maxLength && summary.length > maxLength) {
-      summary = summary.substring(0, maxLength - 3) + '...'
+      summary = `${summary.substring(0, maxLength - 3)}...`
     }
 
     return summary
@@ -462,7 +462,7 @@ export class HomomorphicOperations {
    */
   private async filterText(
     text: string,
-    filterTerms?: string[]
+    filterTerms?: string[],
   ): Promise<string> {
     if (!filterTerms || filterTerms.length === 0) {
       return text
@@ -484,7 +484,7 @@ export class HomomorphicOperations {
   private async performCustomOperation(
     text: string,
     operation: string,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ): Promise<string> {
     switch (operation) {
       case 'wordCount': {
@@ -501,14 +501,14 @@ export class HomomorphicOperations {
           throw new FHEOperationError(
             'keywordDensity operation requires a keyword parameter',
             'keywordDensity',
-            'MISSING_PARAMETER'
+            'MISSING_PARAMETER',
           )
         }
         const keyword = params.keyword as string
         const lowerText = text.toLowerCase()
         const words = lowerText.split(/\W+/).filter((w) => w.length > 0)
         const keywordCount = words.filter(
-          (w) => w === keyword.toLowerCase()
+          (w) => w === keyword.toLowerCase(),
         ).length
         const density = keywordCount / words.length
         return density.toFixed(4)
@@ -541,7 +541,7 @@ export class HomomorphicOperations {
         throw new FHEOperationError(
           `Unsupported custom operation: ${operation}`,
           operation,
-          'UNSUPPORTED_CUSTOM_OPERATION'
+          'UNSUPPORTED_CUSTOM_OPERATION',
         )
     }
   }

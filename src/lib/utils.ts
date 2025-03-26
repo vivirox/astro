@@ -1,6 +1,10 @@
-import { clsx, type ClassValue } from 'clsx'
+import type { ClassValue } from 'clsx'
+import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+/**
+ * Utility function to merge class names with Tailwind CSS classes
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -23,7 +27,7 @@ export function generateId(): string {
  */
 export function getDateKey(
   dateString: string,
-  period: 'daily' | 'weekly' | 'monthly'
+  period: 'daily' | 'weekly' | 'monthly',
 ): string {
   const date = new Date(dateString)
 

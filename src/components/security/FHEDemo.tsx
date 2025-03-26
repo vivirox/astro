@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import { fheService } from '../../lib/fhe'
 import type { EncryptionMode } from '../../lib/fhe/types'
+import { useEffect, useState } from 'react'
+import { fheService } from '../../lib/fhe'
 
 interface FHEDemoProps {
   defaultMode?: EncryptionMode
@@ -112,7 +112,7 @@ export default function FHEDemo({
               >
                 {mode.toUpperCase()}
               </button>
-            )
+            ),
           )}
         </div>
       </div>

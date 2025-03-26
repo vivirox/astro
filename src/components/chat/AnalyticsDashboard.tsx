@@ -1,16 +1,17 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import { fheAnalytics, AnalyticsType } from '../../lib/fhe/analytics'
+import type { SecurityLevel } from '@/hooks/useSecurity'
+import type { Message } from '@/types/chat'
+import { useEffect, useMemo, useState } from 'react'
 import { fheService } from '../../lib/fhe'
-import type { ChatMessage } from '../../types/chat'
+import { AnalyticsType, fheAnalytics } from '../../lib/fhe/analytics'
 import {
-  IconLock,
-  IconRefresh,
-  IconBarChart,
-  IconPieChart,
-  IconLineChart,
   IconAlertTriangle,
+  IconBarChart,
+  IconLineChart,
+  IconLock,
+  IconPieChart,
+  IconRefresh,
 } from './icons'
 
 // Define encryption modes
@@ -67,10 +68,10 @@ interface EmotionalPatternItem {
 }
 
 interface AnalyticsDashboardProps {
-  messages: ChatMessage[]
-  securityLevel: 'standard' | 'hipaa' | 'maximum'
+  messages: Message[]
+  securityLevel: SecurityLevel
   encryptionEnabled: boolean
-  scenario?: string
+  scenario: string
 }
 
 export default function AnalyticsDashboard({
@@ -83,7 +84,7 @@ export default function AnalyticsDashboard({
   const [error, setError] = useState<string | null>(null)
   const [analyticsData, setAnalyticsData] = useState<AnalyticsItem[]>([])
   const [activeTab, setActiveTab] = useState<AnalyticsType>(
-    AnalyticsType.SENTIMENT_TREND
+    AnalyticsType.SENTIMENT_TREND,
   )
   const [refreshInterval] = useState<number | null>(30000) // 30s refresh by default
   const [fheInitialized, setFheInitialized] = useState(false)
@@ -147,22 +148,24 @@ export default function AnalyticsDashboard({
       // Get analytics data
       const results = await fheAnalytics.createAnalyticsDashboard(
         messages,
-        config
+        config,
       )
 
       // Decrypt results if needed
       const processedResults = await Promise.all(
         results.map(async (result) => {
-          if (result.isEncrypted) {
-            // Instead of decrypt, parse the data directly
+          if (result.isEncrypted && typeof result.data === 'string') {
+            const parsedData = JSON.parse(
+              result.data,
+            ) as unknown as AnalyticsData
             return {
               ...result,
-              data: JSON.parse(result.data),
+              data: parsedData,
               isEncrypted: false,
             }
           }
           return result
-        })
+        }),
       )
 
       setAnalyticsData(processedResults)
@@ -223,12 +226,12 @@ export default function AnalyticsDashboard({
                 Processing Success Rate:
               </span>
               <span
-                className={`ml-2 font-medium ${data.errorCount > 0 ? 'text-yellow-400' : 'text-green-400'}`}
+                className={`ml-2 font-medium ${(data.errorCount ?? 0) > 0 ? 'text-yellow-400' : 'text-green-400'}`}
               >
                 {Math.round(
-                  (data.processedCount /
-                    (data.processedCount + data.errorCount)) *
-                    100
+                  ((data.processedCount ?? 0) /
+                    ((data.processedCount ?? 0) + (data.errorCount ?? 0))) *
+                    100,
                 )}
                 %
               </span>
@@ -493,7 +496,7 @@ export default function AnalyticsDashboard({
 
           <div className="mt-4 text-sm text-gray-300">
             <p>
-              Intervention analysis shows which therapeutic approaches are most
+              Intervention analysis shows which therapeutic approaches are mos
               effective with this client.
             </p>
             {securityLevel === 'maximum' && (

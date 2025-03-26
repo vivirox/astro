@@ -58,13 +58,13 @@ export class ServiceWorkerManager {
       })
 
       if (this.debug) {
-        console.log('Service Worker registered successfully')
+        console.warn('Service Worker registered successfully')
       }
 
       await this.setupSync()
       await this.setupPushNotifications()
-    } catch (error) {
-      this.logError('Service Worker registration failed', error)
+    } catch {
+      this.logError('Service Worker registration failed')
     }
   }
 
@@ -80,10 +80,10 @@ export class ServiceWorkerManager {
     try {
       await this.registration.update()
       if (this.debug) {
-        console.log('Service Worker update check completed')
+        console.warn('Service Worker update check completed')
       }
-    } catch (error) {
-      this.logError('Service Worker update check failed', error)
+    } catch {
+      this.logError('Service Worker update check failed')
     }
   }
 
@@ -97,17 +97,17 @@ export class ServiceWorkerManager {
 
     try {
       const registration = this.registration as ServiceWorkerRegistration & {
-        sync?: { register(tag: string): Promise<void> }
+        sync?: { register: (tag: string) => Promise<void> }
       }
 
       if ('sync' in registration && registration.sync) {
         await registration.sync.register(this.config.backgroundSync.queueName)
         if (this.debug) {
-          console.log('Background sync registered successfully')
+          console.warn('Background sync registered successfully')
         }
       }
-    } catch (error) {
-      this.logError('Background sync registration failed', error)
+    } catch {
+      this.logError('Background sync registration failed')
     }
   }
 
@@ -120,25 +120,25 @@ export class ServiceWorkerManager {
     }
 
     try {
-      const subscription = await this.registration.pushManager.subscribe({
+      await this.registration.pushManager.subscribe({
         userVisibleOnly: this.config.pushNotifications.options.userVisibleOnly,
         applicationServerKey: this.config.pushNotifications.publicKey,
       })
 
       if (this.debug) {
-        console.log('Push notification subscription:', subscription)
+        console.warn('Push notifications registered successfully')
       }
-    } catch (error) {
-      this.logError('Push notification registration failed', error)
+    } catch {
+      this.logError('Push notification registration failed')
     }
   }
 
   /**
    * Log errors in debug mode
    */
-  private logError(message: string, error: unknown): void {
+  private logError(message: string): void {
     if (this.debug) {
-      console.error(message, error)
+      console.error(message)
     }
   }
 }

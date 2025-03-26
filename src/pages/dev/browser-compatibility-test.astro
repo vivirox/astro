@@ -1,15 +1,14 @@
 ---
-import ChatLayout from '../../layouts/ChatLayout.astro';
-import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester';
-import AIChat from '../../components/AIChat';
+import ChatLayout from '../../layouts/ChatLayout.astro'
+import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester'
+import AIChat from '../../components/AIChat'
 
 // Define size map outside component
 const sizeMap = {
   small: { width: 50, height: 20 },
   medium: { width: 100, height: 30 },
   large: { width: 150, height: 40 },
-};
-
+}
 ---
 
 <ChatLayout title="Browser Compatibility Testing">
@@ -63,7 +62,8 @@ const sizeMap = {
               <div
                 class="loading-skeleton"
                 style={`width: ${sizeMap.small.width}px; height: ${sizeMap.small.height}px;`}
-              ></div>
+              >
+              </div>
               <p class="loading-message">Loading small...</p>
             </div>
           </div>
@@ -73,7 +73,8 @@ const sizeMap = {
               <div
                 class="loading-skeleton"
                 style={`width: ${sizeMap.medium.width}px; height: ${sizeMap.medium.height}px;`}
-              ></div>
+              >
+              </div>
               <p class="loading-message">Loading medium...</p>
             </div>
           </div>
@@ -83,7 +84,8 @@ const sizeMap = {
               <div
                 class="loading-skeleton"
                 style={`width: ${sizeMap.large.width}px; height: ${sizeMap.large.height}px;`}
-              ></div>
+              >
+              </div>
               <p class="loading-message">Loading large...</p>
             </div>
           </div>
@@ -279,8 +281,12 @@ const sizeMap = {
     }
 
     @keyframes loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
     }
 
     @media (max-width: 768px) {
@@ -294,21 +300,19 @@ const sizeMap = {
 <script>
   // Define the issue type
   interface Issue {
-    browser: string;
-    component: string;
-    issue: string;
-    severity: string;
-    timestamp: string;
+    browser: string
+    component: string
+    issue: string
+    severity: string
+    timestamp: string
   }
 
   // Client-side script to handle form submission and display issues
   document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById(
-      'compatibility-form'
-    ) as HTMLFormElement
+    const form = document.getElementById('compatibility-form') as HTMLFormElemen
     const issuesContainer = document.getElementById(
-      'issues-container'
-    ) as HTMLDivElement
+      'issues-container',
+    ) as HTMLDivElemen
 
     if (!form || !issuesContainer) {
       console.error('Required elements not found')
@@ -318,7 +322,7 @@ const sizeMap = {
     // Load existing issues from localStorage
     const loadIssues = () => {
       const issues = JSON.parse(
-        localStorage.getItem('compatibility-issues') || '[]'
+        localStorage.getItem('compatibility-issues') || '[]',
       )
       if (issues.length === 0) {
         issuesContainer.innerHTML = '<p>No issues reported yet.</p>'
@@ -348,12 +352,12 @@ const sizeMap = {
       // Add event listeners to delete buttons
       document.querySelectorAll('.delete-issue').forEach((button) => {
         button.addEventListener('click', (e) => {
-          const target = e.currentTarget as HTMLElement
+          const target = e.currentTarget as HTMLElemen
           if (!target) return
 
           const index = parseInt(target.getAttribute('data-index') || '0')
           const issues = JSON.parse(
-            localStorage.getItem('compatibility-issues') || '[]'
+            localStorage.getItem('compatibility-issues') || '[]',
           )
           issues.splice(index, 1)
           localStorage.setItem('compatibility-issues', JSON.stringify(issues))
@@ -377,7 +381,7 @@ const sizeMap = {
 
       // Save to localStorage
       const issues = JSON.parse(
-        localStorage.getItem('compatibility-issues') || '[]'
+        localStorage.getItem('compatibility-issues') || '[]',
       )
       issues.push(issue)
       localStorage.setItem('compatibility-issues', JSON.stringify(issues))

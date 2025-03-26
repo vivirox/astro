@@ -1,7 +1,7 @@
-import { supabase, supabaseAdmin } from '../supabase'
 import type { Database } from '../../types/supabase'
-import { updateConversation } from './conversations'
 import { createAuditLog } from '../audit/log'
+import { supabase, supabaseAdmin } from '../supabase'
+import { updateConversation } from './conversations'
 
 export type Message = Database['public']['Tables']['messages']['Row']
 export type NewMessage = Database['public']['Tables']['messages']['Insert']
@@ -14,7 +14,7 @@ export async function getMessages(
   conversationId: string,
   userId: string,
   limit = 50,
-  offset = 0
+  offset = 0,
 ): Promise<Message[]> {
   // First verify the user has access to this conversation
   const { data: conversation, error: conversationError } = await supabase
@@ -51,7 +51,7 @@ export async function getMessages(
 export async function createMessage(
   message: NewMessage,
   userId: string,
-  request?: Request
+  request?: Request,
 ): Promise<Message> {
   // First verify the user has access to this conversation
   const { data: conversation, error: conversationError } = await supabase
@@ -86,7 +86,7 @@ export async function createMessage(
 
   // Log the event for HIPAA compliance
   await createAuditLog({
-    userId: userId,
+    userId,
     action: 'message_created',
     resource: 'messages',
     metadata: {
@@ -109,7 +109,7 @@ export async function updateMessage(
   conversationId: string,
   userId: string,
   updates: UpdateMessage,
-  request?: Request
+  request?: Request,
 ): Promise<Message> {
   // First verify the user has access to this conversation
   const { data: conversation, error: conversationError } = await supabase
@@ -163,7 +163,7 @@ export async function flagMessage(
   conversationId: string,
   userId: string,
   reason: string,
-  request?: Request
+  request?: Request,
 ): Promise<Message> {
   const updates: UpdateMessage = {
     is_flagged: true,

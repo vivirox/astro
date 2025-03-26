@@ -5,6 +5,8 @@
  * In production, this would be replaced with the actual TFHE module.
  */
 
+import { Buffer } from 'node:buffer'
+
 // Mock key objects
 export interface MockClientKey {
   id: string
@@ -37,18 +39,25 @@ export interface TFHEParams {
   // Other parameters can be added as needed
 }
 
+// Generic mock key interface with id property
+export interface MockKey {
+  id?: string
+  type?: string
+  [key: string]: unknown
+}
+
 /**
  * Create a client key for FHE operations
  * @param params Parameters for key generation
  * @returns A mock client key
  */
 export function createClientKey(params: unknown): unknown {
-  console.log('Mock: Creating client key with params', params)
   return {
     mock: true,
     type: 'clientKey',
     id: generateRandomId(),
     created: Date.now(),
+    params, // Store params for potential future use
   }
 }
 
@@ -58,11 +67,10 @@ export function createClientKey(params: unknown): unknown {
  * @returns A mock server key
  */
 export function createServerKey(clientKey: unknown): unknown {
-  console.log('Mock: Creating server key from client key', clientKey)
   return {
     mock: true,
     type: 'serverKey',
-    clientKeyId: (clientKey as any)?.id || 'unknown',
+    clientKeyId: (clientKey as MockKey)?.id || 'unknown',
     id: generateRandomId(),
     created: Date.now(),
   }
@@ -74,11 +82,10 @@ export function createServerKey(clientKey: unknown): unknown {
  * @returns A mock public key
  */
 export function createPublicKey(clientKey: unknown): unknown {
-  console.log('Mock: Creating public key from client key', clientKey)
   return {
     mock: true,
     type: 'publicKey',
-    clientKeyId: (clientKey as any)?.id || 'unknown',
+    clientKeyId: (clientKey as MockKey)?.id || 'unknown',
     id: generateRandomId(),
     created: Date.now(),
   }
@@ -91,9 +98,9 @@ export function createPublicKey(clientKey: unknown): unknown {
  * @returns Mock encrypted data
  */
 export function encrypt(data: string, key: unknown): unknown {
-  console.log('Mock: Encrypting data with key', key)
-  // Simple mock implementation
-  return `mock-encrypted:${Buffer.from(data).toString('base64')}`
+  // Include key id in mock encryption for traceability
+  const keyId = (key as MockKey)?.id || 'unknown'
+  return `mock-encrypted:${keyId}:${Buffer.from(data).toString('base64')}`
 }
 
 /**
@@ -103,9 +110,12 @@ export function encrypt(data: string, key: unknown): unknown {
  * @returns Decrypted data
  */
 export function decrypt(data: unknown, key: unknown): string {
-  console.log('Mock: Decrypting data with key', key)
   if (typeof data === 'string' && data.startsWith('mock-encrypted:')) {
-    const base64Data = data.replace('mock-encrypted:', '')
+    // Verify key matches the one used for encryption
+    const [, keyId, base64Data] = data.split(':') // Use comma to skip unused prefix
+    if ((key as MockKey)?.id && keyId !== (key as MockKey).id) {
+      throw new Error('Invalid key for decryption')
+    }
     return Buffer.from(base64Data, 'base64').toString()
   }
   return String(data)
@@ -122,24 +132,39 @@ function generateRandomId(): string {
  * Perform homomorphic addition on encrypted values
  */
 export function homomorphicAdd(a: unknown, b: unknown): unknown {
-  console.log('Mock: Performing homomorphic addition')
-  return 'mock-encrypted:result'
+  if (typeof a !== 'string' || typeof b !== 'string') {
+    throw new TypeError('Invalid encrypted values: expected string')
+  }
+  // Mock implementation that combines the encrypted values
+  const aStr = a.replace('mock-encrypted:', '')
+  const bStr = b.replace('mock-encrypted:', '')
+  return `mock-encrypted:${aStr}+${bStr}`
 }
 
 /**
  * Perform homomorphic multiplication on encrypted values
  */
 export function homomorphicMultiply(a: unknown, b: unknown): unknown {
-  console.log('Mock: Performing homomorphic multiplication')
-  return 'mock-encrypted:result'
+  if (typeof a !== 'string' || typeof b !== 'string') {
+    throw new TypeError('Invalid encrypted values: expected string')
+  }
+  // Mock implementation that combines the encrypted values
+  const aStr = a.replace('mock-encrypted:', '')
+  const bStr = b.replace('mock-encrypted:', '')
+  return `mock-encrypted:${aStr}*${bStr}`
 }
 
 /**
  * Perform homomorphic comparison on encrypted values
  */
 export function homomorphicCompare(a: unknown, b: unknown): unknown {
-  console.log('Mock: Performing homomorphic comparison')
-  return 'mock-encrypted:result'
+  if (typeof a !== 'string' || typeof b !== 'string') {
+    throw new TypeError('Invalid encrypted values: expected string')
+  }
+  // Mock implementation that combines the encrypted values
+  const aStr = a.replace('mock-encrypted:', '')
+  const bStr = b.replace('mock-encrypted:', '')
+  return `mock-encrypted:${aStr}==${bStr}`
 }
 
 // Export as default object to match the structure expected by dynamic imports

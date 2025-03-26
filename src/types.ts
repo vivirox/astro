@@ -1,4 +1,8 @@
 /* SITE */
+import type { IncomingMessage } from 'node:http'
+import type { Socket } from 'node:net'
+import type { AuthUser } from './lib/auth'
+
 export type Url = `http://${string}` | `https://${string}`
 type Path = `/${string}`
 
@@ -467,7 +471,7 @@ export interface Ui {
    *
    * Used in `src/components/base/NavBar.astro`.
    */
-  navBarLayout: NavBarLayout
+  navBarLayout: NavBarLayou
 
   /**
    * Enables and configures for tabs within a tabbed layout.
@@ -657,10 +661,6 @@ export interface Features {
    */
   slideEnterAnim: FeatureConfig<slideEnterAnimConfig>
 }
-
-import type { IncomingMessage } from 'http'
-import type { Socket } from 'net'
-import type { AuthUser } from './lib/auth'
 
 export interface ExtendedRequest extends IncomingMessage {
   url: string

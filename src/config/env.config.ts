@@ -4,10 +4,18 @@ import { z } from 'zod'
  * Environment variable schema with validation
  */
 const envSchema = z.object({
-  // Node environmen
+  // Node environment
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
+
+  // Vercel deploymen
+  VERCEL: z.string().optional(),
+  VERCEL_ENV: z.enum(['development', 'preview', 'production']).optional(),
+  VERCEL_URL: z.string().optional(),
+  VERCEL_TOKEN: z.string().optional(),
+  VERCEL_ORG_ID: z.string().optional(),
+  VERCEL_PROJECT_ID: z.string().optional(),
 
   // Server configuration
   PORT: z.string().transform(Number).default('3000'),
@@ -48,11 +56,6 @@ const envSchema = z.object({
   // Email
   EMAIL_FROM: z.string().email().optional(),
   RESEND_API_KEY: z.string().optional(),
-
-  // Deploymen
-  VERCEL_TOKEN: z.string().optional(),
-  VERCEL_ORG_ID: z.string().optional(),
-  VERCEL_PROJECT_ID: z.string().optional(),
 
   // Security
   SECURITY_ENABLE_BRUTE_FORCE_PROTECTION: z
@@ -117,7 +120,7 @@ export const env = getEnv()
 export type Env = z.infer<typeof envSchema>
 
 /**
- * Environment configuration object
+ * Environment configuration objec
  */
 export const config = {
   isDevelopment: (): boolean => getEnv().NODE_ENV === 'development',
@@ -167,9 +170,12 @@ export const config = {
   },
 
   deployment: {
-    vercelToken: (): string | undefined => getEnv().VERCEL_TOKEN,
-    vercelOrgId: (): string | undefined => getEnv().VERCEL_ORG_ID,
-    vercelProjectId: (): string | undefined => getEnv().VERCEL_PROJECT_ID,
+    vercelEnv: () => getEnv().VERCEL_ENV,
+    isVercel: () => getEnv().VERCEL,
+    vercelUrl: () => getEnv().VERCEL_URL,
+    vercelToken: () => getEnv().VERCEL_TOKEN,
+    vercelOrgId: () => getEnv().VERCEL_ORG_ID,
+    vercelProjectId: () => getEnv().VERCEL_PROJECT_ID,
   },
 
   security: {

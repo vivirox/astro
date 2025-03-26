@@ -86,7 +86,7 @@ export function List({
         dividedClasses,
         hoverClasses,
         { 'pl-5': variant !== 'none' && !horizontal },
-        className
+        className,
       )}
       role={type === 'ul' ? 'list' : undefined}
       {...props}
@@ -95,7 +95,8 @@ export function List({
 
       {extraItemsCount > 0 && (
         <li className="text-gray-500 italic">
-          ...and {extraItemsCount} more item{extraItemsCount > 1 ? 's' : ''}
+          ...and {extraItemsCount} more item
+          {extraItemsCount > 1 ? 's' : ''}
         </li>
       )}
     </Component>
@@ -141,7 +142,7 @@ export function ListItem({
           'cursor-pointer': clickable || onClick,
           'transition-colors': clickable || onClick,
         },
-        className
+        className,
       )}
       onClick={disabled ? undefined : onClick}
       aria-disabled={disabled ? true : undefined}
@@ -246,7 +247,7 @@ export function ListGroup({
           {
             'max-h-0 opacity-0': collapsible && !expanded,
             'max-h-[1000px] opacity-100': !collapsible || expanded,
-          }
+          },
         )}
       >
         <div className="pl-2">{children}</div>
@@ -256,7 +257,7 @@ export function ListGroup({
 }
 
 /**
- * Nested list item that can contain another list
+ * Nested list item that can contain another lis
  */
 export interface NestedListItemProps extends Omit<ListItemProps, 'children'> {
   /** Label for the nested list item */
@@ -328,7 +329,7 @@ export function NestedListItem({
           {
             'max-h-0 opacity-0': !expanded,
             'max-h-[1000px] opacity-100': expanded,
-          }
+          },
         )}
       >
         {children}
@@ -337,4 +338,4 @@ export function NestedListItem({
   )
 }
 
-export default List
+export default Lis

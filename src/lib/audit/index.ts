@@ -1,1 +1,1 @@
-export { createAuditLog, type AuditLogEntry } from './log'
+export { type AuditLogEntry, createAuditLog } from './log'

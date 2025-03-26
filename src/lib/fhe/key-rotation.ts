@@ -5,8 +5,8 @@
  * This ensures compliance with security best practices and HIPAA requirements.
  */
 
+import type { KeyManagementOptions, TFHEKeyPair } from './types'
 import { getLogger } from '../logging'
-import type { TFHEKeyPair, KeyManagementOptions } from './types'
 
 // Get logger
 const logger = getLogger()
@@ -37,12 +37,12 @@ export class KeyRotationService {
   private constructor(options?: Partial<KeyManagementOptions>) {
     this.options = { ...DEFAULT_OPTIONS, ...options }
 
-    // Detect environmen
+    // Detect environment
     this.isClient = typeof window !== 'undefined'
     this.isServer = typeof window === 'undefined'
 
     logger.info(
-      `Key Rotation Service initialized in ${this.isServer ? 'server' : 'client'} environment`
+      `Key Rotation Service initialized in ${this.isServer ? 'server' : 'client'} environment`,
     )
   }
 
@@ -50,7 +50,7 @@ export class KeyRotationService {
    * Get singleton instance
    */
   public static getInstance(
-    options?: Partial<KeyManagementOptions>
+    options?: Partial<KeyManagementOptions>,
   ): KeyRotationService {
     if (!KeyRotationService.instance) {
       KeyRotationService.instance = new KeyRotationService(options)
@@ -75,7 +75,7 @@ export class KeyRotationService {
     } catch (error) {
       logger.error('Failed to initialize key rotation service', error)
       throw new Error(
-        `Key rotation initialization error: ${(error as Error).message}`
+        `Key rotation initialization error: ${(error as Error).message}`,
       )
     }
   }
@@ -102,7 +102,7 @@ export class KeyRotationService {
 
       this.keyRotationTimers.set(keyId, timer)
       logger.info(
-        `Scheduled key ${keyId} for rotation in ${Math.round(timeToExpiry / (1000 * 60 * 60 * 24))} days`
+        `Scheduled key ${keyId} for rotation in ${Math.round(timeToExpiry / (1000 * 60 * 60 * 24))} days`,
       )
     } else if (this.isClient) {
       // For client environments, check periodically
@@ -217,7 +217,7 @@ export class KeyRotationService {
           if (key?.startsWith(this.options.storagePrefix!)) {
             try {
               const keyPair = JSON.parse(
-                localStorage.getItem(key)!
+                localStorage.getItem(key)!,
               ) as TFHEKeyPair
 
               // Check if key is not expired
@@ -229,8 +229,8 @@ export class KeyRotationService {
                     (
                       JSON.parse(
                         localStorage.getItem(
-                          `${this.options.storagePrefix}${this.activeKeyId}`
-                        )!
+                          `${this.options.storagePrefix}${this.activeKeyId}`,
+                        )!,
                       ) as TFHEKeyPair
                     ).created
                 ) {
@@ -287,10 +287,10 @@ export class KeyRotationService {
    */
   public dispose(): void {
     // Clear all timers
-    for (const timer of this.keyRotationTimers.values()) {
+    this.keyRotationTimers.forEach((timer) => {
       clearTimeout(timer)
       clearInterval(timer)
-    }
+    })
 
     this.keyRotationTimers.clear()
     logger.info('Key rotation service disposed')

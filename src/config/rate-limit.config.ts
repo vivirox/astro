@@ -98,7 +98,7 @@ export const rateLimitConfig = {
    * Merges default config with endpoint-specific overrides
    */
   getConfig: (
-    type: 'default' | 'auth' | 'api' | 'sensitive'
+    type: 'default' | 'auth' | 'api' | 'sensitive',
   ): RateLimitOptions => {
     if (!rateLimitConfig.default.enabled) {
       return { ...rateLimitConfig.default, enabled: false }

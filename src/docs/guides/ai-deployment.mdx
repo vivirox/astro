@@ -427,7 +427,7 @@ const aiRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => req.user?.id || req.ip,
-  handler: (req, res) => {
+  handler: (req, rest) => {
     return new Response(
       JSON.stringify({
         error: {

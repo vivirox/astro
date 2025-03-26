@@ -102,7 +102,7 @@ export function Footer({
                   href="/chat"
                   className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary"
                 >
-                  Chat
+                  Cha
                 </a>
               </li>
               <li>
@@ -126,7 +126,7 @@ export function Footer({
                   href="/about"
                   className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary"
                 >
-                  About
+                  Abou
                 </a>
               </li>
               <li>
@@ -134,7 +134,7 @@ export function Footer({
                   href="/contact"
                   className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary"
                 >
-                  Contact
+                  Contac
                 </a>
               </li>
               <li>
@@ -150,7 +150,10 @@ export function Footer({
         </div>
 
         <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-8 text-center text-gray-500 dark:text-gray-400">
-          <p>&copy; {currentYear} Gradiant. All rights reserved.</p>
+          <p>
+            &copy;
+            {currentYear} Gradiant. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

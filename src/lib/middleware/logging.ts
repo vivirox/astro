@@ -1,7 +1,7 @@
 import { defineMiddleware } from 'astro:middleware'
-import { getLogger } from '../logging/index'
 import { v4 as uuidv4 } from 'uuid'
 import { getSession } from '../auth/session'
+import { getLogger } from '../logging/index'
 
 /**
  * Request logging and tracking middleware
@@ -86,7 +86,7 @@ export const loggingMiddleware = defineMiddleware(async ({ request }, next) => {
           path,
           duration: Math.round(duration),
         },
-      }
+      },
     )
 
     // Re-throw the error to be handled by error handlers

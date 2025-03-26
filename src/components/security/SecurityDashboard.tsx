@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
 import type { SecurityEvent } from '../../lib/security/monitoring'
+import { useEffect, useState } from 'react'
 import {
-  SecurityEventType,
   SecurityEventSeverity,
+  SecurityEventType,
 } from '../../lib/security/monitoring'
 
 interface SecurityDashboardProps {
@@ -38,12 +38,12 @@ export function SecurityDashboard({ className }: SecurityDashboardProps) {
           params.append('timeRange', filter.timeRange)
 
         const response = await fetch(
-          `/api/security/events?${params.toString()}`
+          `/api/security/events?${params.toString()}`,
         )
 
         if (!response?.ok) {
           throw new Error(
-            `Failed to fetch security events: ${response.statusText}`
+            `Failed to fetch security events: ${response.statusText}`,
           )
         }
 
@@ -68,7 +68,7 @@ export function SecurityDashboard({ className }: SecurityDashboardProps) {
       newAcc[event.severity] = (newAcc[event.severity] || 0) + 1
       return newAcc
     },
-    {} as Record<string, number>
+    {} as Record<string, number>,
   )
 
   // Get event counts by type
@@ -78,7 +78,7 @@ export function SecurityDashboard({ className }: SecurityDashboardProps) {
       newAcc[event.type] = (newAcc[event.type] || 0) + 1
       return newAcc
     },
-    {} as Record<string, number>
+    {} as Record<string, number>,
   )
 
   return (

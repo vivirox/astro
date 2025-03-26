@@ -1,10 +1,10 @@
+import type { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro'
 import { sequence } from 'astro:middleware'
-import type { MiddlewareHandler, APIContext, MiddlewareNext } from 'astro'
-import { corsMiddleware } from './cors'
-import { rateLimitMiddleware } from './rate-limit'
-import { loggingMiddleware } from './logging'
-import { csrfMiddleware } from './csrf'
 import { auditLoggingMiddleware } from './audit-logging'
+import { corsMiddleware } from './cors'
+import { csrfMiddleware } from './csrf'
+import { loggingMiddleware } from './logging'
+import { rateLimitMiddleware } from './rate-limit'
 
 /**
  * Apply security headers to all responses
@@ -12,9 +12,9 @@ import { auditLoggingMiddleware } from './audit-logging'
  */
 const securityHeadersMiddleware: MiddlewareHandler = async (
   _context: APIContext,
-  next: MiddlewareNext
+  next: MiddlewareNext,
 ) => {
-  // Process the request first
+  // Process the request firs
   const response = await next()
 
   // Add security headers
@@ -23,12 +23,12 @@ const securityHeadersMiddleware: MiddlewareHandler = async (
   response?.headers.set('X-XSS-Protection', '1; mode=block')
   response?.headers.set(
     'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains'
+    'max-age=31536000; includeSubDomains',
   )
   response?.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   response?.headers.set(
     'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=()'
+    'camera=(), microphone=(), geolocation=()',
   )
 
   // Set Content-Security-Policy
@@ -42,7 +42,7 @@ const securityHeadersMiddleware: MiddlewareHandler = async (
       "font-src 'self'; " +
       "frame-src 'none'; " +
       "object-src 'none'; " +
-      "base-uri 'self';"
+      "base-uri 'self';",
   )
 
   return response
@@ -67,5 +67,5 @@ export const onRequest = sequence(
   corsMiddleware,
   rateLimitMiddleware,
   csrfMiddleware,
-  securityHeadersMiddleware
+  securityHeadersMiddleware,
 )

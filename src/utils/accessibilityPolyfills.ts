@@ -3,7 +3,7 @@
  */
 
 /**
- * Adds focus-visible polyfill for browsers that don't support it
+ * Adds focus-visible polyfill for browsers that don't support i
  */
 export function addFocusVisiblePolyfill(): void {
   if (typeof window === 'undefined') return
@@ -13,7 +13,7 @@ export function addFocusVisiblePolyfill(): void {
     'CSS' in window && CSS.supports('selector(:focus-visible)')
 
   if (!supportsFocusVisible) {
-    // Add a class to the html element
+    // Add a class to the html elemen
     document.documentElement.classList.add('no-focus-visible')
 
     // Add event listeners to track keyboard vs mouse focus
@@ -24,7 +24,7 @@ export function addFocusVisiblePolyfill(): void {
     const focusTracker = {
       previousActiveElement: null as Element | null,
       trackFocusChange() {
-        this.previousActiveElement = document.activeElement
+        this.previousActiveElement = document.activeElemen
       },
       reset() {
         this.previousActiveElement = null

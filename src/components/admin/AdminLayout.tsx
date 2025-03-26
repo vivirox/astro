@@ -1,6 +1,8 @@
+import type { AuthUser } from '../../lib/auth/types'
+import { Avatar } from '@/components/ui/avatar'
 import React, { useState } from 'react'
-import { useAuth } from '../../lib/auth/hooks'
 import { AdminPermission } from '../../lib/admin'
+import { useAuth } from '../../lib/auth/hooks'
 
 // Admin sidebar navigation item type
 interface NavItem {
@@ -58,9 +60,10 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
   ]
 
   // Check if user has the required permission for a nav item
-  const hasPermission = (permission?: AdminPermission) => {
-    if (!permission || !user) return true
-    return user.permissions?.includes(permission) || false
+  const hasPermission = (permission: string): boolean => {
+    if (!user) return false
+    const authUser = user as unknown as AuthUser
+    return authUser.permissions?.includes(permission) || false
   }
 
   // Toggle sidebar visibility
@@ -110,7 +113,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                       {isSidebarOpen && <span>{item.label}</span>}
                     </a>
                   </li>
-                )
+                ),
             )}
           </ul>
         </nav>
@@ -125,16 +128,15 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           </h1>
 
           {/* User profile */}
-          <div className="flex items-center">
-            <div className="mr-4 text-right">
-              <p className="text-sm text-gray-800 dark:text-gray-200">
-                {user?.name}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Admin</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white">
-              {user?.name?.charAt(0) || 'A'}
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">
+              {(user as unknown as AuthUser)?.name || 'Anonymous'}
+            </span>
+            <Avatar>
+              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+                {(user as unknown as AuthUser)?.name?.charAt(0) || 'A'}
+              </div>
+            </Avatar>
           </div>
         </header>
 

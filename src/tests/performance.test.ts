@@ -1,8 +1,8 @@
-import { test, expect } from 'vitest'
-import { chromium } from 'playwright'
 import type { Browser, Page } from 'playwright'
-import fs from 'fs/promises'
-import { join } from 'path'
+import fs from 'node:fs/promises'
+import { join } from 'node:path'
+import { chromium } from 'playwright'
+import { expect } from 'vitest'
 
 // Browser performance types
 interface PerformanceNavigationEntry extends PerformanceEntry {
@@ -88,7 +88,7 @@ interface EvaluatedMetrics {
   resourceSize: number
 }
 
-// Pages to test
+// Pages to tes
 const TEST_PAGES = [
   { path: '/', name: 'Home Page' },
   { path: '/app/dashboard', name: 'Dashboard' },
@@ -96,7 +96,7 @@ const TEST_PAGES = [
   { path: '/app/settings', name: 'Settings' },
 ]
 
-// API endpoints to test
+// API endpoints to tes
 const API_ENDPOINTS = [
   {
     path: '/api/ai/completion',
@@ -109,7 +109,7 @@ const API_ENDPOINTS = [
   { path: '/api/ai/usage', method: 'GET' },
 ]
 
-describe('Performance Tests', () => {
+describe('performance Tests', () => {
   let browser: Browser
   let page: Page
   let results: PerformanceResults = {
@@ -138,15 +138,15 @@ describe('Performance Tests', () => {
     await fs.writeFile(
       join(
         resultsDir,
-        `performance-${new Date().toISOString().replace(/:/g, '-')}.json`
+        `performance-${new Date().toISOString().replace(/:/g, '-')}.json`,
       ),
-      JSON.stringify(results, null, 2)
+      JSON.stringify(results, null, 2),
     )
   })
 
   // Test Core Web Vitals and other metrics for each page
   TEST_PAGES.forEach(({ path, name }) => {
-    test(`Core Web Vitals - ${name}`, async () => {
+    it(`core Web Vitals - `, async () => {
       page = await browser.newPage()
 
       // Enable JS profiling
@@ -163,57 +163,57 @@ describe('Performance Tests', () => {
       const metrics = await page.evaluate(() => {
         // Using type assertion with unknown as intermediate step for safer conversion
         const perfEntries = performance.getEntriesByType(
-          'navigation'
+          'navigation',
         )[0] as unknown as PerformanceNavigationEntry
         const paintEntries = performance.getEntriesByType(
-          'paint'
+          'paint',
         ) as unknown as PerformancePaintEntry[]
 
         // Use type assertion for custom browser API methods
         const lcpEntry = (
           performance as unknown as {
-            getEntriesByType(type: string): { startTime: number }[]
+            getEntriesByType: (type: string) => { startTime: number }[]
           }
         ).getEntriesByType('largest-contentful-paint')[0] || { startTime: 0 }
 
-        const layoutShiftEntries =
-          (
+        const layoutShiftEntries
+          = (
             performance as unknown as {
-              getEntriesByType(type: string): { value: number }[]
+              getEntriesByType: (type: string) => { value: number }[]
             }
           ).getEntriesByType('layout-shift') || []
 
         const resources = performance.getEntriesByType(
-          'resource'
+          'resource',
         ) as unknown as PerformanceResourceEntry[]
         const resourceCounttt = resources.length
         const resourceSize = resources.reduce(
           (total, resource) => total + resource.encodedBodySize,
-          0
+          0,
         )
 
         // Calculate CLS
         const cumulativeLayoutShift = layoutShiftEntries.reduce(
           (total: number, entry) => total + entry.value,
-          0
+          0,
         )
 
         // Get FCP
-        const firstContentfulPaint =
-          paintEntries.find((entry) => entry.name === 'first-contentful-paint')
+        const firstContentfulPain
+          = paintEntries.find(entry => entry.name === 'first-contentful-paint')
             ?.startTime || 0
 
         return {
           // Core Web Vitals
           LCP: lcpEntry.startTime,
           CLS: cumulativeLayoutShift,
-          // We'll measure FID through interaction in a separate test
+          // We'll measure FID through interaction in a separate tes
 
           // Additional metrics
           FCP: firstContentfulPaint,
           domContentLoaded:
-            perfEntries.domContentLoadedEventEnd -
-            perfEntries.domContentLoadedEventStart,
+            perfEntries.domContentLoadedEventEnd
+            - perfEntries.domContentLoadedEventStart,
           domComplete: perfEntries.domComplete,
           loadEvent: perfEntries.loadEventEnd - perfEntries.loadEventStart,
 
@@ -227,13 +227,13 @@ describe('Performance Tests', () => {
       const jsCoverage = await page.coverage.stopJSCoverage()
       const jsSize = jsCoverage.reduce(
         (total, entry) => total + (entry.source?.length || 0),
-        0
+        0,
       )
       const jsExecutionTime = jsCoverage.reduce((total, entry) => {
         const functions = entry.functions || []
         return (
-          total +
-          functions.reduce((sum, fn) => sum + (fn.ranges[0]?.count || 0), 0)
+          total
+          + functions.reduce((sum, fn) => sum + (fn.ranges[0]?.count || 0), 0)
         )
       }, 0)
 
@@ -251,27 +251,27 @@ describe('Performance Tests', () => {
       expect(metrics.CLS).toBeLessThan(PERFORMANCE_THRESHOLDS.CLS)
       expect(metrics.FCP).toBeLessThan(PERFORMANCE_THRESHOLDS.FCP)
       expect(metrics.resourceCounttt).toBeLessThan(
-        PERFORMANCE_THRESHOLDS.resourceCounttt
+        PERFORMANCE_THRESHOLDS.resourceCounttt,
       )
       expect(metrics.resourceSize).toBeLessThan(
-        PERFORMANCE_THRESHOLDS.resourceSize
+        PERFORMANCE_THRESHOLDS.resourceSize,
       )
       expect(jsExecutionTime).toBeLessThan(
-        PERFORMANCE_THRESHOLDS.jsExecutionTime
+        PERFORMANCE_THRESHOLDS.jsExecutionTime,
       )
 
       await page.close()
     })
 
     // Test First Input Delay through simulated user interaction
-    test(`First Input Delay - ${name}`, async () => {
+    it(`first Input Delay - `, async () => {
       page = await browser.newPage()
       await page.goto(`http://localhost:3000${path}`, { waitUntil: 'load' })
 
       // Wait for the page to be fully interactive
       await page.waitForTimeout(500)
 
-      // Find a clickable element
+      // Find a clickable elemen
       const button = await page.$('button, a, input, [role="button"]')
 
       if (button) {
@@ -302,9 +302,10 @@ describe('Performance Tests', () => {
         // Store result
         results.pages[name].FID = inputDelay
 
-        // Assert
+        // Asser
         expect(inputDelay).toBeLessThan(PERFORMANCE_THRESHOLDS.FID)
-      } else {
+      }
+      else {
         // Skip if no clickable element found
         console.warn(`No clickable element found on ${name}`)
       }
@@ -315,7 +316,7 @@ describe('Performance Tests', () => {
 
   // Test API endpoint performance
   API_ENDPOINTS.forEach(({ path, method, payload }) => {
-    test(`API Performance - ${path}`, async () => {
+    it(`aPI Performance - `, async () => {
       page = await browser.newPage()
 
       // Set up request interception for timing
@@ -336,7 +337,8 @@ describe('Performance Tests', () => {
             ok: response.ok,
           }
         }, `http://localhost:3000${path}`)
-      } else if (method === 'POST') {
+      }
+      else if (method === 'POST') {
         response = await page.evaluate(
           ({ url, data }) => {
             return fetch(url, {
@@ -345,7 +347,7 @@ describe('Performance Tests', () => {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify(data),
-            }).then((response) => ({
+            }).then(response => ({
               status: response.status,
               ok: response.ok,
             }))
@@ -353,7 +355,7 @@ describe('Performance Tests', () => {
           {
             url: `http://localhost:3000${path}`,
             data: payload,
-          }
+          },
         )
       }
 
@@ -364,9 +366,9 @@ describe('Performance Tests', () => {
         status: response?.status,
       }
 
-      // Assert
+      // Asser
       expect(apiResponseTime).toBeLessThan(
-        PERFORMANCE_THRESHOLDS.apiResponseTime
+        PERFORMANCE_THRESHOLDS.apiResponseTime,
       )
       expect(response?.ok).toBe(true)
 
@@ -374,14 +376,14 @@ describe('Performance Tests', () => {
     })
   })
 
-  // Historical comparison test
-  test('Performance regression test', async () => {
+  // Historical comparison tes
+  it('performance regression test', async () => {
     const resultsDir = join(process.cwd(), 'performance-results')
 
     try {
       // Get previous results if they exist
       const files = await fs.readdir(resultsDir)
-      const jsonFiles = files.filter((file) => file.endsWith('.json'))
+      const jsonFiles = files.filter(file => file.endsWith('.json'))
 
       if (jsonFiles.length > 0) {
         // Sort by date (newest first, excluding current test)
@@ -389,7 +391,7 @@ describe('Performance Tests', () => {
 
         // Load the most recent previous result
         const previousResults = JSON.parse(
-          await fs.readFile(join(resultsDir, jsonFiles[0]), 'utf-8')
+          await fs.readFile(join(resultsDir, jsonFiles[0]), 'utf-8'),
         ) as { pages: Record<string, PageMetrics> }
 
         // Compare with current results
@@ -400,26 +402,26 @@ describe('Performance Tests', () => {
             // Check for significant regressions (>20% worse)
             for (const metricName of ['LCP', 'FID', 'CLS', 'FCP']) {
               const current = pageMetrics[metricName as keyof PageMetrics]
-              const previous =
-                previousPageMetrics[metricName as keyof PageMetrics]
+              const previous
+                = previousPageMetrics[metricName as keyof PageMetrics]
 
               if (current !== undefined && previous !== undefined) {
                 const currentValue = current as number
                 const previousValue = previous as number
-                const percentChange =
-                  ((currentValue - previousValue) / previousValue) * 100
+                const percentChange
+                  = ((currentValue - previousValue) / previousValue) * 100
 
                 // Log warnings for significant regressions
                 if (percentChange > 20) {
                   console.warn(
-                    `Regression detected in ${pageName} - ${metricName}: ${previousValue} -> ${currentValue} (${percentChange.toFixed(2)}% worse)`
+                    `Regression detected in ${pageName} - ${metricName}: ${previousValue} -> ${currentValue} (${percentChange.toFixed(2)}% worse)`,
                   )
                 }
 
                 // For critical metrics, fail the test on severe regressions (>50% worse)
                 if (
-                  ['LCP', 'FID', 'CLS'].includes(metricName) &&
-                  percentChange > 50
+                  ['LCP', 'FID', 'CLS'].includes(metricName)
+                  && percentChange > 50
                 ) {
                   expect(percentChange).toBeLessThan(50)
                 }
@@ -428,7 +430,8 @@ describe('Performance Tests', () => {
           }
         }
       }
-    } catch (_err) {
+    }
+    catch (_err) {
       // First run or other error, skip comparison
       console.log('No previous performance results to compare with.')
     }
@@ -441,7 +444,7 @@ export async function simulateUserInteraction(page: Page) {
   })
   await page.waitForTimeout(200)
 
-  // Find and click an interactive element
+  // Find and click an interactive elemen
   const button = await page.$('button:not([disabled]), a:not([disabled])')
   if (button) {
     await button.click()

@@ -1,5 +1,5 @@
-import React from 'react'
 import type { ChatMessageWithFHE } from '../../lib/chat/fheChat'
+import React from 'react'
 
 interface FHEChatStatusProps {
   message: ChatMessageWithFHE

@@ -1,0 +1,59 @@
+name: GitHub Backup
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for complete backup
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.0'
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: '10.0.0'
+
+      - name: Backup to Dropbox
+        uses: chyroc/github2dropbox@v0.4.0
+        with:
+          DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ENABLE_REPO: true
+          ENABLE_STAR: true
+          ENABLE_FOLLOWER: true
+          ENABLE_FOLLOWING: true
+          ENABLE_GIST: true
+          ENABLE_ISSUE: true
+          ENABLE_ISSUE_COMMENT: true
+          ENABLE_REPO_GIT: true
+
+      - name: Cleanup Old Backups
+        run: |
+          # Using the Dropbox API to list and delete old backups
+          curl -X POST https://api.dropboxapi.com/2/files/search_v2 \
+            --header "Authorization: Bearer ${{ secrets.DROPBOX_TOKEN }}" \
+            --header "Content-Type: application/json" \
+            --data '{
+              "query": "backup-",
+              "options": {
+                "path": "/GitHub",
+                "max_results": 100
+              }
+            }' | jq -r '.matches[] | select(.metadata.metadata.server_modified < (now - 2592000))'

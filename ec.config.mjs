@@ -1,6 +1,6 @@
-import { defineEcConfig, setLuminance, setAlpha } from 'astro-expressive-code'
-import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
+import { defineEcConfig, setAlpha, setLuminance } from 'astro-expressive-code'
 
 // https://expressive-code.com/reference/configuration/
 export default defineEcConfig({

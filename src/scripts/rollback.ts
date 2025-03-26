@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * Deployment Rollback Script
+ * Deployment Rollback Scrip
  *
  * This script performs an automatic rollback when a deployment fails.
  * It restores the previous stable version and notifies the team.
  */
 
-import { spawnSync } from 'child_process'
+import { spawnSync } from 'node:child_process'
 import { parseArgs } from 'node:util'
 import fetch from 'node-fetch'
 
@@ -61,7 +61,8 @@ async function sendNotification(message: string, environment: string) {
     }
 
     console.log('✓ Notifications sent')
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Failed to send notification:', error)
   }
 }
@@ -71,7 +72,7 @@ async function sendNotification(message: string, environment: string) {
  */
 async function getLastStableVersion(
   environment: string,
-  options: RollbackOptions
+  options: RollbackOptions,
 ): Promise<string> {
   try {
     // First try to find the previous production tag
@@ -92,7 +93,8 @@ async function getLastStableVersion(
         const rollbackTag = tags[1]
         console.log(`Using tag ${rollbackTag} for rollback`)
         return rollbackTag
-      } else if (tags.length === 1) {
+      }
+      else if (tags.length === 1) {
         console.log(`Only one production tag found: ${tags[0]}`)
         // Use it if explicitly allowed through options
         if (options.fallbackBranch === 'use-current-tag') {
@@ -100,7 +102,8 @@ async function getLastStableVersion(
           return tags[0]
         }
       }
-    } else {
+    }
+    else {
       console.log('No production tags found')
     }
 
@@ -118,7 +121,7 @@ async function getLastStableVersion(
 
     if (result.status !== 0) {
       throw new Error(
-        `Failed to get deployment history: ${result.stderr.toString()}`
+        `Failed to get deployment history: ${result.stderr.toString()}`,
       )
     }
 
@@ -126,17 +129,17 @@ async function getLastStableVersion(
 
     // Find last successful deployment (not the current failing one)
     const lastStable = deployments.find(
-      (d) => d.state === 'READY' && !d.meta?.rollback
+      d => d.state === 'READY' && !d.meta?.rollback,
     )
 
     if (!lastStable) {
-      // If no stable version found and a fallback branch is specified, use it
+      // If no stable version found and a fallback branch is specified, use i
       if (
-        options.fallbackBranch &&
-        options.fallbackBranch !== 'use-current-tag'
+        options.fallbackBranch
+        && options.fallbackBranch !== 'use-current-tag'
       ) {
         console.log(
-          `No stable version found in deployments, using fallback branch: ${options.fallbackBranch}`
+          `No stable version found in deployments, using fallback branch: ${options.fallbackBranch}`,
         )
         return options.fallbackBranch
       }
@@ -145,13 +148,14 @@ async function getLastStableVersion(
 
     console.log(`Found stable deployment: ${lastStable.url}`)
     return lastStable.url
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error finding last stable version:', error)
 
-    // If fallback branch is specified, use it
+    // If fallback branch is specified, use i
     if (
-      options.fallbackBranch &&
-      options.fallbackBranch !== 'use-current-tag'
+      options.fallbackBranch
+      && options.fallbackBranch !== 'use-current-tag'
     ) {
       console.log(`Using fallback branch: ${options.fallbackBranch}`)
       return options.fallbackBranch
@@ -168,16 +172,16 @@ async function performRollback(options: RollbackOptions) {
     console.log(`=== Initiating Rollback for ${options.environment} ===`)
 
     // Get version to roll back to
-    const version =
-      options.version ||
-      (await getLastStableVersion(options.environment, options))
+    const version
+      = options.version
+        || (await getLastStableVersion(options.environment, options))
     console.log(`Target rollback version: ${version}`)
 
-    // Determine rollback method based on version format
+    // Determine rollback method based on version forma
     if (
-      version.startsWith('production-') ||
-      version === 'main' ||
-      (options.fallbackBranch && version === options.fallbackBranch)
+      version.startsWith('production-')
+      || version === 'main'
+      || (options.fallbackBranch && version === options.fallbackBranch)
     ) {
       // Git tag or branch rollback
       console.log(`Performing git-based rollback to ${version}...`)
@@ -186,7 +190,7 @@ async function performRollback(options: RollbackOptions) {
       const checkoutResult = spawnSync('git', ['checkout', version])
       if (checkoutResult.status !== 0) {
         throw new Error(
-          `Failed to checkout ${version}: ${checkoutResult.stderr.toString()}`
+          `Failed to checkout ${version}: ${checkoutResult.stderr.toString()}`,
         )
       }
 
@@ -202,7 +206,8 @@ async function performRollback(options: RollbackOptions) {
       if (deployResult.status !== 0) {
         throw new Error(`Deployment failed: ${deployResult.stderr.toString()}`)
       }
-    } else {
+    }
+    else {
       // Vercel URL-based rollback
       console.log('Performing Vercel-based rollback...')
       const rollback = spawnSync('pnpm', [
@@ -234,28 +239,30 @@ async function performRollback(options: RollbackOptions) {
       if (options.notify) {
         await sendNotification(
           'Rollback completed but verification checks failed. Manual intervention may be required.',
-          options.environment
+          options.environment,
         )
       }
-    } else {
+    }
+    else {
       console.log('✓ Rollback verification successful')
 
       if (options.notify) {
         await sendNotification(
           `Deployment rollback completed successfully to version ${version}.`,
-          options.environment
+          options.environment,
         )
       }
     }
 
     return true
-  } catch (error) {
+  }
+  catch (error) {
     console.error('\n❌ Rollback failed:', error)
 
     if (options.notify) {
       await sendNotification(
         `CRITICAL: Automatic rollback failed. Manual intervention required. Error: ${error}`,
-        options.environment
+        options.environment,
       )
     }
 
@@ -284,7 +291,8 @@ async function main() {
 
     const success = await performRollback(options)
     process.exit(success ? 0 : 1)
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Unhandled error:', error)
     process.exit(1)
   }

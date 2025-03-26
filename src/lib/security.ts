@@ -5,10 +5,12 @@
  * security features required for HIPAA compliance and beyond.
  */
 
-import { atomWithStorage } from 'jotai/utils'
-import { atom } from 'jotai'
-import { fheService } from './fhe'
 import type { FHEOperation, HomomorphicOperationResult } from './fhe/types'
+import { Buffer } from 'node:buffer'
+import process from 'node:process'
+import { atom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
+import { fheService } from './fhe'
 import { EncryptionMode } from './fhe/types'
 import { getLogger } from './logging'
 
@@ -28,7 +30,7 @@ interface EnhancedFHEService {
   processEncrypted?: (
     encryptedMessage: string,
     operation: FHEOperation,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ) => Promise<HomomorphicOperationResult>
   setupKeyManagement?: (options: {
     rotationPeriodDays: number
@@ -61,7 +63,7 @@ export async function initializeSecurity(): Promise<void> {
 
     if (!encryptionSuccess) {
       logger.warn(
-        'Encryption initialization failed, continuing with reduced security'
+        'Encryption initialization failed, continuing with reduced security',
       )
     }
 
@@ -70,7 +72,7 @@ export async function initializeSecurity(): Promise<void> {
   } catch (error) {
     logger.error('Failed to initialize security system:', error)
     throw new Error(
-      `Security initialization failed: ${error instanceof Error ? error.message : String(error)}`
+      `Security initialization failed: ${error instanceof Error ? error.message : String(error)}`,
     )
   }
 }
@@ -95,10 +97,10 @@ export async function initializeEncryption(level = 'medium'): Promise<boolean> {
       enableDebug: process.env.NODE_ENV === 'development',
     })
 
-    // For FHE mode, also set up key management
+    // For FHE mode, also set up key managemen
     if (
       encryptionMode === EncryptionMode.FHE &&
-      enhancedFHEService.setupKeyManagement
+      enhancedFHEService.setupKeyManagemen
     ) {
       const keyId = await enhancedFHEService.setupKeyManagement({
         rotationPeriodDays: 7,
@@ -109,7 +111,7 @@ export async function initializeEncryption(level = 'medium'): Promise<boolean> {
     }
 
     logger.info(
-      `Encryption initialized successfully with mode: ${encryptionMode}`
+      `Encryption initialized successfully with mode: ${encryptionMode}`,
     )
     return true
   } catch (error) {
@@ -135,7 +137,7 @@ export async function encryptMessage(message: string): Promise<string> {
  * Decrypt a message using the FHE service
  */
 export async function decryptMessage(
-  encryptedMessage: string
+  encryptedMessage: string,
 ): Promise<string> {
   try {
     let decrypted: string
@@ -161,7 +163,7 @@ export async function decryptMessage(
 export async function processEncryptedMessage(
   encryptedMessage: string,
   operation: string,
-  params?: Record<string, unknown>
+  params?: Record<string, unknown>,
 ): Promise<string> {
   try {
     // Map operation string to FHEOperation enum
@@ -174,7 +176,7 @@ export async function processEncryptedMessage(
     const result = await enhancedFHEService.processEncrypted(
       encryptedMessage,
       fheOperation,
-      params
+      params,
     )
 
     // Convert result to string format for return
@@ -189,7 +191,7 @@ export async function processEncryptedMessage(
  * Create a verification token for message integrity
  */
 export async function createVerificationToken(
-  message: string
+  message: string,
 ): Promise<string> {
   try {
     if (enhancedFHEService.createVerificationToken) {
@@ -199,7 +201,7 @@ export async function createVerificationToken(
     // Fallback implementation if the method doesn't exist
     const timestamp = Date.now().toString()
     const data = `${message}:${timestamp}`
-    return createSignature(data) + '.' + timestamp
+    return `${createSignature(data)}.${timestamp}`
   } catch (error) {
     logger.error('Verification token generation error:', error)
     throw error
@@ -216,7 +218,7 @@ export function generateSecureSessionKey(): string {
     const array = new Uint8Array(32)
     window.crypto.getRandomValues(array)
     return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
-      ''
+      '',
     )
   } else {
     // Node.js environment
@@ -242,15 +244,12 @@ export function logSecurityEvent(
     | 'therapy_chat_request'
     | 'therapy_chat_response'
     | 'therapy_chat_error',
-  details: Record<string, string | number | boolean | null | undefined>
+  details: Record<string, string | number | boolean | null | undefined>,
 ): void {
   // Log to console in dev mode
   if (process.env.NODE_ENV === 'development') {
     logger.debug(`[SECURITY EVENT] ${eventType.toUpperCase()}:`, details)
   }
-
-  // In production, this would securely log to a HIPAA-compliant audit system
-  // Here, we're assuming this will be handled by the audit module
 }
 
 /**
@@ -309,7 +308,7 @@ export function generateSecureToken(length = 32): string {
       const array = new Uint8Array(length)
       window.crypto.getRandomValues(array)
       return Array.from(array, (byte) =>
-        byte.toString(16).padStart(2, '0')
+        byte.toString(16).padStart(2, '0'),
       ).join('')
     } else {
       // Node.js implementation - use a safe fallback for SSR
@@ -337,8 +336,8 @@ export function createSignature(data: string): string {
       return btoa(
         String.fromCharCode.apply(
           null,
-          Array.from(new TextEncoder().encode(data + SECRET_KEY))
-        )
+          Array.from(new TextEncoder().encode(data + SECRET_KEY)),
+        ),
       )
     } else {
       // Node.js implementation - use dynamic import for build compatibility
@@ -372,7 +371,7 @@ export function verifySignature(data: string, signature: string): boolean {
  */
 export function createSecureToken(
   payload: Record<string, unknown>,
-  expiresIn = 3600
+  expiresIn = 3600,
 ): string {
   const tokenData = {
     ...payload,
@@ -394,7 +393,7 @@ export function createSecureToken(
  * @returns Decoded payload or null if invalid
  */
 export function verifySecureToken(
-  token: string
+  token: string,
 ): Record<string, unknown> | null {
   try {
     const [encodedData, signature] = token.split('.')
@@ -418,8 +417,7 @@ export function verifySecureToken(
     }
 
     return payload
-  } catch (error) {
-    console.error('Error verifying token:', error)
+  } catch {
     return null
   }
 }

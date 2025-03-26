@@ -1,8 +1,8 @@
 // Import necessary libraries and types
 import { fheService } from '../../../lib/fhe'
 import { EncryptionMode } from '../../../lib/fhe/types'
-import { createVerificationToken } from '../../../lib/security'
 import { getLogger } from '../../../lib/logging'
+import { createVerificationToken } from '../../../lib/security'
 
 // Initialize logger
 const logger = getLogger()
@@ -20,17 +20,17 @@ interface User {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as LoginRequest
+    const body = (await request.json()) as LoginReques
 
     // Authenticate user (replace with your actual auth logic)
     const user: User = {
-      id: 'user-' + crypto.randomUUID(),
+      id: `user-${crypto.randomUUID()}`,
       email: body.email,
     }
 
     // Create session data
     const sessionData = {
-      sessionId: 'session-' + crypto.randomUUID(),
+      sessionId: `session-${crypto.randomUUID()}`,
       userId: user.id,
       startTime: Date.now(),
       expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
@@ -43,10 +43,10 @@ export async function POST(request: Request) {
 
     // Create a verification token for message integrity
     const verificationToken = await createVerificationToken(
-      JSON.stringify(sessionData)
+      JSON.stringify(sessionData),
     )
 
-    // Encrypt sensitive session data if security level requires it
+    // Encrypt sensitive session data if security level requires i
     let encryptedSessionData = null
     if (sessionData.securityLevel !== 'low') {
       // Initialize FHE service if needed
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
           userId: sessionData.userId,
           sessionId: sessionData.sessionId,
           metadata: sessionData.metadata,
-        })
+        }),
       )
     }
 
@@ -104,9 +104,10 @@ export async function POST(request: Request) {
           'Content-Type': 'application/json',
           // ... other headers ...
         },
-      }
+      },
     )
-  } catch (error) {
+  }
+  catch (error) {
     // Handle the error properly
     logger.error('Login error:', {
       message: error instanceof Error ? error?.message : String(error),
@@ -123,7 +124,7 @@ export async function POST(request: Request) {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 }

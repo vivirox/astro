@@ -5,23 +5,23 @@
  * for privacy and HIPAA compliance.
  */
 
-import { getLogger } from '../logging'
+import type { ChatMessage } from '../../types/chat'
 // Import only the EncryptionMode from fhe types
 import { EncryptionMode } from '../fhe/types'
+import { getLogger } from '../logging'
 import { createSignedVerificationToken } from '../security/verification'
 import { generateId } from '../utils'
-import type { ChatMessage } from '../../types/chat'
 
 // Initialize logger
 const logger = getLogger()
 
 // Define FHE service interface with required methods
 interface FHEServiceInterface {
-  encrypt(data: string): Promise<string>
-  encryptData(
+  encrypt: (data: string) => Promise<string>
+  encryptData: (
     data: Uint8Array,
-    mode: EncryptionMode
-  ): Promise<{
+    mode: EncryptionMode,
+  ) => Promise<{
     data: ArrayBuffer
     encryptedKey?: string
     iv?: string
@@ -42,7 +42,7 @@ export enum ExportFormat {
  * Export options configuration
  */
 export interface ExportOptions {
-  format: ExportFormat
+  format: ExportForma
   includeMetadata: boolean
   encryptionMode: EncryptionMode
   includeVerificationToken: boolean
@@ -66,7 +66,7 @@ const DEFAULT_EXPORT_OPTIONS: ExportOptions = {
 export interface ExportResult {
   id: string
   data: string | Uint8Array
-  format: ExportFormat
+  format: ExportForma
   encryptionMode: EncryptionMode
   verificationToken?: string
   timestamp: number
@@ -101,6 +101,7 @@ export class ExportService {
     this.fheService = fheService
     logger.info('Export service initialized')
   }
+
   /**
    * Get singleton instance
    */
@@ -145,7 +146,7 @@ export class ExportService {
    */
   public async exportConversation(
     messages: ChatMessage[],
-    options: Partial<ExportOptions> = {}
+    options: Partial<ExportOptions> = {},
   ): Promise<ExportResult> {
     if (!this.initialized) {
       await this.initialize()
@@ -159,10 +160,10 @@ export class ExportService {
 
     try {
       logger.info(
-        `Exporting conversation with ${messages.length} messages in ${exportOptions.format} format`
+        `Exporting conversation with ${messages.length} messages in ${exportOptions.format} format`,
       )
 
-      // Create export data based on format
+      // Create export data based on forma
       let exportData: string | Uint8Array
       let mimeType: string
       let filename: string
@@ -179,7 +180,7 @@ export class ExportService {
         case ExportFormat.ENCRYPTED_ARCHIVE: {
           const archive = await this.createEncryptedArchive(
             messages,
-            exportOptions
+            exportOptions,
           )
           exportData = archive.data
           mimeType = 'application/octet-stream'
@@ -202,7 +203,7 @@ export class ExportService {
         verificationToken = await this.createVerificationToken(
           exportData,
           exportId,
-          timestamp
+          timestamp,
         )
       }
 
@@ -228,7 +229,7 @@ export class ExportService {
    */
   private async createJSONExport(
     messages: ChatMessage[],
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<{ data: string }> {
     // Prepare export content
     const exportContent = {
@@ -264,7 +265,7 @@ export class ExportService {
       // Use FHE service to encrypt
       const encryptedData = await this.fheService.encryptData(
         new TextEncoder().encode(jsonData),
-        options.encryptionMode
+        options.encryptionMode,
       )
 
       // Format as JWE
@@ -287,12 +288,12 @@ export class ExportService {
    */
   private async createPDFExport(
     messages: ChatMessage[],
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<{ data: Uint8Array }> {
     // Note: In a real implementation, this would use a PDF generation library
     // For now, we'll create a placeholder implementation
 
-    // Convert messages to PDF-compatible format
+    // Convert messages to PDF-compatible forma
     const pdfContent = `
       Therapy Conversation export
       Generated: ${new Date().toISOString()}
@@ -309,7 +310,7 @@ export class ExportService {
     if (options.encryptionMode !== EncryptionMode.NONE) {
       const encryptedData = await this.fheService.encryptData(
         pdfBuffer,
-        options.encryptionMode
+        options.encryptionMode,
       )
 
       return { data: new Uint8Array(encryptedData.data) }
@@ -323,9 +324,9 @@ export class ExportService {
    */
   private async createEncryptedArchive(
     messages: ChatMessage[],
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<{ data: Uint8Array }> {
-    // Note: In a real implementation, this would use a secure archive format
+    // Note: In a real implementation, this would use a secure archive forma
     // For this example, we'll create a simplified version
 
     // Create JSON representation
@@ -338,7 +339,7 @@ export class ExportService {
         encryption: options.encryptionMode,
         timestamp: Date.now(),
         contentType: 'application/json',
-      })
+      }),
     )
 
     // Combine header and data
@@ -348,7 +349,7 @@ export class ExportService {
     // Combine all buffers
     const jsonBuffer = new TextEncoder().encode(jsonResult.data)
     const completeBuffer = new Uint8Array(
-      headerSizeBuffer.length + header.length + jsonBuffer.length
+      headerSizeBuffer.length + header.length + jsonBuffer.length,
     )
 
     completeBuffer.set(headerSizeBuffer, 0)
@@ -364,7 +365,7 @@ export class ExportService {
   private async createVerificationToken(
     data: string | Uint8Array,
     exportId: string,
-    timestamp: number
+    timestamp: number,
   ): Promise<string> {
     const dataBuffer =
       typeof data === 'string' ? new TextEncoder().encode(data) : data

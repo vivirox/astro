@@ -4,6 +4,7 @@
  * Provides token creation and validation functions for export integrity
  */
 
+import { Buffer } from 'node:buffer'
 import { getLogger } from '../logging'
 
 const logger = getLogger()
@@ -26,7 +27,7 @@ export function createSignedVerificationToken(payload: unknown): string {
     const encodedToken = Buffer.from(JSON.stringify(token)).toString('base64')
     return encodedToken
   } catch (error) {
-    logger.error('Failed to create verification token', error)
+    logger.error('Failed to create verification token', { error })
     throw new Error('Verification token creation failed')
   }
 }
@@ -44,12 +45,13 @@ export function verifyToken(token: string): unknown | null {
 
     // Check expiration
     if (decoded.exp < Date.now()) {
+      logger.warn('Token expired', { token })
       return null
     }
 
     return decoded
   } catch (error) {
-    logger.error('Error verifying token', error)
+    logger.error('Error verifying token', { error, token })
     return null
   }
 }

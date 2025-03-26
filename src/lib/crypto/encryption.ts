@@ -45,7 +45,7 @@ export class Encryption {
 
       // Decrypt the data
       const decrypted = CryptoJS.AES.decrypt(encryptedContent, key).toString(
-        CryptoJS.enc.Utf8
+        CryptoJS.enc.Utf8,
       )
 
       // Parse the decrypted data

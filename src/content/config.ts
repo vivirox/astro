@@ -1,7 +1,7 @@
-import { glob } from 'astro/loaders'
-import { defineCollection, z } from 'astro:content'
-
 import { feedLoader } from '@ascorbic/feed-loader'
+import { glob } from 'astro/loaders'
+
+import { defineCollection, z } from 'astro:content'
 // Comment out unused imports to fix linter errors
 // import { githubReleasesLoader } from 'astro-loader-github-releases'
 // import { githubPrsLoader } from 'astro-loader-github-prs'

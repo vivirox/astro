@@ -1,5 +1,5 @@
-import { type User } from '../../auth/types'
-import { type Json } from '../../../types/supabase'
+import type { Json } from '../../../types/supabase'
+import type { User } from '../../auth/types'
 
 /**
  * Base interface for all AI analysis results

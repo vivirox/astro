@@ -11,12 +11,12 @@ export interface ExtendedAICompletionRequest extends AICompletionRequest {
 }
 
 // Use a safe crypto implementation for both server and client
-const getCrypto = async () => {
+async function getCrypto() {
   if (typeof window === 'undefined') {
     // Server environment
     try {
       // Dynamic import
-      const cryptoModule = await import('crypto')
+      const cryptoModule = await import('node:crypto')
       return cryptoModule.default
     } catch (e) {
       console.error('Crypto not available:', e)
@@ -25,17 +25,21 @@ const getCrypto = async () => {
 
   // Fallback for browser or when crypto is not available
   return {
-    createHash: (_algorithm: string) => ({
+    createHash: (algorithm: string) => ({
       update: (data: string) => ({
-        digest: (_format: string) => {
+        digest: (format: string) => {
           // Simple hash function for browser
           let hash = 0
           for (let i = 0; i < data.length; i++) {
             const char = data.charCodeAt(i)
-            hash = (hash << 5) - hash + char
+            // Use algorithm string to add variation to the hash
+            const salt = algorithm.length
+            hash = (hash << salt) - hash + char
             hash = hash & hash // Convert to 32bit integer
           }
-          return Math.abs(hash).toString(16)
+          // Use format to determine output length
+          const length = format === 'hex' ? 32 : 16
+          return Math.abs(hash).toString(16).padStart(length, '0')
         },
       }),
     }),
@@ -100,7 +104,7 @@ export class AICacheService {
    * Generate a cache key from a request
    */
   private async generateKey(
-    request: ExtendedAICompletionRequest
+    request: ExtendedAICompletionRequest,
   ): Promise<string> {
     // Don't cache streaming requests
     if (request.stream) {
@@ -116,6 +120,16 @@ export class AICacheService {
     })
 
     const crypto = await getCrypto()
+    if (!crypto?.createHash) {
+      // Fallback if crypto is not available
+      return Math.abs(
+        JSON.stringify(requestData)
+          .split('')
+          .reduce((acc, char) => {
+            return (acc << 5) - acc + char.charCodeAt(0)
+          }, 0),
+      ).toString(16)
+    }
     return crypto.createHash('md5').update(requestData).digest('hex')
   }
 
@@ -123,7 +137,7 @@ export class AICacheService {
    * Get a cached response if available
    */
   async get(
-    request: ExtendedAICompletionRequest
+    request: ExtendedAICompletionRequest,
   ): Promise<AICompletionResponse | null> {
     if (!this.enabled) return null
 
@@ -151,7 +165,7 @@ export class AICacheService {
    */
   async set(
     request: ExtendedAICompletionRequest,
-    response: AICompletionResponse
+    response: AICompletionResponse,
   ): Promise<void> {
     if (!this.enabled) return
 
@@ -177,7 +191,7 @@ export class AICacheService {
   private evictLeastUsed(): void {
     // Sort entries by hits (ascending)
     const entries = Array.from(this.cache.entries()).sort(
-      (a, b) => a[1].hits - b[1].hits
+      (a, b) => a[1].hits - b[1].hits,
     )
 
     // Remove 10% of least used entries

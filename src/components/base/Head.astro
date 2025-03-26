@@ -23,7 +23,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 const generatedOgImage = checkFileExistsInDir(
   'public/og-images',
-  `${basename(Astro.url.pathname)}.png`
+  `${basename(Astro.url.pathname)}.png`,
 )
   ? getUrl('og-images', `${basename(Astro.url.pathname)}.png`)
   : undefined
@@ -37,7 +37,7 @@ const assignedOgImage =
 
 const ogImageURL = new URL(
   assignedOgImage || generatedOgImage || getUrl('og-images', 'og-image.png'),
-  Astro.url
+  Astro.url,
 ).href
 
 // https://jsonld.com/blog-post/
@@ -87,10 +87,10 @@ const webPageData = {
 <meta name="color-scheme" content="light dark" />
 
 <!-- Three.js -->
-<script
+<scrip
   is:inline
   src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"
-></script>
+></scrip>
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={pubDate ? 'article' : 'website'} />
@@ -142,17 +142,17 @@ const webPageData = {
 <!-- Google JSON-LD Structured Data -->
 {
   pubDate ? (
-    <script
+    <scrip
       is:inline
       type="application/ld+json"
       set:html={JSON.stringify(blogPostingData)}
     />
   ) : (
-    <script
+    <scrip
       is:inline
       type="application/ld+json"
       set:html={JSON.stringify(webPageData)}
-    ></script>
+    />
   )
 }
 

@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
 import type { SentimentResult } from '../../../lib/ai'
+import { useCallback, useState } from 'react'
 
 interface UseSentimentAnalysisOptions {
   apiEndpoint?: string
@@ -67,7 +67,7 @@ export function useSentimentAnalysis({
         }
 
         // Parse response
-        const data = (await response.json()) as SentimentResult
+        const data = (await response.json()) as SentimentResul
         setResult(data)
 
         // Call onComplete callback
@@ -91,7 +91,7 @@ export function useSentimentAnalysis({
         setIsLoading(false)
       }
     },
-    [isLoading, model, apiEndpoint, onError, onComplete]
+    [isLoading, model, apiEndpoint, onError, onComplete],
   )
 
   // Analyze a batch of texts
@@ -148,7 +148,7 @@ export function useSentimentAnalysis({
         setIsLoading(false)
       }
     },
-    [isLoading, model, apiEndpoint, onError, onComplete]
+    [isLoading, model, apiEndpoint, onError, onComplete],
   )
 
   return {

@@ -92,9 +92,10 @@ export class PromptOptimizerService {
       // For other messages, truncate content
       return {
         ...msg,
-        content:
-          content.substring(0, this.maxMessageLength) +
-          ` [...truncated ${content.length - this.maxMessageLength} characters]`,
+        content: `${content.substring(
+          0,
+          this.maxMessageLength,
+        )} [...truncated ${content.length - this.maxMessageLength} characters]`,
       }
     })
   }
@@ -113,7 +114,7 @@ export class PromptOptimizerService {
     // Keep the most recent messages (excluding system messages)
     const nonSystemMessages = messages.filter((msg) => msg.role !== 'system')
     const recentMessages = nonSystemMessages.slice(
-      -this.maxMessages + systemMessages.length
+      -this.maxMessages + systemMessages.length,
     )
 
     // Add a note about truncated history if there were messages removed
@@ -141,7 +142,7 @@ export class PromptOptimizerService {
 
     // Get the messages to summarize (excluding system and recent)
     const toSummarize = messages.filter(
-      (msg) => msg.role !== 'system' && !recentMessages.includes(msg)
+      (msg) => msg.role !== 'system' && !recentMessages.includes(msg),
     )
 
     if (toSummarize.length <= 1) {
@@ -181,7 +182,7 @@ export class PromptOptimizerService {
 
     // Count word frequencies
     for (const word of words) {
-      const cleaned = word.toLowerCase().replace(/[^\w]/g, '')
+      const cleaned = word.toLowerCase().replace(/\W/g, '')
       if (cleaned.length > 4) {
         // Only consider words longer than 4 chars
         wordCounts[cleaned] = (wordCounts[cleaned] || 0) + 1

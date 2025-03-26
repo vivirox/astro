@@ -1,8 +1,15 @@
 import type { APIRoute } from 'astro'
-import { AdminService } from '../../../lib/admin'
-import { AdminPermission } from '../../../lib/admin'
+import { AdminPermission, AdminService } from '../../../lib/admin'
 import { adminGuard } from '../../../lib/admin/middleware'
 import { getLogger } from '../../../lib/logging'
+
+interface AdminLocals {
+  admin: {
+    userId: string
+    isAdmin: boolean
+    hasPermission: boolean
+  }
+}
 
 // Initialize logger
 const logger = getLogger()
@@ -14,7 +21,7 @@ const logger = getLogger()
 export const GET: APIRoute = async (context) => {
   // Apply admin middleware to check for admin status and required permission
   const middlewareResponse = await adminGuard(AdminPermission.VIEW_METRICS)(
-    context
+    context,
   )
   if (middlewareResponse) {
     return middlewareResponse
@@ -22,7 +29,7 @@ export const GET: APIRoute = async (context) => {
 
   try {
     // Get admin user ID from middleware context
-    const { userId } = context.locals.admin
+    const { userId } = (context.locals as AdminLocals).admin
 
     // Get admin service
     const adminService = AdminService.getInstance()
@@ -38,8 +45,8 @@ export const GET: APIRoute = async (context) => {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
-  } catch (error) {
-    logger.error('Error fetching admin metrics:', error)
+  } catch {
+    logger.error('Error fetching admin metrics')
     return new Response(JSON.stringify({ error: 'Failed to fetch metrics' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

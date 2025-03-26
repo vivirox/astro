@@ -1,21 +1,22 @@
 #!/usr/bin/env node
 
 /**
- * Playwright Test Runner Script
+ * Playwright Test Runner Scrip
  *
  * This script ensures Playwright is properly set up and can run tests.
  * It handles installing dependencies and executing tests.
  */
 
-import { spawnSync } from 'child_process'
+import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
+import process from 'node:process'
 
 const BROWSER_BINARY_PATH = join(
   process.cwd(),
   'node_modules',
   '.cache',
-  'ms-playwright'
+  'ms-playwright',
 )
 
 /**
@@ -36,12 +37,12 @@ function installPlaywright() {
     ['exec', 'playwright', 'install', '--with-deps'],
     {
       stdio: 'inherit',
-    }
+    },
   )
 
   if (installResult.status !== 0) {
     throw new Error(
-      `Failed to install Playwright browsers: ${installResult.stderr?.toString() || 'Unknown error'}`
+      `Failed to install Playwright browsers: ${installResult.stderr?.toString() || 'Unknown error'}`,
     )
   }
 
@@ -88,8 +89,8 @@ async function main() {
     const args = process.argv.slice(2)
     const setupOnly = args.includes('--setup-only')
 
-    // Remove our custom flags so they don't get passed to Playwright
-    const filteredArgs = args.filter((arg) => arg !== '--setup-only')
+    // Remove our custom flags so they don't get passed to Playwrigh
+    const filteredArgs = args.filter(arg => arg !== '--setup-only')
 
     // Check if Playwright browsers are installed
     const isInstalled = checkPlaywrightInstallation()
@@ -97,7 +98,8 @@ async function main() {
     // Install if needed
     if (!isInstalled) {
       installPlaywright()
-    } else {
+    }
+    else {
       console.log('✅ Playwright browsers already installed')
     }
 
@@ -111,14 +113,15 @@ async function main() {
     runTests(filteredArgs)
 
     process.exit(0)
-  } catch (error) {
-    console.error('\n❌ Error:', error)
+  }
+  catch {
+    console.error('\n❌ Error')
     process.exit(1)
   }
 }
 
-// Run the script
-main().catch((error) => {
-  console.error('Unhandled error:', error)
+// Run the scrip
+main().catch(() => {
+  console.error('Unhandled error')
   process.exit(1)
 })

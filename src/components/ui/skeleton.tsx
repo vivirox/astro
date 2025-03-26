@@ -63,7 +63,7 @@ export function Skeleton({
         className={cn(baseClasses, animationClasses, shapeClasses, className)}
         style={style}
         {...props}
-      />
+      />,
     )
 
     // Add line break if multiple items are rendered
@@ -111,7 +111,7 @@ export function SkeletonText({
           marginBottom: isLastLine ? 0 : spacingPx,
         }}
         {...props}
-      />
+      />,
     )
   }
 

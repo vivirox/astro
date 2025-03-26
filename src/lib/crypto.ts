@@ -3,11 +3,11 @@ export interface CryptoSystemOptions {
 }
 
 export interface CryptoSystem {
-  encrypt(data: string, context: string): Promise<string>
-  decrypt(encryptedData: string, context: string): Promise<string>
-  hash(data: string): Promise<string>
-  sign(data: string): Promise<string>
-  verify(data: string, signature: string): Promise<boolean>
+  encrypt: (data: string, context: string) => Promise<string>
+  decrypt: (encryptedData: string, context: string) => Promise<string>
+  hash: (data: string) => Promise<string>
+  sign: (data: string) => Promise<string>
+  verify: (data: string, signature: string) => Promise<boolean>
 }
 
 /**
@@ -53,7 +53,7 @@ export function createCryptoSystem(options: CryptoSystemOptions): CryptoSystem {
         return decoder.decode(new Uint8Array(dataArray))
       } catch (error) {
         throw new Error(
-          `Decryption failed: ${error instanceof Error ? error.message : String(error)}`
+          `Decryption failed: ${error instanceof Error ? error.message : String(error)}`,
         )
       }
     },

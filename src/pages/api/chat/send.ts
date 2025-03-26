@@ -12,13 +12,13 @@ interface ChatMessageRequest {
 
 // Define the message sending handler with FHE secure processing
 export async function POST(request: Request) {
-  const body = (await request.json()) as ChatMessageRequest
+  const body = (await request.json()) as ChatMessageReques
 
   // ... existing message validation logic
 
   // Create message data
   const messageData = {
-    id: 'msg-' + crypto.randomUUID(),
+    id: `msg-${crypto.randomUUID()}`,
     conversationId: body.conversationId,
     senderId: body.userId,
     content: body.message,
@@ -36,7 +36,8 @@ export async function POST(request: Request) {
   if (body.isEncrypted) {
     await fheChat.encryptMessage(messageData)
     // ... store encrypted message ...
-  } else {
+  }
+  else {
     // ... store message with security signature ...
   }
 
@@ -61,15 +62,15 @@ export async function POST(request: Request) {
         'Content-Type': 'application/json',
         // ... other headers ...
       },
-    }
+    },
   )
 }
 
 // Helper function to get authorized senders for a conversation
 async function getAuthorizedSenders(
-  _conversationId: string
+  _conversationId: string,
 ): Promise<string[]> {
   // In a real implementation, this would fetch the authorized senders from the database
-  // For now, return a mock list
+  // For now, return a mock lis
   return ['user-1', 'user-2', 'ai-assistant']
 }

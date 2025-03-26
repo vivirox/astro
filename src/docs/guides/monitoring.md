@@ -292,4 +292,4 @@ graph TD
    - Set up user roles
    - Configure permissions
    - Enable SSO
-   - Audit access logs 
+   - Audit access logs

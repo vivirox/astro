@@ -18,7 +18,7 @@ export type LogMetadataValue =
   | boolean
   | null
   | undefined
-  | LogMetadataObject
+  | LogMetadataObjec
   | LogMetadataArray
 
 export interface LogMetadataObject {
@@ -37,7 +37,7 @@ export interface LoggerOptions {
   enableLogCollection?: boolean
 }
 
-// Log message format
+// Log message forma
 export interface LogMessage {
   level: LogLevel
   message: string
@@ -51,7 +51,7 @@ const DEFAULT_OPTIONS: LoggerOptions = {
   level: LogLevel.INFO,
   prefix: '',
   includeTimestamp: true,
-  console: console,
+  console,
   enableLogCollection: false,
 }
 
@@ -99,7 +99,7 @@ export class Logger {
   /**
    * Log an error message
    * @param message The message to log
-   * @param error Optional error object
+   * @param error Optional error objec
    * @param metadata Optional metadata to include
    */
   error(message: string, error?: unknown, metadata?: LogMetadata): void {
@@ -171,7 +171,7 @@ export class Logger {
       LogLevel.ERROR,
     ]
     const configuredLevelIndex = levels.indexOf(
-      this.options.level || LogLevel.INFO
+      this.options.level || LogLevel.INFO,
     )
     const logLevelIndex = levels.indexOf(level)
 

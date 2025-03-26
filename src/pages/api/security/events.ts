@@ -1,11 +1,11 @@
+import type { AstroCookies } from 'astro'
+import { getCurrentUser } from '../../../lib/auth.js'
 import { getLogger } from '../../../lib/logging'
 import {
-  SecurityEventType,
   SecurityEventSeverity,
+  SecurityEventType,
 } from '../../../lib/security/monitoring.js'
-import { getCurrentUser } from '../../../lib/auth.js'
 import { supabase } from '../../../lib/supabase.js'
-import type { AstroCookies } from 'astro'
 
 const logger = getLogger()
 
@@ -14,7 +14,7 @@ interface RequestContext {
   cookies: AstroCookies
 }
 
-interface SecurityEventRow {
+interface _SecurityEventRow {
   type: SecurityEventType
   user_id: string
   ip_address: string
@@ -38,7 +38,7 @@ export async function GET({ request, cookies }: RequestContext) {
         {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       )
     }
 
@@ -47,27 +47,27 @@ export async function GET({ request, cookies }: RequestContext) {
     const type = url.searchParams.get('type')
     const severity = url.searchParams.get('severity')
     const timeRange = url.searchParams.get('timeRange')
-    const limit = parseInt(url.searchParams.get('limit') || '100', 10)
-    const page = parseInt(url.searchParams.get('page') || '1', 10)
+    const limit = Number.parseInt(url.searchParams.get('limit') || '100', 10)
+    const page = Number.parseInt(url.searchParams.get('page') || '1', 10)
 
     // Start building the query
     let query = supabase.from('security_events').select('*')
 
     // Filter by type
     if (
-      type &&
-      type !== 'all' &&
-      Object.values(SecurityEventType).includes(type as SecurityEventType)
+      type
+      && type !== 'all'
+      && Object.values(SecurityEventType).includes(type as SecurityEventType)
     ) {
       query = query.eq('type', type)
     }
 
     // Filter by severity
     if (
-      severity &&
-      severity !== 'all' &&
-      Object.values(SecurityEventSeverity).includes(
-        severity as SecurityEventSeverity
+      severity
+      && severity !== 'all'
+      && Object.values(SecurityEventSeverity).includes(
+        severity as SecurityEventSeverity,
       )
     ) {
       query = query.eq('severity', severity)
@@ -107,7 +107,7 @@ export async function GET({ request, cookies }: RequestContext) {
     }
 
     // Transform results to match the SecurityEvent interface
-    const events = (result || []).map((row: SecurityEventRow) => ({
+    const events = (result || []).map(row => ({
       type: row.type,
       userId: row.user_id,
       ip: row.ip_address,
@@ -128,10 +128,11 @@ export async function GET({ request, cookies }: RequestContext) {
     return new Response(JSON.stringify(events), {
       headers: { 'Content-Type': 'application/json' },
     })
-  } catch (error) {
+  }
+  catch (error) {
     // Log error
     logger.error('Error fetching security events', {
-      message: error instanceof Error ? error : new Error(String(error)),
+      message: error instanceof Error ? error.message : String(error),
     })
 
     // Return error response
@@ -142,7 +143,7 @@ export async function GET({ request, cookies }: RequestContext) {
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
   }
 }

@@ -9,10 +9,12 @@
  * - Redirect to secure endpoints for sensitive operations
  */
 
-import { NextRequest, NextResponse } from 'next/server'
-import { getLogger } from '../../logging'
-import { piiDetectionService, PIIType } from '.'
+import type { NextRequest } from 'next/server'
+import type { PIIType } from '.'
+import { NextResponse } from 'next/server'
+import { piiDetectionService } from '.'
 import { createAuditLog } from '../../audit'
+import { getLogger } from '../../logging'
 
 // Define enums locally if they're missing
 enum AuditEventType {
@@ -88,7 +90,7 @@ const DEFAULT_CONFIG: PIIMiddlewareConfig = {
 export async function piiMiddleware(
   request: NextRequest,
   next: () => Promise<NextResponse>,
-  config: Partial<PIIMiddlewareConfig> = {}
+  config: Partial<PIIMiddlewareConfig> = {},
 ): Promise<NextResponse> {
   // Merge configuration with defaults
   const mergedConfig: PIIMiddlewareConfig = { ...DEFAULT_CONFIG, ...config }
@@ -108,13 +110,13 @@ export async function piiMiddleware(
 
   // Determine if this is a sensitive path
   const isSensitivePath = mergedConfig.sensitivePathPatterns.some((pattern) =>
-    pattern.test(pathname)
+    pattern.test(pathname),
   )
 
   // Get content type
   const contentType = request.headers.get('content-type') || ''
   const isSensitiveContentType = mergedConfig.sensitiveContentTypes.some(
-    (type) => contentType.includes(type)
+    (type) => contentType.includes(type),
   )
 
   try {
@@ -152,7 +154,7 @@ export async function piiMiddleware(
         // Continue with the request even if we can't parse the body
       }
 
-      // Process the request body if we were able to parse it
+      // Process the request body if we were able to parse i
       if (requestBody) {
         // For string content (plain text)
         if (typeof requestBody === 'string') {
@@ -175,7 +177,7 @@ export async function piiMiddleware(
                   method: request.method,
                   piiTypes: piiResult.types,
                   confidence: piiResult.confidence,
-                }
+                },
               )
             }
 
@@ -194,7 +196,7 @@ export async function piiMiddleware(
                   error:
                     'Request contains sensitive information and was blocked',
                 },
-                { status: 400 }
+                { status: 400 },
               )
             }
 
@@ -213,7 +215,7 @@ export async function piiMiddleware(
               redact: mergedConfig.redactRequests,
               types: mergedConfig.typesToCheck,
               sensitiveKeys: mergedConfig.sensitiveParameters,
-            }
+            },
           )
 
           // If PII detected
@@ -228,7 +230,7 @@ export async function piiMiddleware(
                 {
                   path: pathname,
                   method: request.method,
-                }
+                },
               )
             }
 
@@ -245,7 +247,7 @@ export async function piiMiddleware(
                   error:
                     'Request contains sensitive information and was blocked',
                 },
-                { status: 400 }
+                { status: 400 },
               )
             }
 
@@ -274,7 +276,7 @@ export async function piiMiddleware(
       const shouldProcessResponse =
         isSensitivePath ||
         mergedConfig.sensitiveContentTypes.some((type) =>
-          responseContentType.includes(type)
+          responseContentType.includes(type),
         )
 
       // If not sensitive, return the original response
@@ -300,7 +302,7 @@ export async function piiMiddleware(
         return originalResponse
       }
 
-      // Process the response body if we were able to parse it
+      // Process the response body if we were able to parse i
       if (responseBody) {
         // For string content (plain text)
         if (typeof responseBody === 'string') {
@@ -323,7 +325,7 @@ export async function piiMiddleware(
                   method: request.method,
                   piiTypes: piiResult.types,
                   confidence: piiResult.confidence,
-                }
+                },
               )
             }
 
@@ -342,7 +344,7 @@ export async function piiMiddleware(
             {
               redact: true,
               types: mergedConfig.typesToCheck,
-            }
+            },
           )
 
           // If PII detected and redacted
@@ -357,7 +359,7 @@ export async function piiMiddleware(
                 {
                   path: pathname,
                   method: request.method,
-                }
+                },
               )
             }
 
@@ -373,11 +375,11 @@ export async function piiMiddleware(
         return originalResponse
       }
 
-      // Return the original response if we couldn't process it
+      // Return the original response if we couldn't process i
       return originalResponse
     }
 
-    // If we don't need to process the response, just call next
+    // If we don't need to process the response, just call nex
     return next()
   } catch {
     // Log the error

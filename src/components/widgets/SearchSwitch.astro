@@ -1,6 +1,6 @@
-
 ---
 import { getUrl } from '~/utils/common'
+import { toggleFadeEffect } from '~/utils/animation'
 ---
 
 <button
@@ -16,7 +16,7 @@ import { getUrl } from '~/utils/common'
   transition:persis
   id="search-panel"
   class="z-200 fixed top-20 right-8
-    hidden grid grid-rows-[auto_1fr]
+    grid grid-rows-[auto_1fr]
     w-30rem max-h-82vh p-2 rounded-lg lt-lgp:(w-90% left-5% right-5%)
     bg-[var(--c-bg)] shadow-custom_0_0_20_0"
 >
@@ -28,7 +28,7 @@ import { getUrl } from '~/utils/common'
   >
     <div u-i-grommet-icons-search id="search-icon" class="op-60"></div>
     <label class="sr-only" for="search-input">Search</label>
-    <input
+    <inpu
       type="search"
       id="search-input"
       class="h-full pl-2 bg-transparent outline-0"
@@ -112,7 +112,7 @@ import { getUrl } from '~/utils/common'
         title: 'Testing Search Functionality in Prod Env',
       },
       excerpt: 'Try running <mark>pnpm build && pnpm preview</mark> instead.',
-    }
+    },
   ]
 
   /* Handle user input */
@@ -120,12 +120,25 @@ import { getUrl } from '~/utils/common'
     const searchResults = document.getElementById('search-results')
     if (searchResults) searchResults.innerHTML = ''
     if (import.meta.env.PROD) {
-      //   (for Cannot find name 'pagefind'.ts(2304), used as window.pagefind)
-      const search = await pagefind.search(event.target.value)
+      interface Pagefind {
+        search: (query: string) => Promise<{
+          results: {
+            data: () => Promise<{
+              url: string
+              meta: {
+                title: string
+              }
+              excerpt: string
+            }>
+          }[]
+        }>
+      }
+
+      const pagefind = (window as unknown as { pagefind: Pagefind }).pagefind
+      const search = await pagefind.search((event.target as HTMLInputElement).value)
 
       for (const result of search.results) {
         const data = await result.data()
-        // console.log('data', data)
         document.getElementById('search-results')!.innerHTML += `
         <a href="${data.url}" class="search-results-item">
           <div class="search-results-title">${data.meta.title}</div>
@@ -154,7 +167,7 @@ import { getUrl } from '~/utils/common'
       const pagefind = await import(scriptUrl)
 
       await pagefind.options({
-        'excerptLength': 20
+        excerptLength: 20,
       })
 
       pagefind.init()
