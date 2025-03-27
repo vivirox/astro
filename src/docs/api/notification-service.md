@@ -1,6 +1,8 @@
 # Notification Service API Documentation
 
-The Gradiant platform includes multiple notification services that handle different aspects of the system's notification capabilities. This document provides comprehensive documentation for these services, their interfaces, methods, and usage examples.
+The Gradiant platform includes multiple notification services that handle different aspects of the system's
+notification capabilities. This document provides comprehensive documentation for these services, their
+interfaces, methods, and usage examples.
 
 ## Table of Contents
 
@@ -16,11 +18,14 @@ The Gradiant platform includes multiple notification services that handle differ
 
 ## Overview
 
-The notification system in Gradiant is designed to handle various types of notifications across different channels. The system includes three main services:
+The notification system in Gradiant is designed to handle various types of notifications across different
+channels. The system includes three main services:
 
 1. **NotificationService**: A basic notification service for cache alerts
-2. **AutomatedNotificationService**: An enhanced service with support for multiple channels and advanced features
-3. **Security NotificationService**: A specialized service for security-related notifications with advanced error handling and circuit breaking
+2. **AutomatedNotificationService**: An enhanced service with support for multiple channels and advanced
+   features
+3. **Security NotificationService**: A specialized service for security-related notifications with advanced error
+   handling and circuit breaking
 
 These services share common concepts but are tailored for specific use cases within the application.
 
@@ -109,7 +114,8 @@ The service also includes several private methods:
 
 ## AutomatedNotificationService
 
-The `AutomatedNotificationService` is an enhanced notification service that extends EventEmitter and supports multiple notification channels with advanced features.
+The `AutomatedNotificationService` is an enhanced notification service that extends EventEmitter and supports
+multiple notification channels with advanced features.
 
 ### Automated Service Interfaces 2
 
@@ -226,7 +232,8 @@ notificationService.on('notification:error', ({ notification, error }) => {
 
 ## Security NotificationService
 
-The `NotificationService` in the security module is a specialized service for handling security-related notifications with advanced error handling, circuit breaking, and performance monitoring.
+The `NotificationService` in the security module is a specialized service for handling security-related
+notifications with advanced error handling, circuit breaking, and performance monitoring.
 
 ### Security Service Interfaces 2
 

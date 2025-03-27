@@ -2,11 +2,15 @@
 
 ## Project Overview
 
-Gradiant is a cutting-edge mental health analytics platform built with modern web technologies and advanced AI capabilities. The platform provides real-time therapeutic analytics, secure patient data management, and comprehensive mental health assessment tools.
+Gradiant is a cutting-edge mental health analytics platform built with modern web technologies and
+advanced AI capabilities. The platform provides real-time therapeutic analytics, secure patient data
+management, and comprehensive mental health assessment tools.
 
 ## Core Mission
 
-To revolutionize mental healthcare by providing practitioners and institutions with powerful, AI-driven analytics tools while maintaining the highest standards of privacy, security, and ethical considerations in healthcare technology.
+To revolutionize mental healthcare by providing practitioners and institutions with powerful,
+AI-driven analytics tools while maintaining the highest standards of privacy, security, and ethical
+considerations in healthcare technology.
 
 ## Technical Architecture
 
@@ -70,7 +74,7 @@ To revolutionize mental healthcare by providing practitioners and institutions w
 ## Sample User Journeys
 
 ### 1. Mental Health Professional
-```
+```text
 Login → Dashboard → Patient Overview → Session Analysis → Generate Insights → Create Report
 ```
 - Access encrypted patient records
@@ -79,7 +83,7 @@ Login → Dashboard → Patient Overview → Session Analysis → Generate Insig
 - Create comprehensive reports
 
 ### 2. Healthcare Administrator
-```
+```text
 Login → Analytics Dashboard → Performance Metrics → Resource Management → Compliance Reports
 ```
 - Monitor institutional metrics
@@ -88,7 +92,7 @@ Login → Analytics Dashboard → Performance Metrics → Resource Management �
 - Generate administrative reports
 
 ### 3. Researcher
-```
+```text
 Login → Data Analytics → Pattern Analysis → Research Dashboard → Export Findings
 ```
 - Access anonymized data

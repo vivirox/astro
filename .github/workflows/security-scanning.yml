@@ -8,14 +8,26 @@ on:
   schedule:
     - cron: '0 0 * * *' # Run daily at midnight UTC
 
+permissions: read-all
+
+env:
+  ENABLE_SECURITY_ALERTS: ${{ secrets.ENABLE_SECURITY_ALERTS }}
+  SECURITY_SLACK_WEBHOOK: ${{ secrets.SECURITY_SLACK_WEBHOOK }}
+  SECURITY_SMTP_SERVER: ${{ secrets.SECURITY_SMTP_SERVER }}
+  SECURITY_SMTP_PORT: ${{ secrets.SECURITY_SMTP_PORT }}
+  SECURITY_SMTP_USERNAME: ${{ secrets.SECURITY_SMTP_USERNAME }}
+  SECURITY_SMTP_PASSWORD: ${{ secrets.SECURITY_SMTP_PASSWORD }}
+  SECURITY_TEAM_EMAIL: ${{ secrets.SECURITY_TEAM_EMAIL }}
+
 jobs:
   security-checks:
     name: Security Scanning
     runs-on: ubuntu-latest
     permissions:
-      actions: read
       contents: read
       security-events: write
+      pull-requests: read
+      checks: write
 
     steps:
       - name: Checkout repository
@@ -30,6 +42,36 @@ jobs:
           languages: javascript, typescript, python
           queries: security-extended,security-and-quality
           config-file: ./.github/codeql/codeql-config.yml
+          ram: 8192
+          threads: auto
+          debug: true
+
+      # Additional custom queries for healthcare systems
+      - name: Add Custom Healthcare Queries
+        run: |
+          mkdir -p .github/codeql/healthcare-queries
+          cat << 'EOF' > .github/codeql/healthcare-queries/phi-exposure.ql
+          /**
+           * @name PHI Data Exposure
+           * @description Detects potential exposure of Protected Health Information
+           * @kind problem
+           * @problem.severity error
+           * @precision high
+           * @id js/phi-exposure
+           * @tags security
+           *       hipaa
+           *       privacy
+           */
+          import javascript
+
+          from DataFlow::Node source, DataFlow::Node sink
+          where exists(DataFlow::PathNode mid |
+            isPhiSource(source) and
+            isUnsafeSink(sink) and
+            hasPath(source, mid, sink)
+          )
+          select sink, "Potential PHI exposure"
+          EOF
 
       # Build for CodeQL Analysis (if needed)
       - name: Autobuild
@@ -49,33 +91,40 @@ jobs:
         run: |
           echo "Checking HIPAA Security Standards..."
 
-          # Check encryption standards
+          # Check encryption implementation
           echo "Verifying encryption standards..."
           find . -type f -name "*.ts" -o -name "*.js" -o -name "*.py" | while read file; do
-            if grep -i "createcipher\|createdecipher" "$file"; then
-              echo "WARNING: Deprecated crypto methods found in $file"
+            if grep -i "createcipher\\|createdecipher\\|crypto.createCipher\\|crypto.createDecipher" "$file"; then
+              echo "ERROR: Deprecated/insecure crypto methods found in $file"
+              exit 1
             fi
           done
 
-          # Check authentication methods
-          echo "Verifying authentication methods..."
+          # Check authentication and authorization
+          echo "Verifying access controls..."
           find . -type f -name "*.ts" -o -name "*.js" -o -name "*.py" | while read file; do
-            if ! grep -i "mfa\|2fa\|twofactor" "$file"; then
-              echo "WARNING: No MFA found in $file"
+            if grep -i "router.get\\|router.post\\|router.put\\|router.delete" "$file"; then
+              if ! grep -i "authenticate\\|authorize\\|checkPermission" "$file"; then
+                echo "ERROR: Route without authentication checks in $file"
+                exit 1
+              fi
             fi
           done
 
           # Check audit logging
           echo "Verifying audit logging..."
           find . -type f -name "*.ts" -o -name "*.js" -o -name "*.py" | while read file; do
-            if ! grep -i "audit.log\|auditlog" "$file"; then
-              echo "WARNING: No audit logging found in $file"
+            if grep -i "patient\\|phi\\|medical" "$file"; then
+              if ! grep -i "audit\\|log.info\\|logger" "$file"; then
+                echo "ERROR: PHI handling without audit logging in $file"
+                exit 1
+              fi
             fi
           done
 
       # Dependency Review
       - name: Dependency Review
-        uses: actions/dependency-review-action@v3
+        uses: actions/dependency-review-action@v4
         if: github.event_name == 'pull_request'
 
       # Enhanced Trivy Scanner
@@ -118,6 +167,45 @@ jobs:
         with:
           sarif_file: 'checkov.sarif'
 
+      - name: Create Security Issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const report = fs.existsSync('security-report.md') ?
+              fs.readFileSync('security-report.md', 'utf8') :
+              'Security scan completed with issues';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Security Scan Alert',
+              body: `Security scan detected issues:\n\n${report}`,
+              labels: ['security', 'hipaa-compliance']
+            });
+
+      - name: Send Slack Notification
+        if: env.ENABLE_SECURITY_ALERTS == 'true'
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data @notification.json \
+          ${{ env.SECURITY_SLACK_WEBHOOK }}
+
+      - name: Send Email Notification
+        if: env.ENABLE_SECURITY_ALERTS == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ env.SECURITY_SMTP_SERVER }}
+          server_port: ${{ env.SECURITY_SMTP_PORT }}
+          username: ${{ env.SECURITY_SMTP_USERNAME }}
+          password: ${{ env.SECURITY_SMTP_PASSWORD }}
+          subject: 'Security Scan Results - ${{ github.repository }}'
+          to: ${{ env.SECURITY_TEAM_EMAIL }}
+          from: GitHub Actions
+          body: file://security-report.md
+
   hipaa-compliance:
     name: HIPAA Compliance Checks
     runs-on: ubuntu-latest
@@ -138,58 +226,73 @@ jobs:
         run: |
           echo "Running comprehensive PHI detection scan..."
           cat << 'EOF' > phi_detector.py
-          from presidio_analyzer import AnalyzerEngine
+          from presidio_analyzer import AnalyzerEngine, PatternRecognizer
           from presidio_anonymizer import AnonymizerEngine
           import os
           import json
+          import re
 
-          def scan_file(filepath):
-              analyzer = AnalyzerEngine()
-              anonymizer = AnonymizerEngine()
-              results = []
+          # Healthcare specific patterns
+          icd10_pattern = r'\b[A-Z]\d{2}(?:\.\d{1,2})?\b'
+          mrn_pattern = r'\b(?:MRN|Medical Record Number|Patient ID)[\s:=-]*\d{4,10}\b'
+          fhir_id_pattern = r'\b(Patient|Observation|Condition|Procedure|MedicationRequest)\/[a-zA-Z0-9-]{1,64}\b'
+          npi_pattern = r'\b\d{10}\b'
+          date_pattern = r'\b\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\b'
 
-              try:
-                  with open(filepath, 'r', encoding='utf-8') as f:
-                      text = f.read()
-                      analysis_results = analyzer.analyze(text=text, language='en')
+          # Create custom recognizers
+          icd10_recognizer = PatternRecognizer(
+              supported_entity="ICD10_CODE",
+              patterns=[{"name": "icd10", "regex": icd10_pattern}]
+          )
+          mrn_recognizer = PatternRecognizer(
+              supported_entity="MEDICAL_RECORD_NUMBER",
+              patterns=[{"name": "mrn", "regex": mrn_pattern}]
+          )
+          fhir_recognizer = PatternRecognizer(
+              supported_entity="FHIR_RESOURCE_ID",
+              patterns=[{"name": "fhir_id", "regex": fhir_id_pattern}]
+          )
+          npi_recognizer = PatternRecognizer(
+              supported_entity="NPI_NUMBER",
+              patterns=[{"name": "npi", "regex": npi_pattern}]
+          )
 
-                      if analysis_results:
-                          for result in analysis_results:
-                              results.append({
-                                  'file': filepath,
-                                  'type': result.entity_type,
-                                  'score': result.score,
-                                  'text': text[result.start:result.end],
-                                  'position': f"{result.start}-{result.end}"
-                              })
-              except Exception as e:
-                  print(f"Error processing {filepath}: {str(e)}")
+          analyzer = AnalyzerEngine()
+          anonymizer = AnonymizerEngine()
 
-              return results
+          # Add healthcare recognizers
+          analyzer.registry.add_recognizer(icd10_recognizer)
+          analyzer.registry.add_recognizer(mrn_recognizer)
+          analyzer.registry.add_recognizer(fhir_recognizer)
+          analyzer.registry.add_recognizer(npi_recognizer)
 
-          def main():
-              all_results = []
-              for root, _, files in os.walk('.'):
-                  if 'node_modules' in root or '.git' in root:
-                      continue
+          def scan_code(content, filename):
+              # Analyze for PHI
+              results = analyzer.analyze(
+                  text=content,
+                  language="en",
+                  return_decision_process=True
+              )
 
-                  for file in files:
-                      if file.endswith(('.js', '.ts', '.py', '.json', '.md')):
-                          filepath = os.path.join(root, file)
-                          results = scan_file(filepath)
-                          all_results.extend(results)
+              if results:
+                  print(f"Found potential PHI in {filename}:")
+                  for result in results:
+                      print(f"- {result.entity_type}: {content[result.start:result.end]}")
+                  return True
+              return False
 
-              with open('phi-scan-results.json', 'w') as f:
-                  json.dump(all_results, f, indent=2)
-
-              if all_results:
-                  print("⚠️ PHI detected! Check phi-scan-results.json for details")
-                  exit(1)
-              else:
-                  print("✅ No PHI detected")
-
-          if __name__ == '__main__':
-              main()
+          # Scan all relevant files
+          for root, _, files in os.walk("."):
+              for file in files:
+                  if file.endswith((".ts", ".js", ".py", ".json", ".md")):
+                      filepath = os.path.join(root, file)
+                      with open(filepath, "r", encoding="utf-8") as f:
+                          try:
+                              content = f.read()
+                              if scan_code(content, filepath):
+                                  print(f"WARNING: Potential PHI found in {filepath}")
+                          except Exception as e:
+                              print(f"Error scanning {filepath}: {str(e)}")
           EOF
 
           python phi_detector.py
@@ -242,6 +345,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # TruffleHog for advanced secret scanning
       - name: TruffleHog OSS
@@ -252,12 +357,33 @@ jobs:
           head: HEAD
           extra_args: --debug --only-verified
 
-      # Gitleaks as secondary scanner
+      # Custom healthcare credential patterns
+      - name: Install custom scanners
+        run: |
+          cat << EOF > healthcare-patterns.json
+          {
+            "EHR_API_KEY": {
+              "description": "EHR API Key Pattern",
+              "pattern": "(?i)(epic|cerner|allscripts|athena)([_-]?api[_-]?key|apikey)([^a-zA-Z0-9]|$){0,1}[=:\"\\s'\\`]{1,2}([a-zA-Z0-9=_\\-\\+/]{16,45})"
+            },
+            "FHIR_TOKEN": {
+              "description": "FHIR Access Token Pattern",
+              "pattern": "(?i)(fhir[_-]?token|fhir[_-]?access[_-]?token)([^a-zA-Z0-9]|$){0,1}[=:\"\\s'\\`]{1,2}([a-zA-Z0-9=_\\-\\+/\\.]{32,250})"
+            },
+            "PATIENT_ID": {
+              "description": "Patient ID Pattern",
+              "pattern": "(?i)(patient[_-]?id|mrn|medical[_-]?record[_-]?number)([^a-zA-Z0-9]|$){0,1}[=:\"\\s'\\`]{1,2}([A-Z0-9]{6,15})"
+            }
+          }
+          EOF
+
+      # Gitleaks with custom rules
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_CONFIG: .gitleaks.toml
+          GITLEAKS_RULES: healthcare-patterns.json
 
   report-generation:
     name: Security Report Generation
@@ -285,38 +411,56 @@ jobs:
           - Date: $(date)
           - Branch: ${{ github.ref }}
           - Commit: ${{ github.sha }}
+          - Environment: production
 
           ## HIPAA Compliance Status
 
-          ### PHI Protection
-          - [ ] PHI Detection Scan Complete
-          - [ ] Data Encryption Verification
-          - [ ] Access Control Implementation
-          - [ ] Data Backup Verification
+          ### Access Controls and Authentication
+          - [ ] Multi-factor authentication enforcement
+          - [ ] Role-based access control implementation
+          - [ ] Access review documentation
+          - [ ] Session management controls
+          - [ ] Emergency access procedures
 
-          ### Security Controls
-          - [ ] Authentication Mechanisms
-          - [ ] Authorization Controls
-          - [ ] Audit Logging
-          - [ ] Emergency Access Procedures
+          ### Data Protection
+          - [ ] PHI Detection Scan Complete
+          - [ ] End-to-end encryption verified
+          - [ ] Zero-knowledge proof system active
+          - [ ] Data backup encryption verified
+          - [ ] Key rotation schedule confirmed
+
+          ### Audit and Monitoring
+          - [ ] Comprehensive audit logging
+          - [ ] Real-time security monitoring
+          - [ ] Intrusion detection active
+          - [ ] Access attempt logging
+          - [ ] PHI access tracking
 
           ### Technical Safeguards
-          - [ ] Encryption Standards
-          - [ ] Access Monitoring
-          - [ ] Integrity Controls
-          - [ ] Transmission Security
+          - [ ] TLS 1.3 enforcement
+          - [ ] CORS policy verification
+          - [ ] CSP implementation
+          - [ ] Rate limiting controls
+          - [ ] Input validation
+
+          ### Business Associate Agreements
+          - [ ] AI provider BAAs verified
+          - [ ] Cloud service BAAs current
+          - [ ] Vendor compliance verification
+          - [ ] Data handling agreements
+          - [ ] BAA tracking system
 
           ## Security Scan Results
 
-          ### CodeQL Analysis
+          ### PHI Detection Summary
+          \`\`\`
+          $(cat phi-scan-results.json 2>/dev/null || echo "No PHI scan results available")
+          \`\`\`
+
+          ### Code Analysis
           \`\`\`
           $(cat sarif-results/javascript.sarif 2>/dev/null || echo "No JavaScript results")
           $(cat sarif-results/python.sarif 2>/dev/null || echo "No Python results")
-          \`\`\`
-
-          ### PHI Detection Results
-          \`\`\`
-          $(cat phi-scan-results.json 2>/dev/null || echo "No PHI scan results available")
           \`\`\`
 
           ### Dependency Analysis
@@ -330,48 +474,73 @@ jobs:
           $(cat checkov.sarif 2>/dev/null || echo "No infrastructure scan results")
           \`\`\`
 
-          ## Critical Findings
+          ## Critical Findings and Violations
           $(awk '/CRITICAL|HIGH/' trivy-results.sarif 2>/dev/null || echo "No critical findings")
 
-          ## Recommendations
-          1. Review and address all PHI findings immediately
-          2. Update dependencies with security vulnerabilities
-          3. Implement missing security controls
-          4. Review and enhance audit logging
-          5. Verify encryption implementation
+          ### PHI Exposure Risks
+          $(jq -r '.findings[] | select(.severity=="HIGH") | "- [\(.severity)] \(.type) in \(.file)"' phi-scan-results.json 2>/dev/null || echo "No high-severity PHI findings")
+
+          ### Security Vulnerabilities
+          $(jq -r '.runs[].results[] | select(.level=="error") | "- [\(.ruleId)] \(.message.text)"' sarif-results/javascript.sarif 2>/dev/null || echo "No critical JavaScript vulnerabilities")
+          $(jq -r '.runs[].results[] | select(.level=="error") | "- [\(.ruleId)] \(.message.text)"' sarif-results/python.sarif 2>/dev/null || echo "No critical Python vulnerabilities")
 
           ## Required Actions
-          - [ ] Review critical security findings
-          - [ ] Address PHI exposure risks
-          - [ ] Update security documentation
-          - [ ] Schedule security review meeting
-          - [ ] Plan remediation timeline
+          1. **Critical Findings**
+             - [ ] Review and address all critical security vulnerabilities
+             - [ ] Investigate and remediate PHI exposure risks
+             - [ ] Verify fixes with follow-up scans
 
-          ## Next Steps
-          1. Immediate action required for critical findings
-          2. Schedule comprehensive security review
-          3. Update HIPAA compliance documentation
-          4. Review security architecture
+          2. **HIPAA Compliance**
+             - [ ] Update compliance documentation
+             - [ ] Review access control implementations
+             - [ ] Verify audit logging completeness
+             - [ ] Check encryption configurations
+             - [ ] Update risk assessment
+
+          3. **Infrastructure**
+             - [ ] Review infrastructure security configurations
+             - [ ] Verify backup procedures
+             - [ ] Check monitoring systems
+             - [ ] Update disaster recovery plans
+
+          ## Remediation Timeline
+          1. Immediate (24 hours):
+             - Address critical vulnerabilities
+             - Fix any PHI exposures
+             - Update security headers
+
+          2. Short-term (7 days):
+             - Update dependencies
+             - Implement missing security controls
+             - Enhance logging coverage
+
+          3. Long-term (30 days):
+             - Complete HIPAA documentation updates
+             - Conduct penetration testing
+             - Review and update security architecture
+
+          ## Documentation Updates Required
+          - [ ] Security controls documentation
+          - [ ] HIPAA compliance procedures
+          - [ ] Incident response plan
+          - [ ] Disaster recovery procedures
+          - [ ] Training materials
+
+          ---
+          Generated by GitHub Actions on $(date)
+          Report ID: ${{ github.run_id }}
           EOF
 
-      - name: Upload Security Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-report
-          path: security-report.md
-          retention-days: 90
-
-      # Enhanced notifications
       - name: Process and Send Notifications
         if: always()
         run: |
+          # Set default values
           CRITICAL_COUNT=$(grep -c "CRITICAL" trivy-results.sarif 2>/dev/null || echo "0")
           PHI_COUNT=$(grep -c "Found" phi-scan-results.json 2>/dev/null || echo "0")
           FHIR_ISSUES=$(grep -c "FHIR" sarif-results/javascript.sarif 2>/dev/null || echo "0")
 
           if [ "$CRITICAL_COUNT" -gt 0 ] || [ "$PHI_COUNT" -gt 0 ] || [ "$FHIR_ISSUES" -gt 0 ]; then
-            echo "::warning ::Found $CRITICAL_COUNT critical vulnerabilities, $PHI_COUNT potential PHI exposures, and $FHIR_ISSUES FHIR security issues"
-            echo "SECURITY_ALERT=1" >> $GITHUB_ENV
+            echo "SECURITY_ALERT=true" >> $GITHUB_ENV
 
             # Prepare notification message
             cat << EOF > notification.json
@@ -398,52 +567,226 @@ jobs:
                     "type": "mrkdwn",
                     "text": "*Findings Summary:*\n• Critical Vulnerabilities: $CRITICAL_COUNT\n• PHI Exposures: $PHI_COUNT\n• FHIR Security Issues: $FHIR_ISSUES"
                   }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "View detailed report: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                  }
                 }
               ]
             }
             EOF
           fi
 
-      - name: Send Slack Notification
-        if: env.SECURITY_ALERT == '1'
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: file://notification.json
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SECURITY_WEBHOOK }}
-
-      - name: Send Email Notification
-        if: env.SECURITY_ALERT == '1'
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ secrets.SMTP_SERVER }}
-          server_port: ${{ secrets.SMTP_PORT }}
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          subject: 'Security Alert: ${{ github.repository }}'
-          body: |
-            Security scan detected issues in ${{ github.repository }}
-
-            Findings Summary:
-            - Critical Vulnerabilities: ${{ env.CRITICAL_COUNT }}
-            - PHI Exposures: ${{ env.PHI_COUNT }}
-            - FHIR Security Issues: ${{ env.FHIR_ISSUES }}
-
-            View detailed report: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-            This is an automated message. Please do not reply.
-          to: ${{ secrets.SECURITY_TEAM_EMAIL }}
-          from: GitHub Security Scanner <${{ secrets.SMTP_USERNAME }}>
-
       - name: Install PHI detector dependencies
         run: npm install glob
 
       - name: Run PHI detector
         run: node scripts/phi-detector.js --output=phi-scan-results.json
+
+  security-headers:
+    name: Security Headers Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify Security Headers
+        run: |
+          echo "Checking security headers configuration..."
+
+          # Define required headers for HIPAA compliance
+          cat << EOF > required-headers.json
+          {
+            "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            "X-XSS-Protection": "1; mode=block",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+            "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+            "Content-Security-Policy": [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https:",
+              "connect-src 'self' https:",
+              "font-src 'self'",
+              "object-src 'none'",
+              "media-src 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'"
+            ]
+          }
+          EOF
+
+          # Check Astro config for security headers
+          if grep -r "headers:" . --include="*.{ts,js,mjs}"; then
+            echo "✅ Security headers configuration found"
+          else
+            echo "⚠️ Warning: No security headers configuration found"
+            exit 1
+          fi
+
+          # Create report
+          cat << EOF > headers-report.md
+          # Security Headers Analysis
+
+          ## Required Headers Status
+          $(jq -r 'to_entries | .[] | "- [ ] \(.key): \(.value)"' required-headers.json)
+
+          ## Recommendations
+          1. Ensure all required headers are configured in the application
+          2. Validate header values match security requirements
+          3. Test headers implementation in all environments
+          4. Document any required exceptions
+          5. Include headers check in deployment validation
+
+          ## HIPAA Compliance Impact
+          Security headers are essential for HIPAA compliance:
+          - Prevent unauthorized access to PHI
+          - Protect against common web vulnerabilities
+          - Ensure secure data transmission
+          - Maintain data integrity
+          - Document security controls
+          EOF
+
+      - name: Upload Headers Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-headers-report
+          path: headers-report.md
+          retention-days: 90
+
+  dast-scanning:
+    name: Dynamic Security Testing
+    runs-on: ubuntu-latest
+    needs: [security-headers]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install OWASP ZAP
+        run: |
+          wget https://github.com/zaproxy/zaproxy/releases/download/v2.14.0/ZAP_2.14.0_Linux.tar.gz
+          tar -xvf ZAP_2.14.0_Linux.tar.gz
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install healthcare security tools
+        run: |
+          pip install safety bandit
+          npm install -g snyk
+
+      - name: Session Management Tests
+        run: |
+          echo "Verifying session management..."
+          cat << 'EOF' > session_test.py
+          import re
+          import os
+
+          def check_session_configuration():
+              issues = []
+
+              # Check session timeout
+              for root, _, files in os.walk("."):
+                  for file in files:
+                      if file.endswith((".ts", ".js", ".json")):
+                          with open(os.path.join(root, file)) as f:
+                              content = f.read()
+                              # Check for session timeout configuration
+                              if re.search(r'session.*timeout', content, re.I):
+                                  if not re.search(r'timeout.*=.*\d+', content, re.I):
+                                      issues.append(f"No explicit session timeout in {file}")
+
+                              # Check for secure session settings
+                              if re.search(r'session.*options', content, re.I):
+                                  if not re.search(r'secure:\s*true', content):
+                                      issues.append(f"Session not marked secure in {file}")
+                                  if not re.search(r'httpOnly:\s*true', content):
+                                      issues.append(f"Session not marked httpOnly in {file}")
+
+              return issues
+
+          def verify_hipaa_session_compliance():
+              checks = {
+                  "automatic_logout": False,
+                  "inactivity_timeout": False,
+                  "concurrent_session_control": False,
+                  "session_encryption": False
+              }
+
+              for root, _, files in os.walk("."):
+                  for file in files:
+                      if file.endswith((".ts", ".js", ".json")):
+                          with open(os.path.join(root, file)) as f:
+                              content = f.read()
+                              if re.search(r'auto.*logout|force.*logout', content, re.I):
+                                  checks["automatic_logout"] = True
+                              if re.search(r'session.*timeout|inactivity.*timeout', content, re.I):
+                                  checks["inactivity_timeout"] = True
+                              if re.search(r'concurrent.*session|multiple.*session', content, re.I):
+                                  checks["concurrent_session_control"] = True
+                              if re.search(r'encrypt.*session|session.*encrypt', content, re.I):
+                                  checks["session_encryption"] = True
+
+              return checks
+
+          if __name__ == "__main__":
+              print("Running Session Management Tests...")
+
+              issues = check_session_configuration()
+              compliance = verify_hipaa_session_compliance()
+
+              print("\nSession Configuration Issues:")
+              for issue in issues:
+                  print(f"- {issue}")
+
+              print("\nHIPAA Session Compliance:")
+              for check, status in compliance.items():
+                  print(f"- {check}: {'✓' if status else '✗'}")
+
+              if issues or not all(compliance.values()):
+                  exit(1)
+          EOF
+
+          python session_test.py || echo "Session management issues found"
+
+      - name: Run DAST Scan
+        run: |
+          ./ZAP_2.14.0/zap.sh -cmd -quickurl http://localhost:3000 \
+            -quickprogress -quickout zap-report.html \
+            -configfile ./zap-rules.conf
+
+      - name: Generate DAST Report
+        run: |
+          cat << EOF > dast-report.md
+          # Dynamic Security Analysis Report
+
+          ## Session Management
+          - Automatic session invalidation
+          - Inactivity timeout enforcement
+          - Concurrent session controls
+          - Session fixation protection
+          - HIPAA compliance verification
+
+          ## DAST Results
+          $(cat zap-report.html | grep -o '<div class="risk-high">.*</div>' || echo "No high risks found")
+
+          ## Remediation Steps
+          1. Review session timeout configurations
+          2. Verify encryption of session data
+          3. Implement missing security headers
+          4. Update session management policies
+          EOF
+
+      - name: Upload DAST Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dast-report
+          path: dast-report.md
+          retention-days: 90

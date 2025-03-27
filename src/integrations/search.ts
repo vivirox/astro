@@ -36,14 +36,14 @@ export default function flexsearchIntegration(
   return {
     name: 'astro-flexsearch',
     hooks: {
-      'astro:config:setup': ({ injectScript, config, logger }) => {
+      'astro:config:setup': ({ injectScript, _config, logger }) => {
         logger.info('Setting up FlexSearch integration')
 
         // Inject the search client for browser usage
         injectScript(
           'page',
           `
-          import { searchClient } from '../lib/search';
+          import { searchClient } from '@lib/search';
           window.searchClient = searchClient;
         `,
         )
@@ -91,7 +91,7 @@ export default function flexsearchIntegration(
                   await fs.writeFile(htmlFile, html, 'utf-8')
                   modifiedFiles++
                 }
-              } catch (error) {
+              } catch (_error) {
                 logger.error(`Failed to modify HTML file: ${htmlFile}`)
               }
             }

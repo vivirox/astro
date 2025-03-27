@@ -133,11 +133,34 @@ export class NotificationService {
    * Register a WebSocket client for a user
    */
   registerClient(userId: string, ws: WebSocket): void {
+    // Clean up any existing connection
+    const existingWs = this.wsClients.get(userId)
+    if (existingWs) {
+      existingWs.close()
+      this.wsClients.delete(userId)
+    }
+
+    // Register new connection
     this.wsClients.set(userId, ws)
 
+    // Handle cleanup on close
     ws.on('close', () => {
-      this.wsClients.delete(userId)
+      // Only delete if this is still the registered client
+      if (this.wsClients.get(userId) === ws) {
+        this.wsClients.delete(userId)
+      }
     })
+  }
+
+  /**
+   * Unregister a WebSocket client for a user
+   */
+  unregisterClient(userId: string): void {
+    const ws = this.wsClients.get(userId)
+    if (ws) {
+      ws.close()
+      this.wsClients.delete(userId)
+    }
   }
 
   /**
@@ -361,7 +384,7 @@ export class NotificationService {
   /**
    * Deliver notification via Web Push
    */
-  private async deliverPush(notification: NotificationItem): Promise<void> {
+  private async deliverPush(_notification: NotificationItem): Promise<void> {
     // TODO: Implement push notification delivery
     throw new Error('Push notifications not implemented')
   }
@@ -380,7 +403,7 @@ export class NotificationService {
   /**
    * Deliver notification via SMS
    */
-  private async deliverSMS(notification: NotificationItem): Promise<void> {
+  private async deliverSMS(_notification: NotificationItem): Promise<void> {
     // TODO: Implement SMS delivery
     throw new Error('SMS notifications not implemented')
   }

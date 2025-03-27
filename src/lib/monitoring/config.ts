@@ -41,7 +41,7 @@ const defaultConfig: MonitoringConfig = {
   },
   alerts: {
     enableAlerts: true,
-    slackWebhookUrl: process.env.MONITORING_SLACK_WEBHOOK,
+    slackWebhookUrl: process.env.SLACK_WEBHOOK,
     emailRecipients: process.env.MONITORING_EMAIL_RECIPIENTS?.split(','),
   },
 }
@@ -57,7 +57,9 @@ export function getMonitoringConfig(): MonitoringConfig {
       },
     }
   } catch (error) {
-    logger.error('Failed to load monitoring configuration', error)
+    logger.error('Failed to load monitoring configuration', {
+      error: error instanceof Error ? error.message : String(error),
+    })
     return defaultConfig
   }
 }

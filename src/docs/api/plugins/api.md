@@ -1,6 +1,7 @@
 # Plugin API Reference
 
-This document provides detailed information about the APIs available to plugin developers in the Gradiant EHR Integration Platform.
+This document provides detailed information about the APIs available to plugin developers in the Gradiant
+EHR Integration Platform.
 
 ## Core APIs
 
@@ -175,10 +176,10 @@ The events API allows plugins to subscribe to and emit events.
 
 ```typescript
 interface Events {
-  on: (event: string, handler: Function) => void
-  off: (event: string, handler: Function) => void
+  on: (event: string, handler: (data: unknown) => void) => void
+  off: (event: string, handler: (data: unknown) => void) => void
   emit: (event: string, data: any) => void
-  once: (event: string, handler: Function) => void
+  once: (event: string, handler: (data: unknown) => void) => void
 }
 ```
 

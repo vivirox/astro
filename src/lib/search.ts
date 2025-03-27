@@ -246,7 +246,7 @@ export class SearchClient {
   }
 }
 
-// Export a singleton instance for simple use cases
+// Export a default search client instance
 export const searchClient = new SearchClient()
 
 // Helper function to create a document for indexing

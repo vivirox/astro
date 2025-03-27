@@ -13,14 +13,9 @@ export async function initializeAIDatabase() {
     await initializeAITables()
 
     // Log successful initialization
-    await createAuditLog(
-      'system',
-      'system.ai.database.initialize',
-      'database',
-      {
-        timestamp: new Date().toISOString(),
-      },
-    )
+    await createAuditLog('system', 'system.ai.database.initialize', 'ai', {
+      timestamp: new Date().toISOString(),
+    })
 
     console.log('AI database tables initialized successfully')
     return true
@@ -34,7 +29,7 @@ export async function initializeAIDatabase() {
     await createAuditLog(
       'system',
       'system.ai.database.initialize.error',
-      'database',
+      'ai',
       {
         error: error instanceof Error ? error?.message : String(error),
         timestamp: new Date().toISOString(),

@@ -35,7 +35,7 @@ async function sendNotification(message: string, environment: string) {
     console.log(`Sending notification for ${environment} rollback...`)
 
     // Send to Slack
-    await fetch(process.env.SLACK_WEBHOOK_URL || '', {
+    await fetch(process.env.SLACK_WEBHOOK || '', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -36,15 +36,14 @@ jobs:
           TAG_COUNT=$(echo "$TAGS" | grep -v "^$" | wc -l)
 
           if [ "$TAG_COUNT" -eq 0 ]; then
-            echo "::error::No staging tags found for rollback"
+            echo "::error::No staging tags found"
             exit 1
           elif [ "$TAG_COUNT" -eq 1 ]; then
-            echo "::error::Only one staging tag found. Need at least two tags for rollback."
-            echo "Found tag: $(echo "$TAGS" | head -n 1)"
+            echo "::error::Only one staging tag exists"
             exit 1
           fi
 
-          TAG=$(echo "$TAGS" | head -n 2 | tail -n 1)
+          TAG=$(echo "$TAGS" | sed -n '2p')
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Rolling back to: $TAG"
           git checkout $TAG
@@ -101,15 +100,14 @@ jobs:
           TAG_COUNT=$(echo "$TAGS" | grep -v "^$" | wc -l)
 
           if [ "$TAG_COUNT" -eq 0 ]; then
-            echo "::error::No production tags found for rollback"
+            echo "::error::No production tags found"
             exit 1
           elif [ "$TAG_COUNT" -eq 1 ]; then
-            echo "::error::Only one production tag found. Need at least two tags for rollback."
-            echo "Found tag: $(echo "$TAGS" | head -n 1)"
+            echo "::error::Only one production tag exists"
             exit 1
           fi
 
-          TAG=$(echo "$TAGS" | head -n 2 | tail -n 1)
+          TAG=$(echo "$TAGS" | sed -n '2p')
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Rolling back to: $TAG"
           git checkout $TAG

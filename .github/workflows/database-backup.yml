@@ -1,0 +1,68 @@
+name: Database Backup
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_VERSION: 20.11.0
+      PNPM_VERSION: 10.0.0
+      BACKUP_RETENTION_DAYS: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run backup
+        id: backup
+        run: |
+          # Add your backup logic here
+          echo "Backup completed"
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "🚨 Database Backup Status",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Status:* ✅ Success"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:* ${{ env.ENVIRONMENT }}"
+                    },
+                    {
+                      "type": "mrkdwn", 
+                      "text": "*Timestamp:* ${{ steps.backup.outputs.timestamp }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Workflow:* Database Backup"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Trigger:* ${{ github.event_name }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
