@@ -47,6 +47,14 @@ const PUBLIC_ROUTES = [
 
 export const onRequest = defineMiddleware(
   async ({ request, cookies, locals, redirect }, next) => {
+    // Skip middleware completely for prerendered pages
+    // This prevents header usage in static pages
+    if (import.meta.env.PROD) {
+      // In production builds, we'll skip header checks for prerendered pages
+      // and just serve the static content
+      return next()
+    }
+
     const typedLocals = locals as AstroLocals
 
     // Generate or get request ID

@@ -4,11 +4,10 @@
  * This component works in both server-rendered and prerendered pages
  */
 
-// Get initial values from Astro.locals when available in SSR mode
-const initialLanguage = Astro.locals.userPreferences?.language || ''
-const initialDarkMode = Astro.locals.userPreferences?.darkMode || false
-const initialReducedMotion =
-  Astro.locals.userPreferences?.reducedMotion || false
+// Don't rely on Astro.locals for prerendered pages - detect everything client-side
+const initialLanguage = ''
+const initialDarkMode = false
+const initialReducedMotion = false
 ---
 
 <script define:vars={{ initialLanguage, initialDarkMode, initialReducedMotion }}

@@ -24,7 +24,7 @@ export async function GET() {
 
   return new Response(JSON.stringify(manifest), {
     headers: {
-      'Content-Type': 'application/manifest+json; charset=utf-8',
+      'Content-Type': 'application/manifest+json',
     },
   })
 }

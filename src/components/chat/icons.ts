@@ -13,6 +13,7 @@ import {
   Send,
   Settings,
   ShieldCheck,
+  User,
   UserCircle,
 } from 'lucide-react'
 
@@ -24,6 +25,7 @@ export const IconLock = Lock
 export const IconShieldLock = ShieldCheck
 export const IconMessage = MessageSquare
 export const IconBrain = Brain
+export const IconUser = User
 export const IconUserCircle = UserCircle
 export const IconRefresh = RefreshCw
 export const IconBarChart = BarChart

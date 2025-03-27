@@ -37,8 +37,8 @@ const { Content, headings } = await post.render()
 const { share, toc } = FEATURES
 
 // Format dates
-const pubDate = frontmatter.pubDate?.toISOString()
-const updatedDate = frontmatter.lastModDate?.toISOString()
+const pubDate = frontmatter.pubDate instanceof Date ? frontmatter.pubDate.toISOString() : undefined;
+const updatedDate = frontmatter.lastModDate instanceof Date ? frontmatter.lastModDate.toISOString() : undefined;
 
 // Warning message for unpublished posts
 const UNPUBLISHED_WARNING = `This article is not yet available.

@@ -23,7 +23,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { Button } from '@/components/ui/button'
-import { MentalHealthAnalysis } from '@/lib/chat'
+import type { MentalHealthAnalysis } from '@/lib/chat/mentalHealthChat'
 
 interface MentalHealthInsightsProps {
   analysis: MentalHealthAnalysis

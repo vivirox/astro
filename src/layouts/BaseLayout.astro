@@ -53,28 +53,29 @@ if (hasCustomCursor) style['--external-link-cursor'] = cursorType
 // Safely get current path without accessing headers directly
 const currentPath = Astro.url.pathname
 
-// Use type assertion to specify the structure of locals
-const locals = Astro.locals as {
-  isSSR?: boolean
-  isPrerendered?: boolean
-  userPreferences?: {
-    darkMode?: boolean
-    language?: string
-    userAgent?: string
-    isMobile?: boolean
+// Instead of accessing headers, set default values or use alternatives
+// This removes all possible header usage in prerendered pages
+const locals = {
+  isSSR: false,
+  isPrerendered: true,
+  userPreferences: {
+    darkMode: false,
+    language: 'en-US',
+    userAgent: '',
+    isMobile: false
   }
-}
+};
 
 // Set page data for client-side usage
 const pageData = {
-  isSSR: locals.isSSR === true,
-  isPrerendered: locals.isPrerendered === true,
-  darkMode: locals.userPreferences?.darkMode || false,
-  language: locals.userPreferences?.language || 'en-US',
-  userAgent: locals.userPreferences?.userAgent || '',
+  isSSR: false,
+  isPrerendered: true,
+  darkMode: false,
+  language: 'en-US',
+  userAgent: '',
   path: currentPath,
-  isMobile: locals.userPreferences?.isMobile || false,
-}
+  isMobile: false,
+};
 ---
 
 <!doctype html>

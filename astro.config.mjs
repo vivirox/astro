@@ -38,7 +38,7 @@ export default defineConfig({
   },
   vite: {
     optimizeDeps: {
-      include: ['unocss', 'three'],
+      include: ['unocss', 'three', 'react', 'react-dom'],
       exclude: [],
     },
     build: {

@@ -2,10 +2,10 @@
 // inspired by: https://github.com/antfu/antfu.me/blob/main/src/components/ArtDots.vue
 ---
 
-<bg-do
+<bg-dot
   class="z--1 fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden dark:invert"
 >
-</bg-do>
+</bg-dot>
 
 <script>
   import p5 from 'p5'
@@ -27,7 +27,7 @@
         const SPACING = 15
 
         const width = window.innerWidth
-        const height = window.innerHeigh
+        const height = window.innerHeight
 
         const existingPoints = new Set()
         const points: { x: number; y: number; opacity: number }[] = []
@@ -63,7 +63,7 @@
 
           const t = +new Date() / 10000
           for (const point of points) {
-            const { x, y } = poin
+            const { x, y } = point
             const rad = getForceOnPoint(x, y, t)
             const length = getLength(x, y, t)
             const nx = x + p.cos(rad) * length

@@ -1,4 +1,4 @@
-import { fheChat, ChatMessage, ChatMessageWithFHE } from './fheChat'
+import { fheChat, type ChatMessage, type ChatMessageWithFHE } from './fheChat'
 import { EmotionLlamaEnhancedProvider } from '../ai/providers/EmotionLlamaEnhancedProvider'
 import { MentalLLaMAFactory } from '../ai/mental-llama'
 import { createLogger } from '../../utils/logger'
