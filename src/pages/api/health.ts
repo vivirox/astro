@@ -1,134 +1,128 @@
 import type { APIRoute } from 'astro'
 import * as processModule from 'node:process'
 import { createClient } from '@supabase/supabase-js'
+import { getRedisHealth } from '../../lib/redis'
 
 /**
- * Health check API endpoin
+ * Health check API endpoint
  *
- * This endpoint will check:
- * 1. API server availability
+ * This endpoint checks and reports the health of system components:
+ * 1. API service itself
  * 2. Supabase connection (if credentials available)
- * 3. System resources
+ * 3. Redis connection (if credentials available)
  */
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request }) => {
+  const startTime = performance.now()
+  const healthStatus: Record<string, any> = {
+    status: 'healthy',
+    api: {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+    },
+  }
+
+  // Get request info for debugging
+  const url = new URL(request.url)
+  const clientIp = request.headers.get('x-forwarded-for') || 'unknown'
+  const userAgent = request.headers.get('user-agent') || 'unknown'
+
+  console.info('Health check requested', {
+    path: url.pathname,
+    clientIp,
+    userAgent,
+  })
+
+  // If no Supabase credentials, return partial health status
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn(
+      'Health check: Missing Supabase credentials, skipping database check',
+    )
+    healthStatus.supabase = {
+      status: 'unknown',
+      message: 'No credentials available',
+    }
+  } else {
+    try {
+      // Check Supabase connection
+      healthStatus.supabase = await checkSupabaseConnection(
+        supabaseUrl,
+        supabaseAnonKey,
+      )
+    } catch (error) {
+      console.error('Error during Supabase health check:', error)
+      healthStatus.supabase = {
+        status: 'unhealthy',
+        error: error instanceof Error ? error.message : String(error),
+      }
+      // If a critical component fails, the overall status is unhealthy
+      healthStatus.status = 'unhealthy'
+    }
+  }
+
+  // Check Redis connection
   try {
-    // Check database connection
-    const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-
-    // Check memory usage
-    const memoryUsage = processModule.memoryUsage()
-    const usedMemoryPercentage =
-      (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
-
-    const memoryInfo = {
-      percentage: usedMemoryPercentage.toFixed(2),
-      heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
-      heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
+    healthStatus.redis = await getRedisHealth()
+    if (healthStatus.redis.status === 'unhealthy') {
+      healthStatus.status = 'unhealthy'
     }
-
-    // If no Supabase credentials, return partial health status
-    if (!supabaseUrl || !supabaseAnonKey) {
-      console.warn(
-        'Health check: Missing Supabase credentials, skipping database check',
-      )
-
-      return new Response(
-        JSON.stringify({
-          status: 'partial',
-          message: 'API available but database connection not configured',
-          checks: {
-            api: 'ok',
-            database: 'skipped',
-            memory: usedMemoryPercentage < 85 ? 'ok' : 'warning',
-            memoryUsage: memoryInfo,
-          },
-        }),
-        {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store, max-age=0',
-          },
-        },
-      )
+  } catch (error) {
+    console.error('Error during Redis health check:', error)
+    healthStatus.redis = {
+      status: 'unhealthy',
+      error: error instanceof Error ? error.message : String(error),
     }
+    healthStatus.status = 'unhealthy'
+  }
 
-    // Create Supabase client if credentials are available
-    const supabase = createClient(supabaseUrl, supabaseAnonKey)
+  // Calculate response time
+  const endTime = performance.now()
+  healthStatus.api.responseTimeMs = Math.round(endTime - startTime)
 
-    // Simple query to check database connection
+  // Return the health status
+  return new Response(JSON.stringify(healthStatus, null, 2), {
+    status: healthStatus.status === 'healthy' ? 200 : 503,
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store, max-age=0',
+    },
+  })
+}
+
+/**
+ * Check Supabase connection
+ */
+async function checkSupabaseConnection(
+  supabaseUrl: string,
+  supabaseAnonKey: string,
+): Promise<Record<string, any>> {
+  // Create Supabase client if credentials are available
+  const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+  // Check connection by querying health table
+  try {
     const { error } = await supabase
-      .from('health_checks')
-      .select('count')
+      .from('_health')
+      .select('status')
       .limit(1)
+      .maybeSingle()
 
     if (error) {
-      return new Response(
-        JSON.stringify({
-          status: 'degraded',
-          message: 'Database connection error',
-          error: error?.message,
-          checks: {
-            api: 'ok',
-            database: 'error',
-            memory: usedMemoryPercentage < 85 ? 'ok' : 'warning',
-            memoryUsage: memoryInfo,
-          },
-        }),
-        {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      throw new Error(`Supabase connection check failed: ${error.message}`)
     }
 
-    // Log a successful health check (useful for metrics)
-    console.warn(`Health check successful at ${new Date().toISOString()}`)
-
-    // All checks passed
-    return new Response(
-      JSON.stringify({
-        status: 'ok',
-        message: 'All systems operational',
-        timestamp: new Date().toISOString(),
-        checks: {
-          api: 'ok',
-          database: 'ok',
-          memory: usedMemoryPercentage < 85 ? 'ok' : 'warning',
-          memoryUsage: memoryInfo,
-        },
-      }),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-store, max-age=0',
-        },
-      },
-    )
+    return {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+    }
   } catch (error) {
-    console.error('Health check failed:', error)
-
-    return new Response(
-      JSON.stringify({
-        status: 'error',
-        message: 'Health check failed',
-        error: error instanceof Error ? error?.message : 'Unknown error',
-        checks: {
-          api: 'error',
-          database: 'unknown',
-          memory: 'unknown',
-        },
-      }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    console.error('Supabase health check failed:', error)
+    return {
+      status: 'unhealthy',
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString(),
+    }
   }
 }

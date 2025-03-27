@@ -6,8 +6,7 @@
  */
 
 import type { FHEOperation, HomomorphicOperationResult } from './fhe/types'
-// Import process properly
-import process from 'node:process'
+// Use isomorphic approach for process
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { fheService } from './fhe'
@@ -17,6 +16,10 @@ import { getLogger } from './logging'
 
 // Initialize logger
 const logger = getLogger()
+
+// Create isomorphic process reference
+const processEnv = typeof process !== 'undefined' ? process.env : {}
+const NODE_ENV = processEnv.NODE_ENV || 'development'
 
 // Security-related atoms
 export const encryptionInitializedAtom = atom(false)

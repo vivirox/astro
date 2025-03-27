@@ -618,28 +618,59 @@ export class FHEService {
    */
   async generateHash(data: string): Promise<string> {
     try {
-      // In browser, use a Web Crypto API-based approach
+      // Use Web Crypto API for both browser and Node.js environments
       let hash = ''
       if (typeof window !== 'undefined') {
+        // Browser environment
         const encoder = new TextEncoder()
         const dataBuffer = encoder.encode(data)
-        const hashBuffer = crypto.subtle.digest('SHA-256', dataBuffer)
+        const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer)
         // Convert buffer to hex string
         const hashArray = Array.from(new Uint8Array(await hashBuffer))
         hash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
       } else {
-        // In Node.js environment, use the crypto module
-        const cryptoModule = await import('node:crypto')
-        hash = cryptoModule.default
-          .createHash('sha256')
-          .update(data)
-          .digest('hex')
+        // Node.js environment - use a browser-compatible approach
+        // that doesn't rely on crypto module imports
+        const encoder = new TextEncoder()
+        const dataBuffer = encoder.encode(data)
+
+        try {
+          // Access global crypto in Node.js
+          const subtle = (globalThis.crypto || {}).subtle
+          if (subtle) {
+            const hashBuffer = await subtle.digest('SHA-256', dataBuffer)
+            const hashArray = Array.from(new Uint8Array(hashBuffer))
+            hash = hashArray
+              .map((b) => b.toString(16).padStart(2, '0'))
+              .join('')
+          } else {
+            // Simple fallback if crypto.subtle is not available
+            hash = this.simpleHash(data)
+          }
+        } catch (err) {
+          // Last resort fallback
+          hash = this.simpleHash(data)
+        }
       }
       return hash.substring(0, 10)
     } catch (error) {
       logger.error('Error generating hash', error)
       return crypto.randomUUID().substring(0, 10)
     }
+  }
+
+  /**
+   * Simple fallback hash function without any external dependencies
+   */
+  private simpleHash(str: string): string {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i)
+      hash = (hash << 5) - hash + char
+      hash = hash & hash // Convert to 32bit integer
+    }
+    // Convert to hex string and ensure positive
+    return (hash >>> 0).toString(16).padStart(8, '0')
   }
 }
 

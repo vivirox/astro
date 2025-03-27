@@ -1,96 +1,64 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "buildCommand": "pnpm build",
-  "outputDirectory": "dist",
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "astro",
-  "github": {
-    "silent": true,
-    "autoJobCancelation": true
-  },
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
-        },
-        {
-          "key": "Strict-Transport-Security",
-          "value": "max-age=31536000; includeSubDomains; preload"
-        }
-      ]
-    },
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/_astro/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).html",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).(jpg|jpeg|png|webp|avif|ico|svg)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).(css|js)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+  "functions": {
+    "dist/server/entry.mjs": {
+      "memory": 1024,
+      "maxDuration": 60
     }
-  ]
+  },
+  "routes": [
+    {
+      "src": "/_astro/(.*)",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/assets/(.*)",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "dist/server/entry.mjs" }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/security-audit",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/metrics-rollup",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/database-backup",
+      "schedule": "0 2 * * *"
+    }
+  ],
+  "env": {
+    "PUBLIC_SUPABASE_URL": "@public_supabase_url",
+    "PUBLIC_SUPABASE_ANON_KEY": "@public_supabase_anon_key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+    "UPSTASH_REDIS_REST_URL": "@upstash_redis_rest_url",
+    "UPSTASH_REDIS_REST_TOKEN": "@upstash_redis_rest_token",
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "PUBLIC_SUPABASE_URL": "@public_supabase_url",
+      "PUBLIC_SUPABASE_ANON_KEY": "@public_supabase_anon_key",
+      "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+      "UPSTASH_REDIS_REST_URL": "@upstash_redis_rest_url",
+      "UPSTASH_REDIS_REST_TOKEN": "@upstash_redis_rest_token",
+      "NODE_ENV": "production"
+    }
+  }
 }

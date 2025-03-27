@@ -1,34 +1,51 @@
-import process from 'node:process'
 import { createClient } from '@supabase/supabase-js'
 import { env } from '../config/env.config'
 
 // Define types for Supabase
 export type SupabaseClient = ReturnType<typeof createClient>
 
+// Create isomorphic process reference
+const processEnv = typeof process !== 'undefined' ? process.env : {}
+const NODE_ENV = processEnv.NODE_ENV || 'development'
+
 // Default values for development (will be overridden by actual env vars if present)
 const FALLBACK_SUPABASE_URL = 'https://example.supabase.co'
 const FALLBACK_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example'
 
-// Get Supabase URL and key with fallbacks
+// Determine if we're in a production environment
+const isProduction = NODE_ENV === 'production'
+
+// Get Supabase URL and key with appropriate fallbacks
 const supabaseUrl =
   env?.SUPABASE_URL ||
   (typeof window === 'undefined'
-    ? process.env.PUBLIC_SUPABASE_URL
+    ? processEnv.PUBLIC_SUPABASE_URL
     : undefined) ||
-  FALLBACK_SUPABASE_URL
+  (isProduction ? undefined : FALLBACK_SUPABASE_URL)
+
 const supabaseAnonKey =
   env?.SUPABASE_ANON_KEY ||
-  (typeof process !== 'undefined'
-    ? process.env.PUBLIC_SUPABASE_ANON_KEY
-    : undefined) ||
-  FALLBACK_ANON_KEY
+  processEnv.PUBLIC_SUPABASE_ANON_KEY ||
+  (isProduction ? undefined : FALLBACK_ANON_KEY)
+
 const supabaseServiceRole = env?.SUPABASE_SERVICE_ROLE_KEY
+
+// In production, ensure we have valid credentials or throw an error
+if (isProduction && (!supabaseUrl || !supabaseAnonKey)) {
+  console.error(
+    'CRITICAL: Missing Supabase credentials in production environment',
+  )
+  // Don't throw in production - use mock client instead, but log the error
+}
 
 // Create mock Supabase client for builds without proper credentials
 function createMockClient() {
-  console.warn(
-    'Using mock Supabase client. This should not be used in production.',
-  )
+  const message = isProduction
+    ? 'CRITICAL: Using mock Supabase client in production. This should never happen.'
+    : 'Using mock Supabase client for development. This should not be used in production.'
+
+  console.warn(message)
+
   return {
     auth: {
       getUser: () => Promise.resolve({ data: { user: null }, error: null }),

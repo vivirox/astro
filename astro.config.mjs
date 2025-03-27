@@ -7,6 +7,8 @@ import tailwind from '@astrojs/tailwind'
 import vercel from '@astrojs/vercel'
 import UnoCSS from '@unocss/astro'
 import { defineConfig } from 'astro/config'
+// Temporarily disable flexsearch integration due to module resolution issues
+// import flexsearchIntegration from './src/integrations/search'
 
 export default defineConfig({
   site: 'https://gradiantascent.xyz',
@@ -32,6 +34,12 @@ export default defineConfig({
       configFile: './uno.config.ts',
     }),
     tailwind(),
+    // Temporarily disable flexsearch integration due to module resolution issues
+    // flexsearchIntegration({
+    //   collections: ['blog', 'docs', 'guides'],
+    //   indexPath: '_search-index.js',
+    //   autoInclude: true,
+    // }),
   ],
   content: {
     collections: ['blog', 'docs'],

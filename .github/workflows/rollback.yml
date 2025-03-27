@@ -32,13 +32,26 @@ jobs:
       - name: Determine rollback tag
         id: get-tag
         run: |
-          TAG=$(git tag -l "staging-*" --sort=-committerdate | head -n 2 | tail -n 1)
-          if [ -z "$TAG" ]; then
-            echo "::error::No suitable tag found for rollback"
+          TAGS=$(git tag -l "staging-*" --sort=-committerdate)
+          TAG_COUNT=$(echo "$TAGS" | grep -v "^$" | wc -l)
+
+          if [ "$TAG_COUNT" -eq 0 ]; then
+            echo "::error::No staging tags found for rollback"
+            exit 1
+          elif [ "$TAG_COUNT" -eq 1 ]; then
+            echo "::error::Only one staging tag found. Need at least two tags for rollback."
+            echo "Found tag: $(echo "$TAGS" | head -n 1)"
             exit 1
           fi
+
+          TAG=$(echo "$TAGS" | head -n 2 | tail -n 1)
           echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Rolling back to: $TAG"
           git checkout $TAG
+        shell: /usr/bin/bash -e {0}
+        env:
+          NODE_VERSION: ${{ env.NODE_VERSION }}
+          PNPM_VERSION: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -84,13 +97,26 @@ jobs:
       - name: Determine rollback tag
         id: get-tag
         run: |
-          TAG=$(git tag -l "production-*" --sort=-committerdate | head -n 2 | tail -n 1)
-          if [ -z "$TAG" ]; then
-            echo "::error::No suitable tag found for rollback"
+          TAGS=$(git tag -l "production-*" --sort=-committerdate)
+          TAG_COUNT=$(echo "$TAGS" | grep -v "^$" | wc -l)
+
+          if [ "$TAG_COUNT" -eq 0 ]; then
+            echo "::error::No production tags found for rollback"
+            exit 1
+          elif [ "$TAG_COUNT" -eq 1 ]; then
+            echo "::error::Only one production tag found. Need at least two tags for rollback."
+            echo "Found tag: $(echo "$TAGS" | head -n 1)"
             exit 1
           fi
+
+          TAG=$(echo "$TAGS" | head -n 2 | tail -n 1)
           echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Rolling back to: $TAG"
           git checkout $TAG
+        shell: /usr/bin/bash -e {0}
+        env:
+          NODE_VERSION: ${{ env.NODE_VERSION }}
+          PNPM_VERSION: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

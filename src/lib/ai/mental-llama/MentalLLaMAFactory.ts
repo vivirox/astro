@@ -1,4 +1,4 @@
-import { FHEService } from '../../fhe'
+import { FHEService, fheService } from '../../fhe'
 import { EmotionLlamaProvider } from '../providers/EmotionLlamaProvider'
 import { createLogger } from '../../../utils/logger'
 import { MentalLLaMAAdapter } from './MentalLLaMAAdapter'
@@ -33,12 +33,8 @@ export class MentalLLaMAFactory {
     pythonBridge?: MentalLLaMAPythonBridge
   }> {
     try {
-      // Initialize FHE service
-      const fheService = new FHEService({
-        keyPath: config.fheConfig.keyPath,
-        certPath: config.fheConfig.certPath,
-      })
-      await fheService.initialize()
+      // Use the stub FHE service
+      const fheServiceInstance = fheService
 
       // Create or use existing provider
       let provider: EmotionLlamaProvider
@@ -52,21 +48,21 @@ export class MentalLLaMAFactory {
         provider = new EmotionLlamaProvider(
           config.providerConfig.providerUrl,
           config.providerConfig.providerApiKey,
-          fheService,
+          fheServiceInstance,
         )
       } else {
         // Create new provider
         provider = new EmotionLlamaProvider(
           config.baseUrl,
           config.apiKey,
-          fheService,
+          fheServiceInstance,
         )
       }
 
       // Create adapter
       const adapter = new MentalLLaMAAdapter(
         provider,
-        fheService,
+        fheServiceInstance,
         config.baseUrl,
         config.apiKey,
       )
@@ -143,11 +139,8 @@ export class MentalLLaMAFactory {
     adapter: MentalLLaMAAdapter
     pythonBridge?: MentalLLaMAPythonBridge
   }> {
-    // Initialize with mock services for testing
-    const mockFHE = new FHEService({
-      keyPath: 'test/keys/test.key',
-      certPath: 'test/certs/test.cert',
-    })
+    // Use the stub FHE service
+    const mockFHE = fheService
 
     const mockProvider = new EmotionLlamaProvider(
       'http://localhost:8080',

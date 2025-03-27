@@ -56,6 +56,9 @@ export interface AuditLogEntry {
   timestamp: Date
 }
 
+// Determine if we're in a production environment
+const isProduction = process.env.NODE_ENV === 'production'
+
 // Initialize Supabase client or use mock if not available
 let supabase: any
 
@@ -63,14 +66,24 @@ let supabase: any
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
 
+// Log critical error in production if credentials are missing
+if (isProduction && (!supabaseUrl || !supabaseKey)) {
+  console.error(
+    'CRITICAL: Missing Supabase credentials for audit logging in production',
+  )
+}
+
 if (supabaseUrl && supabaseKey) {
   // Initialize real Supabase client
   supabase = createClient<Database>(supabaseUrl, supabaseKey)
 } else {
   // Create a mock implementation for builds without Supabase credentials
-  console.warn(
-    'Using mock Supabase client for audit logging. This should not be used in production.',
-  )
+  const message = isProduction
+    ? 'CRITICAL: Using mock Supabase client for audit logging in production. This should never happen.'
+    : 'Using mock Supabase client for audit logging in development. This should not be used in production.'
+
+  console.warn(message)
+
   supabase = {
     from: () => ({
       insert: () => Promise.resolve({ error: null }),
@@ -139,7 +152,12 @@ export async function createAuditLog(
       })
 
       if (error) {
-        console.error('Error creating audit log:', error)
+        const errorMsg = `Error creating audit log: ${error.message}`
+        console.error(errorMsg, { userId, action, resource })
+        if (isProduction) {
+          // In production, we should report this to an error monitoring service
+          // reportErrorToMonitoring(errorMsg, { userId, action, resource })
+        }
       }
     } else {
       // Called with entry object
@@ -157,11 +175,21 @@ export async function createAuditLog(
       })
 
       if (error) {
-        console.error('Error creating audit log:', error)
+        const errorMsg = `Error creating audit log: ${error.message}`
+        console.error(errorMsg, { entry })
+        if (isProduction) {
+          // In production, we should report this to an error monitoring service
+          // reportErrorToMonitoring(errorMsg, { entry })
+        }
       }
     }
   } catch (error) {
-    console.error('Error creating audit log:', error)
+    const errorMsg = `Exception in audit logging: ${error instanceof Error ? error.message : String(error)}`
+    console.error(errorMsg)
+    if (isProduction) {
+      // In production, we should report this to an error monitoring service
+      // reportErrorToMonitoring(errorMsg)
+    }
   }
 }
 

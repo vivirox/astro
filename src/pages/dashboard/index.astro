@@ -1,141 +1,135 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro'
-import Button from '../../components/ui/Button.astro'
+import DashboardLayout from '../../layouts/DashboardLayout.astro'
+import { Card } from '@/components/ui/card'
 ---
 
-<BaseLayout
-  title="Dashboard | Gradiant Ascent"
-  description="Your personal dashboard for managing your Gradiant Ascent account and accessing your data."
-  bgType="plum"
+<DashboardLayout
+  title="Dashboard | Gradiant Therapy"
+  description="Your therapy dashboard - Overview and quick access to all features"
 >
-  <div class="min-h-screen bg-gray-50">
-    <!-- Dashboard Header -->
-    <header class="bg-white shadow">
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
-      >
-        <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <div class="flex items-center space-x-4">
-          <span class="text-sm text-gray-600">Welcome, User</span>
-          <Button variant="outline" size="sm" href="/login">Logout</Button>
+  <div class="container mx-auto py-6">
+    <div class="flex flex-col gap-6">
+      <!-- Welcome Section -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold tracking-tight mb-1">
+            Welcome Back
+          </h1>
+          <p class="text-muted-foreground">
+            Here's an overview of your therapy space
+          </p>
         </div>
-      </div>
-    </header>
-
-    <!-- Dashboard Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-lg font-medium text-gray-900 mb-2">Sessions</h2>
-          <p class="text-3xl font-bold">12</p>
-          <p class="text-sm text-gray-500 mt-1">+2 from last week</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-lg font-medium text-gray-900 mb-2">Progress</h2>
-          <p class="text-3xl font-bold">68%</p>
-          <p class="text-sm text-gray-500 mt-1">+5% from last week</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-lg font-medium text-gray-900 mb-2">Insights</h2>
-          <p class="text-3xl font-bold">24</p>
-          <p class="text-sm text-gray-500 mt-1">+8 from last week</p>
-        </div>
-      </div>
-
-      <!-- Recent Activity -->
-      <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-lg font-medium text-gray-900">Recent Activity</h2>
-        </div>
-        <div class="divide-y divide-gray-200">
-          <div class="px-6 py-4">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-sm font-medium text-gray-900">
-                  Completed Session: Emotional Awareness
-                </p>
-                <p class="text-sm text-gray-500 mt-1">
-                  You scored 85% on this session.
-                </p>
-              </div>
-              <span class="text-xs text-gray-500">2 days ago</span>
-            </div>
+        <div class="flex items-center gap-4">
+          <div class="text-right">
+            <p class="text-sm font-medium">Security Level</p>
+            <p class="text-xs text-muted-foreground">
+              Maximum (FHE)
+            </p>
           </div>
-          <div class="px-6 py-4">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-sm font-medium text-gray-900">
-                  New Insight Discovered
-                </p>
-                <p class="text-sm text-gray-500 mt-1">
-                  Pattern recognized in your emotional responses.
-                </p>
-              </div>
-              <span class="text-xs text-gray-500">4 days ago</span>
-            </div>
-          </div>
-          <div class="px-6 py-4">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-sm font-medium text-gray-900">Goal Achieved</p>
-                <p class="text-sm text-gray-500 mt-1">
-                  Completed 10 consecutive days of practice.
-                </p>
-              </div>
-              <span class="text-xs text-gray-500">1 week ago</span>
-            </div>
+          <div class="h-10 w-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white">
+            <span class="material-symbols-outlined text-lg">security</span>
           </div>
         </div>
       </div>
 
-      <!-- Recommendations -->
-      <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-lg font-medium text-gray-900">Recommended for You</h2>
+      <!-- Quick Access Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-purple-600 material-symbols-outlined">
+              psychology
+            </span>
+            <h3 class="text-lg font-medium">Mental Health Chat</h3>
+          </div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Start a therapeutic conversation with our AI-powered mental health
+            assistant
+          </p>
+          <a
+            href="/mental-health-chat"
+            class="text-sm text-purple-600 hover:text-purple-700 font-medium"
+          >
+            Open Chat →
+          </a>
         </div>
-        <div class="divide-y divide-gray-200">
-          <div class="px-6 py-4">
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-blue-600 material-symbols-outlined">
+              exercise
+            </span>
+            <h3 class="text-lg font-medium">Practice Simulator</h3>
+          </div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Practice therapeutic techniques in a safe, private environment
+          </p>
+          <a
+            href="/simulator"
+            class="text-sm text-blue-600 hover:text-blue-700 font-medium"
+          >
+            Start Practice →
+          </a>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-green-600 material-symbols-outlined">
+              analytics
+            </span>
+            <h3 class="text-lg font-medium">Progress Analytics</h3>
+          </div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            View insights and progress from your therapeutic journey
+          </p>
+          <button
+            class="text-sm text-green-600 hover:text-green-700 font-medium"
+          >
+            View Analytics →
+          </button>
+        </div>
+      </div>
+
+      <!-- Recent Activity & Quick Stats -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium mb-4">Recent Sessions</h3>
+          <div class="space-y-4">
+            <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+              No recent sessions found
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium mb-4">Quick Stats</h3>
+          <div class="space-y-4">
             <div class="flex justify-between items-center">
-              <div>
-                <p class="text-sm font-medium text-gray-900">
-                  Advanced Emotional Regulation
-                </p>
-                <p class="text-sm text-gray-500 mt-1">
-                  Based on your recent progress
-                </p>
-              </div>
-              <Button variant="outline" size="sm">Start</Button>
+              <span class="text-sm text-gray-600 dark:text-gray-400">
+                Sessions This Week
+              </span>
+              <span class="text-2xl font-bold">
+                0
+              </span>
             </div>
-          </div>
-          <div class="px-6 py-4">
             <div class="flex justify-between items-center">
-              <div>
-                <p class="text-sm font-medium text-gray-900">
-                  Stress Management Techniques
-                </p>
-                <p class="text-sm text-gray-500 mt-1">
-                  Recommended for your profile
-                </p>
-              </div>
-              <Button variant="outline" size="sm">Start</Button>
+              <span class="text-sm text-gray-600 dark:text-gray-400">
+                Total Practice Hours
+              </span>
+              <span class="text-2xl font-bold">
+                0
+              </span>
             </div>
-          </div>
-          <div class="px-6 py-4">
             <div class="flex justify-between items-center">
-              <div>
-                <p class="text-sm font-medium text-gray-900">
-                  Empathy Building Exercise
-                </p>
-                <p class="text-sm text-gray-500 mt-1">New content available</p>
-              </div>
-              <Button variant="outline" size="sm">Start</Button>
+              <span class="text-sm text-gray-600 dark:text-gray-400">
+                Progress Score
+              </span>
+              <span class="text-2xl font-bold">
+                0%
+              </span>
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
   </div>
-</BaseLayout>
+</DashboardLayout>

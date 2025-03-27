@@ -46,3 +46,17 @@ declare namespace App {
     }
   }
 }
+
+import type { SearchClient, SearchDocument } from './lib/search'
+
+// Extend Window interface to include our global objects
+interface Window {
+  // FlexSearch client instance
+  searchClient: SearchClient
+
+  // Search index data
+  searchIndex?: SearchDocument[]
+
+  // Function to initialize search
+  initSearch?: () => void
+}

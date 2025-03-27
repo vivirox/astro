@@ -77,11 +77,22 @@ Note: All tools are in Python. For batch processing or custom needs, you can alw
 Remember to always verify tool results and cross-reference findings!
 </workspace_configuration>
 
+<package_manager>
+IMPORTANT: Always use pnpm as the package manager for this project.
+- Use `pnpm install` for adding dependencies
+- Use `pnpm add -D` for dev dependencies
+- Use `pnpm update` for updates
+- Never use npm or yarn
+</package_manager>
+
 <project_status>
 Current Progress:
 - Core Infrastructure: 100% (Documentation pending)
 - Hooks and Custom Logic: 90% (Context providers in progress)
 - Utility Services: 80% (Notification service enhancement in progress)
+- Docker Configuration: 100% (Fully configured for Astro with pnpm)
+- Build Process: 100% (Successfully building with pnpm)
+- Search Functionality: 90% (Flexsearch integration prepared but disabled due to compatibility issues)
 
 Priority Tasks:
 1. HIGH PRIORITY:
@@ -92,7 +103,7 @@ Priority Tasks:
    - Documentation
      * API documentation
      * Security guidelines
-     * Deployment procedures
+     * Deployment procedures ✓
      * User guides
      * Monitoring documentation
    - Testing
@@ -100,6 +111,10 @@ Priority Tasks:
      * Performance tests
      * Load tests
      * End-to-end tests
+   - Search Implementation
+     * Fix module resolution error between astro:scripts/page.js and ../lib/search
+     * Test search functionality on all supported platforms
+     * Optimize search for better performance
 
 2. MEDIUM PRIORITY:
    - Client Scenarios
@@ -217,9 +232,9 @@ Always update .cursorrules with:
 <multi_agent_scratchpad>
 ### Current Task Analysis
 
-Focus Area: MentalLLaMA Integration
+Focus Area: MentalLLaMA Integration & Deployment Setup
 Priority: High
-Impact: Enhanced mental health analysis capabilities
+Impact: Enhanced mental health analysis capabilities and improved deployment pipeline
 
 ### Implementation Progress
 
@@ -242,15 +257,37 @@ Current Status:
   - Implemented expert-guided explanation generation ✓
   - Added CLI support for expert explanations ✓
   - Updated documentation ✓
+- Deployment Configuration: 100% complete
+  - Updated Dockerfile for Astro and pnpm ✓
+  - Created Docker entrypoint script ✓
+  - Ensured proper build commands and environment setup ✓
+  - Fixed TypeScript errors and interface exports ✓
+  - Successfully built project with pnpm ✓
+- Search Implementation: 90% complete
+  - Removed pagefind dependency ✓
+  - Created mock content collection system ✓
+  - Prepared flexsearch integration ✓
+  - Downgraded flexsearch to version 0.7.31 for better compatibility ✓
+  - Temporarily disabled due to module resolution error between astro:scripts/page.js and ../lib/search ✓
+  - Build working with current configuration ✓
 
-### Next Steps
+### Next Tasks
 
-1. IMHI Benchmark Integration (Priority: Medium)
+1. Search Implementation (HIGH PRIORITY)
+   - Investigate and resolve the module resolution error in the flexsearch integration
+   - Problem: Cannot resolve "../lib/search" from "astro:scripts/page.js"
+   - Potential solutions:
+     * Fix the path resolution in the search integration
+     * Create an alias for the search module in Astro's Vite configuration
+     * Reimplement the search client injection mechanism
+   - Test search functionality on all supported platforms once resolved
+
+2. IMHI Benchmark Integration (Priority: Medium)
    - Implement more comprehensive testing across all categories
    - Add support for custom datasets
    - Create visualization for benchmark results
 
-2. Visualization Tools (Priority: Medium)
+3. Visualization Tools (Priority: Medium)
    - Create dashboard for analysis results
    - Implement timeline visualization for longitudinal analysis
    - Add charts for category distribution

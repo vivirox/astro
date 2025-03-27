@@ -1,0 +1,65 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SearchDemo from '../components/SearchDemo';
+---
+
+<Layout title="FlexSearch Demo">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8 text-center">FlexSearch Demo</h1>
+
+    <div class="max-w-2xl mx-auto mb-12">
+      <p class="text-lg text-center mb-6">
+        This is a demo of the FlexSearch implementation, a fast and privacy-focused client-side search solution.
+      </p>
+
+      <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg mb-8">
+        <h2 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Privacy First</h2>
+        <p class="text-blue-700 dark:text-blue-300">
+          Unlike traditional search solutions, FlexSearch runs entirely in your browser.
+          No search queries are sent to any server, preserving your privacy while still
+          providing fast and relevant search results.
+        </p>
+      </div>
+
+      <SearchDemo client:load />
+    </div>
+
+    <div class="max-w-2xl mx-auto mt-12 text-center">
+      <h2 class="text-2xl font-semibold mb-4">How It Works</h2>
+      <p class="mb-4">
+        The search index is pre-built during site compilation and loaded as a JavaScript file.
+        All search operations run in your browser using FlexSearch's optimized algorithms.
+      </p>
+      <p class="mb-8">
+        This provides both excellent performance and complete privacy, as your search queries
+        never leave your device.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h3 class="font-semibold mb-2">Fast Performance</h3>
+          <p class="text-gray-600 dark:text-gray-300 text-sm">
+            FlexSearch is one of the fastest full-text search libraries available,
+            outperforming alternatives even with large datasets.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h3 class="font-semibold mb-2">Fuzzy Search</h3>
+          <p class="text-gray-600 dark:text-gray-300 text-sm">
+            Handles typos and partial matches, making it easy for users to
+            find what they're looking for even with imperfect queries.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h3 class="font-semibold mb-2">Lightweight</h3>
+          <p class="text-gray-600 dark:text-gray-300 text-sm">
+            Adds minimal overhead to your site with a tiny footprint of
+            around 5KB, ensuring fast page loads.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

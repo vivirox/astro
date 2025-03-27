@@ -1,26 +1,32 @@
 #!/usr/bin/env node
 
-import { spawn } from 'node:child_process'
+// This file is the entrypoint for our Docker container
+console.log('📡 Container startup script running...')
 
-const env = { ...process.env }
+// Check for environment variables
+const requiredEnvVars = ['NODE_ENV']
 
-// If running the web server then prerender pages
-if (process.argv.slice(-2).join(' ') === 'node index.js') {
-  await exec('npx next build --experimental-build-mode generate')
+const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar])
+
+if (missingEnvVars.length > 0) {
+  console.error(
+    `❌ Missing required environment variables: ${missingEnvVars.join(', ')}`,
+  )
+  process.exit(1)
 }
 
-// launch application
-await exec(process.argv.slice(2).join(' '))
+// Additional startup tasks can be added here
+console.log('✅ Environment validated. Starting Astro application...')
 
-function exec(command) {
-  const child = spawn(command, { shell: true, stdio: 'inherit', env })
-  return new Promise((resolve, reject) => {
-    child.on('exit', code => {
-      if (code === 0) {
-        resolve()
-      } else {
-        reject(new Error(`${command} failed rc=${code}`))
-      }
-    })
-  })
-}
+// Hand off to the main application
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully')
+  process.exit(0)
+})
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully')
+  process.exit(0)
+})
+
+// The application will continue to the CMD specified in the Dockerfile
