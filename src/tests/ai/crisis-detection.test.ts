@@ -60,6 +60,68 @@ const mockAIService = {
   dispose: vi.fn(),
 } as unknown as AIService
 
+vi.mock('@/lib/ai/services/openai', () => ({
+  default: {
+    chat: vi.fn().mockImplementation(async (messages, options) => {
+      const text = messages[messages.length - 1].content
+
+      if (text.includes('high-risk')) {
+        return {
+          content: JSON.stringify({
+            isCrisis: true,
+            confidence: 0.95,
+            category: 'self-harm',
+            severity: 'high',
+            recommendedAction: 'Immediate intervention required',
+          }),
+        }
+      }
+
+      if (text.includes('medium-risk')) {
+        return {
+          content: JSON.stringify({
+            isCrisis: true,
+            confidence: 0.75,
+            category: 'psychological_distress',
+            severity: 'medium',
+            recommendedAction: 'Schedule follow-up within 24 hours',
+          }),
+        }
+      }
+
+      if (text.includes('low-risk')) {
+        return {
+          content: JSON.stringify({
+            isCrisis: true,
+            confidence: 0.6,
+            category: 'anxiety',
+            severity: 'low',
+            recommendedAction: 'Monitor and provide coping strategies',
+          }),
+        }
+      }
+
+      if (text === 'Not a valid JSON') {
+        return { content: 'Not a valid JSON' }
+      }
+
+      if (text.includes('error')) {
+        throw new Error('AI service error')
+      }
+
+      return {
+        content: JSON.stringify({
+          isCrisis: false,
+          confidence: 0.9,
+          category: 'none',
+          severity: 'none',
+          recommendedAction: 'Continue regular support',
+        }),
+      }
+    }),
+  },
+}))
+
 describe('crisisDetectionService', () => {
   let crisisService: CrisisDetectionService
 

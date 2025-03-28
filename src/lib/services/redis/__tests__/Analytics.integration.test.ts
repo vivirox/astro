@@ -1,6 +1,20 @@
-import { AnalyticsService } from '@/lib/analytics/service'
+import {
+  AnalyticsService,
+  EventType,
+  EventPriority,
+  type EventData,
+} from '@/lib/services/analytics/AnalyticsService'
 import { Redis } from 'ioredis'
 import { RedisService } from '../RedisService'
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  afterAll,
+} from 'vitest'
 import {
   cleanupTestKeys,
   generateTestKey,
@@ -36,13 +50,16 @@ describe('analytics Integration', () => {
     })
     await redis.connect()
 
-    analytics = new AnalyticsService(redis)
-    await analytics.initialize()
+    analytics = new AnalyticsService({
+      retentionDays: 1,
+      batchSize: 100,
+      processingInterval: 100,
+    })
   })
 
   afterEach(async () => {
     await cleanupTestKeys()
-    await analytics.shutdown()
+    await analytics.cleanup()
     await redis.disconnect()
   })
 
@@ -53,31 +70,36 @@ describe('analytics Integration', () => {
 
   describe('event Tracking', () => {
     it('should track individual events', async () => {
-      const userId = 'user123'
-      const event = {
-        type: 'session_start',
+      const event: EventData = {
+        type: EventType.USER_ACTION,
+        priority: EventPriority.NORMAL,
+        userId: 'user123',
         timestamp: Date.now(),
+        properties: {},
         metadata: { browser: 'Chrome', os: 'MacOS' },
       }
 
-      await analytics.trackEvent(userId, event)
-      const events = await analytics.getUserEvents(userId)
+      const eventId = await analytics.trackEvent(event)
+      const events = await analytics.getEvents({ type: EventType.USER_ACTION })
 
       expect(events).toHaveLength(1)
-      expect(events[0]).toMatchObject(event)
+      expect(events[0]).toMatchObject({ ...event, id: eventId })
     })
 
     it('should handle concurrent event tracking', async () => {
       const userId = 'user123'
       const eventCount = 100
       const events = Array.from({ length: eventCount }, (_, i) => ({
-        type: 'test_event',
+        type: EventType.USER_ACTION,
+        priority: EventPriority.NORMAL,
+        userId,
         timestamp: Date.now() + i,
+        properties: {},
         metadata: { index: i },
       }))
 
       const operations = events.map(
-        (event) => () => analytics.trackEvent(userId, event),
+        (event) => () => analytics.trackEvent(event),
       )
 
       await runConcurrentOperations(operations, {
@@ -86,24 +108,37 @@ describe('analytics Integration', () => {
         minThroughput: 50,
       })
 
-      const storedEvents = await analytics.getUserEvents(userId)
-      expect(storedEvents).toHaveLength(eventCount)
+      const storedEvents = await analytics.getEvents({
+        type: EventType.USER_ACTION,
+        startTime: Date.now() - 2000,
+        endTime: Date.now(),
+      })
+      expect(storedEvents.filter((e) => e.userId === userId)).toHaveLength(
+        eventCount,
+      )
     })
 
     it('should maintain event order', async () => {
-      const userId = 'user123'
-      const events = Array.from({ length: 5 }, (_, i) => ({
-        type: 'ordered_event',
-        timestamp: Date.now() + i * 1000,
+      const baseTime = Date.now()
+      const events: EventData[] = Array.from({ length: 5 }, (_, i) => ({
+        type: EventType.USER_ACTION,
+        priority: EventPriority.NORMAL,
+        userId: 'user123',
+        timestamp: baseTime + i * 1000,
+        properties: {},
         metadata: { sequence: i },
       }))
 
       // Track events in reverse order
       for (const event of events.reverse()) {
-        await analytics.trackEvent(userId, event)
+        await analytics.trackEvent(event)
       }
 
-      const storedEvents = await analytics.getUserEvents(userId)
+      const storedEvents = await analytics.getEvents({
+        type: EventType.USER_ACTION,
+        startTime: baseTime,
+        endTime: baseTime + 5000,
+      })
       expect(storedEvents).toHaveLength(events.length)
 
       // Verify events are stored in chronological order
@@ -113,27 +148,33 @@ describe('analytics Integration', () => {
     })
   })
 
-  describe('metrics Aggregation', () => {
-    it('should aggregate metrics over time', async () => {
-      const metric = generateTestKey('response_time')
+  describe('metrics Tracking', () => {
+    it('should track metrics over time', async () => {
+      const metricName = generateTestKey('response_time')
       const values = Array.from({ length: 100 }, () => Math.random() * 100)
 
       // Record metric values
       await Promise.all(
-        values.map((value) => analytics.recordMetric(metric, value)),
+        values.map((value) =>
+          analytics.trackMetric({
+            name: metricName,
+            value,
+            timestamp: Date.now(),
+            tags: {},
+          }),
+        ),
       )
 
-      const stats = await analytics.getMetricStats(metric)
-      expect(stats).toMatchObject({
-        count: values.length,
-        min: Math.min(...values),
-        max: Math.max(...values),
-        avg: values.reduce((a, b) => a + b) / values.length,
+      const metrics = await analytics.getMetrics({
+        name: metricName,
+        startTime: Date.now() - 1000,
+        endTime: Date.now(),
       })
+      expect(metrics).toHaveLength(values.length)
     })
 
     it('should maintain metric history', async () => {
-      const metric = generateTestKey('cpu_usage')
+      const metricName = generateTestKey('cpu_usage')
       const intervals = 5
       const valuesPerInterval = 10
 
@@ -141,33 +182,67 @@ describe('analytics Integration', () => {
       for (let i = 0; i < intervals; i++) {
         const timestamp = Date.now() - (intervals - i) * 60000 // 1 minute intervals
         for (let j = 0; j < valuesPerInterval; j++) {
-          await analytics.recordMetric(metric, Math.random() * 100, timestamp)
+          await analytics.trackMetric({
+            name: metricName,
+            value: Math.random() * 100,
+            timestamp,
+            tags: { interval: i.toString() },
+          })
         }
       }
 
-      const history = await analytics.getMetricHistory(metric, intervals)
-      expect(history).toHaveLength(intervals)
-      history.forEach((interval) => {
-        expect(interval.count).toBe(valuesPerInterval)
+      const metrics = await analytics.getMetrics({
+        name: metricName,
+        startTime: Date.now() - intervals * 60000,
+        endTime: Date.now(),
+      })
+      expect(metrics).toHaveLength(intervals * valuesPerInterval)
+
+      // Group metrics by interval
+      const metricsByInterval = metrics.reduce(
+        (acc, metric) => {
+          const interval = metric.tags.interval
+          acc[interval] = (acc[interval] || 0) + 1
+          return acc
+        },
+        {} as Record<string, number>,
+      )
+
+      // Verify each interval has the correct number of metrics
+      Object.values(metricsByInterval).forEach((count) => {
+        expect(count).toBe(valuesPerInterval)
       })
     })
 
     it('should handle metric expiration', async () => {
-      const metric = generateTestKey('temp_metric')
+      const metricName = generateTestKey('temp_metric')
       const ttl = 2 // 2 seconds
 
-      await analytics.recordMetric(metric, 100, Date.now(), ttl)
+      await analytics.trackMetric({
+        name: metricName,
+        value: 100,
+        timestamp: Date.now(),
+        tags: { ttl: ttl.toString() },
+      })
 
       // Verify metric exists
-      let stats = await analytics.getMetricStats(metric)
-      expect(stats.count).toBe(1)
+      let metrics = await analytics.getMetrics({
+        name: metricName,
+        startTime: Date.now() - 1000,
+        endTime: Date.now(),
+      })
+      expect(metrics).toHaveLength(1)
 
       // Wait for expiration
       await sleep(ttl * 1000 + 100)
 
       // Verify metric is expired
-      stats = await analytics.getMetricStats(metric)
-      expect(stats.count).toBe(0)
+      metrics = await analytics.getMetrics({
+        name: metricName,
+        startTime: Date.now() - ttl * 1000 - 200,
+        endTime: Date.now(),
+      })
+      expect(metrics).toHaveLength(0)
     })
   })
 
@@ -175,10 +250,28 @@ describe('analytics Integration', () => {
     it('should track active users', async () => {
       const users = Array.from({ length: 5 }, (_, i) => `user${i}`)
 
-      // Mark users as active
-      await Promise.all(users.map((userId) => analytics.markUserActive(userId)))
+      // Track user activity through events
+      await Promise.all(
+        users.map((userId) =>
+          analytics.trackEvent({
+            type: EventType.USER_ACTION,
+            priority: EventPriority.NORMAL,
+            userId,
+            timestamp: Date.now(),
+            properties: { action: 'login' },
+            metadata: {},
+          }),
+        ),
+      )
 
-      const activeUsers = await analytics.getActiveUsers()
+      // Get recent user activity
+      const recentEvents = await analytics.getEvents({
+        type: EventType.USER_ACTION,
+        startTime: Date.now() - 1000,
+        endTime: Date.now(),
+      })
+
+      const activeUsers = [...new Set(recentEvents.map((e) => e.userId!))]
       expect(activeUsers).toHaveLength(users.length)
       users.forEach((userId) => {
         expect(activeUsers).toContain(userId)
@@ -189,18 +282,34 @@ describe('analytics Integration', () => {
       const userId = 'user123'
       const sessionTtl = 2 // 2 seconds
 
-      await analytics.markUserActive(userId, sessionTtl)
+      // Track user session start
+      await analytics.trackEvent({
+        type: EventType.USER_ACTION,
+        priority: EventPriority.NORMAL,
+        userId,
+        timestamp: Date.now(),
+        properties: { action: 'session_start' },
+        metadata: { ttl: sessionTtl },
+      })
 
       // Verify user is active
-      let activeUsers = await analytics.getActiveUsers()
-      expect(activeUsers).toContain(userId)
+      let activeUsers = await analytics.getEvents({
+        type: EventType.USER_ACTION,
+        startTime: Date.now() - 1000,
+        endTime: Date.now(),
+      })
+      expect(activeUsers.some((e) => e.userId === userId)).toBe(true)
 
       // Wait for session timeout
       await sleep(sessionTtl * 1000 + 100)
 
       // Verify user is no longer active
-      activeUsers = await analytics.getActiveUsers()
-      expect(activeUsers).not.toContain(userId)
+      activeUsers = await analytics.getEvents({
+        type: EventType.USER_ACTION,
+        startTime: Date.now() - 1000,
+        endTime: Date.now(),
+      })
+      expect(activeUsers.some((e) => e.userId === userId)).toBe(false)
     })
 
     it('should track concurrent sessions', async () => {
@@ -214,7 +323,15 @@ describe('analytics Integration', () => {
       await monitorMemoryUsage(
         async () => {
           const operations = users.map(
-            (userId) => () => analytics.markUserActive(userId),
+            (userId) => () =>
+              analytics.trackEvent({
+                type: EventType.USER_ACTION,
+                priority: EventPriority.NORMAL,
+                userId,
+                timestamp: Date.now(),
+                properties: { action: 'session_start' },
+                metadata: {},
+              }),
           )
 
           await runConcurrentOperations(operations, {
@@ -229,44 +346,70 @@ describe('analytics Integration', () => {
         },
       )
 
-      const activeUsers = await analytics.getActiveUsers()
-      expect(activeUsers).toHaveLength(sessionCount)
+      const activeUsers = await analytics.getEvents({
+        type: EventType.USER_ACTION,
+        startTime: Date.now() - 1000,
+        endTime: Date.now(),
+      })
+      expect(activeUsers.length).toBe(sessionCount)
     })
   })
 
   describe('error Handling', () => {
     it('should handle Redis connection failures', async () => {
-      const userId = 'user123'
-      const event = {
-        type: 'error_test',
+      const event: EventData = {
+        type: EventType.ERROR,
+        priority: EventPriority.HIGH,
+        userId: 'user123',
         timestamp: Date.now(),
+        properties: { error: 'test_error' },
+        metadata: {},
       }
 
       // Force Redis disconnection
       await redis.disconnect()
 
       // Attempt to track event
-      await expect(analytics.trackEvent(userId, event)).rejects.toThrow()
+      await expect(analytics.trackEvent(event)).rejects.toThrow()
 
       // Reconnect for cleanup
       await redis.connect()
     })
 
     it('should handle invalid metric values', async () => {
-      const metric = generateTestKey('invalid_metric')
+      const metricName = generateTestKey('invalid_metric')
 
-      await expect(analytics.recordMetric(metric, Number.NaN)).rejects.toThrow()
+      await expect(
+        analytics.trackMetric({
+          name: metricName,
+          value: Number.NaN,
+          timestamp: Date.now(),
+          tags: {},
+        }),
+      ).rejects.toThrow()
 
-      await expect(analytics.recordMetric(metric, Infinity)).rejects.toThrow()
+      await expect(
+        analytics.trackMetric({
+          name: metricName,
+          value: Infinity,
+          timestamp: Date.now(),
+          tags: {},
+        }),
+      ).rejects.toThrow()
     })
 
     it('should handle Redis memory limits', async () => {
-      const metric = generateTestKey('memory_test')
+      const metricName = generateTestKey('memory_test')
       const largeValue = 'x'.repeat(1024 * 1024) // 1MB string
 
       // Attempt to store large values
       const promises = Array.from({ length: 100 }, () =>
-        analytics.recordMetric(metric, largeValue),
+        analytics.trackMetric({
+          name: metricName,
+          value: 1,
+          timestamp: Date.now(),
+          tags: { largeValue },
+        }),
       )
 
       await expect(Promise.all(promises)).rejects.toThrow()
@@ -278,13 +421,16 @@ describe('analytics Integration', () => {
       const userId = 'user123'
       const eventCount = 10000
       const events = Array.from({ length: eventCount }, (_, i) => ({
-        type: 'perf_test',
+        type: EventType.PERFORMANCE,
+        priority: EventPriority.NORMAL,
+        userId,
         timestamp: Date.now() + i,
-        metadata: { index: i },
+        properties: { index: i },
+        metadata: {},
       }))
 
       const { duration, throughput } = await runConcurrentOperations(
-        events.map((event) => () => analytics.trackEvent(userId, event)),
+        events.map((event) => () => analytics.trackEvent(event)),
         {
           description: 'High throughput event tracking',
           expectedDuration: 10000,
@@ -295,8 +441,15 @@ describe('analytics Integration', () => {
       expect(duration).toBeLessThan(10000)
       expect(throughput).toBeGreaterThan(1000)
 
-      const storedEvents = await analytics.getUserEvents(userId)
-      expect(storedEvents).toHaveLength(eventCount)
+      // Get all events for this user
+      const storedEvents = await analytics.getEvents({
+        type: EventType.PERFORMANCE,
+        startTime: Date.now() - 1000,
+        endTime: Date.now() + eventCount,
+      })
+      expect(storedEvents.filter((e) => e.userId === userId)).toHaveLength(
+        eventCount,
+      )
     })
 
     it('should maintain performance with large datasets', async () => {
@@ -308,13 +461,16 @@ describe('analytics Integration', () => {
         async () => {
           for (const userId of users) {
             const events = Array.from({ length: eventsPerUser }, (_, i) => ({
-              type: 'bulk_test',
+              type: EventType.PERFORMANCE,
+              priority: EventPriority.NORMAL,
+              userId,
               timestamp: Date.now() + i,
-              metadata: { user: userId, index: i },
+              properties: { index: i },
+              metadata: {},
             }))
 
             await Promise.all(
-              events.map((event) => analytics.trackEvent(userId, event)),
+              events.map((event) => analytics.trackEvent(event)),
             )
           }
         },
@@ -326,8 +482,14 @@ describe('analytics Integration', () => {
 
       // Verify data integrity
       for (const userId of users) {
-        const events = await analytics.getUserEvents(userId)
-        expect(events).toHaveLength(eventsPerUser)
+        const events = await analytics.getEvents({
+          type: EventType.PERFORMANCE,
+          startTime: Date.now() - 1000,
+          endTime: Date.now() + eventsPerUser,
+        })
+        expect(events.filter((e) => e.userId === userId)).toHaveLength(
+          eventsPerUser,
+        )
       }
     })
   })

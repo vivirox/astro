@@ -10,6 +10,14 @@ vi.mock('ws')
 vi.mock('@/lib/utils/logger')
 vi.mock('@/config/env.config')
 
+// Mock crypto.randomUUID
+Object.defineProperty(global, 'crypto', {
+  value: {
+    randomUUID: () => 'test-worker-id',
+    ...crypto,
+  },
+})
+
 // Mock process.exit to prevent tests from actually exiting
 const mockExit = vi
   .spyOn(process, 'exit')

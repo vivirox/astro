@@ -42,7 +42,7 @@ export enum ExportFormat {
  * Export options configuration
  */
 export interface ExportOptions {
-  format: ExportForma
+  format: ExportFormat
   includeMetadata: boolean
   encryptionMode: EncryptionMode
   includeVerificationToken: boolean
@@ -66,7 +66,7 @@ const DEFAULT_EXPORT_OPTIONS: ExportOptions = {
 export interface ExportResult {
   id: string
   data: string | Uint8Array
-  format: ExportForma
+  format: ExportFormat
   encryptionMode: EncryptionMode
   verificationToken?: string
   timestamp: number

@@ -176,8 +176,8 @@ describe('performance Tests', () => {
           }
         ).getEntriesByType('largest-contentful-paint')[0] || { startTime: 0 }
 
-        const layoutShiftEntries
-          = (
+        const layoutShiftEntries =
+          (
             performance as unknown as {
               getEntriesByType: (type: string) => { value: number }[]
             }
@@ -199,8 +199,8 @@ describe('performance Tests', () => {
         )
 
         // Get FCP
-        const firstContentfulPaint
-          = paintEntries.find(entry => entry.name === 'first-contentful-paint')
+        const firstContentfulPaint =
+          paintEntries.find((entry) => entry.name === 'first-contentful-paint')
             ?.startTime || 0
 
         return {
@@ -212,8 +212,8 @@ describe('performance Tests', () => {
           // Additional metrics
           FCP: firstContentfulPaint,
           domContentLoaded:
-            perfEntries.domContentLoadedEventEnd
-            - perfEntries.domContentLoadedEventStart,
+            perfEntries.domContentLoadedEventEnd -
+            perfEntries.domContentLoadedEventStart,
           domComplete: perfEntries.domComplete,
           loadEvent: perfEntries.loadEventEnd - perfEntries.loadEventStart,
 
@@ -232,8 +232,8 @@ describe('performance Tests', () => {
       const jsExecutionTime = jsCoverage.reduce((total, entry) => {
         const functions = entry.functions || []
         return (
-          total
-          + functions.reduce((sum, fn) => sum + (fn.ranges[0]?.count || 0), 0)
+          total +
+          functions.reduce((sum, fn) => sum + (fn.ranges[0]?.count || 0), 0)
         )
       }, 0)
 
@@ -304,8 +304,7 @@ describe('performance Tests', () => {
 
         // Assert
         expect(inputDelay).toBeLessThan(PERFORMANCE_THRESHOLDS.FID)
-      }
-      else {
+      } else {
         // Skip if no clickable element found
         console.warn(`No clickable element found on ${name}`)
       }
@@ -337,8 +336,7 @@ describe('performance Tests', () => {
             ok: response.ok,
           }
         }, `http://localhost:3000${path}`)
-      }
-      else if (method === 'POST') {
+      } else if (method === 'POST') {
         response = await page.evaluate(
           ({ url, data }) => {
             return fetch(url, {
@@ -347,7 +345,7 @@ describe('performance Tests', () => {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify(data),
-            }).then(response => ({
+            }).then((response) => ({
               status: response.status,
               ok: response.ok,
             }))
@@ -383,7 +381,7 @@ describe('performance Tests', () => {
     try {
       // Get previous results if they exist
       const files = await fs.readdir(resultsDir)
-      const jsonFiles = files.filter(file => file.endsWith('.json'))
+      const jsonFiles = files.filter((file) => file.endsWith('.json'))
 
       if (jsonFiles.length > 0) {
         // Sort by date (newest first, excluding current test)
@@ -402,14 +400,14 @@ describe('performance Tests', () => {
             // Check for significant regressions (>20% worse)
             for (const metricName of ['LCP', 'FID', 'CLS', 'FCP']) {
               const current = pageMetrics[metricName as keyof PageMetrics]
-              const previous
-                = previousPageMetrics[metricName as keyof PageMetrics]
+              const previous =
+                previousPageMetrics[metricName as keyof PageMetrics]
 
               if (current !== undefined && previous !== undefined) {
                 const currentValue = current as number
                 const previousValue = previous as number
-                const percentChange
-                  = ((currentValue - previousValue) / previousValue) * 100
+                const percentChange =
+                  ((currentValue - previousValue) / previousValue) * 100
 
                 // Log warnings for significant regressions
                 if (percentChange > 20) {
@@ -420,8 +418,8 @@ describe('performance Tests', () => {
 
                 // For critical metrics, fail the test on severe regressions (>50% worse)
                 if (
-                  ['LCP', 'FID', 'CLS'].includes(metricName)
-                  && percentChange > 50
+                  ['LCP', 'FID', 'CLS'].includes(metricName) &&
+                  percentChange > 50
                 ) {
                   expect(percentChange).toBeLessThan(50)
                 }
@@ -430,8 +428,7 @@ describe('performance Tests', () => {
           }
         }
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.error('Error in performance regression test:', err)
       throw err
     }

@@ -69,7 +69,9 @@ export const GET: APIRoute = async (context) => {
       },
     )
   } catch (error) {
-    logger.error('Error fetching users:', { error: error instanceof Error ? error.message : String(error) })
+    logger.error('Error fetching users:', {
+      error: error instanceof Error ? error.message : String(error),
+    })
     return new Response(JSON.stringify({ error: 'Failed to fetch users' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
@@ -132,7 +134,9 @@ export const PATCH: APIRoute = async (context) => {
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (error) {
-    logger.error('Error updating user:', { error: error instanceof Error ? error.message : String(error) })
+    logger.error('Error updating user:', {
+      error: error instanceof Error ? error.message : String(error),
+    })
     return new Response(JSON.stringify({ error: 'Failed to update user' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

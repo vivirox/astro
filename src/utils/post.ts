@@ -19,10 +19,16 @@ export interface PostData {
 export type PostCollectionType = 'blog' | 'docs'
 
 // Helper type for our collection entries
-export type PostCollectionEntry = AstroCollectionEntry<'blog'> | AstroCollectionEntry<'docs'>
+export type PostCollectionEntry =
+  | AstroCollectionEntry<'blog'>
+  | AstroCollectionEntry<'docs'>
 
-export function filterDrafts(entries: PostCollectionEntry[]): PostCollectionEntry[] {
-  return entries.filter(entry => !('draft' in entry.data) || !entry.data.draft)
+export function filterDrafts(
+  entries: PostCollectionEntry[],
+): PostCollectionEntry[] {
+  return entries.filter(
+    (entry) => !('draft' in entry.data) || !entry.data.draft,
+  )
 }
 
 export function sortByDate<T extends { data: { pubDate: Date } }>(
@@ -41,18 +47,14 @@ export async function getPosts(
   return getCollection(contentCollectionType, filterFn)
 }
 
-export function sortPosts(
-  posts: PostCollectionEntry[],
-): PostCollectionEntry[] {
+export function sortPosts(posts: PostCollectionEntry[]): PostCollectionEntry[] {
   return posts.sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   )
 }
 
 export function filterDraftPosts() {
-  return function filterDraftPosts(
-    entry: PostCollectionEntry,
-  ) {
+  return function filterDraftPosts(entry: PostCollectionEntry) {
     return !('draft' in entry.data) || !entry.data.draft
   }
 }
@@ -71,10 +73,8 @@ export async function getFilteredPosts(
   const posts = await getPosts(collectionType, filterFn)
 
   // Filter out drafts in production (unless explicitly filtered)
-  const filteredPosts
-    = import.meta.env.PROD && !filterFn
-      ? filterDrafts(posts)
-      : posts
+  const filteredPosts =
+    import.meta.env.PROD && !filterFn ? filterDrafts(posts) : posts
 
   // Sort by date
   return sortPosts(filteredPosts)

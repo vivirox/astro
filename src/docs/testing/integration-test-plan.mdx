@@ -115,12 +115,12 @@ describe('Performance Tests', () => {
       const plugins = await Promise.all(
         Array(10)
           .fill(null)
-          .map(() => installTestPlugin())
+          .map(() => installTestPlugin()),
       )
 
       // Measure operation performance
       const result = await measurePerformance(() =>
-        ehrService.searchPatients({ limit: 100 })
+        ehrService.searchPatients({ limit: 100 }),
       )
 
       expect(result.duration).toBeLessThan(1000) // 1 second max
@@ -154,12 +154,12 @@ describe('Security Tests', () => {
     it('should enforce proper authentication', async () => {
       // Attempt unauthorized access
       await expect(
-        ehrService.getPatient(testPatientId, { token: null })
+        ehrService.getPatient(testPatientId, { token: null }),
       ).rejects.toThrow('UNAUTHORIZED')
 
       // Attempt access with invalid token
       await expect(
-        ehrService.getPatient(testPatientId, { token: 'invalid' })
+        ehrService.getPatient(testPatientId, { token: 'invalid' }),
       ).rejects.toThrow('INVALID_TOKEN')
 
       // Verify audit logging of attempts
@@ -177,12 +177,12 @@ describe('Security Tests', () => {
 
       // Attempt authorized operation
       await expect(
-        ehrService.getPatient(testPatientId, { user })
+        ehrService.getPatient(testPatientId, { user }),
       ).resolves.toBeDefined()
 
       // Attempt unauthorized operation
       await expect(
-        ehrService.updatePatient(testPatient, { user })
+        ehrService.updatePatient(testPatient, { user }),
       ).rejects.toThrow('FORBIDDEN')
     })
   })
@@ -193,12 +193,12 @@ describe('Security Tests', () => {
 
       // Attempt to access file system
       await expect(
-        plugin.executeOperation('readFile', '/etc/passwd')
+        plugin.executeOperation('readFile', '/etc/passwd'),
       ).rejects.toThrow('SANDBOX_VIOLATION')
 
       // Attempt to make unauthorized network calls
       await expect(
-        plugin.executeOperation('httpRequest', 'https://evil.com')
+        plugin.executeOperation('httpRequest', 'https://evil.com'),
       ).rejects.toThrow('NETWORK_RESTRICTED')
 
       // Verify security events logged
@@ -234,7 +234,7 @@ describe('HIPAA Compliance', () => {
           user: expect.any(String),
           timestamp: expect.any(Date),
           details: expect.any(Object),
-        })
+        }),
       )
     })
   })
@@ -248,7 +248,7 @@ describe('HIPAA Compliance', () => {
 
       // Verify data encrypted in transit
       const networkData = await captureNetworkTraffic(() =>
-        ehrService.getPatient(testPatientId)
+        ehrService.getPatient(testPatientId),
       )
       expect(networkData).not.toContain(testPatient.name)
       expect(networkData).not.toContain(testPatient.ssn)

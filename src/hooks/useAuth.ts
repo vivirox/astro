@@ -269,7 +269,11 @@ export function useAuth(): UseAuthReturn {
           : { error: new Error('Profile update not implemented') }
 
       if (result.error) {
-        setError(result.error instanceof Error ? result.error : new Error('Unknown error'))
+        setError(
+          result.error instanceof Error
+            ? result.error
+            : new Error('Unknown error'),
+        )
         throw result.error
       }
 

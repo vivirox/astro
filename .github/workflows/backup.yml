@@ -6,13 +6,13 @@ on:
   workflow_dispatch: {} # Allow manual trigger without inputs
 
 permissions:
-  contents: read
-  id-token: write
+  contents: write
 
 env:
   NODE_VERSION: 20.11.0
   PNPM_VERSION: 10.0.0
   BACKUP_RETENTION_DAYS: 30
+  BACKUP_DIR: ./backups
 
 jobs:
   backup:
@@ -24,15 +24,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: >-
-            arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-backup
-          aws-region: ${{ secrets.AWS_REGION }}
-          role-duration-seconds: 1200
-          mask-aws-account-id: true
 
       - name: Configure Supabase CLI
         uses: supabase/setup-cli@v1.1.0
@@ -48,14 +39,17 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create and upload backup
+      - name: Create backup directory
+        run: mkdir -p ${{ env.BACKUP_DIR }}
+
+      - name: Create backup
         id: backup
         env:
           PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
@@ -72,86 +66,51 @@ jobs:
 
           echo "::group::Creating database backup"
           # Create backup with error handling
-          if ! pg_dump -p 5432 -F p > "${backup_file}"; then
+          if ! pg_dump -p 5432 -F p > "${BACKUP_DIR}/${backup_file}"; then
             echo "::error::Failed to create database backup"
             exit 1
           fi
 
           # Verify backup size
-          if [ ! -s "${backup_file}" ]; then
+          if [ ! -s "${BACKUP_DIR}/${backup_file}" ]; then
             echo "::error::Backup file is empty"
             exit 1
           fi
           echo "::endgroup::"
 
           echo "::group::Compressing backup"
-          if ! gzip "${backup_file}"; then
+          if ! gzip "${BACKUP_DIR}/${backup_file}"; then
             echo "::error::Failed to compress backup file"
             exit 1
           fi
           echo "::endgroup::"
 
-          echo "::group::Uploading to S3"
-          if ! aws s3 cp "${compressed_file}" \
-            s3://${{ secrets.BACKUP_S3_BUCKET }}/database-backups/${ENVIRONMENT}/ \
-            --storage-class STANDARD_IA; then
-            echo "::error::Failed to upload backup to S3"
-            exit 1
-          fi
-          echo "::endgroup::"
-
-          # Clean up local files
-          rm -f "${backup_file}" "${compressed_file}"
-
           # Set outputs for next steps
-          echo "backup_file=${compressed_file}" >> $GITHUB_OUTPUT
           echo "environment=${ENVIRONMENT}" >> $GITHUB_OUTPUT
           echo "timestamp=${timestamp}" >> $GITHUB_OUTPUT
 
-      - name: Rotate old backups
+      - name: Commit and push backup
         if: success()
-        env:
-          ENVIRONMENT: ${{ steps.backup.outputs.environment }}
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add ${{ env.BACKUP_DIR }}
+          git commit -m "Backup database: ${{ steps.backup.outputs.environment }} - ${{ steps.backup.outputs.timestamp }}"
+          git push
+
+      - name: Clean old backups
+        if: success()
         run: |
           set -euo pipefail
-
-          echo "::group::Rotating old backups"
-          # List backups older than retention period and delete them
-          aws s3 ls s3://${{ secrets.BACKUP_S3_BUCKET }}/database-backups/${ENVIRONMENT}/ --recursive | \
-            awk -v cutoff=$(date -d "-${BACKUP_RETENTION_DAYS} days" +%Y-%m-%d) '$1 < cutoff {print $4}' | \
-            while read -r backup; do
-              echo "Deleting old backup: ${backup}"
-              aws s3 rm "s3://${{ secrets.BACKUP_S3_BUCKET }}/${backup}"
-            done
-          echo "::endgroup::"
-
-      - name: Verify backup
-        if: success()
-        env:
-          ENVIRONMENT: ${{ steps.backup.outputs.environment }}
-          BACKUP_FILE: ${{ steps.backup.outputs.backup_file }}
-        run: |
-          set -euo pipefail
-
-          echo "::group::Verifying backup integrity"
-          # Download the backup we just created
-          aws s3 cp \
-            s3://${{ secrets.BACKUP_S3_BUCKET }}/database-backups/${ENVIRONMENT}/${BACKUP_FILE} \
-            ./verify_${BACKUP_FILE}
-
-          # Check file size and integrity
-          if [ ! -s "./verify_${BACKUP_FILE}" ]; then
-            echo "::error::Verification failed: Downloaded backup is empty"
-            exit 1
-          fi
-
-          # Clean up verification file
-          rm -f "./verify_${BACKUP_FILE}"
+          echo "::group::Cleaning old backups"
+          find ${{ env.BACKUP_DIR }} -name "*.sql.gz" -type f -mtime +${{ env.BACKUP_RETENTION_DAYS }} -delete
           echo "::endgroup::"
 
       - name: Notify status
         if: always()
         uses: slackapi/slack-github-action@v1.25.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         with:
           payload: |
             {

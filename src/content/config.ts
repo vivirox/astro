@@ -65,13 +65,31 @@ const streams = defineCollection({
   schema: streamsSchema,
 })
 
+// Temporary fix: Disable feed loader due to network issues
+// const feeds = defineCollection({
+//   loader: feedLoader({
+//     url: 'https://astro.build/rss.xml',
+//     timeout: 30000, // 30 seconds timeout
+//     retries: 3, // 3 retries
+//     retryDelay: 1000, // 1 second between retries
+//     fallback: [], // Return empty array if feed cannot be loaded
+//     cacheMaxAge: 86400000, // Cache for 24 hours (1 day)
+//     skipOnFail: true, // Continue build even if feed loading fails
+//   }),
+// })
+
+// Use a static data collection as a temporary replacement for feeds
 const feeds = defineCollection({
-  loader: feedLoader({
-    url: 'https://astro.build/rss.xml',
-    timeout: 30000, // 30 seconds timeout
-    retries: 3, // 3 retries
-    retryDelay: 1000, // 1 second between retries
-  }),
+  type: 'data',
+  schema: z.array(
+    z.object({
+      title: z.string(),
+      link: z.string().url(),
+      pubDate: z.string(),
+      description: z.string().optional(),
+      author: z.string().optional(),
+    }),
+  ),
 })
 
 // Fix the releases collection with proper schema

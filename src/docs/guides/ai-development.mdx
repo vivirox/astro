@@ -93,12 +93,12 @@ The `AIService` interface defines the core functionality for interacting with AI
 interface AIService {
   createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion>
 
   createStreamingChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AIStreamingCompletion>
 
   getModelInfo(model: string): ModelInfo
@@ -113,12 +113,12 @@ The `AIProvider` interface defines the functionality for specific AI providers:
 interface AIProvider {
   createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion>
 
   createStreamingChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AIStreamingCompletion>
 
   getModelInfo(model: string): ModelInfo
@@ -195,7 +195,7 @@ const completion = await aiService.createChatCompletion(
     { role: 'system', content: 'You are a helpful assistant.' },
     { role: 'user', content: 'Hello, how are you?' },
   ],
-  { model: 'gpt-4o' }
+  { model: 'gpt-4o' },
 )
 
 console.log(completion.content)
@@ -211,7 +211,7 @@ const { stream } = await aiService.createStreamingChatCompletion(
     { role: 'system', content: 'You are a helpful assistant.' },
     { role: 'user', content: 'Hello, how are you?' },
   ],
-  { model: 'gpt-4o' }
+  { model: 'gpt-4o' },
 )
 
 for await (const chunk of stream) {
@@ -232,7 +232,7 @@ const aiService = createAIService()
 const sentimentService = new SentimentAnalysisService({ aiService })
 
 const result = await sentimentService.analyzeSentiment(
-  'I am feeling great today!'
+  'I am feeling great today!',
 )
 // { sentiment: 'positive', score: 0.85, explanation: '...', model: '...', processingTime: 123 }
 ```
@@ -248,7 +248,7 @@ const aiService = createAIService()
 const crisisService = new CrisisDetectionService({ aiService })
 
 const result = await crisisService.detectCrisis(
-  'I am feeling really down lately.'
+  'I am feeling really down lately.',
 )
 // { is_crisis: true, risk_level: 'low', crisis_type: 'depression', confidence: 0.65, ... }
 ```
@@ -282,7 +282,7 @@ const interventionService = new InterventionAnalysisService({ aiService })
 const result = await interventionService.analyzeIntervention(
   conversation,
   interventionMessage,
-  userResponse
+  userResponse,
 )
 // { effectiveness_score: 8, user_receptiveness: 'high', emotional_impact: 'positive', ... }
 ```
@@ -301,7 +301,7 @@ const aiService = createAIService()
 try {
   const completion = await aiService.createChatCompletion(
     [{ role: 'user', content: 'Hello, how are you?' }],
-    { model: 'invalid-model' }
+    { model: 'invalid-model' },
   )
 } catch (error) {
   if (error instanceof AIError && error.code === AIErrorCodes.INVALID_MODEL) {
@@ -388,14 +388,14 @@ const completion = await withRetry(
   () =>
     aiService.createChatCompletion(
       [{ role: 'user', content: 'Hello, how are you?' }],
-      { model: 'gpt-4o' }
+      { model: 'gpt-4o' },
     ),
   {
     maxRetries: 3,
     initialDelay: 500,
     maxDelay: 10000,
     factor: 2,
-  }
+  },
 )
 ```
 
@@ -511,7 +511,7 @@ test('analyzeSentiment returns correct sentiment analysis', async () => {
   })
 
   const result = await sentimentService.analyzeSentiment(
-    'I am feeling great today!'
+    'I am feeling great today!',
   )
 
   expect(result.sentiment).toBe('positive')
@@ -543,7 +543,7 @@ test('SentimentAnalysisService integrates with AIService', async () => {
   const sentimentService = new SentimentAnalysisService({ aiService })
 
   const result = await sentimentService.analyzeSentiment(
-    'I am feeling great today!'
+    'I am feeling great today!',
   )
 
   expect(result.sentiment).toBe('positive')
@@ -565,7 +565,7 @@ import { AICompletion, AIMessage, AIServiceOptions } from '../models'
 export class MockOpenAIProvider {
   async createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion> {
     // Simulate processing delay
     await new Promise((resolve) => setTimeout(resolve, 100))
@@ -578,7 +578,7 @@ export class MockOpenAIProvider {
       usage: {
         prompt_tokens: messages.reduce(
           (acc, msg) => acc + msg.content.length / 4,
-          0
+          0,
         ),
         completion_tokens: 20,
         total_tokens:
@@ -654,14 +654,14 @@ export class GeminiProvider {
 
   async createChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AICompletion> {
     // Implementation for Gemini API
   }
 
   async createStreamingChatCompletion(
     messages: AIMessage[],
-    options?: AIServiceOptions
+    options?: AIServiceOptions,
   ): Promise<AIStreamingCompletion> {
     // Implementation for Gemini API streaming
   }
@@ -740,7 +740,7 @@ export class SummarizationService {
 
   async summarizeText(
     text: string,
-    options?: SummarizationOptions
+    options?: SummarizationOptions,
   ): Promise<SummarizationResult> {
     const startTime = Date.now()
 

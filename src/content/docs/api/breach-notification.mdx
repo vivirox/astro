@@ -1,12 +1,12 @@
 ---
-title: "Breach Notification API"
-description: "API documentation for the breach notification system"
+title: 'Breach Notification API'
+description: 'API documentation for the breach notification system'
 pubDate: 2025-03-25
 share: true
 toc: true
 lastModDate: 2025-03-25
-tags: ["api", "security", "breach-notification"]
-author: "Gradiant Team"
+tags: ['api', 'security', 'breach-notification']
+author: 'Gradiant Team'
 ---
 
 # Breach Notification API Reference
@@ -59,15 +59,15 @@ Reports a new security breach and initiates the notification process.
 
 **Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| type | string | Yes | Type of breach: 'unauthorized_access', 'data_leak', 'system_compromise', 'other' |
-| severity | string | Yes | Severity level: 'low', 'medium', 'high', 'critical' |
-| description | string | Yes | Detailed description of the breach |
-| affectedUsers | string[] | Yes | Array of affected user IDs |
-| affectedData | string[] | Yes | Array of affected data types |
-| detectionMethod | string | Yes | Method used to detect the breach |
-| remediation | string | Yes | Actions taken to address the breach |
+| Name            | Type     | Required | Description                                                                      |
+| --------------- | -------- | -------- | -------------------------------------------------------------------------------- |
+| type            | string   | Yes      | Type of breach: 'unauthorized_access', 'data_leak', 'system_compromise', 'other' |
+| severity        | string   | Yes      | Severity level: 'low', 'medium', 'high', 'critical'                              |
+| description     | string   | Yes      | Detailed description of the breach                                               |
+| affectedUsers   | string[] | Yes      | Array of affected user IDs                                                       |
+| affectedData    | string[] | Yes      | Array of affected data types                                                     |
+| detectionMethod | string   | Yes      | Method used to detect the breach                                                 |
+| remediation     | string   | Yes      | Actions taken to address the breach                                              |
 
 **Response:**
 
@@ -90,9 +90,9 @@ Retrieves the current status of a specific breach.
 
 **Parameters:**
 
-| Name | Type | Location | Required | Description |
-|------|------|----------|----------|-------------|
-| breachId | string | path | Yes | Unique breach identifier |
+| Name     | Type   | Location | Required | Description              |
+| -------- | ------ | -------- | -------- | ------------------------ |
+| breachId | string | path     | Yes      | Unique breach identifier |
 
 **Response:**
 
@@ -136,15 +136,15 @@ Retrieves a list of recent breaches with optional filtering.
 
 **Query Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| from | string | No | Start date (ISO 8601) |
-| to | string | No | End date (ISO 8601) |
-| severity | string | No | Filter by severity |
-| type | string | No | Filter by breach type |
-| status | string | No | Filter by status |
-| limit | number | No | Maximum number of results (default: 50) |
-| offset | number | No | Pagination offset (default: 0) |
+| Name     | Type   | Required | Description                             |
+| -------- | ------ | -------- | --------------------------------------- |
+| from     | string | No       | Start date (ISO 8601)                   |
+| to       | string | No       | End date (ISO 8601)                     |
+| severity | string | No       | Filter by severity                      |
+| type     | string | No       | Filter by breach type                   |
+| status   | string | No       | Filter by status                        |
+| limit    | number | No       | Maximum number of results (default: 50) |
+| offset   | number | No       | Pagination offset (default: 0)          |
 
 **Response:**
 
@@ -185,9 +185,9 @@ Retrieves detailed notification status for a specific breach.
 
 **Parameters:**
 
-| Name | Type | Location | Required | Description |
-|------|------|----------|----------|-------------|
-| breachId | string | path | Yes | Unique breach identifier |
+| Name     | Type   | Location | Required | Description              |
+| -------- | ------ | -------- | -------- | ------------------------ |
+| breachId | string | path     | Yes      | Unique breach identifier |
 
 **Response:**
 
@@ -298,12 +298,12 @@ Retrieves analytics data for breaches.
 
 **Query Parameters:**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| from | string | No | Start date (ISO 8601) |
-| to | string | No | End date (ISO 8601) |
-| groupBy | string | No | Group results by: 'day', 'week', 'month' |
-| metrics | string[] | No | Specific metrics to include |
+| Name    | Type     | Required | Description                              |
+| ------- | -------- | -------- | ---------------------------------------- |
+| from    | string   | No       | Start date (ISO 8601)                    |
+| to      | string   | No       | End date (ISO 8601)                      |
+| groupBy | string   | No       | Group results by: 'day', 'week', 'month' |
+| metrics | string[] | No       | Specific metrics to include              |
 
 **Response:**
 
@@ -348,6 +348,7 @@ Retrieves analytics data for breaches.
 Subscribe to real-time updates by configuring webhooks in the Security Dashboard.
 
 Available events:
+
 - `breach.created`
 - `breach.updated`
 - `notification.sent`
@@ -395,17 +396,18 @@ Available events:
 
 ### Common Error Codes
 
-| Code | Description |
-|------|-------------|
-| invalid_request | Invalid request parameters |
+| Code                  | Description                |
+| --------------------- | -------------------------- |
+| invalid_request       | Invalid request parameters |
 | authentication_failed | Invalid or missing API key |
-| rate_limit_exceeded | Too many requests |
-| not_found | Resource not found |
-| internal_error | Internal server error |
+| rate_limit_exceeded   | Too many requests          |
+| not_found             | Resource not found         |
+| internal_error        | Internal server error      |
 
 ## SDK Support
 
 Official SDKs are available for:
+
 - JavaScript/TypeScript
 - Python
 - Java
@@ -416,9 +418,9 @@ Official SDKs are available for:
 Example using TypeScript SDK:
 
 ```typescript
-import { BreachNotificationClient } from '@security/breach-notification';
+import { BreachNotificationClient } from '@security/breach-notification'
 
-const client = new BreachNotificationClient('your-api-key');
+const client = new BreachNotificationClient('your-api-key')
 
 async function reportBreach() {
   const breach = await client.breaches.create({
@@ -428,26 +430,29 @@ async function reportBreach() {
     affectedUsers: ['user_1', 'user_2'],
     affectedData: ['personal_info'],
     detectionMethod: 'system_monitoring',
-    remediation: 'Access revoked'
-  });
+    remediation: 'Access revoked',
+  })
 
-  console.log('Breach reported:', breach.id);
+  console.log('Breach reported:', breach.id)
 }
 ```
 
 ## Best Practices
 
 1. Error Handling
+
    - Implement proper error handling
    - Retry failed requests with exponential backoff
    - Log all API errors for debugging
 
 2. Rate Limiting
+
    - Monitor rate limit headers
    - Implement rate limiting in your client
    - Use bulk operations when possible
 
 3. Security
+
    - Store API keys securely
    - Use HTTPS for all requests
    - Validate webhook signatures
@@ -462,6 +467,7 @@ async function reportBreach() {
 ## Support
 
 For API support:
+
 - Email: api-support@example.com
 - Documentation: https://docs.example.com/api
 - Status page: https://status.example.com

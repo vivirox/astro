@@ -4,7 +4,9 @@ import { vi } from 'vitest'
 
 // Mock the simulator hooks and components
 vi.mock('@/simulator', () => ({
-  SimulatorProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  SimulatorProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
   SimulationContainer: ({ scenarioId }: { scenarioId: string }) => (
     <div data-testid="simulation-container">Simulation: {scenarioId}</div>
   ),
@@ -13,8 +15,8 @@ vi.mock('@/simulator', () => ({
   ),
   useAnonymizedMetrics: () => ({
     metrics: { completedScenarios: 0, averageScore: 0 },
-    loading: false
-  })
+    loading: false,
+  }),
 }))
 
 describe('SimulatorDashboard', () => {

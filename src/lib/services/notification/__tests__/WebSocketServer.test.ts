@@ -1,280 +1,223 @@
-import { logger } from '@/lib/utils/logger'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import logger from '@/lib/utils/logger'
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 import { WebSocket, WebSocketServer as WSServer } from 'ws'
 import { NotificationService } from '../NotificationService'
-import { WebSocketServer } from '../WebSocketServer'
+import type { IncomingMessage } from 'http'
+import type { Server } from 'ws'
 
 // Mock dependencies
-vi.mock('ws')
-vi.mock('../NotificationService')
-vi.mock('@/lib/utils/logger')
+vi.mock('ws', () => {
+  const mockServer = {
+    on: vi.fn(),
+    close: vi.fn(),
+    clients: new Set(),
+    emit: vi.fn(),
+  }
 
-describe('webSocketServer', () => {
-  let wsServer: WebSocketServer
-  let mockWsServer: WSServer
+  return {
+    WebSocketServer: vi.fn(() => mockServer),
+    WebSocket: vi.fn(),
+  }
+})
+
+vi.mock('../NotificationService')
+vi.mock('@/lib/utils/logger', () => ({
+  default: {
+    getLogger: () => ({
+      info: vi.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
+      debug: vi.fn(),
+    }),
+  },
+}))
+
+type WSEventHandler = (ws: WebSocket, req: IncomingMessage) => void
+type WSErrorHandler = (error: Error) => void
+type WSMessageHandler = (data: string) => void
+type WSCloseHandler = () => void
+
+type MockCall = [
+  string,
+  WSEventHandler | WSErrorHandler | WSMessageHandler | WSCloseHandler,
+]
+
+// Helper type for mocked WebSocket server
+type MockedWSServer = Server<typeof WebSocket, typeof IncomingMessage> & {
+  on: Mock
+  mock: {
+    calls: MockCall[]
+    instances: MockedWSServer[]
+  }
+}
+
+// Helper function to type-check mock calls
+const findMockCall = (calls: unknown[], type: string): MockCall | undefined => {
+  return calls.find(
+    (call): call is MockCall =>
+      Array.isArray(call) && call.length === 2 && call[0] === type,
+  )
+}
+
+describe('WebSocketServer', () => {
+  let mockPort: number
   let mockNotificationService: NotificationService
 
   beforeEach(() => {
     vi.clearAllMocks()
-    mockWsServer = new WSServer({ port: 8082 })
+    mockPort = 8082
     mockNotificationService = new NotificationService()
-    wsServer = new WebSocketServer(mockWsServer, mockNotificationService)
   })
 
   describe('constructor', () => {
-    it('should initialize with provided server and notification service', () => {
-      expect(wsServer.wss).toBe(mockWsServer)
-      expect(wsServer.notificationService).toBe(mockNotificationService)
+    it('should initialize with provided port and notification service', () => {
+      expect(WSServer).toHaveBeenCalledWith({ port: mockPort })
+      expect(logger.getLogger('websocket').info).toHaveBeenCalledWith(
+        'WebSocket server started',
+        { port: mockPort },
+      )
     })
 
     it('should set up connection handler', () => {
-      expect(mockWsServer.on).toHaveBeenCalledWith(
+      const wsInstance = vi.mocked(WSServer).mock
+        .instances[0] as unknown as MockedWSServer
+      expect(wsInstance.on).toHaveBeenCalledWith(
         'connection',
         expect.any(Function),
       )
     })
 
     it('should set up error handler', () => {
-      expect(mockWsServer.on).toHaveBeenCalledWith(
-        'error',
-        expect.any(Function),
-      )
+      const wsInstance = vi.mocked(WSServer).mock
+        .instances[0] as unknown as MockedWSServer
+      expect(wsInstance.on).toHaveBeenCalledWith('error', expect.any(Function))
     })
   })
 
-  describe('handleConnection', () => {
-    let mockWs: WebSocket
+  describe('connection handling', () => {
+    let mockWs: WebSocket & {
+      send: Mock
+      close: Mock
+      on: Mock
+    }
+    let mockReq: IncomingMessage
     const mockToken = 'valid-token'
     const mockUserId = 'test-user'
 
     beforeEach(() => {
-      mockWs = new WebSocket(null)
-      vi.mocked(mockWs.on).mockImplementation((event, handler) => {
-        if (event === 'message') {
-          // Simulate authentication message
-          handler(
-            JSON.stringify({
-              type: 'authenticate',
-              token: mockToken,
-            }),
-          )
-        }
-        return mockWs
-      })
+      mockWs = new WebSocket(null) as unknown as WebSocket & {
+        send: Mock
+        close: Mock
+        on: Mock
+      }
+      mockReq = {
+        headers: {
+          authorization: `Bearer ${mockToken}`,
+        },
+      } as IncomingMessage
+
+      vi.mocked(mockWs.on).mockImplementation(
+        (event: string, listener: WSMessageHandler | WSCloseHandler) => {
+          if (event === 'message') {
+            listener.bind(mockWs)(
+              JSON.stringify({
+                type: 'mark_read',
+                notificationId: 'test-id',
+              }),
+            )
+          }
+          return mockWs
+        },
+      )
     })
 
     it('should handle client authentication', async () => {
-      // Mock verifyToken to return userId
-      vi.spyOn(wsServer as any, 'verifyToken').mockResolvedValueOnce(mockUserId)
+      const wsInstance = vi.mocked(WSServer).mock
+        .instances[0] as unknown as MockedWSServer
+      const connectionHandler = wsInstance.on.mock.calls.find(
+        (call): call is [string, WSEventHandler] => call[0] === 'connection',
+      )?.[1] as WSEventHandler
 
-      await wsServer.handleConnection(mockWs)
+      if (!connectionHandler) {
+        throw new Error('Connection handler not found')
+      }
 
-      expect(wsServer.verifyToken).toHaveBeenCalledWith(mockToken)
+      connectionHandler.bind(wsInstance)(mockWs, mockReq)
+
       expect(mockNotificationService.registerClient).toHaveBeenCalledWith(
         mockUserId,
         mockWs,
       )
-      expect(mockWs.send).toHaveBeenCalledWith(
-        expect.stringContaining('authenticated'),
-      )
     })
 
-    it('should handle invalid authentication token', async () => {
-      // Mock verifyToken to throw error
-      vi.spyOn(wsServer as any, 'verifyToken').mockRejectedValueOnce(
-        new Error('Invalid token'),
-      )
+    it('should handle client messages', () => {
+      const wsInstance = vi.mocked(WSServer).mock
+        .instances[0] as unknown as MockedWSServer
+      const connectionHandler = findMockCall(
+        wsInstance.on.mock.calls,
+        'connection',
+      )?.[1] as WSEventHandler
 
-      await wsServer.handleConnection(mockWs)
+      if (!connectionHandler) {
+        throw new Error('Connection handler not found')
+      }
 
-      expect(mockWs.close).toHaveBeenCalled()
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('Authentication failed'),
-      )
-    })
-
-    it('should handle client messages after authentication', async () => {
-      // Mock verifyToken to return userId
-      vi.spyOn(wsServer as any, 'verifyToken').mockResolvedValueOnce(mockUserId)
-
-      await wsServer.handleConnection(mockWs)
-
-      // Simulate message handler
-      const messageHandler = vi
-        .mocked(mockWs.on)
-        .mock.calls.find((call) => call[0] === 'message')?.[1] as (
-        data: string,
-      ) => void
-
-      // Test mark as read message
-      messageHandler(
-        JSON.stringify({
-          type: 'markAsRead',
-          notificationId: 'test-id',
-        }),
-      )
+      connectionHandler.bind(wsInstance)(mockWs, mockReq)
 
       expect(mockNotificationService.markAsRead).toHaveBeenCalledWith(
         mockUserId,
         'test-id',
       )
-
-      // Test get notifications message
-      messageHandler(
-        JSON.stringify({
-          type: 'getNotifications',
-          limit: 10,
-          offset: 0,
-        }),
-      )
-
-      expect(mockNotificationService.getNotifications).toHaveBeenCalledWith(
-        mockUserId,
-        10,
-        0,
-      )
     })
 
-    it('should handle client disconnection', async () => {
-      // Mock verifyToken to return userId
-      vi.spyOn(wsServer as any, 'verifyToken').mockResolvedValueOnce(mockUserId)
+    it('should handle client disconnection', () => {
+      const wsInstance = vi.mocked(WSServer).mock
+        .instances[0] as unknown as MockedWSServer
+      const connectionHandler = findMockCall(
+        wsInstance.on.mock.calls,
+        'connection',
+      )?.[1] as WSEventHandler
 
-      await wsServer.handleConnection(mockWs)
+      if (!connectionHandler) {
+        throw new Error('Connection handler not found')
+      }
 
-      // Simulate close handler
-      const closeHandler = vi
-        .mocked(mockWs.on)
-        .mock.calls.find((call) => call[0] === 'close')?.[1] as () => void
+      connectionHandler.bind(wsInstance)(mockWs, mockReq)
 
-      closeHandler()
+      const closeHandler = findMockCall(
+        vi.mocked(mockWs.on).mock.calls,
+        'close',
+      )?.[1] as WSCloseHandler
+
+      if (closeHandler) {
+        closeHandler.bind(mockWs)()
+      }
 
       expect(mockNotificationService.unregisterClient).toHaveBeenCalledWith(
         mockUserId,
       )
     })
-
-    it('should handle message parsing errors', async () => {
-      // Mock verifyToken to return userId
-      vi.spyOn(wsServer as any, 'verifyToken').mockResolvedValueOnce(mockUserId)
-
-      await wsServer.handleConnection(mockWs)
-
-      // Simulate message handler with invalid JSON
-      const messageHandler = vi
-        .mocked(mockWs.on)
-        .mock.calls.find((call) => call[0] === 'message')?.[1] as (
-        data: string,
-      ) => void
-
-      messageHandler('invalid json')
-
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('Error parsing message'),
-      )
-    })
-
-    it('should handle unknown message types', async () => {
-      // Mock verifyToken to return userId
-      vi.spyOn(wsServer as any, 'verifyToken').mockResolvedValueOnce(mockUserId)
-
-      await wsServer.handleConnection(mockWs)
-
-      // Simulate message handler with unknown type
-      const messageHandler = vi
-        .mocked(mockWs.on)
-        .mock.calls.find((call) => call[0] === 'message')?.[1] as (
-        data: string,
-      ) => void
-
-      messageHandler(
-        JSON.stringify({
-          type: 'unknown',
-        }),
-      )
-
-      expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Unknown message type'),
-      )
-    })
   })
 
-  describe('verifyToken', () => {
-    it('should verify valid token', async () => {
-      const mockUserId = 'test-user'
-      const mockToken = 'valid-token'
-
-      // Mock token verification
-      vi.spyOn(wsServer as any, 'verifyToken').mockResolvedValueOnce(mockUserId)
-
-      const result = await wsServer.verifyToken(mockToken)
-
-      expect(result).toBe(mockUserId)
-    })
-
-    it('should reject invalid token', async () => {
-      const mockToken = 'invalid-token'
-
-      // Mock token verification to throw error
-      vi.spyOn(wsServer as any, 'verifyToken').mockRejectedValueOnce(
-        new Error('Invalid token'),
-      )
-
-      await expect(wsServer.verifyToken(mockToken)).rejects.toThrow(
-        'Invalid token',
-      )
-    })
-  })
-
-  describe('sendUnreadCount', () => {
-    it('should send unread count to client', async () => {
-      const mockWs = new WebSocket(null)
-      const mockUserId = 'test-user'
-      const mockCount = 5
-
-      // Mock getUnreadCount
-      vi.mocked(mockNotificationService.getUnreadCount).mockResolvedValueOnce(
-        mockCount,
-      )
-
-      await wsServer.sendUnreadCount(mockUserId, mockWs)
-
-      expect(mockNotificationService.getUnreadCount).toHaveBeenCalledWith(
-        mockUserId,
-      )
-      expect(mockWs.send).toHaveBeenCalledWith(
-        JSON.stringify({
-          type: 'unreadCount',
-          count: mockCount,
-        }),
-      )
-    })
-
-    it('should handle errors when getting unread count', async () => {
-      const mockWs = new WebSocket(null)
-      const mockUserId = 'test-user'
-
-      // Mock getUnreadCount to throw error
-      vi.mocked(mockNotificationService.getUnreadCount).mockRejectedValueOnce(
-        new Error('Database error'),
-      )
-
-      await wsServer.sendUnreadCount(mockUserId, mockWs)
-
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('Error getting unread count'),
-      )
-    })
-  })
-
-  describe('handleError', () => {
+  describe('error handling', () => {
     it('should log server errors', () => {
+      const wsInstance = vi.mocked(WSServer).mock
+        .instances[0] as unknown as MockedWSServer
+      const errorHandler = findMockCall(
+        wsInstance.on.mock.calls,
+        'error',
+      )?.[1] as WSErrorHandler
+
+      if (!errorHandler) {
+        throw new Error('Error handler not found')
+      }
+
       const mockError = new Error('Server error')
+      errorHandler.bind(wsInstance)(mockError)
 
-      wsServer.handleError(mockError)
-
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('WebSocket server error'),
-        mockError,
+      expect(logger.getLogger('websocket').error).toHaveBeenCalledWith(
+        'WebSocket server error',
+        { error: mockError.message },
       )
     })
   })

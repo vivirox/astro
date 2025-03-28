@@ -119,7 +119,7 @@ interface ResponseConfig {
 
 async function generateResponse(
   context: ConversationContext,
-  config: ResponseConfig
+  config: ResponseConfig,
 ): Promise<string> {
   const model = await modelRouter.selectModel({
     type: 'generation',
@@ -147,7 +147,7 @@ interface CrisisAssessment {
 
 async function assessCrisis(
   message: string,
-  history: Message[]
+  history: Message[],
 ): Promise<CrisisAssessment> {
   const model = await modelRouter.selectModel({
     type: 'crisis',
@@ -240,7 +240,7 @@ class AIFallbackHandler {
   private providers: AIProvider[]
 
   async withFallback<T>(
-    operation: (provider: AIProvider) => Promise<T>
+    operation: (provider: AIProvider) => Promise<T>,
   ): Promise<T> {
     for (const provider of this.providers) {
       try {
@@ -321,7 +321,7 @@ class BatchProcessor {
     this.batch = []
 
     const analyses = await Promise.all(
-      messages.map((msg) => this.analyzeMessage(msg))
+      messages.map((msg) => this.analyzeMessage(msg)),
     )
 
     return analyses

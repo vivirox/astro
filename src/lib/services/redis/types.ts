@@ -83,4 +83,9 @@ export interface IRedisService {
     idleConnections: number
     waitingClients: number
   }>
+  /** Get keys matching a pattern */
+  keys: (pattern: string) => Promise<string[]>
 }
+
+// Re-export the interface as a type
+export type { IRedisService as RedisService }

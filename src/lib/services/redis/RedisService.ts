@@ -1,4 +1,4 @@
-import type { RedisServiceConfig } from './types'
+import type { RedisServiceConfig, IRedisService } from './types'
 import { EventEmitter } from 'node:events'
 import { logger } from '@/lib/logger'
 import Redis from 'ioredis'
@@ -7,8 +7,11 @@ import { RedisErrorCode, RedisServiceError } from './types'
 /**
  * Redis service implementation with connection pooling and health checks
  */
-export class RedisService extends EventEmitter {
-  private client: Redis
+export class RedisService extends EventEmitter implements IRedisService {
+  getClient(): Redis | import('.').RedisService {
+    throw new Error('Method not implemented.')
+  }
+  private client: Redis | null = null
   private subscribers: Map<string, Redis> = new Map()
   private healthCheckInterval: NodeJS.Timeout | null = null
   private readonly config: RedisServiceConfig
@@ -22,11 +25,6 @@ export class RedisService extends EventEmitter {
       poolSize: 10,
       ...config,
     }
-    this.client = this.createClient()
-  }
-
-  public getClient(): Redis {
-    return this.client
   }
 
   private validateConfig(config: RedisServiceConfig): void {
@@ -36,29 +34,6 @@ export class RedisService extends EventEmitter {
         'Redis URL is required',
       )
     }
-  }
-
-  private createClient(): Redis {
-    const client = new Redis(this.config.url, {
-      keyPrefix: this.config.keyPrefix,
-      maxRetriesPerRequest: this.config.maxRetries,
-      retryStrategy: (times: number) => {
-        if (times > this.config.maxRetries!) {
-          return null
-        }
-        return this.config.retryTimeout
-      },
-    })
-
-    client.on('error', (error) => {
-      this.emit('error', error)
-    })
-
-    client.on('connect', () => {
-      this.emit('connect')
-    })
-
-    return client
   }
 
   async connect(): Promise<void> {
@@ -71,11 +46,12 @@ export class RedisService extends EventEmitter {
         keyPrefix: this.config.keyPrefix,
         maxRetriesPerRequest: this.config.maxRetries,
         retryStrategy: (times: number) => {
-          if (times > this.config.maxRetries!) {
+          if (times > (this.config.maxRetries || 3)) {
             return null
           }
-          return this.config.retryTimeout
+          return this.config.retryDelay || 100
         },
+        connectTimeout: this.config.connectTimeout,
       })
 
       // Set up event handlers
@@ -116,9 +92,10 @@ export class RedisService extends EventEmitter {
         this.client = null
       }
 
-      await Promise.all([
-        ...Array.from(this.subscribers.values()).map((sub) => sub.quit()),
-      ])
+      await Promise.all(
+        Array.from(this.subscribers.values()).map((sub) => sub.quit()),
+      )
+      this.subscribers.clear()
     } catch (error) {
       throw new RedisServiceError(
         RedisErrorCode.CONNECTION_CLOSED,
@@ -126,20 +103,6 @@ export class RedisService extends EventEmitter {
         error,
       )
     }
-  }
-
-  private startHealthCheck(): void {
-    if (this.healthCheckInterval) {
-      clearInterval(this.healthCheckInterval)
-    }
-
-    this.healthCheckInterval = setInterval(async () => {
-      try {
-        await this.isHealthy()
-      } catch (error) {
-        logger.error('Redis health check failed:', error)
-      }
-    }, this.config.healthCheckInterval)
   }
 
   private async ensureConnection(): Promise<Redis> {
@@ -157,17 +120,27 @@ export class RedisService extends EventEmitter {
     return this.client
   }
 
+  private startHealthCheck(): void {
+    if (this.healthCheckInterval) {
+      clearInterval(this.healthCheckInterval)
+    }
+
+    this.healthCheckInterval = setInterval(async () => {
+      try {
+        await this.isHealthy()
+      } catch (error) {
+        logger.error('Health check failed:', error)
+      }
+    }, this.config.healthCheckInterval || 5000)
+  }
+
   async isHealthy(): Promise<boolean> {
     try {
       const client = await this.ensureConnection()
-      const result = await client.ping()
-      return result === 'PONG'
+      await client.ping()
+      return true
     } catch (error) {
-      throw new RedisServiceError(
-        RedisErrorCode.HEALTH_CHECK_FAILED,
-        'Redis health check failed',
-        error,
-      )
+      return false
     }
   }
 
@@ -184,17 +157,14 @@ export class RedisService extends EventEmitter {
     }
   }
 
-  async set(
-    key: string,
-    value: string,
-    options?: { EX?: number },
-  ): Promise<'OK' | null> {
+  async set(key: string, value: string, ttlMs?: number): Promise<void> {
     try {
       const client = await this.ensureConnection()
-      if (options?.EX) {
-        return await client.set(key, value, 'EX', options.EX)
+      if (ttlMs) {
+        await client.set(key, value, 'PX', ttlMs)
+      } else {
+        await client.set(key, value)
       }
-      return await client.set(key, value)
     } catch (error) {
       throw new RedisServiceError(
         RedisErrorCode.OPERATION_FAILED,
@@ -204,10 +174,10 @@ export class RedisService extends EventEmitter {
     }
   }
 
-  async del(key: string): Promise<number> {
+  async del(key: string): Promise<void> {
     try {
       const client = await this.ensureConnection()
-      return await client.del(key)
+      await client.del(key)
     } catch (error) {
       throw new RedisServiceError(
         RedisErrorCode.OPERATION_FAILED,
@@ -291,6 +261,19 @@ export class RedisService extends EventEmitter {
       throw new RedisServiceError(
         RedisErrorCode.OPERATION_FAILED,
         `Failed to get members of set: ${key}`,
+        error,
+      )
+    }
+  }
+
+  async keys(pattern: string): Promise<string[]> {
+    try {
+      const client = await this.ensureConnection()
+      return await client.keys(pattern)
+    } catch (error) {
+      throw new RedisServiceError(
+        RedisErrorCode.OPERATION_FAILED,
+        `Failed to get keys matching pattern: ${pattern}`,
         error,
       )
     }

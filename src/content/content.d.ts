@@ -1,4 +1,10 @@
-import type { PageSchema, PostSchema, ProjectsSchema, PrsSchema, StreamsSchema } from './schema'
+import type {
+  PageSchema,
+  PostSchema,
+  ProjectsSchema,
+  PrsSchema,
+  StreamsSchema,
+} from './schema'
 
 declare module 'astro:content' {
   interface DataEntryMap {

@@ -10,9 +10,34 @@ import {
 } from '../NotificationService'
 
 // Mock dependencies
-vi.mock('@/lib/services/redis')
-vi.mock('@/config/env.config')
-vi.mock('ws')
+vi.mock('@/lib/services/redis', () => ({
+  redis: {
+    lpush: vi.fn(),
+    rpoplpush: vi.fn(),
+    lrem: vi.fn(),
+    llen: vi.fn(),
+    lrange: vi.fn(),
+    zadd: vi.fn(),
+    zrangebyscore: vi.fn(),
+    zremrangebyscore: vi.fn(),
+    keys: vi.fn(),
+    hget: vi.fn(),
+    hgetall: vi.fn(),
+    hset: vi.fn(),
+    hdel: vi.fn(),
+    del: vi.fn(),
+  },
+}))
+
+vi.mock('@/lib/utils/logger', () => ({
+  logger: {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+  },
+}))
+
 vi.mock('@/lib/services/email/EmailService')
 
 describe('notificationService', () => {
@@ -294,10 +319,10 @@ describe('notificationService', () => {
       const userId = 'test-user'
 
       notificationService.registerClient(userId, ws)
-      expect(notificationService.wsClients.get(userId)).toBe(ws)
+      expect(notificationService.hasClient(userId)).toBe(true)
 
-      ws.emit('close')
-      expect(notificationService.wsClients.get(userId)).toBeUndefined()
+      notificationService.unregisterClient(userId)
+      expect(notificationService.hasClient(userId)).toBe(false)
     })
 
     it('should deliver in-app notifications via WebSocket', async () => {

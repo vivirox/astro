@@ -1,5 +1,5 @@
 import { TextDecoder, TextEncoder } from 'node:util'
-import { vi } from 'vitest'
+import { vi, expect, beforeAll, afterAll, afterEach } from 'vitest'
 import '@testing-library/jest-dom'
 
 // Polyfill TextEncoder/TextDecoder for Node environment
@@ -57,7 +57,45 @@ Object.defineProperty(global, 'crypto', {
   },
 })
 
-// Clean up after each test
+// Make Jest globals available
+declare global {
+  namespace NodeJS {
+    interface Global {
+      expect: typeof expect
+      it: typeof it
+      describe: typeof describe
+      beforeAll: typeof beforeAll
+      beforeEach: typeof beforeEach
+      afterAll: typeof afterAll
+      afterEach: typeof afterEach
+      jest: typeof jest
+    }
+  }
+}
+
+// Mock console methods to avoid noise in tests
+const originalConsole = { ...console }
+
+beforeAll(() => {
+  console.log = vi.fn()
+  console.error = vi.fn()
+  console.warn = vi.fn()
+  console.info = vi.fn()
+})
+
+afterAll(() => {
+  console.log = originalConsole.log
+  console.error = originalConsole.error
+  console.warn = originalConsole.warn
+  console.info = originalConsole.info
+})
+
+// Reset mocks between tests
 afterEach(() => {
   vi.clearAllMocks()
+})
+
+// Add custom matchers if needed
+expect.extend({
+  // Add custom matchers here
 })

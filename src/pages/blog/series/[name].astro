@@ -13,11 +13,11 @@ export async function getStaticPaths() {
 
   // Get all unique tags to use as series
   const allSeries = [
-    ...new Set(allBlogPosts.flatMap(post => post.data.tags || [])),
+    ...new Set(allBlogPosts.flatMap((post) => post.data.tags || [])),
   ]
 
   // Create a path for each series
-  return allSeries.map(name => ({
+  return allSeries.map((name) => ({
     params: { name },
     props: { name },
   }))
@@ -32,7 +32,7 @@ const allBlogPosts = await getCollection('blog', ({ data }) => {
 
 // Sort by date (newest first)
 const posts = allBlogPosts
-  .filter(post => post.data.tags && post.data.tags.includes(name))
+  .filter((post) => post.data.tags && post.data.tags.includes(name))
   .sort((a, b) => {
     return (
       new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
@@ -55,7 +55,7 @@ const description = `Articles in the ${name} series - Explore related guides and
       <!-- Blog Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
-          posts.map(post => (
+          posts.map((post) => (
             <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md">
               <a href={`/blog/${post.slug}`}>
                 <img

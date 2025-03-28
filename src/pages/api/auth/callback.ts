@@ -17,7 +17,12 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
       return new Response(error?.message, { status: 500 })
     }
 
-    const { access_token, refresh_token } = data?.session
+    if (!data?.session) {
+      console.error('No session data received')
+      return new Response('Authentication failed', { status: 401 })
+    }
+
+    const { access_token, refresh_token } = data.session
     const { user } = data
 
     // Set cookies for session managemen

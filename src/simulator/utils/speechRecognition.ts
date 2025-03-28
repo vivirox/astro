@@ -8,19 +8,19 @@
 
 // Define the speech recognition window interface
 interface Window {
-  SpeechRecognition: any;
-  webkitSpeechRecognition: any;
+  SpeechRecognition: any
+  webkitSpeechRecognition: any
 }
 
 /**
  * Configuration options for speech recognition
  */
 export interface SpeechRecognitionConfig {
-  language?: string;
-  continuous?: boolean;
-  interimResults?: boolean;
-  maxAlternatives?: number;
-  grammarList?: string[];
+  language?: string
+  continuous?: boolean
+  interimResults?: boolean
+  maxAlternatives?: number
+  grammarList?: string[]
 }
 
 /**
@@ -31,48 +31,56 @@ export const DEFAULT_SPEECH_CONFIG: SpeechRecognitionConfig = {
   continuous: true,
   interimResults: true,
   maxAlternatives: 1,
-};
+}
 
 /**
  * Creates and configures a speech recognition instance
  */
-export function createSpeechRecognition(config: SpeechRecognitionConfig = DEFAULT_SPEECH_CONFIG): SpeechRecognition | null {
+export function createSpeechRecognition(
+  config: SpeechRecognitionConfig = DEFAULT_SPEECH_CONFIG,
+): SpeechRecognition | null {
   // Check if browser supports the Web Speech API
-  if (typeof window === 'undefined' ||
-      (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window))) {
-    return null;
+  if (
+    typeof window === 'undefined' ||
+    (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window))
+  ) {
+    return null
   }
 
   // Initialize speech recognition with the appropriate constructor
-  const SpeechRecognitionConstructor = (window as any).SpeechRecognition ||
-                                       (window as any).webkitSpeechRecognition;
+  const SpeechRecognitionConstructor =
+    (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
 
-  const recognition = new SpeechRecognitionConstructor();
+  const recognition = new SpeechRecognitionConstructor()
 
   // Apply configuration
-  recognition.lang = config.language || 'en-US';
-  recognition.continuous = config.continuous !== undefined ? config.continuous : true;
-  recognition.interimResults = config.interimResults !== undefined ? config.interimResults : true;
-  recognition.maxAlternatives = config.maxAlternatives || 1;
+  recognition.lang = config.language || 'en-US'
+  recognition.continuous =
+    config.continuous !== undefined ? config.continuous : true
+  recognition.interimResults =
+    config.interimResults !== undefined ? config.interimResults : true
+  recognition.maxAlternatives = config.maxAlternatives || 1
 
   // Add grammar list if specified and supported
   if (config.grammarList && window.SpeechGrammarList) {
-    const speechGrammarList = new window.SpeechGrammarList();
-    config.grammarList.forEach(grammar => {
-      speechGrammarList.addFromString(grammar, 1);
-    });
-    recognition.grammars = speechGrammarList;
+    const speechGrammarList = new window.SpeechGrammarList()
+    config.grammarList.forEach((grammar) => {
+      speechGrammarList.addFromString(grammar, 1)
+    })
+    recognition.grammars = speechGrammarList
   }
 
-  return recognition;
+  return recognition
 }
 
 /**
  * Checks if speech recognition is supported in the current browser
  */
 export function isSpeechRecognitionSupported(): boolean {
-  return typeof window !== 'undefined' &&
-         (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window));
+  return (
+    typeof window !== 'undefined' &&
+    ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)
+  )
 }
 
 /**
@@ -82,42 +90,83 @@ export function isSpeechRecognitionSupported(): boolean {
 export function createTherapeuticGrammar(domain?: string): string {
   // Base therapeutic terms that should be recognized with higher accuracy
   const coreTherapeuticTerms = [
-    'empathy', 'validation', 'reflection', 'mindfulness',
-    'cognitive', 'behavioral', 'trauma', 'anxiety', 'depression',
-    'therapeutic', 'intervention', 'technique', 'emotion',
-    'feeling', 'thought', 'behavior', 'relationship'
-  ];
+    'empathy',
+    'validation',
+    'reflection',
+    'mindfulness',
+    'cognitive',
+    'behavioral',
+    'trauma',
+    'anxiety',
+    'depression',
+    'therapeutic',
+    'intervention',
+    'technique',
+    'emotion',
+    'feeling',
+    'thought',
+    'behavior',
+    'relationship',
+  ]
 
   // Domain-specific terms
   const domainTerms: Record<string, string[]> = {
-    'anxiety': [
-      'worry', 'panic', 'fear', 'avoidance', 'exposure',
-      'anxious', 'nervous', 'overwhelmed', 'catastrophizing'
+    anxiety: [
+      'worry',
+      'panic',
+      'fear',
+      'avoidance',
+      'exposure',
+      'anxious',
+      'nervous',
+      'overwhelmed',
+      'catastrophizing',
     ],
-    'depression': [
-      'sad', 'hopeless', 'motivation', 'energy', 'interest',
-      'pleasure', 'appetite', 'sleep', 'concentration', 'worth'
+    depression: [
+      'sad',
+      'hopeless',
+      'motivation',
+      'energy',
+      'interest',
+      'pleasure',
+      'appetite',
+      'sleep',
+      'concentration',
+      'worth',
     ],
-    'trauma': [
-      'safety', 'trust', 'flashback', 'nightmare', 'trigger',
-      'hypervigilance', 'avoidance', 'emotional numbing'
+    trauma: [
+      'safety',
+      'trust',
+      'flashback',
+      'nightmare',
+      'trigger',
+      'hypervigilance',
+      'avoidance',
+      'emotional numbing',
     ],
-    'relationship': [
-      'conflict', 'communication', 'boundary', 'attachment',
-      'intimacy', 'trust', 'connection', 'pattern', 'cycle'
-    ]
-  };
+    relationship: [
+      'conflict',
+      'communication',
+      'boundary',
+      'attachment',
+      'intimacy',
+      'trust',
+      'connection',
+      'pattern',
+      'cycle',
+    ],
+  }
 
   // Combine core terms with domain-specific terms if available
   const vocabularyTerms = [
     ...coreTherapeuticTerms,
-    ...(domain && domainTerms[domain] ? domainTerms[domain] : [])
-  ];
+    ...(domain && domainTerms[domain] ? domainTerms[domain] : []),
+  ]
 
   // Create a simple JSGF grammar string (not fully compliant but illustrative)
   return `#JSGF V1.0;
 grammar therapeutic;
-public <therapeutic> = ${vocabularyTerms.join(' | ')};`;
+public <therapeutic> = ${vocabularyTerms.join(' | ')};`
 }
 
 /**
@@ -125,34 +174,34 @@ public <therapeutic> = ${vocabularyTerms.join(' | ')};`;
  */
 export function getKeywordPatterns(domain: string): RegExp[] {
   const patterns: Record<string, RegExp[]> = {
-    'anxiety': [
+    anxiety: [
       /\b(worry|anxious|nervous|panic|fear|phobia|stress)\b/i,
       /\b(avoid|escape|safety behavior)\b/i,
-      /\b(breathing|relaxation|grounding|mindfulness)\b/i
+      /\b(breathing|relaxation|grounding|mindfulness)\b/i,
     ],
-    'depression': [
+    depression: [
       /\b(sad|down|blue|hopeless|worthless)\b/i,
       /\b(motivation|energy|interest|pleasure|appetite|sleep)\b/i,
-      /\b(negative thought|thinking|cognitive distortion)\b/i
+      /\b(negative thought|thinking|cognitive distortion)\b/i,
     ],
-    'trauma': [
+    trauma: [
       /\b(trauma|ptsd|flashback|nightmare|trigger)\b/i,
       /\b(safety|trust|power|control|choice)\b/i,
-      /\b(hypervigilance|startle|numb|avoid|detach)\b/i
+      /\b(hypervigilance|startle|numb|avoid|detach)\b/i,
     ],
-    'relationship': [
+    relationship: [
       /\b(communication|conflict|boundary|need|attachment)\b/i,
       /\b(pattern|cycle|dynamic|trigger|reaction)\b/i,
-      /\b(intimacy|trust|connection|disconnect|repair)\b/i
+      /\b(intimacy|trust|connection|disconnect|repair)\b/i,
     ],
-    'general': [
+    general: [
       /\b(feel|feeling|emotion|thought|believe|experience)\b/i,
       /\b(cope|strategy|skill|practice|exercise|technique)\b/i,
-      /\b(support|help|change|improve|better|progress)\b/i
-    ]
-  };
+      /\b(support|help|change|improve|better|progress)\b/i,
+    ],
+  }
 
-  return patterns[domain] || patterns['general'];
+  return patterns[domain] || patterns['general']
 }
 
 /**
@@ -161,46 +210,47 @@ export function getKeywordPatterns(domain: string): RegExp[] {
  */
 export function processRecognizedSpeech(
   text: string,
-  domain: string = 'general'
+  domain: string = 'general',
 ): {
-  processedText: string,
-  detectedKeywords: string[],
+  processedText: string
+  detectedKeywords: string[]
   confidenceScores: Record<string, number>
 } {
   // Basic text cleanup
-  let processedText = text.trim()
+  let processedText = text
+    .trim()
     .replace(/(\s{2,})/g, ' ')
-    .replace(/^\s*um\s+|^\s*uh\s+|^\s*er\s+/gi, '');
+    .replace(/^\s*um\s+|^\s*uh\s+|^\s*er\s+/gi, '')
 
   // Detect domain-specific keywords
-  const patterns = getKeywordPatterns(domain);
-  const detectedKeywords: string[] = [];
+  const patterns = getKeywordPatterns(domain)
+  const detectedKeywords: string[] = []
 
-  patterns.forEach(pattern => {
-    const matches = processedText.match(pattern);
+  patterns.forEach((pattern) => {
+    const matches = processedText.match(pattern)
     if (matches) {
-      matches.forEach(match => {
+      matches.forEach((match) => {
         if (!detectedKeywords.includes(match)) {
-          detectedKeywords.push(match);
+          detectedKeywords.push(match)
         }
-      });
+      })
     }
-  });
+  })
 
   // Very simple confidence scoring for demonstration
   // In a real implementation, this would be more sophisticated
-  const confidenceScores: Record<string, number> = {};
+  const confidenceScores: Record<string, number> = {}
 
-  detectedKeywords.forEach(keyword => {
+  detectedKeywords.forEach((keyword) => {
     // Assign higher confidence to keywords that appear in the domain's patterns
-    confidenceScores[keyword] = 0.7 + Math.random() * 0.3;
-  });
+    confidenceScores[keyword] = 0.7 + Math.random() * 0.3
+  })
 
   return {
     processedText,
     detectedKeywords,
-    confidenceScores
-  };
+    confidenceScores,
+  }
 }
 
 /**
@@ -208,106 +258,110 @@ export function processRecognizedSpeech(
  */
 export function getTherapeuticPrompts(
   detectedKeywords: string[],
-  domain: string = 'general'
+  domain: string = 'general',
 ): string[] {
   // Map of keywords to potential therapeutic follow-up prompts
   const promptMap: Record<string, string[]> = {
     // Anxiety domain
-    'worry': [
+    worry: [
       'Can you tell me more about what worries you?',
-      'On a scale of 0-10, how intense is this worry?'
+      'On a scale of 0-10, how intense is this worry?',
     ],
-    'anxiety': [
+    anxiety: [
       'Where do you feel that anxiety in your body?',
-      'What thoughts come up when you feel anxious?'
+      'What thoughts come up when you feel anxious?',
     ],
-    'panic': [
+    panic: [
       'What happens just before you experience panic?',
-      'What helps you when you\'re feeling panicked?'
+      "What helps you when you're feeling panicked?",
     ],
 
     // Depression domain
-    'sad': [
+    sad: [
       'How long have you been feeling sad?',
-      'What activities still bring you some enjoyment?'
+      'What activities still bring you some enjoyment?',
     ],
-    'motivation': [
+    motivation: [
       'What small step might feel manageable right now?',
-      'What helped your motivation in the past?'
+      'What helped your motivation in the past?',
     ],
-    'worthless': [
+    worthless: [
       'Where did you first learn to view yourself this way?',
-      'What would you say to a friend who felt worthless?'
+      'What would you say to a friend who felt worthless?',
     ],
 
     // General therapeutic terms
-    'feel': [
+    feel: [
       'What other feelings come up for you?',
-      'How intense is that feeling right now?'
+      'How intense is that feeling right now?',
     ],
-    'cope': [
+    cope: [
       'What coping strategies have worked for you before?',
-      'What new coping skills would you like to develop?'
+      'What new coping skills would you like to develop?',
     ],
-    'support': [
+    support: [
       'Who in your life provides you with support?',
-      'What kind of support would be most helpful right now?'
-    ]
-  };
+      'What kind of support would be most helpful right now?',
+    ],
+  }
 
   // Collect relevant prompts based on detected keywords
-  const prompts: string[] = [];
+  const prompts: string[] = []
 
-  detectedKeywords.forEach(keyword => {
-    const keywordLower = keyword.toLowerCase();
+  detectedKeywords.forEach((keyword) => {
+    const keywordLower = keyword.toLowerCase()
     // Try to find exact match first
     if (promptMap[keywordLower]) {
       // Add a random prompt for this keyword
-      const randomIndex = Math.floor(Math.random() * promptMap[keywordLower].length);
-      prompts.push(promptMap[keywordLower][randomIndex]);
+      const randomIndex = Math.floor(
+        Math.random() * promptMap[keywordLower].length,
+      )
+      prompts.push(promptMap[keywordLower][randomIndex])
     } else {
       // Check for partial matches
       for (const key in promptMap) {
         if (keywordLower.includes(key) || key.includes(keywordLower)) {
-          const randomIndex = Math.floor(Math.random() * promptMap[key].length);
-          prompts.push(promptMap[key][randomIndex]);
-          break; // Only add one prompt per keyword
+          const randomIndex = Math.floor(Math.random() * promptMap[key].length)
+          prompts.push(promptMap[key][randomIndex])
+          break // Only add one prompt per keyword
         }
       }
     }
-  });
+  })
 
   // Add domain-specific general prompts if we don't have enough
   if (prompts.length === 0) {
     const generalPrompts: Record<string, string[]> = {
-      'anxiety': [
+      anxiety: [
         'How has anxiety been affecting you lately?',
-        'What situations typically trigger your anxiety?'
+        'What situations typically trigger your anxiety?',
       ],
-      'depression': [
+      depression: [
         'How have your energy levels been this week?',
-        'What activities do you find most difficult right now?'
+        'What activities do you find most difficult right now?',
       ],
-      'trauma': [
+      trauma: [
         'How have you been managing your safety needs?',
-        'What helps you feel more grounded when memories arise?'
+        'What helps you feel more grounded when memories arise?',
       ],
-      'relationship': [
+      relationship: [
         'What patterns do you notice in your interactions?',
-        'How do you typically respond when feeling disconnected?'
+        'How do you typically respond when feeling disconnected?',
       ],
-      'general': [
+      general: [
         'Could you tell me more about that?',
-        'How does that affect you day to day?'
-      ]
-    };
+        'How does that affect you day to day?',
+      ],
+    }
 
-    const domainPrompts = generalPrompts[domain] || generalPrompts['general'];
-    prompts.push(domainPrompts[Math.floor(Math.random() * domainPrompts.length)]);
+    const domainPrompts = generalPrompts[domain] || generalPrompts['general']
+    prompts.push(
+      domainPrompts[Math.floor(Math.random() * domainPrompts.length)],
+    )
   }
 
   // Limit to a maximum of 2 prompts
-  return prompts.slice(0, 2);
+  return prompts.slice(0, 2)
 }
 
 /**
@@ -315,63 +369,63 @@ export function getTherapeuticPrompts(
  * Returns detected techniques and their confidence scores
  */
 export function analyzeTherapeuticTechniques(
-  text: string
+  text: string,
 ): Record<string, number> {
   // Patterns for different therapeutic techniques
   const techniquePatterns: Record<string, RegExp[]> = {
-    'reflection': [
+    reflection: [
       /it sounds like you(?:'re| are) feeling/i,
       /what I(?:'m| am) hearing is/i,
-      /you(?:'re| are) saying that/i
+      /you(?:'re| are) saying that/i,
     ],
-    'validation': [
+    validation: [
       /that makes sense/i,
       /it's understandable/i,
       /many people would feel/i,
-      /i can see why you/i
+      /i can see why you/i,
     ],
-    'open_question': [
+    open_question: [
       /\bwhat\b.+\?/i,
       /\bhow\b.+\?/i,
       /\bwhy\b.+\?/i,
-      /\bcan you tell me\b.+\?/i
+      /\bcan you tell me\b.+\?/i,
     ],
-    'empathy': [
+    empathy: [
       /that must be/i,
       /i can imagine/i,
       /that sounds/i,
       /it's tough/i,
-      /it must feel/i
+      /it must feel/i,
     ],
-    'summarizing': [
+    summarizing: [
       /\bso\b.+\bsummary\b/i,
       /^let me summarize/i,
       /to summarize/i,
-      /\bin summary\b/i
-    ]
-  };
+      /\bin summary\b/i,
+    ],
+  }
 
-  const detectedTechniques: Record<string, number> = {};
+  const detectedTechniques: Record<string, number> = {}
 
   // Check for each technique
   Object.entries(techniquePatterns).forEach(([technique, patterns]) => {
     // Calculate a confidence score based on how many patterns match
-    let matchCount = 0;
+    let matchCount = 0
 
-    patterns.forEach(pattern => {
+    patterns.forEach((pattern) => {
       if (pattern.test(text)) {
-        matchCount++;
+        matchCount++
       }
-    });
+    })
 
     // Only record techniques with at least one match
     if (matchCount > 0) {
       // Calculate confidence score (higher when more patterns match)
-      const baseConfidence = 0.7;
-      const patternBonus = (matchCount / patterns.length) * 0.3;
-      detectedTechniques[technique] = baseConfidence + patternBonus;
+      const baseConfidence = 0.7
+      const patternBonus = (matchCount / patterns.length) * 0.3
+      detectedTechniques[technique] = baseConfidence + patternBonus
     }
-  });
+  })
 
-  return detectedTechniques;
+  return detectedTechniques
 }

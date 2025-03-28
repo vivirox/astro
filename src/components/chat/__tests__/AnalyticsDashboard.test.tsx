@@ -48,9 +48,27 @@ vi.mock('../icons', () => ({
 
 describe('analyticsDashboard', () => {
   const mockMessages = [
-    { role: 'user' as const, content: 'Hello', encrypted: true, verified: true, name: 'User' },
-    { role: 'assistant' as const, content: 'Hi there', encrypted: true, verified: true, name: 'Assistant' },
-    { role: 'user' as const, content: 'How are you?', encrypted: true, verified: true, name: 'User' },
+    {
+      role: 'user' as const,
+      content: 'Hello',
+      encrypted: true,
+      verified: true,
+      name: 'User',
+    },
+    {
+      role: 'assistant' as const,
+      content: 'Hi there',
+      encrypted: true,
+      verified: true,
+      name: 'Assistant',
+    },
+    {
+      role: 'user' as const,
+      content: 'How are you?',
+      encrypted: true,
+      verified: true,
+      name: 'User',
+    },
   ]
 
   const mockAnalyticsData = [
@@ -67,7 +85,7 @@ describe('analyticsDashboard', () => {
       },
       isEncrypted: false,
       timestamp: Date.now(),
-      encryptionMode: EncryptionMode.NONE
+      encryptionMode: EncryptionMode.NONE,
     },
   ]
 
@@ -213,7 +231,13 @@ describe('analyticsDashboard', () => {
 
     const newMessages = [
       ...mockMessages,
-      { role: 'user' as const, content: 'New message', encrypted: true, verified: true, name: 'User' },
+      {
+        role: 'user' as const,
+        content: 'New message',
+        encrypted: true,
+        verified: true,
+        name: 'User',
+      },
     ]
     await act(async () => {
       rerender(<AnalyticsDashboard {...defaultProps} messages={newMessages} />)

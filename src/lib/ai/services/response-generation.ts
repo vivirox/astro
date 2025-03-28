@@ -187,8 +187,7 @@ export class ResponseGenerationService {
         content: systemPrompt,
         name: '',
       })
-    }
-    else {
+    } else {
       messagesWithSystem[0] = {
         role: 'system',
         content: systemPrompt,
@@ -284,8 +283,7 @@ export class ResponseGenerationService {
         content: systemPrompt,
         name: '',
       })
-    }
-    else {
+    } else {
       messagesWithSystem[0] = {
         role: 'system',
         content: systemPrompt,
@@ -314,8 +312,7 @@ export class ResponseGenerationService {
           onChunk(content)
         }
       }
-    }
-    else {
+    } else {
       // Handle non-streaming response
       const nonStreamingResponse = response as AICompletionResponse
       const content = nonStreamingResponse.choices?.[0]?.message?.content ?? ''

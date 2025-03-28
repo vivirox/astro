@@ -2,7 +2,7 @@ import type { Features, Site, Ui } from './types'
 
 export const SITE: Site = {
   name: 'Gradiant Ascent',
-  website: 'https://vivi.rocks',
+  website: 'https://gradiantascent.xyz',
   base: '/',
   title: 'Gradiant Ascent',
   description: 'All your base are belong to us',

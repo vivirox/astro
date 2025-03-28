@@ -4,21 +4,50 @@ import { join } from 'node:path'
 import { chromium, devices, firefox, webkit } from 'playwright'
 import { expect } from 'vitest'
 import { FEATURES } from '../lib/browser/feature-detection'
+import { beforeAll, afterAll } from 'vitest'
+import { spawn } from 'child_process'
+
+let server
+
+beforeAll(async () => {
+  // Start Next.js dev server
+  server = spawn('pnpm', ['dev'], {
+    stdio: 'pipe',
+    env: { ...process.env, PORT: '3000' },
+  })
+
+  // Wait for server to be ready
+  await new Promise((resolve) => {
+    server.stdout.on('data', (data) => {
+      if (data.toString().includes('ready')) {
+        console.log('Next.js dev server started on port 3000')
+        resolve()
+      }
+    })
+  })
+})
+
+afterAll(async () => {
+  if (server) {
+    server.kill()
+    console.log('Next.js dev server closed')
+  }
+})
 
 // Define types for compatibility results
 interface PageResult {
   navigationSuccessful?: boolean
   visualIssues?: string[]
   criticalElements?: Record<string, boolean>
-  interactions?: Record<string, { success: boolean, details?: string }>
+  interactions?: Record<string, { success: boolean; details?: string }>
   jsErrors?: string[]
   viewportAdaption?: {
-    viewport: { width: number, height: number }
+    viewport: { width: number; height: number }
     hasViewportMeta: boolean
     hasHorizontalOverflow: boolean
     tooSmallTapTargets: Element[]
   }
-  touchInputResults?: Record<string, { success: boolean, details?: string }>
+  touchInputResults?: Record<string, { success: boolean; details?: string }>
 }
 
 interface BrowserResult {
@@ -118,8 +147,8 @@ describe('browser Compatibility Tests', () => {
           }, feature.name)
 
           // Store result
-          compatibilityResults.browsers[name].features[feature.name]
-            = isSupported
+          compatibilityResults.browsers[name].features[feature.name] =
+            isSupported
         }
 
         await page.close()
@@ -140,8 +169,7 @@ describe('browser Compatibility Tests', () => {
           try {
             await page.goto(`http://localhost:3000${path}`, { timeout: 10000 })
             navigationSuccessful = true
-          }
-          catch {
+          } catch {
             console.error(`Failed to navigate to ${pageName} on ${name}`)
           }
 
@@ -152,8 +180,8 @@ describe('browser Compatibility Tests', () => {
           if (navigationSuccessful) {
             // Visual defects tes
             const visualIssues = await checkVisualIssues(page)
-            compatibilityResults.browsers[name].pages[pageName].visualIssues
-              = visualIssues
+            compatibilityResults.browsers[name].pages[pageName].visualIssues =
+              visualIssues
 
             // Take screenshot for verification
             const screenshotDir = join(process.cwd(), 'browser-compatibility')
@@ -174,20 +202,20 @@ describe('browser Compatibility Tests', () => {
 
             // Interactive elements tes
             const interactionResults = await testInteractions(page)
-            compatibilityResults.browsers[name].pages[pageName].interactions
-              = interactionResults
+            compatibilityResults.browsers[name].pages[pageName].interactions =
+              interactionResults
 
             // JavaScript errors tes
             const jsErrors = await checkJsErrors(page)
-            compatibilityResults.browsers[name].pages[pageName].jsErrors
-              = jsErrors
+            compatibilityResults.browsers[name].pages[pageName].jsErrors =
+              jsErrors
 
             // Assert results
             expect(visualIssues.length).toBe(0)
             expect(Object.values(criticalElements).every(Boolean)).toBe(true)
             expect(
               Object.values(interactionResults).every(
-                result => result?.success,
+                (result) => result?.success,
               ),
             ).toBe(true)
             expect(jsErrors.length).toBe(0)
@@ -250,8 +278,8 @@ describe('browser Compatibility Tests', () => {
           }, feature.name)
 
           // Store result
-          compatibilityResults.browsers[name].features[feature.name]
-            = isSupported
+          compatibilityResults.browsers[name].features[feature.name] =
+            isSupported
         }
 
         await page.close()
@@ -273,12 +301,12 @@ describe('browser Compatibility Tests', () => {
           try {
             await page.goto(`http://localhost:3000${path}`, { timeout: 10000 })
             navigationSuccessful = true
-          }
-          catch {
+          } catch {
             console.error(`Failed to navigate to ${pageName} on ${name}`)
           }
 
-          mobileResults.pages[pageName].navigationSuccessful = navigationSuccessful
+          mobileResults.pages[pageName].navigationSuccessful =
+            navigationSuccessful
 
           if (navigationSuccessful) {
             // Mobile-specific tests
@@ -290,7 +318,7 @@ describe('browser Compatibility Tests', () => {
 
               // Check for viewport meta tag
               const viewportMeta = document.querySelector(
-                'meta[name=\'viewport\']',
+                "meta[name='viewport']",
               )
               const hasViewportMeta = Boolean(viewportMeta)
 
@@ -302,7 +330,7 @@ describe('browser Compatibility Tests', () => {
               // Check tap target sizes
               const tooSmallTapTargets = Array.from(
                 document.querySelectorAll(
-                  'a, button, [role=\'button\'], input, select, textarea',
+                  "a, button, [role='button'], input, select, textarea",
                 ),
               ).filter((el) => {
                 const rect = el.getBoundingClientRect()
@@ -320,7 +348,10 @@ describe('browser Compatibility Tests', () => {
             mobileResults.pages[pageName].viewportAdaption = viewportAdaption
 
             // Take screenshot for verification
-            const mobileScreenshotDir = join(process.cwd(), 'browser-compatibility')
+            const mobileScreenshotDir = join(
+              process.cwd(),
+              'browser-compatibility',
+            )
             await fs.mkdir(mobileScreenshotDir, { recursive: true })
             await page.screenshot({
               path: join(
@@ -339,16 +370,25 @@ describe('browser Compatibility Tests', () => {
             mobileResults.pages[pageName].jsErrors = jsErrors
 
             // Assert results
-            expect(viewportAdaption.hasViewportMeta, `No viewport meta tag on ${pageName} with ${name}`).toBe(true)
-            expect(viewportAdaption.hasHorizontalOverflow, `Horizontal overflow on ${pageName} with ${name}`).toBe(false)
+            expect(
+              viewportAdaption.hasViewportMeta,
+              `No viewport meta tag on ${pageName} with ${name}`,
+            ).toBe(true)
+            expect(
+              viewportAdaption.hasHorizontalOverflow,
+              `Horizontal overflow on ${pageName} with ${name}`,
+            ).toBe(false)
             expect(viewportAdaption.tooSmallTapTargets.length).toBeLessThan(5)
             expect(
               Object.values(touchInputResults).every(
-                result => result?.success,
+                (result) => result?.success,
               ),
               `Touch interaction issues on ${pageName} with ${name}`,
             ).toBe(true)
-            expect(jsErrors.length, `JavaScript errors found on ${pageName} with ${name}`).toBe(0)
+            expect(
+              jsErrors.length,
+              `JavaScript errors found on ${pageName} with ${name}`,
+            ).toBe(0)
           }
 
           await page.close()
@@ -390,10 +430,10 @@ async function checkVisualIssues(page: Page): Promise<string[]> {
         if (el1 !== el2) {
           const rect2 = el2.getBoundingClientRect()
           const overlap = !(
-            rect1.right < rect2.left
-            || rect1.left > rect2.right
-            || rect1.bottom < rect2.top
-            || rect1.top > rect2.bottom
+            rect1.right < rect2.left ||
+            rect1.left > rect2.right ||
+            rect1.bottom < rect2.top ||
+            rect1.top > rect2.bottom
           )
 
           if (overlap) {
@@ -453,26 +493,26 @@ async function checkVisualIssues(page: Page): Promise<string[]> {
           const color = style.color
 
           if (
-            backgroundColor === 'rgba(0, 0, 0, 0)'
-            || backgroundColor === 'transparent'
+            backgroundColor === 'rgba(0, 0, 0, 0)' ||
+            backgroundColor === 'transparent'
           ) {
             // Skip transparent backgrounds
             return
           }
 
           // Very basic contrast check - this is not a proper WCAG check
-          const isBothLight
-            = (color.includes('255, 255, 255')
-              || color.includes('rgb(2')
-              || color.includes('#f'))
-            && (backgroundColor.includes('255, 255, 255')
-              || backgroundColor.includes('rgb(2')
-              || backgroundColor.includes('#f'))
+          const isBothLight =
+            (color.includes('255, 255, 255') ||
+              color.includes('rgb(2') ||
+              color.includes('#f')) &&
+            (backgroundColor.includes('255, 255, 255') ||
+              backgroundColor.includes('rgb(2') ||
+              backgroundColor.includes('#f'))
 
-          const isBothDark
-            = (color.includes('rgb(0') || color.includes('#0'))
-              && (backgroundColor.includes('rgb(0')
-                || backgroundColor.includes('#0'))
+          const isBothDark =
+            (color.includes('rgb(0') || color.includes('#0')) &&
+            (backgroundColor.includes('rgb(0') ||
+              backgroundColor.includes('#0'))
 
           if (isBothLight || isBothDark) {
             issues.push(
@@ -508,58 +548,55 @@ async function checkCriticalElements(
 
     if (path === '/' || path === '') {
       results.hasHeroSection = Boolean(
-        document.querySelector('[class*="hero"]')
-        || document.querySelector('section:first-of-type'),
+        document.querySelector('[class*="hero"]') ||
+          document.querySelector('section:first-of-type'),
       )
       results.hasCTAButton = Boolean(
-        document.querySelector('a[href*="/app"]')
-        || document.querySelector('button'),
+        document.querySelector('a[href*="/app"]') ||
+          document.querySelector('button'),
       )
-    }
-    else if (path.includes('/app/dashboard')) {
+    } else if (path.includes('/app/dashboard')) {
       results.hasNavigation = Boolean(document.querySelector('nav'))
       results.hasUserInfo = Boolean(
-        document.querySelector('[class*="user"]')
-        || document.querySelector('[class*="profile"]'),
+        document.querySelector('[class*="user"]') ||
+          document.querySelector('[class*="profile"]'),
       )
       results.hasWidgets = Boolean(
-        document.querySelectorAll('[class*="widget"]').length > 0
-        || document.querySelectorAll('section').length > 0,
+        document.querySelectorAll('[class*="widget"]').length > 0 ||
+          document.querySelectorAll('section').length > 0,
       )
-    }
-    else if (path.includes('/app/chat')) {
+    } else if (path.includes('/app/chat')) {
       results.hasChatInput = Boolean(
-        document.querySelector('textarea')
-        || document.querySelector('input[type="text"]'),
+        document.querySelector('textarea') ||
+          document.querySelector('input[type="text"]'),
       )
       results.hasChatMessages = Boolean(
-        document.querySelector('[class*="message"]')
-        || document.querySelector('[class*="chat"]'),
+        document.querySelector('[class*="message"]') ||
+          document.querySelector('[class*="chat"]'),
       )
       results.hasSendButton = Boolean(
-        document.querySelector('button[type="submit"]')
-        || document.querySelector('[class*="send"]'),
+        document.querySelector('button[type="submit"]') ||
+          document.querySelector('[class*="send"]'),
       )
-    }
-    else if (path.includes('/app/settings')) {
+    } else if (path.includes('/app/settings')) {
       results.hasSettingsForm = Boolean(document.querySelector('form'))
       results.hasSettingsSections = Boolean(
-        document.querySelectorAll('section').length > 0
-        || document.querySelectorAll('fieldset').length > 0,
+        document.querySelectorAll('section').length > 0 ||
+          document.querySelectorAll('fieldset').length > 0,
       )
       results.hasSaveButton = Boolean(
-        document.querySelector('button[type="submit"]')
-        || document.querySelector('input[type="submit"]')
-        || document.querySelector('button:not([type])'),
+        document.querySelector('button[type="submit"]') ||
+          document.querySelector('input[type="submit"]') ||
+          document.querySelector('button:not([type])'),
       )
     }
 
     // Mobile-specific element checks
     if (isMobile) {
       results.hasMobileMenu = Boolean(
-        document.querySelector('[class*="hamburger"]')
-        || document.querySelector('[class*="menu-icon"]')
-        || document.querySelector('button[aria-label*="menu"]'),
+        document.querySelector('[class*="hamburger"]') ||
+          document.querySelector('[class*="menu-icon"]') ||
+          document.querySelector('button[aria-label*="menu"]'),
       )
     }
 
@@ -569,8 +606,8 @@ async function checkCriticalElements(
 
 async function testInteractions(
   page: Page,
-): Promise<Record<string, { success: boolean, details?: string }>> {
-  const results: Record<string, { success: boolean, details?: string }> = {}
+): Promise<Record<string, { success: boolean; details?: string }>> {
+  const results: Record<string, { success: boolean; details?: string }> = {}
 
   // Test navigation links
   try {
@@ -579,15 +616,13 @@ async function testInteractions(
       const randomIndex = Math.floor(Math.random() * navLinks.length)
       await navLinks[randomIndex].click({ timeout: 5000 })
       results.navigationClick = { success: true }
-    }
-    else {
+    } else {
       results.navigationClick = {
         success: true,
         details: 'No navigation links found',
       }
     }
-  }
-  catch (err) {
+  } catch (err) {
     results.navigationClick = {
       success: false,
       details: err instanceof Error ? err.message : String(err),
@@ -603,12 +638,10 @@ async function testInteractions(
       const randomIndex = Math.floor(Math.random() * inputs.length)
       await inputs[randomIndex].type('Test input', { timeout: 5000 })
       results.formInput = { success: true }
-    }
-    else {
+    } else {
       results.formInput = { success: true, details: 'No form inputs found' }
     }
-  }
-  catch (err) {
+  } catch (err) {
     results.formInput = {
       success: false,
       details: err instanceof Error ? err.message : String(err),
@@ -624,12 +657,10 @@ async function testInteractions(
       const randomIndex = Math.floor(Math.random() * buttons.length)
       await buttons[randomIndex].click({ timeout: 5000 })
       results.buttonClick = { success: true }
-    }
-    else {
+    } else {
       results.buttonClick = { success: true, details: 'No buttons found' }
     }
-  }
-  catch (err) {
+  } catch (err) {
     results.buttonClick = {
       success: false,
       details: err instanceof Error ? err.message : String(err),
@@ -641,8 +672,8 @@ async function testInteractions(
 
 async function testTouchInteractions(
   page: Page,
-): Promise<Record<string, { success: boolean, details?: string }>> {
-  const results: Record<string, { success: boolean, details?: string }> = {}
+): Promise<Record<string, { success: boolean; details?: string }>> {
+  const results: Record<string, { success: boolean; details?: string }> = {}
 
   // Test tap on touch targets
   try {
@@ -653,12 +684,10 @@ async function testTouchInteractions(
       const randomIndex = Math.floor(Math.random() * touchTargets.length)
       await touchTargets[randomIndex].tap({ timeout: 5000 })
       results.tap = { success: true }
-    }
-    else {
+    } else {
       results.tap = { success: true, details: 'No touch targets found' }
     }
-  }
-  catch (err) {
+  } catch (err) {
     results.tap = {
       success: false,
       details: err instanceof Error ? err.message : String(err),
@@ -671,8 +700,7 @@ async function testTouchInteractions(
       window.scrollBy(0, 100)
     })
     results.scroll = { success: true }
-  }
-  catch (err) {
+  } catch (err) {
     results.scroll = {
       success: false,
       details: err instanceof Error ? err.message : String(err),
@@ -698,15 +726,13 @@ async function testTouchInteractions(
         success: menuVisible,
         details: menuVisible ? undefined : 'Menu did not appear after click',
       }
-    }
-    else {
+    } else {
       results.mobileMenu = {
         success: true,
         details: 'No mobile menu button found',
       }
     }
-  }
-  catch (err) {
+  } catch (err) {
     results.mobileMenu = {
       success: false,
       details: err instanceof Error ? err.message : String(err),
@@ -719,7 +745,7 @@ async function testTouchInteractions(
 async function checkJsErrors(page: Page): Promise<string[]> {
   const errors: string[] = []
 
-  page.on('console', (msg: { type: () => string, text: () => string }) => {
+  page.on('console', (msg: { type: () => string; text: () => string }) => {
     if (msg.type() === 'error') {
       errors.push(msg.text())
     }

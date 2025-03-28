@@ -116,7 +116,7 @@ describe('UserService', () => {
     // Assert
     expect(Database.query).toHaveBeenCalledWith(
       'SELECT * FROM users WHERE id = ?',
-      ['123']
+      ['123'],
     )
     expect(user).toEqual(mockUser)
   })
@@ -389,7 +389,7 @@ test.describe('Authentication', () => {
     // Verify successful login
     await expect(page.locator('[data-testid="user-menu"]')).toBeVisible()
     await expect(page.locator('[data-testid="user-email"]')).toHaveText(
-      'test@example.com'
+      'test@example.com',
     )
   })
 })
@@ -430,7 +430,7 @@ describe('Report Generator Performance', () => {
     () => {
       return generateReport({ size: 'small', items: 100 })
     },
-    { iterations: 100, time: 1000 }
+    { iterations: 100, time: 1000 },
   )
 
   bench(
@@ -438,7 +438,7 @@ describe('Report Generator Performance', () => {
     () => {
       return generateReport({ size: 'medium', items: 1000 })
     },
-    { iterations: 50, time: 2000 }
+    { iterations: 50, time: 2000 },
   )
 
   bench(
@@ -446,7 +446,7 @@ describe('Report Generator Performance', () => {
     () => {
       return generateReport({ size: 'large', items: 10000 })
     },
-    { iterations: 10, time: 5000 }
+    { iterations: 10, time: 5000 },
   )
 })
 ```

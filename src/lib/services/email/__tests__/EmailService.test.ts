@@ -1,51 +1,76 @@
-import { redis } from '@/lib/services/redis'
+import { RedisService } from '@/lib/services/redis'
 import { Resend } from 'resend'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { EmailService } from '../EmailService'
+import type { Mock } from 'vitest'
+
+// Create redis instance
+const redisService = new RedisService({
+  url: process.env.REDIS_URL || 'redis://localhost:6379',
+  keyPrefix: 'test:',
+})
+
+// Get Redis client for direct operations
+const redis = redisService.getClient()
 
 // Mock dependencies
-vi.mock('@/lib/services/redis', () => ({
-  redis: {
-    lpush: vi.fn(),
-    rpoplpush: vi.fn(),
-    lrem: vi.fn(),
-    llen: vi.fn(),
+vi.mock('ioredis', () => {
+  return {
+    default: vi.fn().mockImplementation(() => ({
+      lpush: vi.fn(),
+      rpoplpush: vi.fn(),
+      lrem: vi.fn(),
+      llen: vi.fn(),
+      lrange: vi.fn(),
+      zadd: vi.fn(),
+      zrangebyscore: vi.fn(),
+      zremrangebyscore: vi.fn(),
+      keys: vi.fn(),
+      hget: vi.fn(),
+      hgetall: vi.fn(),
+      hset: vi.fn(),
+      hdel: vi.fn(),
+      del: vi.fn(),
+      on: vi.fn(),
+    })),
+  }
+})
+
+vi.mock('@/lib/utils/logger', () => ({
+  logger: {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
   },
 }))
 
 vi.mock('@/config/env.config')
 vi.mock('@postmark/core')
 
-// Mock Resend
-vi.mock('resend', () => ({
-  Resend: vi.fn().mockImplementation(() => ({
-    emails: {
-      send: vi.fn(),
-    },
-  })),
-}))
+// Mock Resend with proper types
+vi.mock('resend', () => {
+  const mockSend = vi.fn()
+  return {
+    Resend: vi.fn().mockImplementation(() => ({
+      emails: {
+        send: mockSend,
+      },
+    })),
+  }
+})
 
 describe('emailService', () => {
   let emailService: EmailService
-  let mockResend: jest.Mocked<Resend>
-
-  const mockEmail = {
-    to: 'test@example.com',
-    templateAlias: 'welcome',
-    templateModel: { name: 'Test User' },
-  }
-
-  const mockTemplate = {
-    alias: 'welcome',
-    subject: 'Welcome to Gradiant',
-    htmlBody: '<p>Welcome {{name}}!</p>',
-    from: 'noreply@gradiant.dev',
-  }
+  let mockResend: Resend
+  let mockSend: Mock
 
   beforeEach(() => {
     vi.clearAllMocks()
     emailService = new EmailService()
-    mockResend = new Resend('test') as jest.Mocked<Resend>
+    mockResend = new Resend('test')
+    mockSend = vi.fn()
+    ;(mockResend.emails.send as Mock) = mockSend
   })
 
   afterEach(() => {
@@ -63,7 +88,7 @@ describe('emailService', () => {
       await emailService.queueEmail(emailData)
 
       expect(redis.lpush).toHaveBeenCalledTimes(1)
-      const queueItem = JSON.parse((redis.lpush as jest.Mock).mock.calls[0][1])
+      const queueItem = JSON.parse((redis.lpush as Mock).mock.calls[0][1])
       expect(queueItem).toMatchObject({
         data: emailData,
         attempts: 0,
@@ -109,20 +134,20 @@ describe('emailService', () => {
       }
 
       // Mock successful email send
-      mockResend.emails.send.mockResolvedValueOnce({
+      mockSend.mockResolvedValueOnce({
         data: { id: 'test-send-id' },
         error: null,
       })
 
       // Mock queue operations
-      ;(redis.rpoplpush as jest.Mock).mockResolvedValueOnce(
+      ;(redis.rpoplpush as Mock).mockResolvedValueOnce(
         JSON.stringify(queueItem),
       )
-      ;(redis.rpoplpush as jest.Mock).mockResolvedValueOnce(null)
+      ;(redis.rpoplpush as Mock).mockResolvedValueOnce(null)
 
       await emailService.processQueue()
 
-      expect(mockResend.emails.send).toHaveBeenCalledWith({
+      expect(mockSend).toHaveBeenCalledWith({
         from: 'test@example.com',
         to: 'test@example.com',
         subject: 'Welcome Test User',
@@ -161,16 +186,16 @@ describe('emailService', () => {
       }
 
       // Mock failed email send
-      mockResend.emails.send.mockResolvedValueOnce({
+      mockSend.mockResolvedValueOnce({
         data: null,
         error: new Error('Send failed'),
       })
 
       // Mock queue operations
-      ;(redis.rpoplpush as jest.Mock).mockResolvedValueOnce(
+      ;(redis.rpoplpush as Mock).mockResolvedValueOnce(
         JSON.stringify(queueItem),
       )
-      ;(redis.rpoplpush as jest.Mock).mockResolvedValueOnce(null)
+      ;(redis.rpoplpush as Mock).mockResolvedValueOnce(null)
 
       await emailService.processQueue()
 
@@ -211,16 +236,21 @@ describe('emailService', () => {
       }
 
       await expect(
-        emailService.upsertTemplate(invalidTemplate as any),
+        emailService.upsertTemplate(
+          invalidTemplate as {
+            alias: string
+            subject: string
+            htmlBody: string
+            from: string
+          },
+        ),
       ).rejects.toThrow()
     })
   })
 
   describe('getQueueStats', () => {
     it('should return queue statistics', async () => {
-      ;(redis.llen as jest.Mock)
-        .mockResolvedValueOnce(5)
-        .mockResolvedValueOnce(2)
+      ;(redis.llen as Mock).mockResolvedValueOnce(5).mockResolvedValueOnce(2)
 
       const stats = await emailService.getQueueStats()
 

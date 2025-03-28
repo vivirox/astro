@@ -1,8 +1,5 @@
-'use client'
-
-import React from 'react'
 import { Button } from '@/components/ui/button'
-import { MentalHealthAnalysis } from '@/lib/chat'
+import type { MentalHealthAnalysis } from '@/lib/chat'
 
 interface MentalHealthInsightsProps {
   analysis: MentalHealthAnalysis
@@ -31,8 +28,12 @@ export function MentalHealthInsights({
           <h4 className="text-sm font-medium mb-2">Mental Health Indicators</h4>
           <div className="space-y-2">
             {Object.entries(analysis.scores)
-              .filter(([key, value]) => value !== undefined)
-              .sort(([, a], [, b]) => (b as number) - (a as number))
+              .filter(([_key, value]) => value !== undefined)
+              .sort(([_keyA, a], [_keyB, b]) => {
+                const valueA = a ?? 0
+                const valueB = b ?? 0
+                return valueB - valueA
+              })
               .map(([key, value]) => (
                 <div key={key} className="space-y-1">
                   <div className="flex justify-between items-center">

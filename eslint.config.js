@@ -1,4 +1,3 @@
-import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import tsPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
@@ -7,40 +6,66 @@ import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import globals from 'globals'
 
-const compat = new FlatCompat()
-
 export default [
   {
     ignores: [
       'dist/**',
-      '.astro/**',
       'node_modules/**',
-      '.next/**',
-      '*.generated.*',
-      '.specstory/**',
+      'public/**',
       'coverage/**',
-      '.trunk/**',
+      'playwright-report/**',
+      'test-results/**',
+      'storybook-static/**',
+      'docs/**',
+      'tmp/**',
+      '.vercel/**',
+      '.astro/**',
+      '.vscode/**',
+      '.git/**',
+      '.github/**',
+      '.husky/**',
+      '.next/**',
+      '.swc/**',
+      '.turbo/**',
+      '.yarn/**',
+      'out/**',
+      'build/**',
+      'coverage/**',
+      'dist/**',
+      'node_modules/**',
+      'public/**',
+      'test-results/**',
+      'playwright-report/**',
+      'storybook-static/**',
+      'docs/**',
+      'tmp/**',
+      'scripts/**/*.js',
+      'scripts/**/*.cjs',
     ],
   },
-  // Base JS/TS configuration
+  // Base configuration for all files
   {
-    files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
+    files: ['**/*.{js,jsx,ts,tsx,mjs,cjs}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.es2021,
+        ...globals.node,
+      },
+    },
+  },
+  // TypeScript-specific configuration
+  {
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
       parser: tsParser,
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
-        ecmaVersion: 'latest',
-        sourceType: 'module',
         project: './tsconfig.json',
-      },
-      globals: {
-        ...globals.browser,
-        ...globals.es2021,
-        ...globals.node,
       },
     },
     plugins: {
@@ -50,17 +75,27 @@ export default [
     },
     rules: {
       ...js.configs.recommended.rules,
-      ...tsPlugin.configs['recommended'].rules,
+      ...tsPlugin.configs.recommended.rules,
       ...reactPlugin.configs.recommended.rules,
       ...reactHooksPlugin.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
+      'react/jsx-uses-react': 'off',
+      'react/jsx-uses-vars': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
-        { argsIgnorePattern: '^_' },
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports' },
+      ],
     },
     settings: {
       react: {

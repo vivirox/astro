@@ -1,7 +1,8 @@
 import type { NotificationService } from './NotificationService'
 import logger from '@/lib/utils/logger'
-import { WebSocketServer as WSServer, WebSocket } from 'ws'
-import { IncomingMessage } from 'http'
+import type { WebSocket } from 'ws'
+import { WebSocketServer as WSServer } from 'ws'
+import type { IncomingMessage } from 'http'
 import { z } from 'zod'
 
 // Define message types using Zod for runtime validation
@@ -112,9 +113,10 @@ export class WebSocketServer {
     // This is a placeholder that should be replaced with actual token verification
     try {
       // Replace this with your actual token verification logic
+      console.log(`Verifying token: ${token}`)
       const userId = 'placeholder-user-id' // This should come from your token verification
       return userId
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Invalid token')
     }
   }

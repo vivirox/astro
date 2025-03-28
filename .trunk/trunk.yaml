@@ -18,10 +18,10 @@ runtimes:
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
   enabled:
-    - actionlint@1.7.7
     - bandit@1.8.3
     - black@25.1.0
     - checkov@3.2.392
+    - git-diff-check
     - gitleaks@8.24.2
     - hadolint@2.12.1-beta
     - isort@6.0.1
@@ -34,22 +34,28 @@ lint:
     - svgo@3.3.2
     - taplo@0.9.3
     - trufflehog@3.88.18
-    - yamllint@1.37.0
+    - actionlint@1.7.7
     - eslint@9.23.0
     - prettier@3.5.3
-    - git-diff-check
+    - yamllint@1.37.0
   ignore:
     - linters: [ALL]
       paths:
-        - .next/**
-        - dist/**
+        - .env.local
         - node_modules/**
+        - dist/**
+        - .next/**
+        - .astro/**
         - '*.generated.*'
         - .specstory/**
-    - linters: [eslint]
+        - scripts/**/*.js
+        - scripts/**/*.cjs
+    - linters: [actionlint]
       paths:
-        - .eslintrc.*
-        - eslint.config.*
+        - .github/workflows/*.yml
+    - linters: [yamllint]
+      paths:
+        - .github/workflows/*.yml
   definitions:
     - name: prettier
       files: [typescript, javascript, json, yaml]
@@ -63,6 +69,13 @@ lint:
         - name: lint
           output: rewrite
           run: eslint --fix ${target}
+    - name: yamllint
+      files: [yaml]
+      commands:
+        - name: lint
+          output: regex
+          parse_regex: '^(?P<path>.*):(?P<line>\d+):(?P<col>\d+): \[(?P<severity>.*)\] (?P<message>.*)$'
+          run: yamllint -c .trunk/configs/.yamllint.yaml -f parsable ${target}
 
 actions:
   enabled:

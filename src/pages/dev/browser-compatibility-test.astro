@@ -45,43 +45,46 @@ const TEST_SECTIONS: TestSections = {
       Firefox, Safari, and Edge to verify compatibility.
     </p>
 
-    {Object.entries(TEST_SECTIONS).map(([key, section]) => (
-      <section class="test-section" aria-labelledby={`${key}-title`}>
-        <h2 id={`${key}-title`}>{section.title}</h2>
-        <div class="component-test">
-          {section.instructions && (
-            <>
-              <h3>Test Instructions</h3>
-              <ul>
-                {section.instructions.map((instruction) => (
-                  <li>{instruction}</li>
-                ))}
-              </ul>
-            </>
-          )}
-          <div class="component-container">
-            {section.component && <section.component client:load />}
-            {key === 'loadingIndicator' && (
-              <div class="loading-indicators-test">
-                {Object.entries(LOADING_SIZES).map(([size, dimensions]) => (
-                  <div>
-                    <h4>{size}</h4>
-                    <div class="loading-indicator" aria-live="polite">
-                      <div
-                        class="loading-skeleton"
-                        style={`width: ${dimensions.width}px; height: ${dimensions.height}px;`}
-                      >
-                      </div>
-                      <p class="loading-message">Loading {size.toLowerCase()}...</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+    {
+      Object.entries(TEST_SECTIONS).map(([key, section]) => (
+        <section class="test-section" aria-labelledby={`${key}-title`}>
+          <h2 id={`${key}-title`}>{section.title}</h2>
+          <div class="component-test">
+            {section.instructions && (
+              <>
+                <h3>Test Instructions</h3>
+                <ul>
+                  {section.instructions.map((instruction) => (
+                    <li>{instruction}</li>
+                  ))}
+                </ul>
+              </>
             )}
+            <div class="component-container">
+              {section.component && <section.component client:load />}
+              {key === 'loadingIndicator' && (
+                <div class="loading-indicators-test">
+                  {Object.entries(LOADING_SIZES).map(([size, dimensions]) => (
+                    <div>
+                      <h4>{size}</h4>
+                      <div class="loading-indicator" aria-live="polite">
+                        <div
+                          class="loading-skeleton"
+                          style={`width: ${dimensions.width}px; height: ${dimensions.height}px;`}
+                        />
+                        <p class="loading-message">
+                          Loading {size.toLowerCase()}...
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
-    ))}
+        </section>
+      ))
+    }
 
     <section class="test-section" aria-labelledby="compatibility-log-title">
       <h2 id="compatibility-log-title">Compatibility Issues Log</h2>
@@ -95,9 +98,11 @@ const TEST_SECTIONS: TestSections = {
             <label for="component">Component</label>
             <select id="component" name="component" required>
               <option value="">Select a component</option>
-              {Object.entries(TEST_SECTIONS).map(([key, section]) => (
-                <option value={key}>{section.title}</option>
-              ))}
+              {
+                Object.entries(TEST_SECTIONS).map(([key, section]) => (
+                  <option value={key}>{section.title}</option>
+                ))
+              }
             </select>
           </div>
           <div class="form-group">
@@ -108,7 +113,8 @@ const TEST_SECTIONS: TestSections = {
             <label for="severity">Severity</label>
             <select id="severity" name="severity" required>
               <option value="">Select severity</option>
-              <option value="critical">Critical - Blocking functionality</option>
+              <option value="critical">Critical - Blocking functionality</option
+              >
               <option value="major">Major - Significant impact</option>
               <option value="minor">Minor - Cosmetic issues</option>
             </select>
@@ -146,7 +152,10 @@ const TEST_SECTIONS: TestSections = {
       color: var(--text-primary);
     }
 
-    h1, h2, h3, h4 {
+    h1,
+    h2,
+    h3,
+    h4 {
       color: var(--text-primary);
       margin-bottom: 1rem;
     }
@@ -339,7 +348,11 @@ const TEST_SECTIONS: TestSections = {
 </ChatLayout>
 
 <script>
-  import { addIssue, removeIssue, displayIssues } from '../../utils/compatibility-testing'
+  import {
+    addIssue,
+    removeIssue,
+    displayIssues,
+  } from '../../utils/compatibility-testing'
   import type { CompatibilityIssue } from '../../types/testing'
 
   // Initialize the issues array in localStorage if it doesn't exist
@@ -359,7 +372,7 @@ const TEST_SECTIONS: TestSections = {
       component: formData.get('component') as string,
       description: formData.get('issue') as string,
       severity: formData.get('severity') as 'critical' | 'major' | 'minor',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }
 
     addIssue(issue)

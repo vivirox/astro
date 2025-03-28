@@ -44,13 +44,12 @@ export const GET: APIRoute = async ({ cookies }) => {
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (error) {
-    logger.error('Dashboard API error:', { error: error instanceof Error ? error.message : String(error) })
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    )
+    logger.error('Dashboard API error:', {
+      error: error instanceof Error ? error.message : String(error),
+    })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }

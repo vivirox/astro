@@ -114,8 +114,7 @@ export async function getAIUsageStats(
     return Object.values(statsByDate)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, limit)
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error retrieving AI usage statistics:', error)
 
     // Log the error
@@ -140,15 +139,15 @@ export async function getAIUsageStats(
 export async function getModelUsageBreakdown(
   options: AIUsageStatsOptions,
 ): Promise<
-    Record<
-      string,
-      {
-        requests: number
-        tokens: number
-        cost: number
-      }
-    >
-  > {
+  Record<
+    string,
+    {
+      requests: number
+      tokens: number
+      cost: number
+    }
+  >
+> {
   const stats = await getAIUsageStats(options)
 
   // Aggregate model usage across all dates
@@ -195,9 +194,9 @@ export async function getUsageTrends(options: AIUsageStatsOptions): Promise<{
   stats.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   return {
-    dates: stats.map(stat => stat.date),
-    requests: stats.map(stat => stat.totalRequests),
-    tokens: stats.map(stat => stat.totalTokens),
-    costs: stats.map(stat => stat.totalCost),
+    dates: stats.map((stat) => stat.date),
+    requests: stats.map((stat) => stat.totalRequests),
+    tokens: stats.map((stat) => stat.totalTokens),
+    costs: stats.map((stat) => stat.totalCost),
   }
 }

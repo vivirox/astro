@@ -1,15 +1,22 @@
 ---
-title: "Redis Error Handling"
-description: "Guide for handling Redis errors and exceptions"
+title: 'Redis Error Handling'
+description: 'Guide for handling Redis errors and exceptions'
 pubDate: 2025-03-25
 share: true
 toc: true
 lastModDate: 2025-03-25
-tags: ["redis", "error-handling", "exceptions"]
-author: "Gradiant Team"
+tags: ['redis', 'error-handling', 'exceptions']
+author: 'Gradiant Team'
 ---
 
-import { Steps, Tabs, TabItem, Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+import {
+  Steps,
+  Tabs,
+  TabItem,
+  Card,
+  CardGrid,
+  LinkCard,
+} from '@astrojs/starlight/components'
 
 # Redis Error Handling Guide
 
@@ -28,7 +35,7 @@ class RedisServiceError extends Error {
   constructor(
     public code: RedisErrorCode,
     message: string,
-    public cause?: unknown
+    public cause?: unknown,
   ) {
     super(message)
     this.name = 'RedisServiceError'
@@ -69,7 +76,7 @@ try {
         break
       default:
         logger.error('Unexpected Redis error:', error)
-        // Handle unknown error
+      // Handle unknown error
     }
   } else {
     logger.error('Unknown error:', error)
@@ -84,7 +91,7 @@ try {
 async function withRetry<T>(
   operation: () => Promise<T>,
   maxRetries = 3,
-  delay = 1000
+  delay = 1000,
 ): Promise<T> {
   let lastError: Error | null = null
 
@@ -100,7 +107,9 @@ async function withRetry<T>(
             // Retryable errors
             if (attempt < maxRetries) {
               logger.warn(`Retry attempt ${attempt} of ${maxRetries}`)
-              await new Promise(resolve => setTimeout(resolve, delay * attempt))
+              await new Promise((resolve) =>
+                setTimeout(resolve, delay * attempt),
+              )
               continue
             }
             break
@@ -133,7 +142,7 @@ class RedisCircuitBreaker {
     if (this.isOpen()) {
       throw new RedisServiceError(
         RedisErrorCode.CIRCUIT_OPEN,
-        'Circuit breaker is open'
+        'Circuit breaker is open',
       )
     }
 
@@ -180,13 +189,13 @@ const value = await circuitBreaker.execute(() => redis.get('key'))
 class RedisFallback<T> {
   constructor(
     private readonly redis: RedisService,
-    private readonly fallbackStore: Map<string, T> = new Map()
+    private readonly fallbackStore: Map<string, T> = new Map(),
   ) {}
 
   async getWithFallback(
     key: string,
     fallbackValue: T,
-    ttlMs?: number
+    ttlMs?: number,
   ): Promise<T> {
     try {
       const value = await this.redis.get(key)
@@ -201,7 +210,7 @@ class RedisFallback<T> {
     if (!this.fallbackStore.has(key)) {
       this.fallbackStore.set(key, fallbackValue)
       // Attempt to update Redis in background
-      this.updateRedis(key, fallbackValue, ttlMs).catch(error => {
+      this.updateRedis(key, fallbackValue, ttlMs).catch((error) => {
         logger.error('Failed to update Redis with fallback value:', error)
       })
     }
@@ -212,7 +221,7 @@ class RedisFallback<T> {
   private async updateRedis(
     key: string,
     value: T,
-    ttlMs?: number
+    ttlMs?: number,
   ): Promise<void> {
     try {
       await this.redis.set(key, JSON.stringify(value), ttlMs)
@@ -263,7 +272,10 @@ class RedisReconnectionManager {
         this.clearReconnectTimeout()
       } catch (error) {
         attempt++
-        const delay = Math.min(1000 * Math.pow(2, attempt), this.maxReconnectDelay)
+        const delay = Math.min(
+          1000 * Math.pow(2, attempt),
+          this.maxReconnectDelay,
+        )
         this.reconnectTimeout = setTimeout(reconnect, delay)
       }
     }
@@ -297,7 +309,7 @@ class RedisPoolManager {
       minPoolSize: 5,
       maxPoolSize: 50,
       checkInterval: 30000,
-    }
+    },
   ) {
     this.minPoolSize = options.minPoolSize
     this.maxPoolSize = options.maxPoolSize
@@ -350,7 +362,7 @@ class RedisErrorMetrics {
 
   constructor(
     private readonly redis: RedisService,
-    options = { flushInterval: 60000 }
+    options = { flushInterval: 60000 },
   ) {
     this.flushInterval = options.flushInterval
     this.startMetricsCollection()
@@ -383,7 +395,7 @@ class RedisErrorMetrics {
       await this.redis.set(
         `metrics:errors:${timestamp}`,
         JSON.stringify(metrics),
-        86400000 // 24 hours TTL
+        86400000, // 24 hours TTL
       )
     }
 
@@ -401,7 +413,7 @@ const errorMetrics = new RedisErrorMetrics(redis)
 class RedisLogger {
   constructor(
     private readonly service: string,
-    private readonly environment: string
+    private readonly environment: string,
   ) {}
 
   logError(error: RedisServiceError, context: Record<string, unknown>): void {
@@ -434,21 +446,25 @@ const redisLogger = new RedisLogger('redis', process.env.NODE_ENV)
 ## Best Practices
 
 1. Error Classification
+
    - Categorize errors by severity and type
    - Implement appropriate handling strategies
    - Use custom error codes for better tracking
 
 2. Retry Strategies
+
    - Implement exponential backoff
    - Set maximum retry attempts
    - Consider circuit breaker pattern
 
 3. Monitoring and Alerting
+
    - Track error rates and patterns
    - Set up alerts for critical errors
    - Monitor connection pool health
 
 4. Recovery Procedures
+
    - Implement automatic reconnection
    - Manage connection pools effectively
    - Use fallback mechanisms
@@ -494,7 +510,7 @@ describe('Redis Error Handling', () => {
         await breaker.execute(() => {
           throw new RedisServiceError(
             RedisErrorCode.OPERATION_FAILED,
-            'Test failure'
+            'Test failure',
           )
         })
       } catch (error) {
@@ -504,7 +520,7 @@ describe('Redis Error Handling', () => {
 
     // Circuit should be open
     await expect(
-      breaker.execute(() => Promise.resolve('test'))
+      breaker.execute(() => Promise.resolve('test')),
     ).rejects.toThrow('Circuit breaker is open')
   })
 
@@ -513,7 +529,7 @@ describe('Redis Error Handling', () => {
     const fallback = new RedisFallback<string>(redis)
     const result = await fallback.getWithFallback(
       'missing-key',
-      'default-value'
+      'default-value',
     )
     expect(result).toBe('default-value')
   })

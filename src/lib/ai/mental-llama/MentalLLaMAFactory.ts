@@ -1,6 +1,6 @@
-import { FHEService, fheService } from '../../fhe'
+import { fheService } from '@lib/fhe'
 import { EmotionLlamaProvider } from '../providers/EmotionLlamaProvider'
-import { createLogger } from '../../../utils/logger'
+import { createLogger } from '@utils/logger'
 import { MentalLLaMAAdapter } from './MentalLLaMAAdapter'
 import { MentalLLaMAPythonBridge } from './PythonBridge'
 

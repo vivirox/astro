@@ -9,7 +9,7 @@ export async function GET() {
   const filteredBlogitems = blog.filter((item) => !item.data.draft)
 
   const sortedBlogItems = filteredBlogitems.sort(
-    (a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate)
+    (a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate),
   )
 
   return rss({

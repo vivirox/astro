@@ -269,6 +269,13 @@ export class AnalyticsService {
   }
 
   /**
+   * Check if a client is registered
+   */
+  hasClient(userId: string): boolean {
+    return this.wsClients.has(userId)
+  }
+
+  /**
    * Clean up old events and metrics
    */
   async cleanup(): Promise<void> {

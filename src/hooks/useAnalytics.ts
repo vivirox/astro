@@ -18,7 +18,7 @@ export function useAnalytics() {
         priority: data.priority || EventPriority.NORMAL,
         properties: data.properties,
         timestamp: Date.now(),
-        metadata: {}
+        metadata: {},
       })
     } catch (error) {
       console.error('Failed to track analytics event:', error)

@@ -79,7 +79,7 @@ test.describe('Breach Notification System E2E', () => {
       if (request.method() === 'POST') {
         emailRequests.push({
           url: request.url(),
-          postData: JSON.parse(await request.postData() || '{}'),
+          postData: JSON.parse((await request.postData()) || '{}'),
         })
         await route.fulfill({ status: 200 })
       }
@@ -134,13 +134,15 @@ test.describe('Breach Notification System E2E', () => {
 
     // Check HHS notification
     const hhsEmail = emailRequests.find(
-      (request) => request.postData.metadata.type === 'hipaa_breach_notification',
+      (request) =>
+        request.postData.metadata.type === 'hipaa_breach_notification',
     )
     expect(hhsEmail).toBeTruthy()
 
     // Check stakeholder notification
     const stakeholderEmail = emailRequests.find(
-      (request) => request.postData.metadata.type === 'internal_breach_notification',
+      (request) =>
+        request.postData.metadata.type === 'internal_breach_notification',
     )
     expect(stakeholderEmail).toBeTruthy()
   })
@@ -165,7 +167,7 @@ test.describe('Breach Notification System E2E', () => {
       if (request.method() === 'POST') {
         emailRequests.push({
           url: request.url(),
-          postData: JSON.parse(await request.postData() || '{}'),
+          postData: JSON.parse((await request.postData()) || '{}'),
         })
         await route.fulfill({ status: 200 })
       }
@@ -191,11 +193,14 @@ test.describe('Breach Notification System E2E', () => {
 
     // Check escalation notifications
     // Should have sent priority notifications
-    expect(emailRequests.every((request) => request.postData.priority === 'urgent')).toBe(true)
+    expect(
+      emailRequests.every((request) => request.postData.priority === 'urgent'),
+    ).toBe(true)
 
     // Verify HHS notification for large-scale breach
     const hhsEmail = emailRequests.find(
-      (request) => request.postData.metadata.type === 'hipaa_breach_notification',
+      (request) =>
+        request.postData.metadata.type === 'hipaa_breach_notification',
     )
     expect(hhsEmail).toBeTruthy()
     expect(hhsEmail?.postData.breach.affectedIndividuals).toBe(600)
@@ -265,7 +270,7 @@ test.describe('Breach Notification System E2E', () => {
       if (request.method() === 'POST') {
         emailRequests.push({
           url: request.url(),
-          postData: JSON.parse(await request.postData() || '{}'),
+          postData: JSON.parse((await request.postData()) || '{}'),
         })
         await route.fulfill({ status: 200 })
       }
@@ -297,7 +302,7 @@ test.describe('Breach Notification System E2E', () => {
     const userNotifications = emailRequests.filter(
       (req) =>
         req.postData.to === 'patient1@example.com' &&
-        req.postData.metadata.breachId === breachId
+        req.postData.metadata.breachId === breachId,
     )
 
     expect(userNotifications).toHaveLength(1)

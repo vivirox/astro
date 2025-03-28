@@ -660,7 +660,7 @@ Let me fix these issues one by one:
 +       } catch (sendError) {
 +         logger.error('Failed to send error message to client', {
 +           error: sendError instanceof Error ? sendError.message : String(sendError),
-          })
++         })
 +       }
 +     }
     }
@@ -830,13 +830,12 @@ Based on the clean code principles from the provided rules and the current code,
         return
       }
   
--         // Register client with notification service
+      // Register client with notification service
       this.notificationService.registerClient(userId, ws)
 - 
       logger.info('WebSocket client connected', { userId })
   
--         // Handle client messages
--         ws.on('message', (data: string) => {
+      // Handle client messages
 +     ws.on('message', (data: string) => this.handleClientMessage(userId, data, ws))
 +     ws.on('close', () => this.handleClientDisconnection(userId))
 +     ws.on('error', (error) => this.handleClientError(userId, error))
@@ -848,12 +847,8 @@ Based on the clean code principles from the provided rules and the current code,
 +    * Handle client message
 +    */
 +   private handleClientMessage(userId: string, data: string, ws: WebSocket): void {
-      try {
-        const message = JSON.parse(data)
--             this.handleMessage(userId, message, ws)
-+       const validatedMessage = ClientMessageSchema.parse(message)
-+       this.processMessage(userId, validatedMessage, ws)
-      } catch (error) {
++     try {
++       const message: unknown = JSON.parse(data)
 -             logger.error('Failed to parse WebSocket message', {
 +       logger.error('Invalid message received', {
           userId,
@@ -861,10 +856,6 @@ Based on the clean code principles from the provided rules and the current code,
         })
 +       this.sendError(ws, 'Invalid message format')
       }
--         })
-- 
--         // Handle client disconnection
--         ws.on('close', () => {
 +   }
 + 
 +   /**
@@ -957,6 +948,8 @@ Based on the clean code principles from the provided rules and the current code,
 -         ws.close(1008, 'Unauthorized - Token verification failed')
 +       error: error.message,
       })
+    }
+      logger.error('WebSocket server error', error)
     }
       logger.error('WebSocket server error', error)
   

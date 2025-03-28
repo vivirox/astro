@@ -241,7 +241,7 @@ async function getCachedResponse(key: string): Promise<AICompletion | null> {
 async function cacheResponse(
   key: string,
   response: AICompletion,
-  ttl: number
+  ttl: number,
 ): Promise<void> {
   await redisClient.set(key, JSON.stringify(response), { EX: ttl })
 }
@@ -319,7 +319,7 @@ async function trackPerformance(
     prompt_tokens: number
     completion_tokens: number
     total_tokens: number
-  }
+  },
 ): Promise<void> {
   const duration = Date.now() - startTime
 
@@ -358,7 +358,7 @@ async function trackUsage(
     prompt_tokens: number
     completion_tokens: number
     total_tokens: number
-  }
+  },
 ): Promise<void> {
   await db.insert('ai_usage', {
     user_id: userId,
@@ -391,7 +391,7 @@ async function logAuditEvent(
   userId: string,
   action: string,
   resource: string,
-  details: Record<string, any>
+  details: Record<string, any>,
 ): Promise<void> {
   await AuditLogger.log({
     user_id: userId,
@@ -439,7 +439,7 @@ const aiRateLimiter = rateLimit({
       {
         status: 429,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
   },
 })
@@ -506,7 +506,7 @@ if (!AccessControl.can(user, 'use', 'ai:sentiment-analysis')) {
     {
       status: 403,
       headers: { 'Content-Type': 'application/json' },
-    }
+    },
   )
 }
 ```
@@ -579,12 +579,12 @@ import { createAIService, AIError, AIErrorCodes } from '../lib/ai'
 
 async function createCompletionWithFailover(
   messages: AIMessage[],
-  options?: AIServiceOptions
+  options?: AIServiceOptions,
 ): Promise<AICompletion> {
   const primaryProvider =
     options?.provider || process.env.DEFAULT_AI_PROVIDER || 'openai'
   const fallbackProviders = ['anthropic', 'openai'].filter(
-    (p) => p !== primaryProvider
+    (p) => p !== primaryProvider,
   )
 
   try {

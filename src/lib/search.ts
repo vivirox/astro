@@ -1,5 +1,13 @@
-import { Document } from 'flexsearch'
 import type { IndexOptions, SearchOptions } from 'flexsearch'
+import type { Document as FlexDocument } from 'flexsearch'
+
+let Document: typeof FlexDocument
+
+// Only import Document on the client side
+if (typeof window !== 'undefined') {
+  const flexsearch = await import('flexsearch')
+  Document = flexsearch.Document
+}
 
 // Define search document structure
 export interface SearchDocument {

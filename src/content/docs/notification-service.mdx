@@ -1,21 +1,23 @@
 ---
-title: "Notification Service"
+title: 'Notification Service'
 description: "Documentation for Gradiant's notification system and real-time alerts"
-pubDate: 2025-03-24
+pubDate: 2025-03-27
 share: true
 toc: true
-lastModDate: 2025-03-25
-tags: ["notifications", "services", "real-time"]
-author: "Gradiant Team"
+lastModDate: 2025-03-27
+tags: ['notifications', 'services', 'real-time']
+author: 'Gradiant Team'
 ---
 
-# Notification Service Documentation
+## Notification Service
 
-## Overview
+### Overview
 
-The Notification Service provides a robust, real-time notification system that supports multiple delivery channels and ensures reliable message delivery. Built with TypeScript and WebSocket technology, it offers a scalable solution for handling notifications across the application.
+The Notification Service provides a robust, real-time notification system that supports multiple
+delivery channels and ensures reliable message delivery. Built with TypeScript and WebSocket technology,
+it offers a scalable solution for handling notifications across the application.
 
-## Features
+### Features
 
 - Multi-channel delivery (in-app, email, push notifications)
 - Real-time notifications via WebSocket
@@ -26,7 +28,7 @@ The Notification Service provides a robust, real-time notification system that s
 - Comprehensive error handling
 - HIPAA-compliant data handling
 
-## Usage
+### Usage
 
 ### Initializing the Service
 
@@ -72,10 +74,12 @@ const wss = new WebSocketServer({ port: 8082 }, notificationService)
 
 // In your client code:
 const ws = new WebSocket('ws://localhost:8082')
-ws.send(JSON.stringify({
-  type: 'authenticate',
-  token: 'user-auth-token',
-}))
+ws.send(
+  JSON.stringify({
+    type: 'authenticate',
+    token: 'user-auth-token',
+  }),
+)
 ```
 
 ### Marking Notifications as Read
@@ -91,13 +95,17 @@ await notificationService.markAsRead('user-123', 'notification-456')
 const notifications = await notificationService.getNotifications('user-123')
 
 // With pagination
-const paginatedNotifications = await notificationService.getNotifications('user-123', 10, 0)
+const paginatedNotifications = await notificationService.getNotifications(
+  'user-123',
+  10,
+  0,
+)
 
 // Get unread count
 const unreadCount = await notificationService.getUnreadCount('user-123')
 ```
 
-## Configuration
+### Configuration
 
 ### Environment Variables
 
@@ -142,16 +150,18 @@ type ServerResponse = {
 }
 ```
 
-## Error Handling
+### Error Handling
 
 The service implements comprehensive error handling:
 
 1. **Queue Processing Errors**
+
    - Failed notifications are marked with error status
    - Automatic retry with exponential backoff
    - Error logging with stack traces
 
 2. **WebSocket Errors**
+
    - Connection error handling
    - Authentication failure handling
    - Message parsing errors
@@ -162,14 +172,16 @@ The service implements comprehensive error handling:
    - Missing template handling
    - Template rendering errors
 
-## Security
+### Security
 
 1. **Authentication**
+
    - WebSocket connections require valid authentication token
    - Token verification on every message
    - Automatic client disconnection on auth failure
 
 2. **Data Protection**
+
    - HIPAA-compliant data handling
    - Encrypted WebSocket connections
    - PII detection and redaction in notifications
@@ -179,15 +191,17 @@ The service implements comprehensive error handling:
    - Message rate limiting per client
    - Queue processing rate control
 
-## Best Practices
+### Best Practices
 
 1. **Template Management**
+
    - Register templates at application startup
    - Use semantic template IDs
    - Include all required placeholders in templates
    - Validate template data before queuing
 
 2. **Queue Management**
+
    - Monitor queue length
    - Set appropriate processing intervals
    - Implement proper error handling
@@ -199,7 +213,7 @@ The service implements comprehensive error handling:
    - Use appropriate message types
    - Validate message data
 
-## Testing
+### Testing
 
 Run the test suite:
 
@@ -211,17 +225,19 @@ pnpm test src/lib/services/notification/__tests__
 pnpm test src/lib/services/notification/__tests__/NotificationService.test.ts
 ```
 
-## Monitoring
+### Monitoring
 
 Monitor the notification system using the following metrics:
 
 1. **Queue Statistics**
+
    - Queue length
    - Processing rate
    - Error rate
    - Average processing time
 
 2. **WebSocket Statistics**
+
    - Connected clients count
    - Message rate
    - Error rate
@@ -233,17 +249,19 @@ Monitor the notification system using the following metrics:
    - Template usage statistics
    - User engagement metrics
 
-## Troubleshooting
+### Troubleshooting
 
 Common issues and solutions:
 
 1. **Queue Processing Issues**
+
    - Check Redis connection
    - Verify worker process is running
    - Check for error logs
    - Monitor queue length
 
 2. **WebSocket Connection Issues**
+
    - Verify port configuration
    - Check authentication token
    - Monitor server logs
@@ -255,7 +273,7 @@ Common issues and solutions:
    - Check user preferences
    - Monitor delivery logs
 
-## Worker Process
+### Worker Process
 
 Run the notification worker:
 
@@ -268,13 +286,14 @@ pnpm worker:notification:dev
 ```
 
 The worker process handles:
+
 - Queue processing
 - WebSocket server management
 - Real-time notification delivery
 - Error recovery
 - Graceful shutdown
 
-## API Reference
+### API Reference
 
 ### NotificationService
 
@@ -286,7 +305,11 @@ class NotificationService {
   // Notification operations
   async queueNotification(notification: NotificationData): Promise<string>
   async markAsRead(userId: string, notificationId: string): Promise<void>
-  async getNotifications(userId: string, limit?: number, offset?: number): Promise<Notification[]>
+  async getNotifications(
+    userId: string,
+    limit?: number,
+    offset?: number,
+  ): Promise<Notification[]>
   async getUnreadCount(userId: string): Promise<number>
 
   // WebSocket client management
@@ -311,16 +334,18 @@ class WebSocketServer {
 }
 ```
 
-## Future Enhancements
+### Future Enhancements
 
 Planned improvements for future releases:
 
 1. **Additional Channels**
+
    - SMS notifications
    - Mobile push notifications
    - Desktop notifications
 
 2. **Enhanced Features**
+
    - Notification categories
    - Advanced filtering
    - Bulk operations

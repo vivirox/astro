@@ -22,7 +22,9 @@ export function StatsCard({
   className = '',
 }: StatsCardProps) {
   return (
-    <div className={`p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800 ${className}`}>
+    <div
+      className={`p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800 ${className}`}
+    >
       <div className="flex items-start justify-between">
         <div>
           <div className="text-sm font-medium text-gray-500 truncate dark:text-gray-400">

@@ -31,7 +31,7 @@ interface AIResponse {
   }
 }
 
-interface TherapySession {
+export interface TherapySession {
   sessionId: string
   clientId: string
   therapistId: string
@@ -42,7 +42,7 @@ interface TherapySession {
   emotionAnalysisEnabled: boolean
 }
 
-interface EmotionAnalysis {
+export interface EmotionAnalysis {
   timestamp: Date
   emotions: {
     type: string

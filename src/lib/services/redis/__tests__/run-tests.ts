@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process'
-import { logger } from '@/lib/logger'
+import { logger } from '../../../../utils/logger'
 
 interface TestResult {
   suite: string
@@ -30,11 +30,11 @@ async function runTest(
       },
     })
 
-    let output = ''
+    let _output = ''
     let error = ''
 
     child.stdout.on('data', (data) => {
-      output += data.toString()
+      _output += data.toString()
       process.stdout.write(data)
     })
 
@@ -80,8 +80,8 @@ async function runTests() {
     // Run unit tests
     results.push(
       await runTest(
-        'jest',
-        ['RedisService.test.ts', '--config', 'jest.config.ts'],
+        'vitest',
+        ['RedisService.test.ts', '--config', 'vitest.config.ts'],
         {
           suite: 'Unit Tests',
           timeout: 30000,
@@ -92,8 +92,8 @@ async function runTests() {
     // Run integration tests
     results.push(
       await runTest(
-        'jest',
-        ['RedisService.integration.test.ts', '--config', 'jest.config.ts'],
+        'vitest',
+        ['RedisService.integration.test.ts', '--config', 'vitest.config.ts'],
         {
           suite: 'Integration Tests',
           timeout: 60000,
@@ -104,8 +104,8 @@ async function runTests() {
     // Run performance tests
     results.push(
       await runTest(
-        'jest',
-        ['RedisService.perf.test.ts', '--config', 'jest.config.ts'],
+        'vitest',
+        ['RedisService.perf.test.ts', '--config', 'vitest.config.ts'],
         {
           suite: 'Performance Tests',
           timeout: 120000,
@@ -115,16 +115,8 @@ async function runTests() {
 
     // Generate coverage report
     await runTest(
-      'jest',
-      [
-        '--coverage',
-        '--config',
-        'jest.config.ts',
-        '--coverageReporters',
-        'text',
-        'lcov',
-        'html',
-      ],
+      'vitest',
+      ['run', '--coverage', '--config', 'vitest.config.ts'],
       {
         suite: 'Coverage Report',
         timeout: 30000,

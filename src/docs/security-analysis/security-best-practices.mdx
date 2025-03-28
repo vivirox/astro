@@ -196,18 +196,18 @@ export const onRequest = defineMiddleware(
     response.headers.set('X-XSS-Protection', '1; mode=block')
     response.headers.set(
       'Strict-Transport-Security',
-      'max-age=31536000; includeSubDomains'
+      'max-age=31536000; includeSubDomains',
     )
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
 
     // Apply Content Security Policy
     response.headers.set(
       'Content-Security-Policy',
-      "default-src 'self'; script-src 'self'; connect-src 'self' https://api.together.xyz; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self';"
+      "default-src 'self'; script-src 'self'; connect-src 'self' https://api.together.xyz; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self';",
     )
 
     return response
-  }
+  },
 )
 ```
 
@@ -256,7 +256,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     )
   }
 
@@ -299,7 +299,7 @@ const ratelimit = new Ratelimit({
 
 export const rateLimitMiddleware: MiddlewareHandler = async (
   { request, locals },
-  next
+  next,
 ) => {
   // Skip rate limiting for non-API routes
   if (!request.url.includes('/api/')) {

@@ -1,9 +1,12 @@
 import type { WebSocket } from 'ws'
-import { env } from '@/config/env.config'
+import { config } from '@/config/env.config'
 import { EmailService } from '@/lib/services/email/EmailService'
-import { redis } from '@/lib/services/redis'
-import { logger } from '@/lib/utils/logger'
+import { redis } from '@/lib/redis'
+import loggerModule from '@/lib/utils/logger'
 import { z } from 'zod'
+
+// Create a logger instance
+const logger = loggerModule.getLogger('NotificationService')
 
 // Notification channel types
 export const NotificationChannel = {
@@ -179,7 +182,7 @@ export class NotificationService {
         alias: template.id,
         subject: template.title,
         htmlBody: template.body,
-        from: env.EMAIL_FROM_ADDRESS,
+        from: config.email.from() || 'noreply@example.com',
       })
     }
   }
@@ -339,7 +342,7 @@ export class NotificationService {
     if (!notifications) return []
 
     return Object.values(notifications)
-      .map((n) => NotificationItemSchema.parse(JSON.parse(n)))
+      .map((n) => NotificationItemSchema.parse(JSON.parse(n as string)))
       .sort((a, b) => b.createdAt - a.createdAt)
       .slice(offset, offset + limit)
   }
@@ -352,7 +355,7 @@ export class NotificationService {
     if (!notifications) return 0
 
     return Object.values(notifications)
-      .map((n) => NotificationItemSchema.parse(JSON.parse(n)))
+      .map((n) => NotificationItemSchema.parse(JSON.parse(n as string)))
       .filter((n) => n.status !== NotificationStatus.READ).length
   }
 

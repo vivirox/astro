@@ -31,18 +31,20 @@ const { images, imageProps = {}, swiperOptions, class: className } = Astro.props
   mousewheel="true"
   effect="fade"
 >
-  {images.map((item) => (
-    <swiper-slide>
-      <Image
-        src={item.src}
-        alt={item.alt}
-        width={imageProps.width}
-        height={imageProps.height}
-        quality={imageProps.quality}
-        class="aspect-[16/9] object-cover"
-      />
-    </swiper-slide>
-  ))}
+  {
+    images.map((item) => (
+      <swiper-slide>
+        <Image
+          src={item.src}
+          alt={item.alt}
+          width={imageProps.width}
+          height={imageProps.height}
+          quality={imageProps.quality}
+          class="aspect-[16/9] object-cover"
+        />
+      </swiper-slide>
+    ))
+  }
 </swiper-container>
 
 <script>

@@ -34,9 +34,7 @@ export function Layout({
         {showSidebar && <Sidebar />}
 
         <main className="relative h-full w-full overflow-y-auto bg-gray-50 dark:bg-gray-900 lg:ml-64">
-          <div className="px-4 pt-6 pb-4">
-            {children}
-          </div>
+          <div className="px-4 pt-6 pb-4">{children}</div>
 
           {showFooter && <Footer showSocialLinks={showSocialLinks} />}
         </main>

@@ -1,19 +1,22 @@
 ---
-title: "Analytics Service"
+title: 'Analytics Service'
 description: "Guide to Gradiant's analytics service for data processing and insights"
 pubDate: 2025-03-24
 share: true
 toc: true
 lastModDate: 2025-03-25
-tags: ["analytics", "services", "data-processing"]
-author: "Gradiant Team"
+tags: ['analytics', 'services', 'data-processing']
+author: 'Gradiant Team'
 ---
 
-# Analytics Service Documentation
+## Analytics Service Documentation
 
 ## Overview
 
-The Analytics Service provides a robust, real-time analytics system for tracking events and metrics across the application. Built with TypeScript and WebSocket technology, it offers a scalable solution for collecting, processing, and analyzing data while maintaining HIPAA compliance.
+The Analytics Service provides a robust, real-time analytics system for tracking events
+and metrics across the application. Built with TypeScript and WebSocket technology,
+it offers a scalable solution for collecting, processing, and analyzing data while maintaining
+HIPAA compliance.
 
 ## Features
 
@@ -44,7 +47,10 @@ const analyticsService = new AnalyticsService({
 ### Tracking Events
 
 ```typescript
-import { EventType, EventPriority } from '@/lib/services/analytics/AnalyticsService'
+import {
+  EventType,
+  EventPriority,
+} from '@/lib/services/analytics/AnalyticsService'
 
 // Track a user action
 await analyticsService.trackEvent({
@@ -154,10 +160,12 @@ import { WebSocket } from 'ws'
 const ws = new WebSocket('ws://localhost:8083')
 
 // Authenticate
-ws.send(JSON.stringify({
-  type: 'authenticate',
-  userId: 'user-123',
-}))
+ws.send(
+  JSON.stringify({
+    type: 'authenticate',
+    userId: 'user-123',
+  }),
+)
 
 // Listen for events
 ws.on('message', (data) => {
@@ -212,6 +220,7 @@ enum EventPriority {
 The service uses Redis for data storage and queuing:
 
 1. **Event Queue**
+
    - `analytics:events:queue` - Main queue for pending events
    - `analytics:events:processed:{type}` - Processed events by type
    - `analytics:events:time:{type}` - Time series data for events
@@ -223,11 +232,13 @@ The service uses Redis for data storage and queuing:
 ## Security
 
 1. **HIPAA Compliance**
+
    - All data is stored in a HIPAA-compliant manner
    - PII is properly handled and protected
    - Access is controlled and audited
 
 2. **Authentication**
+
    - WebSocket connections require authentication
    - Real-time updates are user-scoped
    - Invalid connections are automatically closed
@@ -240,12 +251,14 @@ The service uses Redis for data storage and queuing:
 ## Best Practices
 
 1. **Event Tracking**
+
    - Use appropriate event types
    - Set meaningful priorities
    - Include relevant properties
    - Add helpful metadata
 
 2. **Metric Collection**
+
    - Use consistent metric names
    - Add relevant tags
    - Track trends over time
@@ -270,6 +283,7 @@ pnpm worker:analytics:dev
 ```
 
 The worker process handles:
+
 - Event processing
 - WebSocket server
 - Data cleanup
@@ -292,12 +306,14 @@ pnpm test src/lib/services/analytics/__tests__/AnalyticsService.test.ts
 Monitor the analytics system using:
 
 1. **Queue Statistics**
+
    - Queue length
    - Processing rate
    - Error rate
    - Processing time
 
 2. **WebSocket Statistics**
+
    - Connected clients
    - Message rate
    - Error rate
@@ -314,12 +330,14 @@ Monitor the analytics system using:
 Common issues and solutions:
 
 1. **Event Processing Issues**
+
    - Check Redis connection
    - Verify worker is running
    - Monitor queue length
    - Check error logs
 
 2. **WebSocket Issues**
+
    - Verify port configuration
    - Check authentication
    - Monitor connections
@@ -377,12 +395,14 @@ class AnalyticsService {
 Planned improvements for future releases:
 
 1. **Advanced Analytics**
+
    - Machine learning integration
    - Predictive analytics
    - Pattern detection
    - Anomaly detection
 
 2. **Enhanced Features**
+
    - Custom metric aggregations
    - Advanced filtering
    - Bulk operations

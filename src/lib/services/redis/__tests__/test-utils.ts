@@ -1,7 +1,8 @@
 import type { RedisErrorCode } from '../types'
-import { logger } from '@/lib/logger'
+import { logger } from '../../../../utils/logger'
 import { Redis } from 'ioredis'
 import { RedisServiceError } from '../types'
+import { expect } from 'vitest'
 
 /**
  * Generates a unique test key with optional prefix
@@ -23,7 +24,7 @@ export function sleep(ms: number): Promise<void> {
  * Measures the execution time of an operation
  */
 export async function measureOperation(
-  operation: () => Promise<any>,
+  operation: () => Promise<unknown>,
 ): Promise<number> {
   const start = Date.now()
   await operation()
@@ -90,7 +91,7 @@ export async function runConcurrentOperations<T>(
   throughput: number
 }> {
   const start = Date.now()
-  const results = await Promise.all(operations)
+  const results = await Promise.all(operations.map((op) => op()))
   const duration = Date.now() - start
   const throughput = Math.floor((operations.length / duration) * 1000)
 
@@ -164,7 +165,7 @@ export async function simulateNetworkIssues(
  */
 export async function verifyDataIntegrity(
   redis: Redis,
-  data: { key: string; value: any }[],
+  data: { key: string; value: unknown }[],
 ): Promise<void> {
   const results = await Promise.all(
     data.map(async ({ key, value }) => {
@@ -252,14 +253,15 @@ export const customMatchers = {
   },
 }
 
+// Extend expect with custom matchers
+expect.extend(customMatchers)
+
 // Type declarations for custom matchers
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeRedisError(expectedCode: RedisErrorCode): R
-      toBeInRedis(expectedValue: unknown): Promise<R>
-      toExistInRedis(): Promise<R>
-      toHaveTTL(expectedTTL: number): Promise<R>
-    }
+declare module 'vitest' {
+  interface Assertion {
+    toBeRedisError(expectedCode: RedisErrorCode): void
+    toBeInRedis(expectedValue: unknown): Promise<void>
+    toExistInRedis(): Promise<void>
+    toHaveTTL(expectedTTL: number): Promise<void>
   }
 }

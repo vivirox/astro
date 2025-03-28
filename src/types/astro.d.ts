@@ -58,36 +58,39 @@ declare module 'astro' {
 
 declare namespace App {
   interface Locals {
-    isSSR?: boolean;
-    isPrerendered?: boolean;
+    isSSR?: boolean
+    isPrerendered?: boolean
     userPreferences?: {
-      darkMode?: boolean;
-      language?: string;
-      userAgent?: string;
-      isMobile?: boolean;
+      darkMode?: boolean
+      language?: string
+      userAgent?: string
+      isMobile?: boolean
     }
   }
 }
 
 declare module 'astro:content' {
   interface ContentCollectionMap {
-    'blog': Record<string, unknown>;
-    'docs': Record<string, unknown>;
-    'highlights': {
-      projects: Record<string, {
-        name: string;
-        link: string;
-        desc: string;
-        icon: string;
-      }[]>;
-    };
+    blog: Record<string, unknown>
+    docs: Record<string, unknown>
+    highlights: {
+      projects: Record<
+        string,
+        {
+          name: string
+          link: string
+          desc: string
+          icon: string
+        }[]
+      >
+    }
   }
 }
 
 // Additional module declarations for any custom types needed
 declare module '*.md' {
-  const Content: any;
-  export { Content };
+  const Content: any
+  export { Content }
 }
 
 // Therapeutic domain types
@@ -98,7 +101,7 @@ type TherapeuticDomain =
   | 'humanistic'
   | 'interpersonal'
   | 'family_systems'
-  | 'solution_focused';
+  | 'solution_focused'
 
 // Feedback types
 type FeedbackType =
@@ -107,4 +110,4 @@ type FeedbackType =
   | 'technique_application'
   | 'therapeutic_alliance'
   | 'communication_style'
-  | 'question_formulation';
+  | 'question_formulation'

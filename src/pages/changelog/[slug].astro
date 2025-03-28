@@ -37,8 +37,14 @@ const { Content, headings } = await post.render()
 const { share, toc } = FEATURES
 
 // Format dates
-const pubDate = frontmatter.pubDate instanceof Date ? frontmatter.pubDate.toISOString() : undefined;
-const updatedDate = frontmatter.lastModDate instanceof Date ? frontmatter.lastModDate.toISOString() : undefined;
+const pubDate =
+  frontmatter.pubDate instanceof Date
+    ? frontmatter.pubDate.toISOString()
+    : undefined
+const updatedDate =
+  frontmatter.lastModDate instanceof Date
+    ? frontmatter.lastModDate.toISOString()
+    : undefined
 
 // Warning message for unpublished posts
 const UNPUBLISHED_WARNING = `This article is not yet available.
@@ -54,19 +60,23 @@ Please check back later.`
 >
   <StandardLayout title={frontmatter.title}>
     <div slot="head">
-      {pubDate && (
-        <p class="mt--6! op-50">
-          <time datetime={pubDate}>{formatDate(pubDate)}</time>
-          {updatedDate && (
-            <time datetime={updatedDate}>
-              | Updated: {formatDate(updatedDate)}
-            </time>
-          )}
-        </p>
-      )}
-      {frontmatter.pubDate && new Date(frontmatter.pubDate) > new Date() && (
-        <Warning rawHTMLString={UNPUBLISHED_WARNING} />
-      )}
+      {
+        pubDate && (
+          <p class="mt--6! op-50">
+            <time datetime={pubDate}>{formatDate(pubDate)}</time>
+            {updatedDate && (
+              <time datetime={updatedDate}>
+                | Updated: {formatDate(updatedDate)}
+              </time>
+            )}
+          </p>
+        )
+      }
+      {
+        frontmatter.pubDate && new Date(frontmatter.pubDate) > new Date() && (
+          <Warning rawHTMLString={UNPUBLISHED_WARNING} />
+        )
+      }
     </div>
     <div slot="article">
       {Array.isArray(toc) && toc[0] && frontmatter.toc && <Toc {headings} />}
@@ -74,8 +84,10 @@ Please check back later.`
     </div>
   </StandardLayout>
   <div slot="share">
-    {Array.isArray(share) && share[0] && frontmatter.share && (
-      <ShareLink config={share[1]} />
-    )}
+    {
+      Array.isArray(share) && share[0] && frontmatter.share && (
+        <ShareLink config={share[1]} />
+      )
+    }
   </div>
 </BaseLayout>

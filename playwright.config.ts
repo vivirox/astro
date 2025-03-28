@@ -1,16 +1,11 @@
-import { defineConfig, devices } from '@playwright/test'
-import 'dotenv/config'
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
+import { devices } from '@playwright/test'
+import type { PlaywrightTestConfig } from '@playwright/test'
 import 'dotenv/config'
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig({
+const config: PlaywrightTestConfig = {
   testDir: './tests',
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
@@ -102,8 +97,10 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'cd astro && pnpm dev',
+    command: 'pnpm dev',
     port: 3000,
     reuseExistingServer: !process.env.CI,
   },
-})
+}
+
+export default config

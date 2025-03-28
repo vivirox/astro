@@ -1,0 +1,95 @@
+
+## PROJECT OVERVIEW
+Project: Astro
+
+## CODE STYLE
+Adhere to standard TypeScript coding conventions.  Avoid using the `any` type.  Unused variables and imports should be removed.
+
+## FOLDER ORGANIZATION
+(No information provided in the interaction)
+
+## TECH STACK
+TypeScript, ESLint, Jest, Vitest, Resend, Redis, ioredis, @testing-library/jest-dom, @testing-library/react, @postmark/core, ioredis
+
+## PROJECT-SPECIFIC STANDARDS
+- Unused variables and imports should be removed.  Address all ESLint warnings about unused code.  If a variable is declared but never used, remove it.
+- Vitest is the preferred testing framework for new tests. Jest should be used for existing tests until migration is complete.  A `vitest.config.ts` file should be created for Vitest configuration, and a Vitest setup file (e.g., `vitest.setup.ts`) is needed to declare Vitest globals for TypeScript projects.  The `jest.config.ts` and associated Jest setup file are deprecated for new tests.
+- Proper configuration is required for both Jest (for existing tests) and Vitest (for new tests).  Ensure types are correctly configured for each.
+- When mocking external services (like Redis or Resend) in tests, ensure proper type definitions are used to avoid linting errors. Direct access to underlying client methods might be necessary if the service class doesn't expose all required methods.  If direct access is needed, ensure proper mocking of the underlying client (e.g., `ioredis`) is implemented.
+- When encountering type errors related to mocked services, consider using type assertions to match the expected type of the mocked function.  However, ensure this is done judiciously and only when necessary to avoid masking actual type problems.
+- Ensure proper Jest type configuration for existing tests or migrate to Vitest for new tests.  Address all ESLint warnings about unused code.  If a variable is declared but never used, remove it.  Address all ESLint warnings, including those related to unused variables and imports.  Prioritize resolving critical issues such as redeclaration errors, unsafe optional chaining, undefined variables, and parsing errors before addressing less critical warnings.
+- Ensure a `vitest.setup.ts` file exists to provide necessary test globals (e.g., `describe`, `it`, `expect`) for Vitest tests.  Missing test framework globals are a common source of errors.
+- When encountering missing test framework globals (describe, it, expect, etc.) in Vitest tests, ensure that the `vitest.setup.ts` file is correctly configured and includes the necessary imports.  Commonly missing imports include `describe`, `it`, `expect`, `beforeAll`, `beforeEach`, `afterEach`, and `afterAll`.
+- When importing modules, carefully check the export type (class vs. constant) to avoid import errors.  Correctly import modules based on their export type (e.g., `import { CacheInvalidation } from '@/lib/cache/invalidation'` instead of `import { CacheInvalidationService } from '@/lib/cache/invalidation'`).  Ensure that the import path correctly reflects the module's location.
+- When using `CacheInvalidation`, ensure that the `redis` property is passed as `{ redis: redis.getClient() }` to correctly access the Redis client.  The `initialize()` and `shutdown()` methods are not part of the `CacheInvalidation` interface and should not be used.  Use `JSON.stringify` for serializing values before storing them in Redis.  The `addTag` method is not available; use the `set()` method with the `tags` option to add tags to keys.
+
+
+## WORKFLOW & RELEASE RULES
+(No information provided in the interaction)
+
+## REFERENCE EXAMPLES
+**Example Vitest Setup File (vitest.setup.ts):**
+
+```typescript
+import '@testing-library/jest-dom'
+import { expect, afterEach } from 'vitest'
+import { cleanup } from '@testing-library/react'
+import matchers from '@testing-library/jest-dom/matchers'
+
+// Extend Vitest's expect with @testing-library/jest-dom's matchers
+expect.extend(matchers)
+
+// Clean up after each test
+afterEach(() => {
+  cleanup()
+})
+```
+
+**Example Jest Setup File (setupTests.ts):**  *(Deprecated for new tests)*
+
+```typescript
+import '@testing-library/jest-dom';
+
+// Make Jest available globally
+declare global {
+  // eslint-disable-next-line no-var
+  var jest: typeof import('@jest/globals')['jest'];
+  // eslint-disable-next-line no-var
+  var describe: typeof import('@jest/globals')['describe'];
+  // eslint-disable-next-line no-var
+  var it: typeof import('@jest/globals')['it'];
+  // eslint-disable-next-line no-var
+  var expect: typeof import('@jest/globals')['expect'];
+  // eslint-disable-next-line no-var
+  var beforeAll: typeof import('@jest/globals')['beforeAll'];
+  // eslint-disable-next-line no-var
+  var afterAll: typeof import('@jest/globals')['afterAll'];
+  // eslint-disable-next-line no-var
+  var beforeEach: typeof import('@jest/globals')['beforeEach'];
+  // eslint-disable-next-line no-var
+  var afterEach: typeof import('@jest/globals')['afterEach'];
+}
+```
+
+## PROJECT DOCUMENTATION & CONTEXT SYSTEM
+(No information provided in the interaction)
+
+## DEBUGGING
+Utilize ESLint to identify and resolve TypeScript linting issues, including unused variables, type issues, and testing framework configuration problems. Address warnings and errors promptly.  If using Vitest, ensure it's correctly configured and integrated. Address all ESLint warnings, including those related to unused variables and imports. Prioritize resolving critical issues such as redeclaration errors, unsafe optional chaining, undefined variables, and parsing errors before addressing less critical warnings. Ensure proper Jest type configuration for existing tests or migrate to Vitest for new tests.  Prioritize resolving critical ESLint errors (redeclaration, unsafe optional chaining, undefined variables, parsing errors) before addressing warnings.  When encountering import errors, carefully check the export type of the imported module (e.g., class vs. constant).  For mocked services, ensure proper typing to avoid errors. When mocking Redis, consider mocking `ioredis` directly if necessary to access all required methods. When using type assertions in tests to resolve type errors, ensure this is a deliberate choice and not a way to mask underlying type issues.  When encountering errors related to undefined variables in tests, ensure that the testing framework (Jest or Vitest) is correctly configured and that necessary types are imported.  If using Vitest, ensure proper configuration and integration.  If using Jest, ensure types are properly configured.  Check for missing test framework globals (describe, it, expect, etc.) when using Vitest. Ensure necessary modules are imported in test files. Address implicit any types in parameters.  When debugging tests, ensure that the `vitest.setup.ts` file (for Vitest) or the equivalent Jest setup file is correctly configured and includes the necessary imports for test globals (e.g., `describe`, `it`, `expect`).  Pay close attention to import statements; ensure they correctly reflect the export type of the module (class vs. function/constant).  When working with `CacheInvalidation`, ensure you are using the correct import (`import { CacheInvalidation } from '@/lib/cache/invalidation'`), passing the redis client correctly (`{ redis: redis.getClient() }`), and using `JSON.stringify` for values.  The `addTag` method is deprecated; use the `set()` method with the `tags` option instead.
+
+## FINAL DOs AND DON'Ts
+- **DO:** Use explicit types in TypeScript.
+- **DO:** Remove unused variables and imports.  Address ESLint warnings about unused code.
+- **DO:** Configure Vitest correctly for new TypeScript tests. Use a `vitest.config.ts` and a setup file to declare Vitest globals.  For existing tests, configure Jest correctly, or migrate to Vitest.
+- **DON'T:** Use the `any` type unless absolutely necessary.
+- **DON'T:** Leave unresolved linting errors or warnings.
+- **DON'T:** Ignore ESLint warnings about unused code.
+- **DO:** If a variable is declared but never used, remove it.
+- **DO:** Prioritize resolving critical ESLint errors (redeclaration, unsafe optional chaining, undefined variables, parsing errors) before addressing warnings.
+- **DO:** For new tests, use Vitest; for existing tests, use Jest until migration is complete.
+- **DO:** When mocking external services, ensure proper type definitions are used.  Direct access to underlying client methods might be necessary if the service class doesn't expose all required methods.  If direct access is required, ensure proper mocking of the underlying client (e.g., `ioredis`) is implemented.
+- **DO:** Use type assertions judiciously when mocking services in tests to resolve type mismatches, but ensure this does not mask underlying type problems.
+- **DO:** When mocking the logger, ensure that all necessary methods (`info`, `error`, `warn`, `debug`) are mocked and returned from the mock.  Use `vi.mock` for Vitest and ensure that the mock includes all the necessary properties and methods of the original module.
+- **DO:** Ensure a `vitest.setup.ts` file is created and used to import necessary test globals when using Vitest.  Include imports for `describe`, `it`, `expect`, `beforeAll`, `beforeEach`, `afterEach`, and `afterAll`.
+- **DO:** Carefully review import statements to ensure they correctly match the export type of the imported module.
+- **DO:** When using `CacheInvalidation`, use `JSON.stringify` for values and the `set()` method with the `tags` option for adding tags. Pass the redis client correctly as `{ redis: redis.getClient() }`.  Do not use the `initialize()` and `shutdown()` methods.

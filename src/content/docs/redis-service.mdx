@@ -1,15 +1,22 @@
 ---
-title: "Redis Service"
-description: "Core Redis service implementation details"
+title: 'Redis Service'
+description: 'Core Redis service implementation details'
 pubDate: 2025-03-25
 share: true
 toc: true
 lastModDate: 2025-03-25
-tags: ["redis", "service", "implementation"]
-author: "Gradiant Team"
+tags: ['redis', 'service', 'implementation']
+author: 'Gradiant Team'
 ---
 
-import { Steps, Tabs, TabItem, Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+import {
+  Steps,
+  Tabs,
+  TabItem,
+  Card,
+  CardGrid,
+  LinkCard,
+} from '@astrojs/starlight/components'
 
 # Redis Service Documentation
 
@@ -29,10 +36,10 @@ The Redis service can be configured using the `RedisServiceConfig` interface:
 
 ```typescript
 interface RedisServiceConfig {
-  url: string               // Redis connection URL
-  keyPrefix?: string       // Prefix for all keys
-  maxRetries?: number     // Maximum number of retries for operations
-  retryDelay?: number    // Retry delay in milliseconds
+  url: string // Redis connection URL
+  keyPrefix?: string // Prefix for all keys
+  maxRetries?: number // Maximum number of retries for operations
+  retryDelay?: number // Retry delay in milliseconds
   connectTimeout?: number // Connection timeout in milliseconds
   maxConnections?: number // Maximum number of connections in the pool
   minConnections?: number // Minimum number of connections to keep in the pool
@@ -157,16 +164,19 @@ try {
 ## Best Practices
 
 1. Connection Management
+
    - Always call `connect()` before using the service
    - Call `disconnect()` when shutting down the application
    - Use the health check mechanism to monitor connection status
 
 2. Error Handling
+
    - Catch and handle `RedisServiceError` specifically
    - Log errors with appropriate context
    - Implement retry logic for transient failures
 
 3. Performance Optimization
+
    - Use appropriate TTLs for cached data
    - Batch operations when possible
    - Monitor connection pool statistics
@@ -233,11 +243,13 @@ const patternRecognition = new PatternRecognitionService(redis)
 The service includes comprehensive test suites:
 
 1. Unit Tests
+
    ```bash
    pnpm test src/lib/services/redis/__tests__/RedisService.test.ts
    ```
 
 2. Integration Tests
+
    ```bash
    pnpm test src/lib/services/redis/__tests__/RedisService.integration.test.ts
    ```
@@ -266,12 +278,14 @@ console.log({
 Common issues and solutions:
 
 1. Connection Failures
+
    - Check Redis URL configuration
    - Verify network connectivity
    - Check Redis server status
    - Review connection pool settings
 
 2. Performance Issues
+
    - Monitor connection pool statistics
    - Check for connection leaks
    - Review operation patterns

@@ -1,5 +1,5 @@
-import { RedisService } from '../src/lib/services/redis/RedisService'
-import { MonitoringService } from '../src/lib/monitoring/setup'
+import type { RedisService } from '../src/lib/services/redis/RedisService'
+import type { MonitoringService } from '../src/lib/monitoring/setup'
 import WebSocket from 'ws'
 import { performance } from 'perf_hooks'
 import { promises as fs } from 'fs'

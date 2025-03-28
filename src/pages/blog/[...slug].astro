@@ -14,7 +14,7 @@ export const prerender = true
 
 export async function getStaticPaths() {
   const posts = (await getFilteredPosts('blog')) as CollectionEntry<'blog'>[]
-  return posts.map(post => ({
+  return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
   }))
@@ -42,19 +42,23 @@ Please check back later.`
 >
   <StandardLayout title={frontmatter.title}>
     <div slot="head">
-      {frontmatter.pubDate && (
-        <p class="mt--6! op-50">
-          <time datetime={pubDate}>{formatDate(pubDate)}</time>
-          {updatedDate && (
-            <time datetime={updatedDate}>
-              | Updated: {formatDate(updatedDate)}
-            </time>
-          )}
-        </p>
-      )}
-      {new Date(frontmatter.pubDate) > new Date() && (
-        <Warning rawHTMLString={warningHTML} />
-      )}
+      {
+        frontmatter.pubDate && (
+          <p class="mt--6! op-50">
+            <time datetime={pubDate}>{formatDate(pubDate)}</time>
+            {updatedDate && (
+              <time datetime={updatedDate}>
+                | Updated: {formatDate(updatedDate)}
+              </time>
+            )}
+          </p>
+        )
+      }
+      {
+        new Date(frontmatter.pubDate) > new Date() && (
+          <Warning rawHTMLString={warningHTML} />
+        )
+      }
     </div>
     <div slot="article">
       {Array.isArray(toc) && toc[0] && frontmatter.toc && <Toc {headings} />}
@@ -62,8 +66,10 @@ Please check back later.`
     </div>
   </StandardLayout>
   <div slot="share">
-    {Array.isArray(share) && share[0] && frontmatter.share && (
-      <ShareLink config={share[1]} />
-    )}
+    {
+      Array.isArray(share) && share[0] && frontmatter.share && (
+        <ShareLink config={share[1]} />
+      )
+    }
   </div>
 </BaseLayout>

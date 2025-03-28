@@ -15,7 +15,7 @@ export function addIssue(issue: CompatibilityIssue): void {
  */
 export function removeIssue(id: number): void {
   const issues = getStoredIssues()
-  const filteredIssues = issues.filter(issue => issue.id !== id)
+  const filteredIssues = issues.filter((issue) => issue.id !== id)
   localStorage.setItem('compatibility-issues', JSON.stringify(filteredIssues))
   displayIssues()
 }
@@ -34,7 +34,9 @@ export function displayIssues(): void {
     return
   }
 
-  container.innerHTML = issues.map(issue => `
+  container.innerHTML = issues
+    .map(
+      (issue) => `
     <div class="issue-item">
       <div class="issue-header">
         <span class="issue-title">${issue.component} - ${issue.browser}</span>
@@ -49,14 +51,18 @@ export function displayIssues(): void {
         Remove
       </button>
     </div>
-  `).join('')
+  `,
+    )
+    .join('')
 }
 
 /**
  * Gets all stored compatibility issues from localStorage
  */
 function getStoredIssues(): CompatibilityIssue[] {
-  return JSON.parse(localStorage.getItem('compatibility-issues') || '[]') as CompatibilityIssue[]
+  return JSON.parse(
+    localStorage.getItem('compatibility-issues') || '[]',
+  ) as CompatibilityIssue[]
 }
 
 // Add removeIssue to window object for onclick handlers
@@ -69,5 +75,5 @@ declare global {
 }
 
 window.compatibilityTesting = {
-  removeIssue
+  removeIssue,
 }

@@ -61,8 +61,12 @@ const MetricCard: React.FC<MetricCardProps> = ({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xs overflow-hidden">
       <div className="p-4 flex items-center">
-        <div className={`p-3 rounded-full bg-${color}-100 dark:bg-${color}-900 mr-4`}>
-          <div className={`text-${color}-500 dark:text-${color}-100`}>{icon}</div>
+        <div
+          className={`p-3 rounded-full bg-${color}-100 dark:bg-${color}-900 mr-4`}
+        >
+          <div className={`text-${color}-500 dark:text-${color}-100`}>
+            {icon}
+          </div>
         </div>
         <div>
           <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -80,7 +84,9 @@ const MetricCard: React.FC<MetricCardProps> = ({
               >
                 {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
               </span>
-              <span className="text-gray-500 dark:text-gray-400">vs last week</span>
+              <span className="text-gray-500 dark:text-gray-400">
+                vs last week
+              </span>
             </div>
           )}
         </div>
@@ -112,7 +118,7 @@ export default function AdminDashboard() {
         setError(null)
       } catch (err) {
         logger.error('Error fetching metrics:', {
-          error: err instanceof Error ? err.message : String(err)
+          error: err instanceof Error ? err.message : String(err),
         })
         setError('Failed to load system metrics')
       } finally {
@@ -168,11 +174,17 @@ export default function AdminDashboard() {
               </p>
               <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
                 {metrics?.activeSecurityLevel === 'maximum' ? (
-                  <span className="text-green-600 dark:text-green-400">Maximum (FHE)</span>
+                  <span className="text-green-600 dark:text-green-400">
+                    Maximum (FHE)
+                  </span>
                 ) : metrics?.activeSecurityLevel === 'hipaa' ? (
-                  <span className="text-blue-600 dark:text-blue-400">HIPAA Compliant</span>
+                  <span className="text-blue-600 dark:text-blue-400">
+                    HIPAA Compliant
+                  </span>
                 ) : (
-                  <span className="text-yellow-600 dark:text-yellow-400">Standard</span>
+                  <span className="text-yellow-600 dark:text-yellow-400">
+                    Standard
+                  </span>
                 )}
               </p>
             </div>

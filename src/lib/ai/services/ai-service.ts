@@ -15,7 +15,11 @@ import type { ConnectionPoolConfig } from './connection-pool'
 import type { FallbackServiceConfig } from './fallback-service'
 import type { PromptOptimizerConfig } from './prompt-optimizer'
 import process from 'node:process'
-import { AICapability as AICapabilityEnum, AIModelType as AIModelTypeEnum, AIProvider as AIProviderEnum } from '../models/types'
+import {
+  AICapability as AICapabilityEnum,
+  AIModelType as AIModelTypeEnum,
+  AIProvider as AIProviderEnum,
+} from '../models/types'
 import { AICacheService } from './cache-service'
 import { ConnectionPoolManager } from './connection-pool'
 import { FallbackService } from './fallback-service'
@@ -29,7 +33,7 @@ interface ServiceResponse {
   created?: number
   content: string
   choices?: {
-    message: { role: string, content: string }
+    message: { role: string; content: string }
     finishReason?: string
   }[]
   usage?: {
@@ -170,9 +174,9 @@ export class AIService implements AIServiceInterface {
       provider: AIProviderEnum.Together,
       created: Date.now(),
       content: response.choices?.[0]?.message?.content || '',
-      choices: (response.choices || []).map(choice => ({
+      choices: (response.choices || []).map((choice) => ({
         message: {
-          role: choice.message?.role as AIRole || 'assistant',
+          role: (choice.message?.role as AIRole) || 'assistant',
           content: choice.message?.content || '',
         },
         finishReason: choice.finishReason,
@@ -205,19 +209,19 @@ export class AIService implements AIServiceInterface {
               model: chunk.model,
               provider: AIProviderEnum.Together,
               isComplete: true,
-              choices: chunk.choices?.map(choice => ({
-                message: {
-                  role: (choice.delta?.role || 'assistant') as AIRole,
-                  content: choice.delta?.content || '',
-                },
-                finishReason: choice.finishReason || undefined,
-              })) || [],
+              choices:
+                chunk.choices?.map((choice) => ({
+                  message: {
+                    role: (choice.delta?.role || 'assistant') as AIRole,
+                    content: choice.delta?.content || '',
+                  },
+                  finishReason: choice.finishReason || undefined,
+                })) || [],
             }
             controller.enqueue(streamChunk)
           }
           controller.close()
-        }
-        catch (error) {
+        } catch (error) {
           controller.error(error)
         }
       },
@@ -242,7 +246,7 @@ export class AIService implements AIServiceInterface {
       created: response.created || Date.now(),
       provider: AIProviderEnum.Together,
       content: response.content,
-      choices: (response.choices || []).map(choice => ({
+      choices: (response.choices || []).map((choice) => ({
         message: {
           role: choice.message.role as AIRole,
           content: choice.message.content,
@@ -264,10 +268,11 @@ export class AIService implements AIServiceInterface {
     messages: AIMessage[],
     options?: AIServiceOptions,
   ): Promise<AICompletionResponse> {
-    const response = (await this.togetherService.createChatCompletionWithTracking(
-      messages,
-      options,
-    )) as ServiceResponse
+    const response =
+      (await this.togetherService.createChatCompletionWithTracking(
+        messages,
+        options,
+      )) as ServiceResponse
 
     return {
       id: response.id || `track-${Date.now()}`,
@@ -275,7 +280,7 @@ export class AIService implements AIServiceInterface {
       created: response.created || Date.now(),
       provider: AIProviderEnum.Together,
       content: response.content,
-      choices: (response.choices || []).map(choice => ({
+      choices: (response.choices || []).map((choice) => ({
         message: {
           role: choice.message.role as AIRole,
           content: choice.message.content,
@@ -329,13 +334,14 @@ export class AIService implements AIServiceInterface {
           model: chunk.model,
           provider: AIProviderEnum.Together,
           isComplete: true,
-          choices: chunk.choices?.map(choice => ({
-            message: {
-              role: (choice.delta?.role || 'assistant') as AIRole,
-              content: choice.delta?.content || '',
-            },
-            finishReason: choice.finishReason || undefined,
-          })) || [],
+          choices:
+            chunk.choices?.map((choice) => ({
+              message: {
+                role: (choice.delta?.role || 'assistant') as AIRole,
+                content: choice.delta?.content || '',
+              },
+              finishReason: choice.finishReason || undefined,
+            })) || [],
         }
         yield streamChunk
       }

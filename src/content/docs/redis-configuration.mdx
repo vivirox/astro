@@ -1,23 +1,31 @@
 ---
-title: "Redis Configuration"
+title: 'Redis Configuration'
 description: "Detailed guide to configuring Redis for Gradiant's caching and queue system"
 pubDate: 2025-03-25
 share: true
 toc: true
 lastModDate: 2025-03-25
-tags: ["redis", "configuration", "caching"]
-author: "Gradiant Team"
+tags: ['redis', 'configuration', 'caching']
+author: 'Gradiant Team'
 ---
 
-import { Steps, Tabs, TabItem, Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+import {
+  Steps,
+  Tabs,
+  TabItem,
+  Card,
+  CardGrid,
+  LinkCard,
+} from '@astrojs/starlight/components'
 
-# Redis Configuration Guide
+## Redis Configuration Guide
 
-## Overview
+### Overview
 
-This guide provides detailed information about configuring the Redis service for optimal performance and reliability in the Gradiant application.
+This guide provides detailed information about configuring the Redis service for optimal
+performance and reliability in the Gradiant application.
 
-## Basic Configuration
+### Basic Configuration
 
 <Steps>
 1. Set up environment variables in your `.env` file:
@@ -27,6 +35,7 @@ This guide provides detailed information about configuring the Redis service for
    ```
 
 2. Create a configuration object:
+
    ```typescript
    import { RedisServiceConfig } from '@/lib/services/redis/types'
 
@@ -37,33 +46,35 @@ This guide provides detailed information about configuring the Redis service for
    ```
 
 3. Initialize the service:
+
    ```typescript
    import { RedisService } from '@/lib/services/redis'
 
    const redis = new RedisService(config)
    await redis.connect()
    ```
+
 </Steps>
 
 ## Configuration Options
 
 ### Connection Settings
 
-| Option | Description | Default | Recommended |
-|--------|-------------|---------|-------------|
-| `url` | Redis connection URL | Required | - |
-| `keyPrefix` | Prefix for all keys | undefined | `"app:"` |
-| `maxRetries` | Maximum retry attempts | 3 | 3-5 |
-| `retryDelay` | Delay between retries (ms) | 1000 | 1000-5000 |
-| `connectTimeout` | Connection timeout (ms) | 5000 | 5000-10000 |
+| Option           | Description                | Default   | Recommended |
+| ---------------- | -------------------------- | --------- | ----------- |
+| `url`            | Redis connection URL       | Required  | -           |
+| `keyPrefix`      | Prefix for all keys        | undefined | `"app:"`    |
+| `maxRetries`     | Maximum retry attempts     | 3         | 3-5         |
+| `retryDelay`     | Delay between retries (ms) | 1000      | 1000-5000   |
+| `connectTimeout` | Connection timeout (ms)    | 5000      | 5000-10000  |
 
 ### Connection Pool Settings
 
-| Option | Description | Default | Recommended |
-|--------|-------------|---------|-------------|
-| `maxConnections` | Maximum connections | 10 | 10-50 |
-| `minConnections` | Minimum connections | 2 | 2-5 |
-| `healthCheckInterval` | Health check interval (ms) | 30000 | 30000-60000 |
+| Option                | Description                | Default | Recommended |
+| --------------------- | -------------------------- | ------- | ----------- |
+| `maxConnections`      | Maximum connections        | 10      | 10-50       |
+| `minConnections`      | Minimum connections        | 2       | 2-5         |
+| `healthCheckInterval` | Health check interval (ms) | 30000   | 30000-60000 |
 
 ## Environment-Specific Configurations
 
@@ -133,16 +144,9 @@ Adjust health check frequency based on your reliability requirements:
 ```typescript
 const config: RedisServiceConfig = {
   // ... other options
-  healthCheckInterval: process.env.NODE_ENV === 'production'
-    ? 30000  // 30 seconds in production
-    : 60000, // 1 minute in development
+  healthCheckInterval:
+    process.env.NODE_ENV === 'production'
+      ? 30000 // 30 seconds in production
+      : 60000, // 1 minute in development
 }
-```
-
-## Security Configuration
-
-### TLS Configuration
-
-For secure Redis connections:
-
 ```

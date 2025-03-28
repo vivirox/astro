@@ -38,8 +38,7 @@ export function detectBrowser(): BrowserInfo {
   if (userAgent.includes('Firefox')) {
     browserName = 'Firefox'
     browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)?.[1] || 'Unknown'
-  }
-  else if (userAgent.includes('Edg')) {
+  } else if (userAgent.includes('Edg')) {
     browserName = 'Edge'
     browserVersion = userAgent.match(/Edg\/([0-9.]+)/)?.[1] || 'Unknown'
   } else if (userAgent.includes('Chrome')) {
@@ -56,8 +55,7 @@ export function detectBrowser(): BrowserInfo {
   // Detect OS
   if (userAgent.includes('Windows')) {
     os = 'Windows'
-  }
-  else if (userAgent.includes('Mac')) {
+  } else if (userAgent.includes('Mac')) {
     os = 'macOS'
   } else if (userAgent.includes('Linux')) {
     os = 'Linux'

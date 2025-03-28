@@ -3,20 +3,22 @@ title: 'Testing Environment Setup Guides'
 description: 'Comprehensive guides for setting up testing environments for Gradiant'
 ---
 
-# Testing Environment Setup Guides
+## Testing Environment Setup Guides
 
-This document provides detailed instructions for setting up various testing environments for the Gradiant platform. Following these guides will ensure consistent testing across development, CI/CD, and production environments.
+This document provides detailed instructions for setting up various testing environments for the
+Gradiant platform. Following these guides will ensure consistent testing across development,
+CI/CD, and production environments.
 
-## Local Development Environment Setup
+### Local Development Environment Setup
 
-### Prerequisites
+#### Prerequisites
 
 - Node.js v18.17.0 or higher
 - pnpm v8.6.0 or higher
 - Docker and Docker Compose (for integration tests)
 - Git
 
-### Basic Setup
+#### Basic Setup
 
 1. Clone the repository:
 
@@ -39,7 +41,7 @@ cp .env.example .env.test.local
 
 4. Edit `.env.test.local` to configure test-specific variables:
 
-```
+```bash
 # Test Database Configuration
 TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/gradiant_test
 TEST_REDIS_URL=redis://localhost:6379/1
@@ -58,7 +60,7 @@ TEST_AUTH_SECRET=random-test-secret
 pnpm test
 ```
 
-## Setting Up Vitest
+### Setting Up Vitest
 
 Gradiant uses Vitest for unit and integration testing. Here's how to configure it:
 
@@ -103,9 +105,9 @@ afterEach(() => {
 })
 ```
 
-## CI/CD Testing Environment
+### CI/CD Testing Environment
 
-### GitHub Actions Setup
+#### GitHub Actions Setup
 
 1. Create a `.github/workflows/test.yml` file:
 
@@ -254,9 +256,9 @@ CMD ["pnpm", "test"]
 docker-compose -f docker-compose.test.yml up --build
 ```
 
-## Testing with Mocks
+### Testing with Mocks
 
-### Setting Up Mock Services
+#### Setting Up Mock Services
 
 1. Create a `mocks` directory for mock services:
 
@@ -333,9 +335,9 @@ describe('AIService', () => {
 })
 ```
 
-## Database Testing
+### Database Testing
 
-### Setting Up Test Databases
+#### Setting Up Test Databases
 
 1. Create a separate database for testing:
 
@@ -387,7 +389,7 @@ export const setupTestDatabase = async () => {
     cleanup: async () => {
       // Drop the schema when done
       await prisma.$executeRawUnsafe(
-        `DROP SCHEMA IF EXISTS "${schema}" CASCADE`
+        `DROP SCHEMA IF EXISTS "${schema}" CASCADE`,
       )
       await prisma.$disconnect()
     },
@@ -430,7 +432,7 @@ describe('UserService', () => {
 })
 ```
 
-## Performance Testing
+### Performance Testing
 
 ### Setting Up Performance Tests
 
@@ -466,7 +468,7 @@ describe('API Performance', () => {
       const response = await request(`${baseUrl}/api/health`)
       return response.statusCode
     },
-    { iterations: 100 }
+    { iterations: 100 },
   )
 
   bench(
@@ -483,7 +485,7 @@ describe('API Performance', () => {
       })
       return response.statusCode
     },
-    { iterations: 50 }
+    { iterations: 50 },
   )
 })
 ```
@@ -554,6 +556,9 @@ NODE_OPTIONS=--max_old_space_size=4096 pnpm test
 
 ## Conclusion
 
-Following these setup guides will ensure a consistent testing environment across all stages of development. For more detailed information on specific testing patterns, refer to the [Test Patterns Documentation](/docs/api/test-patterns).
+Following these setup guides will ensure a consistent testing environment across all stages of development.
+For more detailed information on specific testing patterns, refer to the
+[Test Patterns Documentation](/docs/api/test-patterns).
 
-For any issues not covered in this guide, please refer to the [Troubleshooting Guide](/docs/testing/debugging) or open an issue on GitHub.
+For any issues not covered in this guide, please refer to the
+[Troubleshooting Guide](/docs/testing/debugging) or open an issue on GitHub.

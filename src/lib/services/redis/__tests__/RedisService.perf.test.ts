@@ -1,5 +1,6 @@
-import { describe, expect, it } from '@jest/globals'
+import { describe, expect, it, beforeEach, afterEach } from '@jest/globals'
 import { RedisService } from '../RedisService'
+import { generateTestKey, generateData, measureOperation } from './test-utils'
 
 describe('RedisService Performance', () => {
   let redis: RedisService
@@ -113,18 +114,6 @@ describe('RedisService Performance', () => {
   })
 
   describe('data size', () => {
-    const generateData = (size: number): string => {
-      return 'x'.repeat(size)
-    }
-
-    const measureOperation = async (
-      operation: () => Promise<any>,
-    ): Promise<number> => {
-      const start = Date.now()
-      await operation()
-      return Date.now() - start
-    }
-
     it('should handle various data sizes efficiently', async () => {
       const sizes = [1024, 10240, 102400, 1048576] // 1KB, 10KB, 100KB, 1MB
       const results: Record<number, { write: number; read: number }> = {}
@@ -160,7 +149,7 @@ describe('RedisService Performance', () => {
 
   describe('memory usage', () => {
     it('should maintain reasonable memory usage under load', async () => {
-      const initialStats = await redis.getPoolStats()
+      const _initialStats = await redis.getPoolStats()
 
       // Generate significant load with varied data sizes
       const operations = Array.from({ length: 1000 }, (_, i) => {

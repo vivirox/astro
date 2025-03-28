@@ -205,7 +205,7 @@ export class Auth {
       get: (name: string) => {
         const match = cookieHeader.match(new RegExp(`${name}=([^;]+)`))
         return match ? { value: match[1] } : undefined
-      }
+      },
     } as AstroCookies
   }
 }

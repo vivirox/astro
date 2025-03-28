@@ -1,12 +1,12 @@
 ---
-title: "WebSocket Implementation"
-description: "Guide to implementing and using WebSocket connections"
+title: 'WebSocket Implementation'
+description: 'Guide to implementing and using WebSocket connections'
 pubDate: 2025-03-24
 share: true
 toc: true
 lastModDate: 2025-03-25
-tags: ["websocket", "real-time", "communication"]
-author: "Gradiant Team"
+tags: ['websocket', 'real-time', 'communication']
+author: 'Gradiant Team'
 ---
 
 import { Steps, Tabs, TabItem } from '@astrojs/starlight/components'
@@ -22,11 +22,13 @@ Homomorphic Encryption (FHE) and includes robust error handling and reconnection
 The WebSocket system consists of three main components:
 
 1. Server Components:
+
    - `TherapyChatWebSocketServer`: Handles therapy chat sessions
    - `WebSocketServer`: Manages notifications
    - `AnalyticsService`: Provides real-time analytics updates
 
 2. Client Components:
+
    - `useWebSocket` hook: React hook for WebSocket connections
    - WebSocket integration in various components
 
@@ -48,6 +50,7 @@ class TherapyChatWebSocketServer {
 ```
 
 Features:
+
 - Session management for group therapy
 - FHE message encryption
 - Error handling and logging
@@ -65,6 +68,7 @@ class WebSocketServer {
 ```
 
 Features:
+
 - User-specific notifications
 - Message queuing
 - Delivery tracking
@@ -81,6 +85,7 @@ class AnalyticsService {
 ```
 
 Features:
+
 - Real-time metrics updates
 - Secure data transmission
 - Client subscription management
@@ -106,6 +111,7 @@ function useWebSocket({
 ```
 
 Features:
+
 - Automatic reconnection
 - Message encryption
 - Error handling
@@ -122,17 +128,19 @@ const { isConnected, sendMessage, error } = useWebSocket({
     // Handle incoming messages
   },
   encrypted: true,
-});
+})
 ```
 
 ## Security Considerations
 
 1. Message Encryption:
+
    - FHE encryption for sensitive data
    - End-to-end encryption support
    - Secure key management
 
 2. Authentication:
+
    - Token-based authentication
    - Session validation
    - User authorization
@@ -169,16 +177,19 @@ describe('useWebSocket', () => {
 ## Best Practices
 
 1. Connection Management:
+
    - Implement heartbeat mechanism
    - Handle reconnection gracefully
    - Clean up resources on disconnect
 
 2. Message Handling:
+
    - Validate message format
    - Handle large messages appropriately
    - Implement retry logic for failed sends
 
 3. Security:
+
    - Use secure WebSocket (WSS)
    - Implement proper authentication
    - Encrypt sensitive data
@@ -194,11 +205,13 @@ describe('useWebSocket', () => {
 The WebSocket system includes comprehensive monitoring:
 
 1. Connection Metrics:
+
    - Active connections
    - Connection duration
    - Reconnection attempts
 
 2. Message Metrics:
+
    - Message throughput
    - Message size
    - Error rates
@@ -213,11 +226,13 @@ The WebSocket system includes comprehensive monitoring:
 Common issues and solutions:
 
 1. Connection Issues:
+
    - Check network connectivity
    - Verify WebSocket URL
    - Check SSL certificates
 
 2. Authentication Errors:
+
    - Verify token validity
    - Check user permissions
    - Ensure proper session management
@@ -231,27 +246,27 @@ Common issues and solutions:
 
 ### Server Methods
 
-| Method | Description |
-|--------|-------------|
-| `handleConnection` | Manages new client connections |
-| `handleMessage` | Processes incoming messages |
+| Method               | Description                            |
+| -------------------- | -------------------------------------- |
+| `handleConnection`   | Manages new client connections         |
+| `handleMessage`      | Processes incoming messages            |
 | `broadcastToSession` | Sends messages to session participants |
-| `handleDisconnect` | Cleans up disconnected clients |
+| `handleDisconnect`   | Cleans up disconnected clients         |
 
 ### Client Methods
 
-| Method | Description |
-|--------|-------------|
+| Method        | Description                   |
+| ------------- | ----------------------------- |
 | `sendMessage` | Sends a message to the server |
-| `sendStatus` | Updates client status |
-| `connect` | Initiates connection |
-| `disconnect` | Closes connection |
+| `sendStatus`  | Updates client status         |
+| `connect`     | Initiates connection          |
+| `disconnect`  | Closes connection             |
 
 ### Events
 
-| Event | Description |
-|-------|-------------|
-| `message` | New message received |
-| `status` | Connection status changed |
-| `error` | Error occurred |
-| `close` | Connection closed |
+| Event     | Description               |
+| --------- | ------------------------- |
+| `message` | New message received      |
+| `status`  | Connection status changed |
+| `error`   | Error occurred            |
+| `close`   | Connection closed         |

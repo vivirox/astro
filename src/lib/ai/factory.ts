@@ -97,8 +97,10 @@ export function createAIService(
         baseUrl: options.baseUrl,
       })
       baseService = {
-        createChatCompletion: nebiusProvider.createChatCompletion.bind(nebiusProvider),
-        createStreamingChatCompletion: nebiusProvider.createStreamingChatCompletion.bind(nebiusProvider),
+        createChatCompletion:
+          nebiusProvider.createChatCompletion.bind(nebiusProvider),
+        createStreamingChatCompletion:
+          nebiusProvider.createStreamingChatCompletion.bind(nebiusProvider),
         dispose: nebiusProvider.dispose.bind(nebiusProvider),
       }
       break

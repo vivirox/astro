@@ -9,9 +9,41 @@ import {
   sleep,
   verifyRedisConnection,
 } from './test-utils'
+import {
+  vi,
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+} from 'vitest'
 
-// Mock ioredis
-jest.mock('ioredis')
+const createMockRedis = () => ({
+  lpush: vi.fn().mockResolvedValue(1),
+  rpoplpush: vi.fn().mockResolvedValue('test-value'),
+  lrem: vi.fn().mockResolvedValue(1),
+  llen: vi.fn().mockResolvedValue(1),
+  lrange: vi.fn().mockResolvedValue(['test-value']),
+  zadd: vi.fn().mockResolvedValue(1),
+  zrangebyscore: vi.fn().mockResolvedValue(['test-value']),
+  zremrangebyscore: vi.fn().mockResolvedValue(1),
+  keys: vi.fn().mockResolvedValue(['test-key']),
+  hget: vi.fn().mockResolvedValue('test-value'),
+  hgetall: vi.fn().mockResolvedValue({ key: 'value' }),
+  hset: vi.fn().mockResolvedValue(1),
+  hdel: vi.fn().mockResolvedValue(1),
+  del: vi.fn().mockResolvedValue(1),
+  get: vi.fn().mockResolvedValue('test-value'),
+  set: vi.fn().mockResolvedValue('OK'),
+  quit: vi.fn().mockResolvedValue('OK'),
+  on: vi.fn(),
+  connect: vi.fn().mockResolvedValue(undefined),
+})
+
+vi.mock('ioredis', () => ({
+  default: vi.fn().mockImplementation(() => createMockRedis()),
+}))
 
 describe('redisService', () => {
   let redis: RedisService
@@ -76,20 +108,20 @@ describe('redisService', () => {
   describe('key-Value Operations', () => {
     it('should set and get values', async () => {
       const key = generateTestKey('kv')
-      const value = { test: 'data' }
+      const value = JSON.stringify({ test: 'data' })
 
       await redis.set(key, value)
       const result = await redis.get(key)
 
-      expect(result).toEqual(value)
+      expect(JSON.parse(result!)).toEqual({ test: 'data' })
     })
 
     it('should handle TTL', async () => {
       const key = generateTestKey('ttl')
-      const value = { test: 'data' }
+      const value = JSON.stringify({ test: 'data' })
       const ttl = 2
 
-      await redis.set(key, value, ttl)
+      await redis.set(key, value, ttl * 1000)
       await expect(key).toHaveTTL(ttl)
 
       await sleep(ttl * 1000 + 100)
@@ -113,7 +145,7 @@ describe('redisService', () => {
 
     it('should increment values', async () => {
       const key = generateTestKey('incr')
-      await redis.set(key, 0)
+      await redis.set(key, '0')
       const result = await redis.incr(key)
       expect(result).toBe(1)
     })
@@ -135,7 +167,9 @@ describe('redisService', () => {
       const key = generateTestKey('set')
       const members = ['member1', 'member2']
 
-      await redis.sadd(key, ...members)
+      for (const member of members) {
+        await redis.sadd(key, member)
+      }
       const result = await redis.smembers(key)
       expect(result).toEqual(expect.arrayContaining(members))
     })
@@ -184,7 +218,7 @@ describe('redisService', () => {
 
     it('should maintain stable memory usage', async () => {
       const key = generateTestKey('mem')
-      const value = { data: 'x'.repeat(1000) }
+      const value = JSON.stringify({ data: 'x'.repeat(1000) })
 
       await monitorMemoryUsage(
         async () => {

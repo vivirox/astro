@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-
 interface FeatureTest {
   name: string
   test: () => boolean
@@ -42,12 +41,11 @@ export function BrowserCompatibilityTester() {
           try {
             // Test for specific ES2024 features safely
             return (
-              typeof Promise.withResolvers === 'function'
-              && 'groupBy' in Array.prototype
-              && typeof Array.prototype.findLast === 'function'
+              typeof Promise.withResolvers === 'function' &&
+              'groupBy' in Array.prototype &&
+              typeof Array.prototype.findLast === 'function'
             )
-          }
-          catch {
+          } catch {
             return false
           }
         },
@@ -55,9 +53,9 @@ export function BrowserCompatibilityTester() {
       {
         name: 'WebCrypto',
         test: () =>
-          typeof window !== 'undefined'
-          && 'crypto' in window
-          && 'subtle' in window.crypto,
+          typeof window !== 'undefined' &&
+          'crypto' in window &&
+          'subtle' in window.crypto,
       },
       {
         name: 'WebWorkers',
@@ -77,8 +75,7 @@ export function BrowserCompatibilityTester() {
     featureTests.forEach(({ name, test }) => {
       try {
         testResults[name] = test()
-      }
-      catch {
+      } catch {
         testResults[name] = false
       }
     })
@@ -88,10 +85,6 @@ export function BrowserCompatibilityTester() {
 
   // Helper functions for feature detection
 
-
-
-
-
   return (
     <div className="browser-compatibility-tester">
       <h2>Browser Compatibility Test</h2>
@@ -100,48 +93,32 @@ export function BrowserCompatibilityTester() {
         <h3 id="browser-info-heading">Browser Information</h3>
         <ul>
           <li>
-            <strong>User Agent:</strong>
-            {' '}
-            {browserInfo.userAgent}
+            <strong>User Agent:</strong> {browserInfo.userAgent}
           </li>
           <li>
-            <strong>Platform:</strong>
-            {' '}
-            {browserInfo.platform}
+            <strong>Platform:</strong> {browserInfo.platform}
           </li>
           <li>
-            <strong>Language:</strong>
-            {' '}
-            {browserInfo.language}
+            <strong>Language:</strong> {browserInfo.language}
           </li>
           <li>
-            <strong>Vendor:</strong>
-            {' '}
-            {browserInfo.vendor}
+            <strong>Vendor:</strong> {browserInfo.vendor}
           </li>
           <li>
-            <strong>Cookies Enabled:</strong>
-            {' '}
+            <strong>Cookies Enabled:</strong>{' '}
             {browserInfo.cookiesEnabled ? 'Yes' : 'No'}
           </li>
           <li>
-            <strong>Screen Size:</strong>
-            {' '}
-            {browserInfo.screenSize}
+            <strong>Screen Size:</strong> {browserInfo.screenSize}
           </li>
           <li>
-            <strong>Pixel Ratio:</strong>
-            {' '}
-            {browserInfo.pixelRatio}
+            <strong>Pixel Ratio:</strong> {browserInfo.pixelRatio}
           </li>
           <li>
-            <strong>Touch Points:</strong>
-            {' '}
-            {browserInfo.touchPoints}
+            <strong>Touch Points:</strong> {browserInfo.touchPoints}
           </li>
           <li>
-            <strong>Touch Support:</strong>
-            {' '}
+            <strong>Touch Support:</strong>{' '}
             {browserInfo.hasTouch ? 'Yes' : 'No'}
           </li>
         </ul>

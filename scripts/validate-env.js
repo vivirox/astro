@@ -7,18 +7,10 @@
  * when deploying to production environments.
  */
 
-// Production environment check
+// Environment checks
 const isProduction = process.env.NODE_ENV === 'production'
 const isBuildStep =
   process.env.VERCEL_ENV === 'production' || process.env.NETLIFY === 'true'
-
-// If not in production build, exit silently
-if (!isProduction || !isBuildStep) {
-  console.log(
-    'Not in production build environment, skipping environment validation.',
-  )
-  process.exit(0)
-}
 
 // Define required environment variables
 const requiredVars = [
@@ -30,26 +22,52 @@ const requiredVars = [
   // Add other required variables here
 ]
 
-// Check for missing variables
-const missingVars = requiredVars.filter((varName) => !process.env[varName])
+try {
+  // Check for missing variables
+  const missingVars = requiredVars.filter((varName) => !process.env[varName])
 
-// If there are missing variables, fail the build
-if (missingVars.length > 0) {
-  console.error(
-    '\x1b[31m%s\x1b[0m',
-    '❌ ERROR: Missing required environment variables in production build:',
-  )
-  missingVars.forEach((varName) => {
-    console.error(`   - ${varName}`)
-  })
-  console.error(
-    '\nPlease make sure these variables are set in your deployment platform.\n',
-  )
-  process.exit(1) // Exit with error code
-} else {
-  console.log(
-    '\x1b[32m%s\x1b[0m',
-    '✅ All required environment variables are present.',
-  )
-  process.exit(0)
+  // Production environment handling
+  if (isProduction && isBuildStep) {
+    // If there are missing variables in production, fail the build
+    if (missingVars.length > 0) {
+      console.error(
+        '\x1b[31m%s\x1b[0m',
+        '❌ ERROR: Missing required environment variables in production build:',
+      )
+      missingVars.forEach((varName) => {
+        console.error(`   - ${varName}`)
+      })
+      console.error(
+        '\nPlease make sure these variables are set in your deployment platform.\n',
+      )
+      process.exitCode = 1
+    } else {
+      console.log(
+        '\x1b[32m%s\x1b[0m',
+        '✅ All required environment variables are present.',
+      )
+    }
+  } else {
+    // Development environment - just warn about missing vars
+    if (missingVars.length > 0) {
+      console.warn(
+        '\x1b[33m%s\x1b[0m',
+        '⚠️  Warning: Some environment variables are missing in development:',
+      )
+      missingVars.forEach((varName) => {
+        console.warn(`   - ${varName}`)
+      })
+      console.warn(
+        '\nMock services will be used for missing credentials in development.\n',
+      )
+    } else {
+      console.log(
+        '\x1b[32m%s\x1b[0m',
+        '✅ All environment variables are present.',
+      )
+    }
+  }
+} catch (error) {
+  console.error('Error validating environment variables:', error)
+  process.exitCode = 1
 }

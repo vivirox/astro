@@ -9,21 +9,21 @@ declare global {
     }
 
     interface HTMLAttributes {
-      class?: string;
-      [key: string]: any;
+      class?: string
+      [key: string]: any
     }
 
     // Add Element type for components that return JSX.Element
-    type Element = any;
+    type Element = any
 
     // Add ElementClass for class components
     interface ElementClass {
-      render: any;
+      render: any
     }
 
     // Add ElementAttributesProperty for props type inference
     interface ElementAttributesProperty {
-      props: {};
+      props: {}
     }
   }
 }

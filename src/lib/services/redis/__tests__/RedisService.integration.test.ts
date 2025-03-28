@@ -1,7 +1,26 @@
-import type { RedisServiceConfig } from '../'
+import type { RedisServiceConfig } from '../types'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
-import { RedisService } from '../'
+import { RedisService } from '../RedisService'
 import { RedisErrorCode } from '../types'
+import { generateTestKey, sleep } from './test-utils'
+
+// Add custom matcher for Redis errors
+declare module '@jest/globals' {
+  interface Matchers<R> {
+    toBeRedisError: (code: RedisErrorCode) => R
+  }
+}
+
+expect.extend({
+  toBeRedisError(received: unknown, code: RedisErrorCode) {
+    const error = received as { code?: RedisErrorCode }
+    const pass = error?.code === code
+    return {
+      message: () => `expected error code ${code} but received ${error?.code}`,
+      pass,
+    }
+  },
+})
 
 describe('RedisService Integration Tests', () => {
   let redis: RedisService
@@ -369,6 +388,7 @@ describe('RedisService Integration Tests', () => {
         connectTimeout: 1000,
       })
 
+      // @ts-expect-error Custom matcher defined in test setup
       await expect(unstableRedis.connect()).rejects.toBeRedisError(
         RedisErrorCode.CONNECTION_FAILED,
       )
@@ -472,6 +492,7 @@ describe('RedisService Integration Tests', () => {
         await retryRedis.disconnect()
 
         // This should retry and eventually fail
+        // @ts-expect-error Custom matcher defined in test setup
         await expect(retryRedis.get(key)).rejects.toBeRedisError(
           RedisErrorCode.OPERATION_FAILED,
         )

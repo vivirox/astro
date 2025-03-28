@@ -1,8 +1,7 @@
 import { fheChat, type ChatMessage, type ChatMessageWithFHE } from './fheChat'
-import { EmotionLlamaEnhancedProvider } from '../ai/providers/EmotionLlamaEnhancedProvider'
-import { MentalLLaMAFactory } from '../ai/mental-llama'
-import { createLogger } from '../../utils/logger'
-import { FHEService } from '../fhe'
+import { EmotionLlamaEnhancedProvider } from '@lib/ai/providers/EmotionLlamaEnhancedProvider'
+import { createLogger } from '@utils/logger'
+import type { FHEService } from '@lib/fhe'
 
 const logger = createLogger({ context: 'MentalHealthChat' })
 
@@ -208,12 +207,13 @@ export class MentalHealthChat {
    * @returns True if an intervention is needed
    */
   needsIntervention(conversationId: string): boolean {
-    const history = this.getAnalysisHistory(conversationId)
+    const history = this.analysisHistory.get(conversationId) || []
+    if (history.length === 0) return false
 
-    // Check the last few analyses
+    // Get the most recent analyses (up to last 5)
     const recentAnalyses = history.slice(-5)
 
-    // If any recent analysis exceeds the threshold, suggest intervention
+    // Check if any recent analysis exceeds the threshold
     return recentAnalyses.some(
       (analysis) =>
         analysis.hasMentalHealthIssue &&
@@ -258,7 +258,6 @@ export class MentalHealthChat {
 
       // If no mental health issues, provide a default intervention
       if (recentIssues.length === 0) {
-        const mostRecent = history[history.length - 1]
         const response = await this.provider.generateIntervention(session, {
           timestamp: new Date(),
           emotions: [],
