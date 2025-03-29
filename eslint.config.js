@@ -6,6 +6,9 @@ import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import globals from 'globals'
 
+// Suppress warning for .eslintignore (still needed for Trunk)
+process.env.ESLINT_IGNORE_WARNINGS = 'true'
+
 export default [
   {
     ignores: [
