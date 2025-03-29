@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { RealTimeFeedback, TherapeuticTechnique } from '../types'
+import type { RealTimeFeedback, TherapeuticTechnique } from '../types'
 import EmpathyMeter from './EmpathyMeter'
 
 interface RealTimeFeedbackPanelProps {

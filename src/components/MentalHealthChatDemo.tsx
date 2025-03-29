@@ -6,14 +6,15 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
+import { Label } from '@/components/ui/Label'
 import {
   MentalHealthInsights,
   MentalHealthHistoryChart,
 } from '@/components/MentalHealthInsights'
 import { getLogger } from '@/lib/utils/logger'
-import { fheService } from '@/lib/fhe'
-import { createMentalHealthChat, MentalHealthAnalysis } from '@/lib/chat'
+import { fheService as _fheService } from '@/lib/fhe'
+import type { MentalHealthAnalysis } from '@/lib/chat'
+import { createMentalHealthChat } from '@/lib/chat'
 
 const logger = getLogger('MentalHealthChatDemo')
 
@@ -48,7 +49,9 @@ export function MentalHealthChatDemo() {
   ])
   const [input, setInput] = useState('')
   const [processing, setProcessing] = useState(false)
-  const [mentalHealthChat, setMentalHealthChat] = useState<any>(null)
+  const [mentalHealthChat, setMentalHealthChat] = useState<ReturnType<
+    typeof createMentalHealthChat
+  > | null>(null)
   const [settings, setSettings] = useState({
     enableAnalysis: true,
     useExpertGuidance: true,
@@ -57,7 +60,7 @@ export function MentalHealthChatDemo() {
 
   // Initialize the MentalHealthChat service
   useEffect(() => {
-    const chat = createMentalHealthChat(mockFHEService as any, {
+    const chat = createMentalHealthChat(mockFHEService, {
       enableAnalysis: settings.enableAnalysis,
       useExpertGuidance: settings.useExpertGuidance,
       triggerInterventionThreshold: 0.7,
@@ -69,7 +72,7 @@ export function MentalHealthChatDemo() {
     return () => {
       // Clean up if needed
     }
-  }, [])
+  }, [settings.enableAnalysis, settings.useExpertGuidance])
 
   // Get all analyses from the message history
   const getAnalysisHistory = (): MentalHealthAnalysis[] => {
@@ -170,7 +173,7 @@ export function MentalHealthChatDemo() {
 
   // Request a therapeutic intervention
   const handleRequestIntervention = async (
-    messageWithAnalysis: ChatMessage,
+    _messageWithAnalysis: ChatMessage,
   ) => {
     if (!mentalHealthChat) return
 
@@ -275,8 +278,8 @@ export function MentalHealthChatDemo() {
                   .map((m) => (
                     <div key={`analysis_${m.id}`} className="mb-4">
                       <p className="text-xs text-muted-foreground mb-1">
-                        Analysis for: "{m.content.substring(0, 30)}
-                        {m.content.length > 30 ? '...' : ''}"
+                        Analysis for: &quot;{m.content.substring(0, 30)}
+                        {m.content.length > 30 ? '...' : ''}&quot;
                       </p>
                       <MentalHealthInsights
                         analysis={m.mentalHealthAnalysis!}

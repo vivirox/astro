@@ -9,7 +9,7 @@ import type {
 } from '../types'
 import { createLogger } from '../../../utils/logger'
 import { EmotionLlamaProvider } from './EmotionLlamaProvider'
-import { MentalLLaMAAdapter } from '../mental-llama/MentalLLaMAAdapter'
+import type { MentalLLaMAAdapter } from '../mental-llama/MentalLLaMAAdapter'
 import { MentalLLaMAFactory } from '../mental-llama/MentalLLaMAFactory'
 
 const logger = createLogger({ context: 'EmotionLlamaEnhanced' })

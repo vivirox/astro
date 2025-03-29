@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { SimulationScenario, TherapeuticDomain } from '../types'
+import type { SimulationScenario, TherapeuticDomain } from '../types'
 
 interface ScenarioInfoProps {
   scenario: SimulationScenario

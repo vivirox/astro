@@ -1,4 +1,4 @@
-import { WebRTCServiceInterface, WebRTCConnectionConfig } from '../types'
+import type { WebRTCServiceInterface, WebRTCConnectionConfig } from '../types'
 
 /**
  * Service for managing real-time WebRTC audio/video communication

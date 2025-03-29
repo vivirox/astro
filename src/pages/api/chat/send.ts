@@ -12,7 +12,7 @@ interface ChatMessageRequest {
 
 // Define the message sending handler with FHE secure processing
 export async function POST(request: Request) {
-  const body = (await request.json()) as ChatMessageReques
+  const body = (await request.json()) as ChatMessageRequest
 
   // ... existing message validation logic
 

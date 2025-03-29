@@ -3,6 +3,7 @@ import { Buffer } from 'node:buffer'
 import { initializeSecurityDatabase } from '../../db/security/initialize'
 import { getLogger } from '../logging'
 import { SecurityEventSeverity, SecurityMonitoringService } from './monitoring'
+import crypto from 'crypto'
 
 const logger = getLogger()
 
@@ -183,7 +184,9 @@ async function simulateInitializeFHE(): Promise<void> {
 async function simulateEncrypt(message: string): Promise<string> {
   // Simple XOR-based "encryption" for simulation only
   // This is NOT secure and is only for development illustration
-  const key = 'FHE_SIMULATION_KEY_2025'
+  const key =
+    process.env.SIMULATION_KEY ||
+    crypto.randomBytes(32).toString('hex').slice(0, 24)
   let result = ''
   for (let i = 0; i < message.length; i++) {
     const charCode = message.charCodeAt(i) ^ key.charCodeAt(i % key.length)
@@ -202,7 +205,9 @@ async function simulateDecrypt(ciphertext: string): Promise<string> {
   const encryptedContent = Buffer.from(encodedContent, 'base64').toString()
 
   // Simple XOR-based "decryption" for simulation only
-  const key = 'FHE_SIMULATION_KEY_2025'
+  const key =
+    process.env.SIMULATION_KEY ||
+    crypto.randomBytes(32).toString('hex').slice(0, 24)
   let result = ''
   for (let i = 0; i < encryptedContent.length; i++) {
     const charCode =

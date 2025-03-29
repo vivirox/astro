@@ -1,10 +1,6 @@
 import React, { useState, useMemo } from 'react'
-import {
-  Scenario,
-  TherapeuticDomain,
-  ScenarioDifficulty,
-  ScenarioSelectorProps,
-} from '../types'
+import type { Scenario, ScenarioSelectorProps } from '../types'
+import { TherapeuticDomain, ScenarioDifficulty } from '../types'
 import { getAllScenarios } from '../data/scenarios'
 
 /**

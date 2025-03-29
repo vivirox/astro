@@ -1,6 +1,7 @@
-# @astrojs/react ⚛️
+# @astrojs/react
 
-This **[Astro integration][astro-integration]** enables server-side rendering and client-side hydration for your [React](https://react.dev/) components.
+This **[Astro integration][astro-integration]** enables server-side rendering
+and client-side hydration for your [React](https://react.dev/) components.
 
 ## Documentation
 
@@ -8,15 +9,20 @@ Read the [`@astrojs/react` docs][docs]
 
 ## Support
 
-- Get help in the [Astro Discord][discord]. Post questions in our `#support` forum, or visit our dedicated `#dev` channel to discuss current development and more!
+- Get help in the [Astro Discord][discord]. Post questions in our `#support` forum,
+  or visit our dedicated `#dev` channel to discuss current development and more!
 
-- Check our [Astro Integration Documentation][astro-integration] for more on integrations.
+- Check our [Astro Integration Documentation][astro-integration] for more on
+  integrations.
 
 - Submit bug reports and feature requests as [GitHub issues][issues].
 
 ## Contributing
 
-This package is maintained by Astro's Core team. You're welcome to submit an issue or PR! These links will help you get started:
+This package is maintained by Astro's Core team. You're welcome to submit an issue
+or PR!
+
+These links will help you get started:
 
 - [Contributor Manual][contributing]
 - [Code of Conduct][coc]
@@ -26,7 +32,7 @@ This package is maintained by Astro's Core team. You're welcome to submit an iss
 
 MIT
 
-Copyright (c) 2023–present [Astro][astro]
+Copyright (c) 2023-present [Astro][astro]
 
 [astro]: https://astro.build/
 [docs]: https://docs.astro.build/en/guides/integrations-guide/react/

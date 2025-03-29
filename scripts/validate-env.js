@@ -14,8 +14,8 @@ const isBuildStep =
 
 // Define required environment variables
 const requiredVars = [
-  'PUBLIC_SUPABASE_URL',
-  'PUBLIC_SUPABASE_ANON_KEY',
+  'SUPABASE_URL',
+  'SUPABASE_ANON_KEY',
   'SUPABASE_SERVICE_ROLE_KEY',
   'UPSTASH_REDIS_REST_URL',
   'UPSTASH_REDIS_REST_TOKEN',

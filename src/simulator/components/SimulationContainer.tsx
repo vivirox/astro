@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
-import { SimulationContainerProps, TherapeuticTechnique } from '../types'
+import type { SimulationContainerProps, TherapeuticTechnique } from '../types'
 import { useSimulatorContext } from '../context/SimulatorProvider'
 import { checkBrowserCompatibility, anonymizeFeedback } from '../utils/privacy'
 

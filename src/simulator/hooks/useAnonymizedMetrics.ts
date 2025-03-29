@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import {
-  AnonymizedMetrics,
-  TherapeuticTechnique,
-  TherapeuticDomain,
-  FeedbackType,
-} from '../types'
+import type { AnonymizedMetrics } from '../types'
+import { TherapeuticTechnique, TherapeuticDomain, FeedbackType } from '../types'
 import { getUserConsentPreference } from '../utils/privacy'
 
 // Local storage key for metrics

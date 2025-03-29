@@ -6,11 +6,11 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { TherapeuticDomain } from '../types'
+import type { SpeechRecognitionConfig } from '../utils/speechRecognition'
 import {
   createSpeechRecognition,
   isSpeechRecognitionSupported,
   processRecognizedSpeech,
-  SpeechRecognitionConfig,
   DEFAULT_SPEECH_CONFIG,
   createTherapeuticGrammar,
   analyzeTherapeuticTechniques,

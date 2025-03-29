@@ -106,11 +106,27 @@ export const verifyPrivacySettings = (): string[] => {
 /**
  * Generates a consent form for data processing
  * All data processing should be opt-in with clear explanation of what is processed
+ * @param forHealthcare Whether to generate healthcare-specific consent form
  */
-export const generateConsentForm = (): {
+export const generateConsentForm = (
+  forHealthcare: boolean = false,
+): {
   consentText: string
   privacyPoints: string[]
 } => {
+  if (forHealthcare) {
+    return {
+      consentText:
+        'I understand that anonymous metrics about my practice sessions may be stored locally in my browser. These metrics contain no personal information, session content, or identifiable data. They are used solely to show my progress over time.',
+      privacyPoints: [
+        'Anonymous skill metrics stored only in your browser (technique recognition, response timing)',
+        "Aggregated statistics on therapeutic domains you've practiced",
+        'Progress tracking across practice sessions (skill improvement over time)',
+        'Frequency of different feedback types received',
+      ],
+    }
+  }
+
   return {
     consentText:
       'I understand that this simulation does not record or store any audio, video, or conversation data. I consent to anonymous, aggregated metrics being collected to improve the system.',
@@ -131,20 +147,10 @@ export const generateConsentForm = (): {
  */
 
 /**
- * Generates content for the consent form with appropriate language
- * for healthcare professionals
+ * @deprecated Use generateConsentForm(true) instead
  */
 export function generateHealthcareConsentForm() {
-  return {
-    consentText:
-      'I understand that anonymous metrics about my practice sessions may be stored locally in my browser. These metrics contain no personal information, session content, or identifiable data. They are used solely to show my progress over time.',
-    privacyPoints: [
-      'Anonymous skill metrics stored only in your browser (technique recognition, response timing)',
-      "Aggregated statistics on therapeutic domains you've practiced",
-      'Progress tracking across practice sessions (skill improvement over time)',
-      'Frequency of different feedback types received',
-    ],
-  }
+  return generateConsentForm(true)
 }
 
 /**
@@ -196,7 +202,7 @@ export function checkBrowserCompatibility(): {
   }
 
   // Check for Web Audio API (for audio processing)
-  if (!window.AudioContext && !window['webkitAudioContext']) {
+  if (!window.AudioContext && !(window as any)['webkitAudioContext']) {
     missingFeatures.push('Web Audio API')
   }
 

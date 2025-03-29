@@ -1,12 +1,12 @@
+import type { ReactNode } from 'react'
 import React, {
   createContext,
   useContext,
   useState,
   useEffect,
   useCallback,
-  ReactNode,
 } from 'react'
-import {
+import type {
   FeedbackModelConfig,
   RealTimeFeedback,
   SimulationScenario,

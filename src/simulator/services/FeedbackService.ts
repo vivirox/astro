@@ -1,10 +1,12 @@
+import type {
+  FeedbackServiceInterface,
+  RealTimeFeedback,
+  Scenario,
+} from '../types'
 import {
   FeedbackModelConfig,
-  FeedbackServiceInterface,
   FeedbackType,
-  RealTimeFeedback,
   SimulationScenario,
-  Scenario,
   TherapeuticTechnique,
 } from '../types'
 

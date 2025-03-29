@@ -1,10 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
-import {
-  SimulationFeedback,
-  Scenario,
-  TherapeuticTechnique,
-  FeedbackType,
-} from '../types'
+import type { SimulationFeedback, Scenario } from '../types'
+import { TherapeuticTechnique, FeedbackType } from '../types'
 import {
   getUserConsentPreference,
   setUserConsentPreference,

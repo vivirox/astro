@@ -1,4 +1,4 @@
-import { DeploymentConfig } from './deploy'
+import type { DeploymentConfig } from './deploy'
 
 export const stagingConfig: DeploymentConfig = {
   environment: 'staging',

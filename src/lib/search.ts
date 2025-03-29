@@ -69,6 +69,21 @@ const DEFAULT_CONFIG: SearchConfig = {
   },
 }
 
+// Search client interface
+export interface SearchClient {
+  search: (query: string) => SearchDocument[]
+  importDocuments: (documents: SearchDocument[]) => void
+}
+
+// Declare global types to access via Window
+declare global {
+  interface Window {
+    searchClient: SearchClient
+    searchIndex: SearchDocument[]
+    initSearch?: () => void
+  }
+}
+
 /**
  * FlexSearch client-side search implementation
  * Provides high-performance, privacy-focused search functionality
@@ -254,8 +269,13 @@ export class SearchClient {
   }
 }
 
-// Export a default search client instance
+// Create and export a single search client instance
 export const searchClient = new SearchClient()
+
+// Make it available on the window object when running in browser
+if (typeof window !== 'undefined') {
+  window.searchClient = searchClient
+}
 
 // Helper function to create a document for indexing
 export function createSearchDocument(

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSimulator } from '../context/SimulatorContext'
-import { FeedbackType } from '../types'
+import type { FeedbackType } from '../types'
 
 interface FeedbackPanelProps {
   className?: string

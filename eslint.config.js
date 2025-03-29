@@ -110,9 +110,9 @@ export default [
       astro: astroPlugin,
     },
     languageOptions: {
-      parser: tsParser,
+      parser: astroPlugin.parser,
       parserOptions: {
-        parser: '@typescript-eslint/parser',
+        parser: tsParser,
         extraFileExtensions: ['.astro'],
         sourceType: 'module',
         ecmaVersion: 'latest',

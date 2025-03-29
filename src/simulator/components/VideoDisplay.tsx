@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { UserSession } from '../types'
+import type { UserSession } from '../types'
 
 interface VideoDisplayProps {
   isConnected: boolean
