@@ -7,6 +7,49 @@ import { loggingMiddleware } from './logging'
 import { rateLimitMiddleware } from './rate-limit'
 
 /**
+ * Content Type middleware to ensure proper MIME types
+ * This helps resolve issues with CSS files being served with incorrect MIME types
+ */
+const contentTypeMiddleware: MiddlewareHandler = async (
+  context: APIContext,
+  next: MiddlewareNext,
+) => {
+  // Process the request first
+  const response = await next()
+
+  if (!response) return response
+
+  const url = new URL(context.request.url)
+  const path = url.pathname
+
+  // Set correct content types based on file extensions
+  if (path.endsWith('.css')) {
+    response.headers.set('Content-Type', 'text/css; charset=utf-8')
+  } else if (path.endsWith('.js')) {
+    response.headers.set(
+      'Content-Type',
+      'application/javascript; charset=utf-8',
+    )
+  } else if (path.endsWith('.json')) {
+    response.headers.set('Content-Type', 'application/json; charset=utf-8')
+  } else if (path.endsWith('.svg')) {
+    response.headers.set('Content-Type', 'image/svg+xml')
+  } else if (path.endsWith('.png')) {
+    response.headers.set('Content-Type', 'image/png')
+  } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
+    response.headers.set('Content-Type', 'image/jpeg')
+  } else if (path.endsWith('.webp')) {
+    response.headers.set('Content-Type', 'image/webp')
+  } else if (path.endsWith('.woff2')) {
+    response.headers.set('Content-Type', 'font/woff2')
+  } else if (path.endsWith('.woff')) {
+    response.headers.set('Content-Type', 'font/woff')
+  }
+
+  return response
+}
+
+/**
  * Apply security headers to all responses
  * Based on best practices and penetration testing results
  */
@@ -53,19 +96,12 @@ export interface ExtendedMiddleware extends MiddlewareHandler {
 }
 
 /**
- * Apply middleware in the correct sequence:
- * 1. Audit Logging - capture security events for compliance
- * 2. Logging - track all requests with request IDs
- * 3. CORS - handle preflight requests
- * 4. Rate Limiting - protect against abuse
- * 5. CSRF Protection - prevent cross-site request forgery attacks
- * 6. Security Headers - apply to all responses
+ * Combined middleware sequence that applies our middleware in the correct order
  */
-export const onRequest = sequence(
-  auditLoggingMiddleware,
+export const middlewareSequence = sequence(
   loggingMiddleware,
   corsMiddleware,
-  rateLimitMiddleware,
   csrfMiddleware,
   securityHeadersMiddleware,
+  contentTypeMiddleware,
 )

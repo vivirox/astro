@@ -5,7 +5,7 @@ export type AlertVariant = 'info' | 'success' | 'warning' | 'error'
 
 export interface AlertProps {
   /** Alert variant */
-  variant?: AlertVarian
+  variant?: AlertVariant
   /** Alert title */
   title?: string
   /** Alert description */
@@ -151,4 +151,25 @@ export function Alert({
   )
 }
 
-export default Aler
+export default Alert
+
+// Additional components for alert composition
+export const AlertTitle = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLHeadingElement>) => (
+  <h3 className={cn('text-sm font-medium', className)} {...props}>
+    {children}
+  </h3>
+)
+
+export const AlertDescription = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('text-sm mt-1', className)} {...props}>
+    {children}
+  </div>
+)

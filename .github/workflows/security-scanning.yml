@@ -8,7 +8,12 @@ on:
   schedule:
     - cron: '0 0 * * *' # Run daily at midnight UTC
 
-permissions: read-all
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+  checks: write
+  issues: write
 
 env:
   ENABLE_SECURITY_ALERTS: ${{ secrets.ENABLE_SECURITY_ALERTS }}
@@ -23,11 +28,6 @@ jobs:
   security-checks:
     name: Security Scanning
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      pull-requests: read
-      checks: write
 
     steps:
       - name: Checkout repository
@@ -43,7 +43,7 @@ jobs:
           queries: security-extended,security-and-quality
           config-file: ./.github/codeql/codeql-config.yml
           ram: 8192
-          threads: auto
+          threads: 4
           debug: true
 
       # Additional custom queries for healthcare systems
@@ -82,7 +82,7 @@ jobs:
         with:
           category: '/language:javascript,typescript,python'
           upload: true
-          output: sarif-results
+          output: 'sarif-results'
           ram: 4096
           threads: 4
 
@@ -143,7 +143,7 @@ jobs:
       # Upload Trivy scan results
       - name: Upload Trivy scan results
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: always() && hashFiles('trivy-results.sarif') != ''
         with:
           sarif_file: 'trivy-results.sarif'
 
@@ -163,7 +163,7 @@ jobs:
 
       - name: Upload Checkov scan results
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: always() && hashFiles('checkov.sarif') != ''
         with:
           sarif_file: 'checkov.sarif'
 
@@ -282,6 +282,7 @@ jobs:
               return False
 
           # Scan all relevant files
+          phi_findings = []
           for root, _, files in os.walk("."):
               for file in files:
                   if file.endswith((".ts", ".js", ".py", ".json", ".md")):
@@ -291,8 +292,13 @@ jobs:
                               content = f.read()
                               if scan_code(content, filepath):
                                   print(f"WARNING: Potential PHI found in {filepath}")
+                                  phi_findings.append({"file": filepath, "type": "PHI_DETECTION", "severity": "HIGH"})
                           except Exception as e:
                               print(f"Error scanning {filepath}: {str(e)}")
+
+          # Write findings to a JSON file
+          with open("phi-scan-results.json", "w") as f:
+              json.dump({"findings": phi_findings}, f)
           EOF
 
           python phi_detector.py

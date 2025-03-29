@@ -10,16 +10,16 @@ LABEL org.opencontainers.image.description="Astro"
 ARG PNPM_VERSION=10.6.5
 RUN npm install -g pnpm@$PNPM_VERSION
 
-# Create non-root user and switch to it
-USER node
-
-# Add healthcheck
-HEALTHCHECK \
-    --interval=30s \
-    --timeout=3s \
-    --start-period=5s \
-    --retries=3 \
-    CMD curl -f http://localhost:3000/api/health || exit 1
+# Install packages needed to build node modules (while still root)
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    build-essential=12.9 \
+    node-gyp=9.4.0 \
+    pkg-config=1.8.1 \
+    python-is-python3=3.10.0-2 \
+    curl=7.88.1-10 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Astro app lives here
 WORKDIR /app
@@ -30,20 +30,16 @@ ENV NODE_ENV="production"
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y \
-    build-essential=12.9 \
-    node-gyp=9.4.0 \
-    pkg-config=1.8.1 \
-    python-is-python3=3.10.0-2
-
 # Install node modules
-COPY package.json pnpm-lock.yaml .npmrc ./
+COPY --chown=node:node package.json pnpm-lock.yaml .npmrc ./
+
+# Switch to non-root user for the build process
+USER node
+
 RUN pnpm install --frozen-lockfile --prod=false
 
 # Copy application code
-COPY . .
+COPY --chown=node:node . .
 
 # Build application
 RUN pnpm build && \
@@ -52,12 +48,19 @@ RUN pnpm build && \
 # Final stage for app image
 FROM base
 
+# Add healthcheck (in the final stage)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:4321/api/health || exit 1
+
+# Switch to non-root user for the final image
+USER node
+
 # Copy built application
-COPY --from=build /app /app
+COPY --from=build --chown=node:node /app /app
 
 # Entrypoint sets up the container
 ENTRYPOINT ["/app/docker-entrypoint.js"]
 
 # Start the server by default
-EXPOSE 3000
+EXPOSE 4321
 CMD ["node", "dist/server/entry.mjs"]

@@ -162,4 +162,41 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
 Select.displayName = 'Select'
 
-export default Selec
+export default Select
+
+// Additional components for advanced select functionality
+export const SelectTrigger = ({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className="select-trigger" {...props}>
+    {children}
+  </div>
+)
+
+export const SelectValue = ({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => (
+  <span className="select-value" {...props}>
+    {children}
+  </span>
+)
+
+export const SelectContent = ({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className="select-content" {...props}>
+    {children}
+  </div>
+)
+
+export const SelectItem = ({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className="select-item" {...props}>
+    {children}
+  </div>
+)

@@ -64,6 +64,10 @@ export function getLogger(namespace: string): Logger {
   return new Logger({ prefix: namespace })
 }
 
+// Create a default logger instance for direct import
+export const logger = new Logger({ prefix: 'app' })
+
 export default {
   getLogger,
+  logger,
 }

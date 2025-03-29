@@ -17,7 +17,7 @@ export function BrowserCompatibilityTester() {
     touchPoints: 0,
     hasTouch: false,
   })
-  const [results, setResults] = useState<Record<string, boolean>>({})
+  const [results, setResults] = useState<Record<string, boolean | string>>({})
 
   useEffect(() => {
     // Collect browser information
@@ -69,9 +69,42 @@ export function BrowserCompatibilityTester() {
         name: 'WebAssembly',
         test: () => typeof WebAssembly === 'object',
       },
+      {
+        name: 'CSS Grid',
+        test: () => {
+          const el = document.createElement('div')
+          return typeof el.style.grid !== 'undefined'
+        },
+      },
+      {
+        name: 'Fetch API',
+        test: () => typeof fetch === 'function',
+      },
+      {
+        name: 'LocalStorage',
+        test: () => typeof localStorage !== 'undefined',
+      },
+      {
+        name: 'Reduced Motion Support',
+        test: () => {
+          if (typeof window === 'undefined' || !window.matchMedia) return false
+          return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            ? true
+            : false
+        },
+      },
+      {
+        name: 'High Contrast Mode',
+        test: () => {
+          if (typeof window === 'undefined' || !window.matchMedia) return false
+          return window.matchMedia('(forced-colors: active)').matches
+            ? true
+            : false
+        },
+      },
     ]
 
-    const testResults: Record<string, boolean> = {}
+    const testResults: Record<string, boolean | string> = {}
     featureTests.forEach(({ name, test }) => {
       try {
         testResults[name] = test()
@@ -79,6 +112,14 @@ export function BrowserCompatibilityTester() {
         testResults[name] = false
       }
     })
+
+    // Special handling for accessibility features to show "Active" instead of "Yes"
+    if (testResults['Reduced Motion Support'] === true) {
+      testResults['Reduced Motion Support'] = 'Active'
+    }
+    if (testResults['High Contrast Mode'] === true) {
+      testResults['High Contrast Mode'] = 'Active'
+    }
 
     setResults(testResults)
   }, [])
@@ -156,7 +197,17 @@ export function BrowserCompatibilityTester() {
                           ? 'Used for high-performance data sharing'
                           : feature === 'WebAssembly'
                             ? 'Used for high-performance code execution'
-                            : ''}
+                            : feature === 'CSS Grid'
+                              ? 'Used for layout and alignment'
+                              : feature === 'Fetch API'
+                                ? 'Used for asynchronous data fetching'
+                                : feature === 'LocalStorage'
+                                  ? 'Used for client-side storage'
+                                  : feature === 'Reduced Motion Support'
+                                    ? 'Used for reducing motion on devices'
+                                    : feature === 'High Contrast Mode'
+                                      ? 'Used for high contrast mode'
+                                      : ''}
                 </td>
               </tr>
             ))}

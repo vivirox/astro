@@ -59,6 +59,15 @@ export default defineConfig({
       mono: 'DM Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
       condensed: '"Roboto Condensed", Arial Narrow, Arial, sans-serif',
     },
+    colors: {
+      primary: '#3b82f6', // blue-500
+      secondary: '#64748b', // slate-500
+      success: '#22c55e', // green-500
+      danger: '#ef4444', // red-500
+      oauth: '#4f46e5', // indigo-600
+      github: '#24292e', // GitHub color
+      google: '#ea4335', // Google color
+    },
   },
 
   // Custom rules
@@ -85,10 +94,38 @@ export default defineConfig({
       ([_, x, y, blur, spread]) =>
         `shadow-[${x}px_${y}px_${blur}px_${spread}px_rgba(0,0,0,0.2)] dark:shadow-[${x}px_${y}px_${blur}px_${spread}px_rgba(255,255,255,0.4)]`,
     ],
+    // Define buttons with inline styles using arbitrary values
     [
-      /^btn-(\w+)$/,
-      ([_, color]) =>
-        `px-2.5 py-1 border border-[#8884]! rounded op-50 transition-all duration-200 ease-out no-underline! hover:(op-100 text-${color} bg-${color}/10)`,
+      'btn-base',
+      'px-2.5 py-1 border border-[#8884] rounded opacity-50 transition-all duration-200 ease-out no-underline',
+    ],
+    [
+      'btn-primary',
+      'btn-base hover:[&]:opacity-100 hover:[&]:text-[#3b82f6] hover:[&]:bg-[rgba(59,130,246,0.1)]',
+    ],
+    [
+      'btn-success',
+      'btn-base hover:[&]:opacity-100 hover:[&]:text-[#22c55e] hover:[&]:bg-[rgba(34,197,94,0.1)]',
+    ],
+    [
+      'btn-danger',
+      'btn-base hover:[&]:opacity-100 hover:[&]:text-[#ef4444] hover:[&]:bg-[rgba(239,68,68,0.1)]',
+    ],
+    [
+      'btn-secondary',
+      'btn-base hover:[&]:opacity-100 hover:[&]:text-[#64748b] hover:[&]:bg-[rgba(100,116,139,0.1)]',
+    ],
+    [
+      'btn-github',
+      'btn-base hover:[&]:opacity-100 hover:[&]:text-[#24292e] hover:[&]:bg-[rgba(36,41,46,0.1)]',
+    ],
+    [
+      'btn-google',
+      'btn-base hover:[&]:opacity-100 hover:[&]:text-[#ea4335] hover:[&]:bg-[rgba(234,67,53,0.1)]',
+    ],
+    [
+      'btn-oauth',
+      'btn-base hover:[&]:opacity-100 hover:[&]:text-[#4f46e5] hover:[&]:bg-[rgba(79,70,229,0.1)]',
     ],
   ],
 
@@ -180,6 +217,41 @@ export default defineConfig({
     /* Toc */
     'i-ri-menu-2-fill',
     'i-ri-menu-3-fill',
+
+    /* Button styles */
+    'btn-base',
+    'btn-primary',
+    'btn-success',
+    'btn-danger',
+    'btn-secondary',
+    'btn-github',
+    'btn-google',
+    'btn-oauth',
+    'px-2.5',
+    'py-1',
+    'border',
+    'border-[#8884]',
+    'rounded',
+    'opacity-50',
+    'transition-all',
+    'duration-200',
+    'ease-out',
+    'no-underline',
+    'hover:[&]:opacity-100',
+    'hover:[&]:text-[#3b82f6]',
+    'hover:[&]:bg-[rgba(59,130,246,0.1)]',
+    'hover:[&]:text-[#22c55e]',
+    'hover:[&]:bg-[rgba(34,197,94,0.1)]',
+    'hover:[&]:text-[#ef4444]',
+    'hover:[&]:bg-[rgba(239,68,68,0.1)]',
+    'hover:[&]:text-[#64748b]',
+    'hover:[&]:bg-[rgba(100,116,139,0.1)]',
+    'hover:[&]:text-[#24292e]',
+    'hover:[&]:bg-[rgba(36,41,46,0.1)]',
+    'hover:[&]:text-[#ea4335]',
+    'hover:[&]:bg-[rgba(234,67,53,0.1)]',
+    'hover:[&]:text-[#4f46e5]',
+    'hover:[&]:bg-[rgba(79,70,229,0.1)]',
 
     /* Additional utility classes that might be needed */
     'flex',

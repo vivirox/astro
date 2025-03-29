@@ -67,7 +67,7 @@ const TEST_SECTIONS: TestSections = {
                   {Object.entries(LOADING_SIZES).map(([size, dimensions]) => (
                     <div>
                       <h4>{size}</h4>
-                      <div class="loading-indicator" aria-live="polite">
+                      <div class="loading-indicator" role="status" aria-live="polite">
                         <div
                           class="loading-skeleton"
                           style={`width: ${dimensions.width}px; height: ${dimensions.height}px;`}
@@ -75,6 +75,7 @@ const TEST_SECTIONS: TestSections = {
                         <p class="loading-message">
                           Loading {size.toLowerCase()}...
                         </p>
+                        <span class="sr-only">Loading {size.toLowerCase()} content, please wait.</span>
                       </div>
                     </div>
                   ))}

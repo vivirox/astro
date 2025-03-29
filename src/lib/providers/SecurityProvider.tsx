@@ -1,6 +1,6 @@
 import type { EncryptionKey } from '@/lib/fhe/types'
 import type { ReactNode } from 'react'
-import { FHEService } from '@/lib/fhe'
+import { fheService, type FHEService } from '@/lib/fhe'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 export type SecurityLevel = 'standard' | 'hipaa' | 'maximum'
