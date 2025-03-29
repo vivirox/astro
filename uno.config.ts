@@ -1,22 +1,58 @@
+import type {
+  IconNavItem,
+  IconSocialItem,
+  ResponsiveNavItem,
+  ResponsiveSocialItem,
+} from './src/types'
+import transformerDirectives from '@unocss/transformer-directives'
+import transformerVariantGroup from '@unocss/transformer-variant-group'
 import presetAttributify from '@unocss/preset-attributify'
 import presetIcons from '@unocss/preset-icons'
 import presetUno from '@unocss/preset-uno'
+import presetWebFonts from '@unocss/preset-web-fonts'
 import { defineConfig } from 'unocss'
+import { UI } from './src/config'
+import projecstData from './src/content/projects/data.json'
+import { extractIconsStartingWithI } from './src/utils/common'
+import { VERSION_COLOR } from './src/utils/data'
 
-const presets = [
-  presetUno(),
-  presetAttributify(),
-  presetIcons({
-    scale: 1.2,
-    extraProperties: {
-      'display': 'inline-block',
-      'vertical-align': 'middle',
-    },
-  }),
-]
+const { internalNavs, socialLinks, githubView } = UI
+const navIcons = internalNavs
+  .filter(
+    (item) =>
+      item.displayMode !== 'alwaysText' &&
+      item.displayMode !== 'textHiddenOnMobile',
+  )
+  .map((item) => (item as IconNavItem | ResponsiveNavItem).icon)
+const socialIcons = socialLinks
+  .filter(
+    (item) =>
+      item.displayMode !== 'alwaysText' &&
+      item.displayMode !== 'textHiddenOnMobile',
+  )
+  .map((item) => (item as IconSocialItem | ResponsiveSocialItem).icon)
+
+const projectIcons = extractIconsStartingWithI(projecstData.projects)
+
+const versionClass = Object.values(VERSION_COLOR).flatMap((colorString) =>
+  colorString.split(' '),
+)
+
+const subLogoIcons = githubView.subLogoMatches.map((item) => item[1])
 
 export default defineConfig({
-  presets,
+  // Theme extensions
+  extendTheme: (theme) => {
+    return {
+      ...theme,
+      breakpoints: {
+        ...theme.breakpoints,
+        lgp: '1128px',
+      },
+    }
+  },
+
+  // Theme configuration
   theme: {
     fontFamily: {
       sans: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
@@ -24,17 +60,141 @@ export default defineConfig({
       condensed: '"Roboto Condensed", Arial Narrow, Arial, sans-serif',
     },
   },
+
+  // Custom rules
+  rules: [
+    [
+      /^bg-radial-gradient-(\d+)$/,
+      ([, n]) => {
+        return {
+          'background-image': `radial-gradient(ellipse at bottom left, #ffffff 0%, #fefefe 70%, #88888855 ${n}%)`,
+        }
+      },
+    ],
+  ],
+
+  // Shortcuts
+  shortcuts: [
+    [
+      /^(\w+)-transition(?:-(\d+))?$/,
+      (match) =>
+        `transition-${match[1] === 'op' ? 'opacity' : match[1]} duration-${match[2] ? match[2] : '300'} ease-in-out`,
+    ],
+    [
+      /^shadow-custom_(-?\d+)_(-?\d+)_(-?\d+)_(-?\d+)$/,
+      ([_, x, y, blur, spread]) =>
+        `shadow-[${x}px_${y}px_${blur}px_${spread}px_rgba(0,0,0,0.2)] dark:shadow-[${x}px_${y}px_${blur}px_${spread}px_rgba(255,255,255,0.4)]`,
+    ],
+    [
+      /^btn-(\w+)$/,
+      ([_, color]) =>
+        `px-2.5 py-1 border border-[#8884]! rounded op-50 transition-all duration-200 ease-out no-underline! hover:(op-100 text-${color} bg-${color}/10)`,
+    ],
+  ],
+
+  // Presets
+  presets: [
+    presetUno(),
+    presetAttributify({
+      strict: true,
+      prefix: 'u-',
+      prefixedOnly: false,
+    }),
+    presetIcons({
+      scale: 1.2,
+      extraProperties: {
+        'display': 'inline-block',
+        'height': '1.2em',
+        'width': '1.2em',
+        'vertical-align': 'text-bottom',
+      },
+    }),
+    presetWebFonts({
+      provider: 'bunny',
+      fonts: {
+        sans: [
+          {
+            name: 'Inter',
+            weights: [400, 600, 800],
+          },
+        ],
+        mono: [
+          {
+            name: 'DM Mono',
+            weights: [400, 600],
+          },
+        ],
+        condensed: [
+          {
+            name: 'Roboto Condensed',
+            weights: [400],
+          },
+        ],
+      },
+    }),
+  ],
+
+  // Preflights
   preflights: [
     {
-      layer: 'imports',
-      getCSS: () =>
-        `@import url('https://fonts.bunny.net/css?family=inter:400,600,800|dm-mono:400,600|roboto-condensed:400&display=swap');`,
-    },
-    {
-      layer: 'fonts',
+      layer: 'base',
       getCSS: () => `
-        /* Font family variables */
+        /* Base styles to ensure proper font rendering */
+        html {
+          font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        code, pre, kbd, samp {
+          font-family: DM Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
       `,
     },
+  ],
+
+  // Transformers
+  transformers: [transformerDirectives(), transformerVariantGroup()],
+
+  // Safelist
+  safelist: [
+    ...navIcons,
+    ...socialIcons,
+    ...projectIcons,
+    'font-sans',
+    'font-mono',
+    'font-condensed',
+
+    /* remark-directive-sugar */
+    'i-carbon-logo-github',
+
+    /* BaseLayout */
+    'focus:not-sr-only',
+    'focus:fixed',
+    'focus:start-1',
+    'focus:top-1.5',
+    'focus:op-20',
+
+    /* GithubItem */
+    ...versionClass,
+    ...subLogoIcons,
+
+    /* Toc */
+    'i-ri-menu-2-fill',
+    'i-ri-menu-3-fill',
+
+    /* Additional utility classes that might be needed */
+    'flex',
+    'flex-col',
+    'items-center',
+    'text-center',
+    'mt-0',
+    'prose',
+    'mx-auto',
+    'mb-8',
+    'relative',
+    'min-h-screen',
+    'text-gray-700',
+    'dark:text-gray-200',
+    'px-7',
+    'py-10',
   ],
 })

@@ -1,16 +1,17 @@
 @import './animations.css';
+@import '@unocss/reset/tailwind.css';
 
 :root {
   --c-bg: #fff;
-  --c-scrollbar: #ddd;
+  --c-scrollbar: #eee;
   --c-scrollbar-hover: #bbb;
   --c-text: #000;
 }
 
 :root.dark {
   --c-bg: #050505;
-  --c-scrollbar: #222;
-  --c-scrollbar-hover: #444;
+  --c-scrollbar: #111;
+  --c-scrollbar-hover: #222;
   --c-text: #fff;
 }
 
@@ -23,7 +24,7 @@ html {
 }
 
 ::selection {
-  background: #8884;
+  background: rgba(125, 125, 255, 0.2);
 }
 
 /* NProgress */
@@ -58,22 +59,17 @@ html {
 
 @supports selector(::-webkit-scrollbar) {
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
+    height: 6px;
   }
 
-  ::-webkit-scrollbar:horizontal {
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-corner {
-    border-radius: 10px;
-    background: var(--c-bg);
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
     background: var(--c-scrollbar);
+    border-radius: 5px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -278,4 +274,35 @@ input[type='search']::-webkit-search-cancel-button {
 
   color: var(--c-text);
   font-size: 1.06em;
+}
+
+/* Global styles */
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--c-bg);
+  color: var(--c-text);
+  scroll-behavior: smooth;
+}
+
+/* Center main content */
+main {
+  flex-grow: 1;
+  padding: 2.5rem 1.75rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Ensure proper focus styles */
+:focus-visible {
+  outline: 2px solid rgba(125, 125, 255, 0.6);
 }

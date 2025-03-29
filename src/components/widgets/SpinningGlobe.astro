@@ -13,14 +13,16 @@
 <script>
   // Dynamically import Three.js only when needed
   const initGlobe = async () => {
-    const THREE = await import('three')
+    const { Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry,
+      Float32BufferAttribute, PointsMaterial, Points, Color,
+      SphereGeometry, MeshBasicMaterial, Mesh } = await import('three')
     const canvas = document.getElementById('globe-canvas')
     if (!(canvas instanceof HTMLCanvasElement)) return
 
     // Create scene
-    const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
-    const renderer = new THREE.WebGLRenderer({
+    const scene = new Scene()
+    const camera = new PerspectiveCamera(75, 1, 0.1, 1000)
+    const renderer = new WebGLRenderer({
       canvas,
       alpha: true,
       antialias: true,
@@ -34,10 +36,10 @@
 
     // Create globe with dots
     const radius = 100
-    const dotGeometry = new THREE.BufferGeometry()
+    const dotGeometry = new BufferGeometry()
     const positions: number[] = []
     const colors: number[] = []
-    const color = new THREE.Color()
+    const color = new Color()
 
     // Generate evenly distributed points on sphere (Fibonacci sphere algorithm)
     const numPoints = 2000
@@ -61,15 +63,15 @@
 
     dotGeometry.setAttribute(
       'position',
-      new THREE.Float32BufferAttribute(positions, 3),
+      new Float32BufferAttribute(positions, 3),
     )
     dotGeometry.setAttribute(
       'color',
-      new THREE.Float32BufferAttribute(colors, 3),
+      new Float32BufferAttribute(colors, 3),
     )
 
     // Create material and points
-    const dotMaterial = new THREE.PointsMaterial({
+    const dotMaterial = new PointsMaterial({
       size: 2,
       vertexColors: true,
       transparent: false,
@@ -77,17 +79,17 @@
       sizeAttenuation: true,
     })
 
-    const globe = new THREE.Points(dotGeometry, dotMaterial)
+    const globe = new Points(dotGeometry, dotMaterial)
     scene.add(globe)
 
     // Add subtle glow effect
-    const glowGeometry = new THREE.SphereGeometry(radius * 1.05, 32, 32)
-    const glowMaterial = new THREE.MeshBasicMaterial({
+    const glowGeometry = new SphereGeometry(radius * 1.05, 32, 32)
+    const glowMaterial = new MeshBasicMaterial({
       color: 0x888888,
       transparent: true,
       opacity: 0.03,
     })
-    const glow = new THREE.Mesh(glowGeometry, glowMaterial)
+    const glow = new Mesh(glowGeometry, glowMaterial)
     scene.add(glow)
 
     // Animation variables

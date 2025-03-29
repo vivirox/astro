@@ -3,7 +3,7 @@ import process from 'node:process'
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import starlight from '@astrojs/starlight'
-import tailwind from '@astrojs/tailwind'
+// import tailwind from '@astrojs/tailwind'
 import vercel from '@astrojs/vercel'
 import UnoCSS from '@unocss/astro'
 import { defineConfig } from 'astro/config'
@@ -32,7 +32,7 @@ export default defineConfig({
       safelist: ['font-sans', 'font-mono', 'font-condensed'],
       configFile: './uno.config.ts',
     }),
-    tailwind(),
+    // tailwind(),
     flexsearchIntegration({
       collections: ['blog', 'docs', 'guides'],
       indexPath: '_search-index.js',

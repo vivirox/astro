@@ -103,6 +103,33 @@ export default [
       },
     },
   },
+  // Special configuration for UnoCSS config file
+  {
+    files: ['uno.config.ts'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: './tsconfig.json',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      // Disable formatter-related rules for this file
+      'indent': 'off',
+      '@typescript-eslint/indent': 'off',
+      'max-len': 'off',
+      'quotes': 'off',
+      '@typescript-eslint/quotes': 'off',
+      'comma-dangle': 'off',
+      '@typescript-eslint/comma-dangle': 'off',
+      'object-curly-spacing': 'off',
+      '@typescript-eslint/object-curly-spacing': 'off',
+      'semi': 'off',
+      '@typescript-eslint/semi': 'off',
+    },
+  },
   // Astro-specific configuration
   {
     files: ['**/*.astro'],
