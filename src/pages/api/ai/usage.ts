@@ -6,6 +6,11 @@ import { handleApiError } from '../../../lib/ai/error-handling'
 import { getSession } from '../../../lib/auth/session'
 import { validateQueryParams } from '../../../lib/validation/index'
 import { UsageStatsRequestSchema } from '../../../lib/validation/schemas'
+import { rateLimit } from '../../../lib/middleware/rate-limit'
+import { getLogger } from '../../../lib/logging'
+
+// Initialize logger
+const logger = getLogger()
 
 /**
  * API route for AI usage statistics
@@ -25,6 +30,44 @@ export const GET: APIRoute = async ({ request }) => {
           'Content-Type': 'application/json',
         },
       })
+    }
+    
+    // Apply rate limiting based on user role
+    const role = session.user.role || 'user'
+    const { allowed, limit, remaining, reset } = rateLimit.check(
+      `${session.user.id}:/api/ai/usage`,
+      role,
+      {
+        admin: 60,     // 60 requests per minute for admins
+        therapist: 40, // 40 requests per minute for therapists
+        user: 20,      // 20 requests per minute for regular users
+        anonymous: 5   // 5 requests per minute for unauthenticated users
+      },
+      60 * 1000 // 1 minute window
+    )
+    
+    if (!allowed) {
+      logger.warn('Rate limit exceeded for AI usage stats', {
+        userId: session.user.id,
+        role: role
+      })
+      
+      return new Response(
+        JSON.stringify({
+          error: 'Too Many Requests',
+          message: 'Rate limit exceeded. Please try again later.',
+        }),
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RateLimit-Limit': limit.toString(),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': reset.toString(),
+            'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
+          },
+        }
+      )
     }
 
     // Check if user has admin access for all users data
@@ -102,6 +145,9 @@ export const GET: APIRoute = async ({ request }) => {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'private, max-age=60', // Cache for 1 minute
+        'X-RateLimit-Limit': limit.toString(),
+        'X-RateLimit-Remaining': remaining.toString(),
+        'X-RateLimit-Reset': reset.toString(),
       },
     })
   } catch (error) {
