@@ -13,11 +13,11 @@ export const ChatMessageSchema = z.object({
       (value) => {
         // Block common XSS patterns
         const xssPatterns = [
-          /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/i,
-          /javascript\s*:/i,
-          /data\s*:[^,]*?base64/i,
-          /on\w+\s*=/i,
-          /eval\s*\(/i,
+          /<script\b[^<]*(?:<[^<]*)*<\/script>/i,  // Script tags
+          /javascript:/i,                           // JavaScript protocol
+          /data:[^,]*base64/i,                      // Data URIs with base64
+          /on\w+=/i,                                // Event handlers
+          /eval\(/i,                                // Eval calls
         ];
         return !xssPatterns.some(pattern => pattern.test(value));
       },
@@ -29,10 +29,10 @@ export const ChatMessageSchema = z.object({
       (value) => {
         // Block SQL injection patterns
         const sqlPatterns = [
-          /(\b(select|insert|update|delete|drop|alter|create|truncate)\b.*\b(from|into|table|database|values)\b)/i,
-          /(\bunion\b.*\bselect\b)/i,
+          /\b(select|insert|update|delete|drop|alter|create|truncate)\b.*\b(from|into|table|database|values)\b/i,
+          /\bunion\b.*\bselect\b/i,
           /--.*$/m,
-          /;\s*$/,
+          /;$/,
           /\/\*.*\*\//
         ];
         return !sqlPatterns.some(pattern => pattern.test(value));
