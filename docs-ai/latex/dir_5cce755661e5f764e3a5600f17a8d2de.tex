@@ -1,0 +1,218 @@
+\doxysection{node\+\_\+modules/pkg-\/types Directory Reference}
+\hypertarget{dir_5cce755661e5f764e3a5600f17a8d2de}{}\label{dir_5cce755661e5f764e3a5600f17a8d2de}\index{node\_modules/pkg-\/types Directory Reference@{node\_modules/pkg-\/types Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/pkg-types}{\texttt{ }} \href{https://npm.chart.dev/pkg-types}{\texttt{ }} \href{https://codecov.io/gh/unjs/pkg-types}{\texttt{ }}
+
+Node.\+js utilities and Type\+Script definitions for {\ttfamily package.\+json} and {\ttfamily tsconfig.\+json}.\hypertarget{README.md_autotoc_md25991}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md25991}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ ✨\ Auto-\/detect}
+\DoxyCodeLine{npx\ nypm\ install\ pkg-\/types}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ install\ pkg-\/types}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ pkg-\/types}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ pnpm}
+\DoxyCodeLine{pnpm\ install\ pkg-\/types}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ bun}
+\DoxyCodeLine{bun\ install\ pkg-\/types}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ deno}
+\DoxyCodeLine{deno\ install\ pkg-\/types}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25992}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md25992}
+\hypertarget{README.md_autotoc_md25993}{}\doxysubsubsection{\texorpdfstring{{\ttfamily read\+Package\+JSON}}{{\ttfamily read\+Package\+JSON}}}\label{README.md_autotoc_md25993}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ readPackageJSON\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{const\ localPackageJson\ =\ await\ readPackageJSON();}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{const\ packageJson\ =\ await\ readPackageJSON("{}/fully/resolved/path/to/folder"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25994}{}\doxysubsubsection{\texorpdfstring{{\ttfamily write\+Package\+JSON}}{{\ttfamily write\+Package\+JSON}}}\label{README.md_autotoc_md25994}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ writePackageJSON\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ writePackageJSON("{}path/to/package.json"{},\ pkg);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25995}{}\doxysubsubsection{\texorpdfstring{{\ttfamily resolve\+Package\+JSON}}{{\ttfamily resolve\+Package\+JSON}}}\label{README.md_autotoc_md25995}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolvePackageJSON\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{const\ filename\ =\ await\ resolvePackageJSON();}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{const\ packageJson\ =\ await\ resolvePackageJSON("{}/fully/resolved/path/to/folder"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25996}{}\doxysubsubsection{\texorpdfstring{{\ttfamily read\+TSConfig}}{{\ttfamily read\+TSConfig}}}\label{README.md_autotoc_md25996}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ readTSConfig\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{const\ tsconfig\ =\ await\ readTSConfig();}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{const\ tsconfig2\ =\ await\ readTSConfig("{}/fully/resolved/path/to/folder"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25997}{}\doxysubsubsection{\texorpdfstring{{\ttfamily write\+TSConfig}}{{\ttfamily write\+TSConfig}}}\label{README.md_autotoc_md25997}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ writeTSConfig\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ writeTSConfig("{}path/to/tsconfig.json"{},\ tsconfig);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25998}{}\doxysubsubsection{\texorpdfstring{{\ttfamily resolve\+TSConfig}}{{\ttfamily resolve\+TSConfig}}}\label{README.md_autotoc_md25998}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveTSConfig\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{const\ filename\ =\ await\ resolveTSConfig();}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{const\ tsconfig\ =\ await\ resolveTSConfig("{}/fully/resolved/path/to/folder"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25999}{}\doxysubsubsection{\texorpdfstring{{\ttfamily resolve\+File}}{{\ttfamily resolve\+File}}}\label{README.md_autotoc_md25999}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveFile\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{const\ filename\ =\ await\ resolveFile("{}README.md"{},\ \{}
+\DoxyCodeLine{\ \ startingFrom:\ id,}
+\DoxyCodeLine{\ \ rootPattern:\ /\string^node\_modules\$/,}
+\DoxyCodeLine{\ \ matcher:\ (filename)\ =>\ filename.endsWith("{}.md"{}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26000}{}\doxysubsubsection{\texorpdfstring{{\ttfamily resolve\+Lock\+File}}{{\ttfamily resolve\+Lock\+File}}}\label{README.md_autotoc_md26000}
+Find path to the lock file ({\ttfamily yarn.\+lock}, {\ttfamily package-\/lock.\+json}, {\ttfamily pnpm-\/lock.\+yaml}, {\ttfamily npm-\/shrinkwrap.\+json}, {\ttfamily bun.\+lockb}, {\ttfamily bun.\+lock}) or throws an error.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveLockFile\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{const\ lockfile\ =\ await\ resolveLockFile("{}."{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26001}{}\doxysubsubsection{\texorpdfstring{{\ttfamily find\+Workspace\+Dir}}{{\ttfamily find\+Workspace\+Dir}}}\label{README.md_autotoc_md26001}
+Try to detect workspace dir by in order\+:
+
+
+\begin{DoxyEnumerate}
+\item Farthest workspace file ({\ttfamily pnpm-\/workspace.\+yaml}, {\ttfamily lerna.\+json}, {\ttfamily turbo.\+json}, {\ttfamily rush.\+json})
+\item Closest {\ttfamily .git/config} file
+\item Farthest lockfile
+\item Farthest {\ttfamily package.\+json} file
+\end{DoxyEnumerate}
+
+If fails, throws an error.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ findWorkspaceDir\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{const\ workspaceDir\ =\ await\ findWorkspaceDir("{}."{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26002}{}\doxysubsubsection{\texorpdfstring{{\ttfamily resolve\+Git\+Config}}{{\ttfamily resolve\+Git\+Config}}}\label{README.md_autotoc_md26002}
+Finds closest {\ttfamily .git/config} file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveGitConfig\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ gitConfig\ =\ await\ resolveGitConfig("{}."{})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26003}{}\doxysubsubsection{\texorpdfstring{{\ttfamily read\+Git\+Config}}{{\ttfamily read\+Git\+Config}}}\label{README.md_autotoc_md26003}
+Finds and reads closest {\ttfamily .git/config} file into a JS object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveGitConfig\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ gitConfigObj\ =\ await\ readGitConfig("{}."{})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26004}{}\doxysubsubsection{\texorpdfstring{{\ttfamily write\+Git\+Config}}{{\ttfamily write\+Git\+Config}}}\label{README.md_autotoc_md26004}
+Stringifies git config object into INI text format and writes it to a file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ writeGitConfig\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ writeGitConfig("{}.git/config"{},\ gitConfigObj)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26005}{}\doxysubsubsection{\texorpdfstring{{\ttfamily parse\+Git\+Config}}{{\ttfamily parse\+Git\+Config}}}\label{README.md_autotoc_md26005}
+Parses a git config file in INI text format into a Java\+Script object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseGitConfig\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ gitConfigObj\ =\ parseGitConfig(gitConfigINI)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26006}{}\doxysubsubsection{\texorpdfstring{{\ttfamily stringify\+Git\+Config}}{{\ttfamily stringify\+Git\+Config}}}\label{README.md_autotoc_md26006}
+Stringifies a git config object into a git config file INI text format.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseGitConfig\ \}\ from\ "{}pkg-\/types"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ gitConfigINI\ =\ stringifyGitConfig(gitConfigObj)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26007}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{README.md_autotoc_md26007}
+{\bfseries{Note\+:}} In order to make types working, you need to install {\ttfamily typescript} as a dev\+Dependency.
+
+You can directly use typed interfaces\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ TSConfig,\ PackageJSON,\ GitConfig\ \}\ from\ "{}pkg-\/types"{};}
+
+\end{DoxyCode}
+
+
+You can also use define utils for type support for using in plain {\ttfamily .js} files and auto-\/complete in IDE.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ definePackageJSON\ \}\ from\ 'pkg-\/types'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pkg\ =\ definePackageJSON(\{\})}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ defineTSConfig\ \}\ from\ 'pkg-\/types'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pkg\ =\ defineTSConfig(\{\})}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ defineGitConfig\ \}\ from\ 'pkg-\/types'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ gitConfig\ =\ defineGitConfig(\{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26008}{}\doxysubsection{\texorpdfstring{Alternatives}{Alternatives}}\label{README.md_autotoc_md26008}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/dominikg/tsconfck}{\texttt{ dominikg/tsconfck}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md26009}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md26009}
+Published under the \href{https://github.com/unjs/pkg-types/blob/main/LICENSE}{\texttt{ MIT}} license. Made by \href{https://github.com/pi0}{\texttt{ @pi0}}, \href{https://github.com/danielroe}{\texttt{ @danielroe}} and \href{https://github.com/unjs/pkg-types/graphs/contributors}{\texttt{ community}} 💛 ~\newline
+~\newline
+ \href{https://github.com/unjs/pkg-types/graphs/contributors}{\texttt{  }} 

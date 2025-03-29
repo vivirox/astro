@@ -1,0 +1,203 @@
+\doxysection{node\+\_\+modules/resolve-\/pkg-\/maps Directory Reference}
+\hypertarget{dir_7b172c4fddd0fa137c31c14b3a45410f}{}\label{dir_7b172c4fddd0fa137c31c14b3a45410f}\index{node\_modules/resolve-\/pkg-\/maps Directory Reference@{node\_modules/resolve-\/pkg-\/maps Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Utils to resolve {\ttfamily package.\+json} subpath \& conditional \href{https://nodejs.org/api/packages.html\#exports}{\texttt{ {\ttfamily exports}}}/\href{https://nodejs.org/api/packages.html\#imports}{\texttt{ {\ttfamily imports}}} in resolvers.
+
+Implements the \href{https://nodejs.org/api/esm.html\#resolver-algorithm-specification}{\texttt{ ESM resolution algorithm}}. Tested \href{/tests/}{\texttt{ against Node.\+js}} for accuracy.
+
+\textsubscript{Support this project by ⭐️ starring and sharing it. \href{https://github.com/privatenumber}{\texttt{ Follow me}} to see what other cool projects I\textquotesingle{}m working on! ❤️}\hypertarget{README.md_autotoc_md29389}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md29389}
+\hypertarget{README.md_autotoc_md29390}{}\doxysubsubsection{\texorpdfstring{Resolving {\ttfamily exports}}{Resolving {\ttfamily exports}}}\label{README.md_autotoc_md29390}
+{\itshape utils/package.\+json} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ "{}exports"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}./reverse"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}require"{}:\ "{}./file.cjs"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}default"{}:\ "{}./file.mjs"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveExports\ \}\ from\ 'resolve-\/pkg-\/maps'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ [packageName,\ packageSubpath]\ =\ parseRequest('utils/reverse')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ resolvedPaths:\ string[]\ =\ resolveExports(}
+\DoxyCodeLine{\ \ \ \ getPackageJson(packageName).exports,}
+\DoxyCodeLine{\ \ \ \ packageSubpath,}
+\DoxyCodeLine{\ \ \ \ ['import',\ ...otherConditions]}
+\DoxyCodeLine{)}
+\DoxyCodeLine{//\ =>\ ['./file.mjs']}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md29391}{}\doxysubsubsection{\texorpdfstring{Resolving {\ttfamily imports}}{Resolving {\ttfamily imports}}}\label{README.md_autotoc_md29391}
+{\itshape package.\+json} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ "{}imports"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}\#supports-\/color"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}node"{}:\ "{}./index.js"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}default"{}:\ "{}./browser.js"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveImports\ \}\ from\ 'resolve-\/pkg-\/maps'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ resolvedPaths:\ string[]\ =\ resolveImports(}
+\DoxyCodeLine{\ \ \ \ getPackageJson('.').imports,}
+\DoxyCodeLine{\ \ \ \ '\#supports-\/color',}
+\DoxyCodeLine{\ \ \ \ ['node',\ ...otherConditions]}
+\DoxyCodeLine{)}
+\DoxyCodeLine{//\ =>\ ['./index.js']}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md29392}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md29392}
+\hypertarget{README.md_autotoc_md29393}{}\doxysubsubsection{\texorpdfstring{resolve\+Exports(exports, request, conditions)}{resolve\+Exports(exports, request, conditions)}}\label{README.md_autotoc_md29393}
+Returns\+: {\ttfamily string\mbox{[}\mbox{]}}
+
+Resolves the {\ttfamily request} based on {\ttfamily exports} and {\ttfamily conditions}. Returns an array of paths (e.\+g. in case a fallback array is matched).\hypertarget{README.md_autotoc_md29394}{}\doxysubsubsubsection{\texorpdfstring{exports}{exports}}\label{README.md_autotoc_md29394}
+Type\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Exports\ =\ PathOrMap\ |\ readonly\ PathOrMap[]}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ PathOrMap\ =\ string\ |\ PathConditionsMap}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ PathConditionsMap\ =\ \{}
+\DoxyCodeLine{\ \ \ \ [condition:\ string]:\ PathConditions\ |\ null}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The \href{https://nodejs.org/api/packages.html\#exports}{\texttt{ {\ttfamily exports} property}} value in {\ttfamily package.\+json}.\hypertarget{README.md_autotoc_md29395}{}\doxysubsubsubsection{\texorpdfstring{request}{request}}\label{README.md_autotoc_md29395}
+Type\+: {\ttfamily string}
+
+The package subpath to resolve. Assumes a normalized path is passed in (eg. \href{https://github.com/nodejs/node/issues/44316}{\texttt{ repeating slashes {\ttfamily //}}}).
+
+It {\itshape should not} start with {\ttfamily /} or {\ttfamily ./}.
+
+Example\+: if the full import path is {\ttfamily some-\/package/subpath/file}, the request is {\ttfamily subpath/file}.\hypertarget{README.md_autotoc_md29396}{}\doxysubsubsubsection{\texorpdfstring{conditions}{conditions}}\label{README.md_autotoc_md29396}
+Type\+: {\ttfamily readonly string\mbox{[}\mbox{]}}
+
+An array of conditions to use when resolving the request. For reference, Node.\+js\textquotesingle{}s default conditions are \href{https://nodejs.org/api/esm.html\#:~:text=defaultConditions\%20is\%20the\%20conditional\%20environment\%20name\%20array\%2C\%20\%5B\%22node\%22\%2C\%20\%22import\%22\%5D.}{\texttt{ `\mbox{[}\textquotesingle{}node', \textquotesingle{}import\textquotesingle{}\mbox{]}\`{}}}.
+
+The order of this array does not matter; the order of condition keys in the export map is what matters instead.
+
+Not all conditions in the array need to be met to resolve the request. It just needs enough to resolve to a path.
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md29398}{}\doxysubsubsection{\texorpdfstring{resolve\+Imports(imports, request, conditions)}{resolve\+Imports(imports, request, conditions)}}\label{README.md_autotoc_md29398}
+Returns\+: {\ttfamily string\mbox{[}\mbox{]}}
+
+Resolves the {\ttfamily request} based on {\ttfamily imports} and {\ttfamily conditions}. Returns an array of paths (e.\+g. in case a fallback array is matched).\hypertarget{README.md_autotoc_md29399}{}\doxysubsubsubsection{\texorpdfstring{imports}{imports}}\label{README.md_autotoc_md29399}
+Type\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Imports\ =\ \{}
+\DoxyCodeLine{\ \ \ \ [condition:\ string]:\ PathOrMap\ |\ readonly\ PathOrMap[]\ |\ null}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ PathOrMap\ =\ string\ |\ Imports}
+
+\end{DoxyCode}
+
+
+The \href{https://nodejs.org/api/packages.html\#imports}{\texttt{ {\ttfamily imports} property}} value in {\ttfamily package.\+json}.\hypertarget{README.md_autotoc_md29400}{}\doxysubsubsubsection{\texorpdfstring{request}{request}}\label{README.md_autotoc_md29400}
+Type\+: {\ttfamily string}
+
+The request resolve. Assumes a normalized path is passed in (eg. \href{https://github.com/nodejs/node/issues/44316}{\texttt{ repeating slashes {\ttfamily //}}}).
+
+\begin{quote}
+{\bfseries{Note\+:}} In Node.\+js, imports resolutions are limited to requests prefixed with {\ttfamily \#}. However, this package does not enforce that requirement in case you want to add custom support for non-\/prefixed entries. \end{quote}
+\hypertarget{README.md_autotoc_md29401}{}\doxysubsubsubsection{\texorpdfstring{conditions}{conditions}}\label{README.md_autotoc_md29401}
+Type\+: {\ttfamily readonly string\mbox{[}\mbox{]}}
+
+An array of conditions to use when resolving the request. For reference, Node.\+js\textquotesingle{}s default conditions are \href{https://nodejs.org/api/esm.html\#:~:text=defaultConditions\%20is\%20the\%20conditional\%20environment\%20name\%20array\%2C\%20\%5B\%22node\%22\%2C\%20\%22import\%22\%5D.}{\texttt{ `\mbox{[}\textquotesingle{}node', \textquotesingle{}import\textquotesingle{}\mbox{]}\`{}}}.
+
+The order of this array does not matter; the order of condition keys in the import map is what matters instead.
+
+Not all conditions in the array need to be met to resolve the request. It just needs enough to resolve to a path.
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md29403}{}\doxysubsubsection{\texorpdfstring{Errors}{Errors}}\label{README.md_autotoc_md29403}
+\hypertarget{README.md_autotoc_md29404}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily ERR\+\_\+\+PACKAGE\+\_\+\+PATH\+\_\+\+NOT\+\_\+\+EXPORTED}}{{\ttfamily ERR\+\_\+\+PACKAGE\+\_\+\+PATH\+\_\+\+NOT\+\_\+\+EXPORTED}}}\label{README.md_autotoc_md29404}
+
+\begin{DoxyItemize}
+\item If the request is not exported by the export map
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md29405}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily ERR\+\_\+\+PACKAGE\+\_\+\+IMPORT\+\_\+\+NOT\+\_\+\+DEFINED}}{{\ttfamily ERR\+\_\+\+PACKAGE\+\_\+\+IMPORT\+\_\+\+NOT\+\_\+\+DEFINED}}}\label{README.md_autotoc_md29405}
+
+\begin{DoxyItemize}
+\item If the request is not defined by the import map
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md29406}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily ERR\+\_\+\+INVALID\+\_\+\+PACKAGE\+\_\+\+CONFIG}}{{\ttfamily ERR\+\_\+\+INVALID\+\_\+\+PACKAGE\+\_\+\+CONFIG}}}\label{README.md_autotoc_md29406}
+
+\begin{DoxyItemize}
+\item If an object contains properties that are both paths and conditions (e.\+g. start with and without {\ttfamily .})
+\item If an object contains numeric properties
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md29407}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily ERR\+\_\+\+INVALID\+\_\+\+PACKAGE\+\_\+\+TARGET}}{{\ttfamily ERR\+\_\+\+INVALID\+\_\+\+PACKAGE\+\_\+\+TARGET}}}\label{README.md_autotoc_md29407}
+
+\begin{DoxyItemize}
+\item If a resolved exports path is not a valid path (e.\+g. not relative or has protocol)
+\item If a resolved path includes {\ttfamily ..} or {\ttfamily node\+\_\+modules}
+\item If a resolved path is a type that cannot be parsed
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md29408}{}\doxysubsection{\texorpdfstring{FAQ}{FAQ}}\label{README.md_autotoc_md29408}
+\hypertarget{README.md_autotoc_md29409}{}\doxysubsubsection{\texorpdfstring{Why do the APIs return an array of paths?}{Why do the APIs return an array of paths?}}\label{README.md_autotoc_md29409}
+{\ttfamily exports}/{\ttfamily imports} supports passing in a \href{https://github.com/jkrems/proposal-pkg-exports/\#:~:text=Whenever\%20there\%20is,to\%20new\%20cases.}{\texttt{ fallback array}} to provide fallback paths if the previous one is invalid\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}exports"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}./feature"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}./file.js"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}./fallback.js"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Node.\+js\textquotesingle{}s implementation \href{https://github.com/nodejs/node/issues/44282\#issuecomment-1220151715}{\texttt{ picks the first valid path (without attempting to resolve it)}} and throws an error if it can\textquotesingle{}t be resolved. Node.\+js\textquotesingle{}s fallback array is designed for \href{https://github.com/jkrems/proposal-pkg-exports/\#:~:text=providing\%20forwards\%20compatiblitiy\%20for\%20new\%20features}{\texttt{ forward compatibility with features}} (e.\+g. protocols) that can be immediately/inexpensively validated\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}exports"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}./core-\/polyfill"{}:\ ["{}std:core-\/module"{},\ "{}./core-\/polyfill.js"{}]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+However, \href{https://webpack.js.org/guides/package-exports/\#alternatives}{\texttt{ Webpack}} and \href{https://github.com/microsoft/TypeScript/blob/71e852922888337ef51a0e48416034a94a6c34d9/src/compiler/moduleSpecifiers.ts\#L695}{\texttt{ Type\+Script}} have deviated from this behavior and attempts to resolve the next path if a path cannot be resolved.
+
+By returning an array of matched paths instead of just the first one, the user can decide which behavior to adopt.\hypertarget{README.md_autotoc_md29410}{}\doxysubsubsection{\texorpdfstring{How is it different from \href{https://github.com/lukeed/resolve.exports}{\texttt{ {\ttfamily resolve.\+exports}}}?}{How is it different from \href{https://github.com/lukeed/resolve.exports}{\texttt{ {\ttfamily resolve.\+exports}}}?}}\label{README.md_autotoc_md29410}
+{\ttfamily resolve.\+exports} only resolves {\ttfamily exports}, whereas this package resolves both {\ttfamily exports} \& {\ttfamily imports}. This comparison will only cover resolving {\ttfamily exports}.
+
+
+\begin{DoxyItemize}
+\item Despite it\textquotesingle{}s name, {\ttfamily resolve.\+exports} handles more than just {\ttfamily exports}. It takes in the entire {\ttfamily package.\+json} object to handle resolving {\ttfamily .} and \href{https://nodejs.org/api/packages.html\#self-referencing-a-package-using-its-name}{\texttt{ self-\/references}}. This package only accepts {\ttfamily exports}/{\ttfamily imports} maps from {\ttfamily package.\+json} and is scoped to only resolving what\textquotesingle{}s defined in the maps.
+\item {\ttfamily resolve.\+exports} accepts the full request (e.\+g. {\ttfamily foo/bar}), whereas this package only accepts the requested subpath (e.\+g. {\ttfamily bar}).
+\item {\ttfamily resolve.\+exports} only returns the first result in a fallback array. This package returns an array of results for the user to decide how to handle it.
+\item {\ttfamily resolve.\+exports} supports \href{https://nodejs.org/docs/latest-v16.x/api/packages.html\#subpath-folder-mappings}{\texttt{ subpath folder mapping}} (deprecated in Node.\+js v16 \& removed in v17) but seems to \href{https://github.com/lukeed/resolve.exports/issues/7}{\texttt{ have a bug}}. This package does not support subpath folder mapping because Node.\+js has removed it in favor of using subpath patterns.
+\item Neither resolvers rely on a file-\/system
+\end{DoxyItemize}
+
+This package also addresses many of the bugs in {\ttfamily resolve.\+exports}, demonstrated in \href{/tests/exports/compare-resolve.exports.ts}{\texttt{ this test}}. 

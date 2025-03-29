@@ -1,0 +1,86 @@
+\doxysection{node\+\_\+modules/comma-\/separated-\/tokens Directory Reference}
+\hypertarget{dir_e0a4482e21a4fdf7a1cadd195ae52991}{}\label{dir_e0a4482e21a4fdf7a1cadd195ae52991}\index{node\_modules/comma-\/separated-\/tokens Directory Reference@{node\_modules/comma-\/separated-\/tokens Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/wooorm/comma-separated-tokens/actions}{\texttt{ }} \href{https://codecov.io/github/wooorm/comma-separated-tokens}{\texttt{ }} \href{https://www.npmjs.com/package/comma-separated-tokens}{\texttt{ }} \href{https://bundlephobia.com/result?p=comma-separated-tokens}{\texttt{ }}
+
+Parse and stringify comma-\/separated tokens.\hypertarget{readme.md_autotoc_md10742}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md10742}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}parse(value)\`{}
+\item \`{}stringify(values\mbox{[}, options\mbox{]})\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item Security
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md10743}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md10743}
+This is a tiny package that can parse and stringify comma-\/separated tokens, as used for example in the HTML {\ttfamily accept} attribute, according to the \href{https://html.spec.whatwg.org/multipage/common-microsyntaxes.html\#comma-separated-tokens}{\texttt{ WHATWG spec}}.\hypertarget{readme.md_autotoc_md10744}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md10744}
+This package is rather niche, it’s low-\/level and particularly useful when working with \href{https://github.com/syntax-tree/hast}{\texttt{ hast}}.\hypertarget{readme.md_autotoc_md10745}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md10745}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 14.\+14+, 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ comma-\/separated-\/tokens}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{parse,\ stringify\}\ from\ 'https://esm.sh/comma-\/separated-\/tokens@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{parse,\ stringify\}\ from\ 'https://esm.sh/comma-\/separated-\/tokens@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md10746}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md10746}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{parse,\ stringify\}\ from\ 'comma-\/separated-\/tokens'}
+\DoxyCodeLine{}
+\DoxyCodeLine{parse('\ a\ ,b,,d\ d\ ')\ //=>\ ['a',\ 'b',\ '',\ 'd\ d']}
+\DoxyCodeLine{stringify(['a',\ 'b',\ '',\ 'd\ d'])\ //=>\ 'a,\ b,\ ,\ d\ d'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md10747}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md10747}
+This package exports the identifier {\ttfamily parse} and {\ttfamily stringify}. There is no default export.\hypertarget{readme.md_autotoc_md10748}{}\doxysubsubsection{\texorpdfstring{{\ttfamily parse(value)}}{{\ttfamily parse(value)}}}\label{readme.md_autotoc_md10748}
+Parse commma-\/separated tokens ({\ttfamily string}) to an array of strings ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}), according to the \href{https://html.spec.whatwg.org/multipage/common-microsyntaxes.html\#comma-separated-tokens}{\texttt{ WHATWG spec}}.\hypertarget{readme.md_autotoc_md10749}{}\doxysubsubsection{\texorpdfstring{{\ttfamily stringify(values\mbox{[}, options\mbox{]})}}{{\ttfamily stringify(values\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md10749}
+Serialize an array of strings or numbers ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$\vert$}{|}number\texorpdfstring{$>$}{>}}) to comma-\/separated tokens ({\ttfamily string}). Handles empty items at start or end correctly.
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: it’s not possible to specify initial or final whitespace per value. \end{quote}
+\hypertarget{readme.md_autotoc_md10750}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily options}}{{\ttfamily options}}}\label{readme.md_autotoc_md10750}
+Configuration (optional).\hypertarget{readme.md_autotoc_md10751}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+pad\+Left}}{{\ttfamily options.\+pad\+Left}}}\label{readme.md_autotoc_md10751}
+Whether to pad a space before a token ({\ttfamily boolean}, default\+: {\ttfamily true}).\hypertarget{readme.md_autotoc_md10752}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+pad\+Right}}{{\ttfamily options.\+pad\+Right}}}\label{readme.md_autotoc_md10752}
+Whether to pad a space after a token ({\ttfamily boolean}, default\+: {\ttfamily false}).\hypertarget{readme.md_autotoc_md10753}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md10753}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type {\ttfamily Options}.\hypertarget{readme.md_autotoc_md10754}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md10754}
+This package is at least compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 14.\+14+ and 16.\+0+. It also works in Deno and modern browsers.\hypertarget{readme.md_autotoc_md10755}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md10755}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/wooorm/space-separated-tokens}{\texttt{ {\ttfamily space-\/separated-\/tokens}}} — parse/stringify space-\/separated tokens
+\item \href{https://github.com/wooorm/collapse-white-space}{\texttt{ {\ttfamily collapse-\/white-\/space}}} — replace multiple white-\/space characters with a single space
+\item \href{https://github.com/wooorm/property-information}{\texttt{ {\ttfamily property-\/information}}} — info on HTML properties
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md10756}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md10756}
+Yes please! See \href{https://opensource.guide/how-to-contribute/}{\texttt{ How to Contribute to Open Source}}.\hypertarget{readme.md_autotoc_md10757}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md10757}
+This package is safe.\hypertarget{readme.md_autotoc_md10758}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md10758}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

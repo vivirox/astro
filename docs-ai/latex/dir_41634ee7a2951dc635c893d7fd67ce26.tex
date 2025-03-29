@@ -1,0 +1,77 @@
+\doxysection{node\+\_\+modules/domhandler Directory Reference}
+\hypertarget{dir_41634ee7a2951dc635c893d7fd67ce26}{}\label{dir_41634ee7a2951dc635c893d7fd67ce26}\index{node\_modules/domhandler Directory Reference@{node\_modules/domhandler Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+The DOM handler creates a tree containing all nodes of a page. The tree can be manipulated using the \href{https://github.com/fb55/domutils}{\texttt{ domutils}} or \href{https://github.com/cheeriojs/cheerio}{\texttt{ cheerio}} libraries and rendered using \href{https://github.com/cheeriojs/dom-serializer}{\texttt{ dom-\/serializer}} .\hypertarget{readme.md_autotoc_md12053}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md12053}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ handler\ =\ new\ DomHandler([\ <func>\ callback(err,\ dom),\ ]\ [\ <obj>\ options\ ]);}
+\DoxyCodeLine{//\ const\ parser\ =\ new\ Parser(handler[,\ options]);}
+
+\end{DoxyCode}
+
+
+Available options are described below.\hypertarget{readme.md_autotoc_md12054}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{readme.md_autotoc_md12054}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ Parser\ \}\ =\ require("{}htmlparser2"{});}
+\DoxyCodeLine{const\ \{\ DomHandler\ \}\ =\ require("{}domhandler"{});}
+\DoxyCodeLine{const\ rawHtml\ =}
+\DoxyCodeLine{\ \ \ \ "{}Xyz\ <script\ language=\ javascript>var\ foo\ =\ '<<bar>>';</script><!-\/-\/<!-\/-\/\ Waah!\ -\/-\/\ -\/-\/>"{};}
+\DoxyCodeLine{const\ handler\ =\ new\ DomHandler((error,\ dom)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (error)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Handle\ error}
+\DoxyCodeLine{\ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Parsing\ completed,\ do\ something}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(dom);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ parser\ =\ new\ Parser(handler);}
+\DoxyCodeLine{parser.write(rawHtml);}
+\DoxyCodeLine{parser.end();}
+
+\end{DoxyCode}
+
+
+Output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ data:\ "{}Xyz\ "{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ type:\ "{}text"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ type:\ "{}script"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ "{}script"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ attribs:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ language:\ "{}javascript"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data:\ "{}var\ foo\ =\ '<bar>';<"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ "{}text"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ data:\ "{}<!-\/-\/\ Waah!\ -\/-\/\ "{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ type:\ "{}comment"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12055}{}\doxysubsection{\texorpdfstring{Option\+: {\ttfamily with\+Start\+Indices}}{Option\+: {\ttfamily with\+Start\+Indices}}}\label{readme.md_autotoc_md12055}
+Add a {\ttfamily start\+Index} property to nodes. When the parser is used in a non-\/streaming fashion, {\ttfamily start\+Index} is an integer indicating the position of the start of the node in the document. The default value is {\ttfamily false}.\hypertarget{readme.md_autotoc_md12056}{}\doxysubsection{\texorpdfstring{Option\+: {\ttfamily with\+End\+Indices}}{Option\+: {\ttfamily with\+End\+Indices}}}\label{readme.md_autotoc_md12056}
+Add an {\ttfamily end\+Index} property to nodes. When the parser is used in a non-\/streaming fashion, {\ttfamily end\+Index} is an integer indicating the position of the end of the node in the document. The default value is {\ttfamily false}.
+
+\DoxyHorRuler{0}
+
+
+License\+: BSD-\/2-\/\+Clause\hypertarget{readme.md_autotoc_md12058}{}\doxysubsection{\texorpdfstring{Security contact information}{Security contact information}}\label{readme.md_autotoc_md12058}
+To report a security vulnerability, please use the \href{https://tidelift.com/security}{\texttt{ Tidelift security contact}}. Tidelift will coordinate the fix and disclosure.\hypertarget{readme.md_autotoc_md12059}{}\doxysubsection{\texorpdfstring{{\ttfamily domhandler} for enterprise}{{\ttfamily domhandler} for enterprise}}\label{readme.md_autotoc_md12059}
+Available as part of the Tidelift Subscription
+
+The maintainers of {\ttfamily domhandler} and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. \href{https://tidelift.com/subscription/pkg/npm-domhandler?utm_source=npm-domhandler&utm_medium=referral&utm_campaign=enterprise&utm_term=repo}{\texttt{ Learn more.}} 

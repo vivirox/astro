@@ -1,0 +1,45 @@
+\chapter{How to Contribute}
+\hypertarget{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g}{}\label{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g}\index{How to Contribute@{How to Contribute}}
+\label{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g_autotoc_md3318}%
+\Hypertarget{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g_autotoc_md3318}%
+\hypertarget{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g_autotoc_md3319}{}\doxysection{\texorpdfstring{Pull Requests}{Pull Requests}}\label{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g_autotoc_md3319}
+We also accept \mbox{[}pull requests\mbox{]}\mbox{[}pull-\/request\mbox{]}!
+
+Generally we like to see pull requests that
+
+
+\begin{DoxyItemize}
+\item Maintain the existing code style
+\item Are focused on a single change (i.\+e. avoid large refactoring or style adjustments in untouched code if not the primary goal of the pull request)
+\item Have \href{http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html}{\texttt{ good commit messages}}
+\item Have tests
+\item Don\textquotesingle{}t decrease the current code coverage (see coverage/lcov-\/report/index.\+html)
+\end{DoxyItemize}\hypertarget{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g_autotoc_md3320}{}\doxysection{\texorpdfstring{Building}{Building}}\label{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g_autotoc_md3320}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn}
+\DoxyCodeLine{yarn\ test}
+
+\end{DoxyCode}
+
+
+Running {\ttfamily yarn test -\/-\/ dev} will watch for tests within Node and {\ttfamily karma start} may be used for manual testing in browsers.
+
+If you notice any problems, please report them to the Git\+Hub issue tracker at \href{http://github.com/kpdecker/jsdiff/issues}{\texttt{ http\+://github.\+com/kpdecker/jsdiff/issues}}.\hypertarget{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g_autotoc_md3321}{}\doxysection{\texorpdfstring{Releasing}{Releasing}}\label{md_node__modules_2_0dflydotio_2dockerfile_2node__modules_2diff_2_c_o_n_t_r_i_b_u_t_i_n_g_autotoc_md3321}
+A full release may be completed by first updating the {\ttfamily "{}version"{}} property in package.\+json, then running the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ clean}
+\DoxyCodeLine{yarn\ grunt\ release}
+\DoxyCodeLine{yarn\ publish}
+
+\end{DoxyCode}
+
+
+After releasing, remember to\+:
+\begin{DoxyItemize}
+\item commit the {\ttfamily package.\+json} change and push it to Git\+Hub
+\item create a new version tag on Git\+Hub
+\item update {\ttfamily diff.\+js} on the {\ttfamily gh-\/pages} branch to the latest built version from the {\ttfamily dist/} folder. 
+\end{DoxyItemize}

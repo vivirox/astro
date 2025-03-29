@@ -1,0 +1,118 @@
+\doxysection{node\+\_\+modules/why-\/is-\/node-\/running Directory Reference}
+\hypertarget{dir_5b62d0414d95c2c635a869b57acd0a68}{}\label{dir_5b62d0414d95c2c635a869b57acd0a68}\index{node\_modules/why-\/is-\/node-\/running Directory Reference@{node\_modules/why-\/is-\/node-\/running Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Node is running but you don\textquotesingle{}t know why? {\ttfamily why-\/is-\/node-\/running} is here to help you.\hypertarget{README.md_autotoc_md35672}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md35672}
+Node 8 and above\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ why-\/is-\/node-\/running\ -\/g}
+
+\end{DoxyCode}
+
+
+Earlier Node versions (no longer supported)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ why-\/is-\/node-\/running@v1.x\ -\/g}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35673}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md35673}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ log\ =\ require('why-\/is-\/node-\/running')\ //\ should\ be\ your\ first\ require}
+\DoxyCodeLine{const\ net\ =\ require('net')}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ createServer\ ()\ \{}
+\DoxyCodeLine{\ \ const\ server\ =\ net.createServer()}
+\DoxyCodeLine{\ \ setInterval(function\ ()\ \{\},\ 1000)}
+\DoxyCodeLine{\ \ server.listen(0)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{createServer()}
+\DoxyCodeLine{createServer()}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(function\ ()\ \{}
+\DoxyCodeLine{\ \ log()\ //\ logs\ out\ active\ handles\ that\ are\ keeping\ node\ running}
+\DoxyCodeLine{\},\ 100)}
+
+\end{DoxyCode}
+
+
+Save the file as {\ttfamily example.\+js}, then execute\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ ./example.js}
+
+\end{DoxyCode}
+
+
+Here\textquotesingle{}s the output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{There\ are\ 5\ handle(s)\ keeping\ the\ process\ running}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Timeout}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:6\ \ -\/\ setInterval(function\ ()\ \{\},\ 1000)}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:10\ -\/\ createServer()}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ TCPSERVERWRAP}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:7\ \ -\/\ server.listen(0)}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:10\ -\/\ createServer()}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Timeout}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:6\ \ -\/\ setInterval(function\ ()\ \{\},\ 1000)}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:11\ -\/\ createServer()}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ TCPSERVERWRAP}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:7\ \ -\/\ server.listen(0)}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:11\ -\/\ createServer()}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Timeout}
+\DoxyCodeLine{/home/maf/dev/node\_modules/why-\/is-\/node-\/running/example.js:13\ -\/\ setTimeout(function\ ()\ \{}
+
+\end{DoxyCode}
+
+
+{\bfseries{Important Note!}} {\ttfamily unref}ed timers do not prevent the Node process from exiting. If you are running with Node v11.\+0.\+0 and above, {\ttfamily unref}ed timers will not be listed in the above list. Unfortunately, this is not supported in node versions below v11.\+0.\+0.\hypertarget{README.md_autotoc_md35674}{}\doxysubsection{\texorpdfstring{CLI}{CLI}}\label{README.md_autotoc_md35674}
+You can also run {\ttfamily why-\/is-\/node-\/running} as a standalone if you don\textquotesingle{}t want to include it inside your code. Sending {\ttfamily SIGUSR1}/{\ttfamily SIGINFO} signal to the process will produce the log. ({\ttfamily Ctrl + T} on mac\+OS and BSD systems)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{why-\/is-\/node-\/running\ /path/to/some/file.js}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{probing\ module\ /path/to/some/file.js}
+\DoxyCodeLine{kill\ -\/SIGUSR1\ 31115\ for\ logging}
+
+\end{DoxyCode}
+
+
+To trigger the log\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{kill\ -\/SIGUSR1\ 31115}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35675}{}\doxysubsection{\texorpdfstring{Require CLI Option}{Require CLI Option}}\label{README.md_autotoc_md35675}
+You can also use the node {\ttfamily -\/r} option to include {\ttfamily why-\/is-\/node-\/running}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ -\/r\ why-\/is-\/node-\/running/include\ /path/to/some/file.js}
+
+\end{DoxyCode}
+
+
+The steps are otherwise the same as the above CLI section\hypertarget{README.md_autotoc_md35676}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md35676}
+MIT 

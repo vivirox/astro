@@ -1,0 +1,117 @@
+\doxysection{node\+\_\+modules/unist-\/util-\/remove-\/position Directory Reference}
+\hypertarget{dir_9279dd48be04cdbcf090db41c6629406}{}\label{dir_9279dd48be04cdbcf090db41c6629406}\index{node\_modules/unist-\/util-\/remove-\/position Directory Reference@{node\_modules/unist-\/util-\/remove-\/position Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/unist-util-remove-position/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/unist-util-remove-position}{\texttt{ }} \href{https://www.npmjs.com/package/unist-util-remove-position}{\texttt{ }} \href{https://bundlejs.com/?q=unist-util-remove-position}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/unist}{\texttt{ unist}} utility to remove positional info from a tree.\hypertarget{readme.md_autotoc_md34347}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md34347}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}remove\+Position(node\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34348}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md34348}
+This is a small utility that helps you remove the {\ttfamily position} field from nodes in a unist tree.\hypertarget{readme.md_autotoc_md34349}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md34349}
+Often, positional info is the whole reason, or an important reason, for using ASTs. Sometimes, especially when comparing trees, or when inserting one tree into another, the positional info is at best useless and at worst harmful. In those cases, you can use this utility to remove {\ttfamily position} fields from a tree.
+
+You might find the utility \href{https://github.com/syntax-tree/unist-util-position}{\texttt{ {\ttfamily unist-\/util-\/position}}} useful to instead get clean position info from a tree, or \href{https://github.com/syntax-tree/unist-util-generated}{\texttt{ {\ttfamily unist-\/util-\/generated}}} useful to check whether a node is considered to be generated (not in the original input file).
+
+You might also enjoy \href{https://github.com/syntax-tree/unist-util-stringify-position}{\texttt{ {\ttfamily unist-\/util-\/stringify-\/position}}} when you want to display positional info to users.\hypertarget{readme.md_autotoc_md34350}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md34350}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ unist-\/util-\/remove-\/position}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{removePosition\}\ from\ 'https://esm.sh/unist-\/util-\/remove-\/position@5'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{removePosition\}\ from\ 'https://esm.sh/unist-\/util-\/remove-\/position@5?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34351}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md34351}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{fromMarkdown\}\ from\ 'mdast-\/util-\/from-\/markdown'}
+\DoxyCodeLine{import\ \{removePosition\}\ from\ 'unist-\/util-\/remove-\/position'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromMarkdown('Some\ \_emphasis\_,\ **importance**,\ and\ \`{}code`.')}
+\DoxyCodeLine{}
+\DoxyCodeLine{removePosition(tree,\ \{force:\ true\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.dir(tree,\ \{depth:\ null\})}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ 'Some\ '\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'emphasis',\ children:\ [\{type:\ 'text',\ value:\ 'emphasis'\}]\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ ',\ '\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'strong',\ children:\ [\{type:\ 'text',\ value:\ 'importance'\}]\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ ',\ and\ '\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'inlineCode',\ value:\ 'code'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '.'\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34352}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md34352}
+This package exports the identifier \`{}remove\+Position\`{}. There is no default export.\hypertarget{readme.md_autotoc_md34353}{}\doxysubsubsection{\texorpdfstring{{\ttfamily remove\+Position(node\mbox{[}, options\mbox{]})}}{{\ttfamily remove\+Position(node\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md34353}
+Remove the {\ttfamily position} field from a tree.\hypertarget{readme.md_autotoc_md34354}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md34354}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — tree to clean
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34355}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md34355}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md34356}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md34356}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md34357}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md34357}
+
+\begin{DoxyItemize}
+\item {\ttfamily force} ({\ttfamily boolean}, default\+: {\ttfamily false}) — whether to use {\ttfamily delete} to remove {\ttfamily position} fields, the default is to set them to {\ttfamily undefined}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34358}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md34358}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md34359}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md34359}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily unist-\/util-\/remove-\/position@\texorpdfstring{$^\wedge$}{\string^}5}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md34360}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md34360}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md34361}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md34361}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

@@ -1,0 +1,99 @@
+\doxysection{node\+\_\+modules/@tootallnate/once Directory Reference}
+\hypertarget{dir_6e026d9695c27aab66aff0a5fd53d65c}{}\label{dir_6e026d9695c27aab66aff0a5fd53d65c}\index{node\_modules/"@tootallnate/once Directory Reference@{node\_modules/"@tootallnate/once Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{README.md_autotoc_md6426}{}\doxysubsubsection{\texorpdfstring{Creates a Promise that waits for a single event}{Creates a Promise that waits for a single event}}\label{README.md_autotoc_md6426}
+\hypertarget{README.md_autotoc_md6427}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md6427}
+Install with {\ttfamily npm}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ @tootallnate/once}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6428}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md6428}
+\hypertarget{README.md_autotoc_md6429}{}\doxysubsubsection{\texorpdfstring{once(emitter\+: Event\+Emitter, name\+: string, opts?\+: Once\+Options)\+: Promise\texorpdfstring{$<$}{<}\mbox{[}...Args\mbox{]}\texorpdfstring{$>$}{>}}{once(emitter\+: Event\+Emitter, name\+: string, opts?\+: Once\+Options)\+: Promise\texorpdfstring{$<$}{<}\mbox{[}...Args\mbox{]}\texorpdfstring{$>$}{>}}}\label{README.md_autotoc_md6429}
+Creates a Promise that waits for event {\ttfamily name} to occur on {\ttfamily emitter}, and resolves the promise with an array of the values provided to the event handler. If an {\ttfamily error} event occurs before the event specified by {\ttfamily name}, then the Promise is rejected with the error argument.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ once\ from\ '@tootallnate/once';}
+\DoxyCodeLine{import\ \{\ EventEmitter\ \}\ from\ 'events';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ EventEmitter();}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ emitter.emit('foo',\ 'bar');}
+\DoxyCodeLine{\},\ 100);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ [result]\ =\ await\ once(emitter,\ 'foo');}
+\DoxyCodeLine{console.log(\{\ result\ \});}
+\DoxyCodeLine{//\ \{\ result:\ 'bar'\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6430}{}\doxysubsubsubsection{\texorpdfstring{Promise Strong Typing}{Promise Strong Typing}}\label{README.md_autotoc_md6430}
+The main feature that this module provides over other "{}once"{} implementations is that the Promise that is returned is {\itshape {\bfseries{strongly typed}}} based on the type of {\ttfamily emitter} and the {\ttfamily name} of the event. Some examples are shown below.
+
+{\itshape The process "{}exit"{} event contains a single number for exit code\+:}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ [code]\ =\ await\ once(process,\ 'exit');}
+\DoxyCodeLine{//\ \ \ \ \ \string^\ number}
+
+\end{DoxyCode}
+ {\itshape A child process "{}exit"{} event contains either an exit code or a signal\+:}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ child\ =\ spawn('echo',\ []);}
+\DoxyCodeLine{const\ [code,\ signal]\ =\ await\ once(child,\ 'exit');}
+\DoxyCodeLine{//\ \ \ \ \ \string^\ number\ |\ null}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ \string^\ string\ |\ null}
+
+\end{DoxyCode}
+
+
+{\itshape A forked child process "{}message"{} event is type {\ttfamily any}, so you can cast the Promise directly\+:}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ child\ =\ fork('file.js');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ With\ \`{}await`}
+\DoxyCodeLine{const\ [message,\ \_]:\ [WorkerPayload,\ unknown]\ =\ await\ once(child,\ 'message');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ With\ Promise}
+\DoxyCodeLine{const\ messagePromise:\ Promise<[WorkerPayload,\ unknown]>\ =\ once(child,\ 'message');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Better\ yet\ would\ be\ to\ leave\ it\ as\ \`{}any`,\ and\ validate\ the\ payload}
+\DoxyCodeLine{//\ at\ runtime\ with\ i.e.\ \`{}ajv`\ +\ \`{}json-\/schema-\/to-\/typescript`}
+
+\end{DoxyCode}
+
+
+{\itshape If the Type\+Script definition does not contain an overload for the specified event name, then the Promise will have type {\ttfamily unknown\mbox{[}\mbox{]}} and your code will need to narrow the result manually\+:}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ CustomEmitter\ extends\ EventEmitter\ \{}
+\DoxyCodeLine{\ \ \ \ on(name:\ 'foo',\ listener:\ (a:\ string,\ b:\ number)\ =>\ void):\ this;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter:\ CustomEmitter\ =\ new\ EventEmitter();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ "{}foo"{}\ event\ is\ a\ defined\ overload,\ so\ it's\ properly\ typed}
+\DoxyCodeLine{const\ fooPromise\ =\ once(emitter,\ 'foo');}
+\DoxyCodeLine{//\ \ \ \ \string^\ Promise<[a:\ string,\ b:\ number]>}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ "{}bar"{}\ event\ in\ not\ a\ defined\ overload,\ so\ it\ gets\ \`{}unknown[]`}
+\DoxyCodeLine{const\ barPromise\ =\ once(emitter,\ 'bar');}
+\DoxyCodeLine{//\ \ \ \ \string^\ Promise<unknown[]>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6431}{}\doxysubsubsection{\texorpdfstring{Once\+Options}{Once\+Options}}\label{README.md_autotoc_md6431}
+
+\begin{DoxyItemize}
+\item {\ttfamily signal} -\/ {\ttfamily Abort\+Signal} instance to unbind event handlers before the Promise has been fulfilled. 
+\end{DoxyItemize}

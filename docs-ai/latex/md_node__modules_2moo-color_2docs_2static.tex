@@ -1,0 +1,124 @@
+\chapter{Static}
+\hypertarget{md_node__modules_2moo-color_2docs_2static}{}\label{md_node__modules_2moo-color_2docs_2static}\index{Static@{Static}}
+\label{md_node__modules_2moo-color_2docs_2static_autotoc_md24355}%
+\Hypertarget{md_node__modules_2moo-color_2docs_2static_autotoc_md24355}%
+
+
+Static members of Moo\+Color.\hypertarget{md_node__modules_2moo-color_2docs_2static_autotoc_md24356}{}\doxysection{\texorpdfstring{Types}{Types}}\label{md_node__modules_2moo-color_2docs_2static_autotoc_md24356}
+\hypertarget{md_node__modules_2moo-color_2docs_2static_autotoc_md24357}{}\doxysubsection{\texorpdfstring{Random\+Arguments}{Random\+Arguments}}\label{md_node__modules_2moo-color_2docs_2static_autotoc_md24357}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ ts}
+\DoxyCodeLine{/**\ An\ argument\ for\ \`{}random()`\ method.\ */}
+\DoxyCodeLine{interface\ RandomArguments\ \{}
+\DoxyCodeLine{\ \ /**\ The\ hue\ value\ from\ 0\ to\ 360.\ Also\ you\ can\ give\ this\ as\ range.\ e.g.\ [0,\ 180]\ */}
+\DoxyCodeLine{\ \ hue?:\ number|[number,\ number];}
+\DoxyCodeLine{\ \ /**\ The\ whiteness\ value\ from\ 0\ to\ 100.\ Also\ you\ can\ give\ this\ as\ range.\ e.g.\ [0,\ 50]\ */}
+\DoxyCodeLine{\ \ white?:\ number|[number,\ number];}
+\DoxyCodeLine{\ \ /**\ The\ blackness\ value\ from\ 0\ to\ 100.\ Also\ you\ can\ give\ this\ as\ range.\ e.g.\ [0,\ 50]\ */}
+\DoxyCodeLine{\ \ black?:\ number|[number,\ number];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2moo-color_2docs_2static_autotoc_md24358}{}\doxysection{\texorpdfstring{Methods}{Methods}}\label{md_node__modules_2moo-color_2docs_2static_autotoc_md24358}
+\hypertarget{md_node__modules_2moo-color_2docs_2static_autotoc_md24359}{}\doxysubsection{\texorpdfstring{mix}{mix}}\label{md_node__modules_2moo-color_2docs_2static_autotoc_md24359}
+Helper method for \href{modifier.md\#mix}{\texttt{ {\ttfamily mix()}}} method.
+
+Syntax
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ ts}
+\DoxyCodeLine{MooColor.mix(}
+\DoxyCodeLine{\ \ color1:\ MooColor|string|Color,\ }
+\DoxyCodeLine{\ \ color2:\ MooColor|string|Color,}
+\DoxyCodeLine{\ \ percentOf1?:\ number}
+\DoxyCodeLine{):\ MooColor;}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em \`{}\+Moo\+Color\texorpdfstring{$\vert$}{|}string\texorpdfstring{$\vert$}{|}\+Color\`{}} & color1\\
+\hline
+\end{DoxyParams}
+
+\item 
+\begin{DoxyParams}{Parameters}
+{\em \`{}\+Moo\+Color\texorpdfstring{$\vert$}{|}string\texorpdfstring{$\vert$}{|}\+Color\`{}} & color2\\
+\hline
+\end{DoxyParams}
+
+\item 
+\begin{DoxyParams}{Parameters}
+{\em \`{}number\`{}} & \mbox{[}percent\+Of1=50\mbox{]} -\/ percentage of the first color.\\
+\hline
+\end{DoxyParams}
+
+\item \begin{DoxyReturn}{Returns}
+{\ttfamily Moo\+Color} -\/ mixed color.
+\end{DoxyReturn}
+Examples
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{const\ color1\ =\ new\ MooColor('\#f00');}
+\DoxyCodeLine{const\ color2\ =\ new\ MooColor('\#f80');}
+\DoxyCodeLine{const\ mixedColor\ =\ MooColor.mix(color1,\ color2);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ or\ simply}
+\DoxyCodeLine{const\ newColor\ =\ MooColor.mix('\#f00',\ '\#f80');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ If\ you\ want\ to\ getting\ mixed\ as\ unbalanced,\ use\ \`{}percentOf1`\ parameter.}
+\DoxyCodeLine{const\ myColor\ =\ MooColor.mix('green',\ 'blue',\ 75);}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2moo-color_2docs_2static_autotoc_md24360}{}\doxysubsection{\texorpdfstring{random}{random}}\label{md_node__modules_2moo-color_2docs_2static_autotoc_md24360}
+Create random color as HWB model.
+
+Syntax
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ ts}
+\DoxyCodeLine{MooColor.random(arg?:\ RandomArguments):\ MooColor;}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
+ref "{}random\+Arguments"{} "{}\`{}\+Random\+Arguments\`{}"{} \mbox{[}\{ hue, white, black \} = \{\}\mbox{]}
+\begin{DoxyItemize}
+\item {\ttfamily hue} -\/ The hue value from 0 to 360. Also you can give this as range. e.\+g. \mbox{[}0, 180\mbox{]}
+\item {\ttfamily white} -\/ The whiteness value from 0 to 100. Also you can give this as range. e.\+g. \mbox{[}0, 50\mbox{]}
+\item {\ttfamily black} -\/ The blackness value from 0 to 100. Also you can give this as range. e.\+g. \mbox{[}0, 50\mbox{]}
+\end{DoxyItemize}
+\item \begin{DoxyReturn}{Returns}
+{\ttfamily Moo\+Color}
+\end{DoxyReturn}
+Examples
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{//\ Make\ random\ color.\ (default)}
+\DoxyCodeLine{const\ color1\ =\ MooColor.random();}
+\DoxyCodeLine{//\ Make\ random\ color\ that\ specify\ whiteness\ and\ blackness\ values.}
+\DoxyCodeLine{const\ color2\ =\ MooColor.random(\{\ white:\ 0,\ black:\ 50\ \});}
+\DoxyCodeLine{//\ Make\ random\ color\ that\ range\ between\ red\ and\ yellow\ (hue\ value\ from\ 0\ to\ 60).}
+\DoxyCodeLine{const\ color3\ =\ MooColor.random(\{\ hue:\ [0,\ 60]\ \});}
+
+\end{DoxyCode}
+ 

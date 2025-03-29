@@ -1,0 +1,41 @@
+\doxysection{node\+\_\+modules/safe-\/push-\/apply Directory Reference}
+\hypertarget{dir_a2c53d22f6bc1287b0f9c4a614b56f07}{}\label{dir_a2c53d22f6bc1287b0f9c4a614b56f07}\index{node\_modules/safe-\/push-\/apply Directory Reference@{node\_modules/safe-\/push-\/apply Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/ljharb/safe-push-apply/actions}{\texttt{ }} \href{https://app.codecov.io/gh/ljharb/safe-push-apply/}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=safe-push-apply}{\texttt{ }}
+
+\href{https://npmjs.org/package/safe-push-apply}{\texttt{ }}
+
+Push an array of items into an array, while being robust against prototype modification.\hypertarget{README.md_autotoc_md30183}{}\doxysubsection{\texorpdfstring{Getting started}{Getting started}}\label{README.md_autotoc_md30183}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ safe-\/push-\/apply}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30184}{}\doxysubsection{\texorpdfstring{Usage/\+Examples}{Usage/\+Examples}}\label{README.md_autotoc_md30184}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ safePushApply\ =\ require('safe-\/push-\/apply');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ arr\ =\ [1,\ 2,\ 3];}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ orig\ =\ Array.prototype[Symbol.iterator];}
+\DoxyCodeLine{delete\ Array.prototype[Symbol.iterator];}
+\DoxyCodeLine{assert.throws(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ arr.push(...[3,\ 4,\ 5]);}
+\DoxyCodeLine{\ \ \ \ \}\ finally\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Array.prototype[Symbol.iterator]\ =\ orig;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\},\ 'array\ is\ not\ iterable\ anymore');}
+\DoxyCodeLine{}
+\DoxyCodeLine{delete\ Array.prototype.push;}
+\DoxyCodeLine{safePushApply(arr,\ [3,\ 4,\ 5]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(arr,\ [1,\ 2,\ 3,\ 3,\ 4,\ 5]);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30185}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md30185}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

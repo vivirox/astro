@@ -1,0 +1,83 @@
+\doxysection{llm\+\_\+api Namespace Reference}
+\hypertarget{namespacellm__api}{}\label{namespacellm__api}\index{llm\_api@{llm\_api}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classllm__api_1_1_secure_data_handler}{Secure\+Data\+Handler}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacellm__api_abbb0d15965afe61b077c6978a515fc62}{load\+\_\+environment}} ()
+\item 
+tuple\mbox{[}str, str\mbox{]} \mbox{\hyperlink{namespacellm__api_aa0cab89b5eba6d37d08a7c63a176aa70}{encode\+\_\+image\+\_\+file}} (str image\+\_\+path)
+\item 
+\mbox{\hyperlink{namespacellm__api_aa45da50434dfd51a0e98898354fd1d7c}{create\+\_\+llm\+\_\+client}} (provider="{}gemini"{})
+\item 
+Optional\mbox{[}str\mbox{]} \mbox{\hyperlink{namespacellm__api_aadf2ecf7c23bfd87d01deb281d09f02b}{query\+\_\+llm}} (str prompt, Any client=None, Optional\mbox{[}str\mbox{]} model=None, str provider="{}gemini"{}, Optional\mbox{[}str\mbox{]} image\+\_\+path=None)
+\item 
+\mbox{\hyperlink{namespacellm__api_a2125e78fafaaa772f0b6cc8d99523c01}{main}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacellm__api_aa45da50434dfd51a0e98898354fd1d7c}\index{llm\_api@{llm\_api}!create\_llm\_client@{create\_llm\_client}}
+\index{create\_llm\_client@{create\_llm\_client}!llm\_api@{llm\_api}}
+\doxysubsubsection{\texorpdfstring{create\_llm\_client()}{create\_llm\_client()}}
+{\footnotesize\ttfamily \label{namespacellm__api_aa45da50434dfd51a0e98898354fd1d7c} 
+llm\+\_\+api.\+create\+\_\+llm\+\_\+client (\begin{DoxyParamCaption}\item[{}]{provider}{ = {\ttfamily "{}gemini"{}}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Create and return an LLM client based on the specified provider.
+
+Args:
+    provider (str): The provider name ('gemini')
+
+Returns:
+    Any: The appropriate client for the specified provider
+\end{DoxyVerb}
+ \Hypertarget{namespacellm__api_aa0cab89b5eba6d37d08a7c63a176aa70}\index{llm\_api@{llm\_api}!encode\_image\_file@{encode\_image\_file}}
+\index{encode\_image\_file@{encode\_image\_file}!llm\_api@{llm\_api}}
+\doxysubsubsection{\texorpdfstring{encode\_image\_file()}{encode\_image\_file()}}
+{\footnotesize\ttfamily \label{namespacellm__api_aa0cab89b5eba6d37d08a7c63a176aa70} 
+ tuple\mbox{[}str, str\mbox{]} llm\+\_\+api.\+encode\+\_\+image\+\_\+file (\begin{DoxyParamCaption}\item[{str}]{image\+\_\+path}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Encode an image file to base64 and determine its MIME type.
+
+Args:
+    image_path (str): Path to the image file
+
+Returns:
+    tuple: (base64_encoded_string, mime_type)
+\end{DoxyVerb}
+ \Hypertarget{namespacellm__api_abbb0d15965afe61b077c6978a515fc62}\index{llm\_api@{llm\_api}!load\_environment@{load\_environment}}
+\index{load\_environment@{load\_environment}!llm\_api@{llm\_api}}
+\doxysubsubsection{\texorpdfstring{load\_environment()}{load\_environment()}}
+{\footnotesize\ttfamily \label{namespacellm__api_abbb0d15965afe61b077c6978a515fc62} 
+llm\+\_\+api.\+load\+\_\+environment (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Load environment variables from .env files in order of precedence\end{DoxyVerb}
+ \Hypertarget{namespacellm__api_a2125e78fafaaa772f0b6cc8d99523c01}\index{llm\_api@{llm\_api}!main@{main}}
+\index{main@{main}!llm\_api@{llm\_api}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{namespacellm__api_a2125e78fafaaa772f0b6cc8d99523c01} 
+llm\+\_\+api.\+main (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespacellm__api_aadf2ecf7c23bfd87d01deb281d09f02b}\index{llm\_api@{llm\_api}!query\_llm@{query\_llm}}
+\index{query\_llm@{query\_llm}!llm\_api@{llm\_api}}
+\doxysubsubsection{\texorpdfstring{query\_llm()}{query\_llm()}}
+{\footnotesize\ttfamily \label{namespacellm__api_aadf2ecf7c23bfd87d01deb281d09f02b} 
+ Optional\mbox{[}str\mbox{]} llm\+\_\+api.\+query\+\_\+llm (\begin{DoxyParamCaption}\item[{str}]{prompt}{, }\item[{Any }]{client}{ = {\ttfamily None}, }\item[{Optional\mbox{[}str\mbox{]} }]{model}{ = {\ttfamily None}, }\item[{str }]{provider}{ = {\ttfamily "{}gemini"{}}, }\item[{Optional\mbox{[}str\mbox{]} }]{image\+\_\+path}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Query an LLM with a prompt and optional image attachment.
+
+Args:
+    prompt (str): The text prompt to send
+    client (Any): The LLM client instance
+    model (str, optional): The model to use
+    provider (str): The API provider to use
+    image_path (str, optional): Path to an image file to attach
+
+Returns:
+    Optional[str]: The LLM's response or None if there was an error
+\end{DoxyVerb}
+ 

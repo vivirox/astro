@@ -1,0 +1,421 @@
+\doxysection{node\+\_\+modules/eslint-\/plugin-\/react Directory Reference}
+\hypertarget{dir_1ea39de788cf669ff90e8246a0c2cccf}{}\label{dir_1ea39de788cf669ff90e8246a0c2cccf}\index{node\_modules/eslint-\/plugin-\/react Directory Reference@{node\_modules/eslint-\/plugin-\/react Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_de17bcc3f94e9b940fd5342ed0396d43}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\DoxyHorRuler{0}
+
+
+\href{https://github.com/jsx-eslint/eslint-plugin-react/actions}{\texttt{ }} \href{https://github.com/jsx-eslint/eslint-plugin-react/pulse}{\texttt{ }} \href{https://npmjs.org/package/eslint-plugin-react}{\texttt{ }} \href{https://tidelift.com/subscription/pkg/npm-eslint-plugin-react?utm_source=npm-eslint-plugin-react&utm_medium=referral&utm_campaign=readme}{\texttt{ }}
+
+React specific linting rules for {\ttfamily eslint}\hypertarget{README.md_autotoc_md14157}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md14157}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ eslint\ eslint-\/plugin-\/react\ -\/-\/save-\/dev}
+
+\end{DoxyCode}
+
+
+It is also possible to install ESLint globally rather than locally (using {\ttfamily npm install -\/g eslint}). However, this is not recommended, and any plugins or shareable configs that you use must be installed locally in either case.\hypertarget{README.md_autotoc_md14158}{}\doxysubsubsection{\texorpdfstring{Configuration (legacy\+: {\ttfamily .eslintrc\texorpdfstring{$\ast$}{*}}) \label{_configuration}%
+}{Configuration (legacy\+: {\ttfamily .eslintrc\texorpdfstring{$\ast$}{*}}) \label{_configuration}%
+}}\label{README.md_autotoc_md14158}
+Use our preset to get reasonable defaults\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}extends"{}:\ [}
+\DoxyCodeLine{\ \ "{}eslint:recommended"{},}
+\DoxyCodeLine{\ \ "{}plugin:react/recommended"{}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+If you are using the \href{https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html\#removing-unused-react-imports}{\texttt{ new JSX transform from React 17}}, extend \href{https://github.com/jsx-eslint/eslint-plugin-react/blob/c8917b0885094b5e4cc2a6f613f7fb6f16fe932e/index.js\#L163-L176}{\texttt{ {\ttfamily react/jsx-\/runtime}}} in your eslint config (add {\ttfamily "{}plugin\+:react/jsx-\/runtime"{}} to {\ttfamily "{}extends"{}}) to disable the relevant rules.
+
+You should also specify settings that will be shared across all the plugin rules. (\href{https://eslint.org/docs/latest/use/configure/configuration-files\#configuring-shared-settings}{\texttt{ More about eslint shared settings}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}settings"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}react"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}createClass"{}:\ "{}createReactClass"{},\ //\ Regex\ for\ Component\ Factory\ to\ use,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ default\ to\ "{}createReactClass"{}}
+\DoxyCodeLine{\ \ \ \ \ \ "{}pragma"{}:\ "{}React"{},\ \ //\ Pragma\ to\ use,\ default\ to\ "{}React"{}}
+\DoxyCodeLine{\ \ \ \ \ \ "{}fragment"{}:\ "{}Fragment"{},\ \ //\ Fragment\ to\ use\ (may\ be\ a\ property\ of\ <pragma>),\ default\ to\ "{}Fragment"{}}
+\DoxyCodeLine{\ \ \ \ \ \ "{}version"{}:\ "{}detect"{},\ //\ React\ version.\ "{}detect"{}\ automatically\ picks\ the\ version\ you\ have\ installed.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ You\ can\ also\ use\ \`{}16.0`,\ \`{}16.3`,\ etc,\ if\ you\ want\ to\ override\ the\ detected\ value.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Defaults\ to\ the\ "{}defaultVersion"{}\ setting\ and\ warns\ if\ missing,\ and\ to\ "{}detect"{}\ in\ the\ future}
+\DoxyCodeLine{\ \ \ \ \ \ "{}defaultVersion"{}:\ "{}"{},\ //\ Default\ React\ version\ to\ use\ when\ the\ version\ you\ have\ installed\ cannot\ be\ detected.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ If\ not\ provided,\ defaults\ to\ the\ latest\ React\ version.}
+\DoxyCodeLine{\ \ \ \ \ \ "{}flowVersion"{}:\ "{}0.53"{}\ //\ Flow\ version}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ "{}propWrapperFunctions"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ The\ names\ of\ any\ function\ used\ to\ wrap\ propTypes,\ e.g.\ \`{}forbidExtraProps`.\ If\ this\ isn't\ set,\ any\ propTypes\ wrapped\ in\ a\ function\ will\ be\ skipped.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}forbidExtraProps"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{"{}property"{}:\ "{}freeze"{},\ "{}object"{}:\ "{}Object"{}\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{"{}property"{}:\ "{}myFavoriteWrapper"{}\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ for\ rules\ that\ check\ exact\ prop\ wrappers}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{"{}property"{}:\ "{}forbidExtraProps"{},\ "{}exact"{}:\ true\}}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ "{}componentWrapperFunctions"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ The\ name\ of\ any\ function\ used\ to\ wrap\ components,\ e.g.\ Mobx\ \`{}observer`\ function.\ If\ this\ isn't\ set,\ components\ wrapped\ by\ these\ functions\ will\ be\ skipped.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}observer"{},\ //\ \`{}property`}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{"{}property"{}:\ "{}styled"{}\},\ //\ \`{}object`\ is\ optional}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{"{}property"{}:\ "{}observer"{},\ "{}object"{}:\ "{}Mobx"{}\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{"{}property"{}:\ "{}observer"{},\ "{}object"{}:\ "{}<pragma>"{}\}\ //\ sets\ \`{}object`\ to\ whatever\ value\ \`{}settings.react.pragma`\ is\ set\ to}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ "{}formComponents"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Components\ used\ as\ alternatives\ to\ <form>\ for\ forms,\ eg.\ <Form\ endpoint=\{\ url\ \}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ "{}CustomForm"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \{"{}name"{}:\ "{}SimpleForm"{},\ "{}formAttribute"{}:\ "{}endpoint"{}\},}
+\DoxyCodeLine{\ \ \ \ \ \ \{"{}name"{}:\ "{}Form"{},\ "{}formAttribute"{}:\ ["{}registerEndpoint"{},\ "{}loginEndpoint"{}]\},\ //\ allows\ specifying\ multiple\ properties\ if\ necessary}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ "{}linkComponents"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Components\ used\ as\ alternatives\ to\ <a>\ for\ linking,\ eg.\ <Link\ to=\{\ url\ \}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ "{}Hyperlink"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \{"{}name"{}:\ "{}MyLink"{},\ "{}linkAttribute"{}:\ "{}to"{}\},}
+\DoxyCodeLine{\ \ \ \ \ \ \{"{}name"{}:\ "{}Link"{},\ "{}linkAttribute"{}:\ ["{}to"{},\ "{}href"{}]\},\ //\ allows\ specifying\ multiple\ properties\ if\ necessary}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you do not use a preset you will need to specify individual rules and add extra configuration.
+
+Add "{}react"{} to the plugins section.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ \ \ "{}react"{}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Enable JSX support.
+
+With {\ttfamily eslint} 2+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}parserOptions"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}ecmaFeatures"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}jsx"{}:\ true}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Enable the rules that you would like to use.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ "{}react/jsx-\/uses-\/react"{}:\ "{}error"{},}
+\DoxyCodeLine{\ \ "{}react/jsx-\/uses-\/vars"{}:\ "{}error"{},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14159}{}\doxysubsubsubsection{\texorpdfstring{Shareable configs}{Shareable configs}}\label{README.md_autotoc_md14159}
+\hypertarget{README.md_autotoc_md14160}{}\doxysubsubsubsubsection{\texorpdfstring{Recommended}{Recommended}}\label{README.md_autotoc_md14160}
+This plugin exports a {\ttfamily recommended} configuration that enforces React good practices.
+
+To enable this configuration use the {\ttfamily extends} property in your {\ttfamily .eslintrc} config file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}extends"{}:\ ["{}eslint:recommended"{},\ "{}plugin:react/recommended"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+See \href{https://eslint.org/docs/user-guide/configuring/configuration-files\#extending-configuration-files}{\texttt{ {\ttfamily eslint} documentation}} for more information about extending configuration files.\hypertarget{README.md_autotoc_md14161}{}\doxysubsubsubsubsection{\texorpdfstring{All}{All}}\label{README.md_autotoc_md14161}
+This plugin also exports an {\ttfamily all} configuration that includes every available rule. This pairs well with the {\ttfamily eslint\+:all} rule.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ \ \ "{}react"{}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ "{}extends"{}:\ ["{}eslint:all"{},\ "{}plugin:react/all"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note}}\+: These configurations will import {\ttfamily eslint-\/plugin-\/react} and enable JSX in \href{https://eslint.org/docs/user-guide/configuring/language-options\#specifying-parser-options}{\texttt{ parser options}}.\hypertarget{README.md_autotoc_md14162}{}\doxysubsubsection{\texorpdfstring{Configuration (new\+: {\ttfamily eslint.\+config.\+js})}{Configuration (new\+: {\ttfamily eslint.\+config.\+js})}}\label{README.md_autotoc_md14162}
+From \href{https://github.com/eslint/eslint/releases/tag/v8.21.0}{\texttt{ {\ttfamily v8.\+21.\+0}}}, eslint announced a new config system. In the new system, {\ttfamily .eslintrc\texorpdfstring{$\ast$}{*}} is no longer used. {\ttfamily eslint.\+config.\+js} would be the default config file name. In eslint {\ttfamily v8}, the legacy system ({\ttfamily .eslintrc\texorpdfstring{$\ast$}{*}}) would still be supported, while in eslint {\ttfamily v9}, only the new system would be supported.
+
+And from \href{https://github.com/eslint/eslint/releases/tag/v8.23.0}{\texttt{ {\ttfamily v8.\+23.\+0}}}, eslint CLI starts to look up {\ttfamily eslint.\+config.\+js}. {\bfseries{So, if your eslint is {\ttfamily \texorpdfstring{$>$}{>}=8.\+23.\+0}, you\textquotesingle{}re 100\% ready to use the new config system.}}
+
+You might want to check out the official blog posts,
+
+
+\begin{DoxyItemize}
+\item \href{https://eslint.org/blog/2022/08/new-config-system-part-1/}{\texttt{ https\+://eslint.\+org/blog/2022/08/new-\/config-\/system-\/part-\/1/}}
+\item \href{https://eslint.org/blog/2022/08/new-config-system-part-2/}{\texttt{ https\+://eslint.\+org/blog/2022/08/new-\/config-\/system-\/part-\/2/}}
+\item \href{https://eslint.org/blog/2022/08/new-config-system-part-3/}{\texttt{ https\+://eslint.\+org/blog/2022/08/new-\/config-\/system-\/part-\/3/}}
+\end{DoxyItemize}
+
+and the \href{https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new}{\texttt{ official docs}}.\hypertarget{README.md_autotoc_md14163}{}\doxysubsubsubsection{\texorpdfstring{Plugin}{Plugin}}\label{README.md_autotoc_md14163}
+The default export of {\ttfamily eslint-\/plugin-\/react} is a plugin object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ react\ =\ require('eslint-\/plugin-\/react');}
+\DoxyCodeLine{const\ globals\ =\ require('globals');}
+\DoxyCodeLine{}
+\DoxyCodeLine{module.exports\ =\ [}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ files:\ ['**/*.\{js,jsx,mjs,cjs,ts,tsx\}'],}
+\DoxyCodeLine{\ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ react,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ecmaFeatures:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ jsx:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ globals:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ...globals.browser,}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ ...\ any\ rules\ you\ want}
+\DoxyCodeLine{\ \ \ \ \ \ 'react/jsx-\/uses-\/react':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ 'react/jsx-\/uses-\/vars':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ ...\ others\ are\ omitted\ for\ brevity}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14164}{}\doxysubsubsubsection{\texorpdfstring{Configuring shared settings}{Configuring shared settings}}\label{README.md_autotoc_md14164}
+Refer to the \href{https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new\#configuring-shared-settings}{\texttt{ official docs}}.
+
+The schema of the {\ttfamily settings.\+react} object would be identical to that of what\textquotesingle{}s already described above in the legacy config section.\hypertarget{README.md_autotoc_md14165}{}\doxysubsubsubsection{\texorpdfstring{Flat Configs}{Flat Configs}}\label{README.md_autotoc_md14165}
+This plugin exports 3 flat configs\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily flat.\+all}
+\item {\ttfamily flat.\+recommended}
+\item `flat\mbox{[}\textquotesingle{}jsx-\/runtime'\mbox{]}\`{}
+\end{DoxyItemize}
+
+The flat configs are available via the root plugin import. They will configure the plugin under the {\ttfamily react/} namespace and enable JSX in \href{https://eslint.org/docs/latest/use/configure/language-options\#specifying-parser-options}{\texttt{ {\ttfamily language\+Options.\+parser\+Options}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ reactPlugin\ =\ require('eslint-\/plugin-\/react');}
+\DoxyCodeLine{}
+\DoxyCodeLine{module.exports\ =\ [}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{\ \ reactPlugin.configs.flat.recommended,\ //\ This\ is\ not\ a\ plugin\ object,\ but\ a\ shareable\ config\ object}
+\DoxyCodeLine{\ \ reactPlugin.configs.flat['jsx-\/runtime'],\ //\ Add\ this\ if\ you\ are\ using\ React\ 17+}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+You can of course add/override some properties.
+
+{\bfseries{Note}}\+: Our shareable configs does not preconfigure {\ttfamily files} or \href{https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new\#configuration-objects}{\texttt{ {\ttfamily language\+Options.\+globals}}}. For most of the cases, you probably want to configure some properties by yourself.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ reactPlugin\ =\ require('eslint-\/plugin-\/react');}
+\DoxyCodeLine{const\ globals\ =\ require('globals');}
+\DoxyCodeLine{}
+\DoxyCodeLine{module.exports\ =\ [}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ files:\ ['**/*.\{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx\}'],}
+\DoxyCodeLine{\ \ \ \ ...reactPlugin.configs.flat.recommended,}
+\DoxyCodeLine{\ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ ...reactPlugin.configs.flat.recommended.languageOptions,}
+\DoxyCodeLine{\ \ \ \ \ \ globals:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ...globals.serviceworker,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ...globals.browser,}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+The above example is same as the example below, as the new config system is based on chaining.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ reactPlugin\ =\ require('eslint-\/plugin-\/react');}
+\DoxyCodeLine{const\ globals\ =\ require('globals');}
+\DoxyCodeLine{}
+\DoxyCodeLine{module.exports\ =\ [}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ files:\ ['**/*.\{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx\}'],}
+\DoxyCodeLine{\ \ \ \ ...reactPlugin.configs.flat.recommended,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ files:\ ['**/*.\{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx\}'],}
+\DoxyCodeLine{\ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ globals:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ...globals.serviceworker,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ...globals.browser,}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14166}{}\doxysubsubsection{\texorpdfstring{List of supported rules}{List of supported rules}}\label{README.md_autotoc_md14166}
+💼 \href{https://github.com/jsx-eslint/eslint-plugin-react/\#shareable-configs}{\texttt{ Configurations}} enabled in.\textbackslash{} 🚫 \href{https://github.com/jsx-eslint/eslint-plugin-react/\#shareable-configs}{\texttt{ Configurations}} disabled in.\textbackslash{} 🏃 Set in the {\ttfamily jsx-\/runtime} \href{https://github.com/jsx-eslint/eslint-plugin-react/\#shareable-configs}{\texttt{ configuration}}.\textbackslash{} ☑️ Set in the {\ttfamily recommended} \href{https://github.com/jsx-eslint/eslint-plugin-react/\#shareable-configs}{\texttt{ configuration}}.\textbackslash{} 🔧 Automatically fixable by the \href{https://eslint.org/docs/user-guide/command-line-interface\#--fix}{\texttt{ {\ttfamily -\/-\/fix} CLI option}}.\textbackslash{} 💡 Manually fixable by \href{https://eslint.org/docs/latest/use/core-concepts\#rule-suggestions}{\texttt{ editor suggestions}}.\textbackslash{} ❌ Deprecated.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{7}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Name                                    }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ 💼   }&\cellcolor{\tableheadbgcolor}\textbf{ 🚫   }&\cellcolor{\tableheadbgcolor}\textbf{ 🔧   }&\cellcolor{\tableheadbgcolor}\textbf{ 💡   }&\cellcolor{\tableheadbgcolor}\textbf{ ❌    }\\\cline{1-7}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Name                                    }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ 💼   }&\cellcolor{\tableheadbgcolor}\textbf{ 🚫   }&\cellcolor{\tableheadbgcolor}\textbf{ 🔧   }&\cellcolor{\tableheadbgcolor}\textbf{ 💡   }&\cellcolor{\tableheadbgcolor}\textbf{ ❌    }\\\cline{1-7}
+\endhead
+boolean-\/prop-\/naming   &Enforces consistent naming for boolean props   &&&&&\\\cline{1-7}
+button-\/has-\/type   &Disallow usage of {\ttfamily button} elements without an explicit {\ttfamily type} attribute   &&&&&\\\cline{1-7}
+checked-\/requires-\/onchange-\/or-\/readonly   &Enforce using {\ttfamily on\+Change} or {\ttfamily readonly} attribute when {\ttfamily checked} is used   &&&&&\\\cline{1-7}
+default-\/props-\/match-\/prop-\/types   &Enforce all default\+Props have a corresponding non-\/required Prop\+Type   &&&&&\\\cline{1-7}
+destructuring-\/assignment   &Enforce consistent usage of destructuring assignment of props, state, and context   &&&🔧   &&\\\cline{1-7}
+display-\/name   &Disallow missing display\+Name in a React component definition   &☑️   &&&&\\\cline{1-7}
+forbid-\/component-\/props   &Disallow certain props on components   &&&&&\\\cline{1-7}
+forbid-\/dom-\/props   &Disallow certain props on DOM Nodes   &&&&&\\\cline{1-7}
+forbid-\/elements   &Disallow certain elements   &&&&&\\\cline{1-7}
+forbid-\/foreign-\/prop-\/types   &Disallow using another component\textquotesingle{}s prop\+Types   &&&&&\\\cline{1-7}
+forbid-\/prop-\/types   &Disallow certain prop\+Types   &&&&&\\\cline{1-7}
+forward-\/ref-\/uses-\/ref   &Require all forward\+Ref components include a ref parameter   &&&&💡   &\\\cline{1-7}
+function-\/component-\/definition   &Enforce a specific function type for function components   &&&🔧   &&\\\cline{1-7}
+hook-\/use-\/state   &Ensure destructuring and symmetric naming of use\+State hook value and setter variables   &&&&💡   &\\\cline{1-7}
+iframe-\/missing-\/sandbox   &Enforce sandbox attribute on iframe elements   &&&&&\\\cline{1-7}
+jsx-\/boolean-\/value   &Enforce boolean attributes notation in JSX   &&&🔧   &&\\\cline{1-7}
+jsx-\/child-\/element-\/spacing   &Enforce or disallow spaces inside of curly braces in JSX attributes and expressions   &&&&&\\\cline{1-7}
+jsx-\/closing-\/bracket-\/location   &Enforce closing bracket location in JSX   &&&🔧   &&\\\cline{1-7}
+jsx-\/closing-\/tag-\/location   &Enforce closing tag location for multiline JSX   &&&🔧   &&\\\cline{1-7}
+jsx-\/curly-\/brace-\/presence   &Disallow unnecessary JSX expressions when literals alone are sufficient or enforce JSX expressions on literals in JSX children or attributes   &&&🔧   &&\\\cline{1-7}
+jsx-\/curly-\/newline   &Enforce consistent linebreaks in curly braces in JSX attributes and expressions   &&&🔧   &&\\\cline{1-7}
+jsx-\/curly-\/spacing   &Enforce or disallow spaces inside of curly braces in JSX attributes and expressions   &&&🔧   &&\\\cline{1-7}
+jsx-\/equals-\/spacing   &Enforce or disallow spaces around equal signs in JSX attributes   &&&🔧   &&\\\cline{1-7}
+jsx-\/filename-\/extension   &Disallow file extensions that may contain JSX   &&&&&\\\cline{1-7}
+jsx-\/first-\/prop-\/new-\/line   &Enforce proper position of the first property in JSX   &&&🔧   &&\\\cline{1-7}
+jsx-\/fragments   &Enforce shorthand or standard form for React fragments   &&&🔧   &&\\\cline{1-7}
+jsx-\/handler-\/names   &Enforce event handler naming conventions in JSX   &&&&&\\\cline{1-7}
+jsx-\/indent   &Enforce JSX indentation   &&&🔧   &&\\\cline{1-7}
+jsx-\/indent-\/props   &Enforce props indentation in JSX   &&&🔧   &&\\\cline{1-7}
+jsx-\/key   &Disallow missing {\ttfamily key} props in iterators/collection literals   &☑️   &&&&\\\cline{1-7}
+jsx-\/max-\/depth   &Enforce JSX maximum depth   &&&&&\\\cline{1-7}
+jsx-\/max-\/props-\/per-\/line   &Enforce maximum of props on a single line in JSX   &&&🔧   &&\\\cline{1-7}
+jsx-\/newline   &Require or prevent a new line after jsx elements and expressions.   &&&🔧   &&\\\cline{1-7}
+jsx-\/no-\/bind   &Disallow {\ttfamily .bind()} or arrow functions in JSX props   &&&&&\\\cline{1-7}
+jsx-\/no-\/comment-\/textnodes   &Disallow comments from being inserted as text nodes   &☑️   &&&&\\\cline{1-7}
+jsx-\/no-\/constructed-\/context-\/values   &Disallows JSX context provider values from taking values that will cause needless rerenders   &&&&&\\\cline{1-7}
+jsx-\/no-\/duplicate-\/props   &Disallow duplicate properties in JSX   &☑️   &&&&\\\cline{1-7}
+jsx-\/no-\/leaked-\/render   &Disallow problematic leaked values from being rendered   &&&🔧   &&\\\cline{1-7}
+jsx-\/no-\/literals   &Disallow usage of string literals in JSX   &&&&&\\\cline{1-7}
+jsx-\/no-\/script-\/url   &Disallow usage of {\ttfamily javascript\+:} URLs   &&&&&\\\cline{1-7}
+jsx-\/no-\/target-\/blank   &Disallow {\ttfamily target="{}\+\_\+blank"{}} attribute without {\ttfamily rel="{}noreferrer"{}}   &☑️   &&🔧   &&\\\cline{1-7}
+jsx-\/no-\/undef   &Disallow undeclared variables in JSX   &☑️   &&&&\\\cline{1-7}
+jsx-\/no-\/useless-\/fragment   &Disallow unnecessary fragments   &&&🔧   &&\\\cline{1-7}
+jsx-\/one-\/expression-\/per-\/line   &Require one JSX element per line   &&&🔧   &&\\\cline{1-7}
+jsx-\/pascal-\/case   &Enforce Pascal\+Case for user-\/defined JSX components   &&&&&\\\cline{1-7}
+jsx-\/props-\/no-\/multi-\/spaces   &Disallow multiple spaces between inline JSX props   &&&🔧   &&\\\cline{1-7}
+jsx-\/props-\/no-\/spread-\/multi   &Disallow JSX prop spreading the same identifier multiple times   &&&&&\\\cline{1-7}
+jsx-\/props-\/no-\/spreading   &Disallow JSX prop spreading   &&&&&\\\cline{1-7}
+jsx-\/sort-\/default-\/props   &Enforce default\+Props declarations alphabetical sorting   &&&&&❌    \\\cline{1-7}
+jsx-\/sort-\/props   &Enforce props alphabetical sorting   &&&🔧   &&\\\cline{1-7}
+jsx-\/space-\/before-\/closing   &Enforce spacing before closing bracket in JSX   &&&🔧   &&❌    \\\cline{1-7}
+jsx-\/tag-\/spacing   &Enforce whitespace in and around the JSX opening and closing brackets   &&&🔧   &&\\\cline{1-7}
+jsx-\/uses-\/react   &Disallow React to be incorrectly marked as unused   &☑️   &🏃   &&&\\\cline{1-7}
+jsx-\/uses-\/vars   &Disallow variables used in JSX to be incorrectly marked as unused   &☑️   &&&&\\\cline{1-7}
+jsx-\/wrap-\/multilines   &Disallow missing parentheses around multiline JSX   &&&🔧   &&\\\cline{1-7}
+no-\/access-\/state-\/in-\/setstate   &Disallow when this.\+state is accessed within set\+State   &&&&&\\\cline{1-7}
+no-\/adjacent-\/inline-\/elements   &Disallow adjacent inline elements not separated by whitespace.   &&&&&\\\cline{1-7}
+no-\/array-\/index-\/key   &Disallow usage of Array index in keys   &&&&&\\\cline{1-7}
+no-\/arrow-\/function-\/lifecycle   &Lifecycle methods should be methods on the prototype, not class fields   &&&🔧   &&\\\cline{1-7}
+no-\/children-\/prop   &Disallow passing of children as props   &☑️   &&&&\\\cline{1-7}
+no-\/danger   &Disallow usage of dangerous JSX properties   &&&&&\\\cline{1-7}
+no-\/danger-\/with-\/children   &Disallow when a DOM element is using both children and dangerously\+Set\+Inner\+HTML   &☑️   &&&&\\\cline{1-7}
+no-\/deprecated   &Disallow usage of deprecated methods   &☑️   &&&&\\\cline{1-7}
+no-\/did-\/mount-\/set-\/state   &Disallow usage of set\+State in component\+Did\+Mount   &&&&&\\\cline{1-7}
+no-\/did-\/update-\/set-\/state   &Disallow usage of set\+State in component\+Did\+Update   &&&&&\\\cline{1-7}
+no-\/direct-\/mutation-\/state   &Disallow direct mutation of this.\+state   &☑️   &&&&\\\cline{1-7}
+no-\/find-\/dom-\/node   &Disallow usage of find\+DOMNode   &☑️   &&&&\\\cline{1-7}
+no-\/invalid-\/html-\/attribute   &Disallow usage of invalid attributes   &&&&💡   &\\\cline{1-7}
+no-\/is-\/mounted   &Disallow usage of is\+Mounted   &☑️   &&&&\\\cline{1-7}
+no-\/multi-\/comp   &Disallow multiple component definition per file   &&&&&\\\cline{1-7}
+no-\/namespace   &Enforce that namespaces are not used in React elements   &&&&&\\\cline{1-7}
+no-\/object-\/type-\/as-\/default-\/prop   &Disallow usage of referential-\/type variables as default param in functional component   &&&&&\\\cline{1-7}
+no-\/redundant-\/should-\/component-\/update   &Disallow usage of should\+Component\+Update when extending React.\+Pure\+Component   &&&&&\\\cline{1-7}
+no-\/render-\/return-\/value   &Disallow usage of the return value of React\+DOM.\+render   &☑️   &&&&\\\cline{1-7}
+no-\/set-\/state   &Disallow usage of set\+State   &&&&&\\\cline{1-7}
+no-\/string-\/refs   &Disallow using string references   &☑️   &&&&\\\cline{1-7}
+no-\/this-\/in-\/sfc   &Disallow {\ttfamily this} from being used in stateless functional components   &&&&&\\\cline{1-7}
+no-\/typos   &Disallow common typos   &&&&&\\\cline{1-7}
+no-\/unescaped-\/entities   &Disallow unescaped HTML entities from appearing in markup   &☑️   &&&💡   &\\\cline{1-7}
+no-\/unknown-\/property   &Disallow usage of unknown DOM property   &☑️   &&🔧   &&\\\cline{1-7}
+no-\/unsafe   &Disallow usage of unsafe lifecycle methods   &&☑️   &&&\\\cline{1-7}
+no-\/unstable-\/nested-\/components   &Disallow creating unstable components inside components   &&&&&\\\cline{1-7}
+no-\/unused-\/class-\/component-\/methods   &Disallow declaring unused methods of component class   &&&&&\\\cline{1-7}
+no-\/unused-\/prop-\/types   &Disallow definitions of unused prop\+Types   &&&&&\\\cline{1-7}
+no-\/unused-\/state   &Disallow definitions of unused state   &&&&&\\\cline{1-7}
+no-\/will-\/update-\/set-\/state   &Disallow usage of set\+State in component\+Will\+Update   &&&&&\\\cline{1-7}
+prefer-\/es6-\/class   &Enforce ES5 or ES6 class for React Components   &&&&&\\\cline{1-7}
+prefer-\/exact-\/props   &Prefer exact proptype definitions   &&&&&\\\cline{1-7}
+prefer-\/read-\/only-\/props   &Enforce that props are read-\/only   &&&🔧   &&\\\cline{1-7}
+prefer-\/stateless-\/function   &Enforce stateless components to be written as a pure function   &&&&&\\\cline{1-7}
+prop-\/types   &Disallow missing props validation in a React component definition   &☑️   &&&&\\\cline{1-7}
+react-\/in-\/jsx-\/scope   &Disallow missing React when using JSX   &☑️   &🏃   &&&\\\cline{1-7}
+require-\/default-\/props   &Enforce a default\+Props definition for every prop that is not a required prop   &&&&&\\\cline{1-7}
+require-\/optimization   &Enforce React components to have a should\+Component\+Update method   &&&&&\\\cline{1-7}
+require-\/render-\/return   &Enforce ES5 or ES6 class for returning value in render function   &☑️   &&&&\\\cline{1-7}
+self-\/closing-\/comp   &Disallow extra closing tags for components without children   &&&🔧   &&\\\cline{1-7}
+sort-\/comp   &Enforce component methods order   &&&&&\\\cline{1-7}
+sort-\/default-\/props   &Enforce default\+Props declarations alphabetical sorting   &&&&&\\\cline{1-7}
+sort-\/prop-\/types   &Enforce prop\+Types declarations alphabetical sorting   &&&🔧   &&\\\cline{1-7}
+state-\/in-\/constructor   &Enforce class component state initialization style   &&&&&\\\cline{1-7}
+static-\/property-\/placement   &Enforces where React component static properties should be positioned.   &&&&&\\\cline{1-7}
+style-\/prop-\/object   &Enforce style prop value is an object   &&&&&\\\cline{1-7}
+void-\/dom-\/elements-\/no-\/children   &Disallow void DOM elements (e.\+g. {\ttfamily \texorpdfstring{$<$}{<}img /\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}br /\texorpdfstring{$>$}{>}}) from receiving children   &&&&&\\\cline{1-7}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md14167}{}\doxysubsubsection{\texorpdfstring{Other useful plugins}{Other useful plugins}}\label{README.md_autotoc_md14167}
+
+\begin{DoxyItemize}
+\item Rules of Hooks\+: \href{https://github.com/facebook/react/tree/master/packages/eslint-plugin-react-hooks}{\texttt{ eslint-\/plugin-\/react-\/hooks}}
+\item JSX accessibility\+: \href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y}{\texttt{ eslint-\/plugin-\/jsx-\/a11y}}
+\item React Native\+: \href{https://github.com/Intellicode/eslint-plugin-react-native}{\texttt{ eslint-\/plugin-\/react-\/native}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md14168}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md14168}
+{\ttfamily eslint-\/plugin-\/react} is licensed under the \href{https://opensource.org/licenses/mit-license.php}{\texttt{ MIT License}}. 

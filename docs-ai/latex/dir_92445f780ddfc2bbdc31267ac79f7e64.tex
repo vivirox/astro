@@ -1,0 +1,198 @@
+\doxysection{node\+\_\+modules/vite-\/node Directory Reference}
+\hypertarget{dir_92445f780ddfc2bbdc31267ac79f7e64}{}\label{dir_92445f780ddfc2bbdc31267ac79f7e64}\index{node\_modules/vite-\/node Directory Reference@{node\_modules/vite-\/node Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+
+
+ 
+
+\doxysubsection*{vite-\/node }
+
+
+
+Vite as Node runtime.~\newline
+The engine that powers \href{https://github.com/vitest-dev/vitest}{\texttt{ Vitest}} and \href{https://github.com/nuxt/nuxt}{\texttt{ Nuxt 3 Dev SSR}}. 
+
+
+
+\href{https://www.npmjs.com/package/vitest}{\texttt{ }} \hypertarget{README.md_autotoc_md34937}{}\doxysubsubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md34937}
+
+\begin{DoxyItemize}
+\item On-\/demand evaluation
+\item Vite\textquotesingle{}s pipeline, plugins, resolve, aliasing
+\item Out-\/of-\/box ESM \& Type\+Script support
+\item Respect {\ttfamily vite.\+config.\+ts}
+\item Hot module replacement (HMR)
+\item Separate server/client architecture
+\item Top-\/level {\ttfamily await}
+\item Shims for {\ttfamily \+\_\+\+\_\+dirname} and {\ttfamily \+\_\+\+\_\+filename} in ESM
+\item Access to native node modules like {\ttfamily fs}, {\ttfamily path}, etc.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md34938}{}\doxysubsubsection{\texorpdfstring{CLI Usage}{CLI Usage}}\label{README.md_autotoc_md34938}
+Run JS/\+TS file on Node.\+js using Vite\textquotesingle{}s resolvers and transformers.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npx\ vite-\/node\ index.ts}
+
+\end{DoxyCode}
+
+
+Options\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npx\ vite-\/node\ -\/h}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34939}{}\doxysubsubsubsection{\texorpdfstring{Options via CLI}{Options via CLI}}\label{README.md_autotoc_md34939}
+\href{https://github.com/vitest-dev/vitest/blob/main/packages/vite-node/src/types.ts\#L92-L111}{\texttt{ All {\ttfamily Vite\+Node\+Server} options}} are supported by the CLI. They may be defined through the dot syntax, as shown below\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npx\ vite-\/node\ -\/-\/options.deps.inline="{}module-\/name"{}\ -\/-\/options.deps.external="{}/module-\/regexp/"{}\ index.ts}
+
+\end{DoxyCode}
+
+
+Note that for options supporting Reg\+Exps, strings passed to the CLI must start {\itshape and} end with a {\ttfamily /};\hypertarget{README.md_autotoc_md34940}{}\doxysubsubsubsection{\texorpdfstring{Hashbang}{Hashbang}}\label{README.md_autotoc_md34940}
+If you prefer to write scripts that don\textquotesingle{}t need to be passed into Vite Node, you can declare it in the \href{https://bash.cyberciti.biz/guide/Shebang}{\texttt{ hashbang}}.
+
+Simply add {\ttfamily \#!/usr/bin/env vite-\/node -\/-\/script} at the top of your file\+:
+
+{\itshape file.\+ts}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#!/usr/bin/env\ vite-\/node\ -\/-\/script}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log('argv:',\ process.argv.slice(2))}
+
+\end{DoxyCode}
+
+
+And make the file executable\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{chmod\ +x\ ./file.ts}
+
+\end{DoxyCode}
+
+
+Now, you can run the file without passing it into Vite Node\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ ./file.ts\ hello}
+\DoxyCodeLine{argv:\ [\ 'hello'\ ]}
+
+\end{DoxyCode}
+
+
+Note that when using the {\ttfamily -\/-\/script} option, Vite Node forwards every argument and option to the script to execute, even the one supported by Vite Node itself.\hypertarget{README.md_autotoc_md34941}{}\doxysubsubsection{\texorpdfstring{Programmatic Usage}{Programmatic Usage}}\label{README.md_autotoc_md34941}
+In Vite Node, the server and runner (client) are separated, so you can integrate them in different contexts (workers, cross-\/process, or remote) if needed. The demo below shows a simple example of having both (server and runner) running in the same context
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createServer,\ version\ as\ viteVersion\ \}\ from\ 'vite'}
+\DoxyCodeLine{import\ \{\ ViteNodeRunner\ \}\ from\ 'vite-\/node/client'}
+\DoxyCodeLine{import\ \{\ ViteNodeServer\ \}\ from\ 'vite-\/node/server'}
+\DoxyCodeLine{import\ \{\ installSourcemapsSupport\ \}\ from\ 'vite-\/node/source-\/map'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ vite\ server}
+\DoxyCodeLine{const\ server\ =\ await\ createServer(\{}
+\DoxyCodeLine{\ \ optimizeDeps:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ It's\ recommended\ to\ disable\ deps\ optimization}
+\DoxyCodeLine{\ \ \ \ disabled:\ true,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ For\ old\ Vite,\ this\ is\ need\ to\ initialize\ the\ plugins.}
+\DoxyCodeLine{if\ (Number(viteVersion.split('.')[0])\ <\ 6)\ \{}
+\DoxyCodeLine{\ \ await\ server.pluginContainer.buildStart(\{\})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ vite-\/node\ server}
+\DoxyCodeLine{const\ node\ =\ new\ ViteNodeServer(server)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ fixes\ stacktraces\ in\ Errors}
+\DoxyCodeLine{installSourcemapsSupport(\{}
+\DoxyCodeLine{\ \ getSourceMap:\ source\ =>\ node.getSourceMap(source),}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ vite-\/node\ runner}
+\DoxyCodeLine{const\ runner\ =\ new\ ViteNodeRunner(\{}
+\DoxyCodeLine{\ \ root:\ server.config.root,}
+\DoxyCodeLine{\ \ base:\ server.config.base,}
+\DoxyCodeLine{\ \ //\ when\ having\ the\ server\ and\ runner\ in\ a\ different\ context,}
+\DoxyCodeLine{\ \ //\ you\ will\ need\ to\ handle\ the\ communication\ between\ them}
+\DoxyCodeLine{\ \ //\ and\ pass\ to\ this\ function}
+\DoxyCodeLine{\ \ fetchModule(id)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ node.fetchModule(id)}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ resolveId(id,\ importer)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ node.resolveId(id,\ importer)}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ execute\ the\ file}
+\DoxyCodeLine{await\ runner.executeFile('./example.ts')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ close\ the\ vite\ server}
+\DoxyCodeLine{await\ server.close()}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34942}{}\doxysubsubsection{\texorpdfstring{Debugging}{Debugging}}\label{README.md_autotoc_md34942}
+\hypertarget{README.md_autotoc_md34943}{}\doxysubsubsubsection{\texorpdfstring{Debug Transformation}{Debug Transformation}}\label{README.md_autotoc_md34943}
+Sometimes you might want to inspect the transformed code to investigate issues. You can set environment variable {\ttfamily VITE\+\_\+\+NODE\+\_\+\+DEBUG\+\_\+\+DUMP=true} to let vite-\/node write the transformed result of each module under {\ttfamily .vite-\/node/dump}.
+
+If you want to debug by modifying the dumped code, you can change the value of {\ttfamily VITE\+\_\+\+NODE\+\_\+\+DEBUG\+\_\+\+DUMP} to {\ttfamily load} and search for the dumped files and use them for executing.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{VITE\_NODE\_DEBUG\_DUMP=load\ vite-\/node\ example.ts}
+
+\end{DoxyCode}
+
+
+Or programmatically\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ ViteNodeServer\ \}\ from\ 'vite-\/node/server'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ server\ =\ new\ ViteNodeServer(viteServer,\ \{}
+\DoxyCodeLine{\ \ debug:\ \{}
+\DoxyCodeLine{\ \ \ \ dumpModules:\ true,}
+\DoxyCodeLine{\ \ \ \ loadDumppedModules:\ true,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34944}{}\doxysubsubsubsection{\texorpdfstring{Debug Execution}{Debug Execution}}\label{README.md_autotoc_md34944}
+If the process gets stuck, it might be because there are unresolvable circular dependencies. You can set {\ttfamily VITE\+\_\+\+NODE\+\_\+\+DEBUG\+\_\+\+RUNNER=true} for vite-\/node to warn about this.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{VITE\_NODE\_DEBUG\_RUNNER=true\ vite-\/node\ example.ts}
+
+\end{DoxyCode}
+
+
+Or programmatically\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ ViteNodeRunner\ \}\ from\ 'vite-\/node/client'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ runner\ =\ new\ ViteNodeRunner(\{}
+\DoxyCodeLine{\ \ debug:\ true,}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34945}{}\doxysubsubsection{\texorpdfstring{Credits}{Credits}}\label{README.md_autotoc_md34945}
+Based on \href{https://github.com/pi0}{\texttt{ @pi0}}\textquotesingle{}s brilliant idea of having a Vite server as the on-\/demand transforming service for \href{https://github.com/nuxt/vite/pull/201}{\texttt{ Nuxt\textquotesingle{}s Vite SSR}}.
+
+Thanks \href{https://github.com/brillout}{\texttt{ @brillout}} for kindly sharing this package name.\hypertarget{README.md_autotoc_md34946}{}\doxysubsubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md34946}
+\href{https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg}{\texttt{  }} \hypertarget{README.md_autotoc_md34947}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md34947}
+\href{./LICENSE}{\texttt{ MIT}} License © 2021 \href{https://github.com/antfu}{\texttt{ Anthony Fu}} 

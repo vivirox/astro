@@ -1,0 +1,245 @@
+\doxysection{node\+\_\+modules/tinyexec Directory Reference}
+\hypertarget{dir_164c450f7a7cb48689cdb15310a4d83d}{}\label{dir_164c450f7a7cb48689cdb15310a4d83d}\index{node\_modules/tinyexec Directory Reference@{node\_modules/tinyexec Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+A minimal package for executing commands \end{quote}
+
+
+This package was created to provide a minimal way of interacting with child processes without having to manually deal with streams, piping, etc.\hypertarget{README.md_autotoc_md32845}{}\doxysubsection{\texorpdfstring{Installing}{Installing}}\label{README.md_autotoc_md32845}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ i\ -\/S\ tinyexec}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32846}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md32846}
+A process can be spawned and awaited like so\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{x\}\ from\ 'tinyexec';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ await\ x('ls',\ ['-\/l']);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ result.stdout\ -\/\ the\ stdout\ as\ a\ string}
+\DoxyCodeLine{//\ result.stderr\ -\/\ the\ stderr\ as\ a\ string}
+\DoxyCodeLine{//\ result.exitCode\ -\/\ the\ process\ exit\ code\ as\ a\ number}
+
+\end{DoxyCode}
+
+
+You may also iterate over the lines of output via an async loop\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{x\}\ from\ 'tinyexec';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ proc\ =\ x('ls',\ ['-\/l']);}
+\DoxyCodeLine{}
+\DoxyCodeLine{for\ await\ (const\ line\ of\ proc)\ \{}
+\DoxyCodeLine{\ \ //\ line\ will\ be\ from\ stderr/stdout\ in\ the\ order\ you'd\ see\ it\ in\ a\ term}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32847}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md32847}
+Options can be passed to have finer control over spawning of the process\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ x('ls',\ [],\ \{}
+\DoxyCodeLine{\ \ timeout:\ 1000}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+The options object can have the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily signal} -\/ an {\ttfamily Abort\+Signal} to allow aborting of the execution
+\item {\ttfamily timeout} -\/ time in milliseconds at which the process will be forceably killed
+\item {\ttfamily persist} -\/ if {\ttfamily true}, the process will continue after the host exits
+\item {\ttfamily stdin} -\/ another {\ttfamily Result} can be used as the input to this process
+\item {\ttfamily node\+Options} -\/ any valid options to node\textquotesingle{}s underlying {\ttfamily spawn} function
+\item {\ttfamily throw\+On\+Error} -\/ if true, non-\/zero exit codes will throw an error
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md32848}{}\doxysubsubsection{\texorpdfstring{Piping to another process}{Piping to another process}}\label{README.md_autotoc_md32848}
+You can pipe a process to another via the {\ttfamily pipe} method\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ proc1\ =\ x('ls',\ ['-\/l']);}
+\DoxyCodeLine{const\ proc2\ =\ proc1.pipe('grep',\ ['.js']);}
+\DoxyCodeLine{const\ result\ =\ await\ proc2;}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result.stdout);}
+
+\end{DoxyCode}
+
+
+{\ttfamily pipe} takes the same options as a regular execution. For example, you can pass a timeout to the pipe call\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{proc1.pipe('grep',\ ['.js'],\ \{}
+\DoxyCodeLine{\ \ timeout:\ 2000}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32849}{}\doxysubsubsection{\texorpdfstring{Killing a process}{Killing a process}}\label{README.md_autotoc_md32849}
+You can kill the process via the {\ttfamily kill} method\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ proc\ =\ x('ls');}
+\DoxyCodeLine{}
+\DoxyCodeLine{proc.kill();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ or\ with\ a\ signal}
+\DoxyCodeLine{proc.kill('SIGHUP');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32850}{}\doxysubsubsection{\texorpdfstring{Node modules/binaries}{Node modules/binaries}}\label{README.md_autotoc_md32850}
+By default, node\textquotesingle{}s available binaries from {\ttfamily node\+\_\+modules} will be accessible in your command.
+
+For example, in a repo which has {\ttfamily eslint} installed\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ x('eslint',\ ['.']);}
+
+\end{DoxyCode}
+
+
+In this example, {\ttfamily eslint} will come from the locally installed {\ttfamily node\+\_\+modules}.\hypertarget{README.md_autotoc_md32851}{}\doxysubsubsection{\texorpdfstring{Using an abort signal}{Using an abort signal}}\label{README.md_autotoc_md32851}
+An abort signal can be passed to a process in order to abort it at a later time. This will result in the process being killed and {\ttfamily aborted} being set to {\ttfamily true}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ aborter\ =\ new\ AbortController();}
+\DoxyCodeLine{const\ proc\ =\ x('node',\ ['./foo.mjs'],\ \{}
+\DoxyCodeLine{\ \ signal:\ aborter.signal}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ elsewhere...}
+\DoxyCodeLine{aborter.abort();}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ proc;}
+\DoxyCodeLine{}
+\DoxyCodeLine{proc.aborted;\ //\ true}
+\DoxyCodeLine{proc.killed;\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32852}{}\doxysubsubsection{\texorpdfstring{Using with command strings}{Using with command strings}}\label{README.md_autotoc_md32852}
+If you need to continue supporting commands as strings (e.\+g. "{}command arg0 arg1"{}), you can use \href{https://github.com/TrySound/args-tokenizer}{\texttt{ args-\/tokenizer}}, a lightweight library for parsing shell command strings into an array.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{x\}\ from\ 'tinyexec';}
+\DoxyCodeLine{import\ \{tokenizeArgs\}\ from\ 'args-\/tokenizer';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ commandString\ =\ 'echo\ "{}Hello,\ World!"{}';}
+\DoxyCodeLine{const\ [command,\ ...args]\ =\ tokenizeArgs(commandString);}
+\DoxyCodeLine{const\ result\ =\ await\ x(command,\ args);}
+\DoxyCodeLine{}
+\DoxyCodeLine{result.stdout;\ //\ Hello,\ World!}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32853}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md32853}
+Calling {\ttfamily x(command\mbox{[}, args\mbox{]})} returns an awaitable {\ttfamily Result} which has the following API methods and properties available\+:\hypertarget{README.md_autotoc_md32854}{}\doxysubsubsection{\texorpdfstring{{\ttfamily pipe(command\mbox{[}, args\mbox{[}, options\mbox{]}\mbox{]})}}{{\ttfamily pipe(command\mbox{[}, args\mbox{[}, options\mbox{]}\mbox{]})}}}\label{README.md_autotoc_md32854}
+Pipes the current command to another. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x('ls',\ ['-\/l'])}
+\DoxyCodeLine{\ \ .pipe('grep',\ ['js']);}
+
+\end{DoxyCode}
+
+
+The parameters are as follows\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily command} -\/ the command to execute ({\itshape without any arguments})
+\item {\ttfamily args} -\/ an array of arguments
+\item {\ttfamily options} -\/ options object
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md32855}{}\doxysubsubsection{\texorpdfstring{{\ttfamily process}}{{\ttfamily process}}}\label{README.md_autotoc_md32855}
+The underlying node {\ttfamily Child\+Process}. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ proc\ =\ x('ls');}
+\DoxyCodeLine{}
+\DoxyCodeLine{proc.process;\ //\ ChildProcess;}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32856}{}\doxysubsubsection{\texorpdfstring{{\ttfamily kill(\mbox{[}signal\mbox{]})}}{{\ttfamily kill(\mbox{[}signal\mbox{]})}}}\label{README.md_autotoc_md32856}
+Kills the current process with the specified signal. By default, this will use the {\ttfamily SIGTERM} signal.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ proc\ =\ x('ls');}
+\DoxyCodeLine{}
+\DoxyCodeLine{proc.kill();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32857}{}\doxysubsubsection{\texorpdfstring{{\ttfamily pid}}{{\ttfamily pid}}}\label{README.md_autotoc_md32857}
+The current process ID. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ proc\ =\ x('ls');}
+\DoxyCodeLine{}
+\DoxyCodeLine{proc.pid;\ //\ number}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32858}{}\doxysubsubsection{\texorpdfstring{{\ttfamily aborted}}{{\ttfamily aborted}}}\label{README.md_autotoc_md32858}
+Whether the process has been aborted or not (via the {\ttfamily signal} originally passed in the options object).
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ proc\ =\ x('ls');}
+\DoxyCodeLine{}
+\DoxyCodeLine{proc.aborted;\ //\ bool}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32859}{}\doxysubsubsection{\texorpdfstring{{\ttfamily killed}}{{\ttfamily killed}}}\label{README.md_autotoc_md32859}
+Whether the process has been killed or not (e.\+g. via {\ttfamily kill()} or an abort signal).
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ proc\ =\ x('ls');}
+\DoxyCodeLine{}
+\DoxyCodeLine{proc.killed;\ //\ bool}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32860}{}\doxysubsubsection{\texorpdfstring{{\ttfamily exit\+Code}}{{\ttfamily exit\+Code}}}\label{README.md_autotoc_md32860}
+The exit code received when the process completed execution.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ proc\ =\ x('ls');}
+\DoxyCodeLine{}
+\DoxyCodeLine{proc.exitCode;\ //\ number\ (e.g.\ 1)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32861}{}\doxysubsection{\texorpdfstring{Comparison with other libraries}{Comparison with other libraries}}\label{README.md_autotoc_md32861}
+{\ttfamily tinyexec} aims to provide a lightweight layer on top of Node\textquotesingle{}s own {\ttfamily child\+\_\+process} API.
+
+Some clear benefits compared to other libraries are that {\ttfamily tinyexec} will be much lighter, have a much smaller footprint and will have a less abstract interface (less "{}magic"{}). It will also have equal security and cross-\/platform support to popular alternatives.
+
+There are various features other libraries include which we are unlikely to ever implement, as they would prevent us from providing a lightweight layer.
+
+For example, if you\textquotesingle{}d like write scripts rather than individual commands, and prefer to use templating, we\textquotesingle{}d definitely recommend \href{https://github.com/google/zx}{\texttt{ zx}}. zx is a much higher level library which does some of the same work {\ttfamily tinyexec} does but behind a template string interface.
+
+Similarly, libraries like {\ttfamily execa} will provide helpers for various things like passing files as input to processes. We opt not to support features like this since many of them are easy to do yourself (using Node\textquotesingle{}s own APIs). 

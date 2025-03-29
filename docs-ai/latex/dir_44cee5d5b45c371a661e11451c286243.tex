@@ -1,0 +1,325 @@
+\doxysection{node\+\_\+modules/mdast-\/util-\/gfm-\/footnote Directory Reference}
+\hypertarget{dir_44cee5d5b45c371a661e11451c286243}{}\label{dir_44cee5d5b45c371a661e11451c286243}\index{node\_modules/mdast-\/util-\/gfm-\/footnote Directory Reference@{node\_modules/mdast-\/util-\/gfm-\/footnote Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/mdast-util-gfm-footnote/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/mdast-util-gfm-footnote}{\texttt{ }} \href{https://www.npmjs.com/package/mdast-util-gfm-footnote}{\texttt{ }} \href{https://bundlejs.com/?q=mdast-util-gfm-footnote}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}} extensions to parse and serialize \href{https://github.github.com/gfm/}{\texttt{ GFM}} footnotes.\hypertarget{readme.md_autotoc_md22398}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22398}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}gfm\+Footnote\+From\+Markdown()\`{}
+\item \`{}gfm\+Footnote\+To\+Markdown(options?)\`{}
+\item \`{}\+To\+Markdown\+Options\`{}
+\end{DoxyItemize}
+\item HTML
+\item Syntax
+\item Syntax tree
+\begin{DoxyItemize}
+\item Nodes
+\item Content model
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22399}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22399}
+This package contains two extensions that add support for GFM footnote syntax in markdown to \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}. These extensions plug into \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} (to support parsing footnotes in markdown into a syntax tree) and \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} (to support serializing footnotes in syntax trees to markdown).
+
+GFM footnotes were \href{https://github.blog/changelog/2021-09-30-footnotes-now-supported-in-markdown-fields/}{\texttt{ announced September 30, 2021}} but are not specified. Their implementation on github.\+com is currently buggy. The bugs have been reported on \href{https://github.com/github/cmark-gfm}{\texttt{ {\ttfamily cmark-\/gfm}}}.\hypertarget{readme.md_autotoc_md22400}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md22400}
+You can use these extensions when you are working with {\ttfamily mdast-\/util-\/from-\/markdown} and {\ttfamily mdast-\/util-\/to-\/markdown} already.
+
+When working with {\ttfamily mdast-\/util-\/from-\/markdown}, you must combine this package with \href{https://github.com/micromark/micromark-extension-gfm-footnote}{\texttt{ {\ttfamily micromark-\/extension-\/gfm-\/footnote}}}.
+
+When you don’t need a syntax tree, you can use \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}} directly with {\ttfamily micromark-\/extension-\/gfm-\/footnote}.
+
+When you are working with syntax trees and want all of GFM, use \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}} instead.
+
+All these packages are used \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which focusses on making it easier to transform content by abstracting these internals away.
+
+This utility does not handle how markdown is turned to HTML. That’s done by \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}}. If your content is not in English, you should configure that utility.\hypertarget{readme.md_autotoc_md22401}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22401}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mdast-\/util-\/gfm-\/footnote}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{gfmFootnoteFromMarkdown,\ gfmFootnoteToMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/gfm-\/footnote@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{gfmFootnoteFromMarkdown,\ gfmFootnoteToMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/gfm-\/footnote@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22402}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22402}
+Say our document {\ttfamily example.\+md} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{In\ the\ Solar\ System,\ Mercury[\string^mercury]\ and\ Venus[\string^venus]\ have\ very\ small\ tilts.}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^mercury]:}
+\DoxyCodeLine{\ \ \ \ **Mercury**\ is\ the\ first\ planet\ from\ the\ Sun\ and\ the\ smallest}
+\DoxyCodeLine{\ \ \ \ in\ the\ Solar\ System.}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^venus]:}
+\DoxyCodeLine{\ \ \ \ **Venus**\ is\ the\ second\ planet\ from}
+\DoxyCodeLine{\ \ \ \ the\ Sun.}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{fromMarkdown\}\ from\ 'mdast-\/util-\/from-\/markdown'}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ gfmFootnoteFromMarkdown,}
+\DoxyCodeLine{\ \ gfmFootnoteToMarkdown}
+\DoxyCodeLine{\}\ from\ 'mdast-\/util-\/gfm-\/footnote'}
+\DoxyCodeLine{import\ \{toMarkdown\}\ from\ 'mdast-\/util-\/to-\/markdown'}
+\DoxyCodeLine{import\ \{gfmFootnote\}\ from\ 'micromark-\/extension-\/gfm-\/footnote'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ value\ =\ await\ fs.readFile('example.md',\ 'utf8')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromMarkdown(value,\ \{}
+\DoxyCodeLine{\ \ extensions:\ [gfmFootnote()],}
+\DoxyCodeLine{\ \ mdastExtensions:\ [gfmFootnoteFromMarkdown()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(tree)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ toMarkdown(tree,\ \{}
+\DoxyCodeLine{\ \ extensions:\ [gfmFootnoteToMarkdown(\{firstLineBlank:\ true\})]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields (positional info removed for brevity)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ 'In\ the\ Solar\ System,\ Mercury'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'footnoteReference',\ identifier:\ 'mercury',\ label:\ 'mercury'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '\ and\ Venus'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'footnoteReference',\ identifier:\ 'venus',\ label:\ 'venus'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '\ have\ very\ small\ tilts.'\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'footnoteDefinition',}
+\DoxyCodeLine{\ \ \ \ \ \ identifier:\ 'mercury',}
+\DoxyCodeLine{\ \ \ \ \ \ label:\ 'mercury',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'strong',\ children:\ [\{type:\ 'text',\ value:\ 'Mercury'\}]\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'text',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ value:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ '\ is\ the\ first\ planet\ from\ the\ Sun\ and\ the\ smallest\(\backslash\)n'\ +}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 'in\ the\ Solar\ System.'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'footnoteDefinition',}
+\DoxyCodeLine{\ \ \ \ \ \ identifier:\ 'venus',}
+\DoxyCodeLine{\ \ \ \ \ \ label:\ 'venus',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'strong',\ children:\ [\{type:\ 'text',\ value:\ 'Venus'\}]\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '\ is\ the\ second\ planet\ from\(\backslash\)nthe\ Sun.'\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{In\ the\ Solar\ System,\ Mercury[\string^mercury]\ and\ Venus[\string^venus]\ have\ very\ small\ tilts.}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^mercury]:}
+\DoxyCodeLine{\ \ \ \ **Mercury**\ is\ the\ first\ planet\ from\ the\ Sun\ and\ the\ smallest}
+\DoxyCodeLine{\ \ \ \ in\ the\ Solar\ System.}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^venus]:}
+\DoxyCodeLine{\ \ \ \ **Venus**\ is\ the\ second\ planet\ from}
+\DoxyCodeLine{\ \ \ \ the\ Sun.}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22403}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22403}
+This package exports the identifiers \`{}gfm\+Footnote\+From\+Markdown\`{} and \`{}gfm\+Footnote\+To\+Markdown\`{}. There is no default export. It exports the type \`{}\+To\+Markdown\+Options\`{}.\hypertarget{readme.md_autotoc_md22404}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Footnote\+From\+Markdown()}}{{\ttfamily gfm\+Footnote\+From\+Markdown()}}}\label{readme.md_autotoc_md22404}
+Create an extension for \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} to enable GFM footnotes in markdown.\hypertarget{readme.md_autotoc_md22405}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22405}
+Extension for {\ttfamily mdast-\/util-\/from-\/markdown} (\href{https://github.com/syntax-tree/mdast-util-from-markdown\#extension}{\texttt{ {\ttfamily From\+Markdown\+Extension}}}).\hypertarget{readme.md_autotoc_md22406}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Footnote\+To\+Markdown(options?)}}{{\ttfamily gfm\+Footnote\+To\+Markdown(options?)}}}\label{readme.md_autotoc_md22406}
+Create an extension for \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} to enable GFM footnotes in markdown.\hypertarget{readme.md_autotoc_md22407}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22407}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\`{}\+To\+Markdown\+Options\`{}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22408}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22408}
+Extension for {\ttfamily mdast-\/util-\/to-\/markdown} (\href{https://github.com/syntax-tree/mdast-util-to-markdown\#options}{\texttt{ {\ttfamily To\+Markdown\+Extension}}}).\hypertarget{readme.md_autotoc_md22409}{}\doxysubsubsection{\texorpdfstring{{\ttfamily To\+Markdown\+Options}}{{\ttfamily To\+Markdown\+Options}}}\label{readme.md_autotoc_md22409}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md22410}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md22410}
+
+\begin{DoxyItemize}
+\item {\ttfamily first\+Line\+Blank} ({\ttfamily boolean}, default\+: {\ttfamily false}) — use a blank line for the first line of footnote definitions
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22411}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md22411}
+This utility does not handle how markdown is turned to HTML. That’s done by \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}}. If your content is not in English, you should configure that utility.\hypertarget{readme.md_autotoc_md22412}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md22412}
+See \href{https://github.com/micromark/micromark-extension-gfm-footnote\#syntax}{\texttt{ Syntax in {\ttfamily micromark-\/extension-\/gfm-\/footnote}}}.\hypertarget{readme.md_autotoc_md22413}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md22413}
+The following interfaces are added to {\bfseries{\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}}} by this utility.\hypertarget{readme.md_autotoc_md22414}{}\doxysubsubsection{\texorpdfstring{Nodes}{Nodes}}\label{readme.md_autotoc_md22414}
+\hypertarget{readme.md_autotoc_md22415}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Footnote\+Definition}}{{\ttfamily Footnote\+Definition}}}\label{readme.md_autotoc_md22415}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }FootnoteDefinition\ <:\ Parent\ \{}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}:\ \textcolor{stringliteral}{'footnoteDefinition'}}
+\DoxyCodeLine{\ \ children:\ [FlowContent]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{FootnoteDefinition\ includes\ Association}
+
+\end{DoxyCode}
+
+
+{\bfseries{Footnote\+Definition}} ({\bfseries{\href{https://github.com/syntax-tree/mdast\#parent}{\texttt{ Parent}}}}) represents content relating to the document that is outside its flow.
+
+{\bfseries{Footnote\+Definition}} can be used where {\bfseries{flow}} content is expected. Its content model is also {\bfseries{flow}} content.
+
+{\bfseries{Footnote\+Definition}} includes the mixin {\bfseries{\href{https://github.com/syntax-tree/mdast\#association}{\texttt{ Association}}}}.
+
+{\bfseries{Footnote\+Definition}} should be associated with {\bfseries{Footnote\+References}}.
+
+For example, the following markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\string^alpha]:\ bravo\ and\ charlie.}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'footnoteDefinition',}
+\DoxyCodeLine{\ \ identifier:\ 'alpha',}
+\DoxyCodeLine{\ \ label:\ 'alpha',}
+\DoxyCodeLine{\ \ children:\ [\{}
+\DoxyCodeLine{\ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'bravo\ and\ charlie.'\}]}
+\DoxyCodeLine{\ \ \}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22416}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Footnote\+Reference}}{{\ttfamily Footnote\+Reference}}}\label{readme.md_autotoc_md22416}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }FootnoteReference\ <:\ Node\ \{}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}:\ \textcolor{stringliteral}{'footnoteReference'}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{FootnoteReference\ includes\ Association}
+
+\end{DoxyCode}
+
+
+{\bfseries{Footnote\+Reference}} ({\bfseries{\href{https://github.com/syntax-tree/unist\#node}{\texttt{ Node}}}}) represents a marker through association.
+
+{\bfseries{Footnote\+Reference}} can be used where {\bfseries{phrasing}} content is expected. It has no content model.
+
+{\bfseries{Footnote\+Reference}} includes the mixin {\bfseries{\href{https://github.com/syntax-tree/mdast\#association}{\texttt{ Association}}}}.
+
+{\bfseries{Footnote\+Reference}} should be associated with a {\bfseries{Footnote\+Definition}}.
+
+For example, the following markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\string^alpha]}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'footnoteReference',}
+\DoxyCodeLine{\ \ identifier:\ 'alpha',}
+\DoxyCodeLine{\ \ label:\ 'alpha'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22417}{}\doxysubsubsection{\texorpdfstring{Content model}{Content model}}\label{readme.md_autotoc_md22417}
+\hypertarget{readme.md_autotoc_md22418}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Flow\+Content} (GFM footnotes)}{{\ttfamily Flow\+Content} (GFM footnotes)}}\label{readme.md_autotoc_md22418}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}\ FlowContentGfm\ =\ FootnoteDefinition\ |\ FlowContent}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22419}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Phrasing\+Content} (GFM footnotes)}{{\ttfamily Phrasing\+Content} (GFM footnotes)}}\label{readme.md_autotoc_md22419}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}\ PhrasingContentGfm\ =\ FootnoteReference\ |\ PhrasingContent}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22420}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md22420}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It does not export additional types.
+
+The {\ttfamily Footnote\+Definition} and {\ttfamily Footnote\+Reference} types of the mdast nodes are exposed from {\ttfamily @types/mdast}.\hypertarget{readme.md_autotoc_md22421}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md22421}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily mdast-\/util-\/gfm-\/footnote@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md22422}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md22422}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} — remark plugin to support GFM
+\item \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}} — same but all of GFM (autolink literals, footnotes, strikethrough, tables, tasklists)
+\item \href{https://github.com/micromark/micromark-extension-gfm-footnote}{\texttt{ {\ttfamily micromark-\/extension-\/gfm-\/footnote}}} — micromark extension to parse GFM footnotes
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22423}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md22423}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md22424}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md22424}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

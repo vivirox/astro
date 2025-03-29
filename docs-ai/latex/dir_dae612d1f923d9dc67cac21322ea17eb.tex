@@ -1,0 +1,70 @@
+\doxysection{tests/security/node\+\_\+modules/.pnpm/eslint-\/scope@7.2.2/node\+\_\+modules/eslint-\/scope Directory Reference}
+\hypertarget{dir_dae612d1f923d9dc67cac21322ea17eb}{}\label{dir_dae612d1f923d9dc67cac21322ea17eb}\index{tests/security/node\_modules/.pnpm/eslint-\/scope"@7.2.2/node\_modules/eslint-\/scope Directory Reference@{tests/security/node\_modules/.pnpm/eslint-\/scope"@7.2.2/node\_modules/eslint-\/scope Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}npm version\mbox{]}(\href{https://img.shields.io/npm/v/eslint-scope.svg}{\texttt{ https\+://img.\+shields.\+io/npm/v/eslint-\/scope.\+svg}})\mbox{]}(\href{https://www.npmjs.com/package/eslint-scope}{\texttt{ https\+://www.\+npmjs.\+com/package/eslint-\/scope}}) \href{https://www.npmjs.com/package/eslint-scope}{\texttt{ }} \href{https://github.com/eslint/eslint-scope/actions}{\texttt{ }}\hypertarget{README.md_autotoc_md37860}{}\doxysubsection{\texorpdfstring{ESLint Scope}{ESLint Scope}}\label{README.md_autotoc_md37860}
+ESLint Scope is the \href{http://www.ecma-international.org/publications/standards/Ecma-262.htm}{\texttt{ ECMAScript}} scope analyzer used in ESLint. It is a fork of \href{http://github.com/estools/escope}{\texttt{ escope}}.\hypertarget{README.md_autotoc_md37861}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md37861}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ eslint-\/scope\ -\/-\/save}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37862}{}\doxysubsubsection{\texorpdfstring{📖 Usage}{📖 Usage}}\label{README.md_autotoc_md37862}
+To use in an ESM file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ eslintScope\ from\ 'eslint-\/scope';}
+
+\end{DoxyCode}
+
+
+To use in a Common\+JS file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ eslintScope\ =\ require('eslint-\/scope');}
+
+\end{DoxyCode}
+
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ eslintScope\ from\ 'eslint-\/scope';}
+\DoxyCodeLine{import\ *\ as\ espree\ from\ 'espree';}
+\DoxyCodeLine{import\ estraverse\ from\ 'estraverse';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ast\ =\ espree.parse(code,\ \{\ range:\ true\ \});}
+\DoxyCodeLine{const\ scopeManager\ =\ eslintScope.analyze(ast);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ currentScope\ =\ scopeManager.acquire(ast);\ \ \ //\ global\ scope}
+\DoxyCodeLine{}
+\DoxyCodeLine{estraverse.traverse(ast,\ \{}
+\DoxyCodeLine{\ \ \ \ enter\ (node,\ parent)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ do\ stuff}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (/Function/.test(node.type))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ currentScope\ =\ scopeManager.acquire(node);\ \ //\ get\ current\ function\ scope}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ leave(node,\ parent)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (/Function/.test(node.type))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ currentScope\ =\ currentScope.upper;\ \ //\ set\ to\ parent\ scope}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ do\ stuff}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37863}{}\doxysubsubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md37863}
+Issues and pull requests will be triaged and responded to as quickly as possible. We operate under the \href{http://eslint.org/docs/developer-guide/contributing}{\texttt{ ESLint Contributor Guidelines}}, so please be sure to read them before contributing. If you\textquotesingle{}re not sure where to dig in, check out the \href{https://github.com/eslint/eslint-scope/issues}{\texttt{ issues}}.\hypertarget{README.md_autotoc_md37864}{}\doxysubsubsection{\texorpdfstring{Build Commands}{Build Commands}}\label{README.md_autotoc_md37864}
+
+\begin{DoxyItemize}
+\item {\ttfamily npm test} -\/ run all linting and tests
+\item {\ttfamily npm run lint} -\/ run all linting
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37865}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md37865}
+ESLint Scope is licensed under a permissive BSD 2-\/clause license. 

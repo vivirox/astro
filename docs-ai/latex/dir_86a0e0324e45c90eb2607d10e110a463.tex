@@ -1,0 +1,36 @@
+\doxysection{node\+\_\+modules/eslint-\/compat-\/utils Directory Reference}
+\hypertarget{dir_86a0e0324e45c90eb2607d10e110a463}{}\label{dir_86a0e0324e45c90eb2607d10e110a463}\index{node\_modules/eslint-\/compat-\/utils Directory Reference@{node\_modules/eslint-\/compat-\/utils Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+{\itshape {\bfseries{This package is still in the experimental stage.}}}
+
+Provides an API for ESLint custom rules that is compatible with the latest ESLint even when using older ESLint.\hypertarget{README.md_autotoc_md12909}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md12909}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ eslint-\/compat-\/utils}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12910}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md12910}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ getSourceCode\ \}\ =\ require("{}eslint-\/compat-\/utils"{});}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ meta:\ \{\ /*\ ...\ */\ \},}
+\DoxyCodeLine{\ \ create(context)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ sourceCode\ =\ getSourceCode(context)}
+\DoxyCodeLine{\ \ \ \ return\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}Program"{}(node)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ const\ scope\ =\ sourceCode.getScope(node);}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \};}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12911}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md12911}
+\hypertarget{README.md_autotoc_md12912}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily get\+Source\+Code(context)}}{{\ttfamily get\+Source\+Code(context)}}}\label{README.md_autotoc_md12912}
+Returns an extended instance of {\ttfamily context.\+source\+Code} or the result of {\ttfamily context.\+get\+Source\+Code()}. Extended instances can use new APIs such as {\ttfamily get\+Scope(node)} even with old ESLint.\hypertarget{README.md_autotoc_md12913}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily get\+Cwd(context)}}{{\ttfamily get\+Cwd(context)}}}\label{README.md_autotoc_md12913}
+Gets the value of {\ttfamily context.\+cwd}, but for older ESLint it returns the result of {\ttfamily context.\+get\+Cwd()}. Versions older than v6.\+6.\+0 return a value from the result of {\ttfamily process.\+cwd()}.\hypertarget{README.md_autotoc_md12914}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily get\+Filename(context)}}{{\ttfamily get\+Filename(context)}}}\label{README.md_autotoc_md12914}
+Gets the value of {\ttfamily context.\+filename}, but for older ESLint it returns the result of {\ttfamily context.\+get\+Filename()}.\hypertarget{README.md_autotoc_md12915}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily get\+Physical\+Filename(context)}}{{\ttfamily get\+Physical\+Filename(context)}}}\label{README.md_autotoc_md12915}
+Gets the value of {\ttfamily context.\+physical\+Filename}, but for older ESLint it returns the result of {\ttfamily context.\+get\+Physical\+Filename()}. Versions older than v7.\+28.\+0 return a value guessed from the result of {\ttfamily context.\+get\+Filename()}, but it may be incorrect. 

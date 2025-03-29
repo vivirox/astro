@@ -1,0 +1,223 @@
+\doxysection{node\+\_\+modules/smol-\/toml Directory Reference}
+\hypertarget{dir_fba2964d4c3919e19d009247c0880155}{}\label{dir_fba2964d4c3919e19d009247c0880155}\index{node\_modules/smol-\/toml Directory Reference@{node\_modules/smol-\/toml Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://toml.io/en/v1.0.0}{\texttt{ }} \href{https://github.com/squirrelchat/smol-toml/blob/mistress/LICENSE}{\texttt{ }} \href{https://npm.im/smol-toml}{\texttt{ }} \href{https://github.com/squirrelchat/smol-toml/actions/workflows/build.yml}{\texttt{ }}
+
+A small, fast, and correct TOML parser and serializer. smol-\/toml is fully(ish) spec-\/compliant with TOML v1.\+0.\+0.
+
+Why yet another TOML parser? Well, the ecosystem of TOML parsers in Java\+Script is quite underwhelming, most likely due to a lack of interest. With most parsers being outdated, unmaintained, non-\/compliant, or a combination of these, a new parser didn\textquotesingle{}t feel too out of place.
+
+{\itshape \mbox{[}insert xkcd 927\mbox{]}}
+
+smol-\/toml passes most of the tests from the \href{https://github.com/toml-lang/toml-test}{\texttt{ {\ttfamily toml-\/test} suite}}; use the {\ttfamily run-\/toml-\/test.\+bash} script to run the tests. Due to the nature of Java\+Script and the limits of the language, it doesn\textquotesingle{}t pass certain tests, namely\+:
+\begin{DoxyItemize}
+\item Invalid UTF-\/8 strings are not rejected
+\item Certain invalid UTF-\/8 codepoints are not rejected
+\item Certain invalid dates are not rejected
+\begin{DoxyItemize}
+\item For instance, {\ttfamily 2023-\/02-\/30} would be accepted and parsed as {\ttfamily 2023-\/03-\/02}. While additional checks could be performed to reject these, they\textquotesingle{}ve not been added for performance reasons.
+\end{DoxyItemize}
+\item smol-\/toml doesn\textquotesingle{}t preserve type information between integers and floats (in JS, everything is a float)
+\end{DoxyItemize}
+
+You can see a list of all tests smol-\/toml fails (and the reason why it fails these) in the list of skipped tests in {\ttfamily run-\/toml-\/test.\+bash}. Note that some failures are {\itshape not} specification violations per-\/se. For instance, the TOML spec does not require 64-\/bit integer range support or sub-\/millisecond time precision, but are included in the {\ttfamily toml-\/test} suite. See \href{https://github.com/toml-lang/toml-test/issues/154}{\texttt{ https\+://github.\+com/toml-\/lang/toml-\/test/issues/154}} and \href{https://github.com/toml-lang/toml-test/issues/155}{\texttt{ https\+://github.\+com/toml-\/lang/toml-\/test/issues/155}}\hypertarget{README.md_autotoc_md30894}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md30894}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[pnpm\ |\ yarn\ |\ npm]\ i\ smol-\/toml}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30895}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md30895}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse,\ stringify\ \}\ from\ 'smol-\/toml'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ '...'}
+\DoxyCodeLine{const\ parsed\ =\ parse(doc)}
+\DoxyCodeLine{console.log(parsed)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ toml\ =\ stringify(parsed)}
+\DoxyCodeLine{console.log(toml)}
+
+\end{DoxyCode}
+
+
+Alternatively, if you prefer something similar to the JSON global, you can import the library as follows 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ TOML\ from\ 'smol-\/toml'}
+\DoxyCodeLine{}
+\DoxyCodeLine{TOML.stringify(\{\ ...\ \})}
+
+\end{DoxyCode}
+
+
+A few notes on the {\ttfamily stringify} function\+:
+\begin{DoxyItemize}
+\item {\ttfamily undefined} and {\ttfamily null} values on objects are ignored (does not produce a key/value).
+\item {\ttfamily undefined} and {\ttfamily null} values in arrays are {\bfseries{rejected}}.
+\item Functions, classes and symbols are {\bfseries{rejected}}.
+\item floats will be serialized as integers if they don\textquotesingle{}t have a decimal part.
+\begin{DoxyItemize}
+\item `stringify(parse(\textquotesingle{}a = 1.\+0')) === \textquotesingle{}a = 1\textquotesingle{}{\ttfamily }
+\end{DoxyItemize}
+\item {\ttfamily JS}Date{\ttfamily will be serialized as Offset Date Time
+\begin{DoxyItemize}
+\item Use the \mbox{[}
+\end{DoxyItemize}}Toml\+Date\`{} object\mbox{]}(\#dates) for representing other types.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md30896}{}\doxysubsubsection{\texorpdfstring{Dates}{Dates}}\label{README.md_autotoc_md30896}
+{\ttfamily smol-\/toml} uses an extended {\ttfamily Date} object to represent all types of TOML Dates. In the future, {\ttfamily smol-\/toml} will use objects from the Temporal proposal, but for now we\textquotesingle{}re stuck with the legacy Date object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ TomlDate\ \}\ from\ 'smol-\/toml'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Offset\ Date\ Time}
+\DoxyCodeLine{const\ date\ =\ new\ TomlDate('1979-\/05-\/27T07:32:00.000-\/08:00')}
+\DoxyCodeLine{console.log(date.isDateTime(),\ date.isDate(),\ date.isTime(),\ date.isLocal())\ //\ \string~>\ true,\ false,\ false,\ false}
+\DoxyCodeLine{console.log(date.toISOString())\ //\ \string~>\ 1979-\/05-\/27T07:32:00.000-\/08:00}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Local\ Date\ Time}
+\DoxyCodeLine{const\ date\ =\ new\ TomlDate('1979-\/05-\/27T07:32:00.000')}
+\DoxyCodeLine{console.log(date.isDateTime(),\ date.isDate(),\ date.isTime(),\ date.isLocal())\ //\ \string~>\ true,\ false,\ false,\ true}
+\DoxyCodeLine{console.log(date.toISOString())\ //\ \string~>\ 1979-\/05-\/27T07:32:00.000}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Local\ Date}
+\DoxyCodeLine{const\ date\ =\ new\ TomlDate('1979-\/05-\/27')}
+\DoxyCodeLine{console.log(date.isDateTime(),\ date.isDate(),\ date.isTime(),\ date.isLocal())\ //\ \string~>\ false,\ true,\ false,\ true}
+\DoxyCodeLine{console.log(date.toISOString())\ //\ \string~>\ 1979-\/05-\/27}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Local\ Time}
+\DoxyCodeLine{const\ date\ =\ new\ TomlDate('07:32:00')}
+\DoxyCodeLine{console.log(date.isDateTime(),\ date.isDate(),\ date.isTime(),\ date.isLocal())\ //\ \string~>\ false,\ false,\ true,\ true}
+\DoxyCodeLine{console.log(date.toISOString())\ //\ \string~>\ 07:32:00.000}
+
+\end{DoxyCode}
+
+
+You can also wrap a native {\ttfamily Date} object and specify using different methods depending on the type of date you wish to represent\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ TomlDate\ \}\ from\ 'smol-\/toml'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ jsDate\ =\ new\ Date()}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ offsetDateTime\ =\ TomlDate.wrapAsOffsetDateTime(jsDate)}
+\DoxyCodeLine{const\ localDateTime\ =\ TomlDate.wrapAsLocalDateTime(jsDate)}
+\DoxyCodeLine{const\ localDate\ =\ TomlDate.wrapAsLocalDate(jsDate)}
+\DoxyCodeLine{const\ localTime\ =\ TomlDate.wrapAsLocalTime(jsDate)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30897}{}\doxysubsection{\texorpdfstring{Performance}{Performance}}\label{README.md_autotoc_md30897}
+A note on these performance numbers\+: in some highly synthetic tests, other parsers such as {\ttfamily fast-\/toml} greatly outperform other parsers, mostly due to their lack of compliance with the spec. For example, to parse a string, {\ttfamily fast-\/toml} skips the entire string while {\ttfamily smol-\/toml} does validate the string, costing a fair share of performance.
+
+The \texorpdfstring{$\sim$}{\string~}5\+MB test file used for benchmark here is filled with random data which attempts to be close-\/ish to reality in terms of structure. The idea is to have a file relatively close to a real-\/world application, with moderately sized strings etc.
+
+The large TOML generator can be found \href{https://gist.github.com/cyyynthia/e77c744cb6494dabe37d0182506526b9}{\texttt{ here}}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{5}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Parse}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ smol-\/toml   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @iarna/toml@3.\+0.\+0   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @ltd/j-\/toml   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ fast-\/toml    }\\\cline{1-5}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Parse}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ smol-\/toml   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @iarna/toml@3.\+0.\+0   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @ltd/j-\/toml   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ fast-\/toml    }\\\cline{1-5}
+\endhead
+Spec example   &{\bfseries{71,356.\+51 op/s}}   &33,629.\+31 op/s   &16,433.\+86 op/s   &29,421.\+60 op/s    \\\cline{1-5}
+\texorpdfstring{$\sim$}{\string~}5\+MB test file   &{\bfseries{3.\+8091 op/s}}   &{\itshape DNF}   &2.\+4369 op/s   &2.\+6078 op/s   \\\cline{1-5}
+\end{longtabu}
+
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Stringify}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ smol-\/toml   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @iarna/toml@3.\+0.\+0   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @ltd/j-\/toml    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Stringify}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ smol-\/toml   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @iarna/toml@3.\+0.\+0   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @ltd/j-\/toml    }\\\cline{1-4}
+\endhead
+Spec example   &{\bfseries{195,191.\+99 op/s}}   &46,583.\+07 op/s   &5,670.\+12 op/s    \\\cline{1-4}
+\texorpdfstring{$\sim$}{\string~}5\+MB test file   &{\bfseries{14.\+6709 op/s}}   &3.\+5941 op/s   &0.\+7856 op/s   \\\cline{1-4}
+\end{longtabu}
+
+
+
+
+{\bfseries{Detailed benchmark data}}\begin{adjustwidth}{1em}{0em}
+
+
+Tests ran using Vitest v0.\+31.\+0 on commit f58cb6152e667e9cea09f31c93d90652e3b82bf5
+
+CPU\+: Intel Core i7 7700K (4.\+2\+GHz)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{RUN\ \ v0.31.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{✓\ bench/parseSpecExample.bench.ts\ (4)\ 2462ms}
+\DoxyCodeLine{\ \ \ \ name\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hz\ \ \ \ \ min\ \ \ \ \ max\ \ \ \ mean\ \ \ \ \ p75\ \ \ \ \ p99\ \ \ \ p995\ \ \ \ p999\ \ \ \ \ rme\ \ samples}
+\DoxyCodeLine{\ \ ·\ smol-\/toml\ \ \ \ 71,356.51\ \ 0.0132\ \ 0.2633\ \ 0.0140\ \ 0.0137\ \ 0.0219\ \ 0.0266\ \ 0.1135\ \ ±0.37\%\ \ \ \ 35679\ \ \ fastest}
+\DoxyCodeLine{\ \ ·\ @iarna/toml\ \ 33,629.31\ \ 0.0272\ \ 0.2629\ \ 0.0297\ \ 0.0287\ \ 0.0571\ \ 0.0650\ \ 0.1593\ \ ±0.45\%\ \ \ \ 16815}
+\DoxyCodeLine{\ \ ·\ @ltd/j-\/toml\ \ 16,433.86\ \ 0.0523\ \ 1.3088\ \ 0.0608\ \ 0.0550\ \ 0.1140\ \ 0.1525\ \ 0.7348\ \ ±1.47\%\ \ \ \ \ 8217\ \ \ slowest}
+\DoxyCodeLine{\ \ ·\ fast-\/toml\ \ \ \ 29,421.60\ \ 0.0305\ \ 0.2995\ \ 0.0340\ \ 0.0312\ \ 0.0618\ \ 0.0640\ \ 0.1553\ \ ±0.47\%\ \ \ \ 14711}
+\DoxyCodeLine{✓\ bench/parseLargeMixed.bench.ts\ (3)\ 16062ms}
+\DoxyCodeLine{\ \ \ \ name\ \ \ \ \ \ \ \ \ \ \ \ \ hz\ \ \ \ \ min\ \ \ \ \ max\ \ \ \ mean\ \ \ \ \ p75\ \ \ \ \ p99\ \ \ \ p995\ \ \ \ p999\ \ \ \ \ rme\ \ samples}
+\DoxyCodeLine{\ \ ·\ smol-\/toml\ \ \ \ 3.8091\ \ 239.60\ \ 287.30\ \ 262.53\ \ 274.17\ \ 287.30\ \ 287.30\ \ 287.30\ \ ±3.66\%\ \ \ \ \ \ \ 10\ \ \ fastest}
+\DoxyCodeLine{\ \ ·\ @ltd/j-\/toml\ \ 2.4369\ \ 376.73\ \ 493.49\ \ 410.35\ \ 442.58\ \ 493.49\ \ 493.49\ \ 493.49\ \ ±7.08\%\ \ \ \ \ \ \ 10\ \ \ slowest}
+\DoxyCodeLine{\ \ ·\ fast-\/toml\ \ \ \ 2.6078\ \ 373.88\ \ 412.79\ \ 383.47\ \ 388.62\ \ 412.79\ \ 412.79\ \ 412.79\ \ ±2.72\%\ \ \ \ \ \ \ 10}
+\DoxyCodeLine{✓\ bench/stringifySpecExample.bench.ts\ (3)\ 1886ms}
+\DoxyCodeLine{\ \ \ \ name\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hz\ \ \ \ \ min\ \ \ \ \ max\ \ \ \ mean\ \ \ \ \ p75\ \ \ \ \ p99\ \ \ \ p995\ \ \ \ p999\ \ \ \ \ rme\ \ samples}
+\DoxyCodeLine{\ \ ·\ smol-\/toml\ \ \ \ 195,191.99\ \ 0.0047\ \ 0.2704\ \ 0.0051\ \ 0.0050\ \ 0.0099\ \ 0.0110\ \ 0.0152\ \ ±0.41\%\ \ \ \ 97596\ \ \ fastest}
+\DoxyCodeLine{\ \ ·\ @iarna/toml\ \ \ 46,583.07\ \ 0.0197\ \ 0.2808\ \ 0.0215\ \ 0.0208\ \ 0.0448\ \ 0.0470\ \ 0.1704\ \ ±0.47\%\ \ \ \ 23292}
+\DoxyCodeLine{\ \ ·\ @ltd/j-\/toml\ \ \ \ 5,670.12\ \ 0.1613\ \ 0.5768\ \ 0.1764\ \ 0.1726\ \ 0.3036\ \ 0.3129\ \ 0.4324\ \ ±0.56\%\ \ \ \ \ 2836\ \ \ slowest}
+\DoxyCodeLine{✓\ bench/stringifyLargeMixed.bench.ts\ (3)\ 24057ms}
+\DoxyCodeLine{\ \ \ \ name\ \ \ \ \ \ \ \ \ \ \ \ \ \ hz\ \ \ \ \ \ \ min\ \ \ \ \ \ \ max\ \ \ \ \ \ mean\ \ \ \ \ \ \ p75\ \ \ \ \ \ \ p99\ \ \ \ \ \ p995\ \ \ \ \ \ p999\ \ \ \ \ rme\ \ samples}
+\DoxyCodeLine{\ \ ·\ smol-\/toml\ \ \ \ 14.6709\ \ \ 65.1071\ \ \ 79.2199\ \ \ 68.1623\ \ \ 67.1088\ \ \ 79.2199\ \ \ 79.2199\ \ \ 79.2199\ \ ±5.25\%\ \ \ \ \ \ \ 10\ \ \ fastest}
+\DoxyCodeLine{\ \ ·\ @iarna/toml\ \ \ 3.5941\ \ \ \ 266.48\ \ \ \ 295.24\ \ \ \ 278.24\ \ \ \ 290.10\ \ \ \ 295.24\ \ \ \ 295.24\ \ \ \ 295.24\ \ ±2.83\%\ \ \ \ \ \ \ 10}
+\DoxyCodeLine{\ \ ·\ @ltd/j-\/toml\ \ \ 0.7856\ \ 1,254.33\ \ 1,322.05\ \ 1,272.87\ \ 1,286.82\ \ 1,322.05\ \ 1,322.05\ \ 1,322.05\ \ ±1.37\%\ \ \ \ \ \ \ 10\ \ \ slowest}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{BENCH\ \ Summary}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ smol-\/toml\ -\/\ bench/parseLargeMixed.bench.ts\ >}
+\DoxyCodeLine{\ \ \ 1.46x\ faster\ than\ fast-\/toml}
+\DoxyCodeLine{\ \ \ 1.56x\ faster\ than\ @ltd/j-\/toml}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ smol-\/toml\ -\/\ bench/parseSpecExample.bench.ts\ >}
+\DoxyCodeLine{\ \ \ 2.12x\ faster\ than\ @iarna/toml}
+\DoxyCodeLine{\ \ \ 2.43x\ faster\ than\ fast-\/toml}
+\DoxyCodeLine{\ \ \ 4.34x\ faster\ than\ @ltd/j-\/toml}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ smol-\/toml\ -\/\ bench/stringifyLargeMixed.bench.ts\ >}
+\DoxyCodeLine{\ \ \ 4.00x\ faster\ than\ @iarna/toml}
+\DoxyCodeLine{\ \ \ 18.33x\ faster\ than\ @ltd/j-\/toml}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ smol-\/toml\ -\/\ bench/stringifySpecExample.bench.ts\ >}
+\DoxyCodeLine{\ \ \ 4.19x\ faster\ than\ @iarna/toml}
+\DoxyCodeLine{\ \ \ 34.42x\ faster\ than\ @ltd/j-\/toml}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+ Additional notes\+:
+
+I initially tried to benchmark {\ttfamily toml-\/nodejs}, but the 0.\+3.\+0 package is broken. I initially reported this to the library author, but the author decided to
+\begin{DoxyItemize}
+\item a) advise to use a custom loader (via {\itshape experimental} flag) to circumvent the invalid imports.
+\begin{DoxyItemize}
+\item Said flag, {\ttfamily -\/-\/experimental-\/specifier-\/resolution}, has been removed in Node v20.
+\end{DoxyItemize}
+\item b) \href{https://github.com/huan231/toml-nodejs/issues/12}{\texttt{ delete the issue}} when pointed out links to the Node\+JS documentation about the flag removal and standard resolution algorithm.
+\end{DoxyItemize}
+
+For the reference anyway, {\ttfamily toml-\/nodejs} (with proper imports) is \texorpdfstring{$\sim$}{\string~}8x slower on both parse benchmark with\+:
+\begin{DoxyItemize}
+\item spec example\+: 7,543.\+47 op/s
+\item 5mb mixed\+: 0.\+7006 op/s 
+\end{DoxyItemize}\end{adjustwidth}

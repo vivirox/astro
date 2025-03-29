@@ -1,0 +1,79 @@
+\doxysection{node\+\_\+modules/unherit Directory Reference}
+\hypertarget{dir_21f7437112295d8fbeffa36149f4e29d}{}\label{dir_21f7437112295d8fbeffa36149f4e29d}\index{node\_modules/unherit Directory Reference@{node\_modules/unherit Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/wooorm/unherit/actions}{\texttt{ }} \href{https://codecov.io/github/wooorm/unherit}{\texttt{ }} \href{https://www.npmjs.com/package/unherit}{\texttt{ }} \href{https://bundlephobia.com/result?p=unherit}{\texttt{ }}
+
+Create a subclass that can be modified without affecting the super class.\hypertarget{readme.md_autotoc_md34121}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md34121}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}unherit(Super)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item Security
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34122}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md34122}
+This is a tiny package lets you create a subclass, that can be modified, without affecting the super class.\hypertarget{readme.md_autotoc_md34123}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md34123}
+Not often! You might have some weird cases though.\hypertarget{readme.md_autotoc_md34124}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md34124}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 14.\+14+, 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ unherit}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{unherit\}\ from\ 'https://esm.sh/unherit@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{unherit\}\ from\ 'https://esm.sh/unherit@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34125}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md34125}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{EventEmitter\}\ from\ 'node:events'}
+\DoxyCodeLine{import\ \{unherit\}\ from\ 'unherit'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ private\ class\ which\ acts\ just\ like\ \`{}EventEmitter`.}
+\DoxyCodeLine{const\ Emitter\ =\ unherit(EventEmitter)}
+\DoxyCodeLine{}
+\DoxyCodeLine{Emitter.prototype.defaultMaxListeners\ =\ 0}
+\DoxyCodeLine{//\ Now,\ all\ instances\ of\ \`{}Emitter`\ have\ \`{}0`\ maximum\ listeners,\ without\ affecting}
+\DoxyCodeLine{//\ other\ \`{}EventEmitter`s.}
+\DoxyCodeLine{}
+\DoxyCodeLine{new\ Emitter().defaultMaxListeners\ ===\ 0\ //\ =>\ true}
+\DoxyCodeLine{new\ EventEmitter().defaultMaxListeners\ ===\ undefined\ //\ =>\ true}
+\DoxyCodeLine{new\ Emitter()\ instanceof\ EventEmitter\ //\ =>\ true}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34126}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md34126}
+This package exports the identifier {\ttfamily unherit}. There is no default export.\hypertarget{readme.md_autotoc_md34127}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unherit(\+Super)}}{{\ttfamily unherit(\+Super)}}}\label{readme.md_autotoc_md34127}
+Subclass {\ttfamily Super}.\hypertarget{readme.md_autotoc_md34128}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md34128}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md34129}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md34129}
+This package is at least compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 14.\+14+ and 16.\+0+. It also works in Deno and modern browsers.\hypertarget{readme.md_autotoc_md34130}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md34130}
+Yes please! See \href{https://opensource.guide/how-to-contribute/}{\texttt{ How to Contribute to Open Source}}.\hypertarget{readme.md_autotoc_md34131}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md34131}
+This package is safe.\hypertarget{readme.md_autotoc_md34132}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md34132}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

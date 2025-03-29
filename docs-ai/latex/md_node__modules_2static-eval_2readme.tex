@@ -1,0 +1,90 @@
+\chapter{static-\/eval}
+\hypertarget{md_node__modules_2static-eval_2readme}{}\label{md_node__modules_2static-eval_2readme}\index{static-\/eval@{static-\/eval}}
+\label{md_node__modules_2static-eval_2readme_autotoc_md31236}%
+\Hypertarget{md_node__modules_2static-eval_2readme_autotoc_md31236}%
+
+
+evaluate statically-\/analyzable expressions
+
+\href{https://ci.testling.com/substack/static-eval}{\texttt{ }}
+
+\href{http://travis-ci.org/substack/static-eval}{\texttt{ }}\hypertarget{md_node__modules_2static-eval_2readme_autotoc_md31237}{}\doxysection{\texorpdfstring{security}{security}}\label{md_node__modules_2static-eval_2readme_autotoc_md31237}
+static-\/eval is like {\ttfamily eval}. It is intended for use in build scripts and code transformations, doing some evaluation at build time—it is {\bfseries{NOT}} suitable for handling arbitrary untrusted user input. Malicious user input {\itshape can} execute arbitrary code.\hypertarget{md_node__modules_2static-eval_2readme_autotoc_md31238}{}\doxysection{\texorpdfstring{example}{example}}\label{md_node__modules_2static-eval_2readme_autotoc_md31238}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ evaluate\ =\ require('static-\/eval');}
+\DoxyCodeLine{var\ parse\ =\ require('esprima').parse;}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ src\ =\ process.argv[2];}
+\DoxyCodeLine{var\ ast\ =\ parse(src).body[0].expression;}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(evaluate(ast));}
+
+\end{DoxyCode}
+
+
+If you stick to simple expressions, the result is statically analyzable\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ '7*8+9'}
+\DoxyCodeLine{65}
+\DoxyCodeLine{\$\ node\ eval.js\ '[1,2,3+4*5-\/(5*11)]'}
+\DoxyCodeLine{[\ 1,\ 2,\ -\/32\ ]}
+
+\end{DoxyCode}
+
+
+but if you use statements, undeclared identifiers, or syntax, the result is no longer statically analyzable and {\ttfamily evaluate()} returns {\ttfamily undefined}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ eval.js\ '1+2+3*n'}
+\DoxyCodeLine{undefined}
+\DoxyCodeLine{\$\ node\ eval.js\ 'x=5;\ x*2'}
+\DoxyCodeLine{undefined}
+\DoxyCodeLine{\$\ node\ eval.js\ '5-\/4*3'}
+\DoxyCodeLine{-\/7}
+
+\end{DoxyCode}
+
+
+You can also declare variables and functions to use in the static evaluation\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ evaluate\ =\ require('static-\/eval');}
+\DoxyCodeLine{var\ parse\ =\ require('esprima').parse;}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ src\ =\ '[1,2,3+4*10+n,foo(3+5),obj["{}"{}+"{}x"{}].y]';}
+\DoxyCodeLine{var\ ast\ =\ parse(src).body[0].expression;}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(evaluate(ast,\ \{}
+\DoxyCodeLine{\ \ \ \ n:\ 6,}
+\DoxyCodeLine{\ \ \ \ foo:\ function\ (x)\ \{\ return\ x\ *\ 100\ \},}
+\DoxyCodeLine{\ \ \ \ obj:\ \{\ x:\ \{\ y:\ 555\ \}\ \}}
+\DoxyCodeLine{\}));}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2static-eval_2readme_autotoc_md31239}{}\doxysection{\texorpdfstring{methods}{methods}}\label{md_node__modules_2static-eval_2readme_autotoc_md31239}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ evaluate\ =\ require('static-\/eval');}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2static-eval_2readme_autotoc_md31240}{}\doxysubsection{\texorpdfstring{evaluate(ast, vars=\{\})}{evaluate(ast, vars=\{\})}}\label{md_node__modules_2static-eval_2readme_autotoc_md31240}
+Evaluate the \href{https://npmjs.org/package/esprima}{\texttt{ esprima}}-\/parsed abstract syntax tree object {\ttfamily ast} with an optional collection of variables {\ttfamily vars} to use in the static expression resolution.
+
+If the expression contained in {\ttfamily ast} can\textquotesingle{}t be statically resolved, {\ttfamily evaluate()} returns undefined.\hypertarget{md_node__modules_2static-eval_2readme_autotoc_md31241}{}\doxysection{\texorpdfstring{install}{install}}\label{md_node__modules_2static-eval_2readme_autotoc_md31241}
+With \href{https://npmjs.org}{\texttt{ npm}} do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ static-\/eval}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2static-eval_2readme_autotoc_md31242}{}\doxysection{\texorpdfstring{license}{license}}\label{md_node__modules_2static-eval_2readme_autotoc_md31242}
+MIT 

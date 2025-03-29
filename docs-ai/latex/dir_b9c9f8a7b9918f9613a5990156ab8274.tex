@@ -1,0 +1,152 @@
+\doxysection{node\+\_\+modules/jsdoc-\/type-\/pratt-\/parser Directory Reference}
+\hypertarget{dir_b9c9f8a7b9918f9613a5990156ab8274}{}\label{dir_b9c9f8a7b9918f9613a5990156ab8274}\index{node\_modules/jsdoc-\/type-\/pratt-\/parser Directory Reference@{node\_modules/jsdoc-\/type-\/pratt-\/parser Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}Npm Package\mbox{]}(\href{https://badgen.net/npm/v/jsdoc-type-pratt-parser}{\texttt{ https\+://badgen.\+net/npm/v/jsdoc-\/type-\/pratt-\/parser}})\mbox{]}(\href{https://www.npmjs.com/package/jsdoc-type-pratt-parser}{\texttt{ https\+://www.\+npmjs.\+com/package/jsdoc-\/type-\/pratt-\/parser}}) \href{https://github.com/jsdoc-type-pratt-parser/jsdoc-type-pratt-parser/actions?query=branch\%3Amain}{\texttt{ }} \href{https://coveralls.io/github/jsdoc-type-pratt-parser/jsdoc-type-pratt-parser?branch=main}{\texttt{ }} \href{https://github.com/standard/ts-standard}{\texttt{ }} \href{https://github.com/semantic-release/semantic-release}{\texttt{ }}\hypertarget{README.md_autotoc_md20980}{}\doxysubsection{\texorpdfstring{Jsdoc Type Pratt Parser}{Jsdoc Type Pratt Parser}}\label{README.md_autotoc_md20980}
+This project is a parser for jsdoc types. It takes jsdoc type expressions like {\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}} and creates an abstract syntax tree (AST) out of it. It is heavily inspired by the existing libraries \href{https://github.com/hegemonic/catharsis}{\texttt{ catharsis}} and \href{https://github.com/jsdoctypeparser/jsdoctypeparser}{\texttt{ jsdoctypeparser}}, but does not use \href{https://pegjs.org/}{\texttt{ PEG.\+js}}, instead it is written as a pratt parser.
+
+You can find some more information about pratt parsers here\+:
+\begin{DoxyItemize}
+\item \href{https://en.wikipedia.org/wiki/Operator-precedence_parser\#Pratt_parsing}{\texttt{ https\+://en.\+wikipedia.\+org/wiki/\+Operator-\/precedence\+\_\+parser\#\+Pratt\+\_\+parsing}}
+\item \href{http://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/}{\texttt{ http\+://journal.\+stuffwithstuff.\+com/2011/03/19/pratt-\/parsers-\/expression-\/parsing-\/made-\/easy/}}
+\item \href{https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html}{\texttt{ https\+://matklad.\+github.\+io/2020/04/13/simple-\/but-\/powerful-\/pratt-\/parsing.\+html}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md20981}{}\doxysubsubsection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{README.md_autotoc_md20981}
+
+\begin{DoxyItemize}
+\item Live Demo
+\item Getting Started
+\item API Documentation
+\item Available Grammars
+\item Transforms
+\item Traverse
+\item Tests Status
+\item Performance
+\item Development
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md20982}{}\doxysubsubsection{\texorpdfstring{Live Demo}{Live Demo}}\label{README.md_autotoc_md20982}
+A simple live demo to test expressions can be found at\+: \href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/}{\texttt{ https\+://jsdoc-\/type-\/pratt-\/parser.\+github.\+io/jsdoc-\/type-\/pratt-\/parser/}}\hypertarget{README.md_autotoc_md20983}{}\doxysubsubsection{\texorpdfstring{Getting started}{Getting started}}\label{README.md_autotoc_md20983}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ jsdoc-\/type-\/pratt-\/parser@alpha}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse\ \}\ from\ 'jsdoc-\/type-\/pratt-\/parser'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ parse('SomeType<string>',\ 'typescript')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20984}{}\doxysubsubsection{\texorpdfstring{API Documentation}{API Documentation}}\label{README.md_autotoc_md20984}
+An API documentation can be found \href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/}{\texttt{ here}}. It is incomplete, but a good starting point. Please create issues or PRs if you don\textquotesingle{}t find what you expect.\hypertarget{README.md_autotoc_md20985}{}\doxysubsubsection{\texorpdfstring{Available Grammars}{Available Grammars}}\label{README.md_autotoc_md20985}
+Three different modes (grammars) are supported\+: `\textquotesingle{}jsdoc'{\ttfamily ,}\textquotesingle{}closure\textquotesingle{}{\ttfamily and}\textquotesingle{}typescript\textquotesingle{}\`{}\hypertarget{README.md_autotoc_md20986}{}\doxysubsubsection{\texorpdfstring{Transforms}{Transforms}}\label{README.md_autotoc_md20986}
+A common task to do on ASTs are transforms, for example a stringification. This library includes some transform and utilities to implement your own.
+
+\href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/index.html\#stringify}{\texttt{ {\ttfamily stringify}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ stringify\ \}\ from\ 'jsdoc-\/type-\/pratt-\/parser'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ val\ =\ stringify(\{\ type:\ 'JsdocTypeName',\ value:\ 'name'\})\ //\ -\/>\ 'name'}
+
+\end{DoxyCode}
+
+
+You can customize the stringification by using \href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/index.html\#stringifyRules}{\texttt{ {\ttfamily stringify\+Rules}}} and \href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/index.html\#transform}{\texttt{ {\ttfamily transform}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ stringifyRules,\ transform\ \}\ from\ 'jsdoc-\/type-\/pratt-\/parser'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ rules\ =\ stringifyRules()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \`{}result`\ is\ the\ current\ node\ and\ \`{}transform`\ is\ a\ function\ to\ transform\ child\ nodes.}
+\DoxyCodeLine{rules.NAME\ =\ (result,\ transform)\ =>\ 'something\ else'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ val\ =\ transform(rules,\ \{\ type:\ 'JsdocTypeName',\ value:\ 'name'\})\ //\ -\/>\ 'something\ else'}
+
+\end{DoxyCode}
+
+
+You can also build your own transform rules by implementing the \href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/index.html\#TransformRules}{\texttt{ {\ttfamily Transform\+Rules\texorpdfstring{$<$}{<}Transform\+Result\+Type\texorpdfstring{$>$}{>}}}} interface or you can build upon the \href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/index.html\#identityTransformRules}{\texttt{ identity ruleset}} like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ identityTransformRules,\ transform\ \}\ from\ 'jsdoc-\/type-\/pratt-\/parser'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myRules\ =\ identityTransformRules()}
+\DoxyCodeLine{myRules.NAME\ =\ ()\ =>\ (\{\ type:\ 'JsdocTypeName',\ value:\ 'funky'\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ val\ =\ transform(myRules,\ result)}
+
+\end{DoxyCode}
+
+
+This library also supports compatibility modes for catharsis and jsdoctypeparser. The provided transform functions attempt to transform the output to the expected output of the target library. This will not always be the same as some types are parsed differently. These modes are thought to make transition easier, but it is advised to use the native output as this will be more uniform and will contain more information.
+
+\href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/index.html\#catharsisTransform}{\texttt{ Catharsis compat mode}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse,\ catharsisTransform\ \}\ from\ 'jsdoc-\/type-\/pratt-\/parser'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ catharsisTransform(parse('myType.<string>',\ 'closure'))}
+
+\end{DoxyCode}
+
+
+\href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/index.html\#jtpTransform}{\texttt{ Jsdoctypeparser compat mode}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse,\ jtpTransform\ \}\ from\ 'jsdoc-\/type-\/pratt-\/parser'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ jtpTransform(parse('myType.<string>',\ 'closure'))}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20987}{}\doxysubsubsection{\texorpdfstring{Traverse}{Traverse}}\label{README.md_autotoc_md20987}
+You can traverse an AST with the \href{https://jsdoc-type-pratt-parser.github.io/jsdoc-type-pratt-parser/docs/index.html\#traverse}{\texttt{ {\ttfamily traverse}}} function\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ traverse\ \}\ from\ 'jsdoc-\/type-\/pratt-\/parser'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ property\ is\ the\ name\ of\ the\ property\ on\ parent\ that\ contains\ node}
+\DoxyCodeLine{function\ onEnter(node,\ parent,\ property)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(node.type)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ an\ onEnter\ and/or\ an\ onLeave\ function\ can\ be\ supplied}
+\DoxyCodeLine{traverse(\{\ type:\ 'JsdocTypeName',\ value:\ 'name'\},\ onEnter,\ console.log)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20988}{}\doxysubsubsection{\texorpdfstring{Tests Status}{Tests Status}}\label{README.md_autotoc_md20988}
+This parser runs most tests of \href{https://github.com/hegemonic/catharsis}{\texttt{ catharsis}} and \href{https://github.com/jsdoctypeparser/jsdoctypeparser}{\texttt{ jsdoctypeparser}}. It compares the results of the different parsing libraries. If you want to find out where the output differs, look in the tests for the comments {\ttfamily // This seems to be an error of ...} or the {\ttfamily differ} keyword which indicates that differing results are produced.\hypertarget{README.md_autotoc_md20989}{}\doxysubsubsection{\texorpdfstring{Performance}{Performance}}\label{README.md_autotoc_md20989}
+A simple \href{benchmark/benchmark.js}{\texttt{ performance comparison}} using \href{https://benchmarkjs.com/}{\texttt{ Benchmark.\+js}} produced the following results\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Testing\ expression:\ Name}
+\DoxyCodeLine{catharsis\ x\ 37,816\ ops/sec\ ±1.22\%\ (1086\ runs\ sampled)}
+\DoxyCodeLine{jsdoc-\/type-\/pratt-\/parser\ x\ 602,617\ ops/sec\ ±0.16\%\ (1090\ runs\ sampled)}
+\DoxyCodeLine{jsdoctypeparser\ x\ 53,256\ ops/sec\ ±0.73\%\ (1081\ runs\ sampled)}
+\DoxyCodeLine{The\ fastest\ was\ jsdoc-\/type-\/pratt-\/parser}
+\DoxyCodeLine{}
+\DoxyCodeLine{Testing\ expression:\ Array<number>}
+\DoxyCodeLine{catharsis\ x\ 10,124\ ops/sec\ ±0.56\%\ (1084\ runs\ sampled)}
+\DoxyCodeLine{jsdoc-\/type-\/pratt-\/parser\ x\ 228,660\ ops/sec\ ±0.40\%\ (1084\ runs\ sampled)}
+\DoxyCodeLine{jsdoctypeparser\ x\ 42,365\ ops/sec\ ±0.60\%\ (1070\ runs\ sampled)}
+\DoxyCodeLine{The\ fastest\ was\ jsdoc-\/type-\/pratt-\/parser}
+\DoxyCodeLine{}
+\DoxyCodeLine{Testing\ expression:\ \{\ keyA:\ Type<A\ |\ "{}string\ val"{}\ >,\ keyB:\ function(string,\ B):\ A\ \}}
+\DoxyCodeLine{catharsis\ x\ 1,138\ ops/sec\ ±0.66\%\ (1087\ runs\ sampled)}
+\DoxyCodeLine{jsdoc-\/type-\/pratt-\/parser\ x\ 46,535\ ops/sec\ ±0.47\%\ (1090\ runs\ sampled)}
+\DoxyCodeLine{jsdoctypeparser\ x\ 18,291\ ops/sec\ ±0.71\%\ (1084\ runs\ sampled)}
+\DoxyCodeLine{The\ fastest\ was\ jsdoc-\/type-\/pratt-\/parser}
+
+\end{DoxyCode}
+
+
+The benchmark test uses catharsis without cache.\hypertarget{README.md_autotoc_md20990}{}\doxysubsubsection{\texorpdfstring{Development}{Development}}\label{README.md_autotoc_md20990}
+If you want to contribute see the Development Guide to get some pointers. Feel free to create issues if there is information missing. 

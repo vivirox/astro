@@ -1,0 +1,27 @@
+\doxysection{node\+\_\+modules/katex/contrib/copy-\/tex Directory Reference}
+\hypertarget{dir_3ecf36f72da5be4fa8ba430ede55642b}{}\label{dir_3ecf36f72da5be4fa8ba430ede55642b}\index{node\_modules/katex/contrib/copy-\/tex Directory Reference@{node\_modules/katex/contrib/copy-\/tex Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This extension modifies the copy/paste behavior in any browser supporting the \href{https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent}{\texttt{ Clipboard API}} so that, when selecting and copying Ka\+Te\+X-\/rendered elements, the text content of the resulting clipboard renders Ka\+TeX elements as their La\+TeX source surrounded by specified delimiters. (The HTML content of the resulting clipboard remains the selected HTML content, as it normally would.) The default delimiters are {\ttfamily \$...\$} for inline math and {\ttfamily \$\$...\$\$} for display math, but you can easy switch them to e.\+g. {\ttfamily \textbackslash{}(...\textbackslash{})} and {\ttfamily \textbackslash{}\mbox{[}...\textbackslash{}\mbox{]}} by modifying {\ttfamily copy\+Delimiters} in \href{copy-tex.js}{\texttt{ the source code}}. Note that a selection containing part of a Ka\+TeX formula gets extended to include the entire Ka\+TeX formula.\hypertarget{README.md_autotoc_md21333}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md21333}
+This extension isn\textquotesingle{}t part of Ka\+TeX proper, so the script should be separately included in the page.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/copy-\/tex.min.js"{}\ integrity="{}sha384-\/HORx6nWi8j5/mYA+y57/9/CZc5z8HnEw4WUZWy5yOn9ToKBv1l58vJaufFAn9Zzi"{}\ crossorigin="{}anonymous"{}></script>}
+
+\end{DoxyCode}
+
+
+(Note that, as of Ka\+TeX 0.\+16.\+0, there is no longer a corresponding CSS file.)
+
+See \href{index.html}{\texttt{ index.\+html}} for an example. (To run this example from a clone of the repository, run {\ttfamily yarn start} in the root Ka\+TeX directory, and then visit \href{http://localhost:7936/contrib/copy-tex/index.html}{\texttt{ http\+://localhost\+:7936/contrib/copy-\/tex/index.\+html}} with your web browser.)
+
+If you want to build your own custom copy handler based on this one, copy the {\ttfamily copy-\/tex.\+js} into your codebase and replace the {\ttfamily require} statement with `require(\textquotesingle{}katex/contrib/copy-\/tex/katex2tex.\+js')\`{}.
+
+ECMAScript module is also available\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}\ src="{}https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/copy-\/tex.mjs"{}\ integrity="{}sha384-\/bVEnwt0PtX+1EuJoOEcm4rgTUWvb2ILTdjHfI1gUe/r5fdqrTcQaUuRdHG2DciuQ"{}\ crossorigin="{}anonymous"{}></script>}
+
+\end{DoxyCode}
+ 

@@ -1,0 +1,50 @@
+\doxysection{node\+\_\+modules/whatwg-\/encoding Directory Reference}
+\hypertarget{dir_a99732459901b42830aa20e320b6c449}{}\label{dir_a99732459901b42830aa20e320b6c449}\index{node\_modules/whatwg-\/encoding Directory Reference@{node\_modules/whatwg-\/encoding Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package provides a thin layer on top of \href{https://github.com/ashtuchkin/iconv-lite}{\texttt{ iconv-\/lite}} which makes it expose some of the same primitives as the \href{https://encoding.spec.whatwg.org/}{\texttt{ Encoding Standard}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ whatwgEncoding\ =\ require("{}whatwg-\/encoding"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.assert(whatwgEncoding.labelToName("{}latin1"{})\ ===\ "{}windows-\/1252"{});}
+\DoxyCodeLine{console.assert(whatwgEncoding.labelToName("{}\ \ CYRILLic\ "{})\ ===\ "{}ISO-\/8859-\/5"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.assert(whatwgEncoding.isSupported("{}IBM866"{})\ ===\ true);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Not\ supported\ by\ the\ Encoding\ Standard}
+\DoxyCodeLine{console.assert(whatwgEncoding.isSupported("{}UTF-\/32"{})\ ===\ false);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ In\ the\ Encoding\ Standard,\ but\ this\ package\ can't\ decode\ it}
+\DoxyCodeLine{console.assert(whatwgEncoding.isSupported("{}x-\/mac-\/cyrillic"{})\ ===\ false);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.assert(whatwgEncoding.getBOMEncoding(new\ Uint8Array([0xFE,\ 0xFF]))\ ===\ "{}UTF-\/16BE"{});}
+\DoxyCodeLine{console.assert(whatwgEncoding.getBOMEncoding(new\ Uint8Array([0x48,\ 0x69]))\ ===\ null);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.assert(whatwgEncoding.decode(new\ Uint8Array([0x48,\ 0x69]),\ "{}UTF-\/8"{})\ ===\ "{}Hi"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35512}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md35512}
+
+\begin{DoxyItemize}
+\item {\ttfamily decode(uint8\+Array, fallback\+Encoding\+Name)}\+: performs the \href{https://encoding.spec.whatwg.org/\#decode}{\texttt{ decode}} algorithm (in which any BOM will override the passed fallback encoding), and returns the resulting string
+\item {\ttfamily label\+To\+Name(label)}\+: performs the \href{https://encoding.spec.whatwg.org/\#concept-encoding-get}{\texttt{ get an encoding}} algorithm and returns the resulting encoding\textquotesingle{}s name, or {\ttfamily null} for failure
+\item {\ttfamily is\+Supported(name)}\+: returns whether the encoding is one of \href{https://encoding.spec.whatwg.org/\#names-and-labels}{\texttt{ the encodings}} of the Encoding Standard, {\itshape and} is an encoding that this package can decode (via iconv-\/lite)
+\item {\ttfamily get\+BOMEncoding(uint8\+Array)}\+: sniffs the first 2–3 bytes of the supplied {\ttfamily Uint8\+Array}, returning one of the encoding names {\ttfamily "{}\+UTF-\/8"{}}, {\ttfamily "{}\+UTF-\/16\+LE"{}}, or {\ttfamily "{}\+UTF-\/16\+BE"{}} if the appropriate BOM is present, or {\ttfamily null} if no BOM is present
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md35513}{}\doxysubsection{\texorpdfstring{Unsupported encodings}{Unsupported encodings}}\label{README.md_autotoc_md35513}
+Since we rely on iconv-\/lite, we are limited to support only the encodings that they support. Currently we are missing support for\+:
+
+
+\begin{DoxyItemize}
+\item ISO-\/2022-\/\+JP
+\item ISO-\/8859-\/8-\/I
+\item replacement
+\item x-\/mac-\/cyrillic
+\item x-\/user-\/defined
+\end{DoxyItemize}
+
+Passing these encoding names will return {\ttfamily false} when calling {\ttfamily is\+Supported}, and passing any of the possible labels for these encodings to {\ttfamily label\+To\+Name} will return {\ttfamily null}.\hypertarget{README.md_autotoc_md35514}{}\doxysubsection{\texorpdfstring{Credits}{Credits}}\label{README.md_autotoc_md35514}
+This package was originally based on the excellent work of \href{https://github.com/nicolashenry}{\texttt{ @nicolashenry}}, \href{https://github.com/tmpvar/jsdom/blob/7ce11776ce161e8d5921a7a183585327400f786b/lib/jsdom/living/helpers/encoding.js}{\texttt{ in jsdom}}. It has since been pulled out into this separate package.\hypertarget{README.md_autotoc_md35515}{}\doxysubsection{\texorpdfstring{Alternatives}{Alternatives}}\label{README.md_autotoc_md35515}
+If you are looking for a Java\+Script implementation of the Encoding Standard\textquotesingle{}s {\ttfamily Text\+Encoder} and {\ttfamily Text\+Decoder} APIs, you\textquotesingle{}ll want \href{https://github.com/inexorabletash}{\texttt{ @inexorabletash}}\textquotesingle{}s \href{https://github.com/inexorabletash/text-encoding}{\texttt{ text-\/encoding}} package. Node.\+js also has them \href{https://nodejs.org/dist/latest/docs/api/globals.html\#globals_textdecoder}{\texttt{ built-\/in}}. 

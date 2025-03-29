@@ -1,0 +1,275 @@
+\doxysection{node\+\_\+modules/estree-\/util-\/to-\/js Directory Reference}
+\hypertarget{dir_1f48e9a84798c3ae36936ba15a5b9b4e}{}\label{dir_1f48e9a84798c3ae36936ba15a5b9b4e}\index{node\_modules/estree-\/util-\/to-\/js Directory Reference@{node\_modules/estree-\/util-\/to-\/js Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_448ce00c7f072311062a0a2604bf1adc}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/estree-util-to-js/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/estree-util-to-js}{\texttt{ }} \href{https://www.npmjs.com/package/estree-util-to-js}{\texttt{ }} \href{https://bundlejs.com/?q=estree-util-to-js}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/estree/estree}{\texttt{ estree}} (and \href{https://github.com/syntax-tree/esast}{\texttt{ esast}}) utility to serialize estrees as Java\+Script.\hypertarget{readme.md_autotoc_md14628}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md14628}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}to\+Js(tree\mbox{[}, options\mbox{]})\`{}
+\item \`{}jsx\`{}
+\item \`{}\+Handler\`{}
+\item \`{}\+Handlers\`{}
+\item \doxylink{README.md_map}{\`{}\+Map\`{}}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Result\`{}
+\item \`{}\+State\`{}
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Example\+: source maps
+\item Example\+: comments
+\item Example\+: JSX
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14629}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md14629}
+This package is a utility that turns an estree syntax tree into a string of Java\+Script.\hypertarget{readme.md_autotoc_md14630}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md14630}
+You can use this utility when you want to get the serialized Java\+Script that is represented by the syntax tree, either because you’re done with the syntax tree, or because you’re integrating with another tool that does not support syntax trees.
+
+This utility is particularly useful when integrating with other unified tools, such as unist and vfile.
+
+The utility \href{https://github.com/syntax-tree/esast-util-from-js}{\texttt{ {\ttfamily esast-\/util-\/from-\/js}}} does the inverse of this utility. It turns JS into esast.\hypertarget{readme.md_autotoc_md14631}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md14631}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ estree-\/util-\/to-\/js}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{toJs\}\ from\ 'https://esm.sh/estree-\/util-\/to-\/js@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{toJs\}\ from\ 'https://esm.sh/estree-\/util-\/to-\/js@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14632}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md14632}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{parse\}\ from\ 'acorn'}
+\DoxyCodeLine{import\ \{toJs\}\ from\ 'estree-\/util-\/to-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ String(await\ fs.readFile('index.js'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ parse(file,\ \{ecmaVersion:\ 2022,\ sourceType:\ 'module',\ locations:\ true\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ @ts-\/expect-\/error:\ acorn\ is\ funky\ but\ it\ works\ fine.}
+\DoxyCodeLine{console.log(toJs(tree))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ value:\ "{}export\ \{toJs\}\ from\ './lib/index.js';\(\backslash\)nexport\ \{jsx\}\ from\ './lib/jsx.js';\(\backslash\)n"{},}
+\DoxyCodeLine{\ \ map:\ undefined}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14633}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md14633}
+This package exports the identifiers \`{}jsx\`{} and \`{}to\+Js\`{}. There is no default export.\hypertarget{readme.md_autotoc_md14634}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+Js(tree\mbox{[}, options\mbox{]})}}{{\ttfamily to\+Js(tree\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md14634}
+Serialize an estree as Java\+Script.\hypertarget{readme.md_autotoc_md14635}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md14635}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/estree/estree/blob/master/es2015.md\#programs}{\texttt{ {\ttfamily Program}}}) — estree
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14636}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md14636}
+Result, optionally with source map (\`{}\+Result\`{}).\hypertarget{readme.md_autotoc_md14637}{}\doxysubsubsection{\texorpdfstring{{\ttfamily jsx}}{{\ttfamily jsx}}}\label{readme.md_autotoc_md14637}
+Map of handlers to handle the nodes of JSX extensions in Java\+Script (\`{}\+Handlers\`{}).\hypertarget{readme.md_autotoc_md14638}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Handler}}{{\ttfamily Handler}}}\label{readme.md_autotoc_md14638}
+Handle a particular node (Type\+Script type).\hypertarget{readme.md_autotoc_md14639}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md14639}
+
+\begin{DoxyItemize}
+\item {\ttfamily this} ({\ttfamily Generator}) — {\ttfamily astring} generator
+\item {\ttfamily node} (\href{https://github.com/estree/estree/blob/master/es5.md\#node-objects}{\texttt{ {\ttfamily Node}}}) — node to serialize
+\item {\ttfamily state} (\`{}\+State\`{}) — info passed around
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14640}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md14640}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md14641}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Handlers}}{{\ttfamily Handlers}}}\label{readme.md_autotoc_md14641}
+Handlers of nodes (Type\+Script type).\hypertarget{readme.md_autotoc_md14642}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md14642}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Handlers\ =\ Partial<Record<Node['type'],\ Handler>>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14643}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Map}}{{\ttfamily Map}}}\label{readme.md_autotoc_md14643}
+Raw source map from {\ttfamily source-\/map} (Type\+Script type).\hypertarget{readme.md_autotoc_md14644}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md14644}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md14645}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md14645}
+
+\begin{DoxyItemize}
+\item {\ttfamily Source\+Map\+Generator} (\href{https://github.com/mozilla/source-map}{\texttt{ {\ttfamily Source\+Map\+Generator}}}) — generate a source map with this class
+\item {\ttfamily file\+Path} ({\ttfamily string}) — path to original input file
+\item {\ttfamily handlers} (\`{}\+Handlers\`{}) — extra handlers
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14646}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Result}}{{\ttfamily Result}}}\label{readme.md_autotoc_md14646}
+Result (Type\+Script type).\hypertarget{readme.md_autotoc_md14647}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md14647}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} ({\ttfamily string}) — serialized Java\+Script
+\item {\ttfamily map} (\doxylink{README.md_map}{\`{}\+Map\`{}} or {\ttfamily undefined}) — source map as (parsed) JSON
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14648}{}\doxysubsubsection{\texorpdfstring{{\ttfamily State}}{{\ttfamily State}}}\label{readme.md_autotoc_md14648}
+State from {\ttfamily astring} (Type\+Script type).\hypertarget{readme.md_autotoc_md14649}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md14649}
+\hypertarget{readme.md_autotoc_md14650}{}\doxysubsubsection{\texorpdfstring{Example\+: source maps}{Example\+: source maps}}\label{readme.md_autotoc_md14650}
+Source maps are supported when passing the {\ttfamily Source\+Map\+Generator} class from \href{https://github.com/mozilla/source-map}{\texttt{ {\ttfamily source-\/map}}}. You should also pass {\ttfamily file\+Path}. Modified example from § Use above\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{\ import\ \{parse\}\ from\ 'acorn'}
+\DoxyCodeLine{+import\ \{SourceMapGenerator\}\ from\ 'source-\/map'}
+\DoxyCodeLine{\ import\ \{toJs\}\ from\ 'estree-\/util-\/to-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{-\/const\ file\ =\ String(await\ fs.readFile('index.js'))}
+\DoxyCodeLine{+const\ filePath\ =\ 'index.js'}
+\DoxyCodeLine{+const\ file\ =\ String(await\ fs.readFile(filePath))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ const\ tree\ =\ parse(file,\ \{}
+\DoxyCodeLine{\ \ \ ecmaVersion:\ 2022,}
+\DoxyCodeLine{@@\ -\/11,4\ +13,4\ @@\ const\ tree\ =\ parse(file,\ \{}
+\DoxyCodeLine{\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ //\ @ts-\/expect-\/error:\ acorn\ is\ funky\ but\ it\ works\ fine.}
+\DoxyCodeLine{-\/console.log(toJs(tree))}
+\DoxyCodeLine{+console.log(toJs(tree,\ \{filePath,\ SourceMapGenerator\}))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ value:\ "{}export\ \{toJs\}\ from\ './lib/index.js';\(\backslash\)nexport\ \{jsx\}\ from\ './lib/jsx.js';\(\backslash\)n"{},}
+\DoxyCodeLine{\ \ map:\ \{}
+\DoxyCodeLine{\ \ \ \ version:\ 3,}
+\DoxyCodeLine{\ \ \ \ sources:\ [\ 'index.js'\ ],}
+\DoxyCodeLine{\ \ \ \ names:\ [],}
+\DoxyCodeLine{\ \ \ \ mappings:\ 'QAOQ,WAAW;QACX,UAAU',}
+\DoxyCodeLine{\ \ \ \ file:\ 'index.js'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14651}{}\doxysubsubsection{\texorpdfstring{Example\+: comments}{Example\+: comments}}\label{readme.md_autotoc_md14651}
+To get comments to work, they have to be inside the tree. This is not done by Acorn. \href{https://github.com/syntax-tree/estree-util-attach-comments}{\texttt{ {\ttfamily estree-\/util-\/attach-\/comments}}} can do that. Modified example from § Use above\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{\ import\ \{parse\}\ from\ 'acorn'}
+\DoxyCodeLine{+import\ \{attachComments\}\ from\ 'estree-\/util-\/attach-\/comments'}
+\DoxyCodeLine{\ import\ \{toJs\}\ from\ 'estree-\/util-\/to-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ const\ file\ =\ String(await\ fs.readFile('index.js'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{+/**\ @type\ \{Array<import('estree-\/jsx').Comment>\}\ */}
+\DoxyCodeLine{+const\ comments\ =\ []}
+\DoxyCodeLine{\ const\ tree\ =\ parse(file,\ \{}
+\DoxyCodeLine{\ \ \ ecmaVersion:\ 2022,}
+\DoxyCodeLine{\ \ \ sourceType:\ 'module',}
+\DoxyCodeLine{-\/\ \ locations:\ true}
+\DoxyCodeLine{+\ \ locations:\ true,}
+\DoxyCodeLine{+\ \ //\ @ts-\/expect-\/error:\ acorn\ is\ funky\ these\ comments\ are\ fine.}
+\DoxyCodeLine{+\ \ onComment:\ comments}
+\DoxyCodeLine{\ \})}
+\DoxyCodeLine{+attachComments(tree,\ comments)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ //\ @ts-\/expect-\/error:\ acorn\ is\ funky\ but\ it\ works\ fine.}
+\DoxyCodeLine{\ console.log(toJs(tree))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ value:\ '/**\(\backslash\)n'\ +}
+\DoxyCodeLine{\ \ \ \ "{}*\ @typedef\ \{import('./lib/index.js').Options\}\ Options\(\backslash\)n"{}\ +}
+\DoxyCodeLine{\ \ \ \ "{}*\ @typedef\ \{import('./lib/types.js').Handler\}\ Handler\(\backslash\)n"{}\ +}
+\DoxyCodeLine{\ \ \ \ "{}*\ @typedef\ \{import('./lib/types.js').Handlers\}\ Handlers\(\backslash\)n"{}\ +}
+\DoxyCodeLine{\ \ \ \ "{}*\ @typedef\ \{import('./lib/types.js').State\}\ State\(\backslash\)n"{}\ +}
+\DoxyCodeLine{\ \ \ \ '*/\(\backslash\)n'\ +}
+\DoxyCodeLine{\ \ \ \ "{}export\ \{toJs\}\ from\ './lib/index.js';\(\backslash\)n"{}\ +}
+\DoxyCodeLine{\ \ \ \ "{}export\ \{jsx\}\ from\ './lib/jsx.js';\(\backslash\)n"{},}
+\DoxyCodeLine{\ \ map:\ undefined}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14652}{}\doxysubsubsection{\texorpdfstring{Example\+: JSX}{Example\+: JSX}}\label{readme.md_autotoc_md14652}
+To get JSX to work, handlers need to be registered. This is not done by default, but they are exported as {\ttfamily jsx} and can be passed. Modified example from § Use above\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{-\/import\ \{parse\}\ from\ 'acorn'}
+\DoxyCodeLine{-\/import\ \{toJs\}\ from\ 'estree-\/util-\/to-\/js'}
+\DoxyCodeLine{+import\ \{Parser\}\ from\ 'acorn'}
+\DoxyCodeLine{+import\ acornJsx\ from\ 'acorn-\/jsx'}
+\DoxyCodeLine{+import\ \{jsx,\ toJs\}\ from\ 'estree-\/util-\/to-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{-\/const\ file\ =\ String(await\ fs.readFile('index.js'))}
+\DoxyCodeLine{+const\ file\ =\ '<>\{1\ +\ 1\}</>'}
+\DoxyCodeLine{}
+\DoxyCodeLine{-\/const\ tree\ =\ parse(file,\ \{}
+\DoxyCodeLine{+const\ tree\ =\ Parser.extend(acornJsx()).parse(file,\ \{}
+\DoxyCodeLine{\ \ \ ecmaVersion:\ 2022,}
+\DoxyCodeLine{\ \ \ sourceType:\ 'module',}
+\DoxyCodeLine{\ \ \ locations:\ true}
+\DoxyCodeLine{\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ //\ @ts-\/expect-\/error:\ acorn\ is\ funky\ but\ it\ works\ fine.}
+\DoxyCodeLine{-\/console.log(toJs(tree))}
+\DoxyCodeLine{+console.log(toJs(tree,\ \{handlers:\ jsx\}))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ value:\ '<>\{1\ +\ 1\}</>;\(\backslash\)n',\ map:\ undefined\ \}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14653}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md14653}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Handler\`{}, \`{}\+Handlers\`{}, \doxylink{README.md_map}{\`{}\+Map\`{}}, \doxylink{README.md_options}{\`{}\+Options\`{}}, \`{}\+Result\`{}, and \`{}\+State\`{}.\hypertarget{readme.md_autotoc_md14654}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md14654}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily estree-\/util-\/to-\/js@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md14655}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md14655}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md14656}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md14656}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

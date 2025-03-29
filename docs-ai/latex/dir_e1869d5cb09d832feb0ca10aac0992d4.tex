@@ -1,0 +1,173 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/from-\/html-\/isomorphic Directory Reference}
+\hypertarget{dir_e1869d5cb09d832feb0ca10aac0992d4}{}\label{dir_e1869d5cb09d832feb0ca10aac0992d4}\index{node\_modules/hast-\/util-\/from-\/html-\/isomorphic Directory Reference@{node\_modules/hast-\/util-\/from-\/html-\/isomorphic Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-from-html-isomorphic/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-from-html-isomorphic}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-from-html-isomorphic}{\texttt{ }} \href{https://bundlejs.com/?q=hast-util-from-html-isomorphic}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/hast}{\texttt{ hast}} utility that turns HTML into a syntax tree, using browser APIs when available, so it has a smaller bundle size there.\hypertarget{readme.md_autotoc_md16586}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md16586}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}from\+Html\+Isomorphic(value\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Example\+: fragment versus document
+\end{DoxyItemize}
+\item Syntax
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16587}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md16587}
+This package is a utility that takes HTML input and turns it into a hast syntax tree.
+
+In a browser, this uses \href{https://github.com/syntax-tree/hast-util-from-dom}{\texttt{ {\ttfamily hast-\/util-\/from-\/dom}}}, otherwise it uses \href{https://github.com/syntax-tree/hast-util-from-html}{\texttt{ {\ttfamily hast-\/util-\/from-\/html}}}.\hypertarget{readme.md_autotoc_md16588}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md16588}
+If you want to get a syntax tree without positional info, and your code should be isomorphic (it could run anywhere), as it results in a smaller bundle size.
+
+If you need positional information, use \href{https://github.com/syntax-tree/hast-util-from-html}{\texttt{ {\ttfamily hast-\/util-\/from-\/html}}}.
+
+If you don’t care about positional info and your code only runs in browsers, use \href{https://github.com/syntax-tree/hast-util-from-dom}{\texttt{ {\ttfamily hast-\/util-\/from-\/dom}}}.
+
+Finally you can use the utility \href{https://github.com/syntax-tree/hast-util-to-html}{\texttt{ {\ttfamily hast-\/util-\/to-\/html}}}, or \href{https://github.com/syntax-tree/hast-util-to-dom}{\texttt{ {\ttfamily hast-\/util-\/to-\/dom}}} with {\ttfamily .outer\+HTML}, to do the inverse of this utility. That turns hast into HTML.\hypertarget{readme.md_autotoc_md16589}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md16589}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/from-\/html-\/isomorphic}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{fromHtmlIsomorphic\}\ from\ 'https://esm.sh/hast-\/util-\/from-\/html-\/isomorphic@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{fromHtmlIsomorphic\}\ from\ 'https://esm.sh/hast-\/util-\/from-\/html-\/isomorphic@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16590}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md16590}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{fromHtmlIsomorphic\}\ from\ 'hast-\/util-\/from-\/html-\/isomorphic'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromHtmlIsomorphic('<h1>Hello,\ world!</h1>',\ \{fragment:\ true\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(tree)}
+
+\end{DoxyCode}
+
+
+Yields (positional info and data omitted for brevity)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'h1',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [Array],}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16591}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md16591}
+This package exports the identifier \`{}from\+Html\+Isomorphic\`{}. There is no default export.\hypertarget{readme.md_autotoc_md16592}{}\doxysubsubsection{\texorpdfstring{{\ttfamily from\+Html\+Isomorphic(value\mbox{[}, options\mbox{]})}}{{\ttfamily from\+Html\+Isomorphic(value\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md16592}
+Turn serialized HTML into a hast tree.\hypertarget{readme.md_autotoc_md16593}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md16593}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} ({\ttfamily string}) — serialized HTML to parse
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16594}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md16594}
+Tree (\href{https://github.com/syntax-tree/hast\#root}{\texttt{ {\ttfamily Root}}}).\hypertarget{readme.md_autotoc_md16595}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md16595}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md16596}{}\doxysubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md16596}
+\hypertarget{readme.md_autotoc_md16597}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily fragment}}{{\ttfamily fragment}}}\label{readme.md_autotoc_md16597}
+Whether to parse as a fragment ({\ttfamily boolean}, default\+: {\ttfamily false}). The default is to expect a whole document. In document mode, unopened {\ttfamily html}, {\ttfamily head}, and {\ttfamily body} elements are opened.\hypertarget{readme.md_autotoc_md16598}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md16598}
+\hypertarget{readme.md_autotoc_md16599}{}\doxysubsubsection{\texorpdfstring{Example\+: fragment versus document}{Example\+: fragment versus document}}\label{readme.md_autotoc_md16599}
+The following example shows the difference between parsing as a document and parsing as a fragment\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{fromHtml\}\ from\ 'hast-\/util-\/from-\/html-\/isomorphic'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ '<title>Hi!</title><h1>Hello!</h1>'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(fromHtml(doc))}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(fromHtml(doc,\ \{fragment:\ true\}))}
+
+\end{DoxyCode}
+
+
+…yields (positional info and data omitted for brevity)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'element',\ tagName:\ 'html',\ properties:\ \{\},\ children:\ [Array]\}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'element',\ tagName:\ 'title',\ properties:\ \{\},\ children:\ [Array]\},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'element',\ tagName:\ 'h1',\ properties:\ \{\},\ children:\ [Array]\}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: observe that when a whole document is expected (first example), missing elements are opened and closed. \end{quote}
+\hypertarget{readme.md_autotoc_md16600}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md16600}
+HTML is parsed according to WHATWG HTML (the living standard), which is also followed by browsers such as Chrome and Firefox.\hypertarget{readme.md_autotoc_md16601}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md16601}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md16602}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md16602}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily hast-\/util-\/from-\/html-\/isomorphic@\texorpdfstring{$^\wedge$}{\string^}1}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md16603}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md16603}
+Parsing HTML is safe but using user-\/provided content can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack. Use \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/santize}}} to make the hast tree safe.\hypertarget{readme.md_autotoc_md16604}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md16604}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/hast-util-from-html}{\texttt{ {\ttfamily hast-\/util-\/from-\/html}}} — parse html into hast
+\item \href{https://github.com/syntax-tree/hast-util-from-dom}{\texttt{ {\ttfamily hast-\/util-\/from-\/dom}}} — parse a DOM tree into hast
+\item \href{https://github.com/syntax-tree/hast-util-to-html}{\texttt{ {\ttfamily hast-\/util-\/to-\/html}}} — serialize hast
+\item \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/sanitize}}} — sanitize hast
+\item \href{https://github.com/syntax-tree/xast-util-from-xml}{\texttt{ {\ttfamily xast-\/util-\/from-\/xml}}} — parse XML
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16605}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md16605}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md16606}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md16606}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://github.com/remcohaszing}{\texttt{ Remco Haszing}} 

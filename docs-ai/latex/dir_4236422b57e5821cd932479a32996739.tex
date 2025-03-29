@@ -1,0 +1,45 @@
+\doxysection{node\+\_\+modules/@sindresorhus/merge-\/streams Directory Reference}
+\hypertarget{dir_4236422b57e5821cd932479a32996739}{}\label{dir_4236422b57e5821cd932479a32996739}\index{node\_modules/"@sindresorhus/merge-\/streams Directory Reference@{node\_modules/"@sindresorhus/merge-\/streams Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Merge multiple streams into a unified stream \end{quote}
+\hypertarget{readme.md_autotoc_md6001}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md6001}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @sindresorhus/merge-\/streams}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md6002}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md6002}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ mergeStreams\ from\ '@sindresorhus/merge-\/streams';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ mergeStreams([streamA,\ streamB]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{for\ await\ (const\ chunk\ of\ stream)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(chunk);}
+\DoxyCodeLine{\ \ \ \ //=>\ 'A1'}
+\DoxyCodeLine{\ \ \ \ //=>\ 'B1'}
+\DoxyCodeLine{\ \ \ \ //=>\ 'A2'}
+\DoxyCodeLine{\ \ \ \ //=>\ 'B2'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md6003}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md6003}
+\hypertarget{readme.md_autotoc_md6004}{}\doxysubsubsection{\texorpdfstring{{\ttfamily merge\+Streams(streams\+: stream.\+Readable\mbox{[}\mbox{]})\+: Merged\+Stream}}{{\ttfamily merge\+Streams(streams\+: stream.\+Readable\mbox{[}\mbox{]})\+: Merged\+Stream}}}\label{readme.md_autotoc_md6004}
+Merges an array of \href{https://nodejs.org/api/stream.html\#readable-streams}{\texttt{ readable streams}} and returns a new readable stream that emits data from the individual streams as it arrives.
+
+If you provide an empty array, it returns an already-\/ended stream.\hypertarget{readme.md_autotoc_md6005}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Merged\+Stream}}{{\ttfamily Merged\+Stream}}}\label{readme.md_autotoc_md6005}
+{\itshape Type}\+: {\ttfamily stream.\+Readable}
+
+A single stream combining the output of multiple streams.\hypertarget{readme.md_autotoc_md6006}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily Merged\+Stream.\+add(stream\+: stream.\+Readable)\+: void}}{{\ttfamily Merged\+Stream.\+add(stream\+: stream.\+Readable)\+: void}}}\label{readme.md_autotoc_md6006}
+Pipe a new readable stream.
+
+Throws if {\ttfamily Merged\+Stream} has already ended.\hypertarget{readme.md_autotoc_md6007}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily Merged\+Stream.\+remove(stream\+: stream.\+Readable)\+: boolean}}{{\ttfamily Merged\+Stream.\+remove(stream\+: stream.\+Readable)\+: boolean}}}\label{readme.md_autotoc_md6007}
+Unpipe a stream previously added using either \`{}merge\+Streams(streams)\`{} or \`{}\+Merged\+Stream.add(stream)\`{}.
+
+Returns {\ttfamily false} if the stream was not previously added, or if it was already removed by {\ttfamily Merged\+Stream.\+remove(stream)}.
+
+The removed stream is not automatically ended. 

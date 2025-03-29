@@ -1,0 +1,46 @@
+\doxysection{node\+\_\+modules/@vscode/l10n Directory Reference}
+\hypertarget{dir_cabaf75ed25f1d33f2d290989c24135a}{}\label{dir_cabaf75ed25f1d33f2d290989c24135a}\index{node\_modules/"@vscode/l10n Directory Reference@{node\_modules/"@vscode/l10n Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Library used for loading the translations into subprocesses of your extension. These usages also get picked up by \href{https://github.com/microsoft/vscode-l10n/tree/main/l10n-dev}{\texttt{ l10n-\/dev}} string extraction tooling.
+
+\begin{quote}
+{\bfseries{Note}}
+
+You should {\itshape NOT} use this library in your extension\textquotesingle{}s main process. The translations are loaded into the main process by VS Code itself. \end{quote}
+\hypertarget{README.md_autotoc_md7266}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md7266}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ l10n\ from\ '@vscode/l10n';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Load\ the\ translations\ for\ the\ current\ locale}
+\DoxyCodeLine{l10n.config(\{}
+\DoxyCodeLine{\ \ \ \ contents:\ JSON.parse(process.env.BUNDLE\_FROM\_EXTENSION)}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{l10n.config(\{}
+\DoxyCodeLine{\ \ \ \ fsPath:\ process.env.FSPATH\_TO\_BUNDLE\_FROM\_EXTENSION}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ or\ (warning,\ this\ is\ async)}
+\DoxyCodeLine{await\ l10n.config(\{}
+\DoxyCodeLine{\ \ \ \ uri:\ JSON.parse(process.env.BUNDLE\_URI\_FROM\_EXTENSION)}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ the\ translated\ string\ or\ the\ original\ string\ if\ no\ translation\ is\ available}
+\DoxyCodeLine{l10n.t('Hello\ World');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ supports\ arguments\ just\ like\ the\ vscode\ API}
+\DoxyCodeLine{l10n.t('Hello\ \{0\}',\ 'John');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ supports\ comments\ for\ translators}
+\DoxyCodeLine{l10n.t(\{}
+\DoxyCodeLine{\ \ \ \ message:\ 'Hello\ \{0\}',}
+\DoxyCodeLine{\ \ \ \ args:\ ['John'],}
+\DoxyCodeLine{\ \ \ \ comment:\ ['This\ is\ a\ comment']}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+The input for {\ttfamily l10n.\+config} pairs nicely with the {\ttfamily bundle} and {\ttfamily uri} properties on the {\ttfamily l10n} namespace that are provided by the \href{https://code.visualstudio.com/api/references/vscode-api\#l10n}{\texttt{ VS Code API}}. You should send the value of one of these properties from your extension to your subprocess that is consuming {\ttfamily @vscode/l10n}. 

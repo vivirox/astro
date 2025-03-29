@@ -1,0 +1,386 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/gfm-\/footnote Directory Reference}
+\hypertarget{dir_664c62f744e46fbb5101aed4efda02a0}{}\label{dir_664c62f744e46fbb5101aed4efda02a0}\index{node\_modules/micromark-\/extension-\/gfm-\/footnote Directory Reference@{node\_modules/micromark-\/extension-\/gfm-\/footnote Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-gfm-footnote/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-gfm-footnote}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-gfm-footnote}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-gfm-footnote}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extensions to support GFM \href{https://github.blog/changelog/2021-09-30-footnotes-now-supported-in-markdown-fields/}{\texttt{ footnotes}}.\hypertarget{readme.md_autotoc_md23181}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23181}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}default\+Back\+Label(reference\+Index, rereference\+Index)\`{}
+\item \`{}gfm\+Footnote()\`{}
+\item \`{}gfm\+Footnote\+Html(options?)\`{}
+\item \`{}\+Back\+Label\+Template\`{}
+\item \`{}\+Html\+Options\`{}
+\end{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_bugs}{Bugs}
+\item Authoring
+\item HTML
+\item CSS
+\item Syntax
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23182}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23182}
+This package contains extensions that add support for footnotes as enabled by GFM to \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}.
+
+Git\+Hub announced footnotes \href{https://github.blog/changelog/2021-09-30-footnotes-now-supported-in-markdown-fields/}{\texttt{ on September 30, 2021}} but did not specify them in their GFM spec. As they are implemented in their parser and supported in all places where other GFM features work, they can be considered part of GFM. Git\+Hub employs several other features (such as mentions or frontmatter) that are either not in their parser, or not in all places where GFM features work, which should not be considered GFM.
+
+The implementation of footnotes on github.\+com is currently buggy. The bugs have been reported on \href{https://github.com/github/cmark-gfm}{\texttt{ {\ttfamily cmark-\/gfm}}}. This micromark extension matches github.\+com except for its bugs.\hypertarget{readme.md_autotoc_md23183}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23183}
+This project is useful when you want to support footnotes in markdown.
+
+You can use these extensions when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. To support all GFM features, use \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} instead.
+
+When you need a syntax tree, combine this package with \href{https://github.com/syntax-tree/mdast-util-gfm-footnote}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/footnote}}}.
+
+All these packages are used in \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md23184}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23184}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/gfm-\/footnote}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{gfmFootnote,\ gfmFootnoteHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/footnote@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{gfmFootnote,\ gfmFootnoteHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/footnote@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23185}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23185}
+Say our document {\ttfamily example.\+md} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Using\ footnotes\ is\ fun![\string^1]\ They\ let\ you\ reference\ relevant\ information\ without\ disrupting\ the\ flow\ of\ what\ you’re\ trying\ to\ say.[\string^bignote]}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^1]:\ This\ is\ the\ first\ footnote.}
+\DoxyCodeLine{[\string^bignote]:\ Here’s\ one\ with\ multiple\ paragraphs\ and\ code.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ Indent\ paragraphs\ to\ include\ them\ in\ the\ footnote.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \`{}\`{}\`{}}
+\DoxyCodeLine{\ \ \ \ my\ code}
+\DoxyCodeLine{\ \ \ \ \`{}\`{}\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ Add\ as\ many\ paragraphs\ as\ you\ like.}
+\DoxyCodeLine{}
+\DoxyCodeLine{Text\ here\ and\ here\ and\ here.}
+\DoxyCodeLine{[Learn\ more\ about\ markdown\ and\ footnotes\ in\ markdown](https://docs.github.com/en/github/writing-\/on-\/github/getting-\/started-\/with-\/writing-\/and-\/formatting-\/on-\/github/basic-\/writing-\/and-\/formatting-\/syntax\#footnotes)}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{gfmFootnote,\ gfmFootnoteHtml\}\ from\ 'micromark-\/extension-\/gfm-\/footnote'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ micromark(await\ fs.readFile('example.md'),\ \{}
+\DoxyCodeLine{\ \ extensions:\ [gfmFootnote()],}
+\DoxyCodeLine{\ \ htmlExtensions:\ [gfmFootnoteHtml()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>Using\ footnotes\ is\ fun!<sup><a\ href="{}\#user-\/content-\/fn-\/1"{}\ id="{}user-\/content-\/fnref-\/1"{}\ data-\/footnote-\/ref="{}"{}\ aria-\/describedby="{}footnote-\/label"{}>1</a></sup>\ They\ let\ you\ reference\ relevant\ information\ without\ disrupting\ the\ flow\ of\ what\ you’re\ trying\ to\ say.<sup><a\ href="{}\#user-\/content-\/fn-\/bignote"{}\ id="{}user-\/content-\/fnref-\/bignote"{}\ data-\/footnote-\/ref="{}"{}\ aria-\/describedby="{}footnote-\/label"{}>2</a></sup></p>}
+\DoxyCodeLine{<p>Text\ here\ and\ here\ and\ here.}
+\DoxyCodeLine{<a\ href="{}https://docs.github.com/en/github/writing-\/on-\/github/getting-\/started-\/with-\/writing-\/and-\/formatting-\/on-\/github/basic-\/writing-\/and-\/formatting-\/syntax\#footnotes"{}>Learn\ more\ about\ markdown\ and\ footnotes\ in\ markdown</a></p>}
+\DoxyCodeLine{<section\ data-\/footnotes="{}"{}\ class="{}footnotes"{}><h2\ id="{}footnote-\/label"{}\ class="{}sr-\/only"{}>Footnotes</h2>}
+\DoxyCodeLine{<ol>}
+\DoxyCodeLine{<li\ id="{}user-\/content-\/fn-\/1"{}>}
+\DoxyCodeLine{<p>This\ is\ the\ first\ footnote.\ <a\ href="{}\#user-\/content-\/fnref-\/1"{}\ data-\/footnote-\/backref="{}"{}\ class="{}data-\/footnote-\/backref"{}\ aria-\/label="{}Back\ to\ content"{}>↩</a></p>}
+\DoxyCodeLine{</li>}
+\DoxyCodeLine{<li\ id="{}user-\/content-\/fn-\/bignote"{}>}
+\DoxyCodeLine{<p>Here’s\ one\ with\ multiple\ paragraphs\ and\ code.</p>}
+\DoxyCodeLine{<p>Indent\ paragraphs\ to\ include\ them\ in\ the\ footnote.</p>}
+\DoxyCodeLine{<pre><code>my\ code}
+\DoxyCodeLine{</code></pre>}
+\DoxyCodeLine{<p>Add\ as\ many\ paragraphs\ as\ you\ like.\ <a\ href="{}\#user-\/content-\/fnref-\/bignote"{}\ data-\/footnote-\/backref="{}"{}\ class="{}data-\/footnote-\/backref"{}\ aria-\/label="{}Back\ to\ content"{}>↩</a></p>}
+\DoxyCodeLine{</li>}
+\DoxyCodeLine{</ol>}
+\DoxyCodeLine{</section>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23186}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23186}
+This package exports the identifiers \`{}default\+Back\+Label\`{}, \`{}gfm\+Footnote\`{}, and \`{}gfm\+Footnote\+Html\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development module.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md23187}{}\doxysubsubsection{\texorpdfstring{{\ttfamily default\+Back\+Label(reference\+Index, rereference\+Index)}}{{\ttfamily default\+Back\+Label(reference\+Index, rereference\+Index)}}}\label{readme.md_autotoc_md23187}
+Generate the default label that Git\+Hub uses on backreferences (\`{}\+Back\+Label\+Template\`{}).\hypertarget{readme.md_autotoc_md23188}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Footnote()}}{{\ttfamily gfm\+Footnote()}}}\label{readme.md_autotoc_md23188}
+Create an extension for {\ttfamily micromark} to enable GFM footnote syntax.\hypertarget{readme.md_autotoc_md23189}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23189}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions} to enable GFM footnote syntax (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23190}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Footnote\+Html(options?)}}{{\ttfamily gfm\+Footnote\+Html(options?)}}}\label{readme.md_autotoc_md23190}
+Create an extension for {\ttfamily micromark} to support GFM footnotes when serializing to HTML.\hypertarget{readme.md_autotoc_md23191}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23191}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\`{}\+Html\+Options\`{}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23192}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23192}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily html\+Extensions} to support GFM footnotes when serializing to HTML (\href{https://github.com/micromark/micromark\#htmlextension}{\texttt{ {\ttfamily Html\+Extension}}}).\hypertarget{readme.md_autotoc_md23193}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Back\+Label\+Template}}{{\ttfamily Back\+Label\+Template}}}\label{readme.md_autotoc_md23193}
+Generate a back label dynamically (Type\+Script type).
+
+For the following markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Alpha[\string^micromark],\ bravo[\string^micromark],\ and\ charlie[\string^remark].}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^remark]:\ things\ about\ remark}
+\DoxyCodeLine{[\string^micromark]:\ things\ about\ micromark}
+
+\end{DoxyCode}
+
+
+This function will be called with\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily 0} and {\ttfamily 0} for the backreference from {\ttfamily things about micromark} to {\ttfamily alpha}, as it is the first used definition, and the first call to it
+\item {\ttfamily 0} and {\ttfamily 1} for the backreference from {\ttfamily things about micromark} to {\ttfamily bravo}, as it is the first used definition, and the second call to it
+\item {\ttfamily 1} and {\ttfamily 0} for the backreference from {\ttfamily things about remark} to {\ttfamily charlie}, as it is the second used definition
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23194}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23194}
+
+\begin{DoxyItemize}
+\item {\ttfamily reference\+Index} ({\ttfamily number}) — index of the definition in the order that they are first referenced, 0-\/indexed
+\item {\ttfamily rereference\+Index} ({\ttfamily number}) — index of calls to the same definition, 0-\/indexed
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23195}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23195}
+Back label to use when linking back from definitions to their reference ({\ttfamily string}).\hypertarget{readme.md_autotoc_md23196}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Html\+Options}}{{\ttfamily Html\+Options}}}\label{readme.md_autotoc_md23196}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md23197}{}\doxysubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md23197}
+\hypertarget{readme.md_autotoc_md23198}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily clobber\+Prefix}}{{\ttfamily clobber\+Prefix}}}\label{readme.md_autotoc_md23198}
+Prefix to use before the {\ttfamily id} attribute on footnotes to prevent them from {\itshape clobbering} ({\ttfamily string}, default\+: `\textquotesingle{}user-\/content-\/'\`{}).
+
+Pass `'\textquotesingle{}\`{} for trusted markdown and when you are careful with polyfilling. You could pass a different prefix.
+
+DOM clobbering is this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p\ id="{}x"{}></p>}
+\DoxyCodeLine{<script>alert(x)\ //\ \`{}x`\ now\ refers\ to\ the\ \`{}p\#x`\ DOM\ element</script>}
+
+\end{DoxyCode}
+
+
+The above example shows that elements are made available by browsers, by their ID, on the {\ttfamily window} object. This is a security risk because you might be expecting some other variable at that place. It can also break polyfills. Using a prefix solves these problems.\hypertarget{readme.md_autotoc_md23199}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily label}}{{\ttfamily label}}}\label{readme.md_autotoc_md23199}
+Textual label to use for the footnotes section ({\ttfamily string}, default\+: `\textquotesingle{}Footnotes'\`{}).
+
+Change it when the markdown is not in English.
+
+This label is typically hidden visually (assuming a {\ttfamily sr-\/only} CSS class is defined that does that) and so affects screen readers only.\hypertarget{readme.md_autotoc_md23200}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily label\+Attributes}}{{\ttfamily label\+Attributes}}}\label{readme.md_autotoc_md23200}
+Attributes to use on the footnote label ({\ttfamily string}, default\+: `\textquotesingle{}class="{}sr-\/only"{}'\`{}).
+
+Change it to show the label and add other attributes.
+
+This label is typically hidden visually (assuming an {\ttfamily sr-\/only} CSS class is defined that does that) and so affects screen readers only. If you do have such a class, but want to show this section to everyone, pass an empty string. You can also add different attributes.
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: {\ttfamily id="{}footnote-\/label"{}} is always added, because footnote calls use it with {\ttfamily aria-\/describedby} to provide an accessible label. \end{quote}
+\hypertarget{readme.md_autotoc_md23201}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily label\+Tag\+Name}}{{\ttfamily label\+Tag\+Name}}}\label{readme.md_autotoc_md23201}
+HTML tag name to use for the footnote label element ({\ttfamily string}, default\+: `\textquotesingle{}h2'\`{}).
+
+Change it to match your document structure.
+
+This label is typically hidden visually (assuming a {\ttfamily sr-\/only} CSS class is defined that does that) and so affects screen readers only.\hypertarget{readme.md_autotoc_md23202}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily back\+Label}}{{\ttfamily back\+Label}}}\label{readme.md_autotoc_md23202}
+Textual label to describe the backreference back to footnote calls (\`{}\+Back\+Label\+Template\`{} or {\ttfamily string}, default\+: \`{}default\+Back\+Label\`{}).
+
+Change it when the markdown is not in English.
+
+This label is used in the \href{https://w3c.github.io/aria/\#aria-label}{\texttt{ {\ttfamily aria-\/label}}} attribute on each backreference (the {\ttfamily ↩} links). It affects users of assistive technology.\hypertarget{readme.md_autotoc_md23203}{}\doxysubsection{\texorpdfstring{Bugs}{Bugs}}\label{readme.md_autotoc_md23203}
+Git\+Hub’s own algorithm to parse footnote definitions contains several bugs. These are not present in this project. The issues relating to footnote definitions are\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/github/cmark-gfm/issues/237}{\texttt{ Footnote reference call identifiers are trimmed, but definition identifiers aren’t}}\textbackslash{} — initial and final whitespace in labels causes them not to match
+\item \href{https://github.com/github/cmark-gfm/issues/239}{\texttt{ Footnotes are matched case-\/insensitive, but links keep their casing, breaking them}}\textbackslash{} — using uppercase (or any character that will be percent encoded) in identifiers breaks links
+\item \href{https://github.com/github/cmark-gfm/issues/250}{\texttt{ Colons in footnotes generate links w/o {\ttfamily href}}}\textbackslash{} — colons in identifiers generate broken links
+\item \mbox{[}Character escape of {\ttfamily \mbox{]}} does not work in footnote identifiers\mbox{]}(\href{https://github.com/github/cmark-gfm/issues/240}{\texttt{ https\+://github.\+com/github/cmark-\/gfm/issues/240}})\textbackslash{} — some character escapes don’t work
+\item \href{https://github.com/github/cmark-gfm/issues/249}{\texttt{ Footnotes in links are broken}}\textbackslash{} — while {\ttfamily Common\+Mark} prevents links in links, Git\+Hub does not prevent footnotes (which turn into links) in links
+\item \href{https://github.com/github/cmark-gfm/issues/275}{\texttt{ Footnote-\/like brackets around image, break that image}}\textbackslash{} — images can’t be used in what looks like a footnote call
+\item \href{https://github.com/github/cmark-gfm/issues/282}{\texttt{ GFM footnotes\+: line ending in footnote definition label causes text to disappear}}\textbackslash{} — line endings in footnote definitions cause text to disappear
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23204}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23204}
+When authoring markdown with footnotes it’s recommended to use words instead of numbers (or letters or anything with an order) as identifiers. That makes it easier to reuse and reorder footnotes.
+
+It’s recommended to place footnotes definitions at the bottom of the document.\hypertarget{readme.md_autotoc_md23205}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md23205}
+GFM footnotes do not, on their own, relate to anything in HTML. When a footnote reference matches with a definition, they each relate to several elements in HTML.
+
+The reference relates to {\ttfamily \texorpdfstring{$<$}{<}sup\texorpdfstring{$>$}{>}} and {\ttfamily \texorpdfstring{$<$}{<}a\texorpdfstring{$>$}{>}} elements in HTML\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<sup><a\ href="{}\#user-\/content-\/fn-\/x"{}\ id="{}user-\/content-\/fnref-\/x"{}\ data-\/footnote-\/ref="{}"{}\ aria-\/describedby="{}footnote-\/label"{}>1</a></sup></p>}
+
+\end{DoxyCode}
+
+
+…where {\ttfamily x} is the identifier used in the markdown source and {\ttfamily 1} the number of corresponding, listed, definition.
+
+See \href{https://html.spec.whatwg.org/multipage/text-level-semantics.html\#the-sub-and-sup-elements}{\texttt{ {\itshape § 4.\+5.\+19 The {\ttfamily sub} and {\ttfamily sup} elements}}}, \href{https://html.spec.whatwg.org/multipage/text-level-semantics.html\#the-a-element}{\texttt{ {\itshape § 4.\+5.\+1 The {\ttfamily a} element}}}, and \href{https://html.spec.whatwg.org/multipage/dom.html\#embedding-custom-non-visible-data-with-the-data-*-attributes}{\texttt{ {\itshape § 3.\+2.\+6.\+6 Embedding custom non-\/visible data with the \`{}data-\/}\`{} attributes\texorpdfstring{$\ast$}{*}}} in the HTML spec, and \href{https://w3c.github.io/aria/\#aria-describedby}{\texttt{ {\itshape § 6.\+8 {\ttfamily aria-\/describedby} property}}} in WAI-\/\+ARIA, for more info.
+
+When one or more definitions are referenced, a footnote section is generated at the end of the document, using {\ttfamily \texorpdfstring{$<$}{<}section\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}h2\texorpdfstring{$>$}{>}}, and {\ttfamily \texorpdfstring{$<$}{<}ol\texorpdfstring{$>$}{>}} elements\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<section\ data-\/footnotes="{}"{}\ class="{}footnotes"{}><h2\ id="{}footnote-\/label"{}\ class="{}sr-\/only"{}>Footnotes</h2>}
+\DoxyCodeLine{<ol>…</ol>}
+\DoxyCodeLine{</section>}
+
+\end{DoxyCode}
+
+
+Each definition is generated as a {\ttfamily \texorpdfstring{$<$}{<}li\texorpdfstring{$>$}{>}} in the {\ttfamily \texorpdfstring{$<$}{<}ol\texorpdfstring{$>$}{>}} in the order they were first referenced\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<li\ id="{}user-\/content-\/fn-\/1"{}>…</li>}
+
+\end{DoxyCode}
+
+
+Backreferences are injected at the end of the first paragraph, or, when there is no paragraph, at the end of the definition. When a definition is referenced multiple times, multiple backreferences are generated. Further backreferences use an extra counter in the {\ttfamily href} attribute and visually in a {\ttfamily \texorpdfstring{$<$}{<}span\texorpdfstring{$>$}{>}} after {\ttfamily ↩}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<a\ href="{}\#user-\/content-\/fnref-\/1"{}\ data-\/footnote-\/backref="{}"{}\ class="{}data-\/footnote-\/backref"{}\ aria-\/label="{}Back\ to\ content"{}>↩</a>\ <a\ href="{}\#user-\/content-\/fnref-\/1-\/2"{}\ data-\/footnote-\/backref="{}"{}\ class="{}data-\/footnote-\/backref"{}\ aria-\/label="{}Back\ to\ content"{}>↩<sup>2</sup></a>}
+
+\end{DoxyCode}
+
+
+See \href{https://html.spec.whatwg.org/multipage/text-level-semantics.html\#the-a-element}{\texttt{ {\itshape § 4.\+5.\+1 The {\ttfamily a} element}}}, \href{https://html.spec.whatwg.org/multipage/sections.html\#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements}{\texttt{ {\itshape § 4.\+3.\+6 The {\ttfamily h1}, {\ttfamily h2}, {\ttfamily h3}, {\ttfamily h4}, {\ttfamily h5}, and {\ttfamily h6} elements}}}, \href{https://html.spec.whatwg.org/multipage/grouping-content.html\#the-li-element}{\texttt{ {\itshape § 4.\+4.\+8 The {\ttfamily li} element}}}, \href{https://html.spec.whatwg.org/multipage/grouping-content.html\#the-ol-element}{\texttt{ {\itshape § 4.\+4.\+5 The {\ttfamily ol} element}}}, \href{https://html.spec.whatwg.org/multipage/grouping-content.html\#the-p-element}{\texttt{ {\itshape § 4.\+4.\+1 The {\ttfamily p} element}}}, \href{https://html.spec.whatwg.org/multipage/sections.html\#the-section-element}{\texttt{ {\itshape § 4.\+3.\+3 The {\ttfamily section} element}}}, and \href{https://html.spec.whatwg.org/multipage/text-level-semantics.html\#the-sub-and-sup-elements}{\texttt{ {\itshape § 4.\+5.\+19 The {\ttfamily sub} and {\ttfamily sup} elements}}} in the HTML spec, and \href{https://w3c.github.io/aria/\#aria-label}{\texttt{ {\itshape § 6.\+8 {\ttfamily aria-\/label} property}}} in WAI-\/\+ARIA, for more info.\hypertarget{readme.md_autotoc_md23206}{}\doxysubsection{\texorpdfstring{CSS}{CSS}}\label{readme.md_autotoc_md23206}
+The following CSS is needed to make footnotes look a bit like Git\+Hub (and fixes a bug). For the complete actual CSS see \href{https://github.com/sindresorhus/github-markdown-css}{\texttt{ {\ttfamily sindresorhus/github-\/markdown-\/css}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ Style\ the\ footnotes\ section.\ */}
+\DoxyCodeLine{.footnotes\ \{}
+\DoxyCodeLine{\ \ font-\/size:\ smaller;}
+\DoxyCodeLine{\ \ color:\ \#8b949e;}
+\DoxyCodeLine{\ \ border-\/top:\ 1px\ solid\ \#30363d;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{/*\ Hide\ the\ section\ label\ for\ visual\ users.\ */}
+\DoxyCodeLine{.sr-\/only\ \{}
+\DoxyCodeLine{\ \ position:\ absolute;}
+\DoxyCodeLine{\ \ width:\ 1px;}
+\DoxyCodeLine{\ \ height:\ 1px;}
+\DoxyCodeLine{\ \ padding:\ 0;}
+\DoxyCodeLine{\ \ overflow:\ hidden;}
+\DoxyCodeLine{\ \ clip:\ rect(0,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\ \ word-\/wrap:\ normal;}
+\DoxyCodeLine{\ \ border:\ 0;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{/*\ Place\ \`{}[`\ and\ \`{}]`\ around\ footnote\ references.\ */}
+\DoxyCodeLine{[data-\/footnote-\/ref]::before\ \{}
+\DoxyCodeLine{\ \ content:\ '[';}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{[data-\/footnote-\/ref]::after\ \{}
+\DoxyCodeLine{\ \ content:\ ']';}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23207}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md23207}
+Footnotes form with, roughly, the following BNF\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{gfm\_footnote\_reference\ ::=\ gfm\_footnote\_label}
+\DoxyCodeLine{}
+\DoxyCodeLine{gfm\_footnote\_definition\_start\ ::=\ gfm\_footnote\_label\ ':'\ *space\_or\_tab}
+\DoxyCodeLine{;\ Restriction:\ blank\ line\ allowed.}
+\DoxyCodeLine{gfm\_footnote\_definition\_cont\ ::=\ 4(space\_or\_tab)}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Restriction:\ maximum\ \`{}999`\ codes\ between\ \`{}\string^\`{}\ and\ \`{}]`.}
+\DoxyCodeLine{gfm\_footnote\_label\ ::=\ '['\ '\string^'\ 1*(gfm\_footnote\_label\_byte\ |\ gfm\_footnote\_label\_escape)\ ']'}
+\DoxyCodeLine{gfm\_footnote\_label\_byte\ ::=\ text\ -\/\ '['\ -\/\ '\(\backslash\)\(\backslash\)'\ -\/\ ']'}
+\DoxyCodeLine{gfm\_footnote\_label\_escape\ ::=\ '\(\backslash\)\(\backslash\)'\ ['['\ |\ '\(\backslash\)\(\backslash\)'\ |\ ']']}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Any\ byte\ (u8)}
+\DoxyCodeLine{byte\ ::=\ 0x00..=0xFFFF}
+\DoxyCodeLine{space\_or\_tab\ ::=\ '\(\backslash\)t'\ |\ '\ '}
+\DoxyCodeLine{eol\ ::=\ '\(\backslash\)n'\ |\ '\(\backslash\)r'\ |\ '\(\backslash\)r\(\backslash\)n'}
+\DoxyCodeLine{line\ ::=\ byte\ -\/\ eol}
+\DoxyCodeLine{text\ ::=\ line\ -\/\ space\_or\_tab}
+
+\end{DoxyCode}
+
+
+Further lines after {\ttfamily gfm\+\_\+footnote\+\_\+definition\+\_\+start} that are not prefixed with {\ttfamily gfm\+\_\+footnote\+\_\+definition\+\_\+cont} cause the footnote definition to be exited, except when those lines are lazy continuation or blank. Like so many things in markdown, footnote definition too are complex. See \href{https://spec.commonmark.org/0.30/\#phase-1-block-structure}{\texttt{ {\itshape § Phase 1\+: block structure} in {\ttfamily Common\+Mark}}} for more on parsing details.
+
+The identifiers in the {\ttfamily label} parts are interpreted as the \href{https://github.com/micromark/micromark\#content-types}{\texttt{ string}} content type. That means that character escapes and character references are allowed.
+
+Definitions match to references through identifiers. To match, both labels must be equal after normalizing with \href{https://github.com/micromark/micromark/tree/main/packages/micromark-util-normalize-identifier}{\texttt{ {\ttfamily normalize\+Identifier}}}. One definition can match to multiple calls. Multiple definitions with the same, normalized, identifier are ignored\+: the first definition is preferred. To illustrate, the definition with the content of {\ttfamily x} wins\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\string^a]:\ x}
+\DoxyCodeLine{[\string^a]:\ y}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^a]}
+
+\end{DoxyCode}
+
+
+Importantly, while labels {\itshape can} include \href{https://github.com/micromark/micromark\#content-types}{\texttt{ string}} content (character escapes and character references), these are not considered when matching. To illustrate, neither definition matches the reference\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\string^a\&amp;b]:\ x}
+\DoxyCodeLine{[\string^a\(\backslash\)\&b]:\ y}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^a\&b]}
+
+\end{DoxyCode}
+
+
+Because footnote definitions are containers (like block quotes and list items), they can contain more footnote definitions. They can even include references to themselves.\hypertarget{readme.md_autotoc_md23208}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23208}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Back\+Label\+Template\`{} and \`{}\+Html\+Options\`{}.\hypertarget{readme.md_autotoc_md23209}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23209}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/extension-\/gfm-\/footnote@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.
+
+This package works with {\ttfamily micromark} version {\ttfamily 3} and later.\hypertarget{readme.md_autotoc_md23210}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23210}
+This package is safe. Setting `clobber\+Prefix = '\textquotesingle{}{\ttfamily is dangerous, it opens you up to DOM clobbering. The}label\+Tag\+Name{\ttfamily and}label\+Attributes\`{} options are unsafe when used with user content, they allow defining arbitrary HTML.\hypertarget{readme.md_autotoc_md23211}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md23211}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} — support all of GFM
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-footnote}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/footnote}}} — support all of GFM in mdast
+\item \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}} — support all of GFM in mdast
+\item \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} — support all of GFM in remark
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23212}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23212}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23213}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23213}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

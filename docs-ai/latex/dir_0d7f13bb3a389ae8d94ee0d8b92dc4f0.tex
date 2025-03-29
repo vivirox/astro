@@ -1,0 +1,237 @@
+\doxysection{node\+\_\+modules/comment-\/parser Directory Reference}
+\hypertarget{dir_0d7f13bb3a389ae8d94ee0d8b92dc4f0}{}\label{dir_0d7f13bb3a389ae8d94ee0d8b92dc4f0}\index{node\_modules/comment-\/parser Directory Reference@{node\_modules/comment-\/parser Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+{\ttfamily comment-\/parser} is a library helping to handle Generic JSDoc-\/style comments. It is
+
+
+\begin{DoxyItemize}
+\item {\bfseries{language-\/agnostic}} – no semantics enforced. You decide what tags are and what they mean. And it can be used with any language supporting {\ttfamily /\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} \texorpdfstring{$\ast$}{*}/} source comments.
+\item {\bfseries{no dependencies}} – it is compact and environment-\/agnostic, can be run on both the server and browser sides
+\item {\bfseries{highly customizable}} – with a little code you can deeply customize how comments are parsed
+\item {\bfseries{bidirectional}} -\/ you can write comment blocks back to the source after updating or formatting
+\item {\bfseries{strictly typed}} -\/ comes with generated {\ttfamily d.\+ts} data definitions since written in Type\+Script
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ comment-\/parser}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+💡 Check out the \href{https://syavorsky.github.io/comment-parser}{\texttt{ Playground}} \end{quote}
+
+
+\begin{quote}
+💡 Previous version lives in \href{https://github.com/syavorsky/comment-parser/tree/0.x}{\texttt{ 0.\+x}} branch \end{quote}
+
+
+Lib mainly provides two pieces Parser and Stringifier.\hypertarget{README.md_autotoc_md10896}{}\doxysubsection{\texorpdfstring{Parser}{Parser}}\label{README.md_autotoc_md10896}
+Let\textquotesingle{}s go over string parsing\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parse\ \}\ =\ require('comment-\/parser/lib')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ source\ =\ \`{}}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Description\ may\ go}
+\DoxyCodeLine{\ *\ over\ few\ lines\ followed\ by\ @tags}
+\DoxyCodeLine{\ *\ @param\ \{string\}\ name\ the\ name\ parameter}
+\DoxyCodeLine{\ *\ @param\ \{any\}\ value\ the\ value\ of\ any\ type}
+\DoxyCodeLine{\ */`}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ parsed\ =\ parse(source)}
+
+\end{DoxyCode}
+
+
+Lib source code is written in Type\+Script and all data shapes are conveniently available for your IDE of choice. All types described below can be found in \href{src/primitives.ts}{\texttt{ primitives.\+ts}}
+
+The input source is first parsed into lines, then lines split into tokens, and finally, tokens are processed into blocks of tags\hypertarget{README.md_autotoc_md10897}{}\doxysubsubsection{\texorpdfstring{Block}{Block}}\label{README.md_autotoc_md10897}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Description\ may\ go}
+\DoxyCodeLine{\ *\ over\ multiple\ lines\ followed\ by\ @tags}
+\DoxyCodeLine{\ *\ @param\ \{string\}\ name\ the\ name\ parameter}
+\DoxyCodeLine{\ *\ @param\ \{any\}\ value\ the\ value\ parameter}
+\DoxyCodeLine{\ */}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10898}{}\doxysubsubsection{\texorpdfstring{Description}{Description}}\label{README.md_autotoc_md10898}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Description\ may\ go}
+\DoxyCodeLine{\ *\ over\ multiple\ lines\ followed\ by\ @tags}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10899}{}\doxysubsubsection{\texorpdfstring{Tags}{Tags}}\label{README.md_autotoc_md10899}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{*\ @param\ \{string\}\ name\ the\ name\ parameter}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{*\ @param\ \{any\}\ value\ the\ value\ parameter}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10900}{}\doxysubsubsection{\texorpdfstring{Tokens}{Tokens}}\label{README.md_autotoc_md10900}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|line|start|delimiter|postDelimiter|tag\ \ \ |postTag|name\ |postName|type\ \ \ \ |postType|description\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |end|}
+\DoxyCodeLine{|-\/-\/-\/-\/|-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/|}
+\DoxyCodeLine{|\ \ \ 0|\{2\}\ \ |/**\ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ \ \ \ |\ \ \ \ \ \ \ |\ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ |}
+\DoxyCodeLine{|\ \ \ 1|\{3\}\ \ |*\ \ \ \ \ \ \ \ |\{1\}\ \ \ \ \ \ \ \ \ \ |\ \ \ \ \ \ |\ \ \ \ \ \ \ |\ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ |Description\ may\ go\ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ |}
+\DoxyCodeLine{|\ \ \ 2|\{3\}\ \ |*\ \ \ \ \ \ \ \ |\{1\}\ \ \ \ \ \ \ \ \ \ |\ \ \ \ \ \ |\ \ \ \ \ \ \ |\ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ |over\ few\ lines\ followed\ by\ @tags|\ \ \ |}
+\DoxyCodeLine{|\ \ \ 3|\{3\}\ \ |*\ \ \ \ \ \ \ \ |\{1\}\ \ \ \ \ \ \ \ \ \ |@param|\{1\}\ \ \ \ |name\ |\{1\}\ \ \ \ \ |\{string\}|\{1\}\ \ \ \ \ |the\ name\ parameter\ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ |}
+\DoxyCodeLine{|\ \ \ 4|\{3\}\ \ |*\ \ \ \ \ \ \ \ |\{1\}\ \ \ \ \ \ \ \ \ \ |@param|\{1\}\ \ \ \ |value|\{1\}\ \ \ \ \ |\{any\}\ \ \ |\{1\}\ \ \ \ \ |the\ value\ of\ any\ type\ \ \ \ \ \ \ \ \ \ \ |\ \ \ |}
+\DoxyCodeLine{|\ \ \ 5|\{3\}\ \ |\ \ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ \ \ \ |\ \ \ \ \ \ \ |\ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |*/\ |}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10901}{}\doxysubsubsection{\texorpdfstring{Result}{Result}}\label{README.md_autotoc_md10901}
+The result is an array of Block objects, see the full output on the \href{https://syavorsky.github.io/comment-parser}{\texttt{ playground}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\{}
+\DoxyCodeLine{\ \ //\ uppper\ text\ of\ the\ comment,\ overall\ block\ description}
+\DoxyCodeLine{\ \ description:\ 'Description\ may\ go\ over\ multiple\ lines\ followed\ by\ @tags',}
+\DoxyCodeLine{\ \ //\ list\ of\ block\ tags:\ @param,\ @param}
+\DoxyCodeLine{\ \ tags:\ [\{}
+\DoxyCodeLine{\ \ \ \ //\ tokens.tag\ without\ "{}@"{}}
+\DoxyCodeLine{\ \ \ \ tag:\ 'param',}
+\DoxyCodeLine{\ \ \ \ //\ unwrapped\ tokens.name}
+\DoxyCodeLine{\ \ \ \ name:\ 'name',}
+\DoxyCodeLine{\ \ \ \ //\ unwrapped\ tokens.type}
+\DoxyCodeLine{\ \ \ \ type:\ 'string',}
+\DoxyCodeLine{\ \ \ \ //\ true,\ if\ tokens.name\ is\ [optional]}
+\DoxyCodeLine{\ \ \ \ optional:\ false,}
+\DoxyCodeLine{\ \ \ \ //\ default\ value\ if\ optional\ [name=default]\ has\ one}
+\DoxyCodeLine{\ \ \ \ default:\ undefined,}
+\DoxyCodeLine{\ \ \ \ //\ tokens.description\ assembled\ from\ a\ siongle\ or\ multiple\ lines}
+\DoxyCodeLine{\ \ \ \ description:\ 'the\ name\ parameter',}
+\DoxyCodeLine{\ \ \ \ //\ problems\ occured\ while\ parsing\ this\ tag\ section,\ subset\ of\ ../problems\ array}
+\DoxyCodeLine{\ \ \ \ problems:\ [],}
+\DoxyCodeLine{\ \ \ \ //\ source\ lines\ processed\ for\ extracting\ this\ tag,\ "{}slice"{}\ of\ the\ ../source\ item\ reference}
+\DoxyCodeLine{\ \ \ \ source:\ [\ ...\ ],}
+\DoxyCodeLine{\ \ \},\ ...\ ],}
+\DoxyCodeLine{\ \ //\ source\ is\ an\ array\ of\ \`{}Line`\ items\ having\ the\ source}
+\DoxyCodeLine{\ \ //\ line\ number\ and\ \`{}Tokens`\ that\ can\ be\ assembled\ back\ into}
+\DoxyCodeLine{\ \ //\ the\ line\ string\ preserving\ original\ formatting}
+\DoxyCodeLine{\ \ source:\ [\{}
+\DoxyCodeLine{\ \ \ \ //\ source\ line\ number}
+\DoxyCodeLine{\ \ \ \ number:\ 1,}
+\DoxyCodeLine{\ \ \ \ //\ source\ line\ string}
+\DoxyCodeLine{\ \ \ \ source:\ "{}/**"{},}
+\DoxyCodeLine{\ \ \ \ //\ source\ line\ tokens}
+\DoxyCodeLine{\ \ \ \ tokens:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ indentation}
+\DoxyCodeLine{\ \ \ \ \ \ start:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ delimiter,\ either\ '/**',\ '*/',\ '*',\ or\ ''.\ Mid\ lines\ may\ have\ no\ delimiters}
+\DoxyCodeLine{\ \ \ \ \ \ delimiter:\ "{}/**"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ space\ between\ delimiter\ and\ tag}
+\DoxyCodeLine{\ \ \ \ \ \ postDelimiter:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ tag\ starting\ with\ "{}@"{}}
+\DoxyCodeLine{\ \ \ \ \ \ tag:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ space\ between\ tag\ and\ type}
+\DoxyCodeLine{\ \ \ \ \ \ postTag:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ name\ with\ no\ whitespaces\ or\ "{}multiple\ words"{}\ wrapped\ into\ quotes.\ May\ occure\ in\ [name]\ and\ [name=default]\ forms}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ space\ between\ name\ and\ type}
+\DoxyCodeLine{\ \ \ \ \ \ postName:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ type\ is\ has\ to\ be\ \{wrapped\}\ into\ curlies\ otherwise\ will\ be\ omitted}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ space\ between\ type\ and\ description}
+\DoxyCodeLine{\ \ \ \ \ \ postType:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ description\ is\ basicaly\ rest\ of\ the\ line}
+\DoxyCodeLine{\ \ \ \ \ \ description:\ "{}"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ closing\ */\ marker\ if\ present}
+\DoxyCodeLine{\ \ \ \ \ \ end:\ "{}"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},\ ...\ ],}
+\DoxyCodeLine{\ \ //\ problems\ occured\ while\ parsing\ the\ block}
+\DoxyCodeLine{\ \ problems:\ [],}
+\DoxyCodeLine{\}];}
+
+\end{DoxyCode}
+
+
+While {\ttfamily .source\mbox{[}\mbox{]}.tokens} are not providing readable annotation information, they are essential for tracing data origins and assembling string blocks with {\ttfamily stringify}\hypertarget{README.md_autotoc_md10902}{}\doxysubsubsection{\texorpdfstring{options}{options}}\label{README.md_autotoc_md10902}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ Options\ \{}
+\DoxyCodeLine{\ \ //\ start\ count\ for\ source\ line\ numbers}
+\DoxyCodeLine{\ \ startLine:\ number;}
+\DoxyCodeLine{\ \ //\ escaping\ chars\ sequence\ marking\ wrapped\ content\ literal\ for\ the\ parser}
+\DoxyCodeLine{\ \ fence:\ string;}
+\DoxyCodeLine{\ \ //\ block\ and\ comment\ description\ compaction\ strategy}
+\DoxyCodeLine{\ \ spacing:\ 'compact'\ |\ 'preserve';}
+\DoxyCodeLine{\ \ //\ tokenizer\ functions\ extracting\ name,\ type,\ and\ description\ out\ of\ tag,\ see\ Tokenizer}
+\DoxyCodeLine{\ \ tokenizers:\ Tokenizer[];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+examples
+\begin{DoxyItemize}
+\item \href{https://syavorsky.github.io/comment-parser/\#parse-defaults}{\texttt{ default config}}
+\item \href{https://syavorsky.github.io/comment-parser/\#parse-line-numbering}{\texttt{ line numbers control}}
+\item \href{https://syavorsky.github.io/comment-parser/\#parse-spacing}{\texttt{ description spacing}}
+\item \href{https://syavorsky.github.io/comment-parser/\#parse-escaping}{\texttt{ escaping}}
+\item \href{https://syavorsky.github.io/comment-parser/\#parse-source-exploration}{\texttt{ explore the origin source}}
+\end{DoxyItemize}
+
+\href{https://github.com/syavorsky/comment-parser/issues/new?title=example+suggestion\%3A+...&labels=example,parser}{\texttt{ suggest more examples}}\hypertarget{README.md_autotoc_md10903}{}\doxysubsection{\texorpdfstring{Stringifier}{Stringifier}}\label{README.md_autotoc_md10903}
+The stringifier is an important piece used by other tools updating the source code. It goes over {\ttfamily Block.\+source\mbox{[}\mbox{]}.tokens} items and assembles them back to the string. It might be used with various transforms applied before stringifying.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parse,\ stringify,\ transforms:\ \{flow,\ align,\ indent\}\ \}\ =\ require('comment-\/parser');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ source\ =\ \`{}}
+\DoxyCodeLine{\ \ /**}
+\DoxyCodeLine{\ \ \ *\ Description\ may\ go}
+\DoxyCodeLine{\ \ \ *\ over\ multiple\ lines\ followed\ by\ @tags}
+\DoxyCodeLine{\ \ \ *}
+\DoxyCodeLine{*\ @my-\/tag\ \{my.type\}\ my-\/name\ description\ line\ 1}
+\DoxyCodeLine{\ \ \ \ \ \ description\ line\ 2}
+\DoxyCodeLine{\ \ \ \ *\ description\ line\ 3}
+\DoxyCodeLine{\ \ \ */`;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ parsed\ =\ parse(source);}
+\DoxyCodeLine{const\ transform\ =\ flow(align(),\ indent(0))}
+\DoxyCodeLine{console.log(stringify(transform(parsed[0])));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10904}{}\doxysubsubsection{\texorpdfstring{Result}{Result}}\label{README.md_autotoc_md10904}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Description\ may\ go}
+\DoxyCodeLine{\ *\ over\ multiple\ lines\ followed\ by\ @tags}
+\DoxyCodeLine{\ *}
+\DoxyCodeLine{\ *\ @my-\/tag\ \{my.type\}\ my-\/name\ description\ line\ 1}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ description\ line\ 2}
+\DoxyCodeLine{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ description\ line\ 3}
+\DoxyCodeLine{\ */}
+
+\end{DoxyCode}
+
+
+examples
+\begin{DoxyItemize}
+\item \href{https://syavorsky.github.io/comment-parser/\#stringify-formatting}{\texttt{ format comments}}
+\end{DoxyItemize}
+
+\href{https://github.com/syavorsky/comment-parser/issues/new?title=example+suggestion\%3A+...&labels=example,stringifier}{\texttt{ suggest more examples}}\hypertarget{README.md_autotoc_md10905}{}\doxysubsection{\texorpdfstring{Migrating from 0.\+x version}{Migrating from 0.\+x version}}\label{README.md_autotoc_md10905}
+Code of pre-\/1.\+0 version is forked into \href{https://github.com/syavorsky/comment-parser/tree/0.x}{\texttt{ 0.\+x}} and will phase out eventually. Please file the issue if you find some previously existing functionality can\textquotesingle{}t be achieved with 1.\+x API. Check out \doxysectlink{md_node__modules_2comment-parser_2migrate-1_80}{migration notes}{0}. 

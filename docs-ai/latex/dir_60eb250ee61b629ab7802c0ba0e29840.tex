@@ -1,0 +1,169 @@
+\doxysection{node\+\_\+modules/jotai Directory Reference}
+\hypertarget{dir_60eb250ee61b629ab7802c0ba0e29840}{}\label{dir_60eb250ee61b629ab7802c0ba0e29840}\index{node\_modules/jotai Directory Reference@{node\_modules/jotai Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+~\newline
+
+
+
+
+~\newline
+
+
+visit \href{https://jotai.org}{\texttt{ jotai.\+org}} or {\ttfamily npm i jotai}
+
+\href{https://github.com/pmndrs/jotai/actions?query=workflow\%3ALint}{\texttt{ }} \href{https://bundlephobia.com/result?p=jotai}{\texttt{ }} \href{https://www.npmjs.com/package/jotai}{\texttt{ }} \href{https://www.npmjs.com/package/jotai}{\texttt{ }} \href{https://discord.gg/poimandres}{\texttt{ }} \href{https://opencollective.com/jotai}{\texttt{ }}
+
+Jotai scales from a simple use\+State replacement to an enterprise Type\+Script application.
+
+
+\begin{DoxyItemize}
+\item Minimal core API (2kb)
+\item Many utilities and extensions
+\item No string keys (compared to Recoil)
+\end{DoxyItemize}
+
+Examples\+: \href{https://codesandbox.io/s/jotai-demo-47wvh}{\texttt{ Demo 1}} \texorpdfstring{$\vert$}{|} \href{https://codesandbox.io/s/jotai-demo-forked-x2g5d}{\texttt{ Demo 2}}\hypertarget{README.md_autotoc_md20644}{}\doxysubsubsubsection{\texorpdfstring{First, create a primitive atom}{First, create a primitive atom}}\label{README.md_autotoc_md20644}
+An atom represents a piece of state. All you need is to specify an initial value, which can be primitive values like strings and numbers, objects, and arrays. You can create as many primitive atoms as you want.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ atom\ \}\ from\ 'jotai'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ countAtom\ =\ atom(0)}
+\DoxyCodeLine{const\ countryAtom\ =\ atom('Japan')}
+\DoxyCodeLine{const\ citiesAtom\ =\ atom(['Tokyo',\ 'Kyoto',\ 'Osaka'])}
+\DoxyCodeLine{const\ mangaAtom\ =\ atom(\{\ 'Dragon\ Ball':\ 1984,\ 'One\ Piece':\ 1997,\ Naruto:\ 1999\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20645}{}\doxysubsubsubsection{\texorpdfstring{Use the atom in your components}{Use the atom in your components}}\label{README.md_autotoc_md20645}
+It can be used like {\ttfamily React.\+use\+State}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ useAtom\ \}\ from\ 'jotai'}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Counter()\ \{}
+\DoxyCodeLine{\ \ const\ [count,\ setCount]\ =\ useAtom(countAtom)}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <h1>}
+\DoxyCodeLine{\ \ \ \ \ \ \{count\}}
+\DoxyCodeLine{\ \ \ \ \ \ <button\ onClick=\{()\ =>\ setCount((c)\ =>\ c\ +\ 1)\}>one\ up</button>}
+\DoxyCodeLine{\ \ \ \ \ \ ...}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20646}{}\doxysubsubsubsection{\texorpdfstring{Create derived atoms with computed values}{Create derived atoms with computed values}}\label{README.md_autotoc_md20646}
+A new read-\/only atom can be created from existing atoms by passing a read function as the first argument. {\ttfamily get} allows you to fetch the contextual value of any atom.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ doubledCountAtom\ =\ atom((get)\ =>\ get(countAtom)\ *\ 2)}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ DoubleCounter()\ \{}
+\DoxyCodeLine{\ \ const\ [doubledCount]\ =\ useAtom(doubledCountAtom)}
+\DoxyCodeLine{\ \ return\ <h2>\{doubledCount\}</h2>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20647}{}\doxysubsubsubsection{\texorpdfstring{Creating an atom from multiple atoms}{Creating an atom from multiple atoms}}\label{README.md_autotoc_md20647}
+You can combine multiple atoms to create a derived atom.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ count1\ =\ atom(1)}
+\DoxyCodeLine{const\ count2\ =\ atom(2)}
+\DoxyCodeLine{const\ count3\ =\ atom(3)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ sum\ =\ atom((get)\ =>\ get(count1)\ +\ get(count2)\ +\ get(count3))}
+
+\end{DoxyCode}
+
+
+Or if you like fp patterns ...
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ atoms\ =\ [count1,\ count2,\ count3,\ ...otherAtoms]}
+\DoxyCodeLine{const\ sum\ =\ atom((get)\ =>\ atoms.map(get).reduce((acc,\ count)\ =>\ acc\ +\ count))}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20648}{}\doxysubsubsubsection{\texorpdfstring{Derived async atoms \href{https://react.dev/reference/react/Suspense}{\texttt{ }}}{Derived async atoms \href{https://react.dev/reference/react/Suspense}{\texttt{ }}}}\label{README.md_autotoc_md20648}
+You can make the read function an async function too.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ urlAtom\ =\ atom('https://json.host.com')}
+\DoxyCodeLine{const\ fetchUrlAtom\ =\ atom(async\ (get)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ response\ =\ await\ fetch(get(urlAtom))}
+\DoxyCodeLine{\ \ return\ await\ response.json()}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Status()\ \{}
+\DoxyCodeLine{\ \ //\ Re-\/renders\ the\ component\ after\ urlAtom\ is\ changed\ and\ the\ async\ function\ above\ concludes}
+\DoxyCodeLine{\ \ const\ [json]\ =\ useAtom(fetchUrlAtom)}
+\DoxyCodeLine{\ \ ...}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20649}{}\doxysubsubsubsection{\texorpdfstring{You can create a writable derived atom}{You can create a writable derived atom}}\label{README.md_autotoc_md20649}
+Specify a write function at the second argument. {\ttfamily get} will return the current value of an atom. {\ttfamily set} will update the value of an atom.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ decrementCountAtom\ =\ atom(}
+\DoxyCodeLine{\ \ (get)\ =>\ get(countAtom),}
+\DoxyCodeLine{\ \ (get,\ set,\ \_arg)\ =>\ set(countAtom,\ get(countAtom)\ -\/\ 1)}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Counter()\ \{}
+\DoxyCodeLine{\ \ const\ [count,\ decrement]\ =\ useAtom(decrementCountAtom)}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <h1>}
+\DoxyCodeLine{\ \ \ \ \ \ \{count\}}
+\DoxyCodeLine{\ \ \ \ \ \ <button\ onClick=\{decrement\}>Decrease</button>}
+\DoxyCodeLine{\ \ \ \ \ \ ...}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20650}{}\doxysubsubsubsection{\texorpdfstring{Write only derived atoms}{Write only derived atoms}}\label{README.md_autotoc_md20650}
+Just do not define a read function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ multiplyCountAtom\ =\ atom(null,\ (get,\ set,\ by)\ =>}
+\DoxyCodeLine{\ \ set(countAtom,\ get(countAtom)\ *\ by),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Controls()\ \{}
+\DoxyCodeLine{\ \ const\ [,\ multiply]\ =\ useAtom(multiplyCountAtom)}
+\DoxyCodeLine{\ \ return\ <button\ onClick=\{()\ =>\ multiply(3)\}>triple</button>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20651}{}\doxysubsubsubsection{\texorpdfstring{Async actions}{Async actions}}\label{README.md_autotoc_md20651}
+Just make the write function an async function and call {\ttfamily set} when you\textquotesingle{}re ready.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fetchCountAtom\ =\ atom(}
+\DoxyCodeLine{\ \ (get)\ =>\ get(countAtom),}
+\DoxyCodeLine{\ \ async\ (\_get,\ set,\ url)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ response\ =\ await\ fetch(url)}
+\DoxyCodeLine{\ \ \ \ set(countAtom,\ (await\ response.json()).count)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Controls()\ \{}
+\DoxyCodeLine{\ \ const\ [count,\ compute]\ =\ useAtom(fetchCountAtom)}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <button\ onClick=\{()\ =>\ compute('http://count.host.com')\}>compute</button>}
+\DoxyCodeLine{\ \ \ \ ...}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20652}{}\doxysubsubsubsection{\texorpdfstring{Note about functional programming}{Note about functional programming}}\label{README.md_autotoc_md20652}
+Jotai\textquotesingle{}s fluid interface is no accident — atoms are monads, just like promises! Monads are an \href{https://en.wikipedia.org/wiki/Monad_(functional_programming)}{\texttt{ established}} pattern for modular, pure, robust and understandable code which is \href{https://overreacted.io/optimized-for-change/}{\texttt{ optimized for change}}. Read more about \href{https://jotai.org/docs/basics/functional-programming-and-jotai}{\texttt{ Jotai and monads.}}\hypertarget{README.md_autotoc_md20653}{}\doxysubsubsection{\texorpdfstring{Links}{Links}}\label{README.md_autotoc_md20653}
+
+\begin{DoxyItemize}
+\item \href{https://jotai.org}{\texttt{ website}}
+\item \href{https://jotai.org/docs}{\texttt{ documentation}}
+\item \href{https://egghead.io/courses/manage-application-state-with-jotai-atoms-2c3a29f0}{\texttt{ course}} 
+\end{DoxyItemize}

@@ -1,0 +1,436 @@
+\doxysection{node\+\_\+modules/satori Directory Reference}
+\hypertarget{dir_56efb39d410bc4f135a07f546f50fe9a}{}\label{dir_56efb39d410bc4f135a07f546f50fe9a}\index{node\_modules/satori Directory Reference@{node\_modules/satori Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+!\mbox{[}Satori\mbox{]}(.github/card.\+png)
+
+{\bfseries{Satori}}\+: Enlightened library to convert HTML and CSS to SVG.
+
+\begin{quote}
+{\bfseries{Note}}
+
+To use Satori in your project to generate PNG images like Open Graph images and social cards, check out our \href{https://vercel.com/blog/introducing-vercel-og-image-generation-fast-dynamic-social-card-images}{\texttt{ announcement}} and \href{https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation}{\texttt{ Vercel’s Open Graph Image Generation →}}
+
+To use it in Next.\+js, take a look at the \href{https://vercel.com/templates/next.js/og-image-generation}{\texttt{ Next.\+js Open Graph Image Generation template →}} \end{quote}
+\hypertarget{README.md_autotoc_md30251}{}\doxysubsubsection{\texorpdfstring{Overview}{Overview}}\label{README.md_autotoc_md30251}
+Satori supports the JSX syntax, which makes it very straightforward to use. Here’s an overview of the basic usage\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ api.jsx}
+\DoxyCodeLine{import\ satori\ from\ 'satori'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ svg\ =\ await\ satori(}
+\DoxyCodeLine{\ \ <div\ style=\{\{\ color:\ 'black'\ \}\}>hello,\ world</div>,}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ width:\ 600,}
+\DoxyCodeLine{\ \ \ \ height:\ 400,}
+\DoxyCodeLine{\ \ \ \ fonts:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ 'Roboto',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Use\ \`{}fs`\ (Node.js\ only)\ or\ \`{}fetch`\ to\ read\ the\ font\ as\ Buffer/ArrayBuffer\ and\ provide\ \`{}data`\ here.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ data:\ robotoArrayBuffer,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ weight:\ 400,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ style:\ 'normal',}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Satori will render the element into a 600×400 SVG, and return the SVG string\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'<svg\ ...><path\ d="{}..."{}\ fill="{}black"{}></path></svg>'}
+
+\end{DoxyCode}
+
+
+Under the hood, it handles layout calculation, font, typography and more, to generate a SVG that matches the exact same HTML and CSS in a browser.
+
+~\newline
+\hypertarget{README.md_autotoc_md30252}{}\doxysubsubsection{\texorpdfstring{Documentation}{Documentation}}\label{README.md_autotoc_md30252}
+\hypertarget{README.md_autotoc_md30253}{}\doxysubsubsubsection{\texorpdfstring{JSX}{JSX}}\label{README.md_autotoc_md30253}
+Satori only accepts JSX elements that are pure and stateless. You can use a subset of HTML elements (see section below), or custom React components, but React APIs such as {\ttfamily use\+State}, {\ttfamily use\+Effect}, {\ttfamily dangerously\+Set\+Inner\+HTML} are not supported.\hypertarget{README.md_autotoc_md30254}{}\doxysubsubsubsubsection{\texorpdfstring{Use without JSX}{Use without JSX}}\label{README.md_autotoc_md30254}
+If you don\textquotesingle{}t have JSX transpiler enabled, you can simply pass \href{https://reactjs.org/docs/introducing-jsx.html}{\texttt{ React-\/elements-\/like objects}} that have {\ttfamily type}, {\ttfamily props.\+children} and {\ttfamily props.\+style} (and other properties too) directly\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ satori(}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'div',}
+\DoxyCodeLine{\ \ \ \ props:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ 'hello,\ world',}
+\DoxyCodeLine{\ \ \ \ \ \ style:\ \{\ color:\ 'black'\ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ options}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30255}{}\doxysubsubsubsection{\texorpdfstring{HTML Elements}{HTML Elements}}\label{README.md_autotoc_md30255}
+Satori supports a limited subset of HTML and CSS features, due to its special use cases. In general, only these static and visible elements and properties that are implemented.
+
+For example, the {\ttfamily \texorpdfstring{$<$}{<}input\texorpdfstring{$>$}{>}} HTML element, the {\ttfamily cursor} CSS property are not in consideration. And you can\textquotesingle{}t use {\ttfamily \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>}} tags or external resources via {\ttfamily \texorpdfstring{$<$}{<}link\texorpdfstring{$>$}{>}} or {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}}.
+
+Also, Satori does not guarantee that the SVG will 100\% match the browser-\/rendered HTML output since Satori implements its own layout engine based on the \href{https://www.w3.org/TR/SVG11}{\texttt{ SVG 1.\+1 spec}}.
+
+You can find the list of supported HTML elements and their preset styles \href{https://github.com/vercel/satori/blob/main/src/handler/presets.ts}{\texttt{ here}}.\hypertarget{README.md_autotoc_md30256}{}\doxysubsubsubsubsection{\texorpdfstring{Images}{Images}}\label{README.md_autotoc_md30256}
+You can use {\ttfamily \texorpdfstring{$<$}{<}img\texorpdfstring{$>$}{>}} to embed images. However, {\ttfamily width}, and {\ttfamily height} attributes are recommended to set\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ satori(}
+\DoxyCodeLine{\ \ <img\ src="{}https://picsum.photos/200/300"{}\ width=\{200\}\ height=\{300\}\ />,}
+\DoxyCodeLine{\ \ options}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+When using {\ttfamily background-\/image}, the image will be stretched to fit the element by default if you don\textquotesingle{}t specify the size.
+
+If you want to render the generated SVG to another image format such as PNG, it would be better to use base64 encoded image data (or buffer) directly as {\ttfamily props.\+src} so no extra I/O is needed in Satori\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ satori(}
+\DoxyCodeLine{\ \ <img\ src="{}data:image/png;base64,..."{}\ width=\{200\}\ height=\{300\}\ />,}
+\DoxyCodeLine{\ \ //\ Or\ src=\{arrayBuffer\},\ src=\{buffer\}}
+\DoxyCodeLine{\ \ options}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30257}{}\doxysubsubsubsection{\texorpdfstring{CSS}{CSS}}\label{README.md_autotoc_md30257}
+Satori uses the same Flexbox \href{https://yogalayout.com}{\texttt{ layout engine}} as React Native, and it’s {\bfseries{not}} a complete CSS implementation. However, it supports a subset of the spec that covers most common CSS features\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Property }&\cellcolor{\tableheadbgcolor}\textbf{ Property Expanded }&\cellcolor{\tableheadbgcolor}\textbf{ Supported Values }&\cellcolor{\tableheadbgcolor}\textbf{ Example   
+
+}\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Property }&\cellcolor{\tableheadbgcolor}\textbf{ Property Expanded }&\cellcolor{\tableheadbgcolor}\textbf{ Supported Values }&\cellcolor{\tableheadbgcolor}\textbf{ Example   
+
+}\\\cline{1-4}
+\endhead
+\multicolumn{2}{|l|}{{\ttfamily display} }&{\ttfamily none} and {\ttfamily flex}, default to {\ttfamily flex} &
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily position} }&{\ttfamily relative} and {\ttfamily absolute}, default to {\ttfamily relative} &
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily color} }&Supported &
+
+\\\cline{1-4}
+\multirow{5}{*}{{\ttfamily margin} }\\\cline{2-4}
+&{\ttfamily margin\+Top}&Supported&\\\cline{2-4}
+&{\ttfamily margin\+Right}&Supported&\\\cline{2-4}
+&{\ttfamily margin\+Bottom}&Supported&\\\cline{2-4}
+&{\ttfamily margin\+Left}&Supported&
+
+\\\cline{1-4}
+\multirow{5}{*}{Position }\\\cline{2-4}
+&{\ttfamily top}&Supported&\\\cline{2-4}
+&{\ttfamily right}&Supported&\\\cline{2-4}
+&{\ttfamily bottom}&Supported&\\\cline{2-4}
+&{\ttfamily left}&Supported&
+
+\\\cline{1-4}
+\multirow{3}{*}{Size }\\\cline{2-4}
+&{\ttfamily width}&Supported&\\\cline{2-4}
+&{\ttfamily height}&Supported&
+
+\\\cline{1-4}
+\multirow{5}{*}{Min \& max size }\\\cline{2-4}
+&{\ttfamily min\+Width}&Supported except for {\ttfamily min-\/content}, {\ttfamily max-\/content} and {\ttfamily fit-\/content}&\\\cline{2-4}
+&{\ttfamily min\+Height}&Supported except for {\ttfamily min-\/content}, {\ttfamily max-\/content} and {\ttfamily fit-\/content}&\\\cline{2-4}
+&{\ttfamily max\+Width}&Supported except for {\ttfamily min-\/content}, {\ttfamily max-\/content} and {\ttfamily fit-\/content}&\\\cline{2-4}
+&{\ttfamily max\+Height}&Supported except for {\ttfamily min-\/content}, {\ttfamily max-\/content} and {\ttfamily fit-\/content}&
+
+\\\cline{1-4}
+\multirow{5}{*}{{\ttfamily border} }\\\cline{2-4}
+&Width ({\ttfamily border\+Width}, {\ttfamily border\+Top\+Width}, ...)&Supported&\\\cline{2-4}
+&Style ({\ttfamily border\+Style}, {\ttfamily border\+Top\+Style}, ...)&{\ttfamily solid} and {\ttfamily dashed}, default to {\ttfamily solid}&\\\cline{2-4}
+&Color ({\ttfamily border\+Color}, {\ttfamily border\+Top\+Color}, ...)&Supported&\\\cline{2-4}
+&Shorthand ({\ttfamily border}, {\ttfamily border\+Top}, ...)&Supported, i.\+e. {\ttfamily 1px solid gray}~\newline
+ &
+
+\\\cline{1-4}
+\multirow{6}{*}{{\ttfamily border\+Radius} }\\\cline{2-4}
+&{\ttfamily border\+Top\+Left\+Radius}&Supported&\\\cline{2-4}
+&{\ttfamily border\+Top\+Right\+Radius}&Supported&\\\cline{2-4}
+&{\ttfamily border\+Bottom\+Left\+Radius}&Supported&\\\cline{2-4}
+&{\ttfamily border\+Bottom\+Right\+Radius}&Supported&\\\cline{2-4}
+&Shorthand&Supported, i.\+e. {\ttfamily 5px}, {\ttfamily 50\% / 5px}&
+
+\\\cline{1-4}
+\multirow{11}{*}{Flex }\\\cline{2-4}
+&{\ttfamily flex\+Direction}&{\ttfamily column}, {\ttfamily row}, {\ttfamily row-\/reverse}, {\ttfamily column-\/reverse}, default to {\ttfamily row}&\\\cline{2-4}
+&{\ttfamily flex\+Wrap}&{\ttfamily wrap}, {\ttfamily nowrap}, {\ttfamily wrap-\/reverse}, default to {\ttfamily wrap}&\\\cline{2-4}
+&{\ttfamily flex\+Grow}&Supported&\\\cline{2-4}
+&{\ttfamily flex\+Shrink}&Supported&\\\cline{2-4}
+&{\ttfamily flex\+Basis}&Supported except for {\ttfamily auto}&\\\cline{2-4}
+&{\ttfamily align\+Items}&{\ttfamily stretch}, {\ttfamily center}, {\ttfamily flex-\/start}, {\ttfamily flex-\/end}, {\ttfamily baseline}, {\ttfamily normal}, default to {\ttfamily stretch}&\\\cline{2-4}
+&{\ttfamily align\+Content}&Supported&\\\cline{2-4}
+&{\ttfamily align\+Self}&Supported&\\\cline{2-4}
+&{\ttfamily justify\+Content}&Supported&\\\cline{2-4}
+&{\ttfamily gap}&Supported&
+
+\\\cline{1-4}
+\multirow{5}{*}{Font }\\\cline{2-4}
+&{\ttfamily font\+Family}&Supported&\\\cline{2-4}
+&{\ttfamily font\+Size}&Supported&\\\cline{2-4}
+&{\ttfamily font\+Weight}&Supported&\\\cline{2-4}
+&{\ttfamily font\+Style}&Supported&
+
+\\\cline{1-4}
+\multirow{12}{*}{Text }\\\cline{2-4}
+&{\ttfamily tab\+Size}&Supported&\\\cline{2-4}
+&{\ttfamily text\+Align}&{\ttfamily start}, {\ttfamily end}, {\ttfamily left}, {\ttfamily right}, {\ttfamily center}, {\ttfamily justify}, default to {\ttfamily start}&\\\cline{2-4}
+&{\ttfamily text\+Transform}&{\ttfamily none}, {\ttfamily lowercase}, {\ttfamily uppercase}, {\ttfamily capitalize}, defaults to {\ttfamily none}&\\\cline{2-4}
+&{\ttfamily text\+Overflow}&{\ttfamily clip}, {\ttfamily ellipsis}, defaults to {\ttfamily clip}&\\\cline{2-4}
+&{\ttfamily text\+Decoration}&Support line types {\ttfamily underline} and {\ttfamily line-\/through}, and styles {\ttfamily dotted}, {\ttfamily dashed}, {\ttfamily solid}&\href{https://og-playground.vercel.app/?share=nVLLTsMwEPwVaxHqJYgUOCCr9EL5Ajj24mQ3icH1Ro5DW6L8O3ZeQpwKJ-_M7ox25O0gZySQsEH9ubdCNP5s6KnrYi1ERbqsvBSrdZper5KRPGr01S8OdVMbdQ5sYeg0s7HeaUe512xDL2fTHuzcrRWitqUU63RiMpV_lI5bi89s2AXFVVEUixtb_6q_SIr7u4kqVR3lEfT93m5jEZMsMYSnk99Rzk5NO1i2tArT21hsbsPwJaqwEjmjJ-mCLtbH4RtfhWxlNVj8JP6-hUD2nlA4wsFthP_aRqBqqmCVmXYMN-LZa34hAa6jvAHZwXACIB_TNIHxRkA-RICUtSXIQpmGEqADv-u3cx0PzB8HFHziP74cMkKQ3rXUJ-BVFiYqMoaP7AxC_w0}{\texttt{ Example}} \\\cline{2-4}
+&{\ttfamily text\+Shadow}&Supported&\\\cline{2-4}
+&{\ttfamily line\+Height}&Supported&\\\cline{2-4}
+&{\ttfamily letter\+Spacing}&Supported&\\\cline{2-4}
+&{\ttfamily white\+Space}&{\ttfamily normal}, {\ttfamily pre}, {\ttfamily pre-\/wrap}, {\ttfamily pre-\/line}, {\ttfamily nowrap}, defaults to {\ttfamily normal}&\\\cline{2-4}
+&{\ttfamily word\+Break}&{\ttfamily normal}, {\ttfamily break-\/all}, {\ttfamily break-\/word}, {\ttfamily keep-\/all}, defaults to {\ttfamily normal}&\\\cline{2-4}
+&{\ttfamily text\+Wrap}&{\ttfamily wrap}, {\ttfamily balance}, defaults to {\ttfamily wrap}&
+
+\\\cline{1-4}
+\multirow{7}{*}{Background }\\\cline{2-4}
+&{\ttfamily background\+Color}&Supported, single value&\\\cline{2-4}
+&{\ttfamily background\+Image}&{\ttfamily linear-\/gradient}, {\ttfamily radial-\/gradient}, {\ttfamily url}, single value&\\\cline{2-4}
+&{\ttfamily background\+Position}&Support single value&\\\cline{2-4}
+&{\ttfamily background\+Size}&Support two-\/value size i.\+e. {\ttfamily 10px 20\%}&\\\cline{2-4}
+&{\ttfamily background\+Clip}&{\ttfamily border-\/box}, {\ttfamily text}&\\\cline{2-4}
+&{\ttfamily background\+Repeat}&{\ttfamily repeat}, {\ttfamily repeat-\/x}, {\ttfamily repeat-\/y}, {\ttfamily no-\/repeat}, defaults to {\ttfamily repeat}&
+
+\\\cline{1-4}
+\multirow{5}{*}{{\ttfamily transform} }\\\cline{2-4}
+&Translate ({\ttfamily translate}, {\ttfamily translateX}, {\ttfamily translateY})&Supported&\\\cline{2-4}
+&Rotate&Supported&\\\cline{2-4}
+&Scale ({\ttfamily scale}, {\ttfamily scaleX}, {\ttfamily scaleY})&Supported&\\\cline{2-4}
+&Skew ({\ttfamily skew}, {\ttfamily skewX}, {\ttfamily skewY})&Supported&
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily transform\+Origin} }&Support one-\/value and two-\/value syntax (both relative and absolute values) &
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily object\+Fit} }&{\ttfamily contain}, {\ttfamily cover}, {\ttfamily none}, default to {\ttfamily none} &
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily opacity} }&Supported &
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily box\+Shadow} }&Supported &
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily overflow} }&{\ttfamily visible} and {\ttfamily hidden}, default to {\ttfamily visible} &
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily filter} }&Supported &
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily clip\+Path} }&Supported &\href{https://og-playground.vercel.app/?share=XVJNb9wgEP0rI6poW8lJnX6pstpe0h7aQ1UlrXLJBZvBZosZBDgbZ7X_PQMbZze5wPCGmXmPx1Z0pFA04osytzcOIKbZ4tftNscAA5p-SA2szuv6ZFXtwY1RaXiBKRO9lTOj2uLdgub4uwnYJUOOcx3ZaXRLVlrTu58Jx5hT6BKGJbWeYjJ6viAGXZ7_PN3K7n8faHLqgiwFzr_SWj9N5aorc48NvH93BF0_avlU1wXd7W7ctxws0l-KP8j_8FhypP4Y8lIp4_oGzg_YgSKzY6FDau2EC0WAzhr_R5Z39GTnntzrj_UJ1BU34Z3jKi_lVEGd4zerfXEmDlCoA_yLqKCdIdKIQBrSgLChYNUqgpWhx5igo9FLZzBW8Bvv0tk6AjrZWoww0wSJoAsoE4KerD2NianDNbYgvbemk9m8mGdwLbqstEyxXMHNL1F2CTTXTyFPkE6BYbP6wIV81dMGAzeGS_b0tJWZ7y95K6-6YHzi4WTzNU2hdNUylrbtZKyKZ8Wft2wQy112UQnyhZRotqL4IZrP7IfY-yWabI5Q2E69aLS0ESuBI63N39nnv5425cR98r_4MbaoRJPChLtKJNnyjQGtpfKMYvcA}{\texttt{ Example}} 
+
+\\\cline{1-4}
+\multicolumn{2}{|l|}{{\ttfamily line\+Clamp} }&Supported &\href{https://og-playground.vercel.app/?share=5VPBbtQwEP2VkRFakNKSshxQBBwoXDhwaEFc9uLYk6xbx2PZk-6G1Up8DR_GlzDOkgr13FtPGb_xvPf8ojkoQxZVo95Zd7cJAJknj-8Ph1IDbNH1W25gdVHXz1fVCdw5y9sHmHU5ej0J2nncL2ipP7mEhh0F6Rny4xCWbtTWutA3cFH_Q1ptbvtEY7CX5CnJxLOu6-7ZKPC1-4kNrF_P0PG4CR9KsZh_aP9_X60nc7tQAXgX8NLrIQrbPTjo1LvwkZhpkJF1HferU69IAcxiAN8zWmgnyDQgUAe8RdhR8naVwQsFZgZDQ9TBYa7gK-75_CYDBt16zDDRCExgEmpG6EbvzzLLy-EHtqBj9M7oElguGjKLocQ0q3iZEPIr1Iahk_kxFQUdLLjA2CcZlKuRdpiEGK7GzGetLn6_6Dt9bZKLLOIkz-8l0DSzdjrPtO3ovM3nc6KvJNJHyHa1ho368-s3vDBihQb5fVayEa-BX27UE093-apKUZxNqeag5v1Szdu6rtRpAVXzphwstmOvmk77jJXCgW7ctymW7eXdfBKesiSfhxatajiNeKwU61ZubNF7mmNUx78}{\texttt{ Example}} 
+
+\\\cline{1-4}
+\multirow{5}{*}{Mask }\\\cline{2-4}
+&{\ttfamily mask\+Image}&{\ttfamily linear-\/gradient(...)}, {\ttfamily radial-\/gradient(...)}, {\ttfamily url(...)}&\href{https://og-playground.vercel.app/?share=pZJfb9MwFMW_imVp2ZDS5s_I1kULSMAkhgRoYlJf-uLYN8ltHTvYDm2o-t2xuxXBXvcQXed3rONj37unXAugJb0V-GulCLFuklDt92FNSAfYdq4k51manp3HT3CLwnUvmEA7SDZ52kjYnWhYf0ID3KFWXuNajr06qUxiq-4d9DZIoByYk7QercNm-qg9VOH8_-XG8x_4G0pymf-Dls9pr9L0mdaMb1qjRyW8x2jkRefcYMskwZ61YOejCrFtN-e6T4ZOOz3LinyRL65v3ubZdTZrari8KkQmbhh_jzuJdWXqWTbP51n0s1oUUdNX66GNuNFD5TP6MkXbKsvTNOK2sqatI9yhqGD60vHPHxq2fMDv67v022NbNA9vTjfqmd3ch0w-p2ECmZy1oXrLC46GSyDMkSI9C19MajlCTJxhPj8zftNfoyXUG3RfX21HkuTYBf-whhhowGMOBBXpXC_DWYfDSr1bqdvET46vNKZ6CH22tNzT44zQMrxDTJ-miJahL1RAPba0bJi0EFPo9RofpyGMoNse_7xRaOZdX4OgpTMjHGLqWO13dCCl3mojBT38AQ}{\texttt{ Example}} \\\cline{2-4}
+&{\ttfamily mask\+Position}&Supported&\href{https://og-playground.vercel.app/?share=pVJda9swFP0rQlC3Ayf-6NKmpt5gW2Ed7KOskJe8yNK1fRNZ8iR5iRfy3yelCayFPfXBvtK5h3uP7j07yrUAWtBbgb-XihDrRgnlbhfOhLSATesKcp6l6dl5_ARuULj2BSbQ9pKNHq0lbE9oOH9CA9yhVj7HtRw6dcoyiY26d9DZkALlwJxSq8E6rMeP2oMq9H-erj3-E_9AQS7zf6DFUe1Vmh7RivF1Y_SghK8xGHnROtfbIkmwYw3Y6aCCbNtOue6SvtVOT7JZPs_n1zdv8-w6m9QVXF7NRCZuGH-PW4lVaapJNs2nWfSrnM-iuitXfRNxo_vSa_RhjDZllqdpxG1pTVNFuEVRwvil5Z8_1GzxgN9Xd-m3x2ZWP7w5vahjdn0fNHmdhglkctKE6EtecDRcAmGOzNKz8MWkkgPExBnm9TPjSc8K_dAWjxP3O-q35PA_MRZQrdF9fX1DkiSHRfnZG2KgBo9zIKhI6zr5stl_RAXafr9U75bqNvEe9JHGVPeBammxowe30SJMNKZPfqRF2DAVUA0NLWomLcQUOr3Cx7EPZnabw80XCra46yoQtHBmgH1MHas8owUp9UYbKej-Lw}{\texttt{ Example}} \\\cline{2-4}
+&{\ttfamily mask\+Size}&Support two-\/value size i.\+e. {\ttfamily 10px 20\%}&\href{https://og-playground.vercel.app/?share=pVLfb9MwEP5XLEvLhpQ2P0a3LlpAAiYxJEATk_rSF8e-JNc6drAd2lD1f8duV8H6yoN19ved7j7ffTvKtQBa0HuBv5aKEOtGCeVuF-6EtIBN6wpymaXpxWV8BDcoXHuGCbS9ZKNHawnbExrun9AAd6iV57iWQ6dOLJPYqEcHnQ0UKAfmRK0G67AeP2oPqtD_NV17_Af-hoJc5_9Aixe1N2n6glaMrxujByV8jcHIq9a53hZJgh1rwE4HFWTbdsp1l_StdnqSzfJ5Pr-9e5tnt9mkruD6ZiYyccf4e9xKrEpTTbJpPs2in-V8FtVdueqbiBvdl16jD2O0KbM8TSNuS2uaKsItihLGLy3__KFmiyf8vnpIvz03s_rpzelHHbPrx6DJ6zRMIJOTJkRf8oqj4RIIc2SWXoQTk0oOEBNnmNfPjE96Veg4Gr-ffkvyvztaQLVG9_X_O5EkOWzID90QAzV4nANBRVrXyfNm52oCv98v1buluk-863ykMdV98IilxY4e_EWLMMOYHh1Ii7BTKqAaGlrUTFqIKXR6hc9jH-zrNoeXLxSM8NBVIGjhzAD7mDpW-YwWpNQbbaSg-z8}{\texttt{ Example}} \\\cline{2-4}
+&{\ttfamily mask\+Repeat}&{\ttfamily repeat}, {\ttfamily repeat-\/x}, {\ttfamily repeat-\/y}, {\ttfamily no-\/repeat}, defaults to {\ttfamily repeat}&\href{https://og-playground.vercel.app/?share=nVbpjqNIEn6VkqXVzMg1AhtjQ-3MStwGA-Ywl9U_hssJ5jSHAbf63TdxdfXUzh4_FhllHF8cGZkm4usirKJ48bb4LUrvX8qXl7ab8vj3r19n-uUliVOQdG8vP61Q9G8_vb4LhzTqkr_IorStc3-C0ksejx_SmWbTJg67tCqhLqzyvig_tH6eglLs4qKdVXHZxc2H6tq3XXqZmAoKyzn-v6ovUG6mj_jtBVt_Ejnfs92i6Hdp4IcZaKq-jKCPvsl_jvzOf0sLH8RIXYK_B34bbzevqU0fjQE9CKCi4KOaVsJZAFK0PvMaQ3lwYbPiSNqzgHJV00BFqmk34XaGiEbucHlxslDqMNtRAJpyJkUpM0NTFAcXzqco6ztPUSbggs-8BTgY_AMvwl9UU9Qz_lPvPP0-WaiEz6zinkKoPwLIs9_lkGcATGEO-o6jTUANn3iKeJJ2F-6CJ58PJp8_ICFzA7QeFZqSbqHwBOW1zSeow62UY6HeAxNPzgKZnk18E7jfU2LHzbFMulBY5ZHAgVhYtUGpbGMWTT3HuHuFtZ35wLFRzyRScQ-2EDNEQkuKeaJaDM0GmJSLrNcrzGYQr5uDyFBA20vZ-VqbBuf98BkWRqGZUhXtjeGYEvcIizC5DB9yQU7niRiPpwyXH9QkP8RJdqF9unrEDo56Luig_fXD9yf_3NlVr2GRw3zye5DS01nwtp4j3SNXJ8VU_IH_eD9ygfjifEVTf2-gIVvd5TUO8-CzYC3l8rNWJOo750J-cHBfRKqB6rMf4t2-1mDsPCiN5Bn_uhk15t3umJGT79h9JPCQJ_tP9oSM_YfcP-rGwFrAPViZIUAbiH2v97P-p81BsHcJDc-ZWvGSwfHWkRZUm-8UDuWsMsJM7ITXvl8YYxpVaWIcDFuQMp-lDYZXUyUzNVLX4KYTMBgGNxwFaEUoF84QWe6mXMYz13GVeU91ISF0sPF8oDNpbYtxHVWOmSxRzOXLyHCzEenHcHk5as7liJUdRl2SjhWUE3PZ2gdM43nDPrEUGwnJxHISvL6WuHksd8qjuK66bTDEQyKKHu5qIGNFxvAo5byyizvKZ1y7x28hf-CjZXAw2EGzWn_bP04b2lbtMx3Y0jpXaDNktVtXbPH7o8A3k8q5jhVNxsBWhe0F8jqqYqJnr17XAO9o1UZrAcDRo3tY7Zc5wGhikM4Wilz3YTH1akMOy1XMMGOVEZokexWWlo7HMrJ4mBzVqM7u8aSyN7SWb870cAKdUCqJ6c2z3xr6gV61QqrD22-O_pRosq3iHQHGzFRQ5Yisjo61Tseq0VByWxKmdVrHa9fRk122bBpiUHnDCTG_OR28OudwcW0E4qGozUaOdnHZRLesiUbXkbg1bku7lGdSrNTYBlHqgxtVdr9RjvZyd8xXd4BUYBvou7VvXLoxGkldoSrXdvmzRHnurQiLi9WfDPsgi_dJE5cB4pIZG6gaVm1qkrxQVSUqZU3d0bDMtxfdU3kSiVwJKVrPXy8HaWAJzNBDjq4entTprFOeWL32HNwX1u2dXVfSQJQeeyMecFNHn6ezUUmaO9md4uaKL3twybpTNuQ1QYGym8gitAjRu7DoFaQkWHI7miNzZ2UUsuEE2LlmjNrpp5XTh3mM-eXt_mi2O1kor9tBsfwbxgILhzkJ68PRPh25nlhRkxTTuWQq6dWVpp3BVPWq6ree34P7ivDPAljuwsQbB8fxjnTSn-lsx7sPMdwQe48zB3lI0rI02Vgz2kBmsColkI3M3QuwOSUEzZuCd99fNIykkP0YINFwL6LNUiQmKiAPoo5PqkVFGc1fEaQtxrW6psdO4C5IhRxC1916J3mrxeDerWKcRC_0etLjCiR7IexI2eG0w57VB4S0zd53hq0xZI7sNuqZ2ka4KhmHvBQke2sbO_gn013TtlADlAmPyZEcSqsdVrqFl8IbmAgqnY9pFukjifCFN1mcGPOEFPsIAi-V0rgqfdMZSlIkpEGa4ua3J44SQ4thMqQRr8ujjuxUKgCIq3Iaheg6fbOvF2qN895725IMC-eaTAIA_P77Lx_NvfDbTJw79NvLH3laxn7zK2j8KIUTwM9d9dLMPf71Jcj7-PWla_yyrf0G6n7545P9-3AwTyj1-LJaz8tn90Zcx_48VjRP4tcfSicOsrRTPmXwl6GhvYPlWOQfg4O2V9fnicZ8x0B92OyOLDWIKV2dnbz097B5XMGgMCKICnsK1_MHGk0VczNCzBp-2DG9IDeaKQ4iSwHlJEIsNSrXp49N4Ix9-PjUXGCjiyYcUyb8HhbhfcYpDPmIijDVruPguUYlCjBmho4KMzxUk6Yhpn2-zDDILNeqJ0g_LKDDWDI7v0_dKLMZpJWVyHM45NeqOazgikMfhgJt1KvVzuts66QiOBd5G8D9RuukjgQrFRliCZvOnMvyx0H8ezH_n-P808v_ONQ_Qf_laL99-1L-40v5GwLHXLguXhdVPQ-l7eLt6-I50C7eZpevi_eRd_E2D5GLKA56sHi7-Hkbvy7iorqmp6me5-VueHLQ0Tx5ckUQR4u3runjb6-Lzg8gIonzvBqqJo8W3_4J}{\texttt{ Example}}
+
+\\\cline{1-4}
+\multirow{2}{*}{{\ttfamily Webkit\+Text\+Stroke} }&{\ttfamily Webkit\+Text\+Stroke\+Width} &Supported &\\\cline{2-4}
+&{\ttfamily Webkit\+Text\+Stroke\+Color} &Supported &
+
+\\\cline{1-4}
+\end{longtabu}
+
+
+Note\+:
+
+
+\begin{DoxyEnumerate}
+\item Three-\/dimensional transforms are not supported.
+\item There is no {\ttfamily z-\/index} support in SVG. Elements that come later in the document will be painted on top.
+\item {\ttfamily box-\/sizing} is set to {\ttfamily border-\/box} for all elements.
+\item {\ttfamily calc} isn\textquotesingle{}t supported.
+\item {\ttfamily currentcolor} support is only available for the {\ttfamily color} property.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md30258}{}\doxysubsubsubsection{\texorpdfstring{Language and Typography}{Language and Typography}}\label{README.md_autotoc_md30258}
+Advanced typography features such as kerning, ligatures and other Open\+Type features are not currently supported.
+
+RTL languages are not supported either.\hypertarget{README.md_autotoc_md30259}{}\doxysubsubsubsubsection{\texorpdfstring{Fonts}{Fonts}}\label{README.md_autotoc_md30259}
+Satori currently supports three font formats\+: TTF, OTF and WOFF. Note that WOFF2 is not supported at the moment. You must specify the font if any text is rendered with Satori, and pass the font data as Array\+Buffer (web) or Buffer (Node.\+js)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ satori(}
+\DoxyCodeLine{\ \ <div\ style=\{\{\ fontFamily:\ 'Inter'\ \}\}>Hello</div>,}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ width:\ 600,}
+\DoxyCodeLine{\ \ \ \ height:\ 400,}
+\DoxyCodeLine{\ \ \ \ fonts:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ 'Inter',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ data:\ inter,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ weight:\ 400,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ style:\ 'normal',}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ 'Inter',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ data:\ interBold,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ weight:\ 700,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ style:\ 'normal',}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Multiple fonts can be passed to Satori and used in {\ttfamily font\+Family}.
+
+\begin{DoxyRemark}{Remarks}
+We recommend you define global fonts instead of creating a new object and pass it to satori for better performace, if your fonts do not change. \href{https://github.com/vercel/satori/issues/590}{\texttt{ Read it for more detail}}
+\end{DoxyRemark}
+\hypertarget{README.md_autotoc_md30260}{}\doxysubsubsubsubsection{\texorpdfstring{Emojis}{Emojis}}\label{README.md_autotoc_md30260}
+To render custom images for specific graphemes, you can use {\ttfamily grapheme\+Images} option to map the grapheme to an image source\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ satori(}
+\DoxyCodeLine{\ \ <div>Next.js\ is\ 🤯!</div>,}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ ...,}
+\DoxyCodeLine{\ \ \ \ graphemeImages:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ '🤯':\ 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f92f.svg',}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+The image will be resized to the current font-\/size (both width and height) as a square.\hypertarget{README.md_autotoc_md30261}{}\doxysubsubsubsubsection{\texorpdfstring{Locales}{Locales}}\label{README.md_autotoc_md30261}
+Satori supports rendering text in different locales. You can specify the supported locales via the {\ttfamily lang} attribute\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ satori(}
+\DoxyCodeLine{\ \ <div\ lang="{}ja-\/JP"{}>骨</div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Same characters can be rendered differently in different locales, you can specify the locale when necessary to force it to render with a specific font and locale. Check out \href{https://og-playground.vercel.app/?share=nVLdSsMwFH6VcEC86VgdXoyweTMVpyiCA296kzWnbWaalCZ160rfwAcRH8Bn0rcwWVdQEYTdnJzz_ZyEnNNArDkChQkXz5EixNha4rRpfE4IF6aQrKbkOJG4OQ461OfnosTYCq0cF2tZ5apnMxRpZh18EoZHPbgW3Ga_sIJxLlS6Q4sNGbnQU0yKVM0t5sa3R2Wx7KlVZaxI6pl2oPLX_KQTh1-yXEj_6LlnAhLBLXOJYJLMY61MBN_VD2KLlIzGe2jJ4qe01JXiMy116bqsM2Gxc7Stj2edcmIKpohkKp1GsGKD6_sI9hQhn2-vHy_ve-HQK_9ybbPB7O4Q1-LxENfVzX-uydDtgTshAF348RqgDeymB3QchgF04wV66guOyyoFmjBpMADM9Uos6sLvk13vKtfH__FFvkQO1JYVtu0X}{\texttt{ this example}} to learn more.
+
+Supported locales are exported as the {\ttfamily Locale} enum type.\hypertarget{README.md_autotoc_md30262}{}\doxysubsubsubsubsection{\texorpdfstring{Dynamically Load Emojis and Fonts}{Dynamically Load Emojis and Fonts}}\label{README.md_autotoc_md30262}
+Satori supports dynamically loading emoji images (grapheme pictures) and fonts. The {\ttfamily load\+Additional\+Asset} function will be called when a text segment is rendered but missing the image or font\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ satori(}
+\DoxyCodeLine{\ \ <div>👋\ 你好</div>,}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ //\ \`{}code`\ will\ be\ the\ detected\ language\ code,\ \`{}emoji`\ if\ it's\ an\ Emoji,\ or\ \`{}unknown`\ if\ not\ able\ to\ tell.}
+\DoxyCodeLine{\ \ \ \ //\ \`{}segment`\ will\ be\ the\ content\ to\ render.}
+\DoxyCodeLine{\ \ \ \ loadAdditionalAsset:\ async\ (code:\ string,\ segment:\ string)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ if\ (code\ ===\ 'emoji')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ if\ segment\ is\ an\ emoji}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ \`{}data:image/svg+xml;base64,...`}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ if\ segment\ is\ normal\ text}
+\DoxyCodeLine{\ \ \ \ \ \ return\ loadFontFromSystem(code)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30263}{}\doxysubsubsubsection{\texorpdfstring{Runtime and WASM}{Runtime and WASM}}\label{README.md_autotoc_md30263}
+Satori can be used in browser, Node.\+js (\texorpdfstring{$>$}{>}= 16), and Web Workers.
+
+By default, Satori depends on asm.\+js for the browser runtime, and native module in Node.\+js. However, you can optionally load WASM instead by importing {\ttfamily satori/wasm} and provide the initialized WASM module instance of Yoga to Satori\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ satori,\ \{\ init\ \}\ from\ 'satori/wasm'}
+\DoxyCodeLine{import\ initYoga\ from\ 'yoga-\/wasm-\/web'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ yoga\ =\ initYoga(await\ fetch('/yoga.wasm').then(res\ =>\ res.arrayBuffer()))}
+\DoxyCodeLine{init(yoga)}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ satori(...)}
+
+\end{DoxyCode}
+
+
+When running in the browser or in the Node.\+js environment, WASM files need to be hosted and fetched before initializing. asm.\+js can be bundled together with the lib. In this case WASM should be faster.
+
+When running on the Node.\+js server, native modules should be faster. However there are Node.\+js environments where native modules are not supported (e.\+g. Stack\+Blitz\textquotesingle{}s Web\+Containers), or other JS runtimes that support WASM (e.\+g. Vercel\textquotesingle{}s Edge Runtime, Cloudflare Workers, or Deno).
+
+Additionally, there are other difference between asm.\+js, native and WASM, such as security and compatibility.
+
+Overall there are many trade-\/offs between each choice, and it\textquotesingle{}s better to pick the one that works the best for your use case.\hypertarget{README.md_autotoc_md30264}{}\doxysubsubsubsection{\texorpdfstring{Font Embedding}{Font Embedding}}\label{README.md_autotoc_md30264}
+By default, Satori renders the text as {\ttfamily \texorpdfstring{$<$}{<}path\texorpdfstring{$>$}{>}} in SVG, instead of {\ttfamily \texorpdfstring{$<$}{<}text\texorpdfstring{$>$}{>}}. That means it embeds the font path data as inlined information, so succeeding processes (e.\+g. render the SVG on another platform) don’t need to deal with font files anymore.
+
+You can turn off this behavior by setting {\ttfamily embed\+Font} to {\ttfamily false}, and Satori will use {\ttfamily \texorpdfstring{$<$}{<}text\texorpdfstring{$>$}{>}} instead\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ svg\ =\ await\ satori(}
+\DoxyCodeLine{\ \ <div\ style=\{\{\ color:\ 'black'\ \}\}>hello,\ world</div>,}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ ...,}
+\DoxyCodeLine{\ \ \ \ embedFont:\ false,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30265}{}\doxysubsubsubsection{\texorpdfstring{Debug}{Debug}}\label{README.md_autotoc_md30265}
+To draw the bounding box for debugging, you can pass {\ttfamily debug\+: true} as an option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ svg\ =\ await\ satori(}
+\DoxyCodeLine{\ \ <div\ style=\{\{\ color:\ 'black'\ \}\}>hello,\ world</div>,}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ ...,}
+\DoxyCodeLine{\ \ \ \ debug:\ true,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+~\newline
+\hypertarget{README.md_autotoc_md30266}{}\doxysubsubsection{\texorpdfstring{Contribute}{Contribute}}\label{README.md_autotoc_md30266}
+You can use the \href{https://og-playground.vercel.app/}{\texttt{ Vercel OG Image Playground}} to test and report bugs of Satori. Please follow our \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{contribution guidelines} before opening a Pull Request.
+
+~\newline
+\hypertarget{README.md_autotoc_md30267}{}\doxysubsubsection{\texorpdfstring{Author}{Author}}\label{README.md_autotoc_md30267}
+
+\begin{DoxyItemize}
+\item Shu Ding (\href{https://twitter.com/shuding_}{\texttt{ @shuding\+\_\+}})
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+
+
+\href{https://vercel.com}{\texttt{  }} 

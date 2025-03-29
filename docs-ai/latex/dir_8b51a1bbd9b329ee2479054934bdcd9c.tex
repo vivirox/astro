@@ -1,0 +1,198 @@
+\doxysection{node\+\_\+modules/eslint-\/flat-\/config-\/utils Directory Reference}
+\hypertarget{dir_8b51a1bbd9b329ee2479054934bdcd9c}{}\label{dir_8b51a1bbd9b329ee2479054934bdcd9c}\index{node\_modules/eslint-\/flat-\/config-\/utils Directory Reference@{node\_modules/eslint-\/flat-\/config-\/utils Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/eslint-flat-config-utils}{\texttt{ }} \href{https://npmjs.com/package/eslint-flat-config-utils}{\texttt{ }} \href{https://bundlephobia.com/result?p=eslint-flat-config-utils}{\texttt{ }} \href{https://www.jsdocs.io/package/eslint-flat-config-utils}{\texttt{ }} \href{https://github.com/antfu/eslint-flat-config-utils/blob/main/LICENSE}{\texttt{ }}
+
+Utils for managing and manipulating ESLint flat config arrays
+
+\href{https://jsr.io/@antfu/eslint-flat-config-utils/doc}{\texttt{ Documentation}}\hypertarget{README.md_autotoc_md12922}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md12922}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ eslint-\/flat-\/config-\/utils}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12923}{}\doxysubsection{\texorpdfstring{Utils}{Utils}}\label{README.md_autotoc_md12923}
+Most of the descriptions are written in JSDoc, you can find more details in the \href{https://jsr.io/@antfu/eslint-flat-config-utils/doc}{\texttt{ documentation}} via JSR.
+
+Here listing a few highlighted ones\+:\hypertarget{README.md_autotoc_md12924}{}\doxysubsubsection{\texorpdfstring{{\ttfamily concat}}{{\ttfamily concat}}}\label{README.md_autotoc_md12924}
+Concatenate multiple ESLint flat configs into one, resolve the promises, and flatten the array.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.mjs}
+\DoxyCodeLine{import\ \{\ concat\ \}\ from\ 'eslint-\/flat-\/config-\/utils'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ concat(}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ plugins:\ \{\},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{\},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ //\ It\ can\ also\ takes\ a\ array\ of\ configs:}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ plugins:\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ \ rules:\ \{\},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ //\ Or\ promises:}
+\DoxyCodeLine{\ \ Promise.resolve(\{}
+\DoxyCodeLine{\ \ \ \ files:\ ['*.ts'],}
+\DoxyCodeLine{\ \ \ \ rules:\ \{\},}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12925}{}\doxysubsubsection{\texorpdfstring{{\ttfamily composer}}{{\ttfamily composer}}}\label{README.md_autotoc_md12925}
+Create a chainable composer that makes manipulating ESLint flat config easier.
+
+It extends Promise, so that you can directly await or export it to {\ttfamily eslint.\+config.\+mjs}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.mjs}
+\DoxyCodeLine{import\ \{\ composer\ \}\ from\ 'eslint-\/flat-\/config-\/utils'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ composer(}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ plugins:\ \{\},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{\},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ //\ ...some\ configs,\ accepts\ same\ arguments\ as\ \`{}concat`}
+\DoxyCodeLine{)}
+\DoxyCodeLine{\ \ .append(}
+\DoxyCodeLine{\ \ \ \ //\ appends\ more\ configs\ at\ the\ end,\ accepts\ same\ arguments\ as\ \`{}concat`}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ .prepend(}
+\DoxyCodeLine{\ \ \ \ //\ prepends\ more\ configs\ at\ the\ beginning,\ accepts\ same\ arguments\ as\ \`{}concat`}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ .insertAfter(}
+\DoxyCodeLine{\ \ \ \ 'config-\/name',\ //\ specify\ the\ name\ of\ the\ target\ config,\ or\ index}
+\DoxyCodeLine{\ \ \ \ //\ insert\ more\ configs\ after\ the\ target,\ accepts\ same\ arguments\ as\ \`{}concat`}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ .renamePlugins(\{}
+\DoxyCodeLine{\ \ \ \ //\ rename\ plugins}
+\DoxyCodeLine{\ \ \ \ 'old-\/name':\ 'new-\/name',}
+\DoxyCodeLine{\ \ \ \ //\ for\ example,\ rename\ \`{}n`\ from\ \`{}eslint-\/plugin-\/n`\ to\ more\ a\ explicit\ prefix\ \`{}node`}
+\DoxyCodeLine{\ \ \ \ 'n':\ 'node'}
+\DoxyCodeLine{\ \ \ \ //\ applies\ to\ all\ plugins\ and\ rules\ in\ the\ configs}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .override(}
+\DoxyCodeLine{\ \ \ \ 'config-\/name',\ //\ specify\ the\ name\ of\ the\ target\ config,\ or\ index}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ merge\ with\ the\ target\ config}
+\DoxyCodeLine{\ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ 'no-\/console':\ 'off'}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ And\ you\ can\ directly\ return\ the\ composer\ object\ to\ \`{}eslint.config.mjs`}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12926}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily composer.\+rename\+Plugins}}{{\ttfamily composer.\+rename\+Plugins}}}\label{README.md_autotoc_md12926}
+This helper renames plugins in all configurations in the composer. It is useful when you want to enforce a plugin to a custom name\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ config\ =\ await\ composer([}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ n:\ pluginN,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'n/foo':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{])}
+\DoxyCodeLine{\ \ .renamePlugins(\{}
+\DoxyCodeLine{\ \ \ \ n:\ 'node'}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ final\ config\ will\ have\ \`{}node/foo`\ rule\ instead\ of\ \`{}n/foo`}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12927}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily composer.\+remove\+Rules}}{{\ttfamily composer.\+remove\+Rules}}}\label{README.md_autotoc_md12927}
+This helper removes specified rules from all configurations in the composer. It is useful when you are certain that these rules are not needed in the final configuration. Unlike overriding with {\ttfamily off}, removed rules are not affected by priority considerations.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ config\ =\ await\ composer([}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'foo/bar':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ 'foo/baz':\ 'warn',}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ files:\ ['*.ts'],}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'foo/bar':\ 'off',}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{])}
+\DoxyCodeLine{\ \ .removeRules(}
+\DoxyCodeLine{\ \ \ \ 'foo/bar',}
+\DoxyCodeLine{\ \ \ \ 'foo/baz',}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ final\ config\ will\ not\ have\ \`{}foo/bar`\ and\ \`{}foo/baz`\ rules\ at\ all}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12928}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily composer.\+disable\+Rules\+Fix}}{{\ttfamily composer.\+disable\+Rules\+Fix}}}\label{README.md_autotoc_md12928}
+This helper {\bfseries{hijack}} plugins to make fixable rules non-\/fixable, useful when you want to disable auto-\/fixing for some rules but still keep them enabled.
+
+For example, if we want the rule to error when we use {\ttfamily let} on a const, but we don\textquotesingle{}t want auto-\/fix to change it to {\ttfamily const} automatically\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ config\ =\ await\ composer([}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'unused-\/imports':\ pluginUnusedImports,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'perfer-\/const':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ 'unused-\/imports/no-\/unused-\/imports':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{])}
+\DoxyCodeLine{\ \ .disableRulesFix(}
+\DoxyCodeLine{\ \ \ \ [}
+\DoxyCodeLine{\ \ \ \ \ \ 'prefer-\/const',}
+\DoxyCodeLine{\ \ \ \ \ \ 'unused-\/imports/no-\/unused-\/imports',}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ this\ is\ required\ only\ when\ patching\ core\ rules\ like\ \`{}prefer-\/const`\ (rules\ without\ a\ plugin\ prefix)}
+\DoxyCodeLine{\ \ \ \ \ \ builtinRules:\ ()\ =>\ import('eslint/use-\/at-\/your-\/own-\/risk').then(r\ =>\ r.builtinRules),}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ )}
+
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+This function {\bfseries{mutate}} the plugin object which will affect all the references to the plugin object globally. The changes are not reversible in the current runtime.
+\end{DoxyNote}
+\hypertarget{README.md_autotoc_md12929}{}\doxysubsubsection{\texorpdfstring{{\ttfamily extend}}{{\ttfamily extend}}}\label{README.md_autotoc_md12929}
+Extend another flat config from a different root, and rewrite the glob paths accordingly\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ extend\ \}\ from\ 'eslint-\/flat-\/config-\/utils'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ ...await\ extend(}
+\DoxyCodeLine{\ \ \ \ import('./sub-\/package/eslint.config.mjs'),}
+\DoxyCodeLine{\ \ \ \ './sub-\/package/'}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12930}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md12930}
+\href{https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg}{\texttt{  }} \hypertarget{README.md_autotoc_md12931}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md12931}
+\href{./LICENSE}{\texttt{ MIT}} License © 2023-\/PRESENT \href{https://github.com/antfu}{\texttt{ Anthony Fu}} 

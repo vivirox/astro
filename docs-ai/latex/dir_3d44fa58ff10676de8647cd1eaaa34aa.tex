@@ -1,0 +1,86 @@
+\doxysection{node\+\_\+modules/@astrojs/markdown-\/remark/node\+\_\+modules/nlcst-\/to-\/string Directory Reference}
+\hypertarget{dir_3d44fa58ff10676de8647cd1eaaa34aa}{}\label{dir_3d44fa58ff10676de8647cd1eaaa34aa}\index{node\_modules/"@astrojs/markdown-\/remark/node\_modules/nlcst-\/to-\/string Directory Reference@{node\_modules/"@astrojs/markdown-\/remark/node\_modules/nlcst-\/to-\/string Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/nlcst-to-string/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/nlcst-to-string}{\texttt{ }} \href{https://www.npmjs.com/package/nlcst-to-string}{\texttt{ }} \href{https://bundlephobia.com/result?p=nlcst-to-string}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/nlcst}{\texttt{ nlcst}} utility to serialize a node.\hypertarget{readme.md_autotoc_md219}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md219}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}to\+String(value\mbox{[}, separator\mbox{]})\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md220}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md220}
+This package is a utility that takes \href{https://github.com/syntax-tree/nlcst}{\texttt{ nlcst}} nodes and gets their plain-\/text value.\hypertarget{readme.md_autotoc_md221}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md221}
+This is a small utility that is useful when you’re dealing with ASTs.\hypertarget{readme.md_autotoc_md222}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md222}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 14.\+14+ and 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ nlcst-\/to-\/string}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{toString\}\ from\ 'https://esm.sh/nlcst-\/to-\/string@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{toString\}\ from\ 'https://esm.sh/nlcst-\/to-\/string@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md223}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md223}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{toString\}\ from\ 'nlcst-\/to-\/string'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ toString(\{}
+\DoxyCodeLine{\ \ \ \ type:\ 'WordNode',}
+\DoxyCodeLine{\ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \{type:\ 'TextNode',\ value:\ 'AT'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \{type:\ 'PunctuationNode',\ value:\ '\&'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \{type:\ 'TextNode',\ value:\ 'T'\}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{)\ //\ =>\ 'AT\&T'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md224}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md224}
+This package exports the identifier \`{}to\+String\`{}. There is no default export.\hypertarget{readme.md_autotoc_md225}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+String(value\mbox{[}, separator\mbox{]})}}{{\ttfamily to\+String(value\mbox{[}, separator\mbox{]})}}}\label{readme.md_autotoc_md225}
+Get the text content of a node or list of nodes.
+
+Prefers the node’s plain-\/text fields, otherwise serializes its children, and if the given value is an array, serialize the nodes in it.\hypertarget{readme.md_autotoc_md226}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md226}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/nlcst\#nodes}{\texttt{ {\ttfamily Node}}} or {\ttfamily Array\texorpdfstring{$<$}{<}Node\texorpdfstring{$>$}{>}}) — node to serialize.
+\item {\ttfamily separator} ({\ttfamily string}, default\+: `'\textquotesingle{}\`{}) — value to delimit each item
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md227}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md227}
+Result ({\ttfamily string}).\hypertarget{readme.md_autotoc_md228}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md228}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md229}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md229}
+Projects maintained by the unified collective are compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 14.\+14+ and 16.\+0+. Our projects sometimes work with older versions, but this is not guaranteed.\hypertarget{readme.md_autotoc_md230}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md230}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md231}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md231}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

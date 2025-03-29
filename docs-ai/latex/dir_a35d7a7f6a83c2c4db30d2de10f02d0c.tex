@@ -1,0 +1,51 @@
+\doxysection{node\+\_\+modules/define-\/data-\/property Directory Reference}
+\hypertarget{dir_a35d7a7f6a83c2c4db30d2de10f02d0c}{}\label{dir_a35d7a7f6a83c2c4db30d2de10f02d0c}\index{node\_modules/define-\/data-\/property Directory Reference@{node\_modules/define-\/data-\/property Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/ljharb/define-data-property/actions}{\texttt{ }} \href{https://app.codecov.io/gh/ljharb/define-data-property/}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=define-data-property}{\texttt{ }}
+
+\href{https://npmjs.org/package/define-data-property}{\texttt{ }}
+
+Define a data property on an object. Will fall back to assignment in an engine without descriptors.
+
+The three {\ttfamily non\texorpdfstring{$\ast$}{*}} argument can also be passed {\ttfamily null}, which will use the existing state if available.
+
+The {\ttfamily loose} argument will mean that if you attempt to set a non-\/normal data property, in an environment without descriptor support, it will fall back to normal assignment.\hypertarget{README.md_autotoc_md11702}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md11702}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ defineDataProperty\ =\ require('define-\/data-\/property');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\};}
+\DoxyCodeLine{defineDataProperty(obj,\ 'key',\ 'value');}
+\DoxyCodeLine{defineDataProperty(}
+\DoxyCodeLine{\ \ \ \ obj,}
+\DoxyCodeLine{\ \ \ \ 'key2',}
+\DoxyCodeLine{\ \ \ \ 'value',}
+\DoxyCodeLine{\ \ \ \ true,\ //\ nonEnumerable,\ optional}
+\DoxyCodeLine{\ \ \ \ false,\ //\ nonWritable,\ optional}
+\DoxyCodeLine{\ \ \ \ true,\ //\ nonConfigurable,\ optional}
+\DoxyCodeLine{\ \ \ \ false\ //\ loose,\ optional}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(}
+\DoxyCodeLine{\ \ \ \ Object.getOwnPropertyDescriptors(obj),}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ key:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ configurable:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ enumerable:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ value:\ 'value',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ writable:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ key2:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ configurable:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ enumerable:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ value:\ 'value',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ writable:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+ 

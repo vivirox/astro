@@ -1,0 +1,95 @@
+\doxysection{node\+\_\+modules/resend Directory Reference}
+\hypertarget{dir_e127a455a2e21559b1d6844d3a259419}{}\label{dir_e127a455a2e21559b1d6844d3a259419}\index{node\_modules/resend Directory Reference@{node\_modules/resend Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Node.\+js library for the Resend API.\hypertarget{readme.md_autotoc_md29361}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md29361}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ resend}
+\DoxyCodeLine{\#\ or}
+\DoxyCodeLine{yarn\ add\ resend}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29362}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md29362}
+Send email with\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/resendlabs/resend-node-example}{\texttt{ Node.\+js}}
+\item \href{https://github.com/resendlabs/resend-nextjs-app-router-example}{\texttt{ Next.\+js (App Router)}}
+\item \href{https://github.com/resendlabs/resend-nextjs-pages-router-example}{\texttt{ Next.\+js (Pages Router)}}
+\item \href{https://github.com/resendlabs/resend-express-example}{\texttt{ Express}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29363}{}\doxysubsection{\texorpdfstring{Setup}{Setup}}\label{readme.md_autotoc_md29363}
+First, you need to get an API key, which is available in the \href{https://resend.com}{\texttt{ Resend Dashboard}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Resend\ \}\ from\ 'resend';}
+\DoxyCodeLine{const\ resend\ =\ new\ Resend('re\_123456789');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29364}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md29364}
+Send your first email\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ resend.emails.send(\{}
+\DoxyCodeLine{\ \ from:\ 'you@example.com',}
+\DoxyCodeLine{\ \ to:\ 'user@gmail.com',}
+\DoxyCodeLine{\ \ replyTo:\ 'you@example.com',}
+\DoxyCodeLine{\ \ subject:\ 'hello\ world',}
+\DoxyCodeLine{\ \ text:\ 'it\ works!',}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29365}{}\doxysubsection{\texorpdfstring{Send email using HTML}{Send email using HTML}}\label{readme.md_autotoc_md29365}
+Send an email custom HTML content\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ resend.emails.send(\{}
+\DoxyCodeLine{\ \ from:\ 'you@example.com',}
+\DoxyCodeLine{\ \ to:\ 'user@gmail.com',}
+\DoxyCodeLine{\ \ replyTo:\ 'you@example.com',}
+\DoxyCodeLine{\ \ subject:\ 'hello\ world',}
+\DoxyCodeLine{\ \ html:\ '<strong>it\ works!</strong>',}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29366}{}\doxysubsection{\texorpdfstring{Send email using React}{Send email using React}}\label{readme.md_autotoc_md29366}
+Start by creating your email template as a React component.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react';}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ function\ EmailTemplate(\{\ firstName,\ product\ \})\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ <h1>Welcome,\ \{firstName\}!</h1>}
+\DoxyCodeLine{\ \ \ \ \ \ <p>Thanks\ for\ trying\ \{product\}.\ We’re\ thrilled\ to\ have\ you\ on\ board.</p>}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Then import the template component and pass it to the {\ttfamily react} property.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ EmailTemplate\ from\ '../components/EmailTemplate';}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ resend.emails.send(\{}
+\DoxyCodeLine{\ \ from:\ 'you@example.com',}
+\DoxyCodeLine{\ \ to:\ 'user@gmail.com',}
+\DoxyCodeLine{\ \ replyTo:\ 'you@example.com',}
+\DoxyCodeLine{\ \ subject:\ 'hello\ world',}
+\DoxyCodeLine{\ \ react:\ <EmailTemplate\ firstName="{}John"{}\ product="{}MyApp"{}\ />,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29367}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md29367}
+MIT License 

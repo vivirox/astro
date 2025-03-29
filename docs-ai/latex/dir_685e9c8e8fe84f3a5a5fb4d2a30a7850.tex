@@ -1,0 +1,651 @@
+\doxysection{node\+\_\+modules/react-\/markdown Directory Reference}
+\hypertarget{dir_685e9c8e8fe84f3a5a5fb4d2a30a7850}{}\label{dir_685e9c8e8fe84f3a5a5fb4d2a30a7850}\index{node\_modules/react-\/markdown Directory Reference@{node\_modules/react-\/markdown Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{readme.md_autotoc_md26876}{}\doxysubsection{\texorpdfstring{react-\/markdown}{react-\/markdown}}\label{readme.md_autotoc_md26876}
+\href{https://github.com/remarkjs/react-markdown/actions}{\texttt{ }} \href{https://codecov.io/github/remarkjs/react-markdown}{\texttt{ }} \href{https://www.npmjs.com/package/react-markdown}{\texttt{ }} \href{https://bundlejs.com/?q=react-markdown}{\texttt{ }}
+
+React component to render markdown.\hypertarget{readme.md_autotoc_md26877}{}\doxysubsubsection{\texorpdfstring{Feature highlights}{Feature highlights}}\label{readme.md_autotoc_md26877}
+
+\begin{DoxyItemize}
+\item \mbox{[}x\mbox{]} {\bfseries{safe by default}} (no {\ttfamily dangerously\+Set\+Inner\+HTML} or XSS attacks)
+\item \mbox{[}x\mbox{]} {\bfseries{components}} (pass your own component to use instead of {\ttfamily \texorpdfstring{$<$}{<}h2\texorpdfstring{$>$}{>}} for {\ttfamily \#\# hi})
+\item \mbox{[}x\mbox{]} {\bfseries{\doxylink{README.md_plugins}{plugins}}} (many plugins you can pick and choose from)
+\item \mbox{[}x\mbox{]} {\bfseries{compliant}} (100\% to Common\+Mark, 100\% to GFM with a plugin)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26878}{}\doxysubsubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md26878}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}\+Markdown\`{}
+\item \`{}\+Markdown\+Async\`{}
+\item \`{}\+Markdown\+Hooks\`{}
+\item \`{}default\+Url\+Transform(url)\`{}
+\item \`{}\+Allow\+Element\`{}
+\item \`{}\+Components\`{}
+\item \`{}\+Extra\+Props\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Url\+Transform\`{}
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Use a plugin
+\item Use a plugin with options
+\item Use custom components (syntax highlight)
+\item Use remark and rehype plugins (math)
+\end{DoxyItemize}
+\item \doxylink{README.md_plugins}{Plugins}
+\item Syntax
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Architecture
+\item Appendix A\+: HTML in markdown
+\item Appendix B\+: Components
+\item Appendix C\+: line endings in markdown (and JSX)
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26879}{}\doxysubsubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md26879}
+This package is a \href{http://reactjs.org}{\texttt{ React}} component that can be given a string of markdown that it’ll safely render to React elements. You can pass plugins to change how markdown is transformed and pass components that will be used instead of normal HTML elements.
+
+
+\begin{DoxyItemize}
+\item to learn markdown, see this \href{https://commonmark.org/help/}{\texttt{ cheatsheet and tutorial}}
+\item to try out {\ttfamily react-\/markdown}, see \href{https://remarkjs.github.io/react-markdown/}{\texttt{ our demo}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26880}{}\doxysubsubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md26880}
+There are other ways to use markdown in React out there so why use this one? The three main reasons are that they often rely on {\ttfamily dangerously\+Set\+Inner\+HTML}, have bugs with how they handle markdown, or don’t let you swap elements for components. {\ttfamily react-\/markdown} builds a virtual DOM, so React only replaces what changed, from a syntax tree. That’s supported because we use \href{https://github.com/unifiedjs/unified}{\texttt{ unified}}, specifically \href{https://github.com/remarkjs/remark}{\texttt{ remark}} for markdown and \href{https://github.com/rehypejs/rehype}{\texttt{ rehype}} for HTML, which are popular tools to transform content with plugins.
+
+This package focusses on making it easy for beginners to safely use markdown in React. When you’re familiar with unified, you can use a modern hooks based alternative \href{https://github.com/remarkjs/react-remark}{\texttt{ {\ttfamily react-\/remark}}} or \href{https://github.com/rehypejs/rehype-react}{\texttt{ {\ttfamily rehype-\/react}}} manually. If you instead want to use Java\+Script and JSX {\itshape inside} markdown files, use \href{https://github.com/mdx-js/mdx/}{\texttt{ MDX}}.\hypertarget{readme.md_autotoc_md26881}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md26881}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ react-\/markdown}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Markdown\ from\ 'https://esm.sh/react-\/markdown@9'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ Markdown\ from\ 'https://esm.sh/react-\/markdown@9?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26882}{}\doxysubsubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md26882}
+A basic hello world\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ \{createRoot\}\ from\ 'react-\/dom/client'}
+\DoxyCodeLine{import\ Markdown\ from\ 'react-\/markdown'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ markdown\ =\ '\#\ Hi,\ *Pluto*!'}
+\DoxyCodeLine{}
+\DoxyCodeLine{createRoot(document.body).render(<Markdown>\{markdown\}</Markdown>)}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Show equivalent JSX}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>}
+\DoxyCodeLine{\ \ Hi,\ <em>Pluto</em>!}
+\DoxyCodeLine{</h1>}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+
+Here is an example that shows how to use a plugin (\href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which adds support for footnotes, strikethrough, tables, tasklists and URLs directly)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ \{createRoot\}\ from\ 'react-\/dom/client'}
+\DoxyCodeLine{import\ Markdown\ from\ 'react-\/markdown'}
+\DoxyCodeLine{import\ remarkGfm\ from\ 'remark-\/gfm'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ markdown\ =\ \`{}Just\ a\ link:\ www.nasa.gov.`}
+\DoxyCodeLine{}
+\DoxyCodeLine{createRoot(document.body).render(}
+\DoxyCodeLine{\ \ <Markdown\ remarkPlugins=\{[remarkGfm]\}>\{markdown\}</Markdown>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Show equivalent JSX}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>}
+\DoxyCodeLine{\ \ Just\ a\ link:\ <a\ href="{}http://www.nasa.gov"{}>www.nasa.gov</a>.}
+\DoxyCodeLine{</p>}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+\hypertarget{readme.md_autotoc_md26883}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md26883}
+This package exports the identifiers \`{}\+Markdown\+Async\`{}, \`{}\+Markdown\+Hooks\`{}, and \`{}default\+Url\+Transform\`{}. The default export is \`{}\+Markdown\`{}.\hypertarget{readme.md_autotoc_md26884}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Markdown}}{{\ttfamily Markdown}}}\label{readme.md_autotoc_md26884}
+Component to render markdown.
+
+This is a synchronous component. When using async plugins, see \`{}\+Markdown\+Async\`{} or \`{}\+Markdown\+Hooks\`{}.\hypertarget{readme.md_autotoc_md26885}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md26885}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}) — props
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26886}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md26886}
+React element ({\ttfamily JSX.\+Element}).\hypertarget{readme.md_autotoc_md26887}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Markdown\+Async}}{{\ttfamily Markdown\+Async}}}\label{readme.md_autotoc_md26887}
+Component to render markdown with support for async plugins through async/await.
+
+Components returning promises are supported on the server. For async support on the client, see \`{}\+Markdown\+Hooks\`{}.\hypertarget{readme.md_autotoc_md26888}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md26888}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}) — props
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26889}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md26889}
+Promise to a React element ({\ttfamily Promise\texorpdfstring{$<$}{<}JSX.\+Element\texorpdfstring{$>$}{>}}).\hypertarget{readme.md_autotoc_md26890}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Markdown\+Hooks}}{{\ttfamily Markdown\+Hooks}}}\label{readme.md_autotoc_md26890}
+Component to render markdown with support for async plugins through hooks.
+
+This uses {\ttfamily use\+Effect} and {\ttfamily use\+State} hooks. Hooks run on the client and do not immediately render something. For async support on the server, see \`{}\+Markdown\+Async\`{}.\hypertarget{readme.md_autotoc_md26891}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md26891}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}) — props
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26892}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md26892}
+React element ({\ttfamily JSX.\+Element}).\hypertarget{readme.md_autotoc_md26893}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily default\+Url\+Transform(url)}}{{\ttfamily default\+Url\+Transform(url)}}}\label{readme.md_autotoc_md26893}
+Make a URL safe.\hypertarget{readme.md_autotoc_md26894}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md26894}
+
+\begin{DoxyItemize}
+\item {\ttfamily url} ({\ttfamily string}) — URL
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26895}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md26895}
+Safe URL ({\ttfamily string}).\hypertarget{readme.md_autotoc_md26896}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Allow\+Element}}{{\ttfamily Allow\+Element}}}\label{readme.md_autotoc_md26896}
+Filter elements (Type\+Script type).\hypertarget{readme.md_autotoc_md26897}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md26897}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/hast\#element}{\texttt{ {\ttfamily Element} from {\ttfamily hast}}}) — element to check
+\item {\ttfamily index} ({\ttfamily number \texorpdfstring{$\vert$}{|} undefined}) — index of {\ttfamily element} in {\ttfamily parent}
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Node} from {\ttfamily hast}}}) — parent of {\ttfamily element}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26898}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md26898}
+Whether to allow {\ttfamily element} ({\ttfamily boolean}, optional).\hypertarget{readme.md_autotoc_md26899}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Components}}{{\ttfamily Components}}}\label{readme.md_autotoc_md26899}
+Map tag names to components (Type\+Script type).\hypertarget{readme.md_autotoc_md26900}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md26900}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{Element\}\ from\ 'hast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Components\ =\ Partial<\{}
+\DoxyCodeLine{\ \ [TagName\ in\ keyof\ JSX.IntrinsicElements]:}
+\DoxyCodeLine{\ \ \ \ //\ Class\ component:}
+\DoxyCodeLine{\ \ \ \ |\ (new\ (props:\ JSX.IntrinsicElements[TagName]\ \&\ ExtraProps)\ =>\ JSX.ElementClass)}
+\DoxyCodeLine{\ \ \ \ //\ Function\ component:}
+\DoxyCodeLine{\ \ \ \ |\ ((props:\ JSX.IntrinsicElements[TagName]\ \&\ ExtraProps)\ =>\ JSX.Element\ |\ string\ |\ null\ |\ undefined)}
+\DoxyCodeLine{\ \ \ \ //\ Tag\ name:}
+\DoxyCodeLine{\ \ \ \ |\ keyof\ JSX.IntrinsicElements}
+\DoxyCodeLine{\}>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26901}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Extra\+Props}}{{\ttfamily Extra\+Props}}}\label{readme.md_autotoc_md26901}
+Extra fields we pass to components (Type\+Script type).\hypertarget{readme.md_autotoc_md26902}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md26902}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/hast\#element}{\texttt{ {\ttfamily Element} from {\ttfamily hast}}}, optional) — original node
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26903}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md26903}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md26904}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md26904}
+
+\begin{DoxyItemize}
+\item {\ttfamily allow\+Element} (\`{}\+Allow\+Element\`{}, optional) — filter elements; {\ttfamily allowed\+Elements} / {\ttfamily disallowed\+Elements} is used first
+\item {\ttfamily allowed\+Elements} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, default\+: all tag names) — tag names to allow; cannot combine w/ {\ttfamily disallowed\+Elements}
+\item {\ttfamily children} ({\ttfamily string}, optional) — markdown
+\item {\ttfamily class\+Name} ({\ttfamily string}, optional) — wrap in a {\ttfamily div} with this class name
+\item {\ttfamily components} (\`{}\+Components\`{}, optional) — map tag names to components
+\item {\ttfamily disallowed\+Elements} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, default\+: {\ttfamily \mbox{[}\mbox{]}}) — tag names to disallow; cannot combine w/ {\ttfamily allowed\+Elements}
+\item {\ttfamily rehype\+Plugins} ({\ttfamily Array\texorpdfstring{$<$}{<}Plugin\texorpdfstring{$>$}{>}}, optional) — list of \href{https://github.com/rehypejs/rehype/blob/main/doc/plugins.md\#list-of-plugins}{\texttt{ rehype plugins}} to use
+\item {\ttfamily remark\+Plugins} ({\ttfamily Array\texorpdfstring{$<$}{<}Plugin\texorpdfstring{$>$}{>}}, optional) — list of \href{https://github.com/remarkjs/remark/blob/main/doc/plugins.md\#list-of-plugins}{\texttt{ remark plugins}} to use
+\item {\ttfamily remark\+Rehype\+Options} (\href{https://github.com/remarkjs/remark-rehype\#options}{\texttt{ {\ttfamily Options} from {\ttfamily remark-\/rehype}}}, optional) — options to pass through to {\ttfamily remark-\/rehype}
+\item {\ttfamily skip\+Html} ({\ttfamily boolean}, default\+: {\ttfamily false}) — ignore HTML in markdown completely
+\item {\ttfamily unwrap\+Disallowed} ({\ttfamily boolean}, default\+: {\ttfamily false}) — extract (unwrap) what’s in disallowed elements; normally when say {\ttfamily strong} is not allowed, it and it’s children are dropped, with {\ttfamily unwrap\+Disallowed} the element itself is replaced by its children
+\item {\ttfamily url\+Transform} (\`{}\+Url\+Transform\`{}, default\+: \`{}default\+Url\+Transform\`{}) — change URLs
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26905}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Url\+Transform}}{{\ttfamily Url\+Transform}}}\label{readme.md_autotoc_md26905}
+Transform URLs (Type\+Script type).\hypertarget{readme.md_autotoc_md26906}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md26906}
+
+\begin{DoxyItemize}
+\item {\ttfamily url} ({\ttfamily string}) — URL
+\item {\ttfamily key} ({\ttfamily string}, example\+: `\textquotesingle{}href'{\ttfamily ) — property name \texorpdfstring{$\ast$}{*}}node{\ttfamily (\mbox{[}}Element{\ttfamily from}hast\`{}\mbox{]}\href{https://github.com/syntax-tree/hast\#element}{\texttt{ github-\/hast-\/element}}) — element to check
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26907}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md26907}
+Transformed URL ({\ttfamily string}, optional).\hypertarget{readme.md_autotoc_md26908}{}\doxysubsubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md26908}
+\hypertarget{readme.md_autotoc_md26909}{}\doxysubsubsubsection{\texorpdfstring{Use a plugin}{Use a plugin}}\label{readme.md_autotoc_md26909}
+This example shows how to use a remark plugin. In this case, \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which adds support for strikethrough, tables, tasklists and URLs directly\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ \{createRoot\}\ from\ 'react-\/dom/client'}
+\DoxyCodeLine{import\ Markdown\ from\ 'react-\/markdown'}
+\DoxyCodeLine{import\ remarkGfm\ from\ 'remark-\/gfm'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ markdown\ =\ \`{}A\ paragraph\ with\ *emphasis*\ and\ **strong\ importance**.}
+\DoxyCodeLine{}
+\DoxyCodeLine{>\ A\ block\ quote\ with\ \string~strikethrough\string~\ and\ a\ URL:\ https://reactjs.org.}
+\DoxyCodeLine{}
+\DoxyCodeLine{*\ Lists}
+\DoxyCodeLine{*\ [\ ]\ todo}
+\DoxyCodeLine{*\ [x]\ done}
+\DoxyCodeLine{}
+\DoxyCodeLine{A\ table:}
+\DoxyCodeLine{}
+\DoxyCodeLine{|\ a\ |\ b\ |}
+\DoxyCodeLine{|\ -\/\ |\ -\/\ |}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{createRoot(document.body).render(}
+\DoxyCodeLine{\ \ <Markdown\ remarkPlugins=\{[remarkGfm]\}>\{markdown\}</Markdown>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Show equivalent JSX}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<>}
+\DoxyCodeLine{\ \ <p>}
+\DoxyCodeLine{\ \ \ \ A\ paragraph\ with\ <em>emphasis</em>\ and\ <strong>strong\ importance</strong>.}
+\DoxyCodeLine{\ \ </p>}
+\DoxyCodeLine{\ \ <blockquote>}
+\DoxyCodeLine{\ \ \ \ <p>}
+\DoxyCodeLine{\ \ \ \ \ \ A\ block\ quote\ with\ <del>strikethrough</del>\ and\ a\ URL:\{'\ '\}}
+\DoxyCodeLine{\ \ \ \ \ \ <a\ href="{}https://reactjs.org"{}>https://reactjs.org</a>.}
+\DoxyCodeLine{\ \ \ \ </p>}
+\DoxyCodeLine{\ \ </blockquote>}
+\DoxyCodeLine{\ \ <ul\ className="{}contains-\/task-\/list"{}>}
+\DoxyCodeLine{\ \ \ \ <li>Lists</li>}
+\DoxyCodeLine{\ \ \ \ <li\ className="{}task-\/list-\/item"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ <input\ type="{}checkbox"{}\ disabled\ />\ todo}
+\DoxyCodeLine{\ \ \ \ </li>}
+\DoxyCodeLine{\ \ \ \ <li\ className="{}task-\/list-\/item"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ <input\ type="{}checkbox"{}\ disabled\ checked\ />\ done}
+\DoxyCodeLine{\ \ \ \ </li>}
+\DoxyCodeLine{\ \ </ul>}
+\DoxyCodeLine{\ \ <p>A\ table:</p>}
+\DoxyCodeLine{\ \ <table>}
+\DoxyCodeLine{\ \ \ \ <thead>}
+\DoxyCodeLine{\ \ \ \ \ \ <tr>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <th>a</th>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <th>b</th>}
+\DoxyCodeLine{\ \ \ \ \ \ </tr>}
+\DoxyCodeLine{\ \ \ \ </thead>}
+\DoxyCodeLine{\ \ </table>}
+\DoxyCodeLine{</>}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+\hypertarget{readme.md_autotoc_md26910}{}\doxysubsubsubsection{\texorpdfstring{Use a plugin with options}{Use a plugin with options}}\label{readme.md_autotoc_md26910}
+This example shows how to use a plugin and give it options. To do that, use an array with the plugin at the first place, and the options second. \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} has an option to allow only double tildes for strikethrough\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ \{createRoot\}\ from\ 'react-\/dom/client'}
+\DoxyCodeLine{import\ Markdown\ from\ 'react-\/markdown'}
+\DoxyCodeLine{import\ remarkGfm\ from\ 'remark-\/gfm'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ markdown\ =\ 'This\ \string~is\ not\string~\ strikethrough,\ but\ \string~\string~this\ is\string~\string~!'}
+\DoxyCodeLine{}
+\DoxyCodeLine{createRoot(document.body).render(}
+\DoxyCodeLine{\ \ <Markdown\ remarkPlugins=\{[[remarkGfm,\ \{singleTilde:\ false\}]]\}>}
+\DoxyCodeLine{\ \ \ \ \{markdown\}}
+\DoxyCodeLine{\ \ </Markdown>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Show equivalent JSX}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>}
+\DoxyCodeLine{\ \ This\ \string~is\ not\string~\ strikethrough,\ but\ <del>this\ is</del>!}
+\DoxyCodeLine{</p>}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+\hypertarget{readme.md_autotoc_md26911}{}\doxysubsubsubsection{\texorpdfstring{Use custom components (syntax highlight)}{Use custom components (syntax highlight)}}\label{readme.md_autotoc_md26911}
+This example shows how you can overwrite the normal handling of an element by passing a component. In this case, we apply syntax highlighting with the seriously super amazing \href{https://github.com/react-syntax-highlighter/react-syntax-highlighter}{\texttt{ {\ttfamily react-\/syntax-\/highlighter}}} by \href{https://github.com/conorhastings}{\texttt{ {\bfseries{@conorhastings}}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ \{createRoot\}\ from\ 'react-\/dom/client'}
+\DoxyCodeLine{import\ Markdown\ from\ 'react-\/markdown'}
+\DoxyCodeLine{import\ \{Prism\ as\ SyntaxHighlighter\}\ from\ 'react-\/syntax-\/highlighter'}
+\DoxyCodeLine{import\ \{dark\}\ from\ 'react-\/syntax-\/highlighter/dist/esm/styles/prism'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Did\ you\ know\ you\ can\ use\ tildes\ instead\ of\ backticks\ for\ code\ in\ markdown?\ ✨}
+\DoxyCodeLine{const\ markdown\ =\ \`{}Here\ is\ some\ JavaScript\ code:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\string~\string~\string~js}
+\DoxyCodeLine{console.log('It\ works!')}
+\DoxyCodeLine{\string~\string~\string~}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{createRoot(document.body).render(}
+\DoxyCodeLine{\ \ <Markdown}
+\DoxyCodeLine{\ \ \ \ children=\{markdown\}}
+\DoxyCodeLine{\ \ \ \ components=\{\{}
+\DoxyCodeLine{\ \ \ \ \ \ code(props)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ const\ \{children,\ className,\ node,\ ...rest\}\ =\ props}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ const\ match\ =\ /language-\/(\(\backslash\)w+)/.exec(className\ ||\ '')}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ match\ ?\ (}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <SyntaxHighlighter}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{...rest\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ PreTag="{}div"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ children=\{String(children).replace(/\(\backslash\)n\$/,\ '')\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ language=\{match[1]\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ style=\{dark\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ )\ :\ (}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <code\ \{...rest\}\ className=\{className\}>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{children\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ </code>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}\}}
+\DoxyCodeLine{\ \ />}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Show equivalent JSX}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<>}
+\DoxyCodeLine{\ \ <p>Here\ is\ some\ JavaScript\ code:</p>}
+\DoxyCodeLine{\ \ <pre>}
+\DoxyCodeLine{\ \ \ \ <SyntaxHighlighter\ language="{}js"{}\ style=\{dark\}\ PreTag="{}div"{}\ children="{}console.log('It\ works!')"{}\ />}
+\DoxyCodeLine{\ \ </pre>}
+\DoxyCodeLine{</>}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+\hypertarget{readme.md_autotoc_md26912}{}\doxysubsubsubsection{\texorpdfstring{Use remark and rehype plugins (math)}{Use remark and rehype plugins (math)}}\label{readme.md_autotoc_md26912}
+This example shows how a syntax extension (through \href{https://github.com/remarkjs/remark-math}{\texttt{ {\ttfamily remark-\/math}}}) is used to support math in markdown, and a transform plugin (\href{https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex}{\texttt{ {\ttfamily rehype-\/katex}}}) to render that math.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ \{createRoot\}\ from\ 'react-\/dom/client'}
+\DoxyCodeLine{import\ Markdown\ from\ 'react-\/markdown'}
+\DoxyCodeLine{import\ rehypeKatex\ from\ 'rehype-\/katex'}
+\DoxyCodeLine{import\ remarkMath\ from\ 'remark-\/math'}
+\DoxyCodeLine{import\ 'katex/dist/katex.min.css'\ //\ \`{}rehype-\/katex`\ does\ not\ import\ the\ CSS\ for\ you}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ markdown\ =\ \`{}The\ lift\ coefficient\ (\$C\_L\$)\ is\ a\ dimensionless\ coefficient.`}
+\DoxyCodeLine{}
+\DoxyCodeLine{createRoot(document.body).render(}
+\DoxyCodeLine{\ \ <Markdown\ remarkPlugins=\{[remarkMath]\}\ rehypePlugins=\{[rehypeKatex]\}>}
+\DoxyCodeLine{\ \ \ \ \{markdown\}}
+\DoxyCodeLine{\ \ </Markdown>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Show equivalent JSX}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>}
+\DoxyCodeLine{\ \ The\ lift\ coefficient\ (}
+\DoxyCodeLine{\ \ <span\ className="{}katex"{}>}
+\DoxyCodeLine{\ \ \ \ <span\ className="{}katex-\/mathml"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ <math\ xmlns="{}http://www.w3.org/1998/Math/MathML"{}>\{/*\ …\ */\}</math>}
+\DoxyCodeLine{\ \ \ \ </span>}
+\DoxyCodeLine{\ \ \ \ <span\ className="{}katex-\/html"{}\ aria-\/hidden="{}true"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ \{/*\ …\ */\}}
+\DoxyCodeLine{\ \ \ \ </span>}
+\DoxyCodeLine{\ \ </span>}
+\DoxyCodeLine{\ \ )\ is\ a\ dimensionless\ coefficient.}
+\DoxyCodeLine{</p>}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+\hypertarget{readme.md_autotoc_md26913}{}\doxysubsubsection{\texorpdfstring{Plugins}{Plugins}}\label{readme.md_autotoc_md26913}
+We use \href{https://github.com/unifiedjs/unified}{\texttt{ unified}}, specifically \href{https://github.com/remarkjs/remark}{\texttt{ remark}} for markdown and \href{https://github.com/rehypejs/rehype}{\texttt{ rehype}} for HTML, which are tools to transform content with plugins. Here are three good ways to find plugins\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/remarkjs/awesome-remark}{\texttt{ {\ttfamily awesome-\/remark}}} and \href{https://github.com/rehypejs/awesome-rehype}{\texttt{ {\ttfamily awesome-\/rehype}}} — selection of the most awesome projects
+\item \href{https://github.com/remarkjs/remark/blob/main/doc/plugins.md\#list-of-plugins}{\texttt{ List of remark plugins}} and \href{https://github.com/rehypejs/rehype/blob/main/doc/plugins.md\#list-of-plugins}{\texttt{ list of rehype plugins}} — list of all plugins
+\item \href{https://github.com/topics/remark-plugin}{\texttt{ {\ttfamily remark-\/plugin}}} and \href{https://github.com/topics/rehype-plugin}{\texttt{ {\ttfamily rehype-\/plugin}}} topics — any tagged repo on Git\+Hub
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26914}{}\doxysubsubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md26914}
+{\ttfamily react-\/markdown} follows Common\+Mark, which standardizes the differences between markdown implementations, by default. Some syntax extensions are supported through plugins.
+
+We use \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}} under the hood for our parsing. See its documentation for more information on markdown, Common\+Mark, and extensions.\hypertarget{readme.md_autotoc_md26915}{}\doxysubsubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md26915}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Allow\+Element\`{}, \`{}\+Extra\+Props\`{}, \`{}\+Components\`{}, \doxylink{README.md_options}{\`{}\+Options\`{}}, and \`{}\+Url\+Transform\`{}.\hypertarget{readme.md_autotoc_md26916}{}\doxysubsubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md26916}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily react-\/markdown@\texorpdfstring{$^\wedge$}{\string^}9}, compatible with Node.\+js 16.
+
+They work in all modern browsers (essentially\+: everything not IE 11). You can use a bundler (such as esbuild, webpack, or Rollup) to use this package in your project, and use its options (or plugins) to add support for legacy browsers.\hypertarget{readme.md_autotoc_md26917}{}\doxysubsubsection{\texorpdfstring{Architecture}{Architecture}}\label{readme.md_autotoc_md26917}
+
+\begin{DoxyPre}{\ttfamily                                                            react-\/markdown
+         +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+
+         |                                                                                                                |
+         |  +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+        +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+        +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+       +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+       +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+ |
+         |  |          |        |                |        |               |       |                |       |            | |
+\href{https://commonmark.org}{\texttt{ markdown}}-\/+-\/>+  \href{https://github.com/remarkjs/remark}{\texttt{ remark}}  +-\/\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}-\/>+ \href{https://github.com/remarkjs/remark/blob/main/doc/plugins.md}{\texttt{ remark plugins}} +-\/\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}-\/>+ \href{https://github.com/remarkjs/remark-rehype}{\texttt{ remark-\/rehype}} +-\/\href{https://github.com/syntax-tree/hast}{\texttt{ hast}}-\/>+ \href{https://github.com/rehypejs/rehype/blob/main/doc/plugins.md}{\texttt{ rehype plugins}} +-\/\href{https://github.com/syntax-tree/hast}{\texttt{ hast}}-\/>+ \href{\#appendix-b-components}{\texttt{ components}} +-\/+-\/>react elements
+         |  |          |        |                |        |               |       |                |       |            | |
+         |  +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+        +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+        +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+       +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+       +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+ |
+         |                                                                                                                |
+         +-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+
+}\end{DoxyPre}
+
+
+To understand what this project does, it’s important to first understand what unified does\+: please read through the \href{https://github.com/unifiedjs/unified}{\texttt{ {\ttfamily unifiedjs/unified}}} readme (the part until you hit the API section is required reading).
+
+{\ttfamily react-\/markdown} is a unified pipeline — wrapped so that most folks don’t need to directly interact with unified. The processor goes through these steps\+:
+
+
+\begin{DoxyItemize}
+\item parse markdown to mdast (markdown syntax tree)
+\item transform through remark (markdown ecosystem)
+\item transform mdast to hast (HTML syntax tree)
+\item transform through rehype (HTML ecosystem)
+\item render hast to React with components
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26918}{}\doxysubsubsection{\texorpdfstring{Appendix A\+: HTML in markdown}{Appendix A\+: HTML in markdown}}\label{readme.md_autotoc_md26918}
+{\ttfamily react-\/markdown} typically escapes HTML (or ignores it, with {\ttfamily skip\+Html}) because it is dangerous and defeats the purpose of this library.
+
+However, if you are in a trusted environment (you trust the markdown), and can spare the bundle size (±60kb minzipped), then you can use \href{https://github.com/rehypejs/rehype-raw}{\texttt{ {\ttfamily rehype-\/raw}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ \{createRoot\}\ from\ 'react-\/dom/client'}
+\DoxyCodeLine{import\ Markdown\ from\ 'react-\/markdown'}
+\DoxyCodeLine{import\ rehypeRaw\ from\ 'rehype-\/raw'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ markdown\ =\ \`{}<div\ class="{}note"{}>}
+\DoxyCodeLine{}
+\DoxyCodeLine{Some\ *emphasis*\ and\ <strong>strong</strong>!}
+\DoxyCodeLine{}
+\DoxyCodeLine{</div>`}
+\DoxyCodeLine{}
+\DoxyCodeLine{createRoot(document.body).render(}
+\DoxyCodeLine{\ \ <Markdown\ rehypePlugins=\{[rehypeRaw]\}>\{markdown\}</Markdown>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Show equivalent JSX}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ className="{}note"{}>}
+\DoxyCodeLine{\ \ <p>}
+\DoxyCodeLine{\ \ \ \ Some\ <em>emphasis</em>\ and\ <strong>strong</strong>!}
+\DoxyCodeLine{\ \ </p>}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+
+{\bfseries{Note}}\+: HTML in markdown is still bound by how \href{https://spec.commonmark.org/0.31.2/\#html-blocks}{\texttt{ HTML works in Common\+Mark}}. Make sure to use blank lines around block-\/level HTML that again contains markdown!\hypertarget{readme.md_autotoc_md26919}{}\doxysubsubsection{\texorpdfstring{Appendix B\+: Components}{Appendix B\+: Components}}\label{readme.md_autotoc_md26919}
+You can also change the things that come from markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<Markdown}
+\DoxyCodeLine{\ \ components=\{\{}
+\DoxyCodeLine{\ \ \ \ //\ Map\ \`{}h1`\ (`\#\ heading`)\ to\ use\ \`{}h2`s.}
+\DoxyCodeLine{\ \ \ \ h1:\ 'h2',}
+\DoxyCodeLine{\ \ \ \ //\ Rewrite\ \`{}em`s\ (`*like\ so*`)\ to\ \`{}i`\ with\ a\ red\ foreground\ color.}
+\DoxyCodeLine{\ \ \ \ em(props)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ const\ \{node,\ ...rest\}\ =\ props}
+\DoxyCodeLine{\ \ \ \ \ \ return\ <i\ style=\{\{color:\ 'red'\}\}\ \{...rest\}\ />}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}\}}
+\DoxyCodeLine{/>}
+
+\end{DoxyCode}
+
+
+The keys in components are HTML equivalents for the things you write with markdown (such as {\ttfamily h1} for {\ttfamily \# heading}). Normally, in markdown, those are\+: {\ttfamily a}, {\ttfamily blockquote}, {\ttfamily br}, {\ttfamily code}, {\ttfamily em}, {\ttfamily h1}, {\ttfamily h2}, {\ttfamily h3}, {\ttfamily h4}, {\ttfamily h5}, {\ttfamily h6}, {\ttfamily hr}, {\ttfamily img}, {\ttfamily li}, {\ttfamily ol}, {\ttfamily p}, {\ttfamily pre}, {\ttfamily strong}, and {\ttfamily ul}. With \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, you can also use {\ttfamily del}, {\ttfamily input}, {\ttfamily table}, {\ttfamily tbody}, {\ttfamily td}, {\ttfamily th}, {\ttfamily thead}, and {\ttfamily tr}. Other remark or rehype plugins that add support for new constructs will also work with {\ttfamily react-\/markdown}.
+
+The props that are passed are what you probably would expect\+: an {\ttfamily a} (link) will get {\ttfamily href} (and {\ttfamily title}) props, and {\ttfamily img} (image) an {\ttfamily src}, {\ttfamily alt} and {\ttfamily title}, etc.
+
+Every component will receive a {\ttfamily node}. This is the original \href{https://github.com/syntax-tree/hast\#element}{\texttt{ {\ttfamily Element} from {\ttfamily hast}}} element being turned into a React element.\hypertarget{readme.md_autotoc_md26920}{}\doxysubsubsection{\texorpdfstring{Appendix C\+: line endings in markdown (and JSX)}{Appendix C\+: line endings in markdown (and JSX)}}\label{readme.md_autotoc_md26920}
+You might have trouble with how line endings work in markdown and JSX. We recommend the following, which solves all line ending problems\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ If\ you\ write\ actual\ markdown\ in\ your\ code,\ put\ your\ markdown\ in\ a\ variable;}
+\DoxyCodeLine{//\ **do\ not\ indent\ markdown**:}
+\DoxyCodeLine{const\ markdown\ =\ \`{}}
+\DoxyCodeLine{\#\ This\ is\ perfect!}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Pass\ the\ value\ as\ an\ expression\ as\ an\ only\ child:}
+\DoxyCodeLine{const\ result\ =\ <Markdown>\{markdown\}</Markdown>}
+
+\end{DoxyCode}
+
+
+👆 That works. Read on for what doesn’t and why that is.
+
+You might try to write markdown directly in your JSX and find that it {\bfseries{does not}} work\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<Markdown>}
+\DoxyCodeLine{\ \ \#\ Hi}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ This\ is\ **not**\ a\ paragraph.}
+\DoxyCodeLine{</Markdown>}
+
+\end{DoxyCode}
+
+
+The is because in JSX the whitespace (including line endings) is collapsed to a single space. So the above example is equivalent to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<Markdown>\ \#\ Hi\ This\ is\ **not**\ a\ paragraph.\ </Markdown>}
+
+\end{DoxyCode}
+
+
+Instead, to pass markdown to {\ttfamily Markdown}, you can use an expression\+: with a template literal\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<Markdown>\{`}
+\DoxyCodeLine{\#\ Hi}
+\DoxyCodeLine{}
+\DoxyCodeLine{This\ is\ a\ paragraph.}
+\DoxyCodeLine{\`{}\}</Markdown>}
+
+\end{DoxyCode}
+
+
+Template literals have another potential problem, because they keep whitespace (including indentation) inside them. That means that the following {\bfseries{does not}} turn into a heading\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<Markdown>\{`}
+\DoxyCodeLine{\ \ \ \ \#\ This\ is\ **not**\ a\ heading,\ it’s\ an\ indented\ code\ block}
+\DoxyCodeLine{\`{}\}</Markdown>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26921}{}\doxysubsubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md26921}
+Use of {\ttfamily react-\/markdown} is secure by default. Overwriting {\ttfamily url\+Transform} to something insecure will open you up to XSS vectors. Furthermore, the {\ttfamily remark\+Plugins}, {\ttfamily rehype\+Plugins}, and {\ttfamily components} you use may be insecure.
+
+To make sure the content is completely safe, even after what plugins do, use \href{https://github.com/rehypejs/rehype-sanitize}{\texttt{ {\ttfamily rehype-\/sanitize}}}. It lets you define your own schema of what is and isn’t allowed.\hypertarget{readme.md_autotoc_md26922}{}\doxysubsubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md26922}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/mdx-js/mdx/}{\texttt{ {\ttfamily MDX}}} — JSX {\itshape in} markdown
+\item \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} — add support for Git\+Hub flavored markdown support
+\item \href{https://github.com/remarkjs/react-remark}{\texttt{ {\ttfamily react-\/remark}}} — hook based alternative
+\item \href{https://github.com/rehypejs/rehype-react}{\texttt{ {\ttfamily rehype-\/react}}} — turn HTML into React elements
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26923}{}\doxysubsubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md26923}
+See \href{https://github.com/remarkjs/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/remarkjs/.github}{\texttt{ {\ttfamily remarkjs/.github}}} for ways to get started. See \href{https://github.com/remarkjs/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/remarkjs/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md26924}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md26924}
+\mbox{[}MIT\mbox{]}\mbox{[}file-\/license\mbox{]} © \href{https://espen.codes/}{\texttt{ Espen Hovlandsdal}} 

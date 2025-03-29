@@ -1,0 +1,318 @@
+\doxysection{node\+\_\+modules/rehype-\/autolink-\/headings Directory Reference}
+\hypertarget{dir_02c12bb013f2ddc38a4b834cbce41940}{}\label{dir_02c12bb013f2ddc38a4b834cbce41940}\index{node\_modules/rehype-\/autolink-\/headings Directory Reference@{node\_modules/rehype-\/autolink-\/headings Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/rehypejs/rehype-autolink-headings/actions}{\texttt{ }} \href{https://codecov.io/github/rehypejs/rehype-autolink-headings}{\texttt{ }} \href{https://www.npmjs.com/package/rehype-autolink-headings}{\texttt{ }} \href{https://bundlejs.com/?q=rehype-autolink-headings}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/rehypejs/rehype/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}}} plugin to add links from headings back to themselves.\hypertarget{readme.md_autotoc_md28695}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md28695}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}unified().use(rehype\+Autolink\+Headings\mbox{[}, options\mbox{]})\`{}
+\item \`{}\+Behavior\`{}
+\item \`{}\+Build\`{}
+\item \`{}\+Build\+Properties\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Example\+: different behaviors
+\item Example\+: building content with \`{}hastscript\`{}
+\item Example\+: passing content from a string of HTML
+\item Example\+: group
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28696}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md28696}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} (\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}) plugin to add links from headings back to themselves. It looks for headings (so {\ttfamily \texorpdfstring{$<$}{<}h1\texorpdfstring{$>$}{>}} through {\ttfamily \texorpdfstring{$<$}{<}h6\texorpdfstring{$>$}{>}}) that have {\ttfamily id} properties, and injects a link to themselves. Similar functionality is applied by many places that render markdown. For example, when browsing this readme on Git\+Hub or npm, an anchor is added to headings, which you can share to point people to a particular place in a document.
+
+{\bfseries{unified}} is a project that transforms content with abstract syntax trees (ASTs). {\bfseries{rehype}} adds support for HTML to unified. {\bfseries{hast}} is the HTML AST that rehype uses. This is a rehype plugin that adds links to headings in the AST.\hypertarget{readme.md_autotoc_md28697}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md28697}
+This plugin is useful when you have relatively long documents, where you want users to be able to link to particular sections, and you already have {\ttfamily id} properties set on all (or certain?) headings.
+
+A different plugin, \href{https://github.com/rehypejs/rehype-slug}{\texttt{ {\ttfamily rehype-\/slug}}}, adds {\ttfamily id}s to headings. When a heading doesn’t already have an {\ttfamily id} property, it creates a slug from it, and adds that as the {\ttfamily id} property. When using both plugins together, all headings (whether explicitly with a certain {\ttfamily id} or automatically with a generate one) will get a link back to themselves.\hypertarget{readme.md_autotoc_md28698}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md28698}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ rehype-\/autolink-\/headings}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeAutolinkHeadings\ from\ 'https://esm.sh/rehype-\/autolink-\/headings@7'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ rehypeAutolinkHeadings\ from\ 'https://esm.sh/rehype-\/autolink-\/headings@7?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28699}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md28699}
+Say we have the following file {\ttfamily example.\+html}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>Solar\ System</h1>}
+\DoxyCodeLine{<h2>Formation\ and\ evolution</h2>}
+\DoxyCodeLine{<h2>Structure\ and\ composition</h2>}
+\DoxyCodeLine{<h3>Orbits</h3>}
+\DoxyCodeLine{<h3>Composition</h3>}
+\DoxyCodeLine{<h3>Distances\ and\ scales</h3>}
+\DoxyCodeLine{<h3>Interplanetary\ environment</h3>}
+\DoxyCodeLine{<p>…</p>}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{rehype\}\ from\ 'rehype'}
+\DoxyCodeLine{import\ rehypeAutolinkHeadings\ from\ 'rehype-\/autolink-\/headings'}
+\DoxyCodeLine{import\ rehypeSlug\ from\ 'rehype-\/slug'}
+\DoxyCodeLine{import\ \{read\}\ from\ 'to-\/vfile'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ rehype()}
+\DoxyCodeLine{\ \ .data('settings',\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ .use(rehypeSlug)}
+\DoxyCodeLine{\ \ .use(rehypeAutolinkHeadings)}
+\DoxyCodeLine{\ \ .process(await\ read('example.html'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+…then running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1\ id="{}solar-\/system"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#solar-\/system"{}><span\ class="{}icon\ icon-\/link"{}></span></a>Solar\ System</h1>}
+\DoxyCodeLine{<h2\ id="{}formation-\/and-\/evolution"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#formation-\/and-\/evolution"{}><span\ class="{}icon\ icon-\/link"{}></span></a>Formation\ and\ evolution</h2>}
+\DoxyCodeLine{<h2\ id="{}structure-\/and-\/composition"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#structure-\/and-\/composition"{}><span\ class="{}icon\ icon-\/link"{}></span></a>Structure\ and\ composition</h2>}
+\DoxyCodeLine{<h3\ id="{}orbits"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#orbits"{}><span\ class="{}icon\ icon-\/link"{}></span></a>Orbits</h3>}
+\DoxyCodeLine{<h3\ id="{}composition"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#composition"{}><span\ class="{}icon\ icon-\/link"{}></span></a>Composition</h3>}
+\DoxyCodeLine{<h3\ id="{}distances-\/and-\/scales"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#distances-\/and-\/scales"{}><span\ class="{}icon\ icon-\/link"{}></span></a>Distances\ and\ scales</h3>}
+\DoxyCodeLine{<h3\ id="{}interplanetary-\/environment"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#interplanetary-\/environment"{}><span\ class="{}icon\ icon-\/link"{}></span></a>Interplanetary\ environment</h3>}
+\DoxyCodeLine{<p>…</p>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28700}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md28700}
+This package exports no identifiers. The default export is \`{}rehype\+Autolink\+Headings\`{}.\hypertarget{readme.md_autotoc_md28701}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unified().use(rehype\+Autolink\+Headings\mbox{[}, options\mbox{]})}}{{\ttfamily unified().use(rehype\+Autolink\+Headings\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md28701}
+Add links from headings back to themselves.\hypertarget{readme.md_autotoc_md28702}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md28702}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28703}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md28703}
+Transform (\href{https://github.com/unifiedjs/unified\#transformer}{\texttt{ {\ttfamily Transformer}}}).\hypertarget{readme.md_autotoc_md28704}{}\doxysubsubsubsubsubsection{\texorpdfstring{Notes}{Notes}}\label{readme.md_autotoc_md28704}
+This plugin only applies to headings with {\ttfamily id}s. Use {\ttfamily rehype-\/slug} to generate {\ttfamily id}s for headings that don’t have them.
+
+Several behaviors are supported\+:
+
+
+\begin{DoxyItemize}
+\item `\textquotesingle{}prepend'{\ttfamily (default) — inject link before the heading text \texorpdfstring{$\ast$}{*}}\textquotesingle{}append\textquotesingle{}{\ttfamily — inject link after the heading text \texorpdfstring{$\ast$}{*}}\textquotesingle{}wrap\textquotesingle{}{\ttfamily — wrap the whole heading text with the link \texorpdfstring{$\ast$}{*}}\textquotesingle{}before\textquotesingle{}{\ttfamily — insert link before the heading \texorpdfstring{$\ast$}{*}}\textquotesingle{}after\textquotesingle{}\`{} — insert link after the heading
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28705}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Behavior}}{{\ttfamily Behavior}}}\label{readme.md_autotoc_md28705}
+Behavior (Type\+Script type).\hypertarget{readme.md_autotoc_md28706}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md28706}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Behavior\ =\ 'after'\ |\ 'append'\ |\ 'before'\ |\ 'prepend'\ |\ 'wrap'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28707}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Build}}{{\ttfamily Build}}}\label{readme.md_autotoc_md28707}
+Generate content (Type\+Script type).\hypertarget{readme.md_autotoc_md28708}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md28708}
+
+\begin{DoxyItemize}
+\item {\ttfamily element} (\href{https://github.com/syntax-tree/hast\#element}{\texttt{ {\ttfamily Element}}}) — current heading
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28709}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md28709}
+Content (\href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Array\texorpdfstring{$<$}{<}Node\texorpdfstring{$>$}{>}}}} or {\ttfamily Node}).\hypertarget{readme.md_autotoc_md28710}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Build\+Properties}}{{\ttfamily Build\+Properties}}}\label{readme.md_autotoc_md28710}
+Generate properties (Type\+Script type).\hypertarget{readme.md_autotoc_md28711}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md28711}
+
+\begin{DoxyItemize}
+\item {\ttfamily element} (\href{https://github.com/syntax-tree/hast\#element}{\texttt{ {\ttfamily Element}}}) — current heading
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28712}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md28712}
+Properties (\href{https://github.com/syntax-tree/hast\#properties}{\texttt{ {\ttfamily Properties}}}).\hypertarget{readme.md_autotoc_md28713}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md28713}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md28714}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md28714}
+
+\begin{DoxyItemize}
+\item {\ttfamily behavior} (\`{}\+Behavior\`{}, default\+: `\textquotesingle{}prepend'{\ttfamily ) — how to create links \texorpdfstring{$\ast$}{*}}content{\ttfamily (\mbox{[}}Array$<$\+Node$>${\ttfamily \mbox{]}\mbox{[}hast-\/node\mbox{]},}Node{\ttfamily , or \mbox{[}}Build{\ttfamily \mbox{]}\mbox{[}api-\/build\mbox{]}, default\+: if}\textquotesingle{}wrap\textquotesingle{}{\ttfamily then}undefined{\ttfamily , otherwise equivalent of }{\ttfamily ) — content to insert in the link; if}behavior{\ttfamily is}\textquotesingle{}wrap\textquotesingle{}{\ttfamily and}Build{\ttfamily is passed, its result replaces the existing content, otherwise the content is added after existing content \texorpdfstring{$\ast$}{*}}group{\ttfamily (\mbox{[}}Array$<$\+Node$>${\ttfamily \mbox{]}\mbox{[}hast-\/node\mbox{]},}Node{\ttfamily , or \mbox{[}}Build{\ttfamily \mbox{]}\mbox{[}api-\/build\mbox{]}, optional) — content to wrap the heading and link with, if}behavior{\ttfamily is}\textquotesingle{}after\textquotesingle{}{\ttfamily or }\textquotesingle{}before\textquotesingle{}{\ttfamily  \texorpdfstring{$\ast$}{*}}heading\+Properties{\ttfamily (\mbox{[}}Build\+Properties{\ttfamily \mbox{]}\mbox{[}api-\/build-\/properties\mbox{]} or \mbox{[}}Properties{\ttfamily \mbox{]}\mbox{[}hast-\/properties\mbox{]}, optional) — extra properties to set on the heading \texorpdfstring{$\ast$}{*}}properties{\ttfamily (\mbox{[}}Build\+Properties{\ttfamily \mbox{]}\mbox{[}api-\/build-\/properties\mbox{]} or \mbox{[}}Properties{\ttfamily \mbox{]}\mbox{[}hast-\/properties\mbox{]}, default\+: }\{aria\+Hidden\+: true, tab\+Index\+: -\/1\}{\ttfamily if}\textquotesingle{}append\textquotesingle{}{\ttfamily or}\textquotesingle{}prepend\textquotesingle{}{\ttfamily , otherwise }undefined{\ttfamily ) — extra properties to set on the link when injecting \texorpdfstring{$\ast$}{*}}test{\ttfamily (\mbox{[}}Test\`{}\mbox{]}\href{https://github.com/syntax-tree/hast-util-is-element\#test}{\texttt{ hast-\/util-\/is-\/element-\/test}}, optional) — extra test for which headings are linked
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28715}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md28715}
+\hypertarget{readme.md_autotoc_md28716}{}\doxysubsubsection{\texorpdfstring{Example\+: different behaviors}{Example\+: different behaviors}}\label{readme.md_autotoc_md28716}
+This example shows what each behavior generates by default.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{rehype\}\ from\ 'rehype'}
+\DoxyCodeLine{import\ rehypeAutolinkHeadings\ from\ 'rehype-\/autolink-\/headings'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ behaviors\ =\ ['after',\ 'append',\ 'before',\ 'prepend',\ 'wrap']}
+\DoxyCodeLine{let\ index\ =\ -\/1}
+\DoxyCodeLine{while\ (++index\ <\ behaviors.length)\ \{}
+\DoxyCodeLine{\ \ const\ behavior\ =\ behaviors[index]}
+\DoxyCodeLine{\ \ console.log(}
+\DoxyCodeLine{\ \ \ \ String(}
+\DoxyCodeLine{\ \ \ \ \ \ await\ rehype()}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ .data('settings',\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ .use(rehypeAutolinkHeadings,\ \{behavior\})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ .process('<h1\ id="{}'\ +\ behavior\ +\ '"{}>'\ +\ behavior\ +\ '</h1>')}
+\DoxyCodeLine{\ \ \ \ )}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1\ id="{}after"{}>after</h1><a\ href="{}\#after"{}><span\ class="{}icon\ icon-\/link"{}></span></a>}
+\DoxyCodeLine{<h1\ id="{}append"{}>append<a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#append"{}><span\ class="{}icon\ icon-\/link"{}></span></a></h1>}
+\DoxyCodeLine{<a\ href="{}\#before"{}><span\ class="{}icon\ icon-\/link"{}></span></a><h1\ id="{}before"{}>before</h1>}
+\DoxyCodeLine{<h1\ id="{}prepend"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#prepend"{}><span\ class="{}icon\ icon-\/link"{}></span></a>prepend</h1>}
+\DoxyCodeLine{<h1\ id="{}wrap"{}><a\ href="{}\#wrap"{}>wrap</a></h1>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28717}{}\doxysubsubsection{\texorpdfstring{Example\+: building content with {\ttfamily hastscript}}{Example\+: building content with {\ttfamily hastscript}}}\label{readme.md_autotoc_md28717}
+The following example passes {\ttfamily options.\+content} as a function, to generate an accessible description specific to each link. It uses \href{https://github.com/syntax-tree/hastscript}{\texttt{ {\ttfamily hastscript}}} to build nodes.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{toString\}\ from\ 'hast-\/util-\/to-\/string'}
+\DoxyCodeLine{import\ \{rehype\}\ from\ 'rehype'}
+\DoxyCodeLine{import\ rehypeAutolinkHeadings\ from\ 'rehype-\/autolink-\/headings'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ rehype()}
+\DoxyCodeLine{\ \ .data('settings',\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ .use(rehypeAutolinkHeadings,\ \{}
+\DoxyCodeLine{\ \ \ \ content(node)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ h('span.visually-\/hidden',\ 'Read\ the\ “',\ toString(node),\ '”\ section'),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ h('span.icon.icon-\/link',\ \{ariaHidden:\ 'true'\})}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .process('<h1\ id="{}pluto"{}>Pluto</h1>')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1\ id="{}pluto"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#pluto"{}><span\ class="{}visually-\/hidden"{}>Read\ the\ “Pluto”\ section</span><span\ class="{}icon\ icon-\/link"{}\ aria-\/hidden="{}true"{}></span></a>Pluto</h1>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28718}{}\doxysubsubsection{\texorpdfstring{Example\+: passing content from a string of HTML}{Example\+: passing content from a string of HTML}}\label{readme.md_autotoc_md28718}
+The following example passes {\ttfamily content} as nodes. It uses \href{https://github.com/syntax-tree/hast-util-from-html-isomorphic}{\texttt{ {\ttfamily hast-\/util-\/from-\/html-\/isomorphic}}} to build nodes from a string of HTML.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ @typedef\ \{import('hast').ElementContent\}\ ElementContent}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{fromHtmlIsomorphic\}\ from\ 'hast-\/util-\/from-\/html-\/isomorphic'}
+\DoxyCodeLine{import\ \{rehype\}\ from\ 'rehype'}
+\DoxyCodeLine{import\ rehypeAutolinkHeadings\ from\ 'rehype-\/autolink-\/headings'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ rehype()}
+\DoxyCodeLine{\ \ .data('settings',\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ .use(rehypeAutolinkHeadings,\ \{}
+\DoxyCodeLine{\ \ \ \ content:\ /**\ @type\ \{Array<ElementContent>\}\ */\ (}
+\DoxyCodeLine{\ \ \ \ \ \ fromHtmlIsomorphic(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ '<svg\ height="{}10"{}\ width="{}10"{}><circle\ cx="{}5"{}\ cy="{}5"{}\ r="{}5"{}\ fill="{}black"{}\ /></svg>',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{fragment:\ true\}}
+\DoxyCodeLine{\ \ \ \ \ \ ).children}
+\DoxyCodeLine{\ \ \ \ )}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .process('<h1\ id="{}makemake"{}>Makemake</h1>')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1\ id="{}makemake"{}><a\ aria-\/hidden="{}true"{}\ tabindex="{}-\/1"{}\ href="{}\#makemake"{}><svg\ height="{}10"{}\ width="{}10"{}><circle\ cx="{}5"{}\ cy="{}5"{}\ r="{}5"{}\ fill="{}black"{}></circle></svg></a>Makemake</h1>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28719}{}\doxysubsubsection{\texorpdfstring{Example\+: group}{Example\+: group}}\label{readme.md_autotoc_md28719}
+The following example passes {\ttfamily group} as a function, to dynamically generate a differing element that wraps the heading. It uses \href{https://github.com/syntax-tree/hastscript}{\texttt{ {\ttfamily hastscript}}} to build nodes.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{rehype\}\ from\ 'rehype'}
+\DoxyCodeLine{import\ rehypeAutolinkHeadings\ from\ 'rehype-\/autolink-\/headings'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ rehype()}
+\DoxyCodeLine{\ \ .data('settings',\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ .use(rehypeAutolinkHeadings,\ \{}
+\DoxyCodeLine{\ \ \ \ behavior:\ 'before',}
+\DoxyCodeLine{\ \ \ \ group(node)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ h('.heading-\/'\ +\ node.tagName.charAt(1)\ +\ '-\/group')}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .process('<h1\ id="{}ceres"{}>Ceres</h1>')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ class="{}heading-\/1-\/group"{}><a\ href="{}\#ceres"{}><span\ class="{}icon\ icon-\/link"{}></span></a><h1\ id="{}ceres"{}>Ceres</h1></div>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28720}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md28720}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Behavior\`{}, \`{}\+Build\`{}, \`{}\+Build\+Properties\`{}, and \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md28721}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md28721}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily rehype-\/autolink-\/headings@\texorpdfstring{$^\wedge$}{\string^}7}, compatible with Node.\+js 16.
+
+This plugin works with {\ttfamily rehype-\/parse} version 1+, {\ttfamily rehype-\/stringify} version 1+, {\ttfamily rehype} version 1+, and {\ttfamily unified} version 4+.\hypertarget{readme.md_autotoc_md28722}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md28722}
+Use of {\ttfamily rehype-\/autolink-\/headings} can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack if you pass user provided content in {\ttfamily content}, {\ttfamily group}, or {\ttfamily properties}.
+
+Always be wary of user input and use \href{https://github.com/rehypejs/rehype-sanitize}{\texttt{ {\ttfamily rehype-\/sanitize}}}.\hypertarget{readme.md_autotoc_md28723}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md28723}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/rehypejs/rehype-slug}{\texttt{ {\ttfamily rehype-\/slug}}} — add {\ttfamily id}s to headings
+\item \href{https://github.com/rehypejs/rehype-highlight}{\texttt{ {\ttfamily rehype-\/highlight}}} — apply syntax highlighting to code blocks
+\item \href{https://github.com/JS-DevTools/rehype-toc}{\texttt{ {\ttfamily rehype-\/toc}}} — add a table of contents (TOC)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28724}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md28724}
+See \href{https://github.com/rehypejs/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/rehypejs/.github}{\texttt{ {\ttfamily rehypejs/.github}}} for ways to get started. See \href{https://github.com/rehypejs/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/rehypejs/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md28725}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md28725}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

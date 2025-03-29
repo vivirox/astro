@@ -1,0 +1,219 @@
+\doxysection{node\+\_\+modules/estree-\/util-\/build-\/jsx Directory Reference}
+\hypertarget{dir_1df1703a0aad8b8a2d220e566261bd88}{}\label{dir_1df1703a0aad8b8a2d220e566261bd88}\index{node\_modules/estree-\/util-\/build-\/jsx Directory Reference@{node\_modules/estree-\/util-\/build-\/jsx Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/estree-util-build-jsx/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/estree-util-build-jsx}{\texttt{ }} \href{https://www.npmjs.com/package/estree-util-build-jsx}{\texttt{ }} \href{https://bundlejs.com/?q=estree-util-build-jsx}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/estree/estree}{\texttt{ estree}} utility to turn JSX into function calls\+: {\ttfamily \texorpdfstring{$<$}{<}x /\texorpdfstring{$>$}{>}} -\/\texorpdfstring{$>$}{>} `h(\textquotesingle{}x')\`{}!\hypertarget{readme.md_autotoc_md14514}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md14514}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}build\+Jsx(tree\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Runtime\`{}
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Example\+: use with Acorn
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14515}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md14515}
+This package is a utility that takes an \href{https://github.com/estree/estree}{\texttt{ estree}} (Java\+Script) syntax tree as input that contains embedded JSX nodes (elements, fragments) and turns them into function calls.\hypertarget{readme.md_autotoc_md14516}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md14516}
+If you already have a tree and only need to compile JSX away, use this. If you have code, use something like \href{https://swc.rs}{\texttt{ SWC}} or \href{https://esbuild.github.io}{\texttt{ esbuild}} instead.\hypertarget{readme.md_autotoc_md14517}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md14517}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ estree-\/util-\/build-\/jsx}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{buildJsx\}\ from\ 'https://esm.sh/estree-\/util-\/build-\/jsx@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{buildJsx\}\ from\ 'https://esm.sh/estree-\/util-\/build-\/jsx@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14518}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md14518}
+Say we have the following {\ttfamily example.\+jsx}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ x\ from\ 'xastscript'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ <album\ id=\{123\}>}
+\DoxyCodeLine{\ \ \ \ <name>Born\ in\ the\ U.S.A.</name>}
+\DoxyCodeLine{\ \ \ \ <artist>Bruce\ Springsteen</artist>}
+\DoxyCodeLine{\ \ \ \ <releasedate\ date="{}1984-\/04-\/06"{}>April\ 6,\ 1984</releasedate>}
+\DoxyCodeLine{\ \ </album>}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ <>}
+\DoxyCodeLine{\ \ \ \ \{1\ +\ 1\}}
+\DoxyCodeLine{\ \ \ \ <self-\/closing\ />}
+\DoxyCodeLine{\ \ \ \ <x\ name\ key="{}value"{}\ key=\{expression\}\ \{...spread\}\ />}
+\DoxyCodeLine{\ \ </>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+…and next to it a module {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ jsx\ from\ 'acorn-\/jsx'}
+\DoxyCodeLine{import\ \{fromJs\}\ from\ 'esast-\/util-\/from-\/js'}
+\DoxyCodeLine{import\ \{buildJsx\}\ from\ 'estree-\/util-\/build-\/jsx'}
+\DoxyCodeLine{import\ \{toJs\}\ from\ 'estree-\/util-\/to-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ String(await\ fs.readFile('example.jsx'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromJs(doc,\ \{module:\ true,\ plugins:\ [jsx()]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{buildJsx(tree,\ \{pragma:\ 'x',\ pragmaFrag:\ 'null'\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(toJs(tree).value)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ x\ from\ "{}xastscript"{};}
+\DoxyCodeLine{console.log(x("{}album"{},\ \{}
+\DoxyCodeLine{\ \ id:\ 123}
+\DoxyCodeLine{\},\ x("{}name"{},\ null,\ "{}Born\ in\ the\ U.S.A."{}),\ x("{}artist"{},\ null,\ "{}Bruce\ Springsteen"{}),\ x("{}releasedate"{},\ \{}
+\DoxyCodeLine{\ \ date:\ "{}1984-\/04-\/06"{}}
+\DoxyCodeLine{\},\ "{}April\ 6,\ 1984"{})));}
+\DoxyCodeLine{console.log(x(null,\ null,\ 1\ +\ 1,\ x("{}self-\/closing"{}),\ x("{}x"{},\ Object.assign(\{}
+\DoxyCodeLine{\ \ name:\ true,}
+\DoxyCodeLine{\ \ key:\ "{}value"{},}
+\DoxyCodeLine{\ \ key:\ expression}
+\DoxyCodeLine{\},\ spread))));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14519}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md14519}
+This package exports the identifier \`{}build\+Jsx\`{}. There is no default export.\hypertarget{readme.md_autotoc_md14520}{}\doxysubsubsection{\texorpdfstring{{\ttfamily build\+Jsx(tree\mbox{[}, options\mbox{]})}}{{\ttfamily build\+Jsx(tree\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md14520}
+Turn JSX in {\ttfamily tree} into function calls\+: {\ttfamily \texorpdfstring{$<$}{<}x /\texorpdfstring{$>$}{>}} -\/\texorpdfstring{$>$}{>} `h(\textquotesingle{}x')\`{}!\hypertarget{readme.md_autotoc_md14521}{}\doxysubsubsubsubsubsection{\texorpdfstring{Algorithm}{Algorithm}}\label{readme.md_autotoc_md14521}
+In almost all cases, this utility is the same as the Babel plugin, except that they work on slightly different syntax trees.
+
+Some differences\+:
+
+
+\begin{DoxyItemize}
+\item no pure annotations things
+\item {\ttfamily this} is not a component\+: {\ttfamily \texorpdfstring{$<$}{<}this\texorpdfstring{$>$}{>}} -\/\texorpdfstring{$>$}{>} `h(\textquotesingle{}this'){\ttfamily , not}h(this){\ttfamily }
+\item {\ttfamily  namespaces are supported\+:}\texorpdfstring{$<$}{<}a\+:b c\+:d\texorpdfstring{$>$}{>}{\ttfamily -\/\texorpdfstring{$>$}{>}}h(\textquotesingle{}a\+:b\textquotesingle{}, \{\textquotesingle{}c\+:d\textquotesingle{}\+: true\}){\ttfamily , which throws by default in Babel or can be turned on with}throw\+If\+Namespace{\ttfamily }
+\item {\ttfamily  no}use\+Spread{\ttfamily ,}use\+Built\+Ins{\ttfamily , or}filter\`{} options
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14522}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md14522}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/estree/estree/blob/master/es5.md\#node-objects}{\texttt{ {\ttfamily Node}}}) — tree to transform (typically \href{https://github.com/estree/estree/blob/master/es5.md\#programs}{\texttt{ {\ttfamily Program}}})
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14523}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md14523}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md14524}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md14524}
+Configuration (Type\+Script type).
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: you can also configure {\ttfamily runtime}, {\ttfamily import\+Source}, {\ttfamily pragma}, and {\ttfamily pragma\+Frag} from within files through comments. \end{quote}
+\hypertarget{readme.md_autotoc_md14525}{}\doxysubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md14525}
+\hypertarget{readme.md_autotoc_md14526}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily runtime}}{{\ttfamily runtime}}}\label{readme.md_autotoc_md14526}
+Choose the \href{https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html}{\texttt{ runtime}} (\`{}\+Runtime\`{}, default\+: `\textquotesingle{}classic'\`{}).
+
+Comment form\+: {\ttfamily @jsx\+Runtime the\+Runtime}.\hypertarget{readme.md_autotoc_md14527}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily import\+Source}}{{\ttfamily import\+Source}}}\label{readme.md_autotoc_md14527}
+Place to import {\ttfamily jsx}, {\ttfamily jsxs}, {\ttfamily jsx\+DEV}, and {\ttfamily Fragment} from, when the effective runtime is automatic ({\ttfamily string}, default\+: `\textquotesingle{}react'\`{}).
+
+Comment form\+: {\ttfamily @jsx\+Import\+Source the\+Source}.
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: {\ttfamily /jsx-\/runtime} or {\ttfamily /jsx-\/dev-\/runtime} is appended to this provided source. In CJS, that can resolve to a file (as in {\ttfamily the\+Source/jsx-\/runtime.\+js}), but for ESM an export map needs to be set up to point to files\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ …}
+\DoxyCodeLine{"{}exports"{}:\ \{}
+\DoxyCodeLine{\ \ //\ …}
+\DoxyCodeLine{\ \ "{}./jsx-\/runtime"{}:\ "{}./path/to/jsx-\/runtime.js"{},}
+\DoxyCodeLine{\ \ "{}./jsx-\/dev-\/runtime"{}:\ "{}./path/to/jsx-\/runtime.js"{}}
+\DoxyCodeLine{\ \ //\ …}
+
+\end{DoxyCode}
+ \end{quote}
+\hypertarget{readme.md_autotoc_md14528}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily pragma}}{{\ttfamily pragma}}}\label{readme.md_autotoc_md14528}
+Identifier or member expression to call when the effective runtime is classic ({\ttfamily string}, default\+: `\textquotesingle{}React.\+create\+Element'\`{}).
+
+Comment form\+: {\ttfamily @jsx identifier}.\hypertarget{readme.md_autotoc_md14529}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily pragma\+Frag}}{{\ttfamily pragma\+Frag}}}\label{readme.md_autotoc_md14529}
+Identifier or member expression to use as a symbol for fragments when the effective runtime is classic ({\ttfamily string}, default\+: `\textquotesingle{}React.\+Fragment'\`{}).
+
+Comment form\+: {\ttfamily @jsx\+Frag identifier}.\hypertarget{readme.md_autotoc_md14530}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily development}}{{\ttfamily development}}}\label{readme.md_autotoc_md14530}
+When in the automatic runtime, whether to import {\ttfamily the\+Source/jsx-\/dev-\/runtime.\+js}, use {\ttfamily jsx\+DEV}, and pass location info when available ({\ttfamily boolean}, default\+: {\ttfamily false}).
+
+This helps debugging but adds a lot of code that you don’t want in production.\hypertarget{readme.md_autotoc_md14531}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily file\+Path}}{{\ttfamily file\+Path}}}\label{readme.md_autotoc_md14531}
+File path to the original source file ({\ttfamily string}, example\+: `\textquotesingle{}path/to/file.\+js'{\ttfamily ). Passed in location info to}jsx\+DEV{\ttfamily when using the automatic runtime with }development\+: true\`{}.\hypertarget{readme.md_autotoc_md14532}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Runtime}}{{\ttfamily Runtime}}}\label{readme.md_autotoc_md14532}
+How to transform JSX (Type\+Script type).\hypertarget{readme.md_autotoc_md14533}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md14533}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Runtime\ =\ 'automatic'\ |\ 'classic'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14534}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md14534}
+\hypertarget{readme.md_autotoc_md14535}{}\doxysubsubsection{\texorpdfstring{Example\+: use with Acorn}{Example\+: use with Acorn}}\label{readme.md_autotoc_md14535}
+To support configuration from comments in Acorn, those comments have to be in the program. This is done by \href{https://github.com/eslint/espree}{\texttt{ {\ttfamily espree}}} but not automatically by \href{https://github.com/acornjs/acorn}{\texttt{ {\ttfamily acorn}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{Parser\}\ from\ 'acorn'}
+\DoxyCodeLine{import\ jsx\ from\ 'acorn-\/jsx'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ ''\ //\ To\ do:\ get\ \`{}doc`\ somehow.}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ comments\ =\ []}
+\DoxyCodeLine{const\ tree\ =\ Parser.extend(jsx()).parse(doc,\ \{onComment:\ comments\})}
+\DoxyCodeLine{tree.comments\ =\ comments}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md14536}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md14536}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}} and \`{}\+Runtime\`{}.\hypertarget{readme.md_autotoc_md14537}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md14537}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily estree-\/util-\/build-\/jsx@\texorpdfstring{$^\wedge$}{\string^}3}, compatible with Node.\+js 166.\hypertarget{readme.md_autotoc_md14538}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md14538}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/hast-util-to-estree}{\texttt{ {\ttfamily syntax-\/tree/hast-\/util-\/to-\/estree}}} — turn \href{https://github.com/syntax-tree/hast}{\texttt{ hast}} (HTML) to \href{https://github.com/estree/estree}{\texttt{ estree}} JSX
+\item \href{https://github.com/coderaiser/estree-to-babel}{\texttt{ {\ttfamily coderaiser/estree-\/to-\/babel}}} — turn \href{https://github.com/estree/estree}{\texttt{ estree}} to Babel trees
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md14539}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md14539}
+This package is safe.\hypertarget{readme.md_autotoc_md14540}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md14540}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md14541}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md14541}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

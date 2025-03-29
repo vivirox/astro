@@ -1,0 +1,127 @@
+\doxysection{node\+\_\+modules/emoji-\/regex Directory Reference}
+\hypertarget{dir_266dd9fe13de2dae125c9adc83a8c7f4}{}\label{dir_266dd9fe13de2dae125c9adc83a8c7f4}\index{node\_modules/emoji-\/regex Directory Reference@{node\_modules/emoji-\/regex Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+{\itshape emoji-\/regex} offers a regular expression to match all emoji symbols and sequences (including textual representations of emoji) as per the Unicode Standard. It’s based on \href{https://github.com/mathiasbynens/emoji-test-regex-pattern}{\texttt{ {\itshape emoji-\/test-\/regex-\/pattern}}}, which generates (at build time) the regular expression pattern based on the Unicode Standard. As a result, {\itshape emoji-\/regex} can easily be updated whenever new emoji are added to Unicode.
+
+Since each version of {\itshape emoji-\/regex} is tied to the latest Unicode version at the time of release, results are deterministic. This is important for use cases like image replacement, where you want to guarantee that an image asset is available for every possibly matched emoji. If you don’t need a deterministic regex, a lighter-\/weight, general emoji pattern is available via the \href{https://github.com/slevithan/emoji-regex-xs}{\texttt{ {\itshape emoji-\/regex-\/xs}}} package that follows the same API.\hypertarget{README.md_autotoc_md12420}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md12420}
+Via \href{https://www.npmjs.com/}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ emoji-\/regex}
+
+\end{DoxyCode}
+
+
+In \href{https://nodejs.org/}{\texttt{ Node.\+js}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ emojiRegex\ =\ require('emoji-\/regex');}
+\DoxyCodeLine{//\ Note:\ because\ the\ regular\ expression\ has\ the\ global\ flag\ set,\ this\ module}
+\DoxyCodeLine{//\ exports\ a\ function\ that\ returns\ the\ regex\ rather\ than\ exporting\ the\ regular}
+\DoxyCodeLine{//\ expression\ itself,\ to\ make\ it\ impossible\ to\ (accidentally)\ mutate\ the}
+\DoxyCodeLine{//\ original\ regular\ expression.}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ text\ =\ \`{}}
+\DoxyCodeLine{\(\backslash\)u\{231A\}:\ ⌚\ default\ emoji\ presentation\ character\ (Emoji\_Presentation)}
+\DoxyCodeLine{\(\backslash\)u\{2194\}\(\backslash\)u\{FE0F\}:\ ↔️\ default\ text\ presentation\ character\ rendered\ as\ emoji}
+\DoxyCodeLine{\(\backslash\)u\{1F469\}:\ 👩\ emoji\ modifier\ base\ (Emoji\_Modifier\_Base)}
+\DoxyCodeLine{\(\backslash\)u\{1F469\}\(\backslash\)u\{1F3FF\}:\ 👩🏿\ emoji\ modifier\ base\ followed\ by\ a\ modifier}
+\DoxyCodeLine{\`{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ regex\ =\ emojiRegex();}
+\DoxyCodeLine{for\ (const\ match\ of\ text.matchAll(regex))\ \{}
+\DoxyCodeLine{\ \ const\ emoji\ =\ match[0];}
+\DoxyCodeLine{\ \ console.log(`Matched\ sequence\ \$\{\ emoji\ \}\ —\ code\ points:\ \$\{\ [...emoji].length\ \}`);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Console output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Matched\ sequence\ ⌚\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ ⌚\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ ↔️\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ ↔️\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ 👩\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ 👩\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ 👩🏿\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ 👩🏿\ —\ code\ points:\ 2}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12421}{}\doxysubsection{\texorpdfstring{For maintainers}{For maintainers}}\label{README.md_autotoc_md12421}
+\hypertarget{README.md_autotoc_md12422}{}\doxysubsubsection{\texorpdfstring{How to update emoji-\/regex after new Unicode Standard releases}{How to update emoji-\/regex after new Unicode Standard releases}}\label{README.md_autotoc_md12422}
+
+\begin{DoxyEnumerate}
+\item \href{https://github.com/mathiasbynens/emoji-test-regex-pattern\#how-to-update-emoji-test-regex-pattern-after-new-uts51-releases}{\texttt{ Update {\itshape emoji-\/test-\/regex-\/pattern} as described in its repository}}.
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Bump the {\itshape emoji-\/test-\/regex-\/pattern} dependency to the latest version.
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Update the Unicode data dependency in {\ttfamily package.\+json} by running the following commands\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \#\ Example:\ updating\ from\ Unicode\ v13\ to\ Unicode\ v14.}
+\DoxyCodeLine{\ \ \ \ npm\ uninstall\ @unicode/unicode-\/13.0.0}
+\DoxyCodeLine{\ \ \ \ npm\ install\ @unicode/unicode-\/14.0.0\ -\/-\/save-\/dev}
+\DoxyCodeLine{\ \ \ \ \`{}\`{}\`{}\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{1.\ Generate\ the\ new\ output:}
+
+\end{DoxyCode}
+ sh npm run build 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1.\ Verify\ that\ tests\ still\ pass:}
+
+\end{DoxyCode}
+ sh npm test \`{}\`{}\`{}
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md12423}{}\doxysubsubsection{\texorpdfstring{How to publish a new release}{How to publish a new release}}\label{README.md_autotoc_md12423}
+
+\begin{DoxyEnumerate}
+\item On the {\ttfamily main} branch, bump the emoji-\/regex version number in {\ttfamily package.\+json}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ version\ patch\ -\/m\ 'Release\ v\%s'}
+
+\end{DoxyCode}
+
+
+Instead of {\ttfamily patch}, use {\ttfamily minor} or {\ttfamily major} \href{https://semver.org/}{\texttt{ as needed}}.
+
+Note that this produces a Git commit + tag.
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Push the release commit and tag\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ push\ \&\&\ git\ push\ -\/-\/tags}
+
+\end{DoxyCode}
+
+
+Our CI then automatically publishes the new release to npm.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md12424}{}\doxysubsection{\texorpdfstring{Author}{Author}}\label{README.md_autotoc_md12424}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{1}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://twitter.com/mathias}{\texttt{ }}    }\\\cline{1-1}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://twitter.com/mathias}{\texttt{ }}    }\\\cline{1-1}
+\endhead
+\href{https://mathiasbynens.be/}{\texttt{ Mathias Bynens}}   \\\cline{1-1}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md12425}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md12425}
+{\itshape emoji-\/regex} is available under the \href{https://mths.be/mit}{\texttt{ MIT}} license. 

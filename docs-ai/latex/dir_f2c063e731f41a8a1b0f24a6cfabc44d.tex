@@ -1,0 +1,661 @@
+\doxysection{node\+\_\+modules/@supabase/node-\/fetch Directory Reference}
+\hypertarget{dir_f2c063e731f41a8a1b0f24a6cfabc44d}{}\label{dir_f2c063e731f41a8a1b0f24a6cfabc44d}\index{node\_modules/"@supabase/node-\/fetch Directory Reference@{node\_modules/"@supabase/node-\/fetch Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/node-fetch}{\texttt{ }} \href{https://travis-ci.org/bitinn/node-fetch}{\texttt{ }} \href{https://codecov.io/gh/bitinn/node-fetch}{\texttt{ }} \href{https://packagephobia.now.sh/result?p=node-fetch}{\texttt{ }} \href{https://discord.gg/Zxbndcm}{\texttt{ }}
+
+A light-\/weight module that brings {\ttfamily window.\+fetch} to Node.\+js
+
+(We are looking for \href{https://github.com/bitinn/node-fetch/issues/567}{\texttt{ v2 maintainers and collaborators}})
+
+\href{https://opencollective.com/node-fetch}{\texttt{ }}
+
+
+\begin{DoxyItemize}
+\item Motivation
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_features}{Features}
+\item Difference from client-\/side fetch
+\item \doxylink{README.md_installation}{Installation}
+\item Loading and configuring the module
+\item Common Usage
+\begin{DoxyItemize}
+\item Plain text or HTML
+\item \doxylink{calcwit_8hpp_ab701e3ac61a85b337ec5c1abaad6742d}{JSON}
+\item Simple Post
+\item Post with JSON
+\item Post with form parameters
+\item Handling exceptions
+\item Handling client and server errors
+\end{DoxyItemize}
+\item Advanced Usage
+\begin{DoxyItemize}
+\item Streams
+\item Buffer
+\item Accessing Headers and other Meta data
+\item Extract Set-\/\+Cookie Header
+\item Post data using a file stream
+\item Post with form-\/data (detect multipart)
+\item Request cancellation with Abort\+Signal
+\end{DoxyItemize}
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item fetch(url\mbox{[}, options\mbox{]})
+\item \doxylink{README.md_options}{Options}
+\item \doxylink{README.md_class-request}{Class\+: Request}
+\item \doxylink{README.md_class-response}{Class\+: Response}
+\item \doxylink{README.md_class-headers}{Class\+: Headers}
+\item Interface\+: Body
+\item \doxylink{README.md_class-fetcherror}{Class\+: Fetch\+Error}
+\end{DoxyItemize}
+\item \doxylink{README.md_license}{License}
+\item Acknowledgement
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6062}{}\doxysubsection{\texorpdfstring{Motivation}{Motivation}}\label{README.md_autotoc_md6062}
+Instead of implementing {\ttfamily XMLHttp\+Request} in Node.\+js to run browser-\/specific \href{https://github.com/github/fetch}{\texttt{ Fetch polyfill}}, why not go from native {\ttfamily http} to {\ttfamily fetch} API directly? Hence, {\ttfamily node-\/fetch}, minimal code for a {\ttfamily window.\+fetch} compatible API on Node.\+js runtime.
+
+See Matt Andrews\textquotesingle{} \href{https://github.com/matthew-andrews/isomorphic-fetch}{\texttt{ isomorphic-\/fetch}} or Leonardo Quixada\textquotesingle{}s \href{https://github.com/lquixada/cross-fetch}{\texttt{ cross-\/fetch}} for isomorphic usage (exports {\ttfamily node-\/fetch} for server-\/side, {\ttfamily whatwg-\/fetch} for client-\/side).\hypertarget{README.md_autotoc_md6063}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md6063}
+
+\begin{DoxyItemize}
+\item Stay consistent with {\ttfamily window.\+fetch} API.
+\item Make conscious trade-\/off when following \href{https://fetch.spec.whatwg.org/}{\texttt{ WHATWG fetch spec}} and \href{https://streams.spec.whatwg.org/}{\texttt{ stream spec}} implementation details, document known differences.
+\item Use native promise but allow substituting it with \mbox{[}insert your favorite promise library\mbox{]}.
+\item Use native Node streams for body on both request and response.
+\item Decode content encoding (gzip/deflate) properly and convert string output (such as {\ttfamily res.\+text()} and {\ttfamily res.\+json()}) to UTF-\/8 automatically.
+\item Useful extensions such as timeout, redirect limit, response size limit, explicit errors for troubleshooting.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6064}{}\doxysubsection{\texorpdfstring{Difference from client-\/side fetch}{Difference from client-\/side fetch}}\label{README.md_autotoc_md6064}
+
+\begin{DoxyItemize}
+\item See Known Differences for details.
+\item If you happen to use a missing feature that {\ttfamily window.\+fetch} offers, feel free to open an issue.
+\item Pull requests are welcomed too!
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6065}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md6065}
+Current stable release ({\ttfamily 2.\+x})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ node-\/fetch}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6066}{}\doxysubsection{\texorpdfstring{Loading and configuring the module}{Loading and configuring the module}}\label{README.md_autotoc_md6066}
+We suggest you load the module via {\ttfamily require} until the stabilization of ES modules in node\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fetch\ =\ require('node-\/fetch');}
+
+\end{DoxyCode}
+
+
+If you are using a Promise library other than native, set it through {\ttfamily fetch.\+Promise}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Bluebird\ =\ require('bluebird');}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch.Promise\ =\ Bluebird;}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6067}{}\doxysubsection{\texorpdfstring{Common Usage}{Common Usage}}\label{README.md_autotoc_md6067}
+NOTE\+: The documentation below is up-\/to-\/date with {\ttfamily 2.\+x} releases; see the \href{https://github.com/bitinn/node-fetch/blob/1.x/README.md}{\texttt{ {\ttfamily 1.\+x} readme}}, \href{https://github.com/bitinn/node-fetch/blob/1.x/CHANGELOG.md}{\texttt{ changelog}} and 2.x upgrade guide for the differences.\hypertarget{README.md_autotoc_md6068}{}\doxysubsubsubsection{\texorpdfstring{Plain text or HTML}{Plain text or HTML}}\label{README.md_autotoc_md6068}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://github.com/')}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.text())}
+\DoxyCodeLine{\ \ \ \ .then(body\ =>\ console.log(body));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6069}{}\doxysubsubsubsection{\texorpdfstring{JSON}{JSON}}\label{README.md_autotoc_md6069}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://api.github.com/users/github')}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.json())}
+\DoxyCodeLine{\ \ \ \ .then(json\ =>\ console.log(json));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6070}{}\doxysubsubsubsection{\texorpdfstring{Simple Post}{Simple Post}}\label{README.md_autotoc_md6070}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://httpbin.org/post',\ \{\ method:\ 'POST',\ body:\ 'a=1'\ \})}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.json())\ //\ expecting\ a\ json\ response}
+\DoxyCodeLine{\ \ \ \ .then(json\ =>\ console.log(json));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6071}{}\doxysubsubsubsection{\texorpdfstring{Post with JSON}{Post with JSON}}\label{README.md_autotoc_md6071}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ body\ =\ \{\ a:\ 1\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://httpbin.org/post',\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ method:\ 'post',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ body:\ \ \ \ JSON.stringify(body),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ headers:\ \{\ 'Content-\/Type':\ 'application/json'\ \},}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.json())}
+\DoxyCodeLine{\ \ \ \ .then(json\ =>\ console.log(json));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6072}{}\doxysubsubsubsection{\texorpdfstring{Post with form parameters}{Post with form parameters}}\label{README.md_autotoc_md6072}
+{\ttfamily URLSearch\+Params} is available in Node.\+js as of v7.\+5.\+0. See \href{https://nodejs.org/api/url.html\#url_class_urlsearchparams}{\texttt{ official documentation}} for more usage methods.
+
+NOTE\+: The {\ttfamily Content-\/\+Type} header is only set automatically to {\ttfamily x-\/www-\/form-\/urlencoded} when an instance of {\ttfamily URLSearch\+Params} is given as such\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ URLSearchParams\ \}\ =\ require('url');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ params\ =\ new\ URLSearchParams();}
+\DoxyCodeLine{params.append('a',\ 1);}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://httpbin.org/post',\ \{\ method:\ 'POST',\ body:\ params\ \})}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.json())}
+\DoxyCodeLine{\ \ \ \ .then(json\ =>\ console.log(json));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6073}{}\doxysubsubsubsection{\texorpdfstring{Handling exceptions}{Handling exceptions}}\label{README.md_autotoc_md6073}
+NOTE\+: 3xx-\/5xx responses are {\itshape NOT} exceptions and should be handled in {\ttfamily then()}; see the next section for more information.
+
+Adding a catch to the fetch promise chain will catch {\itshape all} exceptions, such as errors originating from node core libraries, network errors and operational errors, which are instances of Fetch\+Error. See the error handling document for more details.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://domain.invalid/')}
+\DoxyCodeLine{\ \ \ \ .catch(err\ =>\ console.error(err));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6074}{}\doxysubsubsubsection{\texorpdfstring{Handling client and server errors}{Handling client and server errors}}\label{README.md_autotoc_md6074}
+It is common to create a helper function to check that the response contains no client (4xx) or server (5xx) error responses\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ checkStatus(res)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (res.ok)\ \{\ //\ res.status\ >=\ 200\ \&\&\ res.status\ <\ 300}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ res;}
+\DoxyCodeLine{\ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ throw\ MyCustomError(res.statusText);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://httpbin.org/status/400')}
+\DoxyCodeLine{\ \ \ \ .then(checkStatus)}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ console.log('will\ not\ get\ here...'))}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6075}{}\doxysubsection{\texorpdfstring{Advanced Usage}{Advanced Usage}}\label{README.md_autotoc_md6075}
+\hypertarget{README.md_autotoc_md6076}{}\doxysubsubsubsection{\texorpdfstring{Streams}{Streams}}\label{README.md_autotoc_md6076}
+The "{}\+Node.\+js way"{} is to use streams when possible\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://assets-\/cdn.github.com/images/modules/logos\_page/Octocat.png')}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ const\ dest\ =\ fs.createWriteStream('./octocat.png');}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ res.body.pipe(dest);}
+\DoxyCodeLine{\ \ \ \ \});}
+
+\end{DoxyCode}
+
+
+In Node.\+js 14 you can also use async iterators to read {\ttfamily body}; however, be careful to catch errors -- the longer a response runs, the more likely it is to encounter an error.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fetch\ =\ require('node-\/fetch');}
+\DoxyCodeLine{const\ response\ =\ await\ fetch('https://httpbin.org/stream/3');}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ \ \ for\ await\ (const\ chunk\ of\ response.body)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.dir(JSON.parse(chunk.toString()));}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ console.error(err.stack);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+In Node.\+js 12 you can also use async iterators to read {\ttfamily body}; however, async iterators with streams did not mature until Node.\+js 14, so you need to do some extra work to ensure you handle errors directly from the stream and wait on it response to fully close.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fetch\ =\ require('node-\/fetch');}
+\DoxyCodeLine{const\ read\ =\ async\ body\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ let\ error;}
+\DoxyCodeLine{\ \ \ \ body.on('error',\ err\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ error\ =\ err;}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\ \ \ \ for\ await\ (const\ chunk\ of\ body)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.dir(JSON.parse(chunk.toString()));}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ return\ new\ Promise((resolve,\ reject)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ body.on('close',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ error\ ?\ reject(error)\ :\ resolve();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ \ \ const\ response\ =\ await\ fetch('https://httpbin.org/stream/3');}
+\DoxyCodeLine{\ \ \ \ await\ read(response.body);}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ console.error(err.stack);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6077}{}\doxysubsubsubsection{\texorpdfstring{Buffer}{Buffer}}\label{README.md_autotoc_md6077}
+If you prefer to cache binary data in full, use buffer(). (NOTE\+: {\ttfamily buffer()} is a {\ttfamily node-\/fetch}-\/only API)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fileType\ =\ require('file-\/type');}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://assets-\/cdn.github.com/images/modules/logos\_page/Octocat.png')}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.buffer())}
+\DoxyCodeLine{\ \ \ \ .then(buffer\ =>\ fileType(buffer))}
+\DoxyCodeLine{\ \ \ \ .then(type\ =>\ \{\ /*\ ...\ */\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6078}{}\doxysubsubsubsection{\texorpdfstring{Accessing Headers and other Meta data}{Accessing Headers and other Meta data}}\label{README.md_autotoc_md6078}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://github.com/')}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(res.ok);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(res.status);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(res.statusText);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(res.headers.raw());}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(res.headers.get('content-\/type'));}
+\DoxyCodeLine{\ \ \ \ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6079}{}\doxysubsubsubsection{\texorpdfstring{Extract Set-\/\+Cookie Header}{Extract Set-\/\+Cookie Header}}\label{README.md_autotoc_md6079}
+Unlike browsers, you can access raw {\ttfamily Set-\/\+Cookie} headers manually using {\ttfamily Headers.\+raw()}. This is a {\ttfamily node-\/fetch} only API.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch(url).then(res\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ returns\ an\ array\ of\ values,\ instead\ of\ a\ string\ of\ comma-\/separated\ values}
+\DoxyCodeLine{\ \ \ \ console.log(res.headers.raw()['set-\/cookie']);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6080}{}\doxysubsubsubsection{\texorpdfstring{Post data using a file stream}{Post data using a file stream}}\label{README.md_autotoc_md6080}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ createReadStream\ \}\ =\ require('fs');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ createReadStream('input.txt');}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://httpbin.org/post',\ \{\ method:\ 'POST',\ body:\ stream\ \})}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.json())}
+\DoxyCodeLine{\ \ \ \ .then(json\ =>\ console.log(json));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6081}{}\doxysubsubsubsection{\texorpdfstring{Post with form-\/data (detect multipart)}{Post with form-\/data (detect multipart)}}\label{README.md_autotoc_md6081}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ FormData\ =\ require('form-\/data');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ form\ =\ new\ FormData();}
+\DoxyCodeLine{form.append('a',\ 1);}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://httpbin.org/post',\ \{\ method:\ 'POST',\ body:\ form\ \})}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.json())}
+\DoxyCodeLine{\ \ \ \ .then(json\ =>\ console.log(json));}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ OR,\ using\ custom\ headers}
+\DoxyCodeLine{//\ NOTE:\ getHeaders()\ is\ non-\/standard\ API}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ form\ =\ new\ FormData();}
+\DoxyCodeLine{form.append('a',\ 1);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ \ \ method:\ 'POST',}
+\DoxyCodeLine{\ \ \ \ body:\ form,}
+\DoxyCodeLine{\ \ \ \ headers:\ form.getHeaders()}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://httpbin.org/post',\ options)}
+\DoxyCodeLine{\ \ \ \ .then(res\ =>\ res.json())}
+\DoxyCodeLine{\ \ \ \ .then(json\ =>\ console.log(json));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6082}{}\doxysubsubsubsection{\texorpdfstring{Request cancellation with Abort\+Signal}{Request cancellation with Abort\+Signal}}\label{README.md_autotoc_md6082}
+\begin{quote}
+NOTE\+: You may cancel streamed requests only on Node \texorpdfstring{$>$}{>}= v8.\+0.\+0 \end{quote}
+
+
+You may cancel requests with {\ttfamily Abort\+Controller}. A suggested implementation is \href{https://www.npmjs.com/package/abort-controller}{\texttt{ {\ttfamily abort-\/controller}}}.
+
+An example of timing out a request after 150ms could be achieved as the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ AbortController\ from\ 'abort-\/controller';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ controller\ =\ new\ AbortController();}
+\DoxyCodeLine{const\ timeout\ =\ setTimeout(}
+\DoxyCodeLine{\ \ ()\ =>\ \{\ controller.abort();\ \},}
+\DoxyCodeLine{\ \ 150,}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch(url,\ \{\ signal:\ controller.signal\ \})}
+\DoxyCodeLine{\ \ .then(res\ =>\ res.json())}
+\DoxyCodeLine{\ \ .then(}
+\DoxyCodeLine{\ \ \ \ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ useData(data)}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ err\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ if\ (err.name\ ===\ 'AbortError')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ request\ was\ aborted}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ .finally(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ clearTimeout(timeout);}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+See \href{https://github.com/bitinn/node-fetch/blob/master/test/test.js}{\texttt{ test cases}} for more examples.\hypertarget{README.md_autotoc_md6083}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md6083}
+\hypertarget{README.md_autotoc_md6084}{}\doxysubsubsection{\texorpdfstring{fetch(url\mbox{[}, options\mbox{]})}{fetch(url\mbox{[}, options\mbox{]})}}\label{README.md_autotoc_md6084}
+
+\begin{DoxyItemize}
+\item {\ttfamily url} A string representing the URL for fetching
+\item {\ttfamily options} \doxylink{README.md_fetch-options}{Options} for the HTTP(\+S) request
+\item Returns\+: {\ttfamily Promise\texorpdfstring{$<$}{<}\doxylink{README.md_class-response}{Response}\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+
+Perform an HTTP(\+S) fetch.
+
+{\ttfamily url} should be an absolute url, such as {\ttfamily \href{https://example.com/}{\texttt{ https\+://example.\+com/}}}. A path-\/relative URL ({\ttfamily /file/under/root}) or protocol-\/relative URL ({\ttfamily //can-\/be-\/http-\/or-\/https.com/}) will result in a rejected {\ttfamily Promise}.
+
+\label{README.md_fetch-options}%
+\Hypertarget{README.md_fetch-options}%
+ \hypertarget{README.md_autotoc_md6085}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md6085}
+The default values are shown after each option key.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ //\ These\ properties\ are\ part\ of\ the\ Fetch\ Standard}
+\DoxyCodeLine{\ \ \ \ method:\ 'GET',}
+\DoxyCodeLine{\ \ \ \ headers:\ \{\},\ \ \ \ \ \ \ \ //\ request\ headers.\ format\ is\ the\ identical\ to\ that\ accepted\ by\ the\ Headers\ constructor\ (see\ below)}
+\DoxyCodeLine{\ \ \ \ body:\ null,\ \ \ \ \ \ \ \ \ //\ request\ body.\ can\ be\ null,\ a\ string,\ a\ Buffer,\ a\ Blob,\ or\ a\ Node.js\ Readable\ stream}
+\DoxyCodeLine{\ \ \ \ redirect:\ 'follow',\ //\ set\ to\ \`{}manual`\ to\ extract\ redirect\ headers,\ \`{}error`\ to\ reject\ redirect}
+\DoxyCodeLine{\ \ \ \ signal:\ null,\ \ \ \ \ \ \ //\ pass\ an\ instance\ of\ AbortSignal\ to\ optionally\ abort\ requests}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ The\ following\ properties\ are\ node-\/fetch\ extensions}
+\DoxyCodeLine{\ \ \ \ follow:\ 20,\ \ \ \ \ \ \ \ \ //\ maximum\ redirect\ count.\ 0\ to\ not\ follow\ redirect}
+\DoxyCodeLine{\ \ \ \ timeout:\ 0,\ \ \ \ \ \ \ \ \ //\ req/res\ timeout\ in\ ms,\ it\ resets\ on\ redirect.\ 0\ to\ disable\ (OS\ limit\ applies).\ Signal\ is\ recommended\ instead.}
+\DoxyCodeLine{\ \ \ \ compress:\ true,\ \ \ \ \ //\ support\ gzip/deflate\ content\ encoding.\ false\ to\ disable}
+\DoxyCodeLine{\ \ \ \ size:\ 0,\ \ \ \ \ \ \ \ \ \ \ \ //\ maximum\ response\ body\ size\ in\ bytes.\ 0\ to\ disable}
+\DoxyCodeLine{\ \ \ \ agent:\ null\ \ \ \ \ \ \ \ \ //\ http(s).Agent\ instance\ or\ function\ that\ returns\ an\ instance\ (see\ below)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6086}{}\doxysubsubsubsubsection{\texorpdfstring{Default Headers}{Default Headers}}\label{README.md_autotoc_md6086}
+If no values are set, the following request headers will be sent automatically\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Header   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Value    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Header   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Value    }\\\cline{1-2}
+\endhead
+{\ttfamily Accept-\/\+Encoding}   &{\ttfamily gzip,deflate} {\itshape (when {\ttfamily options.\+compress === true})}    \\\cline{1-2}
+{\ttfamily Accept}   &{\ttfamily \texorpdfstring{$\ast$}{*}/\texorpdfstring{$\ast$}{*}}    \\\cline{1-2}
+{\ttfamily Connection}   &{\ttfamily close} {\itshape (when no {\ttfamily options.\+agent} is present)}    \\\cline{1-2}
+{\ttfamily Content-\/\+Length}   &{\itshape (automatically calculated, if possible)}    \\\cline{1-2}
+{\ttfamily Transfer-\/\+Encoding}   &{\ttfamily chunked} {\itshape (when {\ttfamily req.\+body} is a stream)}    \\\cline{1-2}
+{\ttfamily User-\/\+Agent}   &{\ttfamily node-\/fetch/1.\+0 (+\href{https://github.com/bitinn/node-fetch}{\texttt{ https\+://github.\+com/bitinn/node-\/fetch}})}   \\\cline{1-2}
+\end{longtabu}
+
+
+Note\+: when {\ttfamily body} is a {\ttfamily Stream}, {\ttfamily Content-\/\+Length} is not set automatically.\hypertarget{README.md_autotoc_md6087}{}\doxysubsubsubsubsection{\texorpdfstring{Custom Agent}{Custom Agent}}\label{README.md_autotoc_md6087}
+The {\ttfamily agent} option allows you to specify networking related options which are out of the scope of Fetch, including and not limited to the following\+:
+
+
+\begin{DoxyItemize}
+\item Support self-\/signed certificate
+\item Use only IPv4 or IPv6
+\item Custom DNS Lookup
+\end{DoxyItemize}
+
+See \href{https://nodejs.org/api/http.html\#http_new_agent_options}{\texttt{ {\ttfamily http.\+Agent}}} for more information.
+
+In addition, the {\ttfamily agent} option accepts a function that returns {\ttfamily http}(s){\ttfamily .Agent} instance given current \href{https://nodejs.org/api/url.html}{\texttt{ URL}}, this is useful during a redirection chain across HTTP and HTTPS protocol.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ httpAgent\ =\ new\ http.Agent(\{}
+\DoxyCodeLine{\ \ \ \ keepAlive:\ true}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ httpsAgent\ =\ new\ https.Agent(\{}
+\DoxyCodeLine{\ \ \ \ keepAlive:\ true}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ \ \ agent:\ function\ (\_parsedURL)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (\_parsedURL.protocol\ ==\ 'http:')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ return\ httpAgent;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ return\ httpsAgent;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\label{README.md_class-request}%
+\Hypertarget{README.md_class-request}%
+ \hypertarget{README.md_autotoc_md6088}{}\doxysubsubsection{\texorpdfstring{Class\+: Request}{Class\+: Request}}\label{README.md_autotoc_md6088}
+An HTTP(\+S) request containing information about URL, method, headers, and the body. This class implements the \doxylink{README.md_iface-body}{Body} interface.
+
+Due to the nature of Node.\+js, the following properties are not implemented at this moment\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily type}
+\item {\ttfamily destination}
+\item {\ttfamily referrer}
+\item {\ttfamily referrer\+Policy}
+\item {\ttfamily mode}
+\item {\ttfamily credentials}
+\item {\ttfamily cache}
+\item {\ttfamily integrity}
+\item {\ttfamily keepalive}
+\end{DoxyItemize}
+
+The following node-\/fetch extension properties are provided\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily follow}
+\item {\ttfamily compress}
+\item {\ttfamily counter}
+\item {\ttfamily agent}
+\end{DoxyItemize}
+
+See \doxylink{README.md_fetch-options}{options} for exact meaning of these extensions.\hypertarget{README.md_autotoc_md6089}{}\doxysubsubsubsection{\texorpdfstring{new Request(input\mbox{[}, options\mbox{]})}{new Request(input\mbox{[}, options\mbox{]})}}\label{README.md_autotoc_md6089}
+
+\footnotesize {\itshape (spec-\/compliant)}
+\normalsize 
+
+
+\begin{DoxyItemize}
+\item {\ttfamily input} A string representing a URL, or another {\ttfamily Request} (which will be cloned)
+\item {\ttfamily options} \mbox{[}Options\mbox{]}\mbox{[}\#fetch-\/options\mbox{]} for the HTTP(\+S) request
+\end{DoxyItemize}
+
+Constructs a new {\ttfamily Request} object. The constructor is identical to that in the \href{https://developer.mozilla.org/en-US/docs/Web/API/Request/Request}{\texttt{ browser}}.
+
+In most cases, directly {\ttfamily fetch(url, options)} is simpler than creating a {\ttfamily Request} object.
+
+\label{README.md_class-response}%
+\Hypertarget{README.md_class-response}%
+ \hypertarget{README.md_autotoc_md6090}{}\doxysubsubsection{\texorpdfstring{Class\+: Response}{Class\+: Response}}\label{README.md_autotoc_md6090}
+An HTTP(\+S) response. This class implements the \doxylink{README.md_iface-body}{Body} interface.
+
+The following properties are not implemented in node-\/fetch at this moment\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Response.\+error()}
+\item {\ttfamily Response.\+redirect()}
+\item {\ttfamily type}
+\item {\ttfamily trailer}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6091}{}\doxysubsubsubsection{\texorpdfstring{new Response(\mbox{[}body\mbox{[}, options\mbox{]}\mbox{]})}{new Response(\mbox{[}body\mbox{[}, options\mbox{]}\mbox{]})}}\label{README.md_autotoc_md6091}
+
+\footnotesize {\itshape (spec-\/compliant)}
+\normalsize 
+
+
+\begin{DoxyItemize}
+\item {\ttfamily body} A {\ttfamily String} or \href{https://nodejs.org/api/stream.html\#stream_readable_streams}{\texttt{ {\ttfamily Readable} stream}}
+\item {\ttfamily options} A \href{https://fetch.spec.whatwg.org/\#responseinit}{\texttt{ {\ttfamily Response\+Init}}} options dictionary
+\end{DoxyItemize}
+
+Constructs a new {\ttfamily Response} object. The constructor is identical to that in the \href{https://developer.mozilla.org/en-US/docs/Web/API/Response/Response}{\texttt{ browser}}.
+
+Because Node.\+js does not implement service workers (for which this class was designed), one rarely has to construct a {\ttfamily Response} directly.\hypertarget{README.md_autotoc_md6092}{}\doxysubsubsubsection{\texorpdfstring{response.\+ok}{response.\+ok}}\label{README.md_autotoc_md6092}
+
+\footnotesize {\itshape (spec-\/compliant)}
+\normalsize 
+
+Convenience property representing if the request ended normally. Will evaluate to true if the response status was greater than or equal to 200 but smaller than 300.\hypertarget{README.md_autotoc_md6093}{}\doxysubsubsubsection{\texorpdfstring{response.\+redirected}{response.\+redirected}}\label{README.md_autotoc_md6093}
+
+\footnotesize {\itshape (spec-\/compliant)}
+\normalsize 
+
+Convenience property representing if the request has been redirected at least once. Will evaluate to true if the internal redirect counter is greater than 0.
+
+\label{README.md_class-headers}%
+\Hypertarget{README.md_class-headers}%
+ \hypertarget{README.md_autotoc_md6094}{}\doxysubsubsection{\texorpdfstring{Class\+: Headers}{Class\+: Headers}}\label{README.md_autotoc_md6094}
+This class allows manipulating and iterating over a set of HTTP headers. All methods specified in the \href{https://fetch.spec.whatwg.org/}{\texttt{ Fetch Standard}} are implemented.\hypertarget{README.md_autotoc_md6095}{}\doxysubsubsubsection{\texorpdfstring{new Headers(\mbox{[}init\mbox{]})}{new Headers(\mbox{[}init\mbox{]})}}\label{README.md_autotoc_md6095}
+
+\footnotesize {\itshape (spec-\/compliant)}
+\normalsize 
+
+
+\begin{DoxyItemize}
+\item {\ttfamily init} Optional argument to pre-\/fill the {\ttfamily Headers} object
+\end{DoxyItemize}
+
+Construct a new {\ttfamily Headers} object. {\ttfamily init} can be either {\ttfamily null}, a {\ttfamily Headers} object, an key-\/value map object or any iterable object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Example\ adapted\ from\ https://fetch.spec.whatwg.org/\#example-\/headers-\/class}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ meta\ =\ \{}
+\DoxyCodeLine{\ \ 'Content-\/Type':\ 'text/xml',}
+\DoxyCodeLine{\ \ 'Breaking-\/Bad':\ '<3'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ headers\ =\ new\ Headers(meta);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ above\ is\ equivalent\ to}
+\DoxyCodeLine{const\ meta\ =\ [}
+\DoxyCodeLine{\ \ [\ 'Content-\/Type',\ 'text/xml'\ ],}
+\DoxyCodeLine{\ \ [\ 'Breaking-\/Bad',\ '<3'\ ]}
+\DoxyCodeLine{];}
+\DoxyCodeLine{const\ headers\ =\ new\ Headers(meta);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ You\ can\ in\ fact\ use\ any\ iterable\ objects,\ like\ a\ Map\ or\ even\ another\ Headers}
+\DoxyCodeLine{const\ meta\ =\ new\ Map();}
+\DoxyCodeLine{meta.set('Content-\/Type',\ 'text/xml');}
+\DoxyCodeLine{meta.set('Breaking-\/Bad',\ '<3');}
+\DoxyCodeLine{const\ headers\ =\ new\ Headers(meta);}
+\DoxyCodeLine{const\ copyOfHeaders\ =\ new\ Headers(headers);}
+
+\end{DoxyCode}
+
+
+\label{README.md_iface-body}%
+\Hypertarget{README.md_iface-body}%
+ \hypertarget{README.md_autotoc_md6096}{}\doxysubsubsection{\texorpdfstring{Interface\+: Body}{Interface\+: Body}}\label{README.md_autotoc_md6096}
+{\ttfamily Body} is an abstract interface with methods that are applicable to both {\ttfamily Request} and {\ttfamily Response} classes.
+
+The following methods are not yet implemented in node-\/fetch at this moment\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily form\+Data()}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6097}{}\doxysubsubsubsection{\texorpdfstring{body.\+body}{body.\+body}}\label{README.md_autotoc_md6097}
+
+\footnotesize {\itshape (deviation from spec)}
+\normalsize 
+
+
+\begin{DoxyItemize}
+\item Node.\+js \href{https://nodejs.org/api/stream.html\#stream_readable_streams}{\texttt{ {\ttfamily Readable} stream}}
+\end{DoxyItemize}
+
+Data are encapsulated in the {\ttfamily Body} object. Note that while the \href{https://fetch.spec.whatwg.org/}{\texttt{ Fetch Standard}} requires the property to always be a WHATWG {\ttfamily Readable\+Stream}, in node-\/fetch it is a Node.\+js \href{https://nodejs.org/api/stream.html\#stream_readable_streams}{\texttt{ {\ttfamily Readable} stream}}.\hypertarget{README.md_autotoc_md6098}{}\doxysubsubsubsection{\texorpdfstring{body.\+body\+Used}{body.\+body\+Used}}\label{README.md_autotoc_md6098}
+
+\footnotesize {\itshape (spec-\/compliant)}
+\normalsize 
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Boolean}
+\end{DoxyItemize}
+
+A boolean property for if this body has been consumed. Per the specs, a consumed body cannot be used again.\hypertarget{README.md_autotoc_md6099}{}\doxysubsubsubsection{\texorpdfstring{body.\+array\+Buffer()}{body.\+array\+Buffer()}}\label{README.md_autotoc_md6099}
+\hypertarget{README.md_autotoc_md6100}{}\doxysubsubsubsection{\texorpdfstring{body.\+blob()}{body.\+blob()}}\label{README.md_autotoc_md6100}
+\hypertarget{README.md_autotoc_md6101}{}\doxysubsubsubsection{\texorpdfstring{body.\+json()}{body.\+json()}}\label{README.md_autotoc_md6101}
+\hypertarget{README.md_autotoc_md6102}{}\doxysubsubsubsection{\texorpdfstring{body.\+text()}{body.\+text()}}\label{README.md_autotoc_md6102}
+
+\footnotesize {\itshape (spec-\/compliant)}
+\normalsize 
+
+
+\begin{DoxyItemize}
+\item Returns\+: {\ttfamily Promise}
+\end{DoxyItemize}
+
+Consume the body and return a promise that will resolve to one of these formats.\hypertarget{README.md_autotoc_md6103}{}\doxysubsubsubsection{\texorpdfstring{body.\+buffer()}{body.\+buffer()}}\label{README.md_autotoc_md6103}
+
+\footnotesize {\itshape (node-\/fetch extension)}
+\normalsize 
+
+
+\begin{DoxyItemize}
+\item Returns\+: {\ttfamily Promise\texorpdfstring{$<$}{<}Buffer\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+
+Consume the body and return a promise that will resolve to a Buffer.\hypertarget{README.md_autotoc_md6104}{}\doxysubsubsubsection{\texorpdfstring{body.\+text\+Converted()}{body.\+text\+Converted()}}\label{README.md_autotoc_md6104}
+
+\footnotesize {\itshape (node-\/fetch extension)}
+\normalsize 
+
+
+\begin{DoxyItemize}
+\item Returns\+: {\ttfamily Promise\texorpdfstring{$<$}{<}String\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+
+Identical to {\ttfamily body.\+text()}, except instead of always converting to UTF-\/8, encoding sniffing will be performed and text converted to UTF-\/8 if possible.
+
+(This API requires an optional dependency of the npm package \href{https://www.npmjs.com/package/encoding}{\texttt{ encoding}}, which you need to install manually. {\ttfamily webpack} users may see \href{https://github.com/bitinn/node-fetch/issues/412\#issuecomment-379007792}{\texttt{ a warning message}} due to this optional dependency.)
+
+\label{README.md_class-fetcherror}%
+\Hypertarget{README.md_class-fetcherror}%
+ \hypertarget{README.md_autotoc_md6105}{}\doxysubsubsection{\texorpdfstring{Class\+: Fetch\+Error}{Class\+: Fetch\+Error}}\label{README.md_autotoc_md6105}
+
+\footnotesize {\itshape (node-\/fetch extension)}
+\normalsize 
+
+An operational error in the fetching process. See \href{https://github.com/bitinn/node-fetch/blob/master/ERROR-HANDLING.md}{\texttt{ ERROR-\/\+HANDLING.\+md}} for more info.
+
+\label{README.md_class-aborterror}%
+\Hypertarget{README.md_class-aborterror}%
+ \hypertarget{README.md_autotoc_md6106}{}\doxysubsubsection{\texorpdfstring{Class\+: Abort\+Error}{Class\+: Abort\+Error}}\label{README.md_autotoc_md6106}
+
+\footnotesize {\itshape (node-\/fetch extension)}
+\normalsize 
+
+An Error thrown when the request is aborted in response to an {\ttfamily Abort\+Signal}\textquotesingle{}s {\ttfamily abort} event. It has a {\ttfamily name} property of {\ttfamily Abort\+Error}. See \href{https://github.com/bitinn/node-fetch/blob/master/ERROR-HANDLING.md}{\texttt{ ERROR-\/\+HANDLING.\+MD}} for more info.\hypertarget{README.md_autotoc_md6107}{}\doxysubsection{\texorpdfstring{Acknowledgement}{Acknowledgement}}\label{README.md_autotoc_md6107}
+Thanks to \href{https://github.com/github/fetch}{\texttt{ github/fetch}} for providing a solid implementation reference.
+
+{\ttfamily node-\/fetch} v1 was maintained by \href{https://github.com/bitinn}{\texttt{ @bitinn}}; v2 was maintained by \href{https://github.com/timothygu}{\texttt{ @\+Timothy\+Gu}}, \href{https://github.com/bitinn}{\texttt{ @bitinn}} and \href{https://github.com/jimmywarting}{\texttt{ @jimmywarting}}; v2 readme is written by \href{https://github.com/jkantr}{\texttt{ @jkantr}}.\hypertarget{README.md_autotoc_md6108}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md6108}
+MIT 

@@ -1,0 +1,140 @@
+\doxysection{node\+\_\+modules/@inquirer/rawlist Directory Reference}
+\hypertarget{dir_03a43c6a672f12b45701f32f4f27c9c1}{}\label{dir_03a43c6a672f12b45701f32f4f27c9c1}\index{node\_modules/"@inquirer/rawlist Directory Reference@{node\_modules/"@inquirer/rawlist Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Simple interactive command line prompt to display a raw list of choices (single value select) with minimal interaction.
+
+\hypertarget{README.md_autotoc_md3799}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md3799}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ npm }&\cellcolor{\tableheadbgcolor}\textbf{ yarn  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ npm }&\cellcolor{\tableheadbgcolor}\textbf{ yarn  }\\\cline{1-2}
+\endhead
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @inquirer/prompts}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ @inquirer/prompts}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\multicolumn{2}{|c|}{\PBS\centering Or  }\\\cline{1-2}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @inquirer/rawlist}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ @inquirer/rawlist}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md3800}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3800}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ rawlist\ \}\ from\ '@inquirer/prompts';}
+\DoxyCodeLine{//\ Or}
+\DoxyCodeLine{//\ import\ rawlist\ from\ '@inquirer/rawlist';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ answer\ =\ await\ rawlist(\{}
+\DoxyCodeLine{\ \ message:\ 'Select\ a\ package\ manager',}
+\DoxyCodeLine{\ \ choices:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ name:\ 'npm',\ value:\ 'npm'\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ name:\ 'yarn',\ value:\ 'yarn'\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ name:\ 'pnpm',\ value:\ 'pnpm'\ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3801}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md3801}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Property   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Required   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Property   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Required   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endhead
+message   &{\ttfamily string}   &yes   &The question to ask    \\\cline{1-4}
+choices   &{\ttfamily Choice\mbox{[}\mbox{]}}   &yes   &List of the available choices.    \\\cline{1-4}
+theme   &See Theming   &no   &Customize look of the prompt.   \\\cline{1-4}
+\end{longtabu}
+
+
+{\ttfamily Separator} objects can be used in the {\ttfamily choices} array to render non-\/selectable lines in the choice list. By default it\textquotesingle{}ll render a line, but you can provide the text as argument (`new Separator('-- Dependencies --\textquotesingle{})\`{}). This option is often used to add labels to groups within long list of options.\hypertarget{README.md_autotoc_md3802}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Choice} object}{{\ttfamily Choice} object}}\label{README.md_autotoc_md3802}
+The {\ttfamily Choice} object is typed as
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Choice<Value>\ =\ \{}
+\DoxyCodeLine{\ \ value:\ Value;}
+\DoxyCodeLine{\ \ name?:\ string;}
+\DoxyCodeLine{\ \ short?:\ string;}
+\DoxyCodeLine{\ \ key?:\ string;}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+Here\textquotesingle{}s each property\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily value}\+: The value is what will be returned by {\ttfamily await rawlist()}.
+\item {\ttfamily name}\+: This is the string displayed in the choice list.
+\item {\ttfamily short}\+: Once the prompt is done (press enter), we\textquotesingle{}ll use {\ttfamily short} if defined to render next to the question. By default we\textquotesingle{}ll use {\ttfamily name}.
+\item {\ttfamily key}\+: The key of the choice. Displayed as {\ttfamily key) name}.
+\end{DoxyItemize}
+
+{\ttfamily choices} can also be an array of string, in which case the string will be used both as the {\ttfamily value} and the {\ttfamily name}.\hypertarget{README.md_autotoc_md3803}{}\doxysubsubsection{\texorpdfstring{Theming}{Theming}}\label{README.md_autotoc_md3803}
+You can theme a prompt by passing a {\ttfamily theme} object option. The theme object only need to includes the keys you wish to modify, we\textquotesingle{}ll fallback on the defaults for the rest.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Theme\ =\ \{}
+\DoxyCodeLine{\ \ prefix:\ string\ |\ \{\ idle:\ string;\ done:\ string\ \};}
+\DoxyCodeLine{\ \ spinner:\ \{}
+\DoxyCodeLine{\ \ \ \ interval:\ number;}
+\DoxyCodeLine{\ \ \ \ frames:\ string[];}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\ \ style:\ \{}
+\DoxyCodeLine{\ \ \ \ answer:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ message:\ (text:\ string,\ status:\ 'idle'\ |\ 'done'\ |\ 'loading')\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ error:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ highlight:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3804}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md3804}
+Copyright (c) 2023 Simon Boudrias (twitter\+: \href{https://twitter.com/Vaxilart}{\texttt{ @vaxilart}})~\newline
+ Licensed under the MIT license. 

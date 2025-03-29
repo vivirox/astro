@@ -1,0 +1,47 @@
+\doxysection{node\+\_\+modules/set-\/function-\/name Directory Reference}
+\hypertarget{dir_aab1ae0b36c58f131c90f2467fec0abd}{}\label{dir_aab1ae0b36c58f131c90f2467fec0abd}\index{node\_modules/set-\/function-\/name Directory Reference@{node\_modules/set-\/function-\/name Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/ljharb/set-function-name/actions}{\texttt{ }} \href{https://app.codecov.io/gh/ljharb/set-function-name/}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=set-function-name}{\texttt{ }}
+
+\href{https://npmjs.org/package/set-function-name}{\texttt{ }}
+
+Set a function’s name.
+
+Arguments\+:
+\begin{DoxyItemize}
+\item {\ttfamily fn}\+: the function
+\item {\ttfamily name}\+: the new name
+\item {\ttfamily loose}\+: Optional. If true, and the name fails to be set, do not throw. Default false.
+\end{DoxyItemize}
+
+Returns {\ttfamily fn}.\hypertarget{README.md_autotoc_md30616}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md30616}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ setFunctionName\ =\ require('set-\/function-\/name');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ obj\ =\ \{}
+\DoxyCodeLine{\ \ \ \ concise()\ \{\},}
+\DoxyCodeLine{\ \ \ \ arrow:\ ()\ =>\ \{\},}
+\DoxyCodeLine{\ \ \ \ named:\ function\ named()\ \{\},}
+\DoxyCodeLine{\ \ \ \ anon:\ function\ ()\ \{\},}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{assert.equal(obj.concise.name,\ 'concise');}
+\DoxyCodeLine{assert.equal(obj.arrow.name,\ 'arrow');}
+\DoxyCodeLine{assert.equal(obj.named.name,\ 'named');}
+\DoxyCodeLine{assert.equal(obj.anon.name,\ 'anon');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(setFunctionName(obj.concise,\ 'brief'),\ obj.concise);}
+\DoxyCodeLine{assert.equal(setFunctionName(obj.arrow,\ 'pointy'),\ obj.arrow);}
+\DoxyCodeLine{assert.equal(setFunctionName(obj.named,\ ''),\ obj.named);}
+\DoxyCodeLine{assert.equal(setFunctionName(obj.anon,\ 'anonymous'),\ obj.anon);}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(obj.concise.name,\ 'brief');}
+\DoxyCodeLine{assert.equal(obj.arrow.name,\ 'pointy');}
+\DoxyCodeLine{assert.equal(obj.named.name,\ '');}
+\DoxyCodeLine{assert.equal(obj.anon.name,\ 'anonymous');}
+
+\end{DoxyCode}
+ 

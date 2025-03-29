@@ -1,0 +1,202 @@
+\chapter{require-\/directory}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e}{}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e}\index{require-\/directory@{require-\/directory}}
+\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29331}%
+\Hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29331}%
+
+
+Recursively iterates over specified directory, {\ttfamily require()}\textquotesingle{}ing each file, and returning a nested hash structure containing those modules.
+
+{\bfseries{\href{https://twitter.com/intent/user?screen_name=troygoode}{\texttt{ Follow me (@troygoode) on Twitter!}}}}
+
+\href{https://nodei.co/npm/require-directory/}{\texttt{ }}
+
+\href{http://travis-ci.org/troygoode/node-require-directory}{\texttt{ }}\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29332}{}\doxysection{\texorpdfstring{How To Use}{How To Use}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29332}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29333}{}\doxysubsection{\texorpdfstring{Installation (via \href{https://npmjs.org/package/require-directory}{\texttt{ npm}})}{Installation (via \href{https://npmjs.org/package/require-directory}{\texttt{ npm}})}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29333}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ require-\/directory}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29334}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29334}
+A common pattern in node.\+js is to include an index file which creates a hash of the files in its current directory. Given a directory structure like so\+:
+
+
+\begin{DoxyItemize}
+\item app.\+js
+\item routes/
+\begin{DoxyItemize}
+\item index.\+js
+\item home.\+js
+\item auth/
+\begin{DoxyItemize}
+\item login.\+js
+\item logout.\+js
+\item register.\+js
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+{\ttfamily routes/index.\+js} uses {\ttfamily require-\/directory} to build the hash (rather than doing so manually) like so\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory');}
+\DoxyCodeLine{module.exports\ =\ requireDirectory(module);}
+
+\end{DoxyCode}
+
+
+{\ttfamily app.\+js} references {\ttfamily routes/index.\+js} like any other module, but it now has a hash/tree of the exports from the {\ttfamily ./routes/} directory\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ routes\ =\ require('./routes');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ snip}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.get('/',\ routes.home);}
+\DoxyCodeLine{app.get('/register',\ routes.auth.register);}
+\DoxyCodeLine{app.get('/login',\ routes.auth.login);}
+\DoxyCodeLine{app.get('/logout',\ routes.auth.logout);}
+
+\end{DoxyCode}
+
+
+The {\ttfamily routes} variable above is the equivalent of this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ routes\ =\ \{}
+\DoxyCodeLine{\ \ home:\ require('routes/home.js'),}
+\DoxyCodeLine{\ \ auth:\ \{}
+\DoxyCodeLine{\ \ \ \ login:\ require('routes/auth/login.js'),}
+\DoxyCodeLine{\ \ \ \ logout:\ require('routes/auth/logout.js'),}
+\DoxyCodeLine{\ \ \ \ register:\ require('routes/auth/register.js')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+{\itshape Note that {\ttfamily routes.\+index} will be {\ttfamily undefined} as you would hope.}\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29335}{}\doxysubsection{\texorpdfstring{Specifying Another Directory}{Specifying Another Directory}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29335}
+You can specify which directory you want to build a tree of (if it isn\textquotesingle{}t the current directory for whatever reason) by passing it as the second parameter. Not specifying the path ({\ttfamily require\+Directory(module)}) is the equivelant of {\ttfamily require\+Directory(module, \+\_\+\+\_\+dirname)}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory');}
+\DoxyCodeLine{module.exports\ =\ requireDirectory(module,\ './some/subdirectory');}
+
+\end{DoxyCode}
+
+
+For example, in the \doxylink{readme.md_usage}{example in the Usage section} we could have avoided creating {\ttfamily routes/index.\+js} and instead changed the first lines of {\ttfamily app.\+js} to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory');}
+\DoxyCodeLine{var\ routes\ =\ requireDirectory(module,\ './routes');}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29336}{}\doxysection{\texorpdfstring{Options}{Options}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29336}
+You can pass an options hash to {\ttfamily require-\/directory} as the 2nd parameter (or 3rd if you\textquotesingle{}re passing the path to another directory as the 2nd parameter already). Here are the available options\+:\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29337}{}\doxysubsection{\texorpdfstring{Whitelisting}{Whitelisting}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29337}
+Whitelisting (either via Reg\+Exp or function) allows you to specify that only certain files be loaded.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory'),}
+\DoxyCodeLine{\ \ whitelist\ =\ /onlyinclude.js\$/,}
+\DoxyCodeLine{\ \ hash\ =\ requireDirectory(module,\ \{include:\ whitelist\});}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory'),}
+\DoxyCodeLine{\ \ check\ =\ function(path)\{}
+\DoxyCodeLine{\ \ \ \ if(/onlyinclude.js\$/.test(path))\{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ true;\ //\ don't\ include}
+\DoxyCodeLine{\ \ \ \ \}else\{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ false;\ //\ go\ ahead\ and\ include}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ hash\ =\ requireDirectory(module,\ \{include:\ check\});}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29338}{}\doxysubsection{\texorpdfstring{Blacklisting}{Blacklisting}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29338}
+Blacklisting (either via Reg\+Exp or function) allows you to specify that all but certain files should be loaded.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory'),}
+\DoxyCodeLine{\ \ blacklist\ =\ /dontinclude\(\backslash\).js\$/,}
+\DoxyCodeLine{\ \ hash\ =\ requireDirectory(module,\ \{exclude:\ blacklist\});}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory'),}
+\DoxyCodeLine{\ \ check\ =\ function(path)\{}
+\DoxyCodeLine{\ \ \ \ if(/dontinclude\(\backslash\).js\$/.test(path))\{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ false;\ //\ don't\ include}
+\DoxyCodeLine{\ \ \ \ \}else\{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ true;\ //\ go\ ahead\ and\ include}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ hash\ =\ requireDirectory(module,\ \{exclude:\ check\});}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29339}{}\doxysubsection{\texorpdfstring{Visiting Objects As They\textquotesingle{}re Loaded}{Visiting Objects As They\textquotesingle{}re Loaded}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29339}
+{\ttfamily require-\/directory} takes a function as the {\ttfamily visit} option that will be called for each module that is added to module.\+exports.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory'),}
+\DoxyCodeLine{\ \ visitor\ =\ function(obj)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(obj);\ //\ will\ be\ called\ for\ every\ module\ that\ is\ loaded}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ hash\ =\ requireDirectory(module,\ \{visit:\ visitor\});}
+
+\end{DoxyCode}
+
+
+The visitor can also transform the objects by returning a value\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory'),}
+\DoxyCodeLine{\ \ visitor\ =\ function(obj)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ obj(new\ Date());}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ hash\ =\ requireDirectory(module,\ \{visit:\ visitor\});}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29340}{}\doxysubsection{\texorpdfstring{Renaming Keys}{Renaming Keys}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29340}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory'),}
+\DoxyCodeLine{\ \ renamer\ =\ function(name)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ name.toUpperCase();}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ hash\ =\ requireDirectory(module,\ \{rename:\ renamer\});}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29341}{}\doxysubsection{\texorpdfstring{No Recursion}{No Recursion}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29341}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ requireDirectory\ =\ require('require-\/directory'),}
+\DoxyCodeLine{\ \ hash\ =\ requireDirectory(module,\ \{recurse:\ false\});}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29342}{}\doxysection{\texorpdfstring{Run Unit Tests}{Run Unit Tests}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29342}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ run\ lint}
+\DoxyCodeLine{\$\ npm\ test}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29343}{}\doxysection{\texorpdfstring{License}{License}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29343}
+\href{http://www.opensource.org/licenses/mit-license.php}{\texttt{ MIT License}}\hypertarget{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29344}{}\doxysection{\texorpdfstring{Author}{Author}}\label{md_node__modules_2require-directory_2_r_e_a_d_m_e_autotoc_md29344}
+\href{https://github.com/TroyGoode}{\texttt{ Troy Goode}} (\href{mailto:troygoode@gmail.com}{\texttt{ troygoode@gmail.\+com}}) 

@@ -1,0 +1,55 @@
+\doxysection{node\+\_\+modules/p-\/limit/node\+\_\+modules/yocto-\/queue Directory Reference}
+\hypertarget{dir_409dd54906151281fb9ab17ebfd0ea5c}{}\label{dir_409dd54906151281fb9ab17ebfd0ea5c}\index{node\_modules/p-\/limit/node\_modules/yocto-\/queue Directory Reference@{node\_modules/p-\/limit/node\_modules/yocto-\/queue Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Tiny queue data structure \end{quote}
+
+
+You should use this package instead of an array if you do a lot of {\ttfamily Array\#push()} and {\ttfamily Array\#shift()} on large arrays, since {\ttfamily Array\#shift()} has \href{https://medium.com/@ariel.salem1989/an-easy-to-use-guide-to-big-o-time-complexity-5dcf4be8a444\#:~:text=O(N)\%E2\%80\%94Linear\%20Time}{\texttt{ linear time complexity}} {\itshape O(n)} while {\ttfamily Queue\#dequeue()} has \href{https://medium.com/@ariel.salem1989/an-easy-to-use-guide-to-big-o-time-complexity-5dcf4be8a444\#:~:text=O(1)\%20\%E2\%80\%94\%20Constant\%20Time}{\texttt{ constant time complexity}} {\itshape O(1)}. That makes a huge difference for large arrays.
+
+\begin{quote}
+A \href{https://en.wikipedia.org/wiki/Queue_(abstract_data_type)}{\texttt{ queue}} is an ordered list of elements where an element is inserted at the end of the queue and is removed from the front of the queue. A queue works based on the first-\/in, first-\/out (\href{https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)}{\texttt{ FIFO}}) principle. \end{quote}
+\hypertarget{readme.md_autotoc_md25339}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md25339}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ yocto-\/queue}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25340}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md25340}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Queue\ =\ require('yocto-\/queue');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ queue\ =\ new\ Queue();}
+\DoxyCodeLine{}
+\DoxyCodeLine{queue.enqueue('🦄');}
+\DoxyCodeLine{queue.enqueue('🌈');}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(queue.size);}
+\DoxyCodeLine{//=>\ 2}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(...queue);}
+\DoxyCodeLine{//=>\ '🦄\ 🌈'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(queue.dequeue());}
+\DoxyCodeLine{//=>\ '🦄'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(queue.dequeue());}
+\DoxyCodeLine{//=>\ '🌈'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25341}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md25341}
+\hypertarget{readme.md_autotoc_md25342}{}\doxysubsubsection{\texorpdfstring{{\ttfamily queue = new Queue()}}{{\ttfamily queue = new Queue()}}}\label{readme.md_autotoc_md25342}
+The instance is an \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols}{\texttt{ {\ttfamily Iterable}}}, which means you can iterate over the queue front to back with a “for…of” loop, or use spreading to convert the queue to an array. Don\textquotesingle{}t do this unless you really need to though, since it\textquotesingle{}s slow.\hypertarget{readme.md_autotoc_md25343}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily .enqueue(value)}}{{\ttfamily .enqueue(value)}}}\label{readme.md_autotoc_md25343}
+Add a value to the queue.\hypertarget{readme.md_autotoc_md25344}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily .dequeue()}}{{\ttfamily .dequeue()}}}\label{readme.md_autotoc_md25344}
+Remove the next value in the queue.
+
+Returns the removed value or {\ttfamily undefined} if the queue is empty.\hypertarget{readme.md_autotoc_md25345}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily .clear()}}{{\ttfamily .clear()}}}\label{readme.md_autotoc_md25345}
+Clear the queue.\hypertarget{readme.md_autotoc_md25346}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily .size}}{{\ttfamily .size}}}\label{readme.md_autotoc_md25346}
+The size of the queue.\hypertarget{readme.md_autotoc_md25347}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md25347}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/quick-lru}{\texttt{ quick-\/lru}} -\/ Simple “\+Least Recently Used” (LRU) cache 
+\end{DoxyItemize}

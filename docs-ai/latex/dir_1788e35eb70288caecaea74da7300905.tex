@@ -1,0 +1,139 @@
+\doxysection{node\+\_\+modules/@unocss/transformer-\/attributify-\/jsx Directory Reference}
+\hypertarget{dir_1788e35eb70288caecaea74da7300905}{}\label{dir_1788e35eb70288caecaea74da7300905}\index{node\_modules/"@unocss/transformer-\/attributify-\/jsx Directory Reference@{node\_modules/"@unocss/transformer-\/attributify-\/jsx Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Support \href{https://github.com/unocss/unocss/tree/main/packages-presets/preset-attributify\#valueless-attributify}{\texttt{ valueless attributify}} in JSX/\+TSX.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ function\ Component()\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div\ text-\/red\ text-\/center\ text-\/5xl\ animate-\/bounce>}
+\DoxyCodeLine{\ \ \ \ \ \ unocss}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Will be transformed to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ function\ Component()\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div\ text-\/red="{}"{}\ text-\/center="{}"{}\ text-\/5xl="{}"{}\ animate-\/bounce="{}"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ unocss}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Without this transformer}}\begin{adjustwidth}{1em}{0em}
+
+
+JSX by default will treat valueless attributes as boolean attributes.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ function\ Component()\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div\ text-\/red=\{true\}\ text-\/center=\{true\}\ text-\/5xl=\{true\}\ animate-\/bounce=\{true\}>}
+\DoxyCodeLine{\ \ \ \ \ \ unocss}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+\hypertarget{README.md_autotoc_md7105}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md7105}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ -\/D\ @unocss/transformer-\/attributify-\/jsx}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ transformerAttributifyJsx\ from\ '@unocss/transformer-\/attributify-\/jsx'}
+\DoxyCodeLine{//\ uno.config.ts}
+\DoxyCodeLine{import\ \{\ defineConfig,\ presetAttributify\ \}\ from\ 'unocss'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ presets:\ [}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ presetAttributify()}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ transformers:\ [}
+\DoxyCodeLine{\ \ \ \ transformerAttributifyJsx(),\ //\ <-\/-\/}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7106}{}\doxysubsection{\texorpdfstring{Caveats}{Caveats}}\label{README.md_autotoc_md7106}
+If you encounter any issues with this package, there is \href{https://github.com/unocss/unocss/tree/main/packages-presets/transformer-attributify-jsx-babel}{\texttt{ @unocss/transformer-\/attributify-\/jsx-\/babel}} package that uses Babel to transform JSX.
+
+\begin{quote}
+⚠️ The rules are almost the same as those of {\ttfamily preset-\/attributify}, but there are several precautions \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ translate-\/x-\/100\%\ />}
+\DoxyCodeLine{<!-\/-\/\ cannot\ end\ with\ \`{}\%`\ -\/-\/>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<div\ translate-\/x-\/[100px]\ />}
+\DoxyCodeLine{<!-\/-\/\ cannot\ contain\ \`{}[`\ or\ \`{}]`\ -\/-\/>}
+
+\end{DoxyCode}
+
+
+Instead, you may want to use valued attributes instead\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ translate="{}x-\/100\%"{}\ />}
+\DoxyCodeLine{}
+\DoxyCodeLine{<div\ translate="{}x-\/[100px]"{}\ />}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7107}{}\doxysubsection{\texorpdfstring{Blocklist}{Blocklist}}\label{README.md_autotoc_md7107}
+This transformer will only transform attributes that are valid Uno\+CSS utilities. You can also {\ttfamily blocklist} bypass some attributes from been transformed.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{transformerAttributifyJsx(\{}
+\DoxyCodeLine{\ \ blocklist:\ [/text-\/[a-\/zA-\/Z]*/,\ 'text-\/5xl']}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ text-\/red\ text-\/center\ text-\/5xl\ animate-\/bounce>}
+\DoxyCodeLine{\ \ unocss}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+
+
+Will be compiled to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ text-\/red\ text-\/center\ text-\/5xl\ animate-\/bounce="{}"{}>unocss</div>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7108}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md7108}
+MIT License \copyright{} 2022-\/PRESENT \href{https://github.com/antfu}{\texttt{ Anthony Fu}} 

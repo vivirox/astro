@@ -1,0 +1,234 @@
+\doxysection{node\+\_\+modules/sirv Directory Reference}
+\hypertarget{dir_8f048143c2e0549f929ac00865a76422}{}\label{dir_8f048143c2e0549f929ac00865a76422}\index{node\_modules/sirv Directory Reference@{node\_modules/sirv Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+The optimized and lightweight middleware for serving requests to static assets \end{quote}
+
+
+You may use {\ttfamily sirv} as a {\itshape very} fast and lightweight alternative to \href{https://www.npmjs.com/package/serve-static}{\texttt{ {\ttfamily serve-\/static}}}.
+
+The massive performance advantage over {\ttfamily serve-\/static} is explained by {\bfseries{not}} relying on the file system for existence checks on every request. These are expensive interactions and must be avoided whenever possible! Instead, when not in "{}dev"{} mode, {\ttfamily sirv} performs all its file-\/system operations upfront and then relies on its cache for future operations.
+
+This middleware will work out of the box for \href{https://github.com/lukeed/polka}{\texttt{ Polka}}, Express, and other Express-\/like frameworks. It will also work with the native {\ttfamily http}, {\ttfamily https} and {\ttfamily http2} modules. It requires {\itshape very} little effort to modify/wrap it for servers that don\textquotesingle{}t accept the {\ttfamily (req, res, next)} signature.
+
+\+:bulb\+: For a feature-\/complete CLI application, check out the sibling \href{https://github.com/lukeed/sirv/tree/master/packages/sirv-cli}{\texttt{ {\ttfamily sirv-\/cli}}} package as an alternative to \href{https://github.com/zeit/serve}{\texttt{ {\ttfamily zeit/serve}}}\texorpdfstring{$\sim$}{\string~}!\hypertarget{readme.md_autotoc_md30730}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md30730}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ sirv}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md30731}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md30731}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ sirv\ =\ require('sirv');}
+\DoxyCodeLine{const\ polka\ =\ require('polka');}
+\DoxyCodeLine{const\ compress\ =\ require('compression')();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Init\ \`{}sirv`\ handler}
+\DoxyCodeLine{const\ assets\ =\ sirv('public',\ \{}
+\DoxyCodeLine{\ \ maxAge:\ 31536000,\ //\ 1Y}
+\DoxyCodeLine{\ \ immutable:\ true}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{polka()}
+\DoxyCodeLine{\ \ .use(compress,\ assets)}
+\DoxyCodeLine{\ \ .use('/api',\ require('./api'))}
+\DoxyCodeLine{\ \ .listen(3000,\ err\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (err)\ throw\ err;}
+\DoxyCodeLine{\ \ \ \ console.log('>\ Ready\ on\ localhost:3000\string~!');}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md30732}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md30732}
+\hypertarget{readme.md_autotoc_md30733}{}\doxysubsubsection{\texorpdfstring{sirv(dir, opts=\{\})}{sirv(dir, opts=\{\})}}\label{readme.md_autotoc_md30733}
+Returns\+: {\ttfamily Function}
+
+The returned function is a middleware in the standard Express-\/like signature\+: {\ttfamily (req, res, next)}, where {\ttfamily req} is the \href{https://nodejs.org/api/http.html\#http_class_http_incomingmessage}{\texttt{ {\ttfamily http.\+Incoming\+Message}}}, {\ttfamily res} is the \href{https://nodejs.org/dist/latest-v9.x/docs/api/http.html\#http_class_http_serverresponse}{\texttt{ {\ttfamily http.\+Server\+Response}}}, and {\ttfamily next} (in this case) is the function to call if no file was found for the given path.
+
+When defined, a {\ttfamily next()} callback is always called {\itshape instead of} the \`{}opts.on\+No\+Match\`{} callback. However, unlike {\ttfamily on\+No\+Match}, your {\ttfamily next()} is given no arguments.\hypertarget{readme.md_autotoc_md30734}{}\doxysubsubsubsection{\texorpdfstring{dir}{dir}}\label{readme.md_autotoc_md30734}
+Type\+: {\ttfamily String}~\newline
+ Default\+: {\ttfamily .}
+
+The directory from which to read and serve assets. It is resolved to an absolute path --- you must provide an absolute path yourself if {\ttfamily process.\+cwd()} is not the correct assumption.\hypertarget{readme.md_autotoc_md30735}{}\doxysubsubsubsection{\texorpdfstring{opts.\+dev}{opts.\+dev}}\label{readme.md_autotoc_md30735}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Enable "{}dev"{} mode, which disables/skips caching. Instead, {\ttfamily sirv} will traverse the file system {\itshape {\bfseries{on every request}}}.
+
+Additionally, {\ttfamily dev} mode will ignore {\ttfamily max\+Age} and {\ttfamily immutable} as these options generate a production-\/oriented {\ttfamily Cache-\/\+Control} header value.
+
+\begin{quote}
+{\bfseries{Important\+:}} Do not use {\ttfamily dev} mode in production! \end{quote}
+\hypertarget{readme.md_autotoc_md30736}{}\doxysubsubsubsection{\texorpdfstring{opts.\+etag}{opts.\+etag}}\label{readme.md_autotoc_md30736}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Generate and attach an {\ttfamily ETag} header to responses.
+
+\begin{quote}
+{\bfseries{Note\+:}} If an incoming request\textquotesingle{}s \href{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match}{\texttt{ {\ttfamily If-\/\+None-\/\+Match} header}} matches the {\ttfamily ETag} value, a {\ttfamily 304} response is given. \end{quote}
+\hypertarget{readme.md_autotoc_md30737}{}\doxysubsubsubsection{\texorpdfstring{opts.\+dotfiles}{opts.\+dotfiles}}\label{readme.md_autotoc_md30737}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Allow requests to dotfiles (files or directories beginning with a {\ttfamily .}).
+
+\begin{quote}
+{\bfseries{Note\+:}} Requests to \href{https://tools.ietf.org/html/rfc8615}{\texttt{ {\ttfamily /.well-\/known/\texorpdfstring{$\ast$}{*}}}} are always allowed. \end{quote}
+\hypertarget{readme.md_autotoc_md30738}{}\doxysubsubsubsection{\texorpdfstring{opts.\+extensions}{opts.\+extensions}}\label{readme.md_autotoc_md30738}
+Type\+: {\ttfamily Array\texorpdfstring{$<$}{<}String\texorpdfstring{$>$}{>}}~\newline
+ Default\+: `\mbox{[}\textquotesingle{}html', \textquotesingle{}htm\textquotesingle{}\mbox{]}\`{}
+
+The file extension fallbacks to check for if a pathame is not initially found. For example, if a {\ttfamily /login} request cannot find a {\ttfamily login} filename, it will then look for {\ttfamily login.\+html} and {\ttfamily login.\+htm} before giving up\texorpdfstring{$\sim$}{\string~}!
+
+\begin{quote}
+{\bfseries{Important\+:}} Actually, {\ttfamily sirv} will {\bfseries{also}} look for {\ttfamily login/index.\+html} and {\ttfamily login/index.\+htm} before giving up. \end{quote}
+\hypertarget{readme.md_autotoc_md30739}{}\doxysubsubsubsection{\texorpdfstring{opts.\+gzip}{opts.\+gzip}}\label{readme.md_autotoc_md30739}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Determine if {\ttfamily sirv} look for {\bfseries{precompiled}} {\ttfamily \texorpdfstring{$\ast$}{*}.gz} files.~\newline
+ Must be enabled {\itshape and} the incoming request\textquotesingle{}s \href{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding}{\texttt{ {\ttfamily Accept Encoding}}} must include "{}gzip"{} in order for {\ttfamily sirv} to search for the gzip\textquotesingle{}d alternative.
+
+\begin{quote}
+{\bfseries{Note\+:}} The {\ttfamily .gz} assumption also applies to the {\ttfamily opts.\+extensions} list. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ NOTE:\ PSEUDO\ CODE}
+\DoxyCodeLine{//\ Showing\ lookup\ logic}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Request:\ [Accept-\/Encoding:\ gzip]\ "{}/foobar.jpg"{}}
+\DoxyCodeLine{lookup([}
+\DoxyCodeLine{\ \ '/foobar.jpg.gz',\ '/foobar.jpg',}
+\DoxyCodeLine{\ \ '/foobar.jpg.html.gz',\ '/foobar.jpg/index.html.gz',}
+\DoxyCodeLine{\ \ '/foobar.jpg.htm.gz',\ '/foobar.jpg/index.htm.gz',}
+\DoxyCodeLine{\ \ '/foobar.jpg.html',\ '/foobar.jpg/index.html',}
+\DoxyCodeLine{\ \ '/foobar.jpg.htm',\ '/foobar.jpg/index.htm',}
+\DoxyCodeLine{]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Request:\ [Accept-\/Encoding:\ gzip]\ "{}/"{}}
+\DoxyCodeLine{lookup([}
+\DoxyCodeLine{\ \ '/index.html.gz',}
+\DoxyCodeLine{\ \ '/index.htm.gz',}
+\DoxyCodeLine{\ \ '/index.html',}
+\DoxyCodeLine{\ \ '/index.htm',}
+\DoxyCodeLine{]);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md30740}{}\doxysubsubsubsection{\texorpdfstring{opts.\+brotli}{opts.\+brotli}}\label{readme.md_autotoc_md30740}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Determine if {\ttfamily sirv} look for {\bfseries{precompiled}} {\ttfamily \texorpdfstring{$\ast$}{*}.br} files.~\newline
+ Must be enabled {\itshape and} the incoming request\textquotesingle{}s \href{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding}{\texttt{ {\ttfamily Accept Encoding}}} must include either "{}br"{} or "{}brotli"{} in order for {\ttfamily sirv} to search for the brotli-\/compressed alternative.
+
+\begin{quote}
+{\bfseries{Note\+:}} The {\ttfamily .br} assumption also applies to the {\ttfamily opts.\+extensions} list. \end{quote}
+
+
+When both {\ttfamily opts.\+broli} and {\ttfamily opts.\+gzip} are enabled --- and all conditions are equal --- then the brotli variant always takes priority.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ NOTE:\ PSEUDO\ CODE}
+\DoxyCodeLine{//\ Showing\ lookup\ logic}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Request:\ [Accept-\/Encoding:\ br]\ "{}/foobar.jpg"{}}
+\DoxyCodeLine{lookup([}
+\DoxyCodeLine{\ \ '/foobar.jpg.br',\ '/foobar.jpg',}
+\DoxyCodeLine{\ \ '/foobar.jpg.html.br',\ '/foobar.jpg/index.html.br',}
+\DoxyCodeLine{\ \ '/foobar.jpg.htm.br',\ '/foobar.jpg/index.htm.br',}
+\DoxyCodeLine{\ \ '/foobar.jpg.html',\ '/foobar.jpg/index.html',}
+\DoxyCodeLine{\ \ '/foobar.jpg.htm',\ '/foobar.jpg/index.htm',}
+\DoxyCodeLine{]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Request:\ [Accept-\/Encoding:\ br,gz]\ "{}/"{}}
+\DoxyCodeLine{lookup([}
+\DoxyCodeLine{\ \ '/index.html.br'}
+\DoxyCodeLine{\ \ '/index.htm.br'}
+\DoxyCodeLine{\ \ '/index.html.gz'}
+\DoxyCodeLine{\ \ '/index.htm.gz'}
+\DoxyCodeLine{\ \ '/index.html'}
+\DoxyCodeLine{\ \ '/index.htm'}
+\DoxyCodeLine{]);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md30741}{}\doxysubsubsubsection{\texorpdfstring{opts.\+max\+Age}{opts.\+max\+Age}}\label{readme.md_autotoc_md30741}
+Type\+: {\ttfamily Number}~\newline
+ Default\+: {\ttfamily undefined}
+
+Enables the {\ttfamily Cache-\/\+Control} header on responses and sets the {\ttfamily max-\/age} value (in seconds).~\newline
+ For example, {\ttfamily max\+Age\+: 31536000} is equivalent to one year.\hypertarget{readme.md_autotoc_md30742}{}\doxysubsubsubsection{\texorpdfstring{opts.\+immutable}{opts.\+immutable}}\label{readme.md_autotoc_md30742}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Appends the \href{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control\#Revalidation_and_reloading}{\texttt{ {\ttfamily immutable} directive}} on your {\ttfamily Cache-\/\+Control} header, used for uniquely-\/named assets that will not change!
+
+\begin{quote}
+{\bfseries{Important\+:}} Will only work if {\ttfamily opts.\+max\+Age} has a value defined! \end{quote}
+\hypertarget{readme.md_autotoc_md30743}{}\doxysubsubsubsection{\texorpdfstring{opts.\+single}{opts.\+single}}\label{readme.md_autotoc_md30743}
+Type\+: {\ttfamily Boolean} or {\ttfamily String}~\newline
+ Default\+: {\ttfamily false}
+
+Treat the directory as a single-\/page application.
+
+When {\ttfamily true}, the directory\textquotesingle{}s index page (default {\ttfamily index.\+html}) will be sent if the request asset does not exist.~\newline
+ You may pass a {\ttfamily string} value to use a file {\itshape instead of} {\ttfamily index.\+html} as your fallback.
+
+For example, if "{}/about"{} is requested but no variants of that file exist, then the response for "{}/"{} is sent instead\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Note:\ This\ is\ psuedo\ code\ to\ illustrate\ what's\ happening}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Request:\ "{}/about"{}}
+\DoxyCodeLine{let\ file\ =\ find(['/about',\ '/about.html',\ '/about.htm',\ '/about/index.html',\ '/about.htm']);}
+\DoxyCodeLine{if\ (file)\ \{}
+\DoxyCodeLine{\ \ send(file);}
+\DoxyCodeLine{\}\ else\ if\ (opts.single\ ===\ true)\ \{}
+\DoxyCodeLine{\ \ file\ =\ find(['/',\ '/index.html',\ '/index.htm']);}
+\DoxyCodeLine{\ \ send(file);}
+\DoxyCodeLine{\}\ else\ if\ (typeof\ opts.single\ ===\ 'string')\ \{}
+\DoxyCodeLine{\ \ file\ =\ find([opts.single]);}
+\DoxyCodeLine{\ \ send(file);}
+\DoxyCodeLine{\}\ else\ \{}
+\DoxyCodeLine{\ \ //\ next()\ or\ 404}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md30744}{}\doxysubsubsubsection{\texorpdfstring{opts.\+ignores}{opts.\+ignores}}\label{readme.md_autotoc_md30744}
+Type\+: {\ttfamily false} or {\ttfamily Array\texorpdfstring{$<$}{<}String \texorpdfstring{$\vert$}{|} Reg\+Exp\texorpdfstring{$>$}{>}}
+
+Specify paths/patterns that should ignore the fallback behavior that {\ttfamily opts.\+single} provides.
+
+By default, any asset-\/like path (URLs that end with an extension) will be ignored. This means that, for example, if {\ttfamily /foobar.jpg} is not found, a {\ttfamily 404} response is sent instead of the {\ttfamily index.\+html} fallback.
+
+Additionally, any {\ttfamily /.well-\/known/\texorpdfstring{$\ast$}{*}} pathname ignores the fallback – as do all other dotfile requests when {\ttfamily opts.\+dotfiles} is enabled.
+
+Any string value(s) will be passed through `new Reg\+Exp(value, \textquotesingle{}i')\`{} directly.
+
+Finally, you may set {\ttfamily ignores\+: false} to disable {\itshape {\bfseries{all}}} ignores, including the defaults. Put differently, this will fallback {\itshape {\bfseries{all}}} unknown pathnames to your {\ttfamily index.\+html} (or custom {\ttfamily opts.\+single} value).
+
+\begin{quote}
+{\bfseries{Important\+:}} Only has an effect if {\ttfamily opts.\+single} is enabled. \end{quote}
+\hypertarget{readme.md_autotoc_md30745}{}\doxysubsubsubsection{\texorpdfstring{opts.\+on\+No\+Match}{opts.\+on\+No\+Match}}\label{readme.md_autotoc_md30745}
+Type\+: {\ttfamily Function}
+
+A custom function to run if a file cannot be found for a given request. ~\newline
+By default, {\ttfamily sirv} will send a basic {\ttfamily (404) Not found} response.
+
+The function receives the current {\ttfamily req \texorpdfstring{$<$}{<}Incoming\+Message\texorpdfstring{$>$}{>}, res \texorpdfstring{$<$}{<}Server\+Response\texorpdfstring{$>$}{>}} pair for as its two arguments.
+
+\begin{quote}
+{\bfseries{Note\+:}} This won\textquotesingle{}t run if a {\ttfamily next} callback has been provided to the middleware; see \`{}sirv\`{} description. \end{quote}
+\hypertarget{readme.md_autotoc_md30746}{}\doxysubsubsubsection{\texorpdfstring{opts.\+set\+Headers}{opts.\+set\+Headers}}\label{readme.md_autotoc_md30746}
+Type\+: {\ttfamily Function}
+
+A custom function to append or change any headers on the outgoing response. There is no default.
+
+Its signature is {\ttfamily (res, pathname, stats)}, where {\ttfamily res} is the {\ttfamily Server\+Response}, {\ttfamily pathname} is incoming request path (stripped of queries), and {\ttfamily stats} is the file\textquotesingle{}s result from \href{https://nodejs.org/api/fs.html\#fs_fs_statsync_path}{\texttt{ {\ttfamily fs.\+stat\+Sync}}}.\hypertarget{readme.md_autotoc_md30747}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md30747}
+MIT © \href{https://lukeed.com}{\texttt{ Luke Edwards}} 

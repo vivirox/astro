@@ -1,0 +1,52 @@
+\doxysection{node\+\_\+modules/react-\/dom Directory Reference}
+\hypertarget{dir_ca5928ce57d942246ce529d4df3ccdc3}{}\label{dir_ca5928ce57d942246ce529d4df3ccdc3}\index{node\_modules/react-\/dom Directory Reference@{node\_modules/react-\/dom Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package serves as the entry point to the DOM and server renderers for React. It is intended to be paired with the generic React package, which is shipped as {\ttfamily react} to npm.\hypertarget{README.md_autotoc_md26852}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md26852}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ react\ react-\/dom}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26853}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md26853}
+\hypertarget{README.md_autotoc_md26854}{}\doxysubsubsection{\texorpdfstring{In the browser}{In the browser}}\label{README.md_autotoc_md26854}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createRoot\ \}\ from\ 'react-\/dom/client';}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ App()\ \{}
+\DoxyCodeLine{\ \ return\ <div>Hello\ World</div>;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ root\ =\ createRoot(document.getElementById('root'));}
+\DoxyCodeLine{root.render(<App\ />);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26855}{}\doxysubsubsection{\texorpdfstring{On the server}{On the server}}\label{README.md_autotoc_md26855}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ renderToPipeableStream\ \}\ from\ 'react-\/dom/server';}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ App()\ \{}
+\DoxyCodeLine{\ \ return\ <div>Hello\ World</div>;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ handleRequest(res)\ \{}
+\DoxyCodeLine{\ \ //\ ...\ in\ your\ server\ handler\ ...}
+\DoxyCodeLine{\ \ const\ stream\ =\ renderToPipeableStream(<App\ />,\ \{}
+\DoxyCodeLine{\ \ \ \ onShellReady()\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ res.statusCode\ =\ 200;}
+\DoxyCodeLine{\ \ \ \ \ \ res.setHeader('Content-\/type',\ 'text/html');}
+\DoxyCodeLine{\ \ \ \ \ \ stream.pipe(res);}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26856}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md26856}
+\hypertarget{README.md_autotoc_md26857}{}\doxysubsubsection{\texorpdfstring{{\ttfamily react-\/dom}}{{\ttfamily react-\/dom}}}\label{README.md_autotoc_md26857}
+See \href{https://reactjs.org/docs/react-dom.html}{\texttt{ https\+://reactjs.\+org/docs/react-\/dom.\+html}}\hypertarget{README.md_autotoc_md26858}{}\doxysubsubsection{\texorpdfstring{{\ttfamily react-\/dom/client}}{{\ttfamily react-\/dom/client}}}\label{README.md_autotoc_md26858}
+See \href{https://reactjs.org/docs/react-dom-client.html}{\texttt{ https\+://reactjs.\+org/docs/react-\/dom-\/client.\+html}}\hypertarget{README.md_autotoc_md26859}{}\doxysubsubsection{\texorpdfstring{{\ttfamily react-\/dom/server}}{{\ttfamily react-\/dom/server}}}\label{README.md_autotoc_md26859}
+See \href{https://reactjs.org/docs/react-dom-server.html}{\texttt{ https\+://reactjs.\+org/docs/react-\/dom-\/server.\+html}} 

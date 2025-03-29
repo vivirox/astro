@@ -1,0 +1,106 @@
+\doxysection{node\+\_\+modules/micromark-\/util-\/chunked Directory Reference}
+\hypertarget{dir_7dd0353bb82c4f4cda6c337550147703}{}\label{dir_7dd0353bb82c4f4cda6c337550147703}\index{node\_modules/micromark-\/util-\/chunked Directory Reference@{node\_modules/micromark-\/util-\/chunked Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-util-chunked}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-util-chunked}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} utility to splice and push with giant arrays.\hypertarget{readme.md_autotoc_md23614}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23614}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}push(list, items)\`{}
+\item \`{}splice(list, start, remove, items)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23615}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23615}
+This package exposes an algorithm to splice for giant arrays, which V8 bugs out on.\hypertarget{readme.md_autotoc_md23616}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md23616}
+This package might be useful when you are making your own micromark extensions.\hypertarget{readme.md_autotoc_md23617}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23617}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/util-\/chunked}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{push,\ splice\}\ from\ 'https://esm.sh/micromark-\/util-\/chunked@1'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{push,\ splice\}\ from\ 'https://esm.sh/micromark-\/util-\/chunked@1?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23618}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23618}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{push,\ splice\}\ from\ 'micromark-\/util-\/chunked'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ …}
+\DoxyCodeLine{}
+\DoxyCodeLine{nextEvents\ =\ push(nextEvents,\ [}
+\DoxyCodeLine{\ \ ['enter',\ events[open][1],\ context],}
+\DoxyCodeLine{\ \ ['exit',\ events[open][1],\ context]}
+\DoxyCodeLine{])}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ …}
+\DoxyCodeLine{}
+\DoxyCodeLine{splice(events,\ open\ -\/\ 1,\ index\ -\/\ open\ +\ 3,\ nextEvents)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ …}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23619}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23619}
+This module exports the identifiers \`{}push\`{} and \`{}splice\`{}. There is no default export.\hypertarget{readme.md_autotoc_md23620}{}\doxysubsubsection{\texorpdfstring{{\ttfamily push(list, items)}}{{\ttfamily push(list, items)}}}\label{readme.md_autotoc_md23620}
+Append {\ttfamily items} (an array) at the end of {\ttfamily list} (another array). When {\ttfamily list} was empty, returns {\ttfamily items} instead.
+
+This prevents a potentially expensive operation when {\ttfamily list} is empty, and adds items in batches to prevent V8 from hanging.\hypertarget{readme.md_autotoc_md23621}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23621}
+
+\begin{DoxyItemize}
+\item {\ttfamily list} ({\ttfamily Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}}) — list to operate on
+\item {\ttfamily items} ({\ttfamily Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}}) — items to add to {\ttfamily list}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23622}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23622}
+Either {\ttfamily list} or {\ttfamily items} ({\ttfamily Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}}).\hypertarget{readme.md_autotoc_md23623}{}\doxysubsubsection{\texorpdfstring{{\ttfamily splice(list, start, remove, items)}}{{\ttfamily splice(list, start, remove, items)}}}\label{readme.md_autotoc_md23623}
+Like {\ttfamily Array\#splice}, but smarter for giant arrays.
+
+{\ttfamily Array\#splice} takes all items to be inserted as individual argument which causes a stack overflow in V8 when trying to insert 100k items for instance.
+
+Otherwise, this does not return the removed items, and takes {\ttfamily items} as an array instead of rest parameters.\hypertarget{readme.md_autotoc_md23624}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23624}
+
+\begin{DoxyItemize}
+\item {\ttfamily list} ({\ttfamily Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}}) — list to operate on
+\item {\ttfamily start} ({\ttfamily number}) — index to remove/insert at (can be negative)
+\item {\ttfamily remove} ({\ttfamily number}) — number of items to remove
+\item {\ttfamily items} ({\ttfamily Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}}) — items to inject into {\ttfamily list}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23625}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23625}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md23626}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23626}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md23627}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23627}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/util-\/chunked@2}, compatible with Node.\+js 16. This package works with {\ttfamily micromark@3}.\hypertarget{readme.md_autotoc_md23628}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23628}
+This package is safe. See \href{https://github.com/micromark/.github/blob/main/security.md}{\texttt{ {\ttfamily security.\+md}}} in \href{https://github.com/micromark/.github}{\texttt{ {\ttfamily micromark/.github}}} for how to submit a security report.\hypertarget{readme.md_autotoc_md23629}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23629}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/micromark/.github}{\texttt{ {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organisation, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23630}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23630}
+\href{https://github.com/micromark/micromark/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

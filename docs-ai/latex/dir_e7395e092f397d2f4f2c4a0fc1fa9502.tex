@@ -1,0 +1,96 @@
+\doxysection{node\+\_\+modules/sass-\/formatter Directory Reference}
+\hypertarget{dir_e7395e092f397d2f4f2c4a0fc1fa9502}{}\label{dir_e7395e092f397d2f4f2c4a0fc1fa9502}\index{node\_modules/sass-\/formatter Directory Reference@{node\_modules/sass-\/formatter Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+ \href{https://github.com/facebook/jest}{\texttt{ }} \href{https://www.codefactor.io/repository/github/therealsyler/sass-formatter}{\texttt{ }} \href{https://github.com/TheRealSyler/sass-formatter/actions/workflows/main.yml}{\texttt{ }} \href{https://codecov.io/gh/TheRealSyler/sass-formatter}{\texttt{ }} \href{https://www.npmjs.com/package/sass-formatter}{\texttt{ }} \href{https://bundlephobia.com/result?p=sass-formatter}{\texttt{ }} \href{https://packagephobia.now.sh/result?p=sass-formatter}{\texttt{ }} \href{https://github.com/TheRealSyler/sass-formatter}{\texttt{ }} \hypertarget{README.md_autotoc_md30225}{}\doxysubsubsection{\texorpdfstring{Website \href{https://sass-formatter.syler.de/}{\texttt{ sass-\/formatter.\+syler.\+de}}}{Website \href{https://sass-formatter.syler.de/}{\texttt{ sass-\/formatter.\+syler.\+de}}}}\label{README.md_autotoc_md30225}
+\hypertarget{README.md_autotoc_md30226}{}\doxysubsection{\texorpdfstring{Used in}{Used in}}\label{README.md_autotoc_md30226}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/TheRealSyler/vscode-sass-indented}{\texttt{ Vscode sass extension}} 
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md30227}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md30227}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ SassFormatter\ \}\ from\ 'sass-\/formatter';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ SassFormatter.Format(}
+\DoxyCodeLine{\ \ \`{}}
+\DoxyCodeLine{\ \ \ \ span}
+\DoxyCodeLine{\ \ \ \ \ \ color:\ none}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ @for\ \$i\ from\ 0\ through\ 2}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \&:nth-\/child(\#\{\$i\})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ color:\ none}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ @each\ \$author\ in\ \$list}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ .photo-\/\#\{\$author\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ background:\ image-\/url("{}avatars/\#\{\$author\}.png"{})\ no-\/repeat}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ @while\ \$types\ >\ 0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ .while-\/\#\{\$types\}}
+\DoxyCodeLine{\ width:\ \$type-\/width\ +\ \$types`}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30228}{}\doxysubsubsubsection{\texorpdfstring{Result}{Result}}\label{README.md_autotoc_md30228}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{span}
+\DoxyCodeLine{\ \ color:\ none}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ @for\ \$i\ from\ 0\ through\ 2}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \&:nth-\/child(\#\{\$i\})}
+\DoxyCodeLine{\ \ \ \ \ \ color:\ none}
+\DoxyCodeLine{\ \ \ \ \ \ @each\ \$author\ in\ \$list}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ .photo-\/\#\{\$author\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ background:\ image-\/url("{}avatars/\#\{\$author\}.png"{})\ no-\/repeat}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ @while\ \$types\ >\ 0}
+\DoxyCodeLine{\ \ \ \ \ \ .while-\/\#\{\$types\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ width:\ \$type-\/width\ +\ \$types}
+
+\end{DoxyCode}
+
+
+\hypertarget{README.md_autotoc_md30229}{}\doxysubsection{\texorpdfstring{Docs}{Docs}}\label{README.md_autotoc_md30229}
+
+\begin{DoxyItemize}
+\item {\bfseries{config}}
+\begin{DoxyItemize}
+\item Sass\+Formatter\+Config
+\item default\+Sass\+Formatter\+Config
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md30230}{}\doxysubsubsubsection{\texorpdfstring{config}{config}}\label{README.md_autotoc_md30230}
+\hypertarget{README.md_autotoc_md30231}{}\doxysubsubsubsubsubsection{\texorpdfstring{Sass\+Formatter\+Config}{Sass\+Formatter\+Config}}\label{README.md_autotoc_md30231}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ SassFormatterConfig\ \{}
+\DoxyCodeLine{\ \ \ \ /**Enable\ debug\ messages\ */}
+\DoxyCodeLine{\ \ \ \ debug:\ boolean;}
+\DoxyCodeLine{\ \ \ \ /**delete\ rows\ that\ are\ empty.\ */}
+\DoxyCodeLine{\ \ \ \ deleteEmptyRows:\ boolean;}
+\DoxyCodeLine{\ \ \ \ /**@deprecated*/}
+\DoxyCodeLine{\ \ \ \ deleteWhitespace:\ boolean;}
+\DoxyCodeLine{\ \ \ \ /**Convert\ css\ or\ scss\ to\ sass\ */}
+\DoxyCodeLine{\ \ \ \ convert:\ boolean;}
+\DoxyCodeLine{\ \ \ \ /**set\ the\ space\ after\ the\ colon\ of\ a\ property\ to\ one.*/}
+\DoxyCodeLine{\ \ \ \ setPropertySpace:\ boolean;}
+\DoxyCodeLine{\ \ \ \ tabSize:\ number;}
+\DoxyCodeLine{\ \ \ \ /**insert\ spaces\ or\ tabs.\ */}
+\DoxyCodeLine{\ \ \ \ insertSpaces:\ boolean;}
+\DoxyCodeLine{\ \ \ \ /**Defaults\ to\ LF*/}
+\DoxyCodeLine{\ \ \ \ lineEnding:\ 'LF'\ |\ 'CRLF';}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30232}{}\doxysubsubsubsubsubsection{\texorpdfstring{default\+Sass\+Formatter\+Config}{default\+Sass\+Formatter\+Config}}\label{README.md_autotoc_md30232}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ defaultSassFormatterConfig:\ SassFormatterConfig;}
+
+\end{DoxyCode}
+
+
+{\itshape Generated with} {\bfseries{\href{https://www.npmjs.com/package/suf-cli}{\texttt{ suf-\/cli}}}} \hypertarget{README.md_autotoc_md30233}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md30233}
+ Copyright (c) 2019 Leonard Grosoli Licensed under the MIT license.  

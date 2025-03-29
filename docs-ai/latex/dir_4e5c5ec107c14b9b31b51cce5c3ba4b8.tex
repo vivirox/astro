@@ -1,0 +1,158 @@
+\doxysection{node\+\_\+modules/colorette Directory Reference}
+\hypertarget{dir_4e5c5ec107c14b9b31b51cce5c3ba4b8}{}\label{dir_4e5c5ec107c14b9b31b51cce5c3ba4b8}\index{node\_modules/colorette Directory Reference@{node\_modules/colorette Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Easily set your terminal text color \& styles. \end{quote}
+
+
+
+\begin{DoxyItemize}
+\item No dependecies
+\item Automatic color support detection
+\item Up to 2x faster than alternatives
+\item Type\+Script support
+\item \href{https://no-color.org}{\texttt{ {\ttfamily NO\+\_\+\+COLOR}}} friendly
+\item Node \texorpdfstring{$>$}{>}= {\ttfamily 10}
+\end{DoxyItemize}
+
+\begin{quote}
+\href{https://github.com/jorgebucaran/colorette/issues/70}{\texttt{ {\bfseries{Upgrading from Colorette {\ttfamily 1.\+x}?}}}} \end{quote}
+\hypertarget{README.md_autotoc_md10715}{}\doxysubsection{\texorpdfstring{Quickstart}{Quickstart}}\label{README.md_autotoc_md10715}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ blue,\ bold,\ underline\ \}\ from\ "{}colorette"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ blue("{}I'm\ blue"{}),}
+\DoxyCodeLine{\ \ bold(blue("{}da\ ba\ dee"{})),}
+\DoxyCodeLine{\ \ underline(bold(blue("{}da\ ba\ daa"{})))}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Here\textquotesingle{}s an example using \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals}{\texttt{ template literals}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(`}
+\DoxyCodeLine{\ \ There's\ a\ \$\{underline(blue("{}house"{}))\},}
+\DoxyCodeLine{\ \ With\ a\ \$\{bold(blue("{}window"{}))\},}
+\DoxyCodeLine{\ \ And\ a\ \$\{blue("{}corvette"{})\}}
+\DoxyCodeLine{\ \ And\ everything\ is\ blue}
+\DoxyCodeLine{\`{})}
+
+\end{DoxyCode}
+
+
+You can also nest styles without breaking existing color sequences.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(bold(`I'm\ \$\{blue(`da\ ba\ \$\{underline("{}dee"{})\}\ da\ ba`)\}\ daa`))}
+
+\end{DoxyCode}
+
+
+Need to override terminal color detection? You can do that too.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createColors\ \}\ from\ "{}colorette"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ blue\ \}\ =\ createColors(\{\ useColor:\ false\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(blue("{}Blue?\ Nope,\ nah"{}))}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10716}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md10716}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ colorette}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10717}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md10717}
+\hypertarget{README.md_autotoc_md10718}{}\doxysubsubsection{\texorpdfstring{\texorpdfstring{$<$}{<}color\texorpdfstring{$>$}{>}()}{\texorpdfstring{$<$}{<}color\texorpdfstring{$>$}{>}()}}\label{README.md_autotoc_md10718}
+\begin{quote}
+See all supported colors. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ blue\ \}\ from\ "{}colorette"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{blue("{}I'm\ blue"{})\ //=>\ \(\backslash\)x1b[34mI'm\ blue\(\backslash\)x1b[39m}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10719}{}\doxysubsubsection{\texorpdfstring{create\+Colors()}{create\+Colors()}}\label{README.md_autotoc_md10719}
+Override terminal color detection via {\ttfamily create\+Colors(\{ use\+Color \})}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createColors\ \}\ from\ "{}colorette"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ blue\ \}\ =\ createColors(\{\ useColor:\ false\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10720}{}\doxysubsubsection{\texorpdfstring{is\+Color\+Supported}{is\+Color\+Supported}}\label{README.md_autotoc_md10720}
+{\ttfamily true} if your terminal supports color, {\ttfamily false} otherwise. Used internally, but exposed for convenience.\hypertarget{README.md_autotoc_md10721}{}\doxysubsection{\texorpdfstring{Environment}{Environment}}\label{README.md_autotoc_md10721}
+You can override color detection from the CLI by setting the {\ttfamily -\/-\/no-\/color} or {\ttfamily -\/-\/color} flags.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ ./example.js\ -\/-\/no-\/color\ |\ ./consumer.js}
+
+\end{DoxyCode}
+
+
+Or if you can\textquotesingle{}t use CLI flags, by setting the {\ttfamily NO\+\_\+\+COLOR=} or {\ttfamily FORCE\+\_\+\+COLOR=} environment variables.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ NO\_COLOR=\ ./example.js\ |\ ./consumer.js}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10722}{}\doxysubsection{\texorpdfstring{Supported colors}{Supported colors}}\label{README.md_autotoc_md10722}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{5}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Colors   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Background Colors   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bright Colors   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bright Background Colors   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Modifiers    }\\\cline{1-5}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Colors   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Background Colors   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bright Colors   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bright Background Colors   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Modifiers    }\\\cline{1-5}
+\endhead
+black   &bg\+Black   &black\+Bright   &bg\+Black\+Bright   &dim    \\\cline{1-5}
+red   &bg\+Red   &red\+Bright   &bg\+Red\+Bright   &{\bfseries{bold}}    \\\cline{1-5}
+green   &bg\+Green   &green\+Bright   &bg\+Green\+Bright   &hidden    \\\cline{1-5}
+yellow   &bg\+Yellow   &yellow\+Bright   &bg\+Yellow\+Bright   &{\itshape italic}    \\\cline{1-5}
+blue   &bg\+Blue   &blue\+Bright   &bg\+Blue\+Bright   &\uline{underline}    \\\cline{1-5}
+magenta   &bg\+Magenta   &magenta\+Bright   &bg\+Magenta\+Bright   &\sout{strikethrough}    \\\cline{1-5}
+cyan   &bg\+Cyan   &cyan\+Bright   &bg\+Cyan\+Bright   &reset    \\\cline{1-5}
+white   &bg\+White   &white\+Bright   &bg\+White\+Bright   &\\\cline{1-5}
+gray   &&&&\\\cline{1-5}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md10723}{}\doxysubsection{\texorpdfstring{\href{https://github.com/jorgebucaran/colorette/actions/workflows/bench.yml}{\texttt{ Benchmarks}}}{\href{https://github.com/jorgebucaran/colorette/actions/workflows/bench.yml}{\texttt{ Benchmarks}}}}\label{README.md_autotoc_md10723}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ -\/-\/prefix\ bench\ start}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ chalk\ \ \ \ \ \ \ \ \ 1,786,703\ ops/sec}
+\DoxyCodeLine{\ \ kleur\ \ \ \ \ \ \ \ \ 1,618,960\ ops/sec}
+\DoxyCodeLine{\ \ colors\ \ \ \ \ \ \ \ \ \ 646,823\ ops/sec}
+\DoxyCodeLine{\ \ ansi-\/colors\ \ \ \ \ 786,149\ ops/sec}
+\DoxyCodeLine{\ \ picocolors\ \ \ \ 2,871,758\ ops/sec}
+\DoxyCodeLine{+\ colorette\ \ \ \ \ 3,002,751\ ops/sec}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10724}{}\doxysubsection{\texorpdfstring{Acknowledgments}{Acknowledgments}}\label{README.md_autotoc_md10724}
+Colorette started out in 2015 by \href{https://github.com/jorgebucaran}{\texttt{ @jorgebucaran}} as a lightweight alternative to \href{https://github.com/chalk/chalk}{\texttt{ Chalk}} and was introduced originally as \href{https://github.com/jorgebucaran/colorette/commit/b01b5b9961ceb7df878583a3002e836fae9e37ce}{\texttt{ Clor}}. Our terminal color detection logic borrows heavily from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}} and \href{https://github.com/Qix-}{\texttt{ @\+Qix-\/}} work on Chalk. The idea of slicing strings to clear bleeding sequences was adapted from a similar technique used by \href{https://github.com/alexeyraspopov}{\texttt{ @alexeyraspopov}} in \href{https://github.com/alexeyraspopov/picocolors}{\texttt{ picocolors}}. Thank you to all our contributors! \texorpdfstring{$<$}{<}3\hypertarget{README.md_autotoc_md10725}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md10725}
+\doxysectlink{md_node__modules_2colorette_2_l_i_c_e_n_s_e}{MIT}{0} 

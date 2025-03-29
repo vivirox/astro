@@ -1,0 +1,422 @@
+\doxysection{node\+\_\+modules/redis Directory Reference}
+\hypertarget{dir_d64ca83e691c902eae0599f6b4b824ff}{}\label{dir_d64ca83e691c902eae0599f6b4b824ff}\index{node\_modules/redis Directory Reference@{node\_modules/redis Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/redis/node-redis/actions/workflows/tests.yml}{\texttt{ }} \href{https://codecov.io/gh/redis/node-redis}{\texttt{ }} \href{https://github.com/redis/node-redis/blob/master/LICENSE}{\texttt{ }}
+
+\href{https://discord.gg/redis}{\texttt{ }} \href{https://www.twitch.tv/redisinc}{\texttt{ }} \href{https://www.youtube.com/redisinc}{\texttt{ }} \href{https://twitter.com/redisinc}{\texttt{ }}
+
+node-\/redis is a modern, high performance \href{https://redis.io}{\texttt{ Redis}} client for Node.\+js.\hypertarget{README.md_autotoc_md28072}{}\doxysubsection{\texorpdfstring{How do I Redis?}{How do I Redis?}}\label{README.md_autotoc_md28072}
+\href{https://university.redis.com/}{\texttt{ Learn for free at Redis University}}
+
+\href{https://launchpad.redis.com/}{\texttt{ Build faster with the Redis Launchpad}}
+
+\href{https://redis.com/try-free/}{\texttt{ Try the Redis Cloud}}
+
+\href{https://developer.redis.com/}{\texttt{ Dive in developer tutorials}}
+
+\href{https://redis.com/community/}{\texttt{ Join the Redis community}}
+
+\href{https://redis.com/company/careers/jobs/}{\texttt{ Work at Redis}}\hypertarget{README.md_autotoc_md28073}{}\doxysubsection{\texorpdfstring{Packages}{Packages}}\label{README.md_autotoc_md28073}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+\href{./}{\texttt{ redis}}   &\href{https://www.npmjs.com/package/redis}{\texttt{ }} \href{https://www.npmjs.com/package/redis}{\texttt{ }}    \\\cline{1-2}
+\href{./packages/client}{\texttt{ @redis/client}}   &\href{https://www.npmjs.com/package/@redis/client}{\texttt{ }} \href{https://www.npmjs.com/package/@redis/client}{\texttt{ }} \href{https://redis.js.org/documentation/client/}{\texttt{ }}    \\\cline{1-2}
+\href{./packages/bloom}{\texttt{ @redis/bloom}}   &\href{https://www.npmjs.com/package/@redis/bloom}{\texttt{ }} \href{https://www.npmjs.com/package/@redis/bloom}{\texttt{ }} \href{https://redis.js.org/documentation/bloom/}{\texttt{ }} \href{https://oss.redis.com/redisbloom/}{\texttt{ Redis Bloom}} commands    \\\cline{1-2}
+\href{./packages/graph}{\texttt{ @redis/graph}}   &\href{https://www.npmjs.com/package/@redis/graph}{\texttt{ }} \href{https://www.npmjs.com/package/@redis/graph}{\texttt{ }} \href{https://redis.js.org/documentation/graph/}{\texttt{ }} \href{https://oss.redis.com/redisgraph/}{\texttt{ Redis Graph}} commands    \\\cline{1-2}
+\href{./packages/json}{\texttt{ @redis/json}}   &\href{https://www.npmjs.com/package/@redis/json}{\texttt{ }} \href{https://www.npmjs.com/package/@redis/json}{\texttt{ }} \href{https://redis.js.org/documentation/json/}{\texttt{ }} \href{https://oss.redis.com/redisjson/}{\texttt{ Redis JSON}} commands    \\\cline{1-2}
+\href{./packages/search}{\texttt{ @redis/search}}   &\href{https://www.npmjs.com/package/@redis/search}{\texttt{ }} \href{https://www.npmjs.com/package/@redis/search}{\texttt{ }} \href{https://redis.js.org/documentation/search/}{\texttt{ }} \href{https://oss.redis.com/redisearch/}{\texttt{ Redi\+Search}} commands    \\\cline{1-2}
+\href{./packages/time-series}{\texttt{ @redis/time-\/series}}   &\href{https://www.npmjs.com/package/@redis/time-series}{\texttt{ }} \href{https://www.npmjs.com/package/@redis/time-series}{\texttt{ }} \href{https://redis.js.org/documentation/time-series/}{\texttt{ }} \href{https://oss.redis.com/redistimeseries/}{\texttt{ Redis Time-\/\+Series}} commands   \\\cline{1-2}
+\end{longtabu}
+
+
+\begin{quote}
+\+:warning\+: In version 4.\+1.\+0 we moved our subpackages from {\ttfamily @node-\/redis} to {\ttfamily @redis}. If you\textquotesingle{}re just using {\ttfamily npm install redis}, you don\textquotesingle{}t need to do anything—it\textquotesingle{}ll upgrade automatically. If you\textquotesingle{}re using the subpackages directly, you\textquotesingle{}ll need to point to the new scope (e.\+g. {\ttfamily @redis/client} instead of {\ttfamily @node-\/redis/client}). \end{quote}
+\hypertarget{README.md_autotoc_md28074}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md28074}
+Start a redis via docker\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{docker\ run\ -\/p\ 6379:6379\ -\/it\ redis/redis-\/stack-\/server:latest}
+
+\end{DoxyCode}
+
+
+To install node-\/redis, simply\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ redis}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+\+:warning\+: The new interface is clean and cool, but if you have an existing codebase, you\textquotesingle{}ll want to read the migration guide. \end{quote}
+
+
+Looking for a high-\/level library to handle object mapping? See \href{https://github.com/redis/redis-om-node}{\texttt{ redis-\/om-\/node}}!\hypertarget{README.md_autotoc_md28075}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md28075}
+\hypertarget{README.md_autotoc_md28076}{}\doxysubsubsection{\texorpdfstring{Basic Example}{Basic Example}}\label{README.md_autotoc_md28076}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createClient\ \}\ from\ 'redis';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ client\ =\ await\ createClient()}
+\DoxyCodeLine{\ \ .on('error',\ err\ =>\ console.log('Redis\ Client\ Error',\ err))}
+\DoxyCodeLine{\ \ .connect();}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ client.set('key',\ 'value');}
+\DoxyCodeLine{const\ value\ =\ await\ client.get('key');}
+\DoxyCodeLine{await\ client.disconnect();}
+
+\end{DoxyCode}
+
+
+The above code connects to localhost on port 6379. To connect to a different host or port, use a connection string in the format {\ttfamily redis\mbox{[}s\mbox{]}\+://\mbox{[}\mbox{[}username\mbox{]}\mbox{[}\+:password\mbox{]}@\mbox{]}\mbox{[}host\mbox{]}\mbox{[}\+:port\mbox{]}\mbox{[}/db-\/number\mbox{]}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{createClient(\{}
+\DoxyCodeLine{\ \ url:\ 'redis://alice:foobared@awesome.redis.server:6380'}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+You can also use discrete parameters, UNIX sockets, and even TLS to connect. Details can be found in the client configuration guide.
+
+To check if the the client is connected and ready to send commands, use {\ttfamily client.\+is\+Ready} which returns a boolean. {\ttfamily client.\+is\+Open} is also available. This returns {\ttfamily true} when the client\textquotesingle{}s underlying socket is open, and {\ttfamily false} when it isn\textquotesingle{}t (for example when the client is still connecting or reconnecting after a network error).\hypertarget{README.md_autotoc_md28077}{}\doxysubsubsection{\texorpdfstring{Redis Commands}{Redis Commands}}\label{README.md_autotoc_md28077}
+There is built-\/in support for all of the \href{https://redis.io/commands}{\texttt{ out-\/of-\/the-\/box Redis commands}}. They are exposed using the raw Redis command names ({\ttfamily HSET}, {\ttfamily HGETALL}, etc.) and a friendlier camel-\/cased version ({\ttfamily h\+Set}, {\ttfamily h\+Get\+All}, etc.)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ raw\ Redis\ commands}
+\DoxyCodeLine{await\ client.HSET('key',\ 'field',\ 'value');}
+\DoxyCodeLine{await\ client.HGETALL('key');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ friendly\ JavaScript\ commands}
+\DoxyCodeLine{await\ client.hSet('key',\ 'field',\ 'value');}
+\DoxyCodeLine{await\ client.hGetAll('key');}
+
+\end{DoxyCode}
+
+
+Modifiers to commands are specified using a Java\+Script object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.set('key',\ 'value',\ \{}
+\DoxyCodeLine{\ \ EX:\ 10,}
+\DoxyCodeLine{\ \ NX:\ true}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Replies will be transformed into useful data structures\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.hGetAll('key');\ //\ \{\ field1:\ 'value1',\ field2:\ 'value2'\ \}}
+\DoxyCodeLine{await\ client.hVals('key');\ //\ ['value1',\ 'value2']}
+
+\end{DoxyCode}
+
+
+{\ttfamily Buffer}s are supported as well\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.hSet('key',\ 'field',\ Buffer.from('value'));\ //\ 'OK'}
+\DoxyCodeLine{await\ client.hGetAll(}
+\DoxyCodeLine{\ \ commandOptions(\{\ returnBuffers:\ true\ \}),}
+\DoxyCodeLine{\ \ 'key'}
+\DoxyCodeLine{);\ //\ \{\ field:\ <Buffer\ 76\ 61\ 6c\ 75\ 65>\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28078}{}\doxysubsubsection{\texorpdfstring{Unsupported Redis Commands}{Unsupported Redis Commands}}\label{README.md_autotoc_md28078}
+If you want to run commands and/or use arguments that Node Redis doesn\textquotesingle{}t know about (yet!) use {\ttfamily .send\+Command()}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.sendCommand(['SET',\ 'key',\ 'value',\ 'NX']);\ //\ 'OK'}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ client.sendCommand(['HGETALL',\ 'key']);\ //\ ['key1',\ 'field1',\ 'key2',\ 'field2']}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28079}{}\doxysubsubsection{\texorpdfstring{Transactions (Multi/\+Exec)}{Transactions (Multi/\+Exec)}}\label{README.md_autotoc_md28079}
+Start a \href{https://redis.io/topics/transactions}{\texttt{ transaction}} by calling {\ttfamily .multi()}, then chaining your commands. When you\textquotesingle{}re done, call {\ttfamily .exec()} and you\textquotesingle{}ll get an array back with your results\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.set('another-\/key',\ 'another-\/value');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ [setKeyReply,\ otherKeyValue]\ =\ await\ client}
+\DoxyCodeLine{\ \ .multi()}
+\DoxyCodeLine{\ \ .set('key',\ 'value')}
+\DoxyCodeLine{\ \ .get('another-\/key')}
+\DoxyCodeLine{\ \ .exec();\ //\ ['OK',\ 'another-\/value']}
+
+\end{DoxyCode}
+
+
+You can also \href{https://redis.io/topics/transactions\#optimistic-locking-using-check-and-set}{\texttt{ watch}} keys by calling {\ttfamily .watch()}. Your transaction will abort if any of the watched keys change.
+
+To dig deeper into transactions, check out the Isolated Execution Guide.\hypertarget{README.md_autotoc_md28080}{}\doxysubsubsection{\texorpdfstring{Blocking Commands}{Blocking Commands}}\label{README.md_autotoc_md28080}
+Any command can be run on a new connection by specifying the {\ttfamily isolated} option. The newly created connection is closed when the command\textquotesingle{}s {\ttfamily Promise} is fulfilled.
+
+This pattern works especially well for blocking commands—such as {\ttfamily BLPOP} and {\ttfamily BLMOVE}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ commandOptions\ \}\ from\ 'redis';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ blPopPromise\ =\ client.blPop(}
+\DoxyCodeLine{\ \ commandOptions(\{\ isolated:\ true\ \}),}
+\DoxyCodeLine{\ \ 'key',}
+\DoxyCodeLine{\ \ 0}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ client.lPush('key',\ ['1',\ '2']);}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ blPopPromise;\ //\ '2'}
+
+\end{DoxyCode}
+
+
+To learn more about isolated execution, check out the guide.\hypertarget{README.md_autotoc_md28081}{}\doxysubsubsection{\texorpdfstring{Pub/\+Sub}{Pub/\+Sub}}\label{README.md_autotoc_md28081}
+See the Pub/\+Sub overview.\hypertarget{README.md_autotoc_md28082}{}\doxysubsubsection{\texorpdfstring{Scan Iterator}{Scan Iterator}}\label{README.md_autotoc_md28082}
+\href{https://redis.io/commands/scan}{\texttt{ {\ttfamily SCAN}}} results can be looped over using \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator}{\texttt{ async iterators}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{for\ await\ (const\ key\ of\ client.scanIterator())\ \{}
+\DoxyCodeLine{\ \ //\ use\ the\ key!}
+\DoxyCodeLine{\ \ await\ client.get(key);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+This works with {\ttfamily HSCAN}, {\ttfamily SSCAN}, and {\ttfamily ZSCAN} too\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{for\ await\ (const\ \{\ field,\ value\ \}\ of\ client.hScanIterator('hash'))\ \{\}}
+\DoxyCodeLine{for\ await\ (const\ member\ of\ client.sScanIterator('set'))\ \{\}}
+\DoxyCodeLine{for\ await\ (const\ \{\ score,\ value\ \}\ of\ client.zScanIterator('sorted-\/set'))\ \{\}}
+
+\end{DoxyCode}
+
+
+You can override the default options by providing a configuration object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{client.scanIterator(\{}
+\DoxyCodeLine{\ \ TYPE:\ 'string',\ //\ \`{}SCAN`\ only}
+\DoxyCodeLine{\ \ MATCH:\ 'patter*',}
+\DoxyCodeLine{\ \ COUNT:\ 100}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28083}{}\doxysubsubsection{\texorpdfstring{\href{https://redis.io/docs/manual/programmability/}{\texttt{ Programmability}}}{\href{https://redis.io/docs/manual/programmability/}{\texttt{ Programmability}}}}\label{README.md_autotoc_md28083}
+Redis provides a programming interface allowing code execution on the redis server.\hypertarget{README.md_autotoc_md28084}{}\doxysubsubsubsection{\texorpdfstring{\href{https://redis.io/docs/manual/programmability/functions-intro/}{\texttt{ Functions}}}{\href{https://redis.io/docs/manual/programmability/functions-intro/}{\texttt{ Functions}}}}\label{README.md_autotoc_md28084}
+The following example retrieves a key in redis, returning the value of the key, incremented by an integer. For example, if your key {\itshape foo} has the value {\itshape 17} and we run `add(\textquotesingle{}foo', 25)\`{}, it returns the answer to Life, the Universe and Everything.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#!lua\ name=library}
+\DoxyCodeLine{}
+\DoxyCodeLine{redis.register\_function\ \{}
+\DoxyCodeLine{\ \ function\_name\ =\ 'add',}
+\DoxyCodeLine{\ \ callback\ =\ function(keys,\ args)\ return\ redis.call('GET',\ keys[1])\ +\ args[1]\ end,}
+\DoxyCodeLine{\ \ flags\ =\ \{\ 'no-\/writes'\ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Here is the same example, but in a format that can be pasted into the {\ttfamily redis-\/cli}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{FUNCTION\ LOAD\ "{}\#!lua\ name=library\(\backslash\)nredis.register\_function\{function\_name=\(\backslash\)"{}add\(\backslash\)"{},\ callback=function(keys,\ args)\ return\ redis.call('GET',\ keys[1])+args[1]\ end,\ flags=\{\(\backslash\)"{}no-\/writes\(\backslash\)"{}\}\}"{}}
+
+\end{DoxyCode}
+
+
+Load the prior redis function on the {\itshape redis server} before running the example below.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createClient\ \}\ from\ 'redis';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ client\ =\ createClient(\{}
+\DoxyCodeLine{\ \ functions:\ \{}
+\DoxyCodeLine{\ \ \ \ library:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ add:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ NUMBER\_OF\_KEYS:\ 1,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ transformArguments(key:\ string,\ toAdd:\ number):\ Array<string>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ return\ [key,\ toAdd.toString()];}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ transformReply(reply:\ number):\ number\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ return\ reply;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ client.connect();}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ client.set('key',\ '1');}
+\DoxyCodeLine{await\ client.library.add('key',\ 2);\ //\ 3}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28085}{}\doxysubsubsubsection{\texorpdfstring{\href{https://redis.io/docs/manual/programmability/eval-intro/}{\texttt{ Lua Scripts}}}{\href{https://redis.io/docs/manual/programmability/eval-intro/}{\texttt{ Lua Scripts}}}}\label{README.md_autotoc_md28085}
+The following is an end-\/to-\/end example of the prior concept.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createClient,\ defineScript\ \}\ from\ 'redis';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ client\ =\ createClient(\{}
+\DoxyCodeLine{\ \ scripts:\ \{}
+\DoxyCodeLine{\ \ \ \ add:\ defineScript(\{}
+\DoxyCodeLine{\ \ \ \ \ \ NUMBER\_OF\_KEYS:\ 1,}
+\DoxyCodeLine{\ \ \ \ \ \ SCRIPT:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ 'return\ redis.call("{}GET"{},\ KEYS[1])\ +\ ARGV[1];',}
+\DoxyCodeLine{\ \ \ \ \ \ transformArguments(key:\ string,\ toAdd:\ number):\ Array<string>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ [key,\ toAdd.toString()];}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ transformReply(reply:\ number):\ number\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ reply;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ client.connect();}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ client.set('key',\ '1');}
+\DoxyCodeLine{await\ client.add('key',\ 2);\ //\ 3}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28086}{}\doxysubsubsection{\texorpdfstring{Disconnecting}{Disconnecting}}\label{README.md_autotoc_md28086}
+There are two functions that disconnect a client from the Redis server. In most scenarios you should use {\ttfamily .quit()} to ensure that pending commands are sent to Redis before closing a connection.\hypertarget{README.md_autotoc_md28087}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily .QUIT()}/{\ttfamily .quit()}}{{\ttfamily .QUIT()}/{\ttfamily .quit()}}}\label{README.md_autotoc_md28087}
+Gracefully close a client\textquotesingle{}s connection to Redis, by sending the \href{https://redis.io/commands/quit}{\texttt{ {\ttfamily QUIT}}} command to the server. Before quitting, the client executes any remaining commands in its queue, and will receive replies from Redis for each of them.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ [ping,\ get,\ quit]\ =\ await\ Promise.all([}
+\DoxyCodeLine{\ \ client.ping(),}
+\DoxyCodeLine{\ \ client.get('key'),}
+\DoxyCodeLine{\ \ client.quit()}
+\DoxyCodeLine{]);\ //\ ['PONG',\ null,\ 'OK']}
+\DoxyCodeLine{}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ await\ client.get('key');}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ //\ ClosedClient\ Error}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28088}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily .disconnect()}}{{\ttfamily .disconnect()}}}\label{README.md_autotoc_md28088}
+Forcibly close a client\textquotesingle{}s connection to Redis immediately. Calling {\ttfamily disconnect} will not send further pending commands to the Redis server, or wait for or parse outstanding responses.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.disconnect();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28089}{}\doxysubsubsection{\texorpdfstring{Auto-\/\+Pipelining}{Auto-\/\+Pipelining}}\label{README.md_autotoc_md28089}
+Node Redis will automatically pipeline requests that are made during the same "{}tick"{}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{client.set('Tm9kZSBSZWRpcw==',\ 'users:1');}
+\DoxyCodeLine{client.sAdd('users:1:tokens',\ 'Tm9kZSBSZWRpcw==');}
+
+\end{DoxyCode}
+
+
+Of course, if you don\textquotesingle{}t do something with your Promises you\textquotesingle{}re certain to get \href{https://nodejs.org/api/process.html\#process_event_unhandledrejection}{\texttt{ unhandled Promise exceptions}}. To take advantage of auto-\/pipelining and handle your Promises, use {\ttfamily Promise.\+all()}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ Promise.all([}
+\DoxyCodeLine{\ \ client.set('Tm9kZSBSZWRpcw==',\ 'users:1'),}
+\DoxyCodeLine{\ \ client.sAdd('users:1:tokens',\ 'Tm9kZSBSZWRpcw==')}
+\DoxyCodeLine{]);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28090}{}\doxysubsubsection{\texorpdfstring{Clustering}{Clustering}}\label{README.md_autotoc_md28090}
+Check out the Clustering Guide when using Node Redis to connect to a Redis Cluster.\hypertarget{README.md_autotoc_md28091}{}\doxysubsubsection{\texorpdfstring{Events}{Events}}\label{README.md_autotoc_md28091}
+The Node Redis client class is an Nodejs Event\+Emitter and it emits an event each time the network status changes\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ When   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Listener arguments    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ When   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Listener arguments    }\\\cline{1-3}
+\endhead
+{\ttfamily connect}   &Initiating a connection to the server   &{\itshape No arguments}    \\\cline{1-3}
+{\ttfamily ready}   &Client is ready to use   &{\itshape No arguments}    \\\cline{1-3}
+{\ttfamily end}   &Connection has been closed (via {\ttfamily .quit()} or {\ttfamily .disconnect()})   &{\itshape No arguments}    \\\cline{1-3}
+{\ttfamily error}   &An error has occurred—usually a network issue such as "{}\+Socket closed unexpectedly"{}   &{\ttfamily (error\+: Error)}    \\\cline{1-3}
+{\ttfamily reconnecting}   &Client is trying to reconnect to the server   &{\itshape No arguments}    \\\cline{1-3}
+{\ttfamily sharded-\/channel-\/moved}   &See \href{./docs/pub-sub.md\#sharded-channel-moved-event}{\texttt{ here}}   &See \href{./docs/pub-sub.md\#sharded-channel-moved-event}{\texttt{ here}}   \\\cline{1-3}
+\end{longtabu}
+
+
+\begin{quote}
+\+:warning\+: You {\bfseries{MUST}} listen to {\ttfamily error} events. If a client doesn\textquotesingle{}t have at least one {\ttfamily error} listener registered and an {\ttfamily error} occurs, that error will be thrown and the Node.\+js process will exit. See the \href{https://nodejs.org/api/events.html\#events_error_events}{\texttt{ {\ttfamily Event\+Emitter} docs}} for more details. \end{quote}
+
+
+\begin{quote}
+The client will not emit \href{./docs/v3-to-v4.md\#all-the-removed-events}{\texttt{ any other events}} beyond those listed above. \end{quote}
+\hypertarget{README.md_autotoc_md28092}{}\doxysubsection{\texorpdfstring{Supported Redis versions}{Supported Redis versions}}\label{README.md_autotoc_md28092}
+Node Redis is supported with the following versions of Redis\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Supported    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Supported    }\\\cline{1-2}
+\endhead
+7.\+0.\+z   &\+:heavy\+\_\+check\+\_\+mark\+:    \\\cline{1-2}
+6.\+2.\+z   &\+:heavy\+\_\+check\+\_\+mark\+:    \\\cline{1-2}
+6.\+0.\+z   &\+:heavy\+\_\+check\+\_\+mark\+:    \\\cline{1-2}
+5.\+0.\+z   &\+:heavy\+\_\+check\+\_\+mark\+:    \\\cline{1-2}
+\texorpdfstring{$<$}{<} 5.\+0   &\+:x\+:   \\\cline{1-2}
+\end{longtabu}
+
+
+\begin{quote}
+Node Redis should work with older versions of Redis, but it is not fully tested and we cannot offer support. \end{quote}
+\hypertarget{README.md_autotoc_md28093}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md28093}
+If you\textquotesingle{}d like to contribute, check out the \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{contributing guide}.
+
+Thank you to all the people who already contributed to Node Redis!
+
+\href{https://github.com/redis/node-redis/graphs/contributors}{\texttt{ }}\hypertarget{README.md_autotoc_md28094}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md28094}
+This repository is licensed under the "{}\+MIT"{} license. See \mbox{[}LICENSE\mbox{]}(LICENSE). 

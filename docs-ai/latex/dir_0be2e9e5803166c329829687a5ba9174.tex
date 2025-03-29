@@ -1,0 +1,84 @@
+\doxysection{node\+\_\+modules/pathval Directory Reference}
+\hypertarget{dir_0be2e9e5803166c329829687a5ba9174}{}\label{dir_0be2e9e5803166c329829687a5ba9174}\index{node\_modules/pathval Directory Reference@{node\_modules/pathval Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\doxysubsection*{\href{http://chaijs.com}{\texttt{  }} ~\newline
+ pathval }
+
+
+
+Tool for Object value retrieval given a string path for \href{http://nodejs.org}{\texttt{ node}} and the browser. 
+
+
+
+\href{./LICENSE}{\texttt{  }} \href{https://github.com/chaijs/pathval/releases}{\texttt{  }} \href{https://travis-ci.org/chaijs/pathval}{\texttt{  }} \href{https://coveralls.io/r/chaijs/pathval}{\texttt{  }} \href{https://www.npmjs.com/packages/pathval}{\texttt{  }} \href{https://www.npmjs.com/packages/pathval}{\texttt{  }} \href{}{\texttt{  }} ~\newline
+ \href{https://saucelabs.com/u/chaijs-pathval}{\texttt{  }} ~\newline
+ \href{https://chai-slack.herokuapp.com/}{\texttt{  }} \href{https://gitter.im/chaijs/chai}{\texttt{  }} \hypertarget{README.md_autotoc_md25860}{}\doxysubsubsection{\texorpdfstring{What is pathval?}{What is pathval?}}\label{README.md_autotoc_md25860}
+Pathval is a module which you can use to retrieve or set an Object\textquotesingle{}s property for a given {\ttfamily String} path.\hypertarget{README.md_autotoc_md25861}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md25861}
+\hypertarget{README.md_autotoc_md25862}{}\doxysubsubsubsection{\texorpdfstring{Node.\+js}{Node.\+js}}\label{README.md_autotoc_md25862}
+{\ttfamily pathval} is available on \href{http://npmjs.org}{\texttt{ npm}}. To install it, type\+: \begin{DoxyVerb}$ npm install pathval
+\end{DoxyVerb}
+\hypertarget{README.md_autotoc_md25863}{}\doxysubsubsubsection{\texorpdfstring{Browsers}{Browsers}}\label{README.md_autotoc_md25863}
+You can also use it within the browser; install via npm and use the {\ttfamily pathval.\+js} file found within the download. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}./node\_modules/pathval/pathval.js"{}></script>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25864}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md25864}
+The primary export of {\ttfamily pathval} is an object which has the following methods\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily has\+Property(object, name)} -\/ Checks whether an {\ttfamily object} has {\ttfamily name}d property or numeric array index.
+\item {\ttfamily get\+Path\+Info(object, path)} -\/ Returns an object with info indicating the value of the {\ttfamily parent} of that path, the {\ttfamily name} of the property we\textquotesingle{}re retrieving and its {\ttfamily value}.
+\item {\ttfamily get\+Path\+Value(object, path)} -\/ Retrieves the value of a property at a given {\ttfamily path} inside an {\ttfamily object}\textquotesingle{}.
+\item {\ttfamily set\+Path\+Value(object, path, value)} -\/ Sets the {\ttfamily value} of a property at a given {\ttfamily path} inside an {\ttfamily object} and returns the object in which the property has been set.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pathval\ =\ require('pathval');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25865}{}\doxysubsubsubsubsection{\texorpdfstring{.has\+Property(object, name)}{.has\+Property(object, name)}}\label{README.md_autotoc_md25865}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pathval\ =\ require('pathval');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\ prop:\ 'a\ value'\ \};}
+\DoxyCodeLine{pathval.hasProperty(obj,\ 'prop');\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25866}{}\doxysubsubsubsubsection{\texorpdfstring{.get\+Path\+Info(object, path)}{.get\+Path\+Info(object, path)}}\label{README.md_autotoc_md25866}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pathval\ =\ require('pathval');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\ earth:\ \{\ country:\ 'Brazil'\ \}\ \};}
+\DoxyCodeLine{pathval.getPathInfo(obj,\ 'earth.country');\ //\ \{\ parent:\ \{\ country:\ 'Brazil'\ \ \},\ name:\ 'country',\ value:\ 'Brazil',\ exists:\ true\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25867}{}\doxysubsubsubsubsection{\texorpdfstring{.get\+Path\+Value(object, path)}{.get\+Path\+Value(object, path)}}\label{README.md_autotoc_md25867}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pathval\ =\ require('pathval');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\ earth:\ \{\ country:\ 'Brazil'\ \}\ \};}
+\DoxyCodeLine{pathval.getPathValue(obj,\ 'earth.country');\ //\ 'Brazil'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25868}{}\doxysubsubsubsubsection{\texorpdfstring{.set\+Path\+Value(object, path, value)}{.set\+Path\+Value(object, path, value)}}\label{README.md_autotoc_md25868}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pathval\ =\ require('pathval');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\ earth:\ \{\ country:\ 'Brazil'\ \}\ \};}
+\DoxyCodeLine{pathval.setPathValue(obj,\ 'earth.country',\ 'USA');}
+\DoxyCodeLine{}
+\DoxyCodeLine{obj.earth.country;\ //\ 'USA'}
+
+\end{DoxyCode}
+ 

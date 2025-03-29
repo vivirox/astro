@@ -1,0 +1,91 @@
+\doxysection{node\+\_\+modules/astro/node\+\_\+modules/p-\/limit Directory Reference}
+\hypertarget{dir_2cf6da965f716a8e30cee8a6ef8186d7}{}\label{dir_2cf6da965f716a8e30cee8a6ef8186d7}\index{node\_modules/astro/node\_modules/p-\/limit Directory Reference@{node\_modules/astro/node\_modules/p-\/limit Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Run multiple promise-\/returning \& async functions with limited concurrency \end{quote}
+
+
+{\itshape Works in Node.\+js and browsers.}\hypertarget{readme.md_autotoc_md8358}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md8358}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ p-\/limit}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8359}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md8359}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ pLimit\ from\ 'p-\/limit';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ limit\ =\ pLimit(1);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ input\ =\ [}
+\DoxyCodeLine{\ \ \ \ limit(()\ =>\ fetchSomething('foo')),}
+\DoxyCodeLine{\ \ \ \ limit(()\ =>\ fetchSomething('bar')),}
+\DoxyCodeLine{\ \ \ \ limit(()\ =>\ doSomething())}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Only\ one\ promise\ is\ run\ at\ once}
+\DoxyCodeLine{const\ result\ =\ await\ Promise.all(input);}
+\DoxyCodeLine{console.log(result);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8360}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md8360}
+\hypertarget{readme.md_autotoc_md8361}{}\doxysubsubsection{\texorpdfstring{p\+Limit(concurrency) \textsuperscript{default export}}{p\+Limit(concurrency) \textsuperscript{default export}}}\label{readme.md_autotoc_md8361}
+Returns a {\ttfamily limit} function.\hypertarget{readme.md_autotoc_md8362}{}\doxysubsubsubsection{\texorpdfstring{concurrency}{concurrency}}\label{readme.md_autotoc_md8362}
+Type\+: {\ttfamily number}\textbackslash{} Minimum\+: {\ttfamily 1}
+
+Concurrency limit.\hypertarget{readme.md_autotoc_md8363}{}\doxysubsubsection{\texorpdfstring{limit(fn, ...\+args)}{limit(fn, ...\+args)}}\label{readme.md_autotoc_md8363}
+Returns the promise returned by calling {\ttfamily fn(...\+args)}.\hypertarget{readme.md_autotoc_md8364}{}\doxysubsubsubsection{\texorpdfstring{fn}{fn}}\label{readme.md_autotoc_md8364}
+Type\+: {\ttfamily Function}
+
+Promise-\/returning/async function.\hypertarget{readme.md_autotoc_md8365}{}\doxysubsubsubsection{\texorpdfstring{args}{args}}\label{readme.md_autotoc_md8365}
+Any arguments to pass through to {\ttfamily fn}.
+
+Support for passing arguments on to the {\ttfamily fn} is provided in order to be able to avoid creating unnecessary closures. You probably don\textquotesingle{}t need this optimization unless you\textquotesingle{}re pushing a {\itshape lot} of functions.\hypertarget{readme.md_autotoc_md8366}{}\doxysubsubsection{\texorpdfstring{limit.\+active\+Count}{limit.\+active\+Count}}\label{readme.md_autotoc_md8366}
+The number of promises that are currently running.\hypertarget{readme.md_autotoc_md8367}{}\doxysubsubsection{\texorpdfstring{limit.\+pending\+Count}{limit.\+pending\+Count}}\label{readme.md_autotoc_md8367}
+The number of promises that are waiting to run (i.\+e. their internal {\ttfamily fn} was not called yet).\hypertarget{readme.md_autotoc_md8368}{}\doxysubsubsection{\texorpdfstring{limit.\+clear\+Queue()}{limit.\+clear\+Queue()}}\label{readme.md_autotoc_md8368}
+Discard pending promises that are waiting to run.
+
+This might be useful if you want to teardown the queue at the end of your program\textquotesingle{}s lifecycle or discard any function calls referencing an intermediary state of your app.
+
+Note\+: This does not cancel promises that are already running.\hypertarget{readme.md_autotoc_md8369}{}\doxysubsubsection{\texorpdfstring{limit.\+concurrency}{limit.\+concurrency}}\label{readme.md_autotoc_md8369}
+Get or set the concurrency limit.\hypertarget{readme.md_autotoc_md8370}{}\doxysubsubsection{\texorpdfstring{limit\+Function(fn, options) \textsuperscript{named export}}{limit\+Function(fn, options) \textsuperscript{named export}}}\label{readme.md_autotoc_md8370}
+Returns a function with limited concurrency.
+
+The returned function manages its own concurrent executions, allowing you to call it multiple times without exceeding the specified concurrency limit.
+
+Ideal for scenarios where you need to control the number of simultaneous executions of a single function, rather than managing concurrency across multiple functions.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{limitFunction\}\ from\ 'p-\/limit';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ limitedFunction\ =\ limitFunction(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ return\ doSomething();}
+\DoxyCodeLine{\},\ \{concurrency:\ 1\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ input\ =\ Array.from(\{length:\ 10\},\ limitedFunction);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Only\ one\ promise\ is\ run\ at\ once.}
+\DoxyCodeLine{await\ Promise.all(input);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8371}{}\doxysubsubsubsection{\texorpdfstring{fn}{fn}}\label{readme.md_autotoc_md8371}
+Type\+: {\ttfamily Function}
+
+Promise-\/returning/async function.\hypertarget{readme.md_autotoc_md8372}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md8372}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md8373}{}\doxysubsubsubsection{\texorpdfstring{concurrency}{concurrency}}\label{readme.md_autotoc_md8373}
+Type\+: {\ttfamily number}\textbackslash{} Minimum\+: {\ttfamily 1}
+
+Concurrency limit.\hypertarget{readme.md_autotoc_md8374}{}\doxysubsection{\texorpdfstring{FAQ}{FAQ}}\label{readme.md_autotoc_md8374}
+\hypertarget{readme.md_autotoc_md8375}{}\doxysubsubsection{\texorpdfstring{How is this different from the \href{https://github.com/sindresorhus/p-queue}{\texttt{ {\ttfamily p-\/queue}}} package?}{How is this different from the \href{https://github.com/sindresorhus/p-queue}{\texttt{ {\ttfamily p-\/queue}}} package?}}\label{readme.md_autotoc_md8375}
+This package is only about limiting the number of concurrent executions, while {\ttfamily p-\/queue} is a fully featured queue implementation with lots of different options, introspection, and ability to pause the queue.\hypertarget{readme.md_autotoc_md8376}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md8376}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/p-throttle}{\texttt{ p-\/throttle}} -\/ Throttle promise-\/returning \& async functions
+\item \href{https://github.com/sindresorhus/p-debounce}{\texttt{ p-\/debounce}} -\/ Debounce promise-\/returning \& async functions
+\item \href{https://github.com/sindresorhus/p-all}{\texttt{ p-\/all}} -\/ Run promise-\/returning \& async functions concurrently with optional limited concurrency
+\item \href{https://github.com/sindresorhus/promise-fun}{\texttt{ More…}} 
+\end{DoxyItemize}

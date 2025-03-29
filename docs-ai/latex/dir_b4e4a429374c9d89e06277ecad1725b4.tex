@@ -1,0 +1,147 @@
+\doxysection{node\+\_\+modules/p-\/map Directory Reference}
+\hypertarget{dir_b4e4a429374c9d89e06277ecad1725b4}{}\label{dir_b4e4a429374c9d89e06277ecad1725b4}\index{node\_modules/p-\/map Directory Reference@{node\_modules/p-\/map Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Map over promises concurrently \end{quote}
+
+
+Useful when you need to run promise-\/returning \& async functions multiple times with different inputs concurrently.
+
+This is different from {\ttfamily Promise.\+all()} in that you can control the concurrency and also decide whether or not to stop iterating when there\textquotesingle{}s an error.\hypertarget{readme.md_autotoc_md25377}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md25377}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ p-\/map}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25378}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md25378}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ pMap\ from\ 'p-\/map';}
+\DoxyCodeLine{import\ got\ from\ 'got';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ sites\ =\ [}
+\DoxyCodeLine{\ \ \ \ getWebsiteFromUsername('sindresorhus'),\ //=>\ Promise}
+\DoxyCodeLine{\ \ \ \ 'https://avajs.dev',}
+\DoxyCodeLine{\ \ \ \ 'https://github.com'}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mapper\ =\ async\ site\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ \{requestUrl\}\ =\ await\ got.head(site);}
+\DoxyCodeLine{\ \ \ \ return\ requestUrl;}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ await\ pMap(sites,\ mapper,\ \{concurrency:\ 2\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result);}
+\DoxyCodeLine{//=>\ ['https://sindresorhus.com/',\ 'https://avajs.dev/',\ 'https://github.com/']}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25379}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md25379}
+\hypertarget{readme.md_autotoc_md25380}{}\doxysubsubsection{\texorpdfstring{p\+Map(input, mapper, options?)}{p\+Map(input, mapper, options?)}}\label{readme.md_autotoc_md25380}
+Returns a {\ttfamily Promise} that is fulfilled when all promises in {\ttfamily input} and ones returned from {\ttfamily mapper} are fulfilled, or rejects if any of the promises reject. The fulfilled value is an {\ttfamily Array} of the fulfilled values returned from {\ttfamily mapper} in {\ttfamily input} order.\hypertarget{readme.md_autotoc_md25381}{}\doxysubsubsection{\texorpdfstring{p\+Map\+Iterable(input, mapper, options?)}{p\+Map\+Iterable(input, mapper, options?)}}\label{readme.md_autotoc_md25381}
+Returns an async iterable that streams each return value from {\ttfamily mapper} in order.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{pMapIterable\}\ from\ 'p-\/map';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Multiple\ posts\ are\ fetched\ concurrently,\ with\ limited\ concurrency\ and\ backpressure}
+\DoxyCodeLine{for\ await\ (const\ post\ of\ pMapIterable(postIds,\ getPostMetadata,\ \{concurrency:\ 8\}))\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(post);}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25382}{}\doxysubsubsubsection{\texorpdfstring{input}{input}}\label{readme.md_autotoc_md25382}
+Type\+: {\ttfamily Async\+Iterable\texorpdfstring{$<$}{<}Promise\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|} unknown\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|} Iterable\texorpdfstring{$<$}{<}Promise\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|} unknown\texorpdfstring{$>$}{>}}
+
+Synchronous or asynchronous iterable that is iterated over concurrently, calling the {\ttfamily mapper} function for each element. Each iterated item is {\ttfamily await}\textquotesingle{}d before the {\ttfamily mapper} is invoked so the iterable may return a {\ttfamily Promise} that resolves to an item.
+
+Asynchronous iterables (different from synchronous iterables that return {\ttfamily Promise} that resolves to an item) can be used when the next item may not be ready without waiting for an asynchronous process to complete and/or the end of the iterable may be reached after the asynchronous process completes. For example, reading from a remote queue when the queue has reached empty, or reading lines from a stream.\hypertarget{readme.md_autotoc_md25383}{}\doxysubsubsubsection{\texorpdfstring{mapper(element, index)}{mapper(element, index)}}\label{readme.md_autotoc_md25383}
+Type\+: {\ttfamily Function}
+
+Expected to return a {\ttfamily Promise} or value.\hypertarget{readme.md_autotoc_md25384}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md25384}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md25385}{}\doxysubsubsubsubsection{\texorpdfstring{concurrency}{concurrency}}\label{readme.md_autotoc_md25385}
+Type\+: {\ttfamily number} {\itshape (Integer)}\textbackslash{} Default\+: {\ttfamily Infinity}\textbackslash{} Minimum\+: {\ttfamily 1}
+
+Number of concurrently pending promises returned by {\ttfamily mapper}.\hypertarget{readme.md_autotoc_md25386}{}\doxysubsubsubsubsection{\texorpdfstring{backpressure}{backpressure}}\label{readme.md_autotoc_md25386}
+{\bfseries{Only for {\ttfamily p\+Map\+Iterable}}}
+
+Type\+: {\ttfamily number} {\itshape (Integer)}\textbackslash{} Default\+: {\ttfamily options.\+concurrency}\textbackslash{} Minimum\+: {\ttfamily options.\+concurrency}
+
+Maximum number of promises returned by {\ttfamily mapper} that have resolved but not yet collected by the consumer of the async iterable. Calls to {\ttfamily mapper} will be limited so that there is never too much backpressure.
+
+Useful whenever you are consuming the iterable slower than what the mapper function can produce concurrently. For example, to avoid making an overwhelming number of HTTP requests if you are saving each of the results to a database.\hypertarget{readme.md_autotoc_md25387}{}\doxysubsubsubsubsection{\texorpdfstring{stop\+On\+Error}{stop\+On\+Error}}\label{readme.md_autotoc_md25387}
+{\bfseries{Only for {\ttfamily p\+Map}}}
+
+Type\+: {\ttfamily boolean}\textbackslash{} Default\+: {\ttfamily true}
+
+When {\ttfamily true}, the first mapper rejection will be rejected back to the consumer.
+
+When {\ttfamily false}, instead of stopping when a promise rejects, it will wait for all the promises to settle and then reject with an \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError}{\texttt{ {\ttfamily Aggregate\+Error}}} containing all the errors from the rejected promises.
+
+Caveat\+: When {\ttfamily true}, any already-\/started async mappers will continue to run until they resolve or reject. In the case of infinite concurrency with sync iterables, {\itshape all} mappers are invoked on startup and will continue after the first rejection. \href{https://github.com/sindresorhus/p-map/issues/51}{\texttt{ Issue \#51}} can be implemented for abort control.\hypertarget{readme.md_autotoc_md25388}{}\doxysubsubsubsubsection{\texorpdfstring{signal}{signal}}\label{readme.md_autotoc_md25388}
+{\bfseries{Only for {\ttfamily p\+Map}}}
+
+Type\+: \href{https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}{\texttt{ {\ttfamily Abort\+Signal}}}
+
+You can abort the promises using \href{https://developer.mozilla.org/en-US/docs/Web/API/AbortController}{\texttt{ {\ttfamily Abort\+Controller}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ pMap\ from\ 'p-\/map';}
+\DoxyCodeLine{import\ delay\ from\ 'delay';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ abortController\ =\ new\ AbortController();}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ abortController.abort();}
+\DoxyCodeLine{\},\ 500);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mapper\ =\ async\ value\ =>\ value;}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ pMap([delay(1000),\ delay(1000)],\ mapper,\ \{signal:\ abortController.signal\});}
+\DoxyCodeLine{//\ Throws\ AbortError\ (DOMException)\ after\ 500\ ms.}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25389}{}\doxysubsubsection{\texorpdfstring{p\+Map\+Skip}{p\+Map\+Skip}}\label{readme.md_autotoc_md25389}
+Return this value from a {\ttfamily mapper} function to skip including the value in the returned array.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ pMap,\ \{pMapSkip\}\ from\ 'p-\/map';}
+\DoxyCodeLine{import\ got\ from\ 'got';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ sites\ =\ [}
+\DoxyCodeLine{\ \ \ \ getWebsiteFromUsername('sindresorhus'),\ //=>\ Promise}
+\DoxyCodeLine{\ \ \ \ 'https://avajs.dev',}
+\DoxyCodeLine{\ \ \ \ 'https://example.invalid',}
+\DoxyCodeLine{\ \ \ \ 'https://github.com'}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mapper\ =\ async\ site\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ const\ \{requestUrl\}\ =\ await\ got.head(site);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ requestUrl;}
+\DoxyCodeLine{\ \ \ \ \}\ catch\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ pMapSkip;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ await\ pMap(sites,\ mapper,\ \{concurrency:\ 2\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result);}
+\DoxyCodeLine{//=>\ ['https://sindresorhus.com/',\ 'https://avajs.dev/',\ 'https://github.com/']}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25390}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md25390}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/p-all}{\texttt{ p-\/all}} -\/ Run promise-\/returning \& async functions concurrently with optional limited concurrency
+\item \href{https://github.com/sindresorhus/p-filter}{\texttt{ p-\/filter}} -\/ Filter promises concurrently
+\item \href{https://github.com/sindresorhus/p-times}{\texttt{ p-\/times}} -\/ Run promise-\/returning \& async functions a specific number of times concurrently
+\item \href{https://github.com/sindresorhus/p-props}{\texttt{ p-\/props}} -\/ Like {\ttfamily Promise.\+all()} but for {\ttfamily Map} and {\ttfamily Object}
+\item \href{https://github.com/sindresorhus/p-map-series}{\texttt{ p-\/map-\/series}} -\/ Map over promises serially
+\item \href{https://github.com/sindresorhus/promise-fun}{\texttt{ More…}} 
+\end{DoxyItemize}

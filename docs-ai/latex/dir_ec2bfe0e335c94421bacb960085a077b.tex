@@ -1,0 +1,50 @@
+\doxysection{node\+\_\+modules/assertion-\/error Directory Reference}
+\hypertarget{dir_ec2bfe0e335c94421bacb960085a077b}{}\label{dir_ec2bfe0e335c94421bacb960085a077b}\index{node\_modules/assertion-\/error Directory Reference@{node\_modules/assertion-\/error Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+
+
+Assertion\+Error and Assertion\+Result classes. 
+
+
+
+\href{https://github.com/chaijs/assertion-error/actions}{\texttt{  }}\href{https://www.npmjs.com/package/assertion-error}{\texttt{  }}\href{}{\texttt{  }} \hypertarget{README.md_autotoc_md8195}{}\doxysubsubsection{\texorpdfstring{What is Assertion\+Error?}{What is Assertion\+Error?}}\label{README.md_autotoc_md8195}
+Assertion Error is a module that contains two classes\+: {\ttfamily Assertion\+Error}, which is an instance of an {\ttfamily Error}, and {\ttfamily Assertion\+Result} which is not an instance of Error.
+
+These can be useful for returning from a function -\/ if the function "{}succeeds"{} return an {\ttfamily Assertion\+Result} and if the function fails return (or throw) an {\ttfamily Assertion\+Error}.
+
+Both {\ttfamily Assertion\+Error} and {\ttfamily Assertion\+Result} implement the {\ttfamily Result} interface\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ Result\ \{}
+\DoxyCodeLine{\ \ name:\ "{}AssertionError"{}\ |\ "{}AssertionResult"{};}
+\DoxyCodeLine{\ \ ok:\ boolean;}
+\DoxyCodeLine{\ \ toJSON(...args:\ unknown[]):\ Record<string,\ unknown>;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+So if a function returns {\ttfamily Assertion\+Result \texorpdfstring{$\vert$}{|} Assertion\+Error} it is easy to check {\itshape which} one is returned by checking either {\ttfamily .name} or {\ttfamily .ok}, or check {\ttfamily instanceof Error}.\hypertarget{README.md_autotoc_md8196}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md8196}
+\hypertarget{README.md_autotoc_md8197}{}\doxysubsubsubsection{\texorpdfstring{Node.\+js}{Node.\+js}}\label{README.md_autotoc_md8197}
+{\ttfamily assertion-\/error} is available on \href{http://npmjs.org}{\texttt{ npm}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ assertion-\/error}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8198}{}\doxysubsubsubsection{\texorpdfstring{Deno}{Deno}}\label{README.md_autotoc_md8198}
+{\ttfamily assertion\+\_\+error} is available on \href{https://deno.land/x/assertion_error}{\texttt{ Deno.\+land}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ AssertionError,}
+\DoxyCodeLine{\ \ AssertionResult,}
+\DoxyCodeLine{\}\ from\ "{}https://deno.land/x/assertion\_error@2.0.0/mod.ts"{};}
+
+\end{DoxyCode}
+ 

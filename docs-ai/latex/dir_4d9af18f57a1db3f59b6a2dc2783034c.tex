@@ -1,0 +1,116 @@
+\doxysection{node\+\_\+modules/suf-\/log Directory Reference}
+\hypertarget{dir_4d9af18f57a1db3f59b6a2dc2783034c}{}\label{dir_4d9af18f57a1db3f59b6a2dc2783034c}\index{node\_modules/suf-\/log Directory Reference@{node\_modules/suf-\/log Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+ \href{https://app.circleci.com/github/TheRealSyler/suf-log/pipelines}{\texttt{ }} \href{https://codecov.io/gh/TheRealSyler/suf-log}{\texttt{ }} \href{https://www.npmjs.com/package/suf-log}{\texttt{ }} \href{https://bundlephobia.com/result?p=suf-log}{\texttt{ }} \href{https://packagephobia.now.sh/result?p=suf-log}{\texttt{ }} \href{https://github.com/TheRealSyler/suf-log}{\texttt{ }} 
+
+\hypertarget{README.md_autotoc_md31713}{}\doxysubsection{\texorpdfstring{Docs}{Docs}}\label{README.md_autotoc_md31713}
+
+\begin{DoxyItemize}
+\item {\bfseries{interfaces}}
+\begin{DoxyItemize}
+\item Log\+Style
+\item Log\+Message
+\item Log\+Table\+Input
+\end{DoxyItemize}
+\item {\bfseries{loggers}}
+\begin{DoxyItemize}
+\item LogS
+\item Log\+Single
+\end{DoxyItemize}
+\item {\bfseries{styler}}
+\begin{DoxyItemize}
+\item styler
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31714}{}\doxysubsubsubsection{\texorpdfstring{interfaces}{interfaces}}\label{README.md_autotoc_md31714}
+\hypertarget{README.md_autotoc_md31715}{}\doxysubsubsubsubsubsection{\texorpdfstring{Log\+Style}{Log\+Style}}\label{README.md_autotoc_md31715}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ color/background/font-\/weight\ work\ in\ node\ and\ the\ browser,\ the\ other\ properties\ only\ work\ in\ the\ browser.}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{type\ LogStyle\ =\ string\ |\ \{}
+\DoxyCodeLine{\ \ \ \ /**node\ and\ browser\ support\ */}
+\DoxyCodeLine{\ \ \ \ background?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**node\ and\ browser\ support\ */}
+\DoxyCodeLine{\ \ \ \ color?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**browser\ only\ */}
+\DoxyCodeLine{\ \ \ \ padding?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**browser\ only\ */}
+\DoxyCodeLine{\ \ \ \ margin?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**browser\ only,\ set\ to\ inline-\/block\ by\ default.\ */}
+\DoxyCodeLine{\ \ \ \ display?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**browser\ only\ */}
+\DoxyCodeLine{\ \ \ \ border?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**browser\ only\ */}
+\DoxyCodeLine{\ \ \ \ 'border-\/radius'?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**browser\ only\ */}
+\DoxyCodeLine{\ \ \ \ 'text-\/align'?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**browser\ only\ */}
+\DoxyCodeLine{\ \ \ \ 'text-\/shadow'?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**browser\ only\ */}
+\DoxyCodeLine{\ \ \ \ 'font-\/size'?:\ string;}
+\DoxyCodeLine{\ \ \ \ /**\ for\ bold\ text\ in\ node\ add\ the\ value\ 'bold'\ */}
+\DoxyCodeLine{\ \ \ \ 'font-\/weight'?:\ 'bold'\ |\ 'normal'\ |\ 'bolder'\ |\ 'lighter'\ |\ '100'\ |\ '200'\ |\ '300'\ |\ '400'\ |\ '500'\ |\ '600'\ |\ '700'\ |\ '800'\ |\ '900';}
+\DoxyCodeLine{\ \ \ \ [key:\ string]:\ string\ |\ undefined;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31716}{}\doxysubsubsubsubsubsection{\texorpdfstring{Log\+Message}{Log\+Message}}\label{README.md_autotoc_md31716}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ LogMessage\ =\ \{}
+\DoxyCodeLine{\ \ \ \ message:\ string;}
+\DoxyCodeLine{\ \ \ \ style?:\ LogStyle;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31717}{}\doxysubsubsubsubsubsection{\texorpdfstring{Log\+Table\+Input}{Log\+Table\+Input}}\label{README.md_autotoc_md31717}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ LogTableInput\ =\ (number\ |\ string\ |\ LogMessage)[][];}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31718}{}\doxysubsubsubsection{\texorpdfstring{loggers}{loggers}}\label{README.md_autotoc_md31718}
+\hypertarget{README.md_autotoc_md31719}{}\doxysubsubsubsubsubsection{\texorpdfstring{LogS}{LogS}}\label{README.md_autotoc_md31719}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**works\ in\ node\ and\ the\ browser.*/}
+\DoxyCodeLine{function\ Log(...messages:\ (string\ |\ LogMessage)[]):\ void;}
+\DoxyCodeLine{interface\ LogTableOptions\ \{}
+\DoxyCodeLine{\ \ \ \ padding?:\ number;}
+\DoxyCodeLine{\ \ \ \ spacing?:\ number;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{/**node\ only*/}
+\DoxyCodeLine{function\ LogTable(table:\ LogTableInput,\ options?:\ LogTableOptions):\ void;}
+\DoxyCodeLine{/**works\ in\ the\ browser\ and\ node.\ */}
+\DoxyCodeLine{function\ LogS(styles:\ LogStyle[],\ ...messages:\ string[]):\ void;}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31720}{}\doxysubsubsubsubsubsection{\texorpdfstring{Log\+Single}{Log\+Single}}\label{README.md_autotoc_md31720}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**Log\ a\ single\ message\ with\ an\ optional\ style,\ works\ in\ the\ browser\ and\ node.\ */}
+\DoxyCodeLine{function\ LogSingle(message:\ string,\ style?:\ LogStyle):\ void;}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31721}{}\doxysubsubsubsection{\texorpdfstring{styler}{styler}}\label{README.md_autotoc_md31721}
+\hypertarget{README.md_autotoc_md31722}{}\doxysubsubsubsubsubsection{\texorpdfstring{styler}{styler}}\label{README.md_autotoc_md31722}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ this\ function\ is\ not\ browser\ compatible*.}
+\DoxyCodeLine{\ *\ @example\ }
+
+\end{DoxyCode}
+ ts
+\begin{DoxyItemize}
+\item console.\+log(styler(\textquotesingle{}test\textquotesingle{}, \textquotesingle{}red\textquotesingle{}))
+\item {\ttfamily }
+\item {\ttfamily }
+\item {\ttfamily \texorpdfstring{$\ast$}{*}you have to add the styles manually, use the Log function for browser compatibly. \texorpdfstring{$\ast$}{*}/ function styler(input\+: string, style?\+: Log\+Style)\+: string; }
+\end{DoxyItemize}
+
+{\itshape Generated with} {\bfseries{\href{https://www.npmjs.com/package/suf-cli}{\texttt{ suf-\/cli}}}} \hypertarget{README.md_autotoc_md31723}{}\doxysubsubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md31723}
+ Copyright (c) 2020 Leonard Grosoli Licensed under the MIT license.  

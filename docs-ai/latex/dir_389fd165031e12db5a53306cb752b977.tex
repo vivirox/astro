@@ -1,0 +1,39 @@
+\doxysection{node\+\_\+modules/has-\/proto Directory Reference}
+\hypertarget{dir_389fd165031e12db5a53306cb752b977}{}\label{dir_389fd165031e12db5a53306cb752b977}\index{node\_modules/has-\/proto Directory Reference@{node\_modules/has-\/proto Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/inspect-js/has-proto/actions}{\texttt{ }} \href{https://app.codecov.io/gh/inspect-js/has-proto/}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=has-proto}{\texttt{ }}
+
+\href{https://npmjs.org/package/has-proto}{\texttt{ }}
+
+Does this environment have the ability to set the \mbox{[}\mbox{[}Prototype\mbox{]}\mbox{]} of an object on creation with {\ttfamily \+\_\+\+\_\+proto\+\_\+\+\_\+}?\hypertarget{README.md_autotoc_md16489}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md16489}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ hasProto\ =\ require('has-\/proto');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(typeof\ hasProto(),\ 'boolean');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ hasProtoAccessor\ =\ require('has-\/proto/accessor')();}
+\DoxyCodeLine{if\ (hasProtoAccessor)\ \{}
+\DoxyCodeLine{\ \ \ \ assert.equal([].\_\_proto\_\_,\ Array.prototype);}
+\DoxyCodeLine{\}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ assert(!('\_\_proto\_\_'\ in\ Object.prototype));}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ hasProtoMutator\ =\ require('has-\/proto/mutator');}
+\DoxyCodeLine{var\ obj\ =\ \{\};}
+\DoxyCodeLine{assert('toString'\ in\ obj);}
+\DoxyCodeLine{}
+\DoxyCodeLine{obj.\_\_proto\_\_\ =\ null;}
+\DoxyCodeLine{if\ (hasProtoMutator)\ \{}
+\DoxyCodeLine{\ \ \ \ assert(!('toString'\ in\ obj));}
+\DoxyCodeLine{\}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ assert('toString'\ in\ obj);}
+\DoxyCodeLine{\ \ \ \ assert.equal(obj.\_\_proto\_\_,\ null);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16490}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md16490}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

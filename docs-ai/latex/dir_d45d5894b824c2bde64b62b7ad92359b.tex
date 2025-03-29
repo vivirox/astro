@@ -1,0 +1,312 @@
+\doxysection{node\+\_\+modules/highlight.js Directory Reference}
+\hypertarget{dir_d45d5894b824c2bde64b62b7ad92359b}{}\label{dir_d45d5894b824c2bde64b62b7ad92359b}\index{node\_modules/highlight.js Directory Reference@{node\_modules/highlight.js Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/highlight.js}{\texttt{ }} \href{https://join.slack.com/t/highlightjs/shared_invite/zt-mj0utgqp-TNFf4VQICnDnPg4zMHChFw}{\texttt{ }} \href{https://discord.gg/M24EbU7ja9}{\texttt{ }} \href{https://github.com/highlightjs/highlight.js/blob/main/LICENSE}{\texttt{ }} \href{https://packagephobia.now.sh/result?p=highlight.js}{\texttt{ }}  \href{https://www.npmjs.com/package/highlight.js}{\texttt{ }} \href{https://www.jsdelivr.com/package/gh/highlightjs/cdn-release}{\texttt{ }}  \href{https://lgtm.com/projects/g/highlightjs/highlight.js/?mode=list}{\texttt{ }}
+
+\href{https://github.com/highlightjs/highlight.js/actions?query=workflow\%3A\%22Node.js+CI\%22}{\texttt{ }} \href{https://github.com/highlightjs/highlight.js/issues}{\texttt{ }} \href{https://github.com/highlightjs/highlight.js/issues?q=is\%3Aopen+is\%3Aissue+label\%3A\%22help+welcome\%22}{\texttt{ }} \href{https://github.com/highlightjs/highlight.js/issues?q=is\%3Aopen+is\%3Aissue+label\%3A\%22beginner+friendly\%22}{\texttt{ }} \href{https://snyk.io/test/github/highlightjs/highlight.js?targetFile=package.json}{\texttt{ }}
+
+Highlight.\+js is a syntax highlighter written in Java\+Script. It works in the browser as well as on the server. It works with pretty much any markup, doesn’t depend on any framework, and has automatic language detection.\hypertarget{README.md_autotoc_md17683}{}\doxysubsubsubsection{\texorpdfstring{Upgrading to Version 10}{Upgrading to Version 10}}\label{README.md_autotoc_md17683}
+Version 10 is one of the biggest releases in quite some time. If you\textquotesingle{}re upgrading from version 9, there are some breaking changes and things you may want to double check first.
+
+Please read \href{https://github.com/highlightjs/highlight.js/blob/main/VERSION_10_UPGRADE.md}{\texttt{ VERSION\+\_\+10\+\_\+\+UPGRADE.\+md}} for high-\/level summary of breaking changes and any actions you may need to take. See \href{https://github.com/highlightjs/highlight.js/blob/main/VERSION_10_BREAKING_CHANGES.md}{\texttt{ VERSION\+\_\+10\+\_\+\+BREAKING\+\_\+\+CHANGES.\+md}} for a more detailed list and \href{https://github.com/highlightjs/highlight.js/blob/main/CHANGES.md}{\texttt{ CHANGES.\+md}} to learn what else is new.\hypertarget{README.md_autotoc_md17684}{}\doxysubsubsubsubsection{\texorpdfstring{Support for older versions}{Support for older versions}}\label{README.md_autotoc_md17684}
+Please see \href{https://github.com/highlightjs/highlight.js/blob/main/SECURITY.md}{\texttt{ SECURITY.\+md}} for support information.\hypertarget{README.md_autotoc_md17685}{}\doxysubsection{\texorpdfstring{Getting Started}{Getting Started}}\label{README.md_autotoc_md17685}
+The bare minimum for using highlight.\+js on a web page is linking to the library along with one of the styles and calling \href{http://highlightjs.readthedocs.io/en/latest/api.html\#highlightall}{\texttt{ {\ttfamily highlight\+All}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<link\ rel="{}stylesheet"{}\ href="{}/path/to/styles/default.css"{}>}
+\DoxyCodeLine{<script\ src="{}/path/to/highlight.min.js"{}></script>}
+\DoxyCodeLine{<script>hljs.highlightAll();</script>}
+
+\end{DoxyCode}
+
+
+This will find and highlight code inside of {\ttfamily \texorpdfstring{$<$}{<}pre\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}code\texorpdfstring{$>$}{>}} tags; it tries to detect the language automatically. If automatic detection doesn’t work for you, you can specify the language in the {\ttfamily class} attribute\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<pre><code\ class="{}html"{}>...</code></pre>}
+
+\end{DoxyCode}
+
+
+Classes may also be prefixed with either {\ttfamily language-\/} or {\ttfamily lang-\/}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<pre><code\ class="{}language-\/html"{}>...</code></pre>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17686}{}\doxysubsubsection{\texorpdfstring{Plaintext and Disabling Highlighting}{Plaintext and Disabling Highlighting}}\label{README.md_autotoc_md17686}
+To style arbitrary text like code, but without any highlighting, use the {\ttfamily plaintext} class\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<pre><code\ class="{}plaintext"{}>...</code></pre>}
+
+\end{DoxyCode}
+
+
+To disable highlighting of a tag completely, use the {\ttfamily nohighlight} class\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<pre><code\ class="{}nohighlight"{}>...</code></pre>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17687}{}\doxysubsubsection{\texorpdfstring{Supported Languages}{Supported Languages}}\label{README.md_autotoc_md17687}
+Highlight.\+js supports over 180 different languages in the core library. There are also 3rd party language plugins available for additional languages. You can find the full list of supported languages in \href{https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md}{\texttt{ SUPPORTED\+\_\+\+LANGUAGES.\+md}}.\hypertarget{README.md_autotoc_md17688}{}\doxysubsection{\texorpdfstring{Custom Scenarios}{Custom Scenarios}}\label{README.md_autotoc_md17688}
+When you need a bit more control over the initialization of highlight.\+js, you can use the \href{http://highlightjs.readthedocs.io/en/latest/api.html\#highlightblock-block}{\texttt{ {\ttfamily highlight\+Block}}} and \href{http://highlightjs.readthedocs.io/en/latest/api.html\#configure-options}{\texttt{ {\ttfamily configure}}} functions. This allows you to better control {\itshape what} to highlight and {\itshape when}.
+
+Here’s the equivalent of calling \href{http://highlightjs.readthedocs.io/en/latest/api.html\#highlightall}{\texttt{ {\ttfamily highlight\+All}}} using only vanilla JS\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{document.addEventListener('DOMContentLoaded',\ (event)\ =>\ \{}
+\DoxyCodeLine{\ \ document.querySelectorAll('pre\ code').forEach((block)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ hljs.highlightBlock(block);}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Please refer to the documentation for \href{http://highlightjs.readthedocs.io/en/latest/api.html\#configure-options}{\texttt{ {\ttfamily configure}}} options.\hypertarget{README.md_autotoc_md17689}{}\doxysubsubsection{\texorpdfstring{Using custom HTML elements for code blocks}{Using custom HTML elements for code blocks}}\label{README.md_autotoc_md17689}
+We strongly recommend {\ttfamily \texorpdfstring{$<$}{<}pre\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}code\texorpdfstring{$>$}{>}} wrapping for code blocks. It\textquotesingle{}s quite semantic and "{}just works"{} out of the box with zero fiddling. It is possible to use other HTML elements (or combos), but you may need to pay special attention to preserving linebreaks.
+
+Let\textquotesingle{}s say your markup for code blocks uses divs\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ class='code'>...</div>}
+
+\end{DoxyCode}
+
+
+To highlight such blocks manually\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ first,\ find\ all\ the\ div.code\ blocks}
+\DoxyCodeLine{document.querySelectorAll('div.code').forEach(block\ =>\ \{}
+\DoxyCodeLine{\ \ //\ then\ highlight\ each}
+\DoxyCodeLine{\ \ hljs.highlightBlock(block);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Without using a tag that preserves linebreaks (like {\ttfamily pre}) you\textquotesingle{}ll need some additional CSS to help preserve them. You could also \href{https://github.com/highlightjs/highlight.js/issues/2559}{\texttt{ pre and post-\/process line breaks with a plug-\/in}}, but {\itshape we recommend using CSS}.
+
+To preserve linebreaks inside a {\ttfamily div} using CSS\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{div.code\ \{}
+\DoxyCodeLine{\ \ white-\/space:\ pre;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17690}{}\doxysubsection{\texorpdfstring{Using with Vue.\+js}{Using with Vue.\+js}}\label{README.md_autotoc_md17690}
+Simply register the plugin with Vue\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Vue.use(hljs.vuePlugin);}
+
+\end{DoxyCode}
+
+
+And you\textquotesingle{}ll be provided with a {\ttfamily highlightjs} component for use in your templates\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ id="{}app"{}>}
+\DoxyCodeLine{\ \ <!-\/-\/\ bind\ to\ a\ data\ property\ named\ \`{}code`\ -\/-\/>}
+\DoxyCodeLine{\ \ <highlightjs\ autodetect\ :code="{}code"{}\ />}
+\DoxyCodeLine{\ \ <!-\/-\/\ or\ literal\ code\ works\ as\ well\ -\/-\/>}
+\DoxyCodeLine{\ \ <highlightjs\ language='javascript'\ code="{}var\ x\ =\ 5;"{}\ />}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17691}{}\doxysubsection{\texorpdfstring{Web Workers}{Web Workers}}\label{README.md_autotoc_md17691}
+You can run highlighting inside a web worker to avoid freezing the browser window while dealing with very big chunks of code.
+
+In your main script\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{addEventListener('load',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ const\ code\ =\ document.querySelector('\#code');}
+\DoxyCodeLine{\ \ const\ worker\ =\ new\ Worker('worker.js');}
+\DoxyCodeLine{\ \ worker.onmessage\ =\ (event)\ =>\ \{\ code.innerHTML\ =\ event.data;\ \}}
+\DoxyCodeLine{\ \ worker.postMessage(code.textContent);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+In worker.\+js\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{onmessage\ =\ (event)\ =>\ \{}
+\DoxyCodeLine{\ \ importScripts('<path>/highlight.min.js');}
+\DoxyCodeLine{\ \ const\ result\ =\ self.hljs.highlightAuto(event.data);}
+\DoxyCodeLine{\ \ postMessage(result.value);}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17692}{}\doxysubsection{\texorpdfstring{Node.\+js}{Node.\+js}}\label{README.md_autotoc_md17692}
+You can use highlight.\+js with node to highlight content before sending it to the browser. Make sure to use the {\ttfamily .value} property to get the formatted html. For more info about the returned object refer to the \href{https://highlightjs.readthedocs.io/en/latest/api.html}{\texttt{ api docs}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ require\ the\ highlight.js\ library,\ including\ all\ languages}
+\DoxyCodeLine{const\ hljs\ =\ require('./highlight.js');}
+\DoxyCodeLine{const\ highlightedCode\ =\ hljs.highlightAuto('<span>Hello\ World!</span>').value}
+
+\end{DoxyCode}
+
+
+Or for a smaller footprint... load just the languages you need.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ hljs\ =\ require('highlight.js/lib/core');\ \ //\ require\ only\ the\ core\ library}
+\DoxyCodeLine{//\ separately\ require\ languages}
+\DoxyCodeLine{hljs.registerLanguage('xml',\ require('highlight.js/lib/languages/xml'));}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ highlightedCode\ =\ hljs.highlight('<span>Hello\ World!</span>',\ \{language:\ 'xml'\}).value}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17693}{}\doxysubsection{\texorpdfstring{ES6 Modules}{ES6 Modules}}\label{README.md_autotoc_md17693}
+First, you\textquotesingle{}ll likely install via {\ttfamily npm} or {\ttfamily yarn} -- see Getting the Library below.
+
+In your application\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ hljs\ from\ 'highlight.js';}
+
+\end{DoxyCode}
+
+
+The default import imports all languages. Therefore it is likely to be more efficient to import only the library and the languages you need\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ hljs\ from\ 'highlight.js/lib/core';}
+\DoxyCodeLine{import\ javascript\ from\ 'highlight.js/lib/languages/javascript';}
+\DoxyCodeLine{hljs.registerLanguage('javascript',\ javascript);}
+
+\end{DoxyCode}
+
+
+To set the syntax highlighting style, if your build tool processes CSS from your Java\+Script entry point, you can also import the stylesheet directly as modules\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ hljs\ from\ 'highlight.js/lib/core';}
+\DoxyCodeLine{import\ 'highlight.js/styles/github.css';}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17694}{}\doxysubsection{\texorpdfstring{Getting the Library}{Getting the Library}}\label{README.md_autotoc_md17694}
+You can get highlight.\+js as a hosted, or custom-\/build, browser script or as a server module. Right out of the box the browser script supports both AMD and Common\+JS, so if you wish you can use Require\+JS or Browserify without having to build from source. The server module also works perfectly fine with Browserify, but there is the option to use a build specific to browsers rather than something meant for a server.
+
+{\bfseries{Do not link to Git\+Hub directly.}} The library is not supposed to work straight from the source, it requires building. If none of the pre-\/packaged options work for you refer to the \href{http://highlightjs.readthedocs.io/en/latest/building-testing.html}{\texttt{ building documentation}}.
+
+{\bfseries{On Almond.}} You need to use the optimizer to give the module a name. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{r.js\ -\/o\ name=hljs\ paths.hljs=/path/to/highlight\ out=highlight.js}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17695}{}\doxysubsubsection{\texorpdfstring{CDN Hosted}{CDN Hosted}}\label{README.md_autotoc_md17695}
+A prebuilt version of Highlight.\+js bundled with many common languages is hosted by several popular CDNs. When using Highlight.\+js via CDN you can use Subresource Integrity for additional security. For details see \href{https://github.com/highlightjs/cdn-release/blob/main/DIGESTS.md}{\texttt{ DIGESTS.\+md}}.
+
+{\bfseries{cdnjs}} (\href{https://cdnjs.com/libraries/highlight.js}{\texttt{ link}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<link\ rel="{}stylesheet"{}\ href="{}https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.3/styles/default.min.css"{}>}
+\DoxyCodeLine{<script\ src="{}https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.3/highlight.min.js"{}></script>}
+\DoxyCodeLine{<!-\/-\/\ and\ it's\ easy\ to\ individually\ load\ additional\ languages\ -\/-\/>}
+\DoxyCodeLine{<script\ src="{}https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.3/languages/go.min.js"{}></script>}
+
+\end{DoxyCode}
+
+
+{\bfseries{jsdelivr}} (\href{https://www.jsdelivr.com/package/gh/highlightjs/cdn-release}{\texttt{ link}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<link\ rel="{}stylesheet"{}\ href="{}https://cdn.jsdelivr.net/gh/highlightjs/cdn-\/release@10.7.3/build/styles/default.min.css"{}>}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/gh/highlightjs/cdn-\/release@10.7.3/build/highlight.min.js"{}></script>}
+\DoxyCodeLine{<!-\/-\/\ and\ it's\ easy\ to\ individually\ load\ additional\ languages\ -\/-\/>}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/gh/highlightjs/cdn-\/release@10.7.3/build/languages/go.min.js"{}></script>}
+
+\end{DoxyCode}
+
+
+{\bfseries{unpkg}} (\href{https://unpkg.com/browse/@highlightjs/cdn-assets/}{\texttt{ link}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<link\ rel="{}stylesheet"{}\ href="{}https://unpkg.com/@highlightjs/cdn-\/assets@10.7.3/styles/default.min.css"{}>}
+\DoxyCodeLine{<script\ src="{}https://unpkg.com/@highlightjs/cdn-\/assets@10.7.3/highlight.min.js"{}></script>}
+\DoxyCodeLine{<!-\/-\/\ and\ it's\ easy\ to\ individually\ load\ additional\ languages\ -\/-\/>}
+\DoxyCodeLine{<script\ src="{}https://unpkg.com/@highlightjs/cdn-\/assets@10.7.3/languages/go.min.js"{}></script>}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note\+:}} {\itshape The CDN-\/hosted {\ttfamily highlight.\+min.\+js} package doesn\textquotesingle{}t bundle every language.} It would be very large. You can find our list of "{}common"{} languages that we bundle by default on our \href{https://highlightjs.org/download/}{\texttt{ download page}}.\hypertarget{README.md_autotoc_md17696}{}\doxysubsubsection{\texorpdfstring{Self Hosting}{Self Hosting}}\label{README.md_autotoc_md17696}
+The \href{https://highlightjs.org/download/}{\texttt{ download page}} can quickly generate a custom bundle including only the languages you need.
+
+Alternatively, you can build a browser package from source\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ tools/build.js\ -\/t\ browser\ :common}
+
+\end{DoxyCode}
+
+
+See our \href{http://highlightjs.readthedocs.io/en/latest/building-testing.html}{\texttt{ building documentation}} for more information.
+
+{\bfseries{Note\+:}} Building from source should always result in the smallest size builds. The website download page is optimized for speed, not size.\hypertarget{README.md_autotoc_md17697}{}\doxysubsubsubsection{\texorpdfstring{Prebuilt CDN assets}{Prebuilt CDN assets}}\label{README.md_autotoc_md17697}
+You can also download and self-\/host the same assets we serve up via our own CDNs. We publish those builds to the \href{https://github.com/highlightjs/cdn-release}{\texttt{ cdn-\/release}} Git\+Hub repository. You can easily pull individual files off the CDN endpoints with {\ttfamily curl}, etc; if say you only needed {\ttfamily highlight.\+min.\+js} and a single CSS file.
+
+There is also an npm package \href{https://www.npmjs.com/package/@highlightjs/cdn-assets}{\texttt{ @highlightjs/cdn-\/assets}} if pulling the assets in via {\ttfamily npm} or {\ttfamily yarn} would be easier for your build process.\hypertarget{README.md_autotoc_md17698}{}\doxysubsubsection{\texorpdfstring{NPM / Node.\+js server module}{NPM / Node.\+js server module}}\label{README.md_autotoc_md17698}
+Highlight.\+js can also be used on the server. The package with all supported languages can be installed from NPM or Yarn\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ highlight.js}
+\DoxyCodeLine{\#\ or}
+\DoxyCodeLine{yarn\ add\ highlight.js}
+
+\end{DoxyCode}
+
+
+Alternatively, you can build it from source\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ tools/build.js\ -\/t\ node}
+
+\end{DoxyCode}
+
+
+See our \href{http://highlightjs.readthedocs.io/en/latest/building-testing.html}{\texttt{ building documentation}} for more information.\hypertarget{README.md_autotoc_md17699}{}\doxysubsubsection{\texorpdfstring{Source}{Source}}\label{README.md_autotoc_md17699}
+\href{https://github.com/highlightjs/}{\texttt{ Current source}} is always available on Git\+Hub.\hypertarget{README.md_autotoc_md17700}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md17700}
+Highlight.\+js is released under the BSD License. See \href{https://github.com/highlightjs/highlight.js/blob/main/LICENSE}{\texttt{ LICENSE}} file for details.\hypertarget{README.md_autotoc_md17701}{}\doxysubsection{\texorpdfstring{Links}{Links}}\label{README.md_autotoc_md17701}
+The official site for the library is at \href{https://highlightjs.org/}{\texttt{ https\+://highlightjs.\+org/}}.
+
+Further in-\/depth documentation for the API and other topics is at \href{http://highlightjs.readthedocs.io/}{\texttt{ http\+://highlightjs.\+readthedocs.\+io/}}.
+
+A list of the Core Team and contributors can be found in the \href{https://github.com/highlightjs/highlight.js/blob/main/CONTRIBUTORS.md}{\texttt{ CONTRIBUTORS.\+md}} file. 

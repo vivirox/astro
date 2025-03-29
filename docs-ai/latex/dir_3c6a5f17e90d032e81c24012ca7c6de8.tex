@@ -1,0 +1,76 @@
+\doxysection{node\+\_\+modules/find-\/up/node\+\_\+modules/locate-\/path Directory Reference}
+\hypertarget{dir_3c6a5f17e90d032e81c24012ca7c6de8}{}\label{dir_3c6a5f17e90d032e81c24012ca7c6de8}\index{node\_modules/find-\/up/node\_modules/locate-\/path Directory Reference@{node\_modules/find-\/up/node\_modules/locate-\/path Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Get the first path that exists on disk of multiple paths \end{quote}
+\hypertarget{readme.md_autotoc_md15518}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md15518}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ locate-\/path}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md15519}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md15519}
+Here we find the first file that exists on disk, in array order.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ locatePath\ =\ require('locate-\/path');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ files\ =\ [}
+\DoxyCodeLine{\ \ \ \ 'unicorn.png',}
+\DoxyCodeLine{\ \ \ \ 'rainbow.png',\ //\ Only\ this\ one\ actually\ exists\ on\ disk}
+\DoxyCodeLine{\ \ \ \ 'pony.png'}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console(await\ locatePath(files));}
+\DoxyCodeLine{\ \ \ \ //=>\ 'rainbow'}
+\DoxyCodeLine{\})();}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md15520}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md15520}
+\hypertarget{readme.md_autotoc_md15521}{}\doxysubsubsection{\texorpdfstring{locate\+Path(paths, \mbox{[}options\mbox{]})}{locate\+Path(paths, \mbox{[}options\mbox{]})}}\label{readme.md_autotoc_md15521}
+Returns a {\ttfamily Promise\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}} for the first path that exists or {\ttfamily undefined} if none exists.\hypertarget{readme.md_autotoc_md15522}{}\doxysubsubsubsection{\texorpdfstring{paths}{paths}}\label{readme.md_autotoc_md15522}
+Type\+: {\ttfamily Iterable\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}
+
+Paths to check.\hypertarget{readme.md_autotoc_md15523}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md15523}
+Type\+: {\ttfamily Object}\hypertarget{readme.md_autotoc_md15524}{}\doxysubsubsubsubsection{\texorpdfstring{concurrency}{concurrency}}\label{readme.md_autotoc_md15524}
+Type\+: {\ttfamily number}~\newline
+ Default\+: {\ttfamily Infinity}~\newline
+ Minimum\+: {\ttfamily 1}
+
+Number of concurrently pending promises.\hypertarget{readme.md_autotoc_md15525}{}\doxysubsubsubsubsection{\texorpdfstring{preserve\+Order}{preserve\+Order}}\label{readme.md_autotoc_md15525}
+Type\+: {\ttfamily boolean}~\newline
+ Default\+: {\ttfamily true}
+
+Preserve {\ttfamily paths} order when searching.
+
+Disable this to improve performance if you don\textquotesingle{}t care about the order.\hypertarget{readme.md_autotoc_md15526}{}\doxysubsubsubsubsection{\texorpdfstring{cwd}{cwd}}\label{readme.md_autotoc_md15526}
+Type\+: {\ttfamily string}~\newline
+ Default\+: {\ttfamily process.\+cwd()}
+
+Current working directory.\hypertarget{readme.md_autotoc_md15527}{}\doxysubsubsubsubsection{\texorpdfstring{type}{type}}\label{readme.md_autotoc_md15527}
+Type\+: {\ttfamily string}~\newline
+ Default\+: {\ttfamily file}~\newline
+ Values\+: {\ttfamily file} {\ttfamily directory}
+
+The type of paths that can match.\hypertarget{readme.md_autotoc_md15528}{}\doxysubsubsubsubsection{\texorpdfstring{allow\+Symlinks}{allow\+Symlinks}}\label{readme.md_autotoc_md15528}
+Type\+: {\ttfamily boolean}~\newline
+ Default\+: {\ttfamily true}
+
+Allow symbolic links to match if they point to the chosen path type.\hypertarget{readme.md_autotoc_md15529}{}\doxysubsubsection{\texorpdfstring{locate\+Path.\+sync(paths, \mbox{[}options\mbox{]})}{locate\+Path.\+sync(paths, \mbox{[}options\mbox{]})}}\label{readme.md_autotoc_md15529}
+Returns the first path that exists or {\ttfamily undefined} if none exists.\hypertarget{readme.md_autotoc_md15530}{}\doxysubsubsubsection{\texorpdfstring{paths}{paths}}\label{readme.md_autotoc_md15530}
+Type\+: {\ttfamily Iterable\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}
+
+Paths to check.\hypertarget{readme.md_autotoc_md15531}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md15531}
+Type\+: {\ttfamily Object}\hypertarget{readme.md_autotoc_md15532}{}\doxysubsubsubsubsection{\texorpdfstring{cwd}{cwd}}\label{readme.md_autotoc_md15532}
+Same as above.\hypertarget{readme.md_autotoc_md15533}{}\doxysubsubsubsubsection{\texorpdfstring{type}{type}}\label{readme.md_autotoc_md15533}
+Same as above.\hypertarget{readme.md_autotoc_md15534}{}\doxysubsubsubsubsection{\texorpdfstring{allow\+Symlinks}{allow\+Symlinks}}\label{readme.md_autotoc_md15534}
+Same as above.\hypertarget{readme.md_autotoc_md15535}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md15535}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/path-exists}{\texttt{ path-\/exists}} -\/ Check if a path exists
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md15536}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md15536}
+MIT © \href{https://sindresorhus.com}{\texttt{ Sindre Sorhus}} 

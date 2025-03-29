@@ -1,0 +1,151 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/gfm-\/strikethrough Directory Reference}
+\hypertarget{dir_28093ccd748dfb29b3ad8002af5ddbdb}{}\label{dir_28093ccd748dfb29b3ad8002af5ddbdb}\index{node\_modules/micromark-\/extension-\/gfm-\/strikethrough Directory Reference@{node\_modules/micromark-\/extension-\/gfm-\/strikethrough Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-gfm-strikethrough/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-gfm-strikethrough}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-gfm-strikethrough}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-gfm-strikethrough}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extensions to support GFM \href{https://github.github.com/gfm/\#strikethrough-extension-}{\texttt{ strikethrough}}.\hypertarget{readme.md_autotoc_md23215}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23215}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}gfm\+Strikethrough(options?)\`{}
+\item \`{}gfm\+Strikethrough\+Html()\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item Authoring
+\item HTML
+\item CSS
+\item Syntax
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23216}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23216}
+This package contains extensions that add support for strikethrough as enabled by GFM to \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}.\hypertarget{readme.md_autotoc_md23217}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23217}
+This project is useful when you want to support strikethrough in markdown.
+
+You can use these extensions when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. To support all GFM features, use \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}}.
+
+When you need a syntax tree, you can combine this package with \href{https://github.com/syntax-tree/mdast-util-gfm-strikethrough}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/strikethrough}}}.
+
+All these packages are used \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md23218}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23218}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/gfm-\/strikethrough}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{gfmStrikethrough,\ gfmStrikethroughHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/strikethrough@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{gfmStrikethrough,\ gfmStrikethroughHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/strikethrough@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23219}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23219}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ gfmStrikethrough,}
+\DoxyCodeLine{\ \ gfmStrikethroughHtml}
+\DoxyCodeLine{\}\ from\ 'micromark-\/extension-\/gfm-\/strikethrough'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ micromark('Some\ \string~strikethrough\string~.',\ \{}
+\DoxyCodeLine{\ \ extensions:\ [gfmStrikethrough()],}
+\DoxyCodeLine{\ \ htmlExtensions:\ [gfmStrikethroughHtml()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>Some\ <del>strikethrough</del></p>.}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23220}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23220}
+This package exports the identifiers \`{}gfm\+Strikethrough\`{} and \`{}gfm\+Strikethrough\+Html\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development module.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md23221}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Strikethrough(options?)}}{{\ttfamily gfm\+Strikethrough(options?)}}}\label{readme.md_autotoc_md23221}
+Create an extension for {\ttfamily micromark} to enable GFM strikethrough syntax.\hypertarget{readme.md_autotoc_md23222}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23222}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23223}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23223}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions}, to enable GFM strikethrough syntax (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23224}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Strikethrough\+Html()}}{{\ttfamily gfm\+Strikethrough\+Html()}}}\label{readme.md_autotoc_md23224}
+Create an HTML extension for {\ttfamily micromark} to support GFM strikethrough when serializing to HTML.\hypertarget{readme.md_autotoc_md23225}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23225}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily html\+Extensions}, to support GFM strikethrough when serializing to HTML (\href{https://github.com/micromark/micromark\#htmlextension}{\texttt{ {\ttfamily Html\+Extension}}}).\hypertarget{readme.md_autotoc_md23226}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md23226}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md23227}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md23227}
+
+\begin{DoxyItemize}
+\item {\ttfamily single\+Tilde} ({\ttfamily boolean}, default\+: {\ttfamily true}) — whether to support strikethrough with a single tilde. Single tildes work on github.\+com, but are technically prohibited by the GFM spec
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23228}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23228}
+When authoring markdown with strikethrough, it is recommended to use two markers. While {\ttfamily github.\+com} allows single tildes too, it technically prohibits it in their spec.\hypertarget{readme.md_autotoc_md23229}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md23229}
+When tilde sequences match, they together relate to the {\ttfamily \texorpdfstring{$<$}{<}del\texorpdfstring{$>$}{>}} element in HTML. See \href{https://html.spec.whatwg.org/multipage/edits.html\#the-del-element}{\texttt{ {\itshape § 4.\+7.\+2 The {\ttfamily del} element}}} in the HTML spec for more info.\hypertarget{readme.md_autotoc_md23230}{}\doxysubsection{\texorpdfstring{CSS}{CSS}}\label{readme.md_autotoc_md23230}
+Git\+Hub itself does not apply interesting CSS to {\ttfamily del} elements. It currently (July 2022) does change {\ttfamily code} in {\ttfamily del}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{del\ code\ \{}
+\DoxyCodeLine{\ \ text-\/decoration:\ inherit;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+For the complete actual CSS see \href{https://github.com/sindresorhus/github-markdown-css}{\texttt{ {\ttfamily sindresorhus/github-\/markdown-\/css}}}.\hypertarget{readme.md_autotoc_md23231}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md23231}
+Strikethrough sequences form with the following BNF\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{gfm\_attention\_sequence\ ::=\ 1*'\string~'}
+
+\end{DoxyCode}
+
+
+Sequences are matched together to form strikethrough based on which character they contain, how long they are, and what character occurs before and after each sequence. Otherwise they are turned into data.\hypertarget{readme.md_autotoc_md23232}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23232}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md23233}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23233}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/extension-\/gfm-\/strikethrough@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.
+
+This package works with {\ttfamily micromark} version {\ttfamily 3} and later.\hypertarget{readme.md_autotoc_md23234}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23234}
+This package is safe.\hypertarget{readme.md_autotoc_md23235}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md23235}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} — support all of GFM
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-strikethrough}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/strikethrough}}} — support all of GFM in mdast
+\item \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}} — support all of GFM in mdast
+\item \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} — support all of GFM in remark
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23236}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23236}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23237}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23237}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

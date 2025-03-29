@@ -1,0 +1,139 @@
+\doxysection{node\+\_\+modules/@redis/time-\/series Directory Reference}
+\hypertarget{dir_94f3b33e434a02303561fcdcbc809f9e}{}\label{dir_94f3b33e434a02303561fcdcbc809f9e}\index{node\_modules/"@redis/time-\/series Directory Reference@{node\_modules/"@redis/time-\/series Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package provides support for the \href{https://redistimeseries.io}{\texttt{ Redis\+Time\+Series}} module, which adds a time series data structure to Redis. It extends the \href{https://github.com/redis/node-redis}{\texttt{ Node Redis client}} to include functions for each of the Redis\+Time\+Series commands.
+
+To use these extra commands, your Redis server must have the Redis\+Time\+Series module installed.\hypertarget{README.md_autotoc_md5619}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5619}
+For a complete example, see \href{https://github.com/redis/node-redis/blob/master/examples/time-series.js}{\texttt{ {\ttfamily time-\/series.\+js}}} in the Node Redis examples folder.\hypertarget{README.md_autotoc_md5620}{}\doxysubsubsection{\texorpdfstring{Creating Time Series data structure in Redis}{Creating Time Series data structure in Redis}}\label{README.md_autotoc_md5620}
+The \href{https://oss.redis.com/redistimeseries/commands/\#tscreate}{\texttt{ {\ttfamily TS.\+CREATE}}} command creates a new time series.
+
+Here, we\textquotesingle{}ll create a new time series "{}\`{}temperature\`{}"{}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createClient\ \}\ from\ 'redis';}
+\DoxyCodeLine{import\ \{\ TimeSeriesDuplicatePolicies,\ TimeSeriesEncoding,\ TimeSeriesAggregationType\ \}\ from\ '@redis/time-\/series';}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ const\ created\ =\ await\ client.ts.create('temperature',\ \{}
+\DoxyCodeLine{\ \ \ \ RETENTION:\ 86400000,\ //\ 1\ day\ in\ milliseconds}
+\DoxyCodeLine{\ \ \ \ ENCODING:\ TimeSeriesEncoding.UNCOMPRESSED,\ //\ No\ compression\ -\/\ When\ not\ specified,\ the\ option\ is\ set\ to\ COMPRESSED}
+\DoxyCodeLine{\ \ \ \ DUPLICATE\_POLICY:\ TimeSeriesDuplicatePolicies.BLOCK,\ //\ No\ duplicates\ -\/\ When\ not\ specified:\ set\ to\ the\ global\ DUPLICATE\_POLICY\ configuration\ of\ the\ database\ (which\ by\ default,\ is\ BLOCK).}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ if\ (created\ ===\ 'OK')\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Created\ timeseries.');}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Error\ creating\ timeseries\ :(');}
+\DoxyCodeLine{\ \ \ \ process.exit(1);}
+\DoxyCodeLine{\ \ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5621}{}\doxysubsubsection{\texorpdfstring{Adding new value to a Time Series data structure in Redis}{Adding new value to a Time Series data structure in Redis}}\label{README.md_autotoc_md5621}
+With Redis\+Time\+Series, we can add a single value to time series data structure using the \href{https://redis.io/commands/ts.add/}{\texttt{ {\ttfamily TS.\+ADD}}} command and if we would like to add multiple values we can use the \href{https://redis.io/commands/ts.madd/}{\texttt{ {\ttfamily TS.\+MADD}}} command.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ value\ =\ Math.floor(Math.random()\ *\ 1000)\ +\ 1;\ //\ Random\ data\ point\ value}
+\DoxyCodeLine{\ \ let\ currentTimestamp\ =\ 1640995200000;\ //\ Jan\ 1\ 2022\ 00:00:00}
+\DoxyCodeLine{\ \ let\ num\ =\ 0;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ while\ (num\ <\ 10000)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Add\ a\ new\ value\ to\ the\ timeseries,\ providing\ our\ own\ timestamp:}
+\DoxyCodeLine{\ \ \ \ //\ https://redis.io/commands/ts.add/}
+\DoxyCodeLine{\ \ \ \ await\ client.ts.add('temperature',\ currentTimestamp,\ value);}
+\DoxyCodeLine{\ \ \ \ console.log(`Added\ timestamp\ \$\{currentTimestamp\},\ value\ \$\{value\}.`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ num\ +=\ 1;}
+\DoxyCodeLine{\ \ \ \ value\ =\ Math.floor(Math.random()\ *\ 1000)\ +\ 1;\ //\ Get\ another\ random\ value}
+\DoxyCodeLine{\ \ \ \ currentTimestamp\ +=\ 1000;\ //\ Move\ on\ one\ second.}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Add\ multiple\ values\ to\ the\ timeseries\ in\ round\ trip\ to\ the\ server:}
+\DoxyCodeLine{\ \ //\ https://redis.io/commands/ts.madd/}
+\DoxyCodeLine{\ \ const\ response\ =\ await\ client.ts.mAdd([\{}
+\DoxyCodeLine{\ \ \ \ key:\ 'temperature',}
+\DoxyCodeLine{\ \ \ \ timestamp:\ currentTimestamp\ +\ 60000,}
+\DoxyCodeLine{\ \ \ \ value:\ Math.floor(Math.random()\ *\ 1000)\ +\ 1}
+\DoxyCodeLine{\ \ \},\ \{}
+\DoxyCodeLine{\ \ \ \ key:\ 'temperature',}
+\DoxyCodeLine{\ \ \ \ timestamp:\ currentTimestamp\ +\ 120000,}
+\DoxyCodeLine{\ \ \ \ value:\ Math.floor(Math.random()\ *\ 1000)\ +\ 1}
+\DoxyCodeLine{\ \ \}]);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5622}{}\doxysubsubsection{\texorpdfstring{Retrieving Time Series data from Redis}{Retrieving Time Series data from Redis}}\label{README.md_autotoc_md5622}
+With Redis\+Time\+Series, we can retrieve the time series data using the \href{https://redis.io/commands/ts.range/}{\texttt{ {\ttfamily TS.\+RANGE}}} command by passing the criteria as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Query\ the\ timeseries\ with\ TS.RANGE:}
+\DoxyCodeLine{\ \ //\ https://redis.io/commands/ts.range/}
+\DoxyCodeLine{\ \ const\ fromTimestamp\ =\ 1640995200000;\ //\ Jan\ 1\ 2022\ 00:00:00}
+\DoxyCodeLine{\ \ const\ toTimestamp\ =\ 1640995260000;\ //\ Jan\ 1\ 2022\ 00:01:00}
+\DoxyCodeLine{\ \ const\ rangeResponse\ =\ await\ client.ts.range('temperature',\ fromTimestamp,\ toTimestamp,\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Group\ into\ 10\ second\ averages.}
+\DoxyCodeLine{\ \ \ \ AGGREGATION:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ TimeSeriesAggregationType.AVERAGE,}
+\DoxyCodeLine{\ \ \ \ \ \ timeBucket:\ 10000}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log('RANGE\ RESPONSE:');}
+\DoxyCodeLine{\ \ //\ rangeResponse\ looks\ like:}
+\DoxyCodeLine{\ \ //\ [}
+\DoxyCodeLine{\ \ //\ \ \ \{\ timestamp:\ 1640995200000,\ value:\ 356.8\ \},}
+\DoxyCodeLine{\ \ //\ \ \ \{\ timestamp:\ 1640995210000,\ value:\ 534.8\ \},}
+\DoxyCodeLine{\ \ //\ \ \ \{\ timestamp:\ 1640995220000,\ value:\ 481.3\ \},}
+\DoxyCodeLine{\ \ //\ \ \ \{\ timestamp:\ 1640995230000,\ value:\ 437\ \},}
+\DoxyCodeLine{\ \ //\ \ \ \{\ timestamp:\ 1640995240000,\ value:\ 507.3\ \},}
+\DoxyCodeLine{\ \ //\ \ \ \{\ timestamp:\ 1640995250000,\ value:\ 581.2\ \},}
+\DoxyCodeLine{\ \ //\ \ \ \{\ timestamp:\ 1640995260000,\ value:\ 600\ \}}
+\DoxyCodeLine{\ \ //\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5623}{}\doxysubsubsection{\texorpdfstring{Altering Time Series data Stored in Redis}{Altering Time Series data Stored in Redis}}\label{README.md_autotoc_md5623}
+Redis\+Time\+Series includes commands that can update values in a time series data structure.
+
+Using the \href{https://redis.io/commands/ts.alter/}{\texttt{ {\ttfamily TS.\+ALTER}}} command, we can update time series retention like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ https://redis.io/commands/ts.alter/}
+\DoxyCodeLine{const\ alterResponse\ =\ await\ client.ts.alter('temperature',\ \{}
+\DoxyCodeLine{\ \ RETENTION:\ 0\ //\ Keep\ the\ entries\ forever}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5624}{}\doxysubsubsection{\texorpdfstring{Retrieving Information about the timeseries Stored in Redis}{Retrieving Information about the timeseries Stored in Redis}}\label{README.md_autotoc_md5624}
+Redis\+Time\+Series also includes commands that can help to view the information on the state of a time series.
+
+Using the \href{https://redis.io/commands/ts.info/}{\texttt{ {\ttfamily TS.\+INFO}}} command, we can view timeseries information like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Get\ some\ information\ about\ the\ state\ of\ the\ timeseries.}
+\DoxyCodeLine{\ //\ https://redis.io/commands/ts.info/}
+\DoxyCodeLine{\ const\ tsInfo\ =\ await\ client.ts.info('temperature');}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ //\ tsInfo\ looks\ like\ this:}
+\DoxyCodeLine{\ //\ \{}
+\DoxyCodeLine{\ //\ \ \ totalSamples:\ 1440,}
+\DoxyCodeLine{\ //\ \ \ memoryUsage:\ 28904,}
+\DoxyCodeLine{\ //\ \ \ firstTimestamp:\ 1641508920000,}
+\DoxyCodeLine{\ //\ \ \ lastTimestamp:\ 1641595320000,}
+\DoxyCodeLine{\ //\ \ \ retentionTime:\ 86400000,}
+\DoxyCodeLine{\ //\ \ \ chunkCount:\ 7,}
+\DoxyCodeLine{\ //\ \ \ chunkSize:\ 4096,}
+\DoxyCodeLine{\ //\ \ \ chunkType:\ 'uncompressed',}
+\DoxyCodeLine{\ //\ \ \ duplicatePolicy:\ 'block',}
+\DoxyCodeLine{\ //\ \ \ labels:\ [],}
+\DoxyCodeLine{\ //\ \ \ sourceKey:\ null,}
+\DoxyCodeLine{\ //\ \ \ rules:\ []}
+\DoxyCodeLine{\ //\ \}}
+
+\end{DoxyCode}
+ 

@@ -1,0 +1,75 @@
+\doxysection{node\+\_\+modules/yoga-\/wasm-\/web Directory Reference}
+\hypertarget{dir_acceb64ac51bf629b9ed500e751a3c5f}{}\label{dir_acceb64ac51bf629b9ed500e751a3c5f}\index{node\_modules/yoga-\/wasm-\/web Directory Reference@{node\_modules/yoga-\/wasm-\/web Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/facebook/yoga}{\texttt{ Yoga}} but in Web\+Assembly and ASM.\+js.\hypertarget{README.md_autotoc_md36315}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md36315}
+Install with your package manager\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ i\ yoga-\/wasm-\/web}
+\DoxyCodeLine{npm\ i\ yoga-\/wasm-\/web}
+\DoxyCodeLine{yarn\ add\ yoga-\/wasm-\/web}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md36316}{}\doxysubsubsection{\texorpdfstring{ASM.\+js}{ASM.\+js}}\label{README.md_autotoc_md36316}
+To use the ASM.\+js build\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ initYoga,\ \{\ ALIGN\_CENTER\ \}\ from\ 'yoga-\/wasm-\/web/asm'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Yoga\ =\ initYoga()}
+\DoxyCodeLine{const\ node\ =\ Yoga.Node.create()}
+\DoxyCodeLine{node.setAlignContent(ALIGN\_CENTER)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md36317}{}\doxysubsubsection{\texorpdfstring{WASM}{WASM}}\label{README.md_autotoc_md36317}
+To use the WASM build (take Node.\+js as an example)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'fs'}
+\DoxyCodeLine{import\ initYoga,\ \{\ ALIGN\_CENTER\ \}\ from\ 'yoga-\/wasm-\/web'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Yoga\ =\ await\ initYoga(}
+\DoxyCodeLine{\ \ fs.readFileSync('./node\_modules/yoga-\/wasm-\/web/dist/yoga.wasm')}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ node\ =\ Yoga.Node.create()}
+\DoxyCodeLine{node.setAlignContent(ALIGN\_CENTER)}
+
+\end{DoxyCode}
+
+
+You can use other ways to provide the WASM binary too.\hypertarget{README.md_autotoc_md36318}{}\doxysubsection{\texorpdfstring{Contribution}{Contribution}}\label{README.md_autotoc_md36318}
+To develop this project locally, you need to clone the repo and fetch the yoga submodule first. Also, \href{https://emscripten.org/docs/getting_started/downloads.html}{\texttt{ emcc}} is required to build this project too.
+
+After that, install npm dependencies\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ i}
+
+\end{DoxyCode}
+
+
+And run the build script\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ build}
+
+\end{DoxyCode}
+
+
+And run the tests\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ test}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md36319}{}\doxysubsection{\texorpdfstring{Acknowledgements}{Acknowledgements}}\label{README.md_autotoc_md36319}
+This project was started as {\bfseries{opinionated}} fork from \href{https://github.com/pinqy520/yoga-layout-wasm}{\texttt{ pinqy520/yoga-\/layout-\/wasm}} 

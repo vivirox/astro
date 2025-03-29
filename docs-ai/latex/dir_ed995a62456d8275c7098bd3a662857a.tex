@@ -1,0 +1,49 @@
+\doxysection{node\+\_\+modules/jest-\/environment-\/jsdom/node\+\_\+modules/w3c-\/xmlserializer Directory Reference}
+\hypertarget{dir_ed995a62456d8275c7098bd3a662857a}{}\label{dir_ed995a62456d8275c7098bd3a662857a}\index{node\_modules/jest-\/environment-\/jsdom/node\_modules/w3c-\/xmlserializer Directory Reference@{node\_modules/jest-\/environment-\/jsdom/node\_modules/w3c-\/xmlserializer Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+An XML serializer that follows the \href{https://w3c.github.io/DOM-Parsing/}{\texttt{ W3C specification}}.
+
+This package can be used in Node.\+js, as long as you feed it a DOM node, e.\+g. one produced by \href{https://github.com/jsdom/jsdom}{\texttt{ jsdom}}.\hypertarget{README.md_autotoc_md20021}{}\doxysubsection{\texorpdfstring{Basic usage}{Basic usage}}\label{README.md_autotoc_md20021}
+Assume you have a DOM tree rooted at a node {\ttfamily node}. In Node.\+js, you could create this using \href{https://github.com/jsdom/jsdom}{\texttt{ jsdom}} as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ JSDOM\ \}\ =\ require("{}jsdom"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ document\ \}\ =\ new\ JSDOM().window;}
+\DoxyCodeLine{const\ node\ =\ document.createElement("{}akomaNtoso"{});}
+
+\end{DoxyCode}
+
+
+Then, you use this package as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ serialize\ =\ require("{}w3c-\/xmlserializer"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(serialize(node));}
+\DoxyCodeLine{//\ =>\ '<akomantoso\ xmlns="{}http://www.w3.org/1999/xhtml"{}></akomantoso>'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20022}{}\doxysubsection{\texorpdfstring{{\ttfamily require\+Well\+Formed} option}{{\ttfamily require\+Well\+Formed} option}}\label{README.md_autotoc_md20022}
+By default the input DOM tree is not required to be "{}well-\/formed"{}; any given input will serialize to some output string. You can instead require well-\/formedness via
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{serialize(node,\ \{\ requireWellFormed:\ true\ \});}
+
+\end{DoxyCode}
+
+
+which will cause {\ttfamily Error}s to be thrown when non-\/well-\/formed constructs are encountered. \href{https://w3c.github.io/DOM-Parsing/\#dfn-require-well-formed}{\texttt{ Per the spec}}, this largely is about imposing constraints on the names of elements, attributes, etc.
+
+As a point of reference, on the web platform\+:
+
+
+\begin{DoxyItemize}
+\item The \href{https://w3c.github.io/DOM-Parsing/\#dom-innerhtml-innerhtml}{\texttt{ {\ttfamily inner\+HTML} getter}} uses the require-\/well-\/formed mode, i.\+e. trying to get the {\ttfamily inner\+HTML} of non-\/well-\/formed subtrees will throw.
+\item The \href{https://xhr.spec.whatwg.org/\#the-send()-method}{\texttt{ {\ttfamily xhr.\+send()} method}} does not require well-\/formedness, i.\+e. sending non-\/well-\/formed {\ttfamily Document}s will serialize and send them anyway. 
+\end{DoxyItemize}

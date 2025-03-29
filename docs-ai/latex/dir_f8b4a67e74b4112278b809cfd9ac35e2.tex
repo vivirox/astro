@@ -1,0 +1,38 @@
+\doxysection{node\+\_\+modules/@emmetio/css-\/abbreviation Directory Reference}
+\hypertarget{dir_f8b4a67e74b4112278b809cfd9ac35e2}{}\label{dir_f8b4a67e74b4112278b809cfd9ac35e2}\index{node\_modules/"@emmetio/css-\/abbreviation Directory Reference@{node\_modules/"@emmetio/css-\/abbreviation Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Parses given Emmet {\itshape stylesheet} abbreviation into AST. Parsing is performed in two steps\+: first it tokenizes given abbreviation (useful for syntax highlighting in editors) and then tokens are analyzed and converted into AST nodes as plain, JSON-\/serializable objects.
+
+Unlike in \href{/packages/abbreviation}{\texttt{ markup abbreviations}}, elements in stylesheet abbreviations cannot be nested and contain attributes, but allow embedded values in element names.\hypertarget{README.md_autotoc_md3001}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3001}
+You can install it via npm\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @emmetio/css-\/abbreviation}
+
+\end{DoxyCode}
+
+
+Then add it into your project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ parse\ from\ '@emmetio/css-\/abbreviation';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ props\ =\ parse('p10+poa');}
+\DoxyCodeLine{/*\ [\{}
+\DoxyCodeLine{\ \ \ \ name:\ 'p',}
+\DoxyCodeLine{\ \ \ \ value:\ [\{\ type:\ 'CSSValue',\ value:\ [...]\ \}],}
+\DoxyCodeLine{\ \ \ \ important:\ false}
+\DoxyCodeLine{\},\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ 'poa',}
+\DoxyCodeLine{\ \ \ \ value:\ [],}
+\DoxyCodeLine{\ \ \ \ important:\ false}
+\DoxyCodeLine{\}]\ */}
+
+\end{DoxyCode}
+ The returned result is an array of {\ttfamily CSSProperty} items\+: a node with name and values.\hypertarget{README.md_autotoc_md3002}{}\doxysubsection{\texorpdfstring{Abbreviation syntax}{Abbreviation syntax}}\label{README.md_autotoc_md3002}
+Emmet stylesheet abbreviation element may start with name and followed by values, optionally chained with {\ttfamily -\/} delimiter. In most cases, actual CSS properties doesn’t have numbers in their names (or at least they are not used in abbreviation shortcuts) so a number right after alpha characters is considered as {\itshape embedded value}, as well as colors starting with {\ttfamily \#} character\+: {\ttfamily p10}, {\ttfamily bg\#fc0} etc. If implicit name/value boundary can’t be identified, you should use {\ttfamily -\/} as value separator\+: {\ttfamily m-\/a}, {\ttfamily p10-\/20} etc.\hypertarget{README.md_autotoc_md3003}{}\doxysubsubsection{\texorpdfstring{Operators}{Operators}}\label{README.md_autotoc_md3003}
+Since CSS properties can’t be nested, the only available operator is {\ttfamily +}. 

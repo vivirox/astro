@@ -1,0 +1,40 @@
+\doxysection{node\+\_\+modules/object.values Directory Reference}
+\hypertarget{dir_b6e845327e1a080fd516f809c9d3a07a}{}\label{dir_b6e845327e1a080fd516f809c9d3a07a}\index{node\_modules/object.values Directory Reference@{node\_modules/object.values Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/es-shims/Object.values/actions}{\texttt{ }} \href{https://app.codecov.io/gh/es-shims/Object.values/}{\texttt{ }} \href{https://david-dm.org/es-shims/Object.values}{\texttt{ }} \href{https://david-dm.org/es-shims/Object.values\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=object.values}{\texttt{ }}
+
+\href{https://npmjs.com/package/object.values}{\texttt{ }}
+
+An ES2017 spec-\/compliant {\ttfamily Object.\+values} shim. Invoke its "{}shim"{} method to shim {\ttfamily Object.\+values} if it is unavailable or noncompliant.
+
+This package implements the \href{https://github.com/es-shims/api}{\texttt{ es-\/shim API}} interface. It works in an ES3-\/supported environment and complies with the \href{https://tc39.github.io/ecma262/\#sec-object.values}{\texttt{ spec}}.
+
+Most common usage\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{var\ values\ =\ require('object.values');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\ a:\ 1,\ b:\ 2,\ c:\ 3\ \};}
+\DoxyCodeLine{var\ expected\ =\ [1,\ 2,\ 3];}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (typeof\ Symbol\ ===\ 'function'\ \&\&\ typeof\ Symbol()\ ===\ 'symbol')\ \{}
+\DoxyCodeLine{\ \ \ \ //\ for\ environments\ with\ Symbol\ support}
+\DoxyCodeLine{\ \ \ \ var\ sym\ =\ Symbol();}
+\DoxyCodeLine{\ \ \ \ obj[sym]\ =\ 4;}
+\DoxyCodeLine{\ \ \ \ obj.d\ =\ sym;}
+\DoxyCodeLine{\ \ \ \ expected.push(sym);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(values(obj),\ expected);}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (!Object.values)\ \{}
+\DoxyCodeLine{\ \ \ \ values.shim();}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(Object.values(obj),\ expected);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25041}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md25041}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

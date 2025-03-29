@@ -1,0 +1,121 @@
+\doxysection{node\+\_\+modules/@redis/search Directory Reference}
+\hypertarget{dir_9885ee721a21c0c5eade67a591e767ca}{}\label{dir_9885ee721a21c0c5eade67a591e767ca}\index{node\_modules/"@redis/search Directory Reference@{node\_modules/"@redis/search Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package provides support for the \href{https://redisearch.io}{\texttt{ Redi\+Search}} module, which adds indexing and querying support for data stored in Redis Hashes or as JSON documents with the Redis\+JSON module. It extends the \href{https://github.com/redis/node-redis}{\texttt{ Node Redis client}} to include functions for each of the Redi\+Search commands.
+
+To use these extra commands, your Redis server must have the Redi\+Search module installed. To index and query JSON documents, you\textquotesingle{}ll also need to add the Redis\+JSON module.\hypertarget{README.md_autotoc_md5611}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5611}
+For complete examples, see \href{https://github.com/redis/node-redis/blob/master/examples/search-hashes.js}{\texttt{ {\ttfamily search-\/hashes.\+js}}} and \href{https://github.com/redis/node-redis/blob/master/examples/search-json.js}{\texttt{ {\ttfamily search-\/json.\+js}}} in the Node Redis examples folder.\hypertarget{README.md_autotoc_md5612}{}\doxysubsubsection{\texorpdfstring{Indexing and Querying Data in Redis Hashes}{Indexing and Querying Data in Redis Hashes}}\label{README.md_autotoc_md5612}
+\hypertarget{README.md_autotoc_md5613}{}\doxysubsubsubsection{\texorpdfstring{Creating an Index}{Creating an Index}}\label{README.md_autotoc_md5613}
+Before we can perform any searches, we need to tell Redi\+Search how to index our data, and which Redis keys to find that data in. The \href{https://redis.io/commands/ft.create}{\texttt{ FT.\+CREATE}} command creates a Redi\+Search index. Here\textquotesingle{}s how to use it to create an index we\textquotesingle{}ll call {\ttfamily idx\+:animals} where we want to index hashes containing {\ttfamily name}, {\ttfamily species} and {\ttfamily age} fields, and whose key names in Redis begin with the prefix {\ttfamily noderedis\+:animals}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.ft.create('idx:animals',\ \{}
+\DoxyCodeLine{\ \ name:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ SchemaFieldTypes.TEXT,}
+\DoxyCodeLine{\ \ \ \ SORTABLE:\ true}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ species:\ SchemaFieldTypes.TAG,}
+\DoxyCodeLine{\ \ age:\ SchemaFieldTypes.NUMERIC}
+\DoxyCodeLine{\},\ \{}
+\DoxyCodeLine{\ \ ON:\ 'HASH',}
+\DoxyCodeLine{\ \ PREFIX:\ 'noderedis:animals'}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+See the \href{https://redis.io/commands/ft.create/\#description}{\texttt{ {\ttfamily FT.\+CREATE} documentation}} for information about the different field types and additional options.\hypertarget{README.md_autotoc_md5614}{}\doxysubsubsubsection{\texorpdfstring{Querying the Index}{Querying the Index}}\label{README.md_autotoc_md5614}
+Once we\textquotesingle{}ve created an index, and added some data to Redis hashes whose keys begin with the prefix {\ttfamily noderedis\+:animals}, we can start writing some search queries. Redi\+Search supports a rich query syntax for full-\/text search, faceted search, aggregation and more. Check out the \href{https://redis.io/commands/ft.search}{\texttt{ {\ttfamily FT.\+SEARCH} documentation}} and the \href{https://redis.io/docs/interact/search-and-query/query}{\texttt{ query syntax reference}} for more information.
+
+Let\textquotesingle{}s write a query to find all the animals where the {\ttfamily species} field has the value {\ttfamily dog}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ results\ =\ await\ client.ft.search('idx:animals',\ '@species:\{dog\}');}
+
+\end{DoxyCode}
+
+
+{\ttfamily results} looks like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ total:\ 2,}
+\DoxyCodeLine{\ \ documents:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ id:\ 'noderedis:animals:4',}
+\DoxyCodeLine{\ \ \ \ \ \ value:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ 'Fido',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ species:\ 'dog',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ age:\ '7'}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ id:\ 'noderedis:animals:3',}
+\DoxyCodeLine{\ \ \ \ \ \ value:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ 'Rover',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ species:\ 'dog',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ age:\ '9'}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5615}{}\doxysubsubsection{\texorpdfstring{Indexing and Querying Data with Redis\+JSON}{Indexing and Querying Data with Redis\+JSON}}\label{README.md_autotoc_md5615}
+Redi\+Search can also index and query JSON documents stored in Redis using the Redis\+JSON module. The approach is similar to that for indexing and searching data in hashes, but we can now use JSON Path like syntax and the data no longer has to be flat name/value pairs -\/ it can contain nested objects and arrays.\hypertarget{README.md_autotoc_md5616}{}\doxysubsubsubsection{\texorpdfstring{Creating an Index}{Creating an Index}}\label{README.md_autotoc_md5616}
+As before, we create an index with the {\ttfamily FT.\+CREATE} command, this time specifying we want to index JSON documents that look like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ name:\ 'Alice',}
+\DoxyCodeLine{\ \ age:\ 32,}
+\DoxyCodeLine{\ \ coins:\ 100}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Each document represents a user in some system, and users have name, age and coins properties.
+
+One way we might choose to index these documents is as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.ft.create('idx:users',\ \{}
+\DoxyCodeLine{\ \ '\$.name':\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ SchemaFieldTypes.TEXT,}
+\DoxyCodeLine{\ \ \ \ SORTABLE:\ 'UNF'}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ '\$.age':\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ SchemaFieldTypes.NUMERIC,}
+\DoxyCodeLine{\ \ \ \ AS:\ 'age'}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ '\$.coins':\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ SchemaFieldTypes.NUMERIC,}
+\DoxyCodeLine{\ \ \ \ AS:\ 'coins'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\},\ \{}
+\DoxyCodeLine{\ \ ON:\ 'JSON',}
+\DoxyCodeLine{\ \ PREFIX:\ 'noderedis:users'}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Note that we\textquotesingle{}re using JSON Path to specify where the fields to index are in our JSON documents, and the {\ttfamily AS} clause to define a name/alias for each field. We\textquotesingle{}ll use these when writing queries.\hypertarget{README.md_autotoc_md5617}{}\doxysubsubsubsection{\texorpdfstring{Querying the Index}{Querying the Index}}\label{README.md_autotoc_md5617}
+Now we have an index and some data stored as JSON documents in Redis (see the \href{https://github.com/redis/node-redis/tree/master/packages/json}{\texttt{ JSON package documentation}} for examples of how to store JSON), we can write some queries...
+
+We\textquotesingle{}ll use the \href{https://redis.io/docs/interact/search-and-query/query}{\texttt{ Redi\+Search query language}} and \href{https://redis.io/commands/ft.search}{\texttt{ {\ttfamily FT.\+SEARCH}}} command. Here\textquotesingle{}s a query to find users under the age of 30\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.ft.search('idx:users',\ '@age:[0\ 30]');}
+
+\end{DoxyCode}
+ 

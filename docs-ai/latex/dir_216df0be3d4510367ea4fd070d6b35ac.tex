@@ -1,0 +1,268 @@
+\doxysection{node\+\_\+modules/mdast-\/util-\/from-\/markdown Directory Reference}
+\hypertarget{dir_216df0be3d4510367ea4fd070d6b35ac}{}\label{dir_216df0be3d4510367ea4fd070d6b35ac}\index{node\_modules/mdast-\/util-\/from-\/markdown Directory Reference@{node\_modules/mdast-\/util-\/from-\/markdown Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/mdast-util-from-markdown/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/mdast-util-from-markdown}{\texttt{ }} \href{https://www.npmjs.com/package/mdast-util-from-markdown}{\texttt{ }} \href{https://bundlejs.com/?q=mdast-util-from-markdown}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}}} utility that turns markdown into a syntax tree.\hypertarget{readme.md_autotoc_md22333}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22333}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}from\+Markdown(value\mbox{[}, encoding\mbox{]}\mbox{[}, options\mbox{]})\`{}
+\item \`{}\+Compile\+Context\`{}
+\item \`{}\+Compile\+Data\`{}
+\item \`{}\+Encoding\`{}
+\item \`{}\+Extension\`{}
+\item \`{}\+Handle\`{}
+\item \`{}\+On\+Enter\+Error\`{}
+\item \`{}\+On\+Exit\+Error\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Token\`{}
+\item \`{}\+Transform\`{}
+\item \`{}\+Value\`{}
+\end{DoxyItemize}
+\item List of extensions
+\item Syntax
+\item Syntax tree
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22334}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22334}
+This package is a utility that takes markdown input and turns it into an \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}} syntax tree.
+
+This utility uses \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}, which turns markdown into tokens, and then turns those tokens into nodes. This package is used inside \href{https://github.com/remarkjs/remark/tree/main/packages/remark-parse}{\texttt{ {\ttfamily remark-\/parse}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md22335}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md22335}
+If you want to handle syntax trees manually, use this. When you {\itshape just} want to turn markdown into HTML, use \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}} instead. For an easier time processing content, use the {\bfseries{\href{https://github.com/remarkjs/remark}{\texttt{ remark}}}} ecosystem instead.
+
+You can combine this package with other packages to add syntax extensions to markdown. Notable examples that deeply integrate with this package are \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}}, \href{https://github.com/syntax-tree/mdast-util-mdx}{\texttt{ {\ttfamily mdast-\/util-\/mdx}}}, \href{https://github.com/syntax-tree/mdast-util-frontmatter}{\texttt{ {\ttfamily mdast-\/util-\/frontmatter}}}, \href{https://github.com/syntax-tree/mdast-util-math}{\texttt{ {\ttfamily mdast-\/util-\/math}}}, and \href{https://github.com/syntax-tree/mdast-util-directive}{\texttt{ {\ttfamily mdast-\/util-\/directive}}}.\hypertarget{readme.md_autotoc_md22336}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22336}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mdast-\/util-\/from-\/markdown}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{fromMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/from-\/markdown@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{fromMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/from-\/markdown@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22337}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22337}
+Say we have the following markdown file {\ttfamily example.\+md}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\#\ Hello,\ *World*!}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{fromMarkdown\}\ from\ 'mdast-\/util-\/from-\/markdown'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ await\ fs.readFile('example.md')}
+\DoxyCodeLine{const\ tree\ =\ fromMarkdown(doc)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(tree)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields (positional info removed for brevity)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'heading',}
+\DoxyCodeLine{\ \ \ \ \ \ depth:\ 2,}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ 'Hello,\ '\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'emphasis',\ children:\ [\{type:\ 'text',\ value:\ 'World'\}]\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '!'\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22338}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22338}
+This package exports the identifier \`{}from\+Markdown\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development example.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md22339}{}\doxysubsubsection{\texorpdfstring{{\ttfamily from\+Markdown(value\mbox{[}, encoding\mbox{]}\mbox{[}, options\mbox{]})}}{{\ttfamily from\+Markdown(value\mbox{[}, encoding\mbox{]}\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md22339}
+Turn markdown into a syntax tree.\hypertarget{readme.md_autotoc_md22340}{}\doxysubsubsubsubsubsection{\texorpdfstring{Overloads}{Overloads}}\label{readme.md_autotoc_md22340}
+
+\begin{DoxyItemize}
+\item {\ttfamily (value\+: Value, encoding\+: Encoding, options?\+: Options) =\texorpdfstring{$>$}{>} Root}
+\item {\ttfamily (value\+: Value, options?\+: Options) =\texorpdfstring{$>$}{>} Root}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22341}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22341}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} (\`{}\+Value\`{}) — markdown to parse
+\item {\ttfamily encoding} (\`{}\+Encoding\`{}, default\+: `\textquotesingle{}utf8'{\ttfamily ) — \mbox{[}character encoding\mbox{]}\mbox{[}encoding\mbox{]} for when}value{\ttfamily is \mbox{[}}Uint8\+Array{\ttfamily \mbox{]}\mbox{[}uint8-\/array\mbox{]} \texorpdfstring{$\ast$}{*}}options{\ttfamily (\mbox{[}}Options\`{}\mbox{]}\doxylink{README.md_options}{api-\/options}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22342}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22342}
+mdast tree (\href{https://github.com/syntax-tree/mdast\#root}{\texttt{ {\ttfamily Root}}}).\hypertarget{readme.md_autotoc_md22343}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Compile\+Context}}{{\ttfamily Compile\+Context}}}\label{readme.md_autotoc_md22343}
+mdast compiler context (Type\+Script type).\hypertarget{readme.md_autotoc_md22344}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md22344}
+
+\begin{DoxyItemize}
+\item {\ttfamily stack} (\href{https://github.com/syntax-tree/mdast\#nodes}{\texttt{ {\ttfamily Array\texorpdfstring{$<$}{<}Node\texorpdfstring{$>$}{>}}}}) — stack of nodes
+\item {\ttfamily token\+Stack} ({\ttfamily Array\texorpdfstring{$<$}{<}\mbox{[}Token, On\+Enter\+Error \texorpdfstring{$\vert$}{|} undefined\mbox{]}\texorpdfstring{$>$}{>}}) — stack of tokens
+\item {\ttfamily data} (\`{}\+Compile\+Data\`{}) — info passed around; key/value store
+\item {\ttfamily buffer} ({\ttfamily () =\texorpdfstring{$>$}{>} undefined}) — capture some of the output data
+\item {\ttfamily resume} ({\ttfamily () =\texorpdfstring{$>$}{>} string}) — stop capturing and access the output data
+\item {\ttfamily enter} ({\ttfamily (node\+: Node, token\+: Token, on\+Error?\+: On\+Enter\+Error) =\texorpdfstring{$>$}{>} undefined}) — enter a node
+\item {\ttfamily exit} ({\ttfamily (token\+: Token, on\+Error?\+: On\+Exit\+Error) =\texorpdfstring{$>$}{>} undefined}) — exit a node
+\item {\ttfamily slice\+Serialize} ({\ttfamily (token\+: Token, expand\+Tabs?\+: boolean) =\texorpdfstring{$>$}{>} string}) — get the string value of a token
+\item {\ttfamily config} ({\ttfamily Required\texorpdfstring{$<$}{<}Extension\texorpdfstring{$>$}{>}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22345}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Compile\+Data}}{{\ttfamily Compile\+Data}}}\label{readme.md_autotoc_md22345}
+Interface of tracked data (Type\+Script type).\hypertarget{readme.md_autotoc_md22346}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22346}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ CompileData\ \{\ /*\ see\ code\ */\ \}}
+
+\end{DoxyCode}
+
+
+When working on extensions that use more data, extend the corresponding interface to register their types\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{declare\ module\ 'mdast-\/util-\/from-\/markdown'\ \{}
+\DoxyCodeLine{\ \ interface\ CompileData\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Register\ a\ new\ field.}
+\DoxyCodeLine{\ \ \ \ mathFlowInside?:\ boolean\ |\ undefined}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22347}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Encoding}}{{\ttfamily Encoding}}}\label{readme.md_autotoc_md22347}
+Encodings supported by the \href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array}{\texttt{ {\ttfamily Uint8\+Array}}} class (Type\+Script type).
+
+See \href{https://github.com/micromark/micromark/tree/main/packages/micromark\#micromarkvalue-encoding-options}{\texttt{ {\ttfamily micromark}}} for more info.\hypertarget{readme.md_autotoc_md22348}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22348}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Encoding\ =\ 'utf8'\ |\ /*\ …\ */}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22349}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Extension}}{{\ttfamily Extension}}}\label{readme.md_autotoc_md22349}
+Change how markdown tokens from micromark are turned into mdast (Type\+Script type).\hypertarget{readme.md_autotoc_md22350}{}\doxysubsubsubsubsubsection{\texorpdfstring{Properties}{Properties}}\label{readme.md_autotoc_md22350}
+
+\begin{DoxyItemize}
+\item {\ttfamily can\+Contain\+Eols} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, optional) — token types where line endings are used
+\item {\ttfamily enter} (\`{}\+Record\texorpdfstring{$<$}{<}string, Handle\texorpdfstring{$>$}{>}\`{}, optional) — opening handles
+\item {\ttfamily exit} (\`{}\+Record\texorpdfstring{$<$}{<}string, Handle\texorpdfstring{$>$}{>}\`{}, optional) — closing handles
+\item {\ttfamily transforms} (\`{}\+Array\texorpdfstring{$<$}{<}Transform\texorpdfstring{$>$}{>}\`{}, optional) — tree transforms
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22351}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Handle}}{{\ttfamily Handle}}}\label{readme.md_autotoc_md22351}
+Handle a token (Type\+Script type).\hypertarget{readme.md_autotoc_md22352}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22352}
+
+\begin{DoxyItemize}
+\item {\ttfamily this} (\`{}\+Compile\+Context\`{}) — context
+\item {\ttfamily token} (\`{}\+Token\`{}) — current token
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22353}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22353}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md22354}{}\doxysubsubsection{\texorpdfstring{{\ttfamily On\+Enter\+Error}}{{\ttfamily On\+Enter\+Error}}}\label{readme.md_autotoc_md22354}
+Handle the case where the {\ttfamily right} token is open, but it is closed (by the {\ttfamily left} token) or because we reached the end of the document (Type\+Script type).\hypertarget{readme.md_autotoc_md22355}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22355}
+
+\begin{DoxyItemize}
+\item {\ttfamily this} (\`{}\+Compile\+Context\`{}) — context
+\item {\ttfamily left} (\`{}\+Token\`{} or {\ttfamily undefined}) — left token
+\item {\ttfamily right} (\`{}\+Token\`{}) — right token
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22356}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22356}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md22357}{}\doxysubsubsection{\texorpdfstring{{\ttfamily On\+Exit\+Error}}{{\ttfamily On\+Exit\+Error}}}\label{readme.md_autotoc_md22357}
+Handle the case where the {\ttfamily right} token is open but it is closed by exiting the {\ttfamily left} token (Type\+Script type).\hypertarget{readme.md_autotoc_md22358}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22358}
+
+\begin{DoxyItemize}
+\item {\ttfamily this} (\`{}\+Compile\+Context\`{}) — context
+\item {\ttfamily left} (\`{}\+Token\`{}) — left token
+\item {\ttfamily right} (\`{}\+Token\`{}) — right token
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22359}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22359}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md22360}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md22360}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md22361}{}\doxysubsubsubsubsubsection{\texorpdfstring{Properties}{Properties}}\label{readme.md_autotoc_md22361}
+
+\begin{DoxyItemize}
+\item {\ttfamily extensions} (\href{https://github.com/micromark/micromark\#extensions}{\texttt{ {\ttfamily Array\texorpdfstring{$<$}{<}Micromark\+Extension\texorpdfstring{$>$}{>}}}}, optional) — micromark extensions to change how markdown is parsed
+\item {\ttfamily mdast\+Extensions} (\`{}\+Array\texorpdfstring{$<$}{<}Extension \texorpdfstring{$\vert$}{|} Array\texorpdfstring{$<$}{<}Extension\texorpdfstring{$>$}{>}\texorpdfstring{$>$}{>}\`{}, optional) — extensions for this utility to change how tokens are turned into a tree
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22362}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Token}}{{\ttfamily Token}}}\label{readme.md_autotoc_md22362}
+Token from micromark (Type\+Script type).\hypertarget{readme.md_autotoc_md22363}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22363}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Token\ =\ \{\ /*\ …\ */\ \}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22364}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Transform}}{{\ttfamily Transform}}}\label{readme.md_autotoc_md22364}
+Extra transform, to change the AST afterwards (Type\+Script type).\hypertarget{readme.md_autotoc_md22365}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22365}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/syntax-tree/mdast\#root}{\texttt{ {\ttfamily Root}}}) — tree to transform
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22366}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22366}
+New tree (\href{https://github.com/syntax-tree/mdast\#root}{\texttt{ {\ttfamily Root}}}) or nothing (in which case the current tree is used).\hypertarget{readme.md_autotoc_md22367}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Value}}{{\ttfamily Value}}}\label{readme.md_autotoc_md22367}
+Contents of the file (Type\+Script type).
+
+See \href{https://github.com/micromark/micromark/tree/main/packages/micromark\#micromarkvalue-encoding-options}{\texttt{ {\ttfamily micromark}}} for more info.\hypertarget{readme.md_autotoc_md22368}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22368}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Value\ =\ Uint8Array\ |\ string}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22369}{}\doxysubsection{\texorpdfstring{List of extensions}{List of extensions}}\label{readme.md_autotoc_md22369}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/mdast-util-directive}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/directive}}} — directives
+\item \href{https://github.com/syntax-tree/mdast-util-frontmatter}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/frontmatter}}} — frontmatter (YAML, TOML, more)
+\item \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm}}} — GFM
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-autolink-literal}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/autolink-\/literal}}} — GFM autolink literals
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-footnote}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/footnote}}} — GFM footnotes
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-strikethrough}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/strikethrough}}} — GFM strikethrough
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-table}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/table}}} — GFM tables
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-task-list-item}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/task-\/list-\/item}}} — GFM task list items
+\item \href{https://github.com/syntax-tree/mdast-util-math}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/math}}} — math
+\item \href{https://github.com/syntax-tree/mdast-util-mdx}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdx}}} — MDX
+\item \href{https://github.com/syntax-tree/mdast-util-mdx-expression}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdx-\/expression}}} — MDX expressions
+\item \href{https://github.com/syntax-tree/mdast-util-mdx-jsx}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdx-\/jsx}}} — MDX JSX
+\item \href{https://github.com/syntax-tree/mdast-util-mdxjs-esm}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdxjs-\/esm}}} — MDX ESM
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22370}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md22370}
+Markdown is parsed according to Common\+Mark. Extensions can add support for other syntax. If you’re interested in extending markdown, \href{https://github.com/micromark/micromark\#extensions}{\texttt{ more information is available in micromark’s readme}}.\hypertarget{readme.md_autotoc_md22371}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md22371}
+The syntax tree is \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}.\hypertarget{readme.md_autotoc_md22372}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md22372}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Compile\+Context\`{}, \`{}\+Compile\+Data\`{}, \`{}\+Encoding\`{}, \`{}\+Extension\`{}, \`{}\+Handle\`{}, \`{}\+On\+Enter\+Error\`{}, \`{}\+On\+Exit\+Error\`{}, \doxylink{README.md_options}{\`{}\+Options\`{}}, \`{}\+Token\`{}, \`{}\+Transform\`{}, and \`{}\+Value\`{}.\hypertarget{readme.md_autotoc_md22373}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md22373}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily mdast-\/util-\/from-\/markdown@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md22374}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md22374}
+As markdown is sometimes used for HTML, and improper use of HTML can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack, use of {\ttfamily mdast-\/util-\/from-\/markdown} can also be unsafe. When going to HTML, use this utility in combination with \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/sanitize}}} to make the tree safe.\hypertarget{readme.md_autotoc_md22375}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md22375}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/to-\/markdown}}} — serialize mdast as markdown
+\item \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark/micromark}}} — parse markdown
+\item \href{https://github.com/remarkjs/remark}{\texttt{ {\ttfamily remarkjs/remark}}} — process markdown
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22376}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md22376}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md22377}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md22377}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

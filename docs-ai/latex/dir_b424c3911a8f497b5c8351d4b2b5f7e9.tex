@@ -1,0 +1,99 @@
+\doxysection{node\+\_\+modules/webidl-\/conversions Directory Reference}
+\hypertarget{dir_b424c3911a8f497b5c8351d4b2b5f7e9}{}\label{dir_b424c3911a8f497b5c8351d4b2b5f7e9}\index{node\_modules/webidl-\/conversions Directory Reference@{node\_modules/webidl-\/conversions Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package implements, in Java\+Script, the algorithms to convert a given Java\+Script value according to a given \href{http://heycam.github.io/webidl/}{\texttt{ Web IDL}} \href{http://heycam.github.io/webidl/\#idl-types}{\texttt{ type}}.
+
+The goal is that you should be able to write code like
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}use\ strict"{};}
+\DoxyCodeLine{const\ conversions\ =\ require("{}webidl-\/conversions"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ doStuff(x,\ y)\ \{}
+\DoxyCodeLine{\ \ \ \ x\ =\ conversions["{}boolean"{}](x);}
+\DoxyCodeLine{\ \ \ \ y\ =\ conversions["{}unsigned\ long"{}](y);}
+\DoxyCodeLine{\ \ \ \ //\ actual\ algorithm\ code\ here}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+and your function {\ttfamily do\+Stuff} will behave the same as a Web IDL operation declared as
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{undefined\ doStuff(boolean\ x,\ unsigned\ long\ y);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35505}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md35505}
+This package\textquotesingle{}s main module\textquotesingle{}s default export is an object with a variety of methods, each corresponding to a different Web IDL type. Each method, when invoked on a Java\+Script value, will give back the new Java\+Script value that results after passing through the Web IDL conversion rules. (See below for more details on what that means.) Alternately, the method could throw an error, if the Web IDL algorithm is specified to do so\+: for example {\ttfamily conversions\mbox{[}"{}float"{}\mbox{]}(NaN)} \href{http://heycam.github.io/webidl/\#es-float}{\texttt{ will throw a {\ttfamily Type\+Error}}}.
+
+Each method also accepts a second, optional, parameter for miscellaneous options. For conversion methods that throw errors, a string option {\ttfamily \{ context \}} may be provided to provide more information in the error message. (For example, {\ttfamily conversions\mbox{[}"{}float"{}\mbox{]}(NaN, \{ context\+: "{}\+Argument 1 of Interface\textquotesingle{}s operation"{} \})} will throw an error with message {\ttfamily "{}\+Argument 1 of Interface\textquotesingle{}s operation is not a finite floating-\/point value."{}})
+
+If we are dealing with multiple Java\+Script realms (such as those created using Node.\+js\textquotesingle{} \href{https://nodejs.org/api/vm.html}{\texttt{ vm}} module or the HTML {\ttfamily iframe} element), and exceptions from another realm need to be thrown, one can supply an object option {\ttfamily globals} containing the following properties\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ globals:\ \{}
+\DoxyCodeLine{\ \ \ \ Number,}
+\DoxyCodeLine{\ \ \ \ String,}
+\DoxyCodeLine{\ \ \ \ TypeError}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Those specific functions will be used when throwing exceptions.
+
+Specific conversions may also accept other options, the details of which can be found below.\hypertarget{README.md_autotoc_md35506}{}\doxysubsection{\texorpdfstring{Conversions implemented}{Conversions implemented}}\label{README.md_autotoc_md35506}
+Conversions for all of the basic types from the Web IDL specification are implemented\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://heycam.github.io/webidl/\#es-any}{\texttt{ {\ttfamily any}}}
+\item \href{https://heycam.github.io/webidl/\#es-undefined}{\texttt{ {\ttfamily undefined}}}
+\item \href{https://heycam.github.io/webidl/\#es-boolean}{\texttt{ {\ttfamily boolean}}}
+\item \href{https://heycam.github.io/webidl/\#es-integer-types}{\texttt{ Integer types}}, which can additionally be provided the boolean options {\ttfamily \{ clamp, enforce\+Range \}} as a second parameter
+\item \href{https://heycam.github.io/webidl/\#es-float}{\texttt{ {\ttfamily float}}}, \href{https://heycam.github.io/webidl/\#es-unrestricted-float}{\texttt{ {\ttfamily unrestricted float}}}
+\item \href{https://heycam.github.io/webidl/\#es-double}{\texttt{ {\ttfamily double}}}, \href{https://heycam.github.io/webidl/\#es-unrestricted-double}{\texttt{ {\ttfamily unrestricted double}}}
+\item \href{https://heycam.github.io/webidl/\#es-DOMString}{\texttt{ {\ttfamily DOMString}}}, which can additionally be provided the boolean option {\ttfamily \{ treat\+Null\+As\+Empty\+String \}} as a second parameter
+\item \href{https://heycam.github.io/webidl/\#es-ByteString}{\texttt{ {\ttfamily Byte\+String}}}, \href{https://heycam.github.io/webidl/\#es-USVString}{\texttt{ {\ttfamily USVString}}}
+\item \href{https://heycam.github.io/webidl/\#es-object}{\texttt{ {\ttfamily object}}}
+\item \href{https://heycam.github.io/webidl/\#es-buffer-source-types}{\texttt{ Buffer source types}}, which can additionally be provided with the boolean option {\ttfamily \{ allow\+Shared \}} as a second parameter
+\end{DoxyItemize}
+
+Additionally, for convenience, the following derived type definitions are implemented\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://heycam.github.io/webidl/\#ArrayBufferView}{\texttt{ {\ttfamily Array\+Buffer\+View}}}, which can additionally be provided with the boolean option {\ttfamily \{ allow\+Shared \}} as a second parameter
+\item \href{https://heycam.github.io/webidl/\#BufferSource}{\texttt{ {\ttfamily Buffer\+Source}}}
+\item \href{https://heycam.github.io/webidl/\#DOMTimeStamp}{\texttt{ {\ttfamily DOMTime\+Stamp}}}
+\end{DoxyItemize}
+
+Derived types, such as nullable types, promise types, sequences, records, etc. are not handled by this library. You may wish to investigate the \href{https://github.com/jsdom/webidl2js}{\texttt{ webidl2js}} project.\hypertarget{README.md_autotoc_md35507}{}\doxysubsubsection{\texorpdfstring{A note on the {\ttfamily long long} types}{A note on the {\ttfamily long long} types}}\label{README.md_autotoc_md35507}
+The {\ttfamily long long} and {\ttfamily unsigned long long} Web IDL types can hold values that cannot be stored in Java\+Script numbers. Conversions are still accurate as we make use of Big\+Int in the conversion process, but in the case of {\ttfamily unsigned long long} we simply cannot represent some possible output values in Java\+Script. For example, converting the Java\+Script number {\ttfamily -\/1} to a Web IDL {\ttfamily unsigned long long} is supposed to produce the Web IDL value {\ttfamily 18446744073709551615}. Since we are representing our Web IDL values in Java\+Script, we can\textquotesingle{}t represent {\ttfamily 18446744073709551615}, so we instead the best we could do is {\ttfamily 18446744073709551616} as the output.
+
+To mitigate this, we could return the raw Big\+Int value from the conversion function, but right now it is not implemented. If your use case requires such precision, \href{https://github.com/jsdom/webidl-conversions/issues/new}{\texttt{ file an issue}}.
+
+On the other hand, {\ttfamily long long} conversion is always accurate, since the input value can never be more precise than the output value.\hypertarget{README.md_autotoc_md35508}{}\doxysubsubsection{\texorpdfstring{A note on {\ttfamily Buffer\+Source} types}{A note on {\ttfamily Buffer\+Source} types}}\label{README.md_autotoc_md35508}
+All of the {\ttfamily Buffer\+Source} types will throw when the relevant {\ttfamily Array\+Buffer} has been detached. This technically is not part of the \href{https://heycam.github.io/webidl/\#es-buffer-source-types}{\texttt{ specified conversion algorithm}}, but instead part of the \href{https://heycam.github.io/webidl/\#ref-for-dfn-get-buffer-source-reference\%E2\%91\%A0}{\texttt{ getting a reference/getting a copy}} algorithms. We\textquotesingle{}ve consolidated them here for convenience and ease of implementation, but if there is a need to separate them in the future, please open an issue so we can investigate.\hypertarget{README.md_autotoc_md35509}{}\doxysubsection{\texorpdfstring{Background}{Background}}\label{README.md_autotoc_md35509}
+What\textquotesingle{}s actually going on here, conceptually, is pretty weird. Let\textquotesingle{}s try to explain.
+
+Web IDL, as part of its madness-\/inducing design, has its own type system. When people write algorithms in web platform specs, they usually operate on Web IDL values, i.\+e. instances of Web IDL types. For example, if they were specifying the algorithm for our {\ttfamily do\+Stuff} operation above, they would treat {\ttfamily x} as a Web IDL value of \href{http://heycam.github.io/webidl/\#idl-boolean}{\texttt{ Web IDL type {\ttfamily boolean}}}. Crucially, they would {\itshape not} treat {\ttfamily x} as a Java\+Script variable whose value is either the Java\+Script {\ttfamily true} or {\ttfamily false}. They\textquotesingle{}re instead working in a different type system altogether, with its own rules.
+
+Separately from its type system, Web IDL defines a \href{http://heycam.github.io/webidl/\#ecmascript-binding}{\texttt{ "{}binding"{}}} of the type system into Java\+Script. This contains rules like\+: when you pass a Java\+Script value to the Java\+Script method that manifests a given Web IDL operation, how does that get converted into a Web IDL value? For example, a Java\+Script {\ttfamily true} passed in the position of a Web IDL {\ttfamily boolean} argument becomes a Web IDL {\ttfamily true}. But, a Java\+Script {\ttfamily true} passed in the position of a \href{http://heycam.github.io/webidl/\#idl-unsigned-long}{\texttt{ Web IDL {\ttfamily unsigned long}}} becomes a Web IDL {\ttfamily 1}. And so on.
+
+Finally, we have the actual implementation code. This is usually C++, although these days \href{https://github.com/servo/servo}{\texttt{ some smart people are using Rust}}. The implementation, of course, has its own type system. So when they implement the Web IDL algorithms, they don\textquotesingle{}t actually use Web IDL values, since those aren\textquotesingle{}t "{}real"{} outside of specs. Instead, implementations apply the Web IDL binding rules in such a way as to convert incoming Java\+Script values into C++ values. For example, if code in the browser called {\ttfamily do\+Stuff(true, true)}, then the implementation code would eventually receive a C++ {\ttfamily bool} containing {\ttfamily true} and a C++ {\ttfamily uint32\+\_\+t} containing {\ttfamily 1}.
+
+The upside of all this is that implementations can abstract all the conversion logic away, letting Web IDL handle it, and focus on implementing the relevant methods in C++ with values of the correct type already provided. That is payoff of Web IDL, in a nutshell.
+
+And getting to that payoff is the goal of {\itshape this} project—but for Java\+Script implementations, instead of C++ ones. That is, this library is designed to make it easier for Java\+Script developers to write functions that behave like a given Web IDL operation. So conceptually, the conversion pipeline, which in its general form is Java\+Script values ↦ Web IDL values ↦ implementation-\/language values, in this case becomes Java\+Script values ↦ Web IDL values ↦ Java\+Script values. And that intermediate step is where all the logic is performed\+: a Java\+Script {\ttfamily true} becomes a Web IDL {\ttfamily 1} in an unsigned long context, which then becomes a Java\+Script {\ttfamily 1}.\hypertarget{README.md_autotoc_md35510}{}\doxysubsection{\texorpdfstring{Don\textquotesingle{}t use this}{Don\textquotesingle{}t use this}}\label{README.md_autotoc_md35510}
+Seriously, why would you ever use this? You really shouldn\textquotesingle{}t. Web IDL is … strange, and you shouldn\textquotesingle{}t be emulating its semantics. If you\textquotesingle{}re looking for a generic argument-\/processing library, you should find one with better rules than those from Web IDL. In general, your Java\+Script should not be trying to become more like Web IDL; if anything, we should fix Web IDL to make it more like Java\+Script.
+
+The {\itshape only} people who should use this are those trying to create faithful implementations (or polyfills) of web platform interfaces defined in Web IDL. Its main consumer is the \href{https://github.com/jsdom/jsdom}{\texttt{ jsdom}} project. 

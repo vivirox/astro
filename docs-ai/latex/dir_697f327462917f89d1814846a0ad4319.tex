@@ -1,0 +1,207 @@
+\doxysection{node\+\_\+modules/is-\/number Directory Reference}
+\hypertarget{dir_697f327462917f89d1814846a0ad4319}{}\label{dir_697f327462917f89d1814846a0ad4319}\index{node\_modules/is-\/number Directory Reference@{node\_modules/is-\/number Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Returns true if the value is a finite number. \end{quote}
+
+
+Please consider following this project\textquotesingle{}s author, \href{https://github.com/jonschlinkert}{\texttt{ Jon Schlinkert}}, and consider starring the project to show your \+:heart\+: and support.\hypertarget{README.md_autotoc_md18689}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md18689}
+Install with \href{https://www.npmjs.com/}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ is-\/number}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18690}{}\doxysubsection{\texorpdfstring{Why is this needed?}{Why is this needed?}}\label{README.md_autotoc_md18690}
+In Java\+Script, it\textquotesingle{}s not always as straightforward as it should be to reliably check if a value is a number. It\textquotesingle{}s common for devs to use {\ttfamily +}, {\ttfamily -\/}, or {\ttfamily Number()} to cast a string value to a number (for example, when values are returned from user input, regex matches, parsers, etc). But there are many non-\/intuitive edge cases that yield unexpected results\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(+[]);\ //=>\ 0}
+\DoxyCodeLine{console.log(+'');\ //=>\ 0}
+\DoxyCodeLine{console.log(+'\ \ \ ');\ //=>\ 0}
+\DoxyCodeLine{console.log(typeof\ NaN);\ //=>\ 'number'}
+
+\end{DoxyCode}
+
+
+This library offers a performant way to smooth out edge cases like these.\hypertarget{README.md_autotoc_md18691}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md18691}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ isNumber\ =\ require('is-\/number');}
+
+\end{DoxyCode}
+
+
+See the \href{./test.js}{\texttt{ tests}} for more examples.\hypertarget{README.md_autotoc_md18692}{}\doxysubsubsection{\texorpdfstring{true}{true}}\label{README.md_autotoc_md18692}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{isNumber(5e3);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(0xff);\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(-\/1.1);\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(1);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(1.1);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(10);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(10.10);\ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(100);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('-\/1.1');\ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('0');\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('012');\ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('0xff');\ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('1');\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('1.1');\ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('10');\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('10.10');\ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('100');\ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber('5e3');\ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+\DoxyCodeLine{isNumber(parseInt('012'));\ \ \ //\ true}
+\DoxyCodeLine{isNumber(parseFloat('012'));\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18693}{}\doxysubsubsection{\texorpdfstring{False}{False}}\label{README.md_autotoc_md18693}
+Everything else is false, as you would expect\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{isNumber(Infinity);\ \ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber(NaN);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber(null);\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber(undefined);\ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber('');\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber('\ \ \ ');\ \ \ \ \ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber('foo');\ \ \ \ \ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber([1]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber([]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ false}
+\DoxyCodeLine{isNumber(function\ ()\ \{\});\ \ \ \ //\ false}
+\DoxyCodeLine{isNumber(\{\});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ false}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18694}{}\doxysubsection{\texorpdfstring{Release history}{Release history}}\label{README.md_autotoc_md18694}
+\hypertarget{README.md_autotoc_md18695}{}\doxysubsubsection{\texorpdfstring{7.\+0.\+0}{7.\+0.\+0}}\label{README.md_autotoc_md18695}
+
+\begin{DoxyItemize}
+\item Refactor. Now uses {\ttfamily .is\+Finite} if it exists.
+\item Performance is about the same as v6.\+0 when the value is a string or number. But it\textquotesingle{}s now 3x-\/4x faster when the value is not a string or number.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md18696}{}\doxysubsubsection{\texorpdfstring{6.\+0.\+0}{6.\+0.\+0}}\label{README.md_autotoc_md18696}
+
+\begin{DoxyItemize}
+\item Optimizations, thanks to @benaadams.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md18697}{}\doxysubsubsection{\texorpdfstring{5.\+0.\+0}{5.\+0.\+0}}\label{README.md_autotoc_md18697}
+{\bfseries{Breaking changes}}
+
+
+\begin{DoxyItemize}
+\item removed support for {\ttfamily instanceof Number} and {\ttfamily instanceof String}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md18698}{}\doxysubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{README.md_autotoc_md18698}
+As with all benchmarks, take these with a grain of salt. See the \href{./benchmark/index.js}{\texttt{ benchmarks}} for more detail.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ all}
+\DoxyCodeLine{v7.0\ x\ 413,222\ ops/sec\ ±2.02\%\ (86\ runs\ sampled)}
+\DoxyCodeLine{v6.0\ x\ 111,061\ ops/sec\ ±1.29\%\ (85\ runs\ sampled)}
+\DoxyCodeLine{parseFloat\ x\ 317,596\ ops/sec\ ±1.36\%\ (86\ runs\ sampled)}
+\DoxyCodeLine{fastest\ is\ 'v7.0'}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ string}
+\DoxyCodeLine{v7.0\ x\ 3,054,496\ ops/sec\ ±1.05\%\ (89\ runs\ sampled)}
+\DoxyCodeLine{v6.0\ x\ 2,957,781\ ops/sec\ ±0.98\%\ (88\ runs\ sampled)}
+\DoxyCodeLine{parseFloat\ x\ 3,071,060\ ops/sec\ ±1.13\%\ (88\ runs\ sampled)}
+\DoxyCodeLine{fastest\ is\ 'parseFloat,v7.0'}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ number}
+\DoxyCodeLine{v7.0\ x\ 3,146,895\ ops/sec\ ±0.89\%\ (89\ runs\ sampled)}
+\DoxyCodeLine{v6.0\ x\ 3,214,038\ ops/sec\ ±1.07\%\ (89\ runs\ sampled)}
+\DoxyCodeLine{parseFloat\ x\ 3,077,588\ ops/sec\ ±1.07\%\ (87\ runs\ sampled)}
+\DoxyCodeLine{fastest\ is\ 'v6.0'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18699}{}\doxysubsection{\texorpdfstring{About}{About}}\label{README.md_autotoc_md18699}
+
+
+{\bfseries{{\bfseries{Contributing}}}}\begin{adjustwidth}{1em}{0em}
+
+
+Pull requests and stars are always welcome. For bugs and feature requests, \href{../../issues/new}{\texttt{ please create an issue}}.
+
+\end{adjustwidth}
+
+
+
+
+{\bfseries{{\bfseries{Running Tests}}}}\begin{adjustwidth}{1em}{0em}
+
+
+Running and reviewing unit tests is a great way to get familiarized with a library and its API. You can install dependencies and run tests with the following command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ \&\&\ npm\ test}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+
+
+
+{\bfseries{{\bfseries{Building docs}}}}\begin{adjustwidth}{1em}{0em}
+
+
+{\itshape (This project\textquotesingle{}s readme.\+md is generated by \href{https://github.com/verbose/verb-generate-readme}{\texttt{ verb}}, please don\textquotesingle{}t edit the readme directly. Any changes to the readme must be made in the .verb.md readme template.)}
+
+To generate the readme, run the following command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/g\ verbose/verb\#dev\ verb-\/generate-\/readme\ \&\&\ verb}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+\hypertarget{README.md_autotoc_md18700}{}\doxysubsubsection{\texorpdfstring{Related projects}{Related projects}}\label{README.md_autotoc_md18700}
+You might also be interested in these projects\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://www.npmjs.com/package/is-plain-object}{\texttt{ is-\/plain-\/object}}\+: Returns true if an object was created by the {\ttfamily Object} constructor. \texorpdfstring{$\vert$}{|} \href{https://github.com/jonschlinkert/is-plain-object}{\texttt{ homepage}}
+\item \href{https://www.npmjs.com/package/is-primitive}{\texttt{ is-\/primitive}}\+: Returns {\ttfamily true} if the value is a primitive. \texorpdfstring{$\vert$}{|} \href{https://github.com/jonschlinkert/is-primitive}{\texttt{ homepage}}
+\item \href{https://www.npmjs.com/package/isobject}{\texttt{ isobject}}\+: Returns true if the value is an object and not an array or null. \texorpdfstring{$\vert$}{|} \href{https://github.com/jonschlinkert/isobject}{\texttt{ homepage}}
+\item \href{https://www.npmjs.com/package/kind-of}{\texttt{ kind-\/of}}\+: Get the native type of a value. \texorpdfstring{$\vert$}{|} \href{https://github.com/jonschlinkert/kind-of}{\texttt{ homepage}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md18701}{}\doxysubsubsection{\texorpdfstring{Contributors}{Contributors}}\label{README.md_autotoc_md18701}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Commits}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Contributor}}    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Commits}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Contributor}}    }\\\cline{1-2}
+\endhead
+49   &\href{https://github.com/jonschlinkert}{\texttt{ jonschlinkert}}    \\\cline{1-2}
+5   &\href{https://github.com/charlike-old}{\texttt{ charlike-\/old}}    \\\cline{1-2}
+1   &\href{https://github.com/benaadams}{\texttt{ benaadams}}    \\\cline{1-2}
+1   &\href{https://github.com/realityking}{\texttt{ realityking}}   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md18702}{}\doxysubsubsection{\texorpdfstring{Author}{Author}}\label{README.md_autotoc_md18702}
+{\bfseries{Jon Schlinkert}}
+
+
+\begin{DoxyItemize}
+\item \href{https://linkedin.com/in/jonschlinkert}{\texttt{ Linked\+In Profile}}
+\item \href{https://github.com/jonschlinkert}{\texttt{ Git\+Hub Profile}}
+\item \href{https://twitter.com/jonschlinkert}{\texttt{ Twitter Profile}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md18703}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md18703}
+Copyright © 2018, \href{https://github.com/jonschlinkert}{\texttt{ Jon Schlinkert}}. Released under the \mbox{[}MIT License\mbox{]}(LICENSE).
+
+\DoxyHorRuler{0}
+
+
+{\itshape This file was generated by \href{https://github.com/verbose/verb-generate-readme}{\texttt{ verb-\/generate-\/readme}}, v0.\+6.\+0, on June 15, 2018.} 

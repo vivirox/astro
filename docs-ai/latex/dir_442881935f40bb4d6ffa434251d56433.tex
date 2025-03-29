@@ -1,0 +1,182 @@
+\doxysection{node\+\_\+modules/@jridgewell/source-\/map Directory Reference}
+\hypertarget{dir_442881935f40bb4d6ffa434251d56433}{}\label{dir_442881935f40bb4d6ffa434251d56433}\index{node\_modules/"@jridgewell/source-\/map Directory Reference@{node\_modules/"@jridgewell/source-\/map Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Packages {\ttfamily @jridgewell/trace-\/mapping} and {\ttfamily @jridgewell/gen-\/mapping} into the familiar source-\/map API \end{quote}
+
+
+This isn\textquotesingle{}t the full API, but it\textquotesingle{}s the core functionality. This wraps \href{https://github.com/jridgewell/trace-mapping/}{\texttt{ @jridgewell/trace-\/mapping}} and \href{https://github.com/jridgewell/gen-mapping/}{\texttt{ @jridgewell/gen-\/mapping}} implementations.\hypertarget{README.md_autotoc_md4670}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md4670}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @jridgewell/source-\/map}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4671}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md4671}
+TODO\hypertarget{README.md_autotoc_md4672}{}\doxysubsubsection{\texorpdfstring{Source\+Map\+Consumer}{Source\+Map\+Consumer}}\label{README.md_autotoc_md4672}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ SourceMapConsumer\ \}\ from\ '@jridgewell/source-\/map';}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer(\{}
+\DoxyCodeLine{\ \ version:\ 3,}
+\DoxyCodeLine{\ \ names:\ ['foo'],}
+\DoxyCodeLine{\ \ sources:\ ['input.js'],}
+\DoxyCodeLine{\ \ mappings:\ 'AAAAA',}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4673}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+from\+Source\+Map(map\+Generator\mbox{[}, map\+Url\mbox{]})}{Source\+Map\+Consumer.\+from\+Source\+Map(map\+Generator\mbox{[}, map\+Url\mbox{]})}}\label{README.md_autotoc_md4673}
+Transforms a {\ttfamily Source\+Map\+Generator} into a {\ttfamily Source\+Map\+Consumer}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smg\ =\ new\ SourceMapGenerator();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ smc\ =\ SourceMapConsumer.fromSourceMap(map);}
+\DoxyCodeLine{smc.originalPositionFor(\{\ line:\ 1,\ column:\ 0\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4674}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+prototype.\+original\+Position\+For(generated\+Position)}{Source\+Map\+Consumer.\+prototype.\+original\+Position\+For(generated\+Position)}}\label{README.md_autotoc_md4674}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer(map);}
+\DoxyCodeLine{smc.originalPositionFor(\{\ line:\ 1,\ column:\ 0\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4675}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+prototype.\+mappings}{Source\+Map\+Consumer.\+prototype.\+mappings}}\label{README.md_autotoc_md4675}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer(map);}
+\DoxyCodeLine{smc.mappings;\ //\ AAAA}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4676}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+prototype.\+all\+Generated\+Positions\+For(original\+Position)}{Source\+Map\+Consumer.\+prototype.\+all\+Generated\+Positions\+For(original\+Position)}}\label{README.md_autotoc_md4676}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer(map);}
+\DoxyCodeLine{smc.allGeneratedpositionsfor(\{\ line:\ 1,\ column:\ 5,\ source:\ "{}baz.ts"{}\ \});}
+\DoxyCodeLine{//\ [}
+\DoxyCodeLine{//\ \ \ \{\ line:\ 2,\ column:\ 8\ \}}
+\DoxyCodeLine{//\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4677}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+prototype.\+each\+Mapping(callback\mbox{[}, context\mbox{[}, order\mbox{]}\mbox{]})}{Source\+Map\+Consumer.\+prototype.\+each\+Mapping(callback\mbox{[}, context\mbox{[}, order\mbox{]}\mbox{]})}}\label{README.md_autotoc_md4677}
+\begin{quote}
+This implementation currently does not support the "{}order"{} parameter. This function can only iterate in Generated order. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer(map);}
+\DoxyCodeLine{smc.eachMapping((mapping)\ =>\ \{}
+\DoxyCodeLine{//\ \{\ source:\ 'baz.ts',}
+\DoxyCodeLine{//\ \ \ generatedLine:\ 4,}
+\DoxyCodeLine{//\ \ \ generatedColumn:\ 5,}
+\DoxyCodeLine{//\ \ \ originalLine:\ 4,}
+\DoxyCodeLine{//\ \ \ originalColumn:\ 5,}
+\DoxyCodeLine{//\ \ \ name:\ null\ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4678}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+prototype.\+generated\+Position\+For(original\+Position)}{Source\+Map\+Consumer.\+prototype.\+generated\+Position\+For(original\+Position)}}\label{README.md_autotoc_md4678}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer(map);}
+\DoxyCodeLine{smc.generatedPositionFor(\{\ line:\ 1,\ column:\ 5,\ source:\ "{}baz.ts"{}\ \});}
+\DoxyCodeLine{//\ \{\ line:\ 2,\ column:\ 8\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4679}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+prototype.\+has\+Contents\+Of\+All\+Sources()}{Source\+Map\+Consumer.\+prototype.\+has\+Contents\+Of\+All\+Sources()}}\label{README.md_autotoc_md4679}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer(map);}
+\DoxyCodeLine{smc.hasContentsOfAllSources();}
+\DoxyCodeLine{//\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4680}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+prototype.\+source\+Content\+For(source\mbox{[}, return\+Null\+On\+Missing\mbox{]})}{Source\+Map\+Consumer.\+prototype.\+source\+Content\+For(source\mbox{[}, return\+Null\+On\+Missing\mbox{]})}}\label{README.md_autotoc_md4680}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer(map);}
+\DoxyCodeLine{smc.generatedPositionFor("{}baz.ts"{});}
+\DoxyCodeLine{//\ "{}export\ default\ ..."{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4681}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Consumer.\+prototype.\+version}{Source\+Map\+Consumer.\+prototype.\+version}}\label{README.md_autotoc_md4681}
+Returns the source map\textquotesingle{}s version\hypertarget{README.md_autotoc_md4682}{}\doxysubsubsection{\texorpdfstring{Source\+Map\+Generator}{Source\+Map\+Generator}}\label{README.md_autotoc_md4682}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ SourceMapGenerator\ \}\ from\ '@jridgewell/source-\/map';}
+\DoxyCodeLine{const\ smg\ =\ new\ SourceMapGenerator(\{}
+\DoxyCodeLine{\ \ file:\ 'output.js',}
+\DoxyCodeLine{\ \ sourceRoot:\ 'https://example.com/',}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4683}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Generator.\+from\+Source\+Map(map)}{Source\+Map\+Generator.\+from\+Source\+Map(map)}}\label{README.md_autotoc_md4683}
+Transform a {\ttfamily Source\+Map\+Consumer} into a {\ttfamily Source\+Map\+Generator}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smc\ =\ new\ SourceMapConsumer();}
+\DoxyCodeLine{const\ smg\ =\ SourceMapGenerator.fromSourceMap(smc);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4684}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Generator.\+prototype.\+apply\+Source\+Map(source\+Map\+Consumer\mbox{[}, source\+File\mbox{[}, source\+Map\+Path\mbox{]}\mbox{]})}{Source\+Map\+Generator.\+prototype.\+apply\+Source\+Map(source\+Map\+Consumer\mbox{[}, source\+File\mbox{[}, source\+Map\+Path\mbox{]}\mbox{]})}}\label{README.md_autotoc_md4684}
+\begin{quote}
+This method is not implemented yet \end{quote}
+\hypertarget{README.md_autotoc_md4685}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Generator.\+prototype.\+add\+Mapping(mapping)}{Source\+Map\+Generator.\+prototype.\+add\+Mapping(mapping)}}\label{README.md_autotoc_md4685}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smg\ =\ new\ SourceMapGenerator();}
+\DoxyCodeLine{smg.addMapping(\{}
+\DoxyCodeLine{\ \ generated:\ \{\ line:\ 1,\ column:\ 0\ \},}
+\DoxyCodeLine{\ \ source:\ 'input.js',}
+\DoxyCodeLine{\ \ original:\ \{\ line:\ 1,\ column:\ 0\ \},}
+\DoxyCodeLine{\ \ name:\ 'foo',}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4686}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Generator.\+prototype.\+set\+Source\+Content(source\+File, source\+Content)}{Source\+Map\+Generator.\+prototype.\+set\+Source\+Content(source\+File, source\+Content)}}\label{README.md_autotoc_md4686}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smg\ =\ new\ SourceMapGenerator();}
+\DoxyCodeLine{smg.setSourceContent('input.js',\ 'foobar');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4687}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Generator.\+prototype.\+to\+JSON()}{Source\+Map\+Generator.\+prototype.\+to\+JSON()}}\label{README.md_autotoc_md4687}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smg\ =\ new\ SourceMapGenerator();}
+\DoxyCodeLine{smg.toJSON();\ //\ \{\ version:\ 3,\ names:\ [],\ sources:\ [],\ mappings:\ ''\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4688}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Generator.\+prototype.\+to\+String()}{Source\+Map\+Generator.\+prototype.\+to\+String()}}\label{README.md_autotoc_md4688}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smg\ =\ new\ SourceMapGenerator();}
+\DoxyCodeLine{smg.toJSON();\ //\ "{}\{version:3,names:[],sources:[],mappings:''\}"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4689}{}\doxysubsubsubsection{\texorpdfstring{Source\+Map\+Generator.\+prototype.\+to\+Decoded\+Map()}{Source\+Map\+Generator.\+prototype.\+to\+Decoded\+Map()}}\label{README.md_autotoc_md4689}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ smg\ =\ new\ SourceMapGenerator();}
+\DoxyCodeLine{smg.toDecodedMap();\ //\ \{\ version:\ 3,\ names:\ [],\ sources:\ [],\ mappings:\ []\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4690}{}\doxysubsection{\texorpdfstring{Known differences with other implementations}{Known differences with other implementations}}\label{README.md_autotoc_md4690}
+This implementation has some differences with {\ttfamily source-\/map} and {\ttfamily source-\/map-\/js}.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Source\+Map\+Consumer.\+prototype.\+each\+Mapping()}
+\begin{DoxyItemize}
+\item Does not support the {\ttfamily order} argument
+\end{DoxyItemize}
+\item {\ttfamily Source\+Map\+Generator.\+prototype.\+apply\+Source\+Map()}
+\begin{DoxyItemize}
+\item Not implemented 
+\end{DoxyItemize}
+\end{DoxyItemize}

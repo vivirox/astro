@@ -1,0 +1,155 @@
+\doxysection{node\+\_\+modules/rehype-\/raw Directory Reference}
+\hypertarget{dir_874dc6aaea304c0aa3193458911dbb78}{}\label{dir_874dc6aaea304c0aa3193458911dbb78}\index{node\_modules/rehype-\/raw Directory Reference@{node\_modules/rehype-\/raw Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_f832beee60ccfa5145d60663e00e6ae4}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/rehypejs/rehype-raw/actions}{\texttt{ }} \href{https://codecov.io/github/rehypejs/rehype-raw}{\texttt{ }} \href{https://www.npmjs.com/package/rehype-raw}{\texttt{ }} \href{https://bundlejs.com/?q=rehype-raw}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/rehypejs/rehype/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}}} plugin to parse the tree (and raw nodes) again, keeping positional info okay.\hypertarget{readme.md_autotoc_md28894}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md28894}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}unified().use(rehype\+Raw\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28895}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md28895}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} (\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}) plugin to parse a document again. To understand how it works, requires knowledge of ASTs (specifically, \href{https://github.com/syntax-tree/hast}{\texttt{ hast}}). This plugin passes each node and embedded raw HTML through an HTML parser (\href{https://github.com/inikulin/parse5}{\texttt{ {\ttfamily parse5}}}), to recreate a tree exactly as how a browser would parse it, while keeping the original data and positional info intact.
+
+{\bfseries{unified}} is a project that transforms content with abstract syntax trees (ASTs). {\bfseries{rehype}} adds support for HTML to unified. {\bfseries{hast}} is the HTML AST that rehype uses. This is a rehype plugin that parses the tree again.\hypertarget{readme.md_autotoc_md28896}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md28896}
+This plugin is particularly useful when coming from markdown and wanting to support HTML embedded inside that markdown (which requires passing {\ttfamily allow\+Dangerous\+Html\+: true} to {\ttfamily remark-\/rehype}). Markdown dictates how, say, a list item or emphasis can be parsed. We can use that to turn the markdown syntax tree into an HTML syntax tree. But markdown also dictates that things that look like HTML, are passed through untouched, even when it just looks like XML but doesn’t really make sense, so we can’t normally use these strings of “\+HTML” to create an HTML syntax tree. This plugin can. It can be used to take those strings of HTML and include them into the syntax tree as actual nodes.
+
+If your final result is HTML and you trust content, then “strings” are fine (you can pass {\ttfamily allow\+Dangerous\+Html\+: true} to {\ttfamily rehype-\/stringify}, which passes HTML through untouched). But there are two main cases where a proper syntax tree is preferred\+:
+
+
+\begin{DoxyItemize}
+\item rehype plugins need a proper syntax tree as they operate on actual nodes to inspect or transform things, they can’t operate on strings of HTML
+\item other output formats (React, MDX, etc) need actual nodes and can’t handle strings of HTML
+\end{DoxyItemize}
+
+This plugin is built on \href{https://github.com/syntax-tree/hast-util-raw}{\texttt{ {\ttfamily hast-\/util-\/raw}}}, which does the work on syntax trees. rehype focusses on making it easier to transform content by abstracting such internals away.\hypertarget{readme.md_autotoc_md28897}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md28897}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ rehype-\/raw}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeRaw\ from\ 'https://esm.sh/rehype-\/raw@7'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ rehypeRaw\ from\ 'https://esm.sh/rehype-\/raw@7?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28898}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md28898}
+Say we have the following markdown file {\ttfamily example.\+md}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ class="{}note"{}>}
+\DoxyCodeLine{}
+\DoxyCodeLine{A\ mix\ of\ *markdown*\ and\ <em>HTML</em>.}
+\DoxyCodeLine{}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeDocument\ from\ 'rehype-\/document'}
+\DoxyCodeLine{import\ rehypeFormat\ from\ 'rehype-\/format'}
+\DoxyCodeLine{import\ rehypeRaw\ from\ 'rehype-\/raw'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ remarkParse\ from\ 'remark-\/parse'}
+\DoxyCodeLine{import\ remarkRehype\ from\ 'remark-\/rehype'}
+\DoxyCodeLine{import\ \{read\}\ from\ 'to-\/vfile'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(remarkParse)}
+\DoxyCodeLine{\ \ .use(remarkRehype,\ \{allowDangerousHtml:\ true\})}
+\DoxyCodeLine{\ \ .use(rehypeRaw)}
+\DoxyCodeLine{\ \ .use(rehypeDocument,\ \{title:\ '🙌'\})}
+\DoxyCodeLine{\ \ .use(rehypeFormat)}
+\DoxyCodeLine{\ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ .process(await\ read('example.md'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!doctype\ html>}
+\DoxyCodeLine{<html\ lang="{}en"{}>}
+\DoxyCodeLine{\ \ <head>}
+\DoxyCodeLine{\ \ \ \ <meta\ charset="{}utf-\/8"{}>}
+\DoxyCodeLine{\ \ \ \ <title>🙌</title>}
+\DoxyCodeLine{\ \ \ \ <meta\ name="{}viewport"{}\ content="{}width=device-\/width,\ initial-\/scale=1"{}>}
+\DoxyCodeLine{\ \ </head>}
+\DoxyCodeLine{\ \ <body>}
+\DoxyCodeLine{\ \ \ \ <div\ class="{}note"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ <p>A\ mix\ of\ <em>markdown</em>\ and\ <em>HTML</em>.</p>}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ </body>}
+\DoxyCodeLine{</html>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28899}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md28899}
+This package exports no identifiers. The default export is \`{}rehype\+Raw\`{}.\hypertarget{readme.md_autotoc_md28900}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unified().use(rehype\+Raw\mbox{[}, options\mbox{]})}}{{\ttfamily unified().use(rehype\+Raw\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md28900}
+Parse the tree (and raw nodes) again, keeping positional info okay.\hypertarget{readme.md_autotoc_md28901}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md28901}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28902}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md28902}
+Transform (\href{https://github.com/unifiedjs/unified?tab=readme-ov-file\#transformer}{\texttt{ {\ttfamily Transformer}}}).\hypertarget{readme.md_autotoc_md28903}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md28903}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md28904}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md28904}
+
+\begin{DoxyItemize}
+\item {\ttfamily pass\+Through} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, default\+: {\ttfamily \mbox{[}\mbox{]}}) — list of custom hast node types to pass through (as in, keep); this option is a bit advanced as it requires knowledge of ASTs, so we defer to the docs in \href{https://github.com/syntax-tree/hast-util-raw}{\texttt{ {\ttfamily hast-\/util-\/raw}}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28905}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md28905}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.
+
+The {\ttfamily Raw} node type is registered by and exposed from \href{https://github.com/remarkjs/remark-rehype}{\texttt{ {\ttfamily remark-\/rehype}}}.\hypertarget{readme.md_autotoc_md28906}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md28906}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily rehype-\/raw@\texorpdfstring{$^\wedge$}{\string^}7}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md28907}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md28907}
+The {\ttfamily allow\+Dangerous\+Html} option in \href{https://github.com/remarkjs/remark-rehype}{\texttt{ {\ttfamily remark-\/rehype}}} is dangerous, so see that plugin on how to make it safe. Otherwise, this plugin is safe.\hypertarget{readme.md_autotoc_md28908}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md28908}
+See \href{https://github.com/rehypejs/.github/blob/HEAD/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/rehypejs/.github}{\texttt{ {\ttfamily rehypejs/.github}}} for ways to get started. See \href{https://github.com/rehypejs/.github/blob/HEAD/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/rehypejs/.github/blob/HEAD/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md28909}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md28909}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

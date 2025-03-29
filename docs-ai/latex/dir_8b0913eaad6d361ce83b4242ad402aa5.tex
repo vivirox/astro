@@ -1,0 +1,33 @@
+\doxysection{node\+\_\+modules/eastasianwidth Directory Reference}
+\hypertarget{dir_8b0913eaad6d361ce83b4242ad402aa5}{}\label{dir_8b0913eaad6d361ce83b4242ad402aa5}\index{node\_modules/eastasianwidth Directory Reference@{node\_modules/eastasianwidth Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Get \href{http://www.unicode.org/reports/tr11/}{\texttt{ East Asian Width}} from a character.
+
+\textquotesingle{}F\textquotesingle{}(Fullwidth), \textquotesingle{}H\textquotesingle{}(Halfwidth), \textquotesingle{}W\textquotesingle{}(Wide), \textquotesingle{}Na\textquotesingle{}(Narrow), \textquotesingle{}A\textquotesingle{}(Ambiguous) or \textquotesingle{}N\textquotesingle{}(Natural).
+
+Original Code is \href{http://d.hatena.ne.jp/takenspc/20111126\#1322252878}{\texttt{ 東アジアの文字幅 (East Asian Width) の判定 -\/ 中途}}.\hypertarget{README.md_autotoc_md12320}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md12320}
+\begin{DoxyVerb}$ npm install eastasianwidth
+\end{DoxyVerb}
+\hypertarget{README.md_autotoc_md12321}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md12321}
+\begin{DoxyVerb}var eaw = require('eastasianwidth');
+console.log(eaw.eastAsianWidth('￦')) // 'F'
+console.log(eaw.eastAsianWidth('｡')) // 'H'
+console.log(eaw.eastAsianWidth('뀀')) // 'W'
+console.log(eaw.eastAsianWidth('a')) // 'Na'
+console.log(eaw.eastAsianWidth('①')) // 'A'
+console.log(eaw.eastAsianWidth('ف')) // 'N'
+
+console.log(eaw.characterLength('￦')) // 2
+console.log(eaw.characterLength('｡')) // 1
+console.log(eaw.characterLength('뀀')) // 2
+console.log(eaw.characterLength('a')) // 1
+console.log(eaw.characterLength('①')) // 2
+console.log(eaw.characterLength('ف')) // 1
+
+console.log(eaw.length('あいうえお')) // 10
+console.log(eaw.length('abcdefg')) // 7
+console.log(eaw.length('￠￦｡ￜㄅ뀀¢⟭a⊙①بف')) // 19
+\end{DoxyVerb}
+ 

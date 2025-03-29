@@ -1,0 +1,219 @@
+\doxysection{node\+\_\+modules/@eslint/markdown Directory Reference}
+\hypertarget{dir_76e89f6b9e4f9789e801b9c6abb5b41f}{}\label{dir_76e89f6b9e4f9789e801b9c6abb5b41f}\index{node\_modules/"@eslint/markdown Directory Reference@{node\_modules/"@eslint/markdown Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_6a896b4c7e4471da2737d7e4a2e01b47}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/@eslint/markdown}{\texttt{ }} \href{https://www.npmjs.com/package/@eslint/markdown}{\texttt{ }} \href{https://github.com/eslint/markdown/actions}{\texttt{ }}
+
+Lint JS, JSX, Type\+Script, and more inside Markdown.
+
+\hypertarget{README.md_autotoc_md3258}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3258}
+\hypertarget{README.md_autotoc_md3259}{}\doxysubsubsection{\texorpdfstring{Installing}{Installing}}\label{README.md_autotoc_md3259}
+Install the plugin alongside ESLint v9 or greater\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ eslint\ @eslint/markdown}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3260}{}\doxysubsubsection{\texorpdfstring{Configurations}{Configurations}}\label{README.md_autotoc_md3260}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Configuration Name}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Configuration Name}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endhead
+{\ttfamily recommended}   &Lints all {\ttfamily .md} files with the recommended rules and assumes \href{https://commonmark.org/}{\texttt{ Common\+Mark}} format.    \\\cline{1-2}
+{\ttfamily processor}   &Enables extracting code blocks from all {\ttfamily .md} files so code blocks can be individually linted.   \\\cline{1-2}
+\end{longtabu}
+
+
+In your {\ttfamily eslint.\+config.\+js} file, import {\ttfamily @eslint/markdown} and include the recommended config to enable the Markdown processor on all {\ttfamily .md} files\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.js}
+\DoxyCodeLine{import\ markdown\ from\ "{}@eslint/markdown"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ ...markdown.configs.recommended}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ your\ other\ configs\ here}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3261}{}\doxysubsubsection{\texorpdfstring{Rules}{Rules}}\label{README.md_autotoc_md3261}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Rule Name}}   }&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Recommended}}    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Rule Name}}   }&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Recommended}}    }\\\cline{1-3}
+\endhead
+{\ttfamily fenced-\/code-\/language}   &Require languages for fenced code blocks   &\PBS\centering yes    \\\cline{1-3}
+{\ttfamily heading-\/increment}   &Enforce heading levels increment by one   &\PBS\centering yes    \\\cline{1-3}
+{\ttfamily no-\/duplicate-\/headings}   &Disallow duplicate headings in the same document   &\PBS\centering no    \\\cline{1-3}
+{\ttfamily no-\/empty-\/links}   &Disallow empty links   &\PBS\centering yes    \\\cline{1-3}
+{\ttfamily no-\/html}   &Disallow HTML tags   &\PBS\centering no    \\\cline{1-3}
+{\ttfamily no-\/invalid-\/label-\/refs}   &Disallow invalid label references   &\PBS\centering yes    \\\cline{1-3}
+{\ttfamily no-\/missing-\/label-\/refs}   &Disallow missing label references   &\PBS\centering yes   \\\cline{1-3}
+\end{longtabu}
+
+
+{\bfseries{Note\+:}} This plugin does not provide formatting rules. We recommend using a source code formatter such as \href{https://prettier.io}{\texttt{ Prettier}} for that purpose.
+
+In order to individually configure a rule in your {\ttfamily eslint.\+config.\+js} file, import {\ttfamily @eslint/markdown} and configure each rule with a prefix\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.js}
+\DoxyCodeLine{import\ markdown\ from\ "{}@eslint/markdown"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}**/*.md"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ markdown}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ language:\ "{}markdown/commonmark"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}markdown/no-\/html"{}:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+You can individually disable rules in Markdown using HTML comments, such as\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!-\/-\/\ eslint-\/disable-\/next-\/line\ markdown/no-\/html\ -\/-\/\ I\ want\ to\ allow\ HTML\ here\ -\/-\/>}
+\DoxyCodeLine{<custom-\/element>Hello\ world!</custom-\/element>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<!-\/-\/\ eslint-\/disable\ markdown/no-\/html\ -\/-\/\ here\ too\ -\/-\/>}
+\DoxyCodeLine{<another-\/element>Goodbye\ world!</another-\/element>}
+\DoxyCodeLine{<!-\/-\/\ eslint-\/enable\ markdown/no-\/html\ -\/-\/\ safe\ to\ re-\/enable\ now\ -\/-\/>}
+\DoxyCodeLine{}
+\DoxyCodeLine{[Object]\ <!-\/-\/\ eslint-\/disable-\/line\ markdown/no-\/missing-\/label-\/refs\ -\/-\/\ not\ meant\ to\ be\ a\ link\ ref\ -\/-\/>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3262}{}\doxysubsubsection{\texorpdfstring{Languages}{Languages}}\label{README.md_autotoc_md3262}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Language Name}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Language Name}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endhead
+{\ttfamily commonmark}   &Parse using \href{https://commonmark.org}{\texttt{ Common\+Mark}} Markdown format    \\\cline{1-2}
+{\ttfamily gfm}   &Parse using \href{https://github.github.com/gfm/}{\texttt{ Git\+Hub-\/\+Flavored Markdown}} format   \\\cline{1-2}
+\end{longtabu}
+
+
+In order to individually configure a language in your {\ttfamily eslint.\+config.\+js} file, import {\ttfamily @eslint/markdown} and configure a {\ttfamily language}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.js}
+\DoxyCodeLine{import\ markdown\ from\ "{}@eslint/markdown"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}**/*.md"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ markdown}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ language:\ "{}markdown/gfm"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}markdown/no-\/html"{}:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3263}{}\doxysubsubsection{\texorpdfstring{Processors}{Processors}}\label{README.md_autotoc_md3263}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Processor Name}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Processor Name}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endhead
+{\ttfamily markdown}   &Extract fenced code blocks from the Markdown code so they can be linted separately.   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md3264}{}\doxysubsection{\texorpdfstring{Editor Integrations}{Editor Integrations}}\label{README.md_autotoc_md3264}
+\hypertarget{README.md_autotoc_md3265}{}\doxysubsubsection{\texorpdfstring{VSCode}{VSCode}}\label{README.md_autotoc_md3265}
+\href{https://github.com/microsoft/vscode-eslint}{\texttt{ {\ttfamily vscode-\/eslint}}} has built-\/in support for the Markdown processor.\hypertarget{README.md_autotoc_md3266}{}\doxysubsubsection{\texorpdfstring{Atom}{Atom}}\label{README.md_autotoc_md3266}
+The \href{https://atom.io/packages/linter-eslint}{\texttt{ {\ttfamily linter-\/eslint}}} package allows for linting within the \href{https://atom.io/}{\texttt{ Atom IDE}}.
+
+In order to see {\ttfamily @eslint/markdown} work its magic within Markdown code blocks in your Atom editor, you can go to {\ttfamily linter-\/eslint}\textquotesingle{}s settings and within "{}\+List of scopes to run ESLint on..."{}, add the cursor scope "{}source.\+gfm"{}.
+
+However, this reports a problem when viewing Markdown which does not have configuration, so you may wish to use the cursor scope "{}source.\+embedded.\+js"{}, but note that {\ttfamily @eslint/markdown} configuration comments and skip directives won\textquotesingle{}t work in this context.\hypertarget{README.md_autotoc_md3267}{}\doxysubsection{\texorpdfstring{File Name Details}{File Name Details}}\label{README.md_autotoc_md3267}
+This processor will use file names from blocks if a {\ttfamily filename} meta is present.
+
+For example, the following block will result in a parsed file name of {\ttfamily src/index.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\`{}\`{}\`{}js\ filename="{}src/index.js"{}}
+\DoxyCodeLine{export\ const\ value\ =\ "{}Hello,\ world!"{};}
+\DoxyCodeLine{\`{}\`{}\`{}}
+
+\end{DoxyCode}
+
+
+This can be useful for user configurations that include linting overrides for specific file paths. In this example, you could then target the specific code block in your configuration using {\ttfamily "{}file-\/name.\+md/\texorpdfstring{$\ast$}{*}src/index.\+js"{}}.\hypertarget{README.md_autotoc_md3268}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md3268}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ git\ clone\ https://github.com/eslint/markdown.git}
+\DoxyCodeLine{\$\ cd\ markdown}
+\DoxyCodeLine{\$\ npm\ install}
+\DoxyCodeLine{\$\ npm\ test}
+
+\end{DoxyCode}
+
+
+This project follows the \href{https://eslint.org/docs/latest/contribute/}{\texttt{ ESLint contribution guidelines}}.\hypertarget{README.md_autotoc_md3269}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md3269}
+The following companies, organizations, and individuals support ESLint\textquotesingle{}s ongoing maintenance and development. \href{https://eslint.org/donate}{\texttt{ Become a Sponsor}} to get your logo on our READMEs and \href{https://eslint.org/sponsors}{\texttt{ website}}.
+
+\doxysubsubsubsection*{Platinum Sponsors}
+
+\href{https://automattic.com}{\texttt{ }} \href{https://www.airbnb.com/}{\texttt{ }}
+
+\doxysubsubsubsection*{Gold Sponsors}
+
+\href{https://qlty.sh/}{\texttt{ }} \href{https://trunk.io/}{\texttt{ }}
+
+\doxysubsubsubsection*{Silver Sponsors}
+
+\href{https://vite.dev/}{\texttt{ }} \href{https://www.jetbrains.com/}{\texttt{ }} \href{https://liftoff.io/}{\texttt{ }} \href{https://americanexpress.io}{\texttt{ }} \href{https://stackblitz.com}{\texttt{ }}
+
+\doxysubsubsubsection*{Bronze Sponsors}
+
+\href{https://cybozu.co.jp/}{\texttt{ }} \href{https://www.crosswordsolver.org/anagram-solver/}{\texttt{ }} \href{https://icons8.com/}{\texttt{ }} \href{https://discord.com}{\texttt{ }} \href{https://www.gitbook.com}{\texttt{ }} \href{https://nolebase.ayaka.io}{\texttt{ }} \href{https://nx.dev}{\texttt{ }} \href{https://opensource.mercedes-benz.com/}{\texttt{ }} \href{https://herocoders.com}{\texttt{ }} \href{https://www.lambdatest.com}{\texttt{ }}
+
+\doxysubsubsubsection*{Technology Sponsors}
+
+Technology sponsors allow us to use their products and services for free as part of a contribution to the open source ecosystem and our work. 
+
+\href{https://netlify.com}{\texttt{ }} \href{https://algolia.com}{\texttt{ }} \href{https://1password.com}{\texttt{ }}

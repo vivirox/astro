@@ -1,0 +1,72 @@
+\doxysection{node\+\_\+modules/addressparser Directory Reference}
+\hypertarget{dir_6cc7a5a0c344f864c7629b880dd17f16}{}\label{dir_6cc7a5a0c344f864c7629b880dd17f16}\index{node\_modules/addressparser Directory Reference@{node\_modules/addressparser Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Parse e-\/mail address fields. Input can be a single address ({\ttfamily "{}andris@kreata.\+ee"{}}), a formatted address ({\ttfamily "{}\+Andris Reinman $<$andris@kreata.\+ee$>$"{}}), comma separated list of addresses ({\ttfamily "{}andris@kreata.\+ee, andris.\+reinman@kreata.\+ee"{}}), an address group ({\ttfamily "{}disclosed-\/recipients\+:andris@kreata.\+ee;"{}}) or a mix of all the formats.
+
+In addition to comma the semicolon is treated as the list delimiter as well (except when used in the group syntax), so a value {\ttfamily "{}andris@kreata.\+ee; andris.\+reinman@kreata.\+ee"{}} is identical to {\ttfamily "{}andris@kreata.\+ee, andris.\+reinman@kreata.\+ee"{}}.\hypertarget{README.md_autotoc_md7670}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md7670}
+Install with npm
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ addressparser}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7671}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md7671}
+Include the module
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ addressparser\ =\ require('addressparser');}
+
+\end{DoxyCode}
+
+
+Parse some address strings with {\ttfamily addressparser(field)}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ addresses\ =\ addressparser('andris\ <andris@tr.ee>');}
+\DoxyCodeLine{console.log(addresses);\ //\ [\{name:\ "{}andris"{},\ address:"{}andris@tr.ee"{}\}]}
+
+\end{DoxyCode}
+
+
+And when using groups
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{addressparser('Composers:"{}Bach,\ Sebastian"{}\ <sebu@example.com>,\ mozart@example.com\ (Mozzie);');}
+
+\end{DoxyCode}
+
+
+the result would be
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ "{}Composers"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ group:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ address:\ "{}sebu@example.com"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name:\ "{}Bach,\ Sebastian"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ address:\ "{}mozart@example.com"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name:\ "{}Mozzie"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+Be prepared though that groups might be nested. \end{quote}
+\hypertarget{README.md_autotoc_md7672}{}\doxysubsection{\texorpdfstring{Notes}{Notes}}\label{README.md_autotoc_md7672}
+This module does not decode any mime-\/word or punycode encoded strings, it is only a basic parser for parsing the base data, you need to decode the encoded parts later by yourself\hypertarget{README.md_autotoc_md7673}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md7673}
+{\bfseries{MIT}} 

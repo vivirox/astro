@@ -1,0 +1,174 @@
+\doxysection{node\+\_\+modules/axe-\/core Directory Reference}
+\hypertarget{dir_fdd796b9c83e93340b1a477d13c6f110}{}\label{dir_fdd796b9c83e93340b1a477d13c6f110}\index{node\_modules/axe-\/core Directory Reference@{node\_modules/axe-\/core Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_9b07e682fccaf444eed385e0ff5c3df7}{locales}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}\mbox{]}(LICENSE) \href{https://www.npmjs.com/package/axe-core}{\texttt{ }} \href{https://npm-stat.com/charts.html?package=axe-core&from=2017-01-01}{\texttt{ }} \href{https://github.com/dequelabs/axe-core/commits/develop}{\texttt{ }} \href{https://github.com/dequelabs/axe-core/graphs/contributors}{\texttt{ }} \href{https://accessibility.deque.com/axe-community}{\texttt{ }} \href{https://packagequality.com/\#?package=axe-core}{\texttt{ }}
+
+Axe is an accessibility testing engine for websites and other HTML-\/based user interfaces. It\textquotesingle{}s fast, secure, lightweight, and was built to seamlessly integrate with any existing test environment so you can automate accessibility testing alongside your regular functional testing.
+
+\href{https://hubs.ly/H0fsN0b0}{\texttt{ Sign up for axe news}} to get the latest on axe features, future releases, and events.\hypertarget{README.md_autotoc_md8603}{}\doxysubsection{\texorpdfstring{The Accessibility Rules}{The Accessibility Rules}}\label{README.md_autotoc_md8603}
+Axe-\/core has different types of rules, for WCAG 2.\+0, 2.\+1, 2.\+2 on level A, AA and AAA as well as a number of best practices that help you identify common accessibility practices like ensuring every page has an {\ttfamily h1} heading, and to help you avoid "{}gotchas"{} in ARIA like where an ARIA attribute you used will get ignored. The complete list of rules, grouped WCAG level and best practice, can be found in doc/rule-\/descriptions.md.
+
+With axe-\/core, you can find {\bfseries{on average 57\% of WCAG issues automatically}}. Additionally, axe-\/core will return elements as "{}incomplete"{} where axe-\/core could not be certain, and manual review is needed.
+
+To catch bugs earlier in the development cycle we recommend using the \href{https://marketplace.visualstudio.com/items?itemName=deque-systems.vscode-axe-linter}{\texttt{ axe-\/linter vscode extension}}. To improve test coverage even further we recommend the \href{https://www.youtube.com/watch?v=AtsX0dPCG_4&feature=youtu.be&ab_channel=DequeSystems}{\texttt{ intelligent guided tests}} in the \href{https://www.deque.com/axe/browser-extensions/}{\texttt{ axe Extension}}.\hypertarget{README.md_autotoc_md8604}{}\doxysubsection{\texorpdfstring{Getting started}{Getting started}}\label{README.md_autotoc_md8604}
+First download the package\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ axe-\/core\ -\/-\/save-\/dev}
+
+\end{DoxyCode}
+
+
+Now include the javascript file in each of your iframes in your fixtures or test systems\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}node\_modules/axe-\/core/axe.min.js"{}></script>}
+
+\end{DoxyCode}
+
+
+Now insert calls at each point in your tests where a new piece of UI becomes visible or exposed\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{axe}
+\DoxyCodeLine{\ \ .run()}
+\DoxyCodeLine{\ \ .then(results\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (results.violations.length)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ throw\ new\ Error('Accessibility\ issues\ found');}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .catch(err\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.error('Something\ bad\ happened:',\ err.message);}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8605}{}\doxysubsection{\texorpdfstring{Philosophy}{Philosophy}}\label{README.md_autotoc_md8605}
+The web can only become an accessible, inclusive space if developers are empowered to take responsibility for accessibility testing and accessible coding practices.
+
+Automated accessibility testing is a huge timesaver, it doesn\textquotesingle{}t require special expertise, and it allows teams to focus expert resources on the accessibility issues that really need them. Unfortunately, most accessibility tools are meant to be run on sites and applications that have reached the end of the development process and often don\textquotesingle{}t give clear or consistent results, causing frustration and delays just when you thought your product was ready to ship.
+
+Axe was built to reflect how web development actually works. It works with all modern browsers, tools, and testing environments a dev team might use. With axe, accessibility testing can be performed as part of your unit testing, integration testing, browser testing, and any other functional testing your team already performs on a day-\/to-\/day basis. Building accessibility testing into the early development process saves time, resources, and all kinds of frustration.\hypertarget{README.md_autotoc_md8606}{}\doxysubsection{\texorpdfstring{About axe -\/ our Manifesto}{About axe -\/ our Manifesto}}\label{README.md_autotoc_md8606}
+
+\begin{DoxyItemize}
+\item Axe is open source.
+\item It returns zero false positives (bugs notwithstanding).
+\item It\textquotesingle{}s designed to work on all modern browsers and with whatever tools, frameworks, libraries and environments you use today.
+\item It\textquotesingle{}s actively supported by \href{https://www.deque.com}{\texttt{ Deque Systems}}, a major accessibility vendor.
+\item It integrates with your existing functional/acceptance automated tests.
+\item It automatically determines which rules to run based on the evaluation context.
+\item Axe supports in-\/memory fixtures, static fixtures, integration tests, and iframes of infinite depth.
+\item Axe is highly configurable.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md8607}{}\doxysubsection{\texorpdfstring{Supported Browsers}{Supported Browsers}}\label{README.md_autotoc_md8607}
+The axe-\/core API fully supports the following browsers\+:
+
+
+\begin{DoxyItemize}
+\item Microsoft Edge v40 and above
+\item Google Chrome v42 and above
+\item Mozilla Firefox v38 and above
+\item Apple Safari v7 and above
+\item Internet Explorer v11 (DEPRECATED)
+\end{DoxyItemize}
+
+Support means that we will fix bugs and attempt to test each browser regularly. Only Chrome and Firefox are currently tested on every pull request.
+
+There is limited support for JSDOM. We will attempt to make all rules compatible with JSDOM but where this is not possible, we recommend turning those rules off. Currently the {\ttfamily color-\/contrast} rule is known not to work with JSDOM.
+
+We can only support environments where features are either natively supported or polyfilled correctly. We do not support the deprecated v0 Shadow DOM implementation.\hypertarget{README.md_autotoc_md8608}{}\doxysubsection{\texorpdfstring{Contents of the API Package}{Contents of the API Package}}\label{README.md_autotoc_md8608}
+The axe-\/core API package consists of\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily axe.\+js} -\/ the Java\+Script file that should be included in your web site under test (API)
+\item {\ttfamily axe.\+min.\+js} -\/ a minified version of the above file
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md8609}{}\doxysubsection{\texorpdfstring{Localization}{Localization}}\label{README.md_autotoc_md8609}
+Axe can be built using your local language. To do so, a localization file must be added to the {\ttfamily ./locales} directory. This file must be named in the following manner\+: {\ttfamily \texorpdfstring{$<$}{<}langcode\texorpdfstring{$>$}{>}.json}. To build axe using this locale, instead of the default, run axe with the {\ttfamily -\/-\/lang} flag, like so\+:
+
+{\ttfamily grunt build -\/-\/lang=nl}
+
+or equivalently\+:
+
+{\ttfamily npm run build -\/-\/ -\/-\/lang=nl}
+
+This will create a new build for axe, called {\ttfamily axe.\texorpdfstring{$<$}{<}lang\texorpdfstring{$>$}{>}.js} and {\ttfamily axe.\texorpdfstring{$<$}{<}lang\texorpdfstring{$>$}{>}.min.\+js}. If you want to build all localized versions, simply pass in {\ttfamily -\/-\/all-\/lang} instead. If you want to build multiple localized versions (but not all of them), you can pass in a comma-\/separated list of languages to the {\ttfamily -\/-\/lang} flag, like {\ttfamily -\/-\/lang=nl,ja}.
+
+To create a new translation for axe, start by running {\ttfamily grunt translate -\/-\/lang=\texorpdfstring{$<$}{<}langcode\texorpdfstring{$>$}{>}}. This will create a json file in the {\ttfamily ./locales} directory, with the default English text in it for you to translate. Alternatively, you could copy {\ttfamily ./locales/\+\_\+template.json}. We welcome any localization for axe-\/core. For details on how to contribute, see the Contributing section below. For details on the message syntax, see Check Message Template.
+
+To update an existing translation file, re-\/run {\ttfamily grunt translate -\/-\/lang=\texorpdfstring{$<$}{<}langcode\texorpdfstring{$>$}{>}}. This will add new messages used in English and remove messages which were not used in English.
+
+Additionally, locale can be applied at runtime by passing a {\ttfamily locale} object to {\ttfamily axe.\+configure()}. The locale object must be of the same shape as existing locales in the {\ttfamily ./locales} directory. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{axe.configure(\{}
+\DoxyCodeLine{\ \ locale:\ \{}
+\DoxyCodeLine{\ \ \ \ lang:\ 'de',}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ accesskeys:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ help:\ 'Der\ Wert\ des\ accesskey-\/Attributes\ muss\ einzigartig\ sein.'}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ checks:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ abstractrole:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ fail:\ 'Abstrakte\ ARIA-\/Rollen\ dürfen\ nicht\ direkt\ verwendet\ werden.'}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ 'aria-\/errormessage':\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Note:\ doT\ (https://github.com/olado/dot)\ templates\ are\ supported\ here.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ fail:\ 'Der\ Wert\ der\ aria-\/errormessage\ \$\{data.values\}`\ muss\ eine\ Technik\ verwenden,\ um\ die\ Message\ anzukündigen\ (z.\ B.,\ aria-\/live,\ aria-\/describedby,\ role=alert,\ etc.).'}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8610}{}\doxysubsubsection{\texorpdfstring{Supported Locales}{Supported Locales}}\label{README.md_autotoc_md8610}
+Axe-\/core supports the following locales. Do note that since locales are contributed by our community, they are not guaranteed to include all translations needed in a release.
+
+
+\begin{DoxyItemize}
+\item Basque
+\item Danish
+\item Dutch
+\item French
+\item German
+\item Hebrew
+\item Japanese
+\item Korean
+\item Norwegian (Bokmål)
+\item Polish
+\item Portuguese (Brazilian)
+\item Spanish
+\item Greek
+\item Italian
+\item Simplified Chinese
+\item Traditional Chinese
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md8611}{}\doxysubsection{\texorpdfstring{Updates \& Security}{Updates \& Security}}\label{README.md_autotoc_md8611}
+Axe-\/core has a new minor release every 3 to 5 months, which usually introduces new rules and features. We recommend scheduling time to upgrade to these versions. Security updates will be made available for minor version lines up to {\bfseries{18 months old}}.
+
+
+\begin{DoxyItemize}
+\item See release and support for details on the frequency of releases, long-\/term support and recommendations on upgrading axe-\/core.
+\item See backward compatibility for details on the types of changes different releases may introduce.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md8612}{}\doxysubsection{\texorpdfstring{Deque Trademarks Policy}{Deque Trademarks Policy}}\label{README.md_autotoc_md8612}
+DEQUE, DEQUELABS, AXE®, and AXE-\/\+CORE® are trademarks of Deque Systems, Inc. Use of the Deque trademarks must be in accordance with \href{https://www.deque.com/legal/trademarks/}{\texttt{ Deque\textquotesingle{}s trademark policy}}.\hypertarget{README.md_autotoc_md8613}{}\doxysubsection{\texorpdfstring{Supported ARIA Roles and Attributes.}{Supported ARIA Roles and Attributes.}}\label{README.md_autotoc_md8613}
+Refer axe-\/core ARIA support for a complete list of ARIA supported roles and attributes by axe.\hypertarget{README.md_autotoc_md8614}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md8614}
+Read the Proposing Axe-\/core Rules guide
+
+Read the documentation on the architecture
+
+Read the \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{documentation on contributing}\hypertarget{README.md_autotoc_md8615}{}\doxysubsection{\texorpdfstring{Projects using axe-\/core}{Projects using axe-\/core}}\label{README.md_autotoc_md8615}
+List of projects using axe-\/core\hypertarget{README.md_autotoc_md8616}{}\doxysubsection{\texorpdfstring{Acknowledgements}{Acknowledgements}}\label{README.md_autotoc_md8616}
+Thanks to Marat Dulin for his \href{https://www.npmjs.com/package/css-selector-parser}{\texttt{ css-\/selector-\/parser}} implementation which is included for shadow DOM support. Another thank you to the \href{https://github.com/mootools/slick/blob/master/Source/Slick.Parser.js}{\texttt{ Slick Parser}} implementers for their contribution, we have used some of their algorithms in our shadow DOM support code. Thanks to Lea Verou and Chris Lilley for their \href{https://colorjs.io/}{\texttt{ colorjs.\+io}} library which we have used for converting between color formats.\hypertarget{README.md_autotoc_md8617}{}\doxysubsection{\texorpdfstring{Licenses}{Licenses}}\label{README.md_autotoc_md8617}
+Axe-\/core is distributed under the \mbox{[}Mozilla Public License, version 2.\+0\mbox{]}(LICENSE). It comes bundled with several dependencies which are distributed under their own terms. (See \href{LICENSE-3RD-PARTY.txt}{\texttt{ LICENSE-\/3\+RD-\/\+PARTY.\+txt}}) 

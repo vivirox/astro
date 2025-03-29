@@ -1,0 +1,61 @@
+\doxysection{node\+\_\+modules/vscode-\/json-\/languageservice Directory Reference}
+\hypertarget{dir_e91289bb0262d1a610f9099d6b11ad04}{}\label{dir_e91289bb0262d1a610f9099d6b11ad04}\index{node\_modules/vscode-\/json-\/languageservice Directory Reference@{node\_modules/vscode-\/json-\/languageservice Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_168d0e97605a7950076645ab74134d66}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+JSON language service extracted from VSCode to be reused, e.\+g in the Monaco editor.
+
+\href{https://www.npmjs.org/package/vscode-json-languageservice}{\texttt{ }} \href{https://npmjs.org/package/vscode-json-languageservice}{\texttt{ }} \href{https://travis-ci.org/Microsoft/vscode-json-languageservice}{\texttt{ }} \href{https://opensource.org/licenses/MIT}{\texttt{ }}\hypertarget{README.md_autotoc_md35371}{}\doxysubsection{\texorpdfstring{Why?}{Why?}}\label{README.md_autotoc_md35371}
+The {\itshape vscode-\/json-\/languageservice} contains the language smarts behind the JSON editing experience of Visual Studio Code and the Monaco editor.
+
+
+\begin{DoxyItemize}
+\item {\itshape do\+Validation} analyses an input string and returns syntax and lint errors.
+\item {\itshape do\+Complete} provides completion proposals for a given location.
+\item {\itshape do\+Resolve} resolves a completion proposals.
+\item {\itshape do\+Hover} provides a hover text for a given location.
+\item {\itshape find\+Document\+Symbols} provides all symbols in the given document.
+\item {\itshape find\+Document\+Colors} provides all color symbols in the given document.
+\item {\itshape get\+Color\+Presentations} returns available color formats for a color symbol.
+\item {\itshape format} formats the code at the given range.
+\item {\itshape get\+Folding\+Ranges} gets folding ranges for the given document.
+\item {\itshape get\+Selection\+Ranges} gets selection ranges for a given location.
+\item {\itshape get\+Matching\+Schemas} matches a document against its schema and returns all AST nodes along with the matching sub schemas.
+\item {\itshape parse\+JSONDocument} creates a JSON document from source code.
+\item {\itshape new\+JSONDocument} creates a JSON document from an AST.
+\end{DoxyItemize}
+
+For the complete API see \href{./src/jsonLanguageService.ts}{\texttt{ json\+Language\+Service.\+ts}} and \href{./src/jsonLanguageTypes.ts}{\texttt{ json\+Language\+Types.\+ts}}\hypertarget{README.md_autotoc_md35372}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md35372}
+\begin{DoxyVerb}npm install --save vscode-json-languageservice
+\end{DoxyVerb}
+\hypertarget{README.md_autotoc_md35373}{}\doxysubsection{\texorpdfstring{Sample usage}{Sample usage}}\label{README.md_autotoc_md35373}
+See \href{./src/example/sample.ts}{\texttt{ sample.\+ts}} for an example on how to use the JSON language service.
+
+To run the sample use {\ttfamily yarn sample}\hypertarget{README.md_autotoc_md35374}{}\doxysubsection{\texorpdfstring{Development}{Development}}\label{README.md_autotoc_md35374}
+\begin{DoxyVerb}git clone https://github.com/microsoft/vscode-json-languageservice
+cd vscode-json-languageservice
+yarn
+\end{DoxyVerb}
+
+
+Use {\ttfamily yarn test} to compile and run tests\hypertarget{README.md_autotoc_md35375}{}\doxysubsubsection{\texorpdfstring{How can I run and debug the service?}{How can I run and debug the service?}}\label{README.md_autotoc_md35375}
+
+\begin{DoxyItemize}
+\item open the folder in VSCode.
+\item set breakpoints, e.\+g. in {\ttfamily json\+Completion.\+ts}
+\item run the Unit tests from the run viewlet and wait until a breakpoint is hit\+: 
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md35376}{}\doxysubsubsection{\texorpdfstring{How can I run and debug the service inside an instance of VSCode?}{How can I run and debug the service inside an instance of VSCode?}}\label{README.md_autotoc_md35376}
+
+\begin{DoxyItemize}
+\item run VSCode out of sources setup as described here\+: \href{https://github.com/Microsoft/vscode/wiki/How-to-Contribute}{\texttt{ https\+://github.\+com/\+Microsoft/vscode/wiki/\+How-\/to-\/\+Contribute}}
+\item use {\ttfamily yarn link vscode-\/json-\/languageservice} in {\ttfamily vscode/extensions/json-\/language-\/features/server} to run VSCode with the latest changes from {\ttfamily vscode-\/json-\/languageservice}
+\item run VSCode out of source ({\ttfamily vscode/scripts/code.\+sh\texorpdfstring{$\vert$}{|}bat}) and open a {\ttfamily .json} file
+\item in VSCode window that is open on the {\ttfamily vscode-\/json-\/languageservice} sources, run command {\ttfamily Debug\+: Attach to Node process} and pick the {\ttfamily code-\/oss} process with the {\ttfamily json-\/language-\/features} path 
+\item set breakpoints, e.\+g. in {\ttfamily json\+Completion.\+ts}
+\item in the instance run from sources, invoke code completion in the {\ttfamily .json} file 
+\end{DoxyItemize}

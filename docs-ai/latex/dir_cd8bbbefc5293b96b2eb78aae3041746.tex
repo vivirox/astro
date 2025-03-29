@@ -1,0 +1,566 @@
+\doxysection{node\+\_\+modules/@types/three/node\+\_\+modules/fflate Directory Reference}
+\hypertarget{dir_cd8bbbefc5293b96b2eb78aae3041746}{}\label{dir_cd8bbbefc5293b96b2eb78aae3041746}\index{node\_modules/"@types/three/node\_modules/fflate Directory Reference@{node\_modules/"@types/three/node\_modules/fflate Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+High performance (de)compression in an 8kB package\hypertarget{README.md_autotoc_md6872}{}\doxysubsection{\texorpdfstring{Why fflate?}{Why fflate?}}\label{README.md_autotoc_md6872}
+{\ttfamily fflate} (short for fast flate) is the {\bfseries{fastest, smallest, and most versatile}} pure Java\+Script compression and decompression library in existence, handily beating \href{https://npmjs.com/package/pako}{\texttt{ {\ttfamily pako}}}, \href{https://npmjs.com/package/tiny-inflate}{\texttt{ {\ttfamily tiny-\/inflate}}}, and \href{https://github.com/photopea/UZIP.js}{\texttt{ {\ttfamily UZIP.\+js}}} in performance benchmarks while being multiple times more lightweight. Its compression ratios are often better than even the original Zlib C library. It includes support for DEFLATE, GZIP, and Zlib data. Data compressed by {\ttfamily fflate} can be decompressed by other tools, and vice versa.
+
+In addition to the base decompression and compression APIs, {\ttfamily fflate} supports high-\/speed ZIP file archiving for an extra 3 kB. In fact, the compressor, in synchronous mode, compresses both more quickly and with a higher compression ratio than most compression software (even Info-\/\+ZIP, a C program), and in asynchronous mode it can utilize multiple threads to achieve over 3x the performance of any other utility.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{5}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily pako}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily tiny-\/inflate}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily UZIP.\+js}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily fflate}    }\\\cline{1-5}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily pako}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily tiny-\/inflate}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily UZIP.\+js}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily fflate}    }\\\cline{1-5}
+\endhead
+Decompression performance   &1x   &Up to 40\% slower   &{\bfseries{Up to 40\% faster}}   &{\bfseries{Up to 40\% faster}}    \\\cline{1-5}
+Compression performance   &1x   &N/A   &Up to 5\% faster   &{\bfseries{Up to 50\% faster}}    \\\cline{1-5}
+Base bundle size (minified)   &45.\+6kB   &{\bfseries{3kB (inflate only)}}   &14.\+2kB   &8kB {\bfseries{(3kB for inflate only)}}    \\\cline{1-5}
+Compression support   &✅   &❌   &✅   &✅    \\\cline{1-5}
+Thread/\+Worker safe   &✅   &✅   &❌   &✅    \\\cline{1-5}
+ZIP support   &❌   &❌   &✅   &✅    \\\cline{1-5}
+Streaming support   &✅   &❌   &❌   &✅    \\\cline{1-5}
+GZIP/\+Zlib support   &✅   &❌   &❌   &✅    \\\cline{1-5}
+Supports files up to 4GB   &✅   &❌   &❌   &✅    \\\cline{1-5}
+Doesn\textquotesingle{}t hang on error   &✅   &❌   &❌   &✅    \\\cline{1-5}
+Multi-\/thread/\+Asynchronous   &❌   &❌   &❌   &✅    \\\cline{1-5}
+Streaming ZIP support   &❌   &❌   &❌   &✅    \\\cline{1-5}
+Uses ES Modules   &❌   &❌   &❌   &✅   \\\cline{1-5}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md6873}{}\doxysubsection{\texorpdfstring{Demo}{Demo}}\label{README.md_autotoc_md6873}
+If you\textquotesingle{}d like to try {\ttfamily fflate} for yourself without installing it, you can take a look at the \href{https://101arrowz.github.io/fflate}{\texttt{ browser demo}}. Since {\ttfamily fflate} is a pure Java\+Script library, it works in both the browser and Node.\+js (see \href{https://github.com/101arrowz/fflate/\#browser-support}{\texttt{ Browser support}} for more info).\hypertarget{README.md_autotoc_md6874}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md6874}
+Install {\ttfamily fflate}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ fflate\ \#\ or\ yarn\ add\ fflate,\ or\ pnpm\ add\ fflate}
+
+\end{DoxyCode}
+
+
+Import\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ I\ will\ assume\ that\ you\ use\ the\ following\ for\ the\ rest\ of\ this\ guide}
+\DoxyCodeLine{import\ *\ as\ fflate\ from\ 'fflate';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ However,\ you\ should\ import\ ONLY\ what\ you\ need\ to\ minimize\ bloat.}
+\DoxyCodeLine{//\ So,\ if\ you\ just\ need\ GZIP\ compression\ support:}
+\DoxyCodeLine{import\ \{\ gzipSync\ \}\ from\ 'fflate';}
+\DoxyCodeLine{//\ Woo!\ You\ just\ saved\ 20\ kB\ off\ your\ bundle\ with\ one\ line.}
+
+\end{DoxyCode}
+
+
+If your environment doesn\textquotesingle{}t support ES Modules (e.\+g. Node.\+js)\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Try\ to\ avoid\ this\ when\ using\ fflate\ in\ the\ browser,\ as\ it\ will\ import}
+\DoxyCodeLine{//\ all\ of\ fflate's\ components,\ even\ those\ that\ you\ aren't\ using.}
+\DoxyCodeLine{const\ fflate\ =\ require('fflate');}
+
+\end{DoxyCode}
+
+
+If you want to load from a CDN in the browser\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!-\/-\/}
+\DoxyCodeLine{You\ should\ use\ either\ UNPKG\ or\ jsDelivr\ (i.e.\ only\ one\ of\ the\ following)}
+\DoxyCodeLine{}
+\DoxyCodeLine{Note\ that\ tree\ shaking\ is\ completely\ unsupported\ from\ the\ CDN.\ If\ you\ want}
+\DoxyCodeLine{a\ small\ build\ without\ build\ tools,\ please\ ask\ me\ and\ I\ will\ make\ one\ manually}
+\DoxyCodeLine{with\ only\ the\ features\ you\ need.\ This\ build\ is\ about\ 27kB,\ or\ 9kB\ gzipped.}
+\DoxyCodeLine{}
+\DoxyCodeLine{You\ may\ also\ want\ to\ specify\ the\ version,\ e.g.\ with\ fflate@0.4.8}
+\DoxyCodeLine{-\/-\/>}
+\DoxyCodeLine{<script\ src="{}https://unpkg.com/fflate"{}></script>}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/npm/fflate/umd/index.js"{}></script>}
+\DoxyCodeLine{<!-\/-\/\ Now,\ the\ global\ variable\ fflate\ contains\ the\ library\ -\/-\/>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<!-\/-\/\ If\ you're\ going\ buildless\ but\ want\ ESM,\ import\ from\ Skypack\ -\/-\/>}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ *\ as\ fflate\ from\ 'https://cdn.skypack.dev/fflate?min';}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+If you are using Deno\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Don't\ use\ the\ ?dts\ Skypack\ flag;\ it\ isn't\ necessary\ for\ Deno\ support}
+\DoxyCodeLine{//\ The\ @deno-\/types\ comment\ adds\ TypeScript\ typings}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ @deno-\/types="{}https://cdn.skypack.dev/fflate/lib/index.d.ts"{}}
+\DoxyCodeLine{import\ *\ as\ fflate\ from\ 'https://cdn.skypack.dev/fflate?min';}
+
+\end{DoxyCode}
+
+
+If your environment doesn\textquotesingle{}t support bundling\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Again,\ try\ to\ import\ just\ what\ you\ need}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ For\ the\ browser:}
+\DoxyCodeLine{import\ *\ as\ fflate\ from\ 'fflate/esm/browser.js';}
+\DoxyCodeLine{//\ If\ the\ standard\ ESM\ import\ fails\ on\ Node\ (i.e.\ older\ version):}
+\DoxyCodeLine{import\ *\ as\ fflate\ from\ 'fflate/esm';}
+
+\end{DoxyCode}
+
+
+And use\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ This\ is\ an\ ArrayBuffer\ of\ data}
+\DoxyCodeLine{const\ massiveFileBuf\ =\ await\ fetch('/aMassiveFile').then(}
+\DoxyCodeLine{\ \ res\ =>\ res.arrayBuffer()}
+\DoxyCodeLine{);}
+\DoxyCodeLine{//\ To\ use\ fflate,\ you\ need\ a\ Uint8Array}
+\DoxyCodeLine{const\ massiveFile\ =\ new\ Uint8Array(massiveFileBuf);}
+\DoxyCodeLine{//\ Note\ that\ Node.js\ Buffers\ work\ just\ fine\ as\ well:}
+\DoxyCodeLine{//\ const\ massiveFile\ =\ require('fs').readFileSync('aMassiveFile.txt');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Higher\ level\ means\ lower\ performance\ but\ better\ compression}
+\DoxyCodeLine{//\ The\ level\ ranges\ from\ 0\ (no\ compression)\ to\ 9\ (max\ compression)}
+\DoxyCodeLine{//\ The\ default\ level\ is\ 6}
+\DoxyCodeLine{const\ notSoMassive\ =\ fflate.zlibSync(massiveFile,\ \{\ level:\ 9\ \});}
+\DoxyCodeLine{const\ massiveAgain\ =\ fflate.unzlibSync(notSoMassive);}
+\DoxyCodeLine{const\ gzipped\ =\ fflate.gzipSync(massiveFile,\ \{}
+\DoxyCodeLine{\ \ //\ GZIP-\/specific:\ the\ filename\ to\ use\ when\ decompressed}
+\DoxyCodeLine{\ \ filename:\ 'aMassiveFile.txt',}
+\DoxyCodeLine{\ \ //\ GZIP-\/specific:\ the\ modification\ time.\ Can\ be\ a\ Date,\ date\ string,}
+\DoxyCodeLine{\ \ //\ or\ Unix\ timestamp}
+\DoxyCodeLine{\ \ mtime:\ '9/1/16\ 2:00\ PM'}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ {\ttfamily fflate} can autodetect a compressed file\textquotesingle{}s format as well\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ compressed\ =\ new\ Uint8Array(}
+\DoxyCodeLine{\ \ await\ fetch('/GZIPorZLIBorDEFLATE').then(res\ =>\ res.arrayBuffer())}
+\DoxyCodeLine{);}
+\DoxyCodeLine{//\ Above\ example\ with\ Node.js\ Buffers:}
+\DoxyCodeLine{//\ Buffer.from('H4sIAAAAAAAAE8tIzcnJBwCGphA2BQAAAA==',\ 'base64');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ decompressed\ =\ fflate.decompressSync(compressed);}
+
+\end{DoxyCode}
+
+
+Using strings is easy with {\ttfamily fflate}\textquotesingle{}s string conversion API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buf\ =\ fflate.strToU8('Hello\ world!');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ default\ compression\ method\ is\ gzip}
+\DoxyCodeLine{//\ Increasing\ mem\ may\ increase\ performance\ at\ the\ cost\ of\ memory}
+\DoxyCodeLine{//\ The\ mem\ ranges\ from\ 0\ to\ 12,\ where\ 4\ is\ the\ default}
+\DoxyCodeLine{const\ compressed\ =\ fflate.compressSync(buf,\ \{\ level:\ 6,\ mem:\ 8\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ When\ you\ need\ to\ decompress:}
+\DoxyCodeLine{const\ decompressed\ =\ fflate.decompressSync(compressed);}
+\DoxyCodeLine{const\ origText\ =\ fflate.strFromU8(decompressed);}
+\DoxyCodeLine{console.log(origText);\ //\ Hello\ world!}
+
+\end{DoxyCode}
+
+
+If you need to use an (albeit inefficient) binary string, you can set the second argument to {\ttfamily true}. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buf\ =\ fflate.strToU8('Hello\ world!');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ second\ argument,\ latin1,\ is\ a\ boolean\ that\ indicates\ that\ the\ data}
+\DoxyCodeLine{//\ is\ not\ Unicode\ but\ rather\ should\ be\ encoded\ and\ decoded\ as\ Latin-\/1.}
+\DoxyCodeLine{//\ This\ is\ useful\ for\ creating\ a\ string\ from\ binary\ data\ that\ isn't}
+\DoxyCodeLine{//\ necessarily\ valid\ UTF-\/8.\ However,\ binary\ strings\ are\ incredibly}
+\DoxyCodeLine{//\ inefficient\ and\ tend\ to\ double\ file\ size,\ so\ they're\ not\ recommended.}
+\DoxyCodeLine{const\ compressedString\ =\ fflate.strFromU8(}
+\DoxyCodeLine{\ \ fflate.compressSync(buf),}
+\DoxyCodeLine{\ \ true}
+\DoxyCodeLine{);}
+\DoxyCodeLine{const\ decompressed\ =\ fflate.decompressSync(}
+\DoxyCodeLine{\ \ fflate.strToU8(compressedString,\ true)}
+\DoxyCodeLine{);}
+\DoxyCodeLine{const\ origText\ =\ fflate.strFromU8(decompressed);}
+\DoxyCodeLine{console.log(origText);\ //\ Hello\ world!}
+
+\end{DoxyCode}
+
+
+You can use streams as well to incrementally add data to be compressed or decompressed\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ This\ example\ uses\ synchronous\ streams,\ but\ for\ the\ best\ experience}
+\DoxyCodeLine{//\ you'll\ definitely\ want\ to\ use\ asynchronous\ streams.}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ outStr\ =\ '';}
+\DoxyCodeLine{const\ gzipStream\ =\ new\ fflate.Gzip(\{\ level:\ 9\ \},\ (chunk,\ isLast)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ accumulate\ in\ an\ inefficient\ binary\ string\ (just\ an\ example)}
+\DoxyCodeLine{\ \ outStr\ +=\ fflate.strFromU8(chunk,\ true);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ You\ can\ also\ attach\ the\ data\ handler\ separately\ if\ you\ don't\ want\ to}
+\DoxyCodeLine{//\ do\ so\ in\ the\ constructor.}
+\DoxyCodeLine{gzipStream.ondata\ =\ (chunk,\ final)\ =>\ \{\ ...\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Since\ this\ is\ synchronous,\ all\ errors\ will\ be\ thrown\ by\ stream.push()}
+\DoxyCodeLine{gzipStream.push(chunk1);}
+\DoxyCodeLine{gzipStream.push(chunk2);}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ You\ should\ mark\ the\ last\ chunk\ by\ using\ true\ in\ the\ second\ argument}
+\DoxyCodeLine{//\ In\ addition\ to\ being\ necessary\ for\ the\ stream\ to\ work\ properly,\ this}
+\DoxyCodeLine{//\ will\ also\ set\ the\ isLast\ parameter\ in\ the\ handler\ to\ true.}
+\DoxyCodeLine{gzipStream.push(lastChunk,\ true);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(outStr);\ //\ The\ compressed\ binary\ string\ is\ now\ available}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ options\ parameter\ for\ compression\ streams\ is\ optional;\ you\ can}
+\DoxyCodeLine{//\ provide\ one\ parameter\ (the\ handler)\ or\ none\ at\ all\ if\ you\ set}
+\DoxyCodeLine{//\ deflateStream.ondata\ later.}
+\DoxyCodeLine{const\ deflateStream\ =\ new\ fflate.Deflate((chunk,\ final)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(chunk,\ final);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ If\ you\ want\ to\ create\ a\ stream\ from\ strings,\ use\ EncodeUTF8}
+\DoxyCodeLine{const\ utfEncode\ =\ new\ fflate.EncodeUTF8((data,\ final)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Chaining\ streams\ together\ is\ done\ by\ pushing\ to\ the}
+\DoxyCodeLine{\ \ //\ next\ stream\ in\ the\ handler\ for\ the\ previous\ stream}
+\DoxyCodeLine{\ \ deflateStream.push(data,\ final);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{utfEncode.push('Hello'.repeat(1000));}
+\DoxyCodeLine{utfEncode.push('\ '.repeat(100));}
+\DoxyCodeLine{utfEncode.push('world!'.repeat(10),\ true);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ deflateStream\ has\ logged\ the\ compressed\ data}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ inflateStream\ =\ new\ fflate.Inflate();}
+\DoxyCodeLine{inflateStream.ondata\ =\ (decompressedChunk,\ final)\ =>\ \{\ ...\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ stringData\ =\ '';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Streaming\ UTF-\/8\ decode\ is\ available\ too}
+\DoxyCodeLine{const\ utfDecode\ =\ new\ fflate.DecodeUTF8((data,\ final)\ =>\ \{}
+\DoxyCodeLine{\ \ stringData\ +=\ data;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Decompress\ streams\ auto-\/detect\ the\ compression\ method,\ as\ the}
+\DoxyCodeLine{//\ non-\/streaming\ decompress()\ method\ does.}
+\DoxyCodeLine{const\ dcmpStrm\ =\ new\ fflate.Decompress((chunk,\ final)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(chunk,\ 'was\ encoded\ with\ GZIP,\ Zlib,\ or\ DEFLATE');}
+\DoxyCodeLine{\ \ utfDecode.push(chunk,\ final);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{dcmpStrm.push(zlibJSONData1);}
+\DoxyCodeLine{dcmpStrm.push(zlibJSONData2,\ true);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ succeeds;\ the\ UTF-\/8\ decoder\ chained\ with\ the\ unknown\ compression\ format}
+\DoxyCodeLine{//\ stream\ to\ reach\ a\ string\ as\ a\ sink.}
+\DoxyCodeLine{console.log(JSON.parse(stringData));}
+
+\end{DoxyCode}
+
+
+You can create multi-\/file ZIP archives easily as well. Note that by default, compression is enabled for all files, which is not useful when ZIPping many PNGs, JPEGs, PDFs, etc. because those formats are already compressed. You should either override the level on a per-\/file basis or globally to avoid wasting resources. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Note\ that\ the\ asynchronous\ version\ (see\ below)\ runs\ in\ parallel\ and}
+\DoxyCodeLine{//\ is\ *much*\ (up\ to\ 3x)\ faster\ for\ larger\ archives.}
+\DoxyCodeLine{const\ zipped\ =\ fflate.zipSync(\{}
+\DoxyCodeLine{\ \ //\ Directories\ can\ be\ nested\ structures,\ as\ in\ an\ actual\ filesystem}
+\DoxyCodeLine{\ \ 'dir1':\ \{}
+\DoxyCodeLine{\ \ \ \ 'nested':\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ You\ can\ use\ Unicode\ in\ filenames}
+\DoxyCodeLine{\ \ \ \ \ \ '你好.txt':\ std('Hey\ there!')}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ You\ can\ also\ manually\ write\ out\ a\ directory\ path}
+\DoxyCodeLine{\ \ \ \ 'other/tmp.txt':\ new\ Uint8Array([97,\ 98,\ 99,\ 100])}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ //\ You\ can\ also\ provide\ compression\ options}
+\DoxyCodeLine{\ \ 'myImageData.bmp':\ [aMassiveFile,\ \{}
+\DoxyCodeLine{\ \ \ \ level:\ 9,}
+\DoxyCodeLine{\ \ \ \ mem:\ 12,}
+\DoxyCodeLine{\ \ \ \ //\ ZIP-\/specific:\ mtime\ works\ here\ too,\ defaults\ to\ current\ time}
+\DoxyCodeLine{\ \ \ \ mtime:\ new\ Date('10/20/2020')}
+\DoxyCodeLine{\ \ \}],}
+\DoxyCodeLine{\ \ //\ PNG\ is\ pre-\/compressed;\ no\ need\ to\ waste\ time}
+\DoxyCodeLine{\ \ 'superTinyFile.png':\ [aPNGFile,\ \{\ level:\ 0\ \}]}
+\DoxyCodeLine{\},\ \{}
+\DoxyCodeLine{\ \ //\ These\ options\ are\ the\ defaults\ for\ all\ files,\ but\ file-\/specific}
+\DoxyCodeLine{\ \ //\ options\ take\ precedence.}
+\DoxyCodeLine{\ \ level:\ 1,}
+\DoxyCodeLine{\ \ //\ Obfuscate\ mtime\ by\ default}
+\DoxyCodeLine{\ \ mtime:\ 0}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ If\ you\ write\ the\ zipped\ data\ to\ myzip.zip\ and\ unzip,\ the\ folder}
+\DoxyCodeLine{//\ structure\ will\ be\ outputted\ as:}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ myzip.zip\ (original\ file)}
+\DoxyCodeLine{//\ dir1}
+\DoxyCodeLine{//\ |-\/>\ nested}
+\DoxyCodeLine{//\ |\ \ \ |-\/>\ 你好.txt}
+\DoxyCodeLine{//\ |-\/>\ other}
+\DoxyCodeLine{//\ |\ \ \ |-\/>\ tmp.txt}
+\DoxyCodeLine{//\ myImageData.bmp}
+\DoxyCodeLine{//\ superTinyFile.bin}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ When\ decompressing,\ folders\ are\ not\ nested;\ all\ filepaths\ are\ fully}
+\DoxyCodeLine{//\ written\ out\ in\ the\ keys.\ For\ example,\ the\ return\ value\ may\ be:}
+\DoxyCodeLine{//\ \{\ 'nested/directory/a2.txt':\ Uint8Array(2)\ [97,\ 97]\ \})}
+\DoxyCodeLine{const\ decompressed\ =\ fflate.unzipSync(zipped);}
+
+\end{DoxyCode}
+
+
+If you need extremely high performance or custom ZIP compression formats, you can use the highly-\/extensible ZIP streams. They take streams as both input and output. You can even use custom compression/decompression algorithms from other libraries, as long as they \href{https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT}{\texttt{ are defined in the ZIP spec}} (see section 4.\+4.\+5). If you\textquotesingle{}d like more info on using custom compressors, \href{https://github.com/101arrowz/fflate/discussions}{\texttt{ feel free to ask}}. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ZIP\ object}
+\DoxyCodeLine{//\ Can\ also\ specify\ zip.ondata\ outside\ of\ the\ constructor}
+\DoxyCodeLine{const\ zip\ =\ new\ fflate.Zip((err,\ dat,\ final)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (!err)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ output\ of\ the\ streams}
+\DoxyCodeLine{\ \ \ \ console.log(dat,\ final);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ helloTxt\ =\ new\ fflate.ZipDeflate('hello.txt',\ \{}
+\DoxyCodeLine{\ \ level:\ 9}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Always\ add\ streams\ to\ ZIP\ archives\ before\ pushing\ to\ those\ streams}
+\DoxyCodeLine{zip.add(helloTxt);}
+\DoxyCodeLine{}
+\DoxyCodeLine{helloTxt.push(chunk1);}
+\DoxyCodeLine{//\ Last\ chunk}
+\DoxyCodeLine{helloTxt.push(chunk2,\ true);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ZipPassThrough\ is\ like\ ZipDeflate\ with\ level\ 0,\ but\ allows\ for\ tree\ shaking}
+\DoxyCodeLine{const\ nonStreamingFile\ =\ new\ fflate.ZipPassThrough('test.png');}
+\DoxyCodeLine{zip.add(nonStreamingFile);}
+\DoxyCodeLine{//\ If\ you\ have\ data\ already\ loaded,\ just\ .push(data,\ true)}
+\DoxyCodeLine{nonStreamingFile.push(pngData,\ true);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ You\ need\ to\ call\ .end()\ after\ finishing}
+\DoxyCodeLine{//\ This\ ensures\ the\ ZIP\ is\ valid}
+\DoxyCodeLine{zip.end();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Unzip\ object}
+\DoxyCodeLine{const\ unzipper\ =\ new\ fflate.Unzip();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ function\ will\ almost\ always\ have\ to\ be\ called.\ It\ is\ used\ to\ support}
+\DoxyCodeLine{//\ compression\ algorithms\ such\ as\ BZIP2\ or\ LZMA\ in\ ZIP\ files\ if\ just\ DEFLATE}
+\DoxyCodeLine{//\ is\ not\ enough\ (though\ it\ almost\ always\ is).}
+\DoxyCodeLine{//\ If\ your\ ZIP\ files\ are\ not\ compressed,\ this\ line\ is\ not\ needed.}
+\DoxyCodeLine{unzipper.register(fflate.UnzipInflate);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ neededFiles\ =\ ['file1.txt',\ 'example.json'];}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Can\ specify\ handler\ in\ constructor\ too}
+\DoxyCodeLine{unzipper.onfile\ =\ file\ =>\ \{}
+\DoxyCodeLine{\ \ //\ file.name\ is\ a\ string,\ file\ is\ a\ stream}
+\DoxyCodeLine{\ \ if\ (neededFiles.includes(file.name))\ \{}
+\DoxyCodeLine{\ \ \ \ file.ondata\ =\ (err,\ dat,\ final)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Stream\ output\ here}
+\DoxyCodeLine{\ \ \ \ \ \ console.log(dat,\ final);}
+\DoxyCodeLine{\ \ \ \ \};}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ console.log('Reading:',\ file.name);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ File\ sizes\ are\ sometimes\ not\ set\ if\ the\ ZIP\ file\ did\ not\ encode}
+\DoxyCodeLine{\ \ \ \ //\ them,\ so\ you\ may\ want\ to\ check\ that\ file.size\ !=\ undefined}
+\DoxyCodeLine{\ \ \ \ console.log('Compressed\ size',\ file.size);}
+\DoxyCodeLine{\ \ \ \ console.log('Decompressed\ size',\ file.originalSize);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ You\ should\ only\ start\ the\ stream\ if\ you\ plan\ to\ use\ it\ to\ improve}
+\DoxyCodeLine{\ \ \ \ //\ performance.\ Only\ after\ starting\ the\ stream\ will\ ondata\ be\ called.}
+\DoxyCodeLine{\ \ \ \ //\ This\ method\ will\ throw\ if\ the\ compression\ method\ hasn't\ been\ registered}
+\DoxyCodeLine{\ \ \ \ file.start();}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Try\ to\ keep\ under\ 5,000\ files\ per\ chunk\ to\ avoid\ stack\ limit\ errors}
+\DoxyCodeLine{//\ For\ example,\ if\ all\ files\ are\ a\ few\ kB,\ multi-\/megabyte\ chunks\ are\ OK}
+\DoxyCodeLine{//\ If\ files\ are\ mostly\ under\ 100\ bytes,\ 64kB\ chunks\ are\ the\ limit}
+\DoxyCodeLine{unzipper.push(zipChunk1);}
+\DoxyCodeLine{unzipper.push(zipChunk2);}
+\DoxyCodeLine{unzipper.push(zipChunk3,\ true);}
+
+\end{DoxyCode}
+
+
+As you may have guessed, there is an asynchronous version of every method as well. Unlike most libraries, this will cause the compression or decompression run in a separate thread entirely and automatically by using Web (or Node) Workers (as of now, Deno is unsupported). This means that the processing will not block the main thread at all.
+
+Note that there is a significant initial overhead to using workers of about 70ms, so it\textquotesingle{}s best to avoid the asynchronous API unless necessary. However, if you\textquotesingle{}re compressing multiple large files at once, or the synchronous API causes the main thread to hang for too long, the callback APIs are an order of magnitude better. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ gzip,\ zlib,\ AsyncGzip,\ zip,\ unzip,\ strFromU8,}
+\DoxyCodeLine{\ \ Zip,\ AsyncZipDeflate,\ Unzip,\ AsyncUnzipInflate}
+\DoxyCodeLine{\}\ from\ 'fflate';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Workers\ will\ work\ in\ almost\ any\ browser\ (even\ IE11!)}
+\DoxyCodeLine{//\ However,\ they\ fail\ below\ Node\ v12\ without\ the\ -\/-\/experimental-\/worker}
+\DoxyCodeLine{//\ CLI\ flag,\ and\ will\ fail\ entirely\ on\ Node\ below\ v10.}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ All\ of\ the\ async\ APIs\ use\ a\ node-\/style\ callback\ as\ so:}
+\DoxyCodeLine{const\ terminate\ =\ gzip(aMassiveFile,\ (err,\ data)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ The\ compressed\ data\ was\ likely\ corrupt,\ so\ we\ have\ to\ handle}
+\DoxyCodeLine{\ \ \ \ //\ the\ error.}
+\DoxyCodeLine{\ \ \ \ return;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ //\ Use\ data\ however\ you\ like}
+\DoxyCodeLine{\ \ console.log(data.length);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (needToCancel)\ \{}
+\DoxyCodeLine{\ \ //\ The\ return\ value\ of\ any\ of\ the\ asynchronous\ APIs\ is\ a\ function\ that,}
+\DoxyCodeLine{\ \ //\ when\ called,\ will\ immediately\ cancel\ the\ operation.\ The\ callback}
+\DoxyCodeLine{\ \ //\ will\ not\ be\ called.}
+\DoxyCodeLine{\ \ terminate();}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ If\ you\ wish\ to\ provide\ options,\ use\ the\ second\ argument.}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ consume\ option\ will\ render\ the\ data\ inside\ aMassiveFile\ unusable,}
+\DoxyCodeLine{//\ but\ can\ improve\ performance\ and\ dramatically\ reduce\ memory\ usage.}
+\DoxyCodeLine{zlib(aMassiveFile,\ \{\ consume:\ true,\ level:\ 9\ \},\ (err,\ data)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Use\ the\ data}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Asynchronous\ streams\ are\ similar\ to\ synchronous\ streams,\ but\ the}
+\DoxyCodeLine{//\ handler\ has\ the\ error\ that\ occurred\ (if\ any)\ as\ the\ first\ parameter,}
+\DoxyCodeLine{//\ and\ they\ don't\ block\ the\ main\ thread.}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Additionally,\ any\ buffers\ that\ are\ pushed\ in\ will\ be\ consumed\ and}
+\DoxyCodeLine{//\ rendered\ unusable;\ if\ you\ need\ to\ use\ a\ buffer\ you\ push\ in,\ you}
+\DoxyCodeLine{//\ should\ clone\ it\ first.}
+\DoxyCodeLine{const\ gzs\ =\ new\ AsyncGzip(\{\ level:\ 9,\ mem:\ 12,\ filename:\ 'hello.txt'\ \});}
+\DoxyCodeLine{let\ wasCallbackCalled\ =\ false;}
+\DoxyCodeLine{gzs.ondata\ =\ (err,\ chunk,\ final)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Note\ the\ new\ err\ parameter}
+\DoxyCodeLine{\ \ if\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Note\ that\ after\ this\ occurs,\ the\ stream\ becomes\ corrupt\ and\ must}
+\DoxyCodeLine{\ \ \ \ //\ be\ discarded.\ You\ can't\ continue\ pushing\ chunks\ and\ expect\ it\ to}
+\DoxyCodeLine{\ \ \ \ //\ work.}
+\DoxyCodeLine{\ \ \ \ console.error(err);}
+\DoxyCodeLine{\ \ \ \ return;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ wasCallbackCalled\ =\ true;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{gzs.push(chunk);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Since\ the\ stream\ is\ asynchronous,\ the\ callback\ will\ not\ be\ called}
+\DoxyCodeLine{//\ immediately.\ If\ such\ behavior\ is\ absolutely\ necessary\ (it\ shouldn't}
+\DoxyCodeLine{//\ be),\ use\ synchronous\ streams.}
+\DoxyCodeLine{console.log(wasCallbackCalled)\ //\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ To\ terminate\ an\ asynchronous\ stream's\ internal\ worker,\ call}
+\DoxyCodeLine{//\ stream.terminate().}
+\DoxyCodeLine{gzs.terminate();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ is\ way\ faster\ than\ zipSync\ because\ the\ compression\ of\ multiple}
+\DoxyCodeLine{//\ files\ runs\ in\ parallel.\ In\ fact,\ the\ fact\ that\ it's\ parallelized}
+\DoxyCodeLine{//\ makes\ it\ faster\ than\ most\ standalone\ ZIP\ CLIs.\ The\ effect\ is\ most}
+\DoxyCodeLine{//\ significant\ for\ multiple\ large\ files;\ less\ so\ for\ many\ small\ ones.}
+\DoxyCodeLine{zip(\{\ f1:\ aMassiveFile,\ 'f2.txt':\ anotherMassiveFile\ \},\ \{}
+\DoxyCodeLine{\ \ //\ The\ options\ object\ is\ still\ optional,\ you\ can\ still\ do\ just}
+\DoxyCodeLine{\ \ //\ zip(archive,\ callback)}
+\DoxyCodeLine{\ \ level:\ 6,}
+\DoxyCodeLine{\ \ mtime:\ 0}
+\DoxyCodeLine{\},\ (err,\ data)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Save\ the\ ZIP\ file}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ unzip\ is\ the\ only\ async\ function\ without\ support\ for\ consume\ option}
+\DoxyCodeLine{//\ Also\ parallelized,\ so\ unzip\ is\ also\ often\ much\ faster\ than\ unzipSync}
+\DoxyCodeLine{unzip(aMassiveZIPFile,\ (err,\ unzipped)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ If\ the\ archive\ has\ data.xml,\ log\ it\ here}
+\DoxyCodeLine{\ \ console.log(unzipped['data.xml']);}
+\DoxyCodeLine{\ \ //\ Conversion\ to\ string}
+\DoxyCodeLine{\ \ console.log(strFromU8(unzipped['data.xml']))}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Streaming\ ZIP\ archives\ can\ accept\ asynchronous\ streams.\ This\ automatically}
+\DoxyCodeLine{//\ uses\ multicore\ compression.}
+\DoxyCodeLine{const\ zip\ =\ new\ Zip();}
+\DoxyCodeLine{zip.ondata\ =\ (err,\ chunk,\ final)\ =>\ \{\ ...\ \};}
+\DoxyCodeLine{//\ The\ JSON\ and\ BMP\ are\ compressed\ in\ parallel}
+\DoxyCodeLine{const\ exampleFile\ =\ new\ AsyncZipDeflate('example.json');}
+\DoxyCodeLine{exampleFile.push(JSON.stringify(\{\ large:\ 'object'\ \}),\ true);}
+\DoxyCodeLine{const\ exampleFile2\ =\ new\ AsyncZipDeflate('example2.bmp',\ \{\ level:\ 9\ \});}
+\DoxyCodeLine{exampleFile.push(ec2a);}
+\DoxyCodeLine{exampleFile.push(ec2b);}
+\DoxyCodeLine{exampleFile.push(ec2c);}
+\DoxyCodeLine{...}
+\DoxyCodeLine{exampleFile.push(ec2Final,\ true);}
+\DoxyCodeLine{zip.end();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Streaming\ Unzip\ should\ register\ the\ asynchronous\ inflation\ algorithm}
+\DoxyCodeLine{//\ for\ parallel\ processing.}
+\DoxyCodeLine{const\ unzip\ =\ new\ Unzip(stream\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (stream.name.endsWith('.json'))\ \{}
+\DoxyCodeLine{\ \ \ \ stream.ondata\ =\ (err,\ chunk,\ final)\ =>\ \{\ ...\ \};}
+\DoxyCodeLine{\ \ \ \ stream.start();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ if\ (needToCancel)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ To\ cancel\ these\ streams,\ call\ .terminate()}
+\DoxyCodeLine{\ \ \ \ \ \ stream.terminate();}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{unzip.register(AsyncUnzipInflate);}
+\DoxyCodeLine{unzip.push(data,\ true);}
+
+\end{DoxyCode}
+
+
+See the \href{https://github.com/101arrowz/fflate/blob/master/docs/README.md}{\texttt{ documentation}} for more detailed information about the API.\hypertarget{README.md_autotoc_md6875}{}\doxysubsection{\texorpdfstring{Bundle size estimates}{Bundle size estimates}}\label{README.md_autotoc_md6875}
+Since {\ttfamily fflate} uses ES Modules, this table should give you a general idea of {\ttfamily fflate}\textquotesingle{}s bundle size for the features you need. The maximum bundle size that is possible with {\ttfamily fflate} is about 27kB if you use every single feature, but feature parity with {\ttfamily pako} is only around 10kB (as opposed to 45kB from {\ttfamily pako}). If your bundle size increases dramatically after adding {\ttfamily fflate}, please \href{https://github.com/101arrowz/fflate/issues/new}{\texttt{ create an issue}}.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Feature   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bundle size (minified)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Nearest competitor    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Feature   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bundle size (minified)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Nearest competitor    }\\\cline{1-3}
+\endhead
+Decompression   &3kB   &{\ttfamily tiny-\/inflate}    \\\cline{1-3}
+Compression   &5kB   &{\ttfamily UZIP.\+js}, 184\% larger    \\\cline{1-3}
+Async decompression   &4kB (1kB + raw decompression)   &N/A    \\\cline{1-3}
+Async compression   &6kB (1kB + raw compression)   &N/A    \\\cline{1-3}
+ZIP decompression   &5kB (2kB + raw decompression)   &{\ttfamily UZIP.\+js}, 184\% larger    \\\cline{1-3}
+ZIP compression   &7kB (2kB + raw compression)   &{\ttfamily UZIP.\+js}, 103\% larger    \\\cline{1-3}
+GZIP/\+Zlib decompression   &4kB (1kB + raw decompression)   &{\ttfamily pako}, 1040\% larger    \\\cline{1-3}
+GZIP/\+Zlib compression   &5kB (1kB + raw compression)   &{\ttfamily pako}, 812\% larger    \\\cline{1-3}
+Streaming decompression   &4kB (1kB + raw decompression)   &{\ttfamily pako}, 1040\% larger    \\\cline{1-3}
+Streaming compression   &5kB (1kB + raw compression)   &{\ttfamily pako}, 812\% larger   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md6876}{}\doxysubsection{\texorpdfstring{What makes {\ttfamily fflate} so fast?}{What makes {\ttfamily fflate} so fast?}}\label{README.md_autotoc_md6876}
+Many Java\+Script compression/decompression libraries exist. However, the most popular one, \href{https://npmjs.com/package/pako}{\texttt{ {\ttfamily pako}}}, is merely a clone of Zlib rewritten nearly line-\/for-\/line in Java\+Script. Although it is by no means poorly made, {\ttfamily pako} doesn\textquotesingle{}t recognize the many differences between Java\+Script and C, and therefore is suboptimal for performance. Moreover, even when minified, the library is 45 kB; it may not seem like much, but for anyone concerned with optimizing bundle size (especially library authors), it\textquotesingle{}s more weight than necessary.
+
+Note that there exist some small libraries like \href{https://npmjs.com/package/tiny-inflate}{\texttt{ {\ttfamily tiny-\/inflate}}} for solely decompression, and with a minified size of 3 kB, it can be appealing; however, its performance is lackluster, typically 40\% worse than {\ttfamily pako} in my tests.
+
+\href{https://github.com/photopea/UZIP.js}{\texttt{ {\ttfamily UZIP.\+js}}} is both faster (by up to 40\%) and smaller (14 kB minified) than {\ttfamily pako}, and it contains a variety of innovations that make it excellent for both performance and compression ratio. However, the developer made a variety of tiny mistakes and inefficient design choices that make it imperfect. Moreover, it does not support GZIP or Zlib data directly; one must remove the headers manually to use {\ttfamily UZIP.\+js}.
+
+So what makes {\ttfamily fflate} different? It takes the brilliant innovations of {\ttfamily UZIP.\+js} and optimizes them while adding direct support for GZIP and Zlib data. And unlike all of the above libraries, it uses ES Modules to allow for partial builds through tree shaking, meaning that it can rival even {\ttfamily tiny-\/inflate} in size while maintaining excellent performance. The end result is a library that, in total, weighs 8kB minified for the core build (3kB for decompression only and 5kB for compression only), is about 15\% faster than {\ttfamily UZIP.\+js} or up to 60\% faster than {\ttfamily pako}, and achieves the same or better compression ratio than the rest.
+
+If you\textquotesingle{}re willing to have 160 kB of extra weight and \href{https://caniuse.com/wasm}{\texttt{ much less browser support}}, you could theoretically achieve more performance than {\ttfamily fflate} with a WASM build of Zlib like \href{https://www.npmjs.com/package/wasm-flate}{\texttt{ {\ttfamily wasm-\/flate}}}. However, per some tests I conducted, the WASM interpreters of major browsers are not fast enough as of December 2020 for {\ttfamily wasm-\/flate} to be useful\+: {\ttfamily fflate} is around 2x faster.
+
+Before you decide that {\ttfamily fflate} is the end-\/all compression library, you should note that Java\+Script simply cannot rival the performance of a native program. If you\textquotesingle{}re only using Node.\+js, it\textquotesingle{}s probably better to use the \href{https://nodejs.org/api/zlib.html}{\texttt{ native Zlib bindings}}, which tend to offer the best performance. Though note that even against Zlib, {\ttfamily fflate} is only around 30\% slower in decompression and 10\% slower in compression, and can still achieve better compression ratios!\hypertarget{README.md_autotoc_md6877}{}\doxysubsection{\texorpdfstring{Browser support}{Browser support}}\label{README.md_autotoc_md6877}
+{\ttfamily fflate} makes heavy use of typed arrays ({\ttfamily Uint8\+Array}, {\ttfamily Uint16\+Array}, etc.). Typed arrays can be polyfilled at the cost of performance, but the most recent browser that doesn\textquotesingle{}t support them \href{https://caniuse.com/typedarrays}{\texttt{ is from 2011}}, so I wouldn\textquotesingle{}t bother.
+
+The asynchronous APIs also use {\ttfamily Worker}, which is not supported in a few browsers (however, the vast majority of browsers that support typed arrays support {\ttfamily Worker}).
+
+Other than that, {\ttfamily fflate} is completely ES3, meaning you probably won\textquotesingle{}t even need a bundler to use it.\hypertarget{README.md_autotoc_md6878}{}\doxysubsection{\texorpdfstring{Testing}{Testing}}\label{README.md_autotoc_md6878}
+You can validate the performance of {\ttfamily fflate} with {\ttfamily npm}/{\ttfamily yarn}/{\ttfamily pnpm} {\ttfamily test}. It validates that the module is working as expected, ensures the outputs are no more than 5\% larger than competitors at max compression, and outputs performance metrics to {\ttfamily test/results}.
+
+Note that the time it takes for the CLI to show the completion of each test is not representative of the time each package took, so please check the JSON output if you want accurate measurements.\hypertarget{README.md_autotoc_md6879}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md6879}
+This software is \href{./LICENSE}{\texttt{ MIT Licensed}}, with special exemptions for projects and organizations as noted below\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/SheetJS/}{\texttt{ Sheet\+JS}} is exempt from MIT licensing and may license any source code from this software under the BSD Zero Clause License 
+\end{DoxyItemize}

@@ -1,0 +1,452 @@
+\doxysection{node\+\_\+modules/@testing-\/library/dom Directory Reference}
+\hypertarget{dir_9ca98d264732b9564a1d7a65060479ba}{}\label{dir_9ca98d264732b9564a1d7a65060479ba}\index{node\_modules/"@testing-\/library/dom Directory Reference@{node\_modules/"@testing-\/library/dom Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_06ef49bef7a882d2eef0e1ad9d6db171}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+ \doxysubsection*{DOM Testing Library}
+
+
+
+\href{https://www.emojione.com/emoji/1f419}{\texttt{  }}
+
+
+
+Simple and complete DOM testing utilities that encourage good testing practices.
+
+
+
+\href{https://testing-library.com/dom}{\texttt{ {\bfseries{Read the docs}}}} \texorpdfstring{$\vert$}{|} \href{https://github.com/testing-library/testing-library-docs}{\texttt{ Edit the docs}}
+
+
+
+\DoxyHorRuler{0}
+
+
+\href{https://github.com/testing-library/dom-testing-library/actions?query=workflow\%3Avalidate}{\texttt{ }} \href{https://codecov.io/github/testing-library/dom-testing-library}{\texttt{ }} \href{https://www.npmjs.com/package/@testing-library/dom}{\texttt{ }} \href{http://www.npmtrends.com/@testing-library/dom}{\texttt{ }} \href{https://github.com/testing-library/dom-testing-library/blob/main/LICENSE}{\texttt{ }} \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_contributors}{!\mbox{[}All Contributors\mbox{]}\mbox{[}all-\/contributors-\/badge\mbox{]}} \href{http://makeapullrequest.com}{\texttt{ }} \href{https://github.com/testing-library/dom-testing-library/blob/main/CODE_OF_CONDUCT.md}{\texttt{ }} \href{https://discord.gg/testing-library}{\texttt{ }}
+
+\href{https://github.com/testing-library/dom-testing-library/watchers}{\texttt{ }} \href{https://github.com/testing-library/dom-testing-library/stargazers}{\texttt{ }} \href{https://twitter.com/intent/tweet?text=Check\%20out\%20dom-testing-library\%20by\%20\%40testing-library\%20https\%3A\%2F\%2Fgithub.com\%2Ftesting-library\%2Fdom-testing-library\%20\%F0\%9F\%91\%8D}{\texttt{ }}
+
+ \href{https://testingjavascript.com}{\texttt{  }} \hypertarget{README.md_autotoc_md6275}{}\doxysubsubsection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{README.md_autotoc_md6275}
+
+\begin{DoxyItemize}
+\item The Problem
+\item This Solution
+\item \doxylink{README.md_installation}{Installation}
+\item \doxylink{README.md_documentation}{Documentation}
+\item Guiding Principles
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_contributors}{Contributors}
+\item \doxylink{README.md_license}{LICENSE}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6276}{}\doxysubsubsection{\texorpdfstring{The Problem}{The Problem}}\label{README.md_autotoc_md6276}
+You want to write maintainable tests for your Web UI. As a part of this goal, you want your tests to avoid including implementation details of your components and rather focus on making your tests give you the confidence for which they are intended. As part of this, you want your testbase to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don\textquotesingle{}t break your tests and slow you and your team down.\hypertarget{README.md_autotoc_md6277}{}\doxysubsubsection{\texorpdfstring{This Solution}{This Solution}}\label{README.md_autotoc_md6277}
+The {\ttfamily DOM Testing Library} is a very light-\/weight solution for testing DOM nodes (whether simulated with \href{https://github.com/jsdom/jsdom}{\texttt{ {\ttfamily JSDOM}}} as provided by default with \href{https://facebook.github.io/jest}{\texttt{ Jest}} or in the browser). The main utilities it provides involve querying the DOM for nodes in a way that\textquotesingle{}s similar to how the user finds elements on the page. In this way, the library helps ensure your tests give you confidence in your UI code. The {\ttfamily DOM Testing Library}\textquotesingle{}s primary guiding principle is\+:
+
+\begin{quote}
+\href{https://twitter.com/kentcdodds/status/977018512689455106}{\texttt{ The more your tests resemble the way your software is used, the more confidence they can give you.}} \end{quote}
+\hypertarget{README.md_autotoc_md6278}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md6278}
+This module is distributed via \href{https://www.npmjs.com/}{\texttt{ npm}} which is bundled with \href{https://nodejs.org}{\texttt{ node}} and should be installed as one of your project\textquotesingle{}s {\ttfamily dev\+Dependencies}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ @testing-\/library/dom}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+\href{https://testing-library.com/docs/install}{\texttt{ {\bfseries{Docs}}}} \end{quote}
+\hypertarget{README.md_autotoc_md6279}{}\doxysubsubsection{\texorpdfstring{Documentation}{Documentation}}\label{README.md_autotoc_md6279}
+Read the docs (and discover framework and tool-\/specific implementations) at \href{https://testing-library.com/dom}{\texttt{ testing-\/library.\+com}}\hypertarget{README.md_autotoc_md6280}{}\doxysubsubsection{\texorpdfstring{Guiding Principles}{Guiding Principles}}\label{README.md_autotoc_md6280}
+\begin{quote}
+\href{https://twitter.com/kentcdodds/status/977018512689455106}{\texttt{ The more your tests resemble the way your software is used, the more confidence they can give you.}} \end{quote}
+
+
+We try to only expose methods and utilities that encourage you to write tests that closely resemble how your web pages are used.
+
+Utilities are included in this project based on the following guiding principles\+:
+
+
+\begin{DoxyEnumerate}
+\item If it relates to rendering components, it deals with DOM nodes rather than component instances, nor should it encourage dealing with component instances.
+\item It should be generally useful for testing the application components in the way the user would use it. We {\itshape are} making some trade-\/offs here because we\textquotesingle{}re using a computer and often a simulated browser environment, but in general, utilities should encourage tests that use the components the way they\textquotesingle{}re intended to be used.
+\item Utility implementations and APIs should be simple and flexible.
+\end{DoxyEnumerate}
+
+At the end of the day, what we want is for this library to be pretty light-\/weight, simple, and understandable.\hypertarget{README.md_autotoc_md6281}{}\doxysubsubsection{\texorpdfstring{Contributors}{Contributors}}\label{README.md_autotoc_md6281}
+Thanks goes to these people (\href{https://github.com/all-contributors/all-contributors\#emoji-key}{\texttt{ emoji key}})\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{7}{|X[-1]}|}
+\hline
+\PBS\centering \href{https://kentcdodds.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Kent C. Dodds}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=kentcdodds}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=kentcdodds}{\texttt{ 📖}} \href{\#infra-kentcdodds}{\texttt{ 🚇}} \href{https://github.com/testing-library/dom-testing-library/commits?author=kentcdodds}{\texttt{ ⚠️}} &\PBS\centering \href{https://argos-ci.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Greg Bergé}}}}}~\newline
+\href{\#ideas-neoziro}{\texttt{ 🤔}} &\PBS\centering \href{http://audiolion.github.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ryan Castner}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=audiolion}{\texttt{ 📖}} &\PBS\centering \href{https://www.dnlsandiego.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Daniel Sandiego}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=dnlsandiego}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/Miklet}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Paweł Mikołajczyk}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Miklet}{\texttt{ 💻}} &\PBS\centering \href{http://co.linkedin.com/in/alejandronanez/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alejandro Ñáñez Ortiz}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=alejandronanez}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/pbomb}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Matt Parrish}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Apbomb}{\texttt{ 🐛}} \href{https://github.com/testing-library/dom-testing-library/commits?author=pbomb}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=pbomb}{\texttt{ 📖}} \href{https://github.com/testing-library/dom-testing-library/commits?author=pbomb}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/wKovacs64}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Justin Hall}}}}}~\newline
+\href{\#platform-wKovacs64}{\texttt{ 📦}} &\PBS\centering \href{https://github.com/antoaravinth}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Anto Aravinth}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=antoaravinth}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=antoaravinth}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=antoaravinth}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/JonahMoses}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jonah Moses}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=JonahMoses}{\texttt{ 📖}} &\PBS\centering \href{http://team.thebrain.pro}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Łukasz Gandecki}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=lgandecki}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=lgandecki}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=lgandecki}{\texttt{ 📖}} &\PBS\centering \href{https://sompylasar.github.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ivan Babak}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Asompylasar}{\texttt{ 🐛}} \href{\#ideas-sompylasar}{\texttt{ 🤔}} \href{https://github.com/testing-library/dom-testing-library/commits?author=sompylasar}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=sompylasar}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/jday3}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jesse Day}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=jday3}{\texttt{ 💻}} &\PBS\centering \href{http://gnapse.github.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ernesto García}}}}}~\newline
+\href{\#question-gnapse}{\texttt{ 💬}} \href{https://github.com/testing-library/dom-testing-library/commits?author=gnapse}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=gnapse}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{http://jomaxx.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Josef Maxx Blake}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=jomaxx}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=jomaxx}{\texttt{ 📖}} \href{https://github.com/testing-library/dom-testing-library/commits?author=jomaxx}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/alecook}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alex Cook}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=alecook}{\texttt{ 📖}} \href{\#example-alecook}{\texttt{ 💡}} \href{https://github.com/testing-library/dom-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Aalecook}{\texttt{ 👀}} &\PBS\centering \href{https://github.com/dfcook}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Daniel Cook}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=dfcook}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=dfcook}{\texttt{ 📖}} \href{https://github.com/testing-library/dom-testing-library/commits?author=dfcook}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/thchia}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Thomas Chia}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Athchia}{\texttt{ 🐛}} \href{https://github.com/testing-library/dom-testing-library/commits?author=thchia}{\texttt{ 💻}} &\PBS\centering \href{http://timdeschryver.dev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tim Deschryver}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=timdeschryver}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=timdeschryver}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Atimdeschryver}{\texttt{ 👀}} &\PBS\centering \href{https://alexkrolick.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alex Krolick}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=alexkrolick}{\texttt{ 💻}} &\PBS\centering \href{http://www.maddijoyce.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Maddi Joyce}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=maddijoyce}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/npeterkamps}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Peter Kamps}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Anpeterkamps}{\texttt{ 🐛}} \href{https://github.com/testing-library/dom-testing-library/commits?author=npeterkamps}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=npeterkamps}{\texttt{ ⚠️}} &\PBS\centering \href{http://jonathanstoye.de}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jonathan Stoye}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=JonathanStoye}{\texttt{ 📖}} \href{https://github.com/testing-library/dom-testing-library/commits?author=JonathanStoye}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/yongdamsh}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sanghyeon Lee}}}}}~\newline
+\href{\#example-yongdamsh}{\texttt{ 💡}} &\PBS\centering \href{https://github.com/Dajust}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Justice Mba }}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Dajust}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=Dajust}{\texttt{ 📖}} \href{\#ideas-Dajust}{\texttt{ 🤔}} &\PBS\centering \href{https://github.com/wgcrouch}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Wayne Crouch}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=wgcrouch}{\texttt{ 💻}} &\PBS\centering \href{http://benjaminelliott.co.uk}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ben Elliott}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=benelliott}{\texttt{ 💻}} &\PBS\centering \href{http://nuances.co}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ruben Costa}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=rubencosta}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{http://rbrtsmith.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Robert Smith}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Arbrtsmith}{\texttt{ 🐛}} \href{\#ideas-rbrtsmith}{\texttt{ 🤔}} \href{https://github.com/testing-library/dom-testing-library/commits?author=rbrtsmith}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/dadamssg}{\texttt{ ~\newline
+\textsubscript{{\bfseries{dadamssg}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=dadamssg}{\texttt{ 💻}} &\PBS\centering \href{https://neilkistner.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Neil Kistner}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=wyze}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=wyze}{\texttt{ ⚠️}} &\PBS\centering \href{http://bdchauvette.net/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ben Chauvette}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=bdchauvette}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/JeffBaumgardt}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jeff Baumgardt}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=JeffBaumgardt}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=JeffBaumgardt}{\texttt{ 📖}} &\PBS\centering \href{http://matchai.me}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Matan Kushner}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=matchai}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=matchai}{\texttt{ 📖}} \href{\#ideas-matchai}{\texttt{ 🤔}} \href{https://github.com/testing-library/dom-testing-library/commits?author=matchai}{\texttt{ ⚠️}} &\PBS\centering \href{http://www.wendtedesigns.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alex Wendte}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=themostcolm}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=themostcolm}{\texttt{ 📖}} \href{https://github.com/testing-library/dom-testing-library/commits?author=themostcolm}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/ruffle1986}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tamas Fodor}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=ruffle1986}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/BenjaminEckardt}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Benjamin Eckardt}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=BenjaminEckardt}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/campbellr}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ryan Campbell}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=campbellr}{\texttt{ 📖}} &\PBS\centering \href{https://taylor-briggs.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Taylor Briggs}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=TaylorBriggs}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/jgoz}{\texttt{ ~\newline
+\textsubscript{{\bfseries{John Gozde}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=jgoz}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/chentsulin}{\texttt{ ~\newline
+\textsubscript{{\bfseries{C. T. Lin}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=chentsulin}{\texttt{ 📖}} &\PBS\centering \href{http://terrencewwong.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Terrence Wong}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=terrencewwong}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://www.ossfinder.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Soo Jae Hwang}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=misoguy}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/RoystonS}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Royston Shufflebotham}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3ARoystonS}{\texttt{ 🐛}} \href{https://github.com/testing-library/dom-testing-library/commits?author=RoystonS}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=RoystonS}{\texttt{ 📖}} \href{https://github.com/testing-library/dom-testing-library/commits?author=RoystonS}{\texttt{ ⚠️}} &\PBS\centering \href{http://www.vadimbrodsky.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Vadim Brodsky}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=VadimBrodsky}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/eunjae_lee}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Eunjae Lee}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=eunjae-lee}{\texttt{ 💻}} &\PBS\centering \href{http://davidpeter.me}{\texttt{ ~\newline
+\textsubscript{{\bfseries{David Peter}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=sarenji}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/@puemos}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Shy Alter}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=puemos}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=puemos}{\texttt{ 📖}} &\PBS\centering \href{https://lukaszmakuch.pl}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Łukasz Makuch}}}}}~\newline
+\href{\#platform-lukaszmakuch}{\texttt{ 📦}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/tylerthehaas}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tyler Haas}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=tylerthehaas}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=tylerthehaas}{\texttt{ ⚠️}} &\PBS\centering \href{http://vesalaakso.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Vesa Laakso}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=valscion}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=valscion}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/Tolsee}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tulsi Sapkota}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Tolsee}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/tnunes}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tiago Nunes}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=tnunes}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=tnunes}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/JaxCavalera}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jax\+Cavalera}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=JaxCavalera}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/pulls?q=is\%3Apr+reviewed-by\%3AJaxCavalera}{\texttt{ 👀}} &\PBS\centering \href{https://github.com/bopfer}{\texttt{ ~\newline
+\textsubscript{{\bfseries{bopfer}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=bopfer}{\texttt{ ⚠️}} &\PBS\centering \href{http://blog.alfrescian.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jan Pfitzner}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=alfrescian}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/dbismut}{\texttt{ ~\newline
+\textsubscript{{\bfseries{David}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=dbismut}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/diego_codes}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Diego Hernandez}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=diego-codes}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=diego-codes}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/foray1010}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alex Young}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=foray1010}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/paularmstrong}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Paul Armstrong}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=paularmstrong}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=paularmstrong}{\texttt{ ⚠️}} &\PBS\centering \href{https://hu.linkedin.com/pub/tamas-szabo/57/a4b/242}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tamás Szabó}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=szabototo89}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=szabototo89}{\texttt{ ⚠️}} &\PBS\centering \href{https://twitter.com/dylan_piercey}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dylan Piercey}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=DylanPiercey}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=DylanPiercey}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/michaellasky}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michael Lasky}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=michaellasky}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=michaellasky}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=michaellasky}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{https://twitter.com/sebsilbermann}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sebastian Silbermann}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=eps1lon}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=eps1lon}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=eps1lon}{\texttt{ 📖}} \href{\#infra-eps1lon}{\texttt{ 🚇}} \href{https://github.com/testing-library/dom-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Aeps1lon}{\texttt{ 👀}} &\PBS\centering \href{https://dylanvann.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dylan Vann}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=DylanVann}{\texttt{ 💻}} &\PBS\centering \href{https://afontcu.dev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Adrià Fontcuberta}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=afontcu}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=afontcu}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=afontcu}{\texttt{ 📖}} &\PBS\centering \href{http://thomlom.dev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Thomas Lombart}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=thomlom}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/SavePointSam}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sam Horton}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=SavePointSam}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=SavePointSam}{\texttt{ ⚠️}} &\PBS\centering \href{http://andrewhillcode.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Andrew Hill}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=andrewhillcode}{\texttt{ 💻}} &\PBS\centering \href{https://amann.me}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jan Amann}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=amannn}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=amannn}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/brapifra}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Brais Piñeiro}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=brapifra}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=brapifra}{\texttt{ ⚠️}} &\PBS\centering \href{https://www.dominykas.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dominykas Blyžė}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=dominykas}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=dominykas}{\texttt{ ⚠️}} &\PBS\centering \href{http://olzhas.de}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Olzhas Askar}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=pheeria}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=pheeria}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=pheeria}{\texttt{ 📖}} &\PBS\centering \href{https://twitter.com/mbelsky_}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Max Belsky}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=mbelsky}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=mbelsky}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/mmantel}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michael Mantel}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=mmantel}{\texttt{ ⚠️}} &\PBS\centering \href{https://tomdoes.tech/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tom Nagle}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=tomanagle}{\texttt{ 💻}} &\PBS\centering \href{http://westbrookjohnson.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Westbrook Johnson}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Westbrook}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://aziz.js.org}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Mohammad Aziz}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=iAziz786}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=iAziz786}{\texttt{ ⚠️}} &\PBS\centering \href{https://www.linkedin.com/in/seetdev/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{seetdev}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=seetdev}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=seetdev}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/xgbuils}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Xavier Garcia Buils}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=xgbuils}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=xgbuils}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/aw-davidson}{\texttt{ ~\newline
+\textsubscript{{\bfseries{aw-\/davidson}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=aw-davidson}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=aw-davidson}{\texttt{ ⚠️}} &\PBS\centering \href{https://michaeldeboey.be}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michaël De Boey}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=MichaelDeBoey}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/minh_ngvyen}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Minh Nguyen}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=NMinhNguyen}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/egilsster}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Egill Sveinbjörnsson}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=egilsster}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{http://pustovalov.dev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Pavel Pustovalov}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=pustovalov}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/apalaniuk}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Adam Palaniuk}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=apalaniuk}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=apalaniuk}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/Yama-Tomo}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Yama-\/\+Tomo}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Yama-Tomo}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=Yama-Tomo}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/airjp73}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Aaron Pettengill}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=airjp73}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=airjp73}{\texttt{ ⚠️}} &\PBS\centering \href{http://kwboyd.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Kate W. Boyd}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=kwboyd}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/rahulchavan30}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Rahul Suryakanth}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=rahulchavan30}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=rahulchavan30}{\texttt{ ⚠️}} &\PBS\centering \href{https://jamie.tokyo}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jamie}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=jamsinclair}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=jamsinclair}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/nstepien}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Nicolas Stepien}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=nstepien}{\texttt{ 💻}} &\PBS\centering \href{https://knpw.rs}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ken Powers}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=knpwrs}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/mzdunek93}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michał Zdunek}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=mzdunek93}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/Lagily}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ali Nasserzadeh}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Lagily}{\texttt{ 💻}} &\PBS\centering \href{https://darekkay.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Darek Kay}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=darekkay}{\texttt{ 📖}} \href{https://github.com/testing-library/dom-testing-library/commits?author=darekkay}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=darekkay}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/Lukas-Kullmann}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Lukas}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Lukas-Kullmann}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=Lukas-Kullmann}{\texttt{ ⚠️}} &\PBS\centering \href{https://twitter.com/pelotom}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tom Crockett}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=pelotom}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=pelotom}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/appleJax}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Kevin Brewer}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=appleJax}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=appleJax}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/benmonro}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ben Monro}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=benmonro}{\texttt{ 💻}} \href{\#ideas-benmonro}{\texttt{ 🤔}} \href{https://github.com/testing-library/dom-testing-library/commits?author=benmonro}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=benmonro}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/smeijer}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Stephan Meijer}}}}}~\newline
+\href{\#ideas-smeijer}{\texttt{ 🤔}} \href{https://github.com/testing-library/dom-testing-library/commits?author=smeijer}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=smeijer}{\texttt{ ⚠️}} &\PBS\centering \href{https://joaoforja.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{João Forja}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Jnforja}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=Jnforja}{\texttt{ ⚠️}} &\PBS\centering \href{https://nickmccurdy.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Nick Mc\+Curdy}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=nickmccurdy}{\texttt{ 📖}} \href{https://github.com/testing-library/dom-testing-library/commits?author=nickmccurdy}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=nickmccurdy}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Anickmccurdy}{\texttt{ 👀}} \href{\#infra-nickmccurdy}{\texttt{ 🚇}} &\PBS\centering \href{http://calebmer.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Caleb Meredith}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=calebmer}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/marcosvega91}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Marco Moretti}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=marcosvega91}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=marcosvega91}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Amarcosvega91}{\texttt{ 👀}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/tjefferson08}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Travis Jefferson}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=tjefferson08}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=tjefferson08}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/mdjastrzebski}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Maciej Jastrzebski}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Amdjastrzebski}{\texttt{ 🐛}} &\PBS\centering \href{https://commonlit.org}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Geoff Harcourt}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=geoffharcourt}{\texttt{ 💻}} &\PBS\centering \href{http://www.joshuakgoldberg.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Josh Goldberg}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=JoshuaKGoldberg}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=JoshuaKGoldberg}{\texttt{ ⚠️}} &\PBS\centering \href{http://kengregory.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ken Gregory}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=kgregory}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=kgregory}{\texttt{ ⚠️}} &\PBS\centering \href{https://www.jacobparis.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jacob Paris}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=JacobParis}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=JacobParis}{\texttt{ ⚠️}} &\PBS\centering \href{https://keiya01.github.io/portfolio}{\texttt{ ~\newline
+\textsubscript{{\bfseries{keiya sasaki}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=keiya01}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/idanen}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Idan Entin}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=idanen}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=idanen}{\texttt{ ⚠️}} &\PBS\centering \href{https://www.linkedin.com/in/deniz-susman-92b40a145/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Deniz Susman}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=DenrizSusam}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/delca85}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Bianca Del Carretto}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=delca85}{\texttt{ ⚠️}} \href{https://github.com/testing-library/dom-testing-library/commits?author=delca85}{\texttt{ 💻}} &\PBS\centering \href{https://www.linkedin.com/in/joshlalonde3/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Josh Lalonde}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=ryuuji3}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=ryuuji3}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/ipap360}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ioannis Papadopoulos}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=ipap360}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=ipap360}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/maxnewlands}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Maxwell Newlands}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=maxnewlands}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=maxnewlands}{\texttt{ ⚠️}} &\PBS\centering \href{http://www.jaredlux.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jared Luxenberg}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=jluxenberg}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=jluxenberg}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/Snizhana}{\texttt{ ~\newline
+\textsubscript{{\bfseries{snizhana}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Snizhana}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=Snizhana}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/micha149}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michael van Engelshoven}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Amicha149}{\texttt{ 👀}} &\PBS\centering \href{https://ashertuggle.wixsite.com/portfolio}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Asher Tuggle}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Aawesomeunleashed}{\texttt{ 🐛}} &\PBS\centering \href{https://github.com/winterlamon}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Winter La\+Mon}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=winterlamon}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=winterlamon}{\texttt{ ⚠️}} &\PBS\centering \href{http://victorandcode.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Victor Cordova}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=victorandcode}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=victorandcode}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/slowselfip}{\texttt{ ~\newline
+\textsubscript{{\bfseries{slowselfip}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Aslowselfip}{\texttt{ 🐛}} &\PBS\centering \href{https://github.com/Semigradsky}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dmitry Semigradsky}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Semigradsky}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/Tismas}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Adam}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Tismas}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=Tismas}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/balavishnuvj}{\texttt{ ~\newline
+\textsubscript{{\bfseries{balavishnuvj}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=balavishnuvj}{\texttt{ 💻}} &\PBS\centering \href{https://chriscolborne.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Chris Colborne}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=zorfling}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/romain-trotard}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Romain Trotard}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=romain-trotard}{\texttt{ 💻}} &\PBS\centering \href{http://www.thomasmarshall.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Thomas Marshall}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=thomasmarshall}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=thomasmarshall}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/johnjesse}{\texttt{ ~\newline
+\textsubscript{{\bfseries{johnjessewood}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Ajohnjesse}{\texttt{ 🐛}} \href{https://github.com/testing-library/dom-testing-library/commits?author=johnjesse}{\texttt{ 💻}} &\PBS\centering \href{https://codepen.io/ariperkkio/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ari Perkkiö}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3AAriPerkkio}{\texttt{ 🐛}} \href{https://github.com/testing-library/dom-testing-library/commits?author=AriPerkkio}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=AriPerkkio}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/nathanforce}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Nathan Force}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=nathanforce}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/ph-fritsche}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Philipp Fritsche}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=ph-fritsche}{\texttt{ 💻}} &\PBS\centering \href{https://medium.com/@renatoalencar}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Renato Alencar}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=renatoalencar}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=renatoalencar}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/SimenB}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Simen Bekkhus}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3ASimenB}{\texttt{ 🐛}} &\PBS\centering \href{https://github.com/gaearon}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dan Abramov}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Agaearon}{\texttt{ 🐛}} \href{https://github.com/testing-library/dom-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Agaearon}{\texttt{ 👀}} &\PBS\centering \href{https://matan.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Matan Borenkraout}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=MatanBobi}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/simcha90}{\texttt{ ~\newline
+\textsubscript{{\bfseries{simcha90}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=simcha90}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/amitmiran137}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Amit Miran}}}}}~\newline
+\href{\#infra-amitmiran137}{\texttt{ 🚇}} &\PBS\centering \href{https://github.com/leschdom}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dominik Lesch}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=leschdom}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/G-Rath}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Gareth Jones}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=G-Rath}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=G-Rath}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/riotrah}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Rayat Rahman}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=riotrah}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/savcni01}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Nik Savchenko}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=savcni01}{\texttt{ 💻}} &\PBS\centering \href{http://www.hawkeye.dog}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Kevin Fleischman}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=istateside}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/commits?author=istateside}{\texttt{ ⚠️}} &\PBS\centering \href{http://dfdx.us}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Beth Hitch}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=dfoverdx}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{http://www.jacklaurence.net}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jack Laurence}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=jacklaurencegaray}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/Lusito}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Santo\+Jambit}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=SantoJambit}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/mittalyashu}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Yashu Mittal}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=mittalyashu}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/IanVS}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ian Van\+Schooten}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=IanVS}{\texttt{ 💻}} &\PBS\centering \href{http://supervanya.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Vanya Prokopovich}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Asupervanya}{\texttt{ 🐛}} &\PBS\centering \href{https://github.com/jrnail23}{\texttt{ ~\newline
+\textsubscript{{\bfseries{James Nail}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Ajrnail23}{\texttt{ 🐛}} &\PBS\centering \href{https://github.com/robcaldecott}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Rob Caldecott}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Arobcaldecott}{\texttt{ 🐛}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/Dennis273}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dennis273}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Dennis273}{\texttt{ 💻}} &\PBS\centering \href{https://www.jacksonhardaker.dev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jackson Hardaker}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=jacksonhardaker}{\texttt{ ⚠️}} &\PBS\centering \href{https://www.robin-drexler.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Robin Drexler}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=robin-drexler}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/dolevoper}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Omer Dolev}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=dolevoper}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/Lirlev48}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Lirlev48}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=Lirlev48}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/kalmi}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tarnay Kálmán}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=kalmi}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/MynockSpit}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Than Hutchins}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=MynockSpit}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/raplemie}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Raphaël LEMIEUX}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=raplemie}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/arthurlvilasboas}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Arthur Lauck Vilas Boas}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=arthurlvilasboas}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/DaniAcu}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Daniel Acuña}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=DaniAcu}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/jlp-craigmorten}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Craig Morten}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=jlp-craigmorten}{\texttt{ 💻}} \href{\#question-jlp-craigmorten}{\texttt{ 💬}} &\PBS\centering \href{https://naor.dev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Naor Peled}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=naorpeled}{\texttt{ 💻}} &\PBS\centering \href{http://everlong.org/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Julien Wajsberg}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=julienw}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3Ajulienw}{\texttt{ 🐛}} &\PBS\centering \href{https://github.com/KevinBon}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Kevin BON}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=KevinBon}{\texttt{ 💻}} \href{https://github.com/testing-library/dom-testing-library/issues?q=author\%3AKevinBon}{\texttt{ 🐛}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/sieem}{\texttt{ ~\newline
+\textsubscript{{\bfseries{sieem}}}}}~\newline
+\href{https://github.com/testing-library/dom-testing-library/commits?author=sieem}{\texttt{ 💻}}   \\\cline{1-7}
+\end{longtabu}
+
+
+This project follows the \href{https://github.com/all-contributors/all-contributors}{\texttt{ all-\/contributors}} specification. Contributions of any kind welcome!\hypertarget{README.md_autotoc_md6282}{}\doxysubsubsection{\texorpdfstring{LICENSE}{LICENSE}}\label{README.md_autotoc_md6282}
+\mbox{[}MIT\mbox{]}(LICENSE) 

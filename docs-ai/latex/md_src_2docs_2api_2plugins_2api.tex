@@ -1,0 +1,361 @@
+\chapter{Plugin API Reference}
+\hypertarget{md_src_2docs_2api_2plugins_2api}{}\label{md_src_2docs_2api_2plugins_2api}\index{Plugin API Reference@{Plugin API Reference}}
+\label{md_src_2docs_2api_2plugins_2api_autotoc_md36922}%
+\Hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36922}%
+
+
+This document provides detailed information about the APIs available to plugin developers in the Gradiant EHR Integration Platform.\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36923}{}\doxysection{\texorpdfstring{Core APIs}{Core APIs}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36923}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36924}{}\doxysubsection{\texorpdfstring{Patient Management}{Patient Management}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36924}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36925}{}\doxysubsubsection{\texorpdfstring{{\ttfamily patients.\+search(criteria\+: Search\+Criteria)\+: Promise\texorpdfstring{$<$}{<}Patient\mbox{[}\mbox{]}\texorpdfstring{$>$}{>}}}{{\ttfamily patients.\+search(criteria\+: Search\+Criteria)\+: Promise\texorpdfstring{$<$}{<}Patient\mbox{[}\mbox{]}\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36925}
+Search for patients based on specified criteria.
+
+{\bfseries{Parameters\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ SearchCriteria\ \{}
+\DoxyCodeLine{\ \ name?:\ string}
+\DoxyCodeLine{\ \ dateOfBirth?:\ Date}
+\DoxyCodeLine{\ \ mrn?:\ string}
+\DoxyCodeLine{\ \ status?:\ 'active'\ |\ 'inactive'}
+\DoxyCodeLine{\ \ limit?:\ number}
+\DoxyCodeLine{\ \ offset?:\ number}
+\DoxyCodeLine{\ \ sort?:\ \{}
+\DoxyCodeLine{\ \ \ \ field:\ string}
+\DoxyCodeLine{\ \ \ \ order:\ 'asc'\ |\ 'desc'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Returns\+:}} Promise resolving to an array of Patient objects.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ patients\ =\ await\ api.patients.search(\{}
+\DoxyCodeLine{\ \ name:\ 'John',}
+\DoxyCodeLine{\ \ status:\ 'active',}
+\DoxyCodeLine{\ \ limit:\ 10,}
+\DoxyCodeLine{\ \ sort:\ \{}
+\DoxyCodeLine{\ \ \ \ field:\ 'lastName',}
+\DoxyCodeLine{\ \ \ \ order:\ 'asc'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36926}{}\doxysubsubsection{\texorpdfstring{{\ttfamily patients.\+get(id\+: string)\+: Promise\texorpdfstring{$<$}{<}Patient\texorpdfstring{$>$}{>}}}{{\ttfamily patients.\+get(id\+: string)\+: Promise\texorpdfstring{$<$}{<}Patient\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36926}
+Retrieve a specific patient by ID.
+
+{\bfseries{Parameters\+:}}
+\begin{DoxyItemize}
+\item {\ttfamily id}\+: The unique identifier of the patient
+\end{DoxyItemize}
+
+{\bfseries{Returns\+:}} Promise resolving to a Patient object.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ patient\ =\ await\ api.patients.get('123456')}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36927}{}\doxysubsubsection{\texorpdfstring{{\ttfamily patients.\+update(id\+: string, data\+: Partial\texorpdfstring{$<$}{<}Patient\texorpdfstring{$>$}{>})\+: Promise\texorpdfstring{$<$}{<}Patient\texorpdfstring{$>$}{>}}}{{\ttfamily patients.\+update(id\+: string, data\+: Partial\texorpdfstring{$<$}{<}Patient\texorpdfstring{$>$}{>})\+: Promise\texorpdfstring{$<$}{<}Patient\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36927}
+Update a patient\textquotesingle{}s information.
+
+{\bfseries{Parameters\+:}}
+\begin{DoxyItemize}
+\item {\ttfamily id}\+: The unique identifier of the patient
+\item {\ttfamily data}\+: Partial Patient object containing fields to update
+\end{DoxyItemize}
+
+{\bfseries{Returns\+:}} Promise resolving to the updated Patient object.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ updatedPatient\ =\ await\ api.patients.update('123456',\ \{}
+\DoxyCodeLine{\ \ phoneNumber:\ '+1-\/555-\/0123',}
+\DoxyCodeLine{\ \ email:\ 'john.doe@example.com'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36928}{}\doxysubsection{\texorpdfstring{Appointment Management}{Appointment Management}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36928}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36929}{}\doxysubsubsection{\texorpdfstring{{\ttfamily appointments.\+schedule(appointment\+: Appointment)\+: Promise\texorpdfstring{$<$}{<}Appointment\texorpdfstring{$>$}{>}}}{{\ttfamily appointments.\+schedule(appointment\+: Appointment)\+: Promise\texorpdfstring{$<$}{<}Appointment\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36929}
+Schedule a new appointment.
+
+{\bfseries{Parameters\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ Appointment\ \{}
+\DoxyCodeLine{\ \ patientId:\ string}
+\DoxyCodeLine{\ \ providerId:\ string}
+\DoxyCodeLine{\ \ startTime:\ Date}
+\DoxyCodeLine{\ \ endTime:\ Date}
+\DoxyCodeLine{\ \ type:\ string}
+\DoxyCodeLine{\ \ status:\ 'scheduled'\ |\ 'confirmed'\ |\ 'cancelled'}
+\DoxyCodeLine{\ \ notes?:\ string}
+\DoxyCodeLine{\ \ location?:\ \{}
+\DoxyCodeLine{\ \ \ \ id:\ string}
+\DoxyCodeLine{\ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Returns\+:}} Promise resolving to the created Appointment object.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ appointment\ =\ await\ api.appointments.schedule(\{}
+\DoxyCodeLine{\ \ patientId:\ '123456',}
+\DoxyCodeLine{\ \ providerId:\ 'dr-\/smith',}
+\DoxyCodeLine{\ \ startTime:\ new\ Date('2024-\/04-\/01T09:00:00Z'),}
+\DoxyCodeLine{\ \ endTime:\ new\ Date('2024-\/04-\/01T10:00:00Z'),}
+\DoxyCodeLine{\ \ type:\ 'initial-\/consultation',}
+\DoxyCodeLine{\ \ status:\ 'scheduled',}
+\DoxyCodeLine{\ \ notes:\ 'First\ visit'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36930}{}\doxysubsubsection{\texorpdfstring{{\ttfamily appointments.\+cancel(id\+: string, reason\+: string)\+: Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}}{{\ttfamily appointments.\+cancel(id\+: string, reason\+: string)\+: Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36930}
+Cancel an existing appointment.
+
+{\bfseries{Parameters\+:}}
+\begin{DoxyItemize}
+\item {\ttfamily id}\+: The unique identifier of the appointment
+\item {\ttfamily reason}\+: The reason for cancellation
+\end{DoxyItemize}
+
+{\bfseries{Returns\+:}} Promise resolving when the appointment is cancelled.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ api.appointments.cancel('apt-\/123',\ 'Patient\ request')}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36931}{}\doxysubsubsection{\texorpdfstring{{\ttfamily appointments.\+reschedule(id\+: string, new\+Time\+: Date)\+: Promise\texorpdfstring{$<$}{<}Appointment\texorpdfstring{$>$}{>}}}{{\ttfamily appointments.\+reschedule(id\+: string, new\+Time\+: Date)\+: Promise\texorpdfstring{$<$}{<}Appointment\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36931}
+Reschedule an existing appointment.
+
+{\bfseries{Parameters\+:}}
+\begin{DoxyItemize}
+\item {\ttfamily id}\+: The unique identifier of the appointment
+\item {\ttfamily new\+Time}\+: The new start time for the appointment
+\end{DoxyItemize}
+
+{\bfseries{Returns\+:}} Promise resolving to the updated Appointment object.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ rescheduled\ =\ await\ api.appointments.reschedule(}
+\DoxyCodeLine{\ \ 'apt-\/123',}
+\DoxyCodeLine{\ \ new\ Date('2024-\/04-\/02T14:00:00Z')}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36932}{}\doxysubsection{\texorpdfstring{Utility APIs}{Utility APIs}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36932}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36933}{}\doxysubsubsection{\texorpdfstring{Logger}{Logger}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36933}
+The logger API provides structured logging capabilities with HIPAA compliance.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ Logger\ \{}
+\DoxyCodeLine{\ \ info:\ (message:\ string,\ meta?:\ object)\ =>\ void}
+\DoxyCodeLine{\ \ warn:\ (message:\ string,\ meta?:\ object)\ =>\ void}
+\DoxyCodeLine{\ \ error:\ (message:\ string,\ error?:\ Error)\ =>\ void}
+\DoxyCodeLine{\ \ debug:\ (message:\ string,\ meta?:\ object)\ =>\ void}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{api.logger.info('Processing\ patient\ data',\ \{}
+\DoxyCodeLine{\ \ patientId:\ '123456',}
+\DoxyCodeLine{\ \ action:\ 'update'}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{api.logger.error('Failed\ to\ schedule\ appointment',\ new\ Error('Conflict'))}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36934}{}\doxysubsubsection{\texorpdfstring{Events}{Events}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36934}
+The events API allows plugins to subscribe to and emit events.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ Events\ \{}
+\DoxyCodeLine{\ \ on:\ (event:\ string,\ handler:\ (data:\ unknown)\ =>\ void)\ =>\ void}
+\DoxyCodeLine{\ \ off:\ (event:\ string,\ handler:\ (data:\ unknown)\ =>\ void)\ =>\ void}
+\DoxyCodeLine{\ \ emit:\ (event:\ string,\ data:\ any)\ =>\ void}
+\DoxyCodeLine{\ \ once:\ (event:\ string,\ handler:\ (data:\ unknown)\ =>\ void)\ =>\ void}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Subscribe\ to\ events}
+\DoxyCodeLine{api.events.on('appointment:created',\ (appointment)\ =>\ \{}
+\DoxyCodeLine{\ \ api.logger.info('New\ appointment\ created',\ \{\ id:\ appointment.id\ \})}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Emit\ events}
+\DoxyCodeLine{api.events.emit('custom:event',\ \{}
+\DoxyCodeLine{\ \ type:\ 'reminder',}
+\DoxyCodeLine{\ \ patientId:\ '123456'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36935}{}\doxysection{\texorpdfstring{Storage API}{Storage API}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36935}
+Plugins have access to a persistent key-\/value storage system.\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36936}{}\doxysubsection{\texorpdfstring{{\ttfamily storage.\+get(key\+: string)\+: Promise\texorpdfstring{$<$}{<}any\texorpdfstring{$>$}{>}}}{{\ttfamily storage.\+get(key\+: string)\+: Promise\texorpdfstring{$<$}{<}any\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36936}
+Retrieve a value from storage.
+
+{\bfseries{Parameters\+:}}
+\begin{DoxyItemize}
+\item {\ttfamily key}\+: The storage key
+\end{DoxyItemize}
+
+{\bfseries{Returns\+:}} Promise resolving to the stored value.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ settings\ =\ await\ api.storage.get('plugin-\/settings')}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36937}{}\doxysubsection{\texorpdfstring{{\ttfamily storage.\+set(key\+: string, value\+: any)\+: Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}}{{\ttfamily storage.\+set(key\+: string, value\+: any)\+: Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36937}
+Store a value in storage.
+
+{\bfseries{Parameters\+:}}
+\begin{DoxyItemize}
+\item {\ttfamily key}\+: The storage key
+\item {\ttfamily value}\+: The value to store
+\end{DoxyItemize}
+
+{\bfseries{Returns\+:}} Promise resolving when the value is stored.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ api.storage.set('plugin-\/settings',\ \{}
+\DoxyCodeLine{\ \ notificationsEnabled:\ true,}
+\DoxyCodeLine{\ \ theme:\ 'dark'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36938}{}\doxysection{\texorpdfstring{Configuration API}{Configuration API}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36938}
+Access and modify plugin configuration.\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36939}{}\doxysubsection{\texorpdfstring{{\ttfamily config.\+get()\+: Promise\texorpdfstring{$<$}{<}Plugin\+Config\texorpdfstring{$>$}{>}}}{{\ttfamily config.\+get()\+: Promise\texorpdfstring{$<$}{<}Plugin\+Config\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36939}
+Retrieve the plugin\textquotesingle{}s configuration.
+
+{\bfseries{Returns\+:}} Promise resolving to the plugin\textquotesingle{}s configuration object.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ config\ =\ await\ api.config.get()}
+\DoxyCodeLine{console.log(config.apiKey)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36940}{}\doxysubsection{\texorpdfstring{{\ttfamily config.\+update(updates\+: Partial\texorpdfstring{$<$}{<}Plugin\+Config\texorpdfstring{$>$}{>})\+: Promise\texorpdfstring{$<$}{<}Plugin\+Config\texorpdfstring{$>$}{>}}}{{\ttfamily config.\+update(updates\+: Partial\texorpdfstring{$<$}{<}Plugin\+Config\texorpdfstring{$>$}{>})\+: Promise\texorpdfstring{$<$}{<}Plugin\+Config\texorpdfstring{$>$}{>}}}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36940}
+Update the plugin\textquotesingle{}s configuration.
+
+{\bfseries{Parameters\+:}}
+\begin{DoxyItemize}
+\item {\ttfamily updates}\+: Partial configuration object with updates
+\end{DoxyItemize}
+
+{\bfseries{Returns\+:}} Promise resolving to the updated configuration.
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ updatedConfig\ =\ await\ api.config.update(\{}
+\DoxyCodeLine{\ \ apiKey:\ 'new-\/api-\/key',}
+\DoxyCodeLine{\ \ webhookUrl:\ 'https://example.com/webhook'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36941}{}\doxysection{\texorpdfstring{Error Handling}{Error Handling}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36941}
+All API methods may throw the following errors\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ PluginError\ extends\ Error\ \{}
+\DoxyCodeLine{\ \ constructor(}
+\DoxyCodeLine{\ \ \ \ message:\ string,}
+\DoxyCodeLine{\ \ \ \ public\ code:\ string,}
+\DoxyCodeLine{\ \ \ \ public\ details?:\ object}
+\DoxyCodeLine{\ \ )\ \{}
+\DoxyCodeLine{\ \ \ \ super(message)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Common\ error\ codes}
+\DoxyCodeLine{type\ ErrorCode\ =}
+\DoxyCodeLine{\ \ |\ 'PERMISSION\_DENIED'}
+\DoxyCodeLine{\ \ |\ 'RESOURCE\_NOT\_FOUND'}
+\DoxyCodeLine{\ \ |\ 'INVALID\_ARGUMENT'}
+\DoxyCodeLine{\ \ |\ 'RATE\_LIMIT\_EXCEEDED'}
+\DoxyCodeLine{\ \ |\ 'RESOURCE\_EXHAUSTED'}
+\DoxyCodeLine{\ \ |\ 'INTERNAL\_ERROR'}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ await\ api.patients.update('123456',\ \{}
+\DoxyCodeLine{\ \ \ \ status:\ 'invalid-\/status'}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{catch\ (error)\ \{}
+\DoxyCodeLine{\ \ if\ (error.code\ ===\ 'INVALID\_ARGUMENT')\ \{}
+\DoxyCodeLine{\ \ \ \ api.logger.error('Invalid\ patient\ status',\ error)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36942}{}\doxysection{\texorpdfstring{Rate Limits}{Rate Limits}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36942}
+Each API method has associated rate limits\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ rateLimits\ =\ \{}
+\DoxyCodeLine{\ \ 'patients.search':\ 100,\ //\ requests\ per\ minute}
+\DoxyCodeLine{\ \ 'patients.get':\ 300,\ //\ requests\ per\ minute}
+\DoxyCodeLine{\ \ 'patients.update':\ 50,\ //\ requests\ per\ minute}
+\DoxyCodeLine{\ \ 'appointments.schedule':\ 30,\ //\ requests\ per\ minute}
+\DoxyCodeLine{\ \ 'appointments.cancel':\ 30,\ //\ requests\ per\ minute}
+\DoxyCodeLine{\ \ 'appointments.reschedule':\ 30,\ //\ requests\ per\ minute}
+\DoxyCodeLine{\ \ 'storage.get':\ 500,\ //\ requests\ per\ minute}
+\DoxyCodeLine{\ \ 'storage.set':\ 100,\ //\ requests\ per\ minute}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36943}{}\doxysection{\texorpdfstring{Best Practices}{Best Practices}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36943}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Error Handling}}
+\begin{DoxyItemize}
+\item Always wrap API calls in try-\/catch blocks
+\item Log errors appropriately
+\item Implement retry logic for transient failures
+\item Provide meaningful error messages to users
+\end{DoxyItemize}
+\item {\bfseries{Performance}}
+\begin{DoxyItemize}
+\item Cache frequently accessed data
+\item Batch operations when possible
+\item Implement pagination for large result sets
+\item Monitor rate limit usage
+\end{DoxyItemize}
+\item {\bfseries{Security}}
+\begin{DoxyItemize}
+\item Never store sensitive data in plugin storage
+\item Validate all user input
+\item Use minimum required permissions
+\item Follow HIPAA compliance guidelines
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2api_2plugins_2api_autotoc_md36944}{}\doxysection{\texorpdfstring{See Also}{See Also}}\label{md_src_2docs_2api_2plugins_2api_autotoc_md36944}
+
+\begin{DoxyItemize}
+\item \doxysectlink{md_src_2docs_2api_2plugins_2lifecycle}{Plugin Lifecycle}{0}
+\item \doxylink{_s_e_c_u_r_i_t_y_8md}{Security Guidelines}
+\item \doxysectlink{md_src_2docs_2api_2plugins_2best-practices}{Best Practices}{0}
+\item Plugin Examples 
+\end{DoxyItemize}

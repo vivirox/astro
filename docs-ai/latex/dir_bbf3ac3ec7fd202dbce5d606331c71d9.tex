@@ -1,0 +1,202 @@
+\doxysection{node\+\_\+modules/logplease Directory Reference}
+\hypertarget{dir_bbf3ac3ec7fd202dbce5d606331c71d9}{}\label{dir_bbf3ac3ec7fd202dbce5d606331c71d9}\index{node\_modules/logplease Directory Reference@{node\_modules/logplease Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Simple Javascript logger for Node.\+js and Browsers
+
+{\bfseries{\href{https://ipfs.io/ipfs/QmRrBe2sp9ha2xypRoz5UDXqBJUB83NcecQU3QpqBJ5hkq}{\texttt{ DEMO}}}} {\itshape Open the dev tools to see the log output}
+
+
+
+{\itshape logplease} does two simple things\+: output log messages to the console and/or to a file (Node.\+js only) and display the log messages with nice colors. Inspired by \href{https://github.com/stritti/log4js}{\texttt{ log4js}} and \href{https://github.com/visionmedia/debug}{\texttt{ debug}}.\hypertarget{README.md_autotoc_md22041}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md22041}
+
+\begin{DoxyItemize}
+\item Log messages to stdout or a file
+\item Customize the log messages
+\item Log levels
+\item Colors!
+\item Work in Node.\+js and Browsers
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md22042}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md22042}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ logplease}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22043}{}\doxysubsubsection{\texorpdfstring{Examples}{Examples}}\label{README.md_autotoc_md22043}
+\hypertarget{README.md_autotoc_md22044}{}\doxysubsubsubsection{\texorpdfstring{Node.\+js}{Node.\+js}}\label{README.md_autotoc_md22044}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ run\ example}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22045}{}\doxysubsubsubsection{\texorpdfstring{Browser}{Browser}}\label{README.md_autotoc_md22045}
+Open {\ttfamily example/index.\+html} in your browser.\hypertarget{README.md_autotoc_md22046}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md22046}
+\hypertarget{README.md_autotoc_md22047}{}\doxysubsubsection{\texorpdfstring{Node.\+js / Webpack}{Node.\+js / Webpack}}\label{README.md_autotoc_md22047}
+See \href{https://github.com/haadcode/logplease/blob/master/example/example.js}{\texttt{ example/example.\+js}} for details.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Logger\ =\ require('logplease');}
+\DoxyCodeLine{const\ logger\ =\ Logger.create('utils');}
+\DoxyCodeLine{logger.debug(`This\ is\ a\ debug\ message`);}
+\DoxyCodeLine{logger.log(`This\ is\ a\ log\ message`);\ //\ alias\ for\ debug()}
+\DoxyCodeLine{logger.info(`This\ is\ a\ info\ message`);}
+\DoxyCodeLine{logger.warn(`This\ is\ a\ warning`);}
+\DoxyCodeLine{logger.error(`This\ is\ an\ error`);}
+
+\end{DoxyCode}
+
+
+Default log level is {\ttfamily DEBUG}. You can set the log level with {\ttfamily LOG} environment variable, eg. {\ttfamily LOG=debug node example/example.\+js}. See Log levels for available options.
+
+There\textquotesingle{}s an ES5 build in {\ttfamily es5/} which you can include if you need ES5 compatibility, eg. with Webpack.\hypertarget{README.md_autotoc_md22048}{}\doxysubsubsection{\texorpdfstring{Browser}{Browser}}\label{README.md_autotoc_md22048}
+Copy {\ttfamily dist/logplease.\+min.\+js} to your javascripts directory and include it in your html. See \href{https://github.com/haadcode/logplease/blob/master/example/index.html}{\texttt{ example/index.\+html}} for details.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<body>}
+\DoxyCodeLine{\ \ <script\ type="{}text/javascript"{}\ src="{}dist/logplease.min.js"{}\ charset="{}utf-\/8"{}></script>}
+\DoxyCodeLine{\ \ <script\ type="{}text/javascript"{}>}
+\DoxyCodeLine{\ \ \ \ var\ logger\ \ =\ Logger.create('logger\ name');}
+\DoxyCodeLine{\ \ \ \ logger.debug(`This\ is\ a\ debug\ message`);}
+\DoxyCodeLine{\ \ \ \ logger.log(`This\ is\ a\ log\ message`);\ //\ alias\ for\ debug()}
+\DoxyCodeLine{\ \ \ \ logger.info(`This\ is\ a\ info\ message`);}
+\DoxyCodeLine{\ \ \ \ logger.warn(`This\ is\ a\ warning`);}
+\DoxyCodeLine{\ \ \ \ logger.error(`This\ is\ an\ error`);}
+\DoxyCodeLine{\ \ </script>}
+\DoxyCodeLine{</body>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22049}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md22049}
+You can customize your logger to not show the timestamp or the log level, disable colors or specify, if using a log file, to overwrite the log file at start instead of appending to it.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Logger\ =\ require('logplease');}
+\DoxyCodeLine{const\ logger\ =\ Logger.create("{}logger\ name"{},\ options);}
+
+\end{DoxyCode}
+
+
+Available options and defaults\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ useColors:\ true,\ \ \ \ \ //\ Enable\ colors}
+\DoxyCodeLine{\ \ color:\ Colors.White,\ //\ Set\ the\ color\ of\ the\ logger}
+\DoxyCodeLine{\ \ showTimestamp:\ true,\ //\ Display\ timestamp\ in\ the\ log\ message}
+\DoxyCodeLine{\ \ useLocalTime:\ false,\ //\ Display\ timestamp\ in\ local\ timezone}
+\DoxyCodeLine{\ \ showLevel:\ true,\ \ \ \ \ //\ Display\ log\ level\ in\ the\ log\ message}
+\DoxyCodeLine{\ \ filename:\ null,\ \ \ \ \ \ //\ Set\ file\ path\ to\ log\ to\ a\ file}
+\DoxyCodeLine{\ \ appendFile:\ true,\ \ \ \ //\ Append\ logfile\ instead\ of\ overwriting}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22050}{}\doxysubsubsection{\texorpdfstring{Log levels}{Log levels}}\label{README.md_autotoc_md22050}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{DEBUG}
+\DoxyCodeLine{INFO}
+\DoxyCodeLine{WARN}
+\DoxyCodeLine{ERROR}
+\DoxyCodeLine{NONE}
+
+\end{DoxyCode}
+
+
+Default log level is {\ttfamily DEBUG}. To display errors only, use {\ttfamily ERROR}. To turn off all logging, use {\ttfamily NONE}.\hypertarget{README.md_autotoc_md22051}{}\doxysubsubsection{\texorpdfstring{Global log level}{Global log level}}\label{README.md_autotoc_md22051}
+You can set a global log level to display only the wanted log messages.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Logger\ =\ require('logplease');}
+\DoxyCodeLine{Logger.setLogLevel(Logger.LogLevels.ERROR)\ //\ Show\ only\ ERROR\ messages}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{Logger.setLogLevel('ERROR')}
+
+\end{DoxyCode}
+
+
+You can mute all loggers with log level {\itshape NONE}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Logger.setLogLevel(Logger.LogLevels.NONE)\ //\ output\ nothing}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22052}{}\doxysubsubsection{\texorpdfstring{Global log file}{Global log file}}\label{README.md_autotoc_md22052}
+You can set a global log file to which all loggers write to.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Logger\ =\ require('logplease');}
+\DoxyCodeLine{const\ logger1\ =\ Logger.create("{}logger1"{});}
+\DoxyCodeLine{const\ logger2\ =\ Logger.create("{}logger2"{});}
+\DoxyCodeLine{Logger.setLogfile('debug.log');}
+\DoxyCodeLine{logger1.debug('hello\ world\ 1');}
+\DoxyCodeLine{logger2.debug('hello\ world\ 2');}
+\DoxyCodeLine{//\ ==>\ 'debug.log'\ contains\ both\ log\ messages}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22053}{}\doxysubsubsection{\texorpdfstring{Log file}{Log file}}\label{README.md_autotoc_md22053}
+You can set a log file per logger.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Logger\ =\ require('logplease');}
+\DoxyCodeLine{const\ logger1\ =\ Logger.create("{}logger1"{},\ \{\ filename:\ 'debug.log'\ \});}
+\DoxyCodeLine{const\ logger2\ =\ Logger.create("{}logger2"{});}
+\DoxyCodeLine{logger1.debug('hello\ world\ 1');\ //\ writes\ to\ 'debug.log'}
+\DoxyCodeLine{logger2.debug('hello\ world\ 2');\ //\ doesn't\ write\ to\ 'debug.log'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22054}{}\doxysubsubsection{\texorpdfstring{Colors}{Colors}}\label{README.md_autotoc_md22054}
+You can set a color per logger. Default color in Node.\+js is {\itshape White} and in the browser {\itshape Black}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Logger\ =\ require('logplease');}
+\DoxyCodeLine{const\ logger\ =\ Logger.create("{}logger\ name"{},\ \{\ color:\ Logger.Colors.Yellow\ \});}
+
+\end{DoxyCode}
+
+
+Colors\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Black,\ Red,\ Green,\ Yellow,\ Blue,\ Magenta,\ Cyan,\ Grey,\ White}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22055}{}\doxysubsubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md22055}
+Run tests with\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ test}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22056}{}\doxysubsubsection{\texorpdfstring{Build}{Build}}\label{README.md_autotoc_md22056}
+Install build dependencies\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install}
+
+\end{DoxyCode}
+
+
+Build the browser distributable and examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ run\ build}
+
+\end{DoxyCode}
+
+
+Build the browser distributable only\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ run\ build:dist}
+
+\end{DoxyCode}
+
+
+The distributable file will be located in \href{https://github.com/haadcode/logplease/tree/master/dist}{\texttt{ dist/logplease.\+min.\+js}}
+
+Build the browser example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ run\ build:examples}
+
+\end{DoxyCode}
+ 

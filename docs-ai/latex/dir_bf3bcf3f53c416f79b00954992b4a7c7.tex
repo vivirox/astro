@@ -1,0 +1,71 @@
+\doxysection{node\+\_\+modules/@eslint/js Directory Reference}
+\hypertarget{dir_bf3bcf3f53c416f79b00954992b4a7c7}{}\label{dir_bf3bcf3f53c416f79b00954992b4a7c7}\index{node\_modules/"@eslint/js Directory Reference@{node\_modules/"@eslint/js Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}npm version\mbox{]}(\href{https://img.shields.io/npm/v/@eslint/js.svg}{\texttt{ https\+://img.\+shields.\+io/npm/v/@eslint/js.\+svg}})\mbox{]}(\href{https://www.npmjs.com/package/@eslint/js}{\texttt{ https\+://www.\+npmjs.\+com/package/@eslint/js}})\hypertarget{README.md_autotoc_md3249}{}\doxysubsection{\texorpdfstring{ESLint Java\+Script Plugin}{ESLint Java\+Script Plugin}}\label{README.md_autotoc_md3249}
+\href{https://eslint.org}{\texttt{ Website}} \texorpdfstring{$\vert$}{|} \href{https://eslint.org/docs/latest/use/configure}{\texttt{ Configure ESLint}} \texorpdfstring{$\vert$}{|} \href{https://eslint.org/docs/rules/}{\texttt{ Rules}} \texorpdfstring{$\vert$}{|} \href{https://eslint.org/docs/latest/contribute}{\texttt{ Contributing}} \texorpdfstring{$\vert$}{|} \href{https://twitter.com/geteslint}{\texttt{ Twitter}} \texorpdfstring{$\vert$}{|} \href{https://eslint.org/chat}{\texttt{ Chatroom}}
+
+The beginnings of separating out Java\+Script-\/specific functionality from ESLint.
+
+Right now, this plugin contains two configurations\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily recommended} -\/ enables the rules recommended by the ESLint team (the replacement for {\ttfamily "{}eslint\+:recommended"{}})
+\item {\ttfamily all} -\/ enables all ESLint rules (the replacement for {\ttfamily "{}eslint\+:all"{}})
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md3250}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md3250}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @eslint/js\ -\/D}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3251}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3251}
+Use in your {\ttfamily eslint.\+config.\+js} file anytime you want to extend one of the configs\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defineConfig\ \}\ from\ "{}eslint/config"{};}
+\DoxyCodeLine{import\ js\ from\ "{}@eslint/js"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig([}
+\DoxyCodeLine{\ \ \ \ //\ apply\ recommended\ rules\ to\ JS\ files}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ "{}your-\/project/recommended-\/rules"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}**/*.js"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ js,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ extends:\ ["{}js/recommended"{}],}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ apply\ recommended\ rules\ to\ JS\ files\ with\ an\ override}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ "{}your-\/project/recommended-\/rules-\/with-\/override"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}**/*.js"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ js,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ extends:\ ["{}js/recommended"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}no-\/unused-\/vars"{}:\ "{}warn"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ apply\ all\ rules\ to\ JS\ files}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ "{}your-\/project/all-\/rules"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}**/*.js"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ js,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ extends:\ ["{}js/all"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}no-\/unused-\/vars"{}:\ "{}warn"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{]);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3252}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md3252}
+MIT 

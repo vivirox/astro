@@ -1,0 +1,192 @@
+\doxysection{node\+\_\+modules/unist-\/util-\/visit-\/parents Directory Reference}
+\hypertarget{dir_4bd29f3b9b46c90f9e16fdddb4f02647}{}\label{dir_4bd29f3b9b46c90f9e16fdddb4f02647}\index{node\_modules/unist-\/util-\/visit-\/parents Directory Reference@{node\_modules/unist-\/util-\/visit-\/parents Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/unist-util-visit-parents/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/unist-util-visit-parents}{\texttt{ }} \href{https://www.npmjs.com/package/unist-util-visit-parents}{\texttt{ }} \href{https://bundlejs.com/?q=unist-util-visit-parents}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/unist}{\texttt{ unist}} utility to walk the tree with a stack of parents.\hypertarget{readme.md_autotoc_md34400}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md34400}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}visit\+Parents(tree\mbox{[}, test\mbox{]}, visitor\mbox{[}, reverse\mbox{]})\`{}
+\item \`{}\+CONTINUE\`{}
+\item \`{}\+EXIT\`{}
+\item \`{}\+SKIP\`{}
+\item \`{}\+Action\`{}
+\item \`{}\+Action\+Tuple\`{}
+\item \`{}\+Build\+Visitor\`{}
+\item \doxylink{README.md_index}{\`{}\+Index\`{}}
+\item \`{}\+Test\`{}
+\item \`{}\+Visitor\`{}
+\item \`{}\+Visitor\+Result\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34401}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md34401}
+This is a very important utility for working with unist as it lets you walk the tree.\hypertarget{readme.md_autotoc_md34402}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md34402}
+You can use this utility when you want to walk the tree and want to know about every parent of each node. You can use \href{https://github.com/syntax-tree/unist-util-visit}{\texttt{ {\ttfamily unist-\/util-\/visit}}} if you don’t care about the entire stack of parents.\hypertarget{readme.md_autotoc_md34403}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md34403}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ unist-\/util-\/visit-\/parents}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{visitParents\}\ from\ 'https://esm.sh/unist-\/util-\/visit-\/parents@6'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{visitParents\}\ from\ 'https://esm.sh/unist-\/util-\/visit-\/parents@6?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34404}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md34404}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{visitParents\}\ from\ 'unist-\/util-\/visit-\/parents'}
+\DoxyCodeLine{import\ \{fromMarkdown\}\ from\ 'mdast-\/util-\/from-\/markdown'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromMarkdown('Some\ *emphasis*,\ **strong**,\ and\ \`{}code`.')}
+\DoxyCodeLine{}
+\DoxyCodeLine{visitParents(tree,\ 'strong',\ function\ (node,\ ancestors)\ \{}
+\DoxyCodeLine{\ \ console.log(node.type,\ ancestors.map(ancestor\ =>\ ancestor.type))}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{strong\ ['root',\ 'paragraph']}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34405}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md34405}
+This package exports the identifiers \`{}\+CONTINUE\`{}, \`{}\+EXIT\`{}, \`{}\+SKIP\`{}, and \`{}visit\+Parents\`{}. There is no default export.\hypertarget{readme.md_autotoc_md34406}{}\doxysubsubsection{\texorpdfstring{{\ttfamily visit\+Parents(tree\mbox{[}, test\mbox{]}, visitor\mbox{[}, reverse\mbox{]})}}{{\ttfamily visit\+Parents(tree\mbox{[}, test\mbox{]}, visitor\mbox{[}, reverse\mbox{]})}}}\label{readme.md_autotoc_md34406}
+Visit nodes, with ancestral information.
+
+This algorithm performs {\itshape \href{https://github.com/syntax-tree/unist\#depth-first-traversal}{\texttt{ depth-\/first}}} {\itshape \href{https://github.com/syntax-tree/unist\#tree-traversal}{\texttt{ tree traversal}}} in {\itshape \href{https://github.com/syntax-tree/unist\#preorder}{\texttt{ preorder}}} ({\bfseries{NLR}}) or if {\ttfamily reverse} is given, in {\itshape reverse preorder} ({\bfseries{NRL}}).
+
+You can choose for which nodes {\ttfamily visitor} is called by passing a {\ttfamily test}. For complex tests, you should test yourself in {\ttfamily visitor}, as it will be faster and will have improved type information.
+
+Walking the tree is an intensive task. Make use of the return values of the visitor when possible. Instead of walking a tree multiple times, walk it once, use \href{https://github.com/syntax-tree/unist-util-is}{\texttt{ {\ttfamily unist-\/util-\/is}}} to check if a node matches, and then perform different operations.
+
+You can change the tree. See \`{}\+Visitor\`{} for more info.\hypertarget{readme.md_autotoc_md34407}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md34407}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — tree to traverse
+\item {\ttfamily test} (\`{}\+Test\`{}, optional) — \href{https://github.com/syntax-tree/unist-util-is}{\texttt{ {\ttfamily unist-\/util-\/is}}}-\/compatible test
+\item {\ttfamily visitor} (\`{}\+Visitor\`{}) — handle each node
+\item {\ttfamily reverse} ({\ttfamily boolean}, default\+: {\ttfamily false}) — traverse in reverse preorder (NRL) instead of the default preorder (NLR)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34408}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md34408}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md34409}{}\doxysubsubsection{\texorpdfstring{{\ttfamily CONTINUE}}{{\ttfamily CONTINUE}}}\label{readme.md_autotoc_md34409}
+Continue traversing as normal ({\ttfamily true}).\hypertarget{readme.md_autotoc_md34410}{}\doxysubsubsection{\texorpdfstring{{\ttfamily EXIT}}{{\ttfamily EXIT}}}\label{readme.md_autotoc_md34410}
+Stop traversing immediately ({\ttfamily false}).\hypertarget{readme.md_autotoc_md34411}{}\doxysubsubsection{\texorpdfstring{{\ttfamily SKIP}}{{\ttfamily SKIP}}}\label{readme.md_autotoc_md34411}
+Do not traverse this node’s children (`\textquotesingle{}skip'\`{}).\hypertarget{readme.md_autotoc_md34412}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Action}}{{\ttfamily Action}}}\label{readme.md_autotoc_md34412}
+Union of the action types (Type\+Script type).\hypertarget{readme.md_autotoc_md34413}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md34413}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Action\ =\ typeof\ CONTINUE\ |\ typeof\ EXIT\ |\ typeof\ SKIP}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34414}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Action\+Tuple}}{{\ttfamily Action\+Tuple}}}\label{readme.md_autotoc_md34414}
+List with one or two values, the first an action, the second an index (Type\+Script type).\hypertarget{readme.md_autotoc_md34415}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md34415}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ ActionTuple\ =\ [}
+\DoxyCodeLine{\ \ (Action\ |\ null\ |\ undefined\ |\ void)?,}
+\DoxyCodeLine{\ \ (Index\ |\ null\ |\ undefined)?}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34416}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Build\+Visitor}}{{\ttfamily Build\+Visitor}}}\label{readme.md_autotoc_md34416}
+Build a typed {\ttfamily Visitor} function from a tree and a test (Type\+Script type).
+
+It will infer which values are passed as {\ttfamily node} and which as {\ttfamily parents}.\hypertarget{readme.md_autotoc_md34417}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type parameters}{Type parameters}}\label{readme.md_autotoc_md34417}
+
+\begin{DoxyItemize}
+\item {\ttfamily Tree} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}, default\+: {\ttfamily Node}) — tree type
+\item {\ttfamily Check} (\`{}\+Test\`{}, default\+: {\ttfamily Test}) — test type
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34418}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md34418}
+\`{}\+Visitor\`{}.\hypertarget{readme.md_autotoc_md34419}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Index}}{{\ttfamily Index}}}\label{readme.md_autotoc_md34419}
+Move to the sibling at {\ttfamily index} next (after node itself is completely traversed) (Type\+Script type).
+
+Useful if mutating the tree, such as removing the node the visitor is currently on, or any of its previous siblings. Results less than {\ttfamily 0} or greater than or equal to {\ttfamily children.\+length} stop traversing the parent.\hypertarget{readme.md_autotoc_md34420}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md34420}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Index\ =\ number}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34421}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Test}}{{\ttfamily Test}}}\label{readme.md_autotoc_md34421}
+\href{https://github.com/syntax-tree/unist-util-is}{\texttt{ {\ttfamily unist-\/util-\/is}}} compatible test (Type\+Script type).\hypertarget{readme.md_autotoc_md34422}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Visitor}}{{\ttfamily Visitor}}}\label{readme.md_autotoc_md34422}
+Handle a node (matching {\ttfamily test}, if given) (Type\+Script type).
+
+Visitors are free to transform {\ttfamily node}. They can also transform the parent of node (the last of {\ttfamily ancestors}).
+
+Replacing {\ttfamily node} itself, if {\ttfamily SKIP} is not returned, still causes its descendants to be walked (which is a bug).
+
+When adding or removing previous siblings of {\ttfamily node} (or next siblings, in case of reverse), the {\ttfamily Visitor} should return a new {\ttfamily Index} to specify the sibling to traverse after {\ttfamily node} is traversed. Adding or removing next siblings of {\ttfamily node} (or previous siblings, in case of reverse) is handled as expected without needing to return a new {\ttfamily Index}.
+
+Removing the children property of an ancestor still results in them being traversed.\hypertarget{readme.md_autotoc_md34423}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md34423}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — found node
+\item {\ttfamily parents} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Array\texorpdfstring{$<$}{<}Node\texorpdfstring{$>$}{>}}}}) — ancestors of {\ttfamily node}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34424}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md34424}
+What to do next.
+
+An {\ttfamily Index} is treated as a tuple of {\ttfamily \mbox{[}CONTINUE, Index\mbox{]}}. An {\ttfamily Action} is treated as a tuple of {\ttfamily \mbox{[}Action\mbox{]}}.
+
+Passing a tuple back only makes sense if the {\ttfamily Action} is {\ttfamily SKIP}. When the {\ttfamily Action} is {\ttfamily EXIT}, that action can be returned. When the {\ttfamily Action} is {\ttfamily CONTINUE}, {\ttfamily Index} can be returned.\hypertarget{readme.md_autotoc_md34425}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Visitor\+Result}}{{\ttfamily Visitor\+Result}}}\label{readme.md_autotoc_md34425}
+Any value that can be returned from a visitor (Type\+Script type).\hypertarget{readme.md_autotoc_md34426}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md34426}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ VisitorResult\ =}
+\DoxyCodeLine{\ \ |\ Action}
+\DoxyCodeLine{\ \ |\ ActionTuple}
+\DoxyCodeLine{\ \ |\ Index}
+\DoxyCodeLine{\ \ |\ null}
+\DoxyCodeLine{\ \ |\ undefined}
+\DoxyCodeLine{\ \ |\ void}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34427}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md34427}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Action\`{}, \`{}\+Action\+Tuple\`{}, \`{}\+Build\+Visitor\`{}, \doxylink{README.md_index}{\`{}\+Index\`{}}, \`{}\+Test\`{}, \`{}\+Visitor\`{}, and \`{}\+Visitor\+Result\`{}.\hypertarget{readme.md_autotoc_md34428}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md34428}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily unist-\/util-\/visit-\/parents@\texorpdfstring{$^\wedge$}{\string^}6}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md34429}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md34429}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/unist-util-visit}{\texttt{ {\ttfamily unist-\/util-\/visit}}} — walk the tree with one parent
+\item \href{https://github.com/syntax-tree/unist-util-filter}{\texttt{ {\ttfamily unist-\/util-\/filter}}} — create a new tree with all nodes that pass a test
+\item \href{https://github.com/syntax-tree/unist-util-map}{\texttt{ {\ttfamily unist-\/util-\/map}}} — create a new tree with all nodes mapped by a given function
+\item \href{https://gitlab.com/staltz/unist-util-flatmap}{\texttt{ {\ttfamily unist-\/util-\/flatmap}}} — create a new tree by mapping (to an array) with the given function
+\item \href{https://github.com/syntax-tree/unist-util-remove}{\texttt{ {\ttfamily unist-\/util-\/remove}}} — remove nodes from a tree that pass a test
+\item \href{https://github.com/syntax-tree/unist-util-select}{\texttt{ {\ttfamily unist-\/util-\/select}}} — select nodes with CSS-\/like selectors
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34430}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md34430}
+See \href{https://github.com/syntax-tree/.github/blob/HEAD/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/HEAD/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md34431}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md34431}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

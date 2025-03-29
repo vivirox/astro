@@ -1,0 +1,91 @@
+\doxysection{node\+\_\+modules/swr Directory Reference}
+\hypertarget{dir_f61eb226e5042a46e597a7fb72e10738}{}\label{dir_f61eb226e5042a46e597a7fb72e10738}\index{node\_modules/swr Directory Reference@{node\_modules/swr Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}SWR\mbox{]}(\href{https://assets.vercel.com/image/upload/v1572289618/swr/banner.png}{\texttt{ https\+://assets.\+vercel.\+com/image/upload/v1572289618/swr/banner.\+png}})\mbox{]}(\href{https://swr.vercel.app}{\texttt{ https\+://swr.\+vercel.\+app}})
+
+
+
+\href{https://vercel.com}{\texttt{  }} ~\newline
+ \href{https://www.npmjs.com/package/swr}{\texttt{  }} \href{https://bundlephobia.com/result?p=swr}{\texttt{  }} \href{https://github.com/vercel/swr/blob/main/LICENSE}{\texttt{  }} \hypertarget{README.md_autotoc_md31774}{}\doxysubsubsection{\texorpdfstring{Introduction}{Introduction}}\label{README.md_autotoc_md31774}
+SWR is a React Hooks library for data fetching.
+
+The name “\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\+SWR\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}” is derived from {\ttfamily stale-\/while-\/revalidate}, a cache invalidation strategy popularized by \href{https://tools.ietf.org/html/rfc5861}{\texttt{ HTTP RFC 5861}}. {\bfseries{SWR}} first returns the data from cache (stale), then sends the request (revalidate), and finally comes with the up-\/to-\/date data again.
+
+With just one hook, you can significantly simplify the data fetching logic in your project. And it also covered in all aspects of speed, correctness, and stability to help you build better experiences\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Fast}}, {\bfseries{lightweight}} and {\bfseries{reusable}} data fetching
+\item Transport and protocol agnostic
+\item Built-\/in {\bfseries{cache}} and request deduplication
+\item {\bfseries{Real-\/time}} experience
+\item Revalidation on focus
+\item Revalidation on network recovery
+\item Polling
+\item Pagination and scroll position recovery
+\item SSR and SSG
+\item Local mutation (Optimistic UI)
+\item Built-\/in smart error retry
+\item Type\+Script
+\item React Suspense
+\item React Native
+\end{DoxyItemize}
+
+...and a lot more.
+
+With SWR, components will get {\bfseries{a stream of data updates constantly and automatically}}. Thus, the UI will be always {\bfseries{fast}} and {\bfseries{reactive}}.
+
+\DoxyHorRuler{0}
+
+
+{\bfseries{View full documentation and examples on \href{https://swr.vercel.app}{\texttt{ swr.\+vercel.\+app}}.}}
+
+~\newline
+\hypertarget{README.md_autotoc_md31776}{}\doxysubsubsection{\texorpdfstring{Quick Start}{Quick Start}}\label{README.md_autotoc_md31776}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ useSWR\ from\ 'swr'}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Profile()\ \{}
+\DoxyCodeLine{\ \ const\ \{\ data,\ error\ \}\ =\ useSWR('/api/user',\ fetcher)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ if\ (error)\ return\ <div>failed\ to\ load</div>}
+\DoxyCodeLine{\ \ if\ (!data)\ return\ <div>loading...</div>}
+\DoxyCodeLine{\ \ return\ <div>hello\ \{data.name\}!</div>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+In this example, the React Hook {\ttfamily use\+SWR} accepts a {\ttfamily key} and a {\ttfamily fetcher} function. The {\ttfamily key} is a unique identifier of the request, normally the URL of the API. And the {\ttfamily fetcher} accepts {\ttfamily key} as its parameter and returns the data asynchronously.
+
+{\ttfamily use\+SWR} also returns 2 values\+: {\ttfamily data} and {\ttfamily error}. When the request (fetcher) is not yet finished, {\ttfamily data} will be {\ttfamily undefined}. And when we get a response, it sets {\ttfamily data} and {\ttfamily error} based on the result of {\ttfamily fetcher} and rerenders the component.
+
+Note that {\ttfamily fetcher} can be any asynchronous function, you can use your favourite data-\/fetching library to handle that part.
+
+\DoxyHorRuler{0}
+
+
+{\bfseries{View full documentation and examples on \href{https://swr.vercel.app}{\texttt{ swr.\+vercel.\+app}}.}}
+
+~\newline
+\hypertarget{README.md_autotoc_md31778}{}\doxysubsubsection{\texorpdfstring{Authors}{Authors}}\label{README.md_autotoc_md31778}
+This library is created by the team behind \href{https://nextjs.org}{\texttt{ Next.\+js}}, with contributions from our community\+:
+
+
+\begin{DoxyItemize}
+\item Shu Ding (\href{https://twitter.com/shuding_}{\texttt{ @shuding\+\_\+}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\item Guillermo Rauch (\href{https://twitter.com/rauchg}{\texttt{ @rauchg}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\item Joe Haddad (\href{https://twitter.com/timer150}{\texttt{ @timer150}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\item Paco Coursey (\href{https://twitter.com/pacocoursey}{\texttt{ @pacocoursey}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\end{DoxyItemize}
+
+\href{https://github.com/vercel/swr/graphs/contributors}{\texttt{ Contributors}}
+
+Thanks to Ryan Chen for providing the awesome {\ttfamily swr} npm package name!
+
+~\newline
+\hypertarget{README.md_autotoc_md31779}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md31779}
+The MIT License. 

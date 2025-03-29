@@ -1,0 +1,398 @@
+\doxysection{node\+\_\+modules/sswr Directory Reference}
+\hypertarget{dir_1d7c60a64bf9662c614692d5a32d7b37}{}\label{dir_1d7c60a64bf9662c614692d5a32d7b37}\index{node\_modules/sswr Directory Reference@{node\_modules/sswr Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Svelte stale while revalidate (SWR) data fetching strategy \end{quote}
+\hypertarget{README.md_autotoc_md31150}{}\doxysubsection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{README.md_autotoc_md31150}
+
+\begin{DoxyItemize}
+\item Introduction
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_features}{Features}
+\item \doxylink{README.md_installation}{Installation}
+\item Getting Started
+\item Configuration options
+\item Global configuration options
+\item Dependent fetching
+\item Re-\/validate on demand
+\item Mutate on demand
+\item Error handling
+\item Clear Cache
+\item Using with Svelte\+Kit SSR
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_contributors}{Contributors}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31151}{}\doxysubsection{\texorpdfstring{Introduction}{Introduction}}\label{README.md_autotoc_md31151}
+Quote from \href{https://swr.vercel.app/}{\texttt{ vercel\textquotesingle{}s SWR}} for react\+:
+
+\begin{quote}
+The name “\+SWR” is derived from stale-\/while-\/revalidate, a HTTP cache invalidation strategy popularized by \href{https://tools.ietf.org/html/rfc5861}{\texttt{ HTTP RFC 5861}}. SWR is a strategy to first return the data from cache (stale), then send the fetch request (revalidate), and finally come with the up-\/to-\/date data.
+
+With SWR, components will get a stream of data updates constantly and automatically. And the UI will be always fast and reactive. \end{quote}
+\hypertarget{README.md_autotoc_md31152}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md31152}
+
+\begin{DoxyItemize}
+\item \+:tada\+: ~ Built for {\bfseries{Svelte}}
+\item \+:fire\+: ~ {\bfseries{Extremely small and well packed}} at 2KB.
+\item \+:fire\+: ~ {\bfseries{No dependencies (one polyfill for Event\+Target)}}.
+\item \+:+1\+: ~ Built-\/in {\bfseries{cache}} and request deduplication.
+\item \+:eyes\+: ~ {\bfseries{Dependent fetching}} of data that depends on other.
+\item \+:eyes\+: ~ {\bfseries{Real time}} experience.
+\item \+:star\+: ~ {\bfseries{Typescript}} friendly.
+\item \+:+1\+: ~ {\bfseries{Error handling}} by using the error variable provided.
+\item \+:zap\+: ~ {\bfseries{Efficient DOM}} updates using Svelte reactivity.
+\item \+:zap\+: ~ {\bfseries{Efficient HTTP}} requests are only done when needed.
+\item \+:+1\+: ~ {\bfseries{Manual revalidation}} of the data by using {\ttfamily revalidate()}.
+\item \+:+1\+: ~ {\bfseries{Optimistic UI / Manual mutation}} of the data by using {\ttfamily mutate()}.
+\item \+:zzz\+: ~ {\bfseries{Window focus revalidation}} of the data.
+\item \+:zzz\+: ~ {\bfseries{Network change revalidation}} of the data.
+\item \+:+1\+: ~ {\bfseries{Initial data}} support for initial or offline data.
+\item \+:+1\+: ~ {\bfseries{Clear cache}} when you need to invalidate all data or the specified keys (eg. a user logout).
+\item \+:zzz\+: ~ {\bfseries{Offline support}} to be used without any revalidations with string keys.
+\item \+:+1\+: ~ {\bfseries{Global configuration}} available or per hook call.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31153}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md31153}
+You can use npm or yarn to install it.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ sswr}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ sswr}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31154}{}\doxysubsection{\texorpdfstring{Getting Started}{Getting Started}}\label{README.md_autotoc_md31154}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{\ \ import\ \{\ useSWR\ \}\ from\ "{}sswr"{};}
+\DoxyCodeLine{\ \ //\ Call\ the\ \`{}useSWR`\ and\ pass\ the\ key\ you\ want\ to\ use.\ It\ will\ be\ pased}
+\DoxyCodeLine{\ \ //\ to\ the\ fetcher\ function.\ The\ fetcher\ function\ can\ be\ configured\ globally}
+\DoxyCodeLine{\ \ //\ or\ passed\ as\ one\ of\ the\ options\ to\ this\ function.}
+\DoxyCodeLine{\ \ const\ \{\ data:\ posts\ \}\ =\ useSWR("{}https://jsonplaceholder.typicode.com/posts"{});}
+\DoxyCodeLine{</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{\#if\ \$posts\}}
+\DoxyCodeLine{\ \ \{\#each\ \$posts\ as\ post\ (post.id)\}}
+\DoxyCodeLine{\ \ \ \ <h1>\{post.title\}</h1>}
+\DoxyCodeLine{\ \ \ \ <p>\{post.body\}</p>}
+\DoxyCodeLine{\ \ \{/each\}}
+\DoxyCodeLine{\{/if\}}
+
+\end{DoxyCode}
+
+
+This is a simple example that will use SWR as the strategy to fetch the data. In this particular case, all the default options are used (or the ones specified in the global config) and it will fetch the data using the default or global fetcher and update the DOM when the request is done.\hypertarget{README.md_autotoc_md31155}{}\doxysubsection{\texorpdfstring{Configuration options}{Configuration options}}\label{README.md_autotoc_md31155}
+All hook calls can have their respective configuration options applied to it. Nevertheless you can also configure global options to avoid passing them to each hook call.\hypertarget{README.md_autotoc_md31156}{}\doxysubsubsection{\texorpdfstring{Signature}{Signature}}\label{README.md_autotoc_md31156}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ useSWR(key,\ options):\ SWRResponse}
+\DoxyCodeLine{//\ Can\ be\ destructured\ to\ get\ the\ response\ as\ such:}
+\DoxyCodeLine{const\ \{\ data,\ error,\ mutate,\ revalidate\ \}\ =\ useSWR(key,\ options)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31157}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md31157}
+
+\begin{DoxyItemize}
+\item {\ttfamily key}\+: A resolved or non-\/resolved key. Can either be a string, or a function. A function can be used for dependent fetching as seen below.
+\item {\ttfamily options}\+: An optional object with optional properties such as\+:
+\begin{DoxyItemize}
+\item {\ttfamily cache\+: SWRCache = new Default\+Cache()}\+: Determines the cache to use for SWR.
+\item {\ttfamily errors\+: Event\+Target = new Event\+Target()}\+: Determines the error event target where the errors will be dispatched.
+\item {\ttfamily fetcher\+: (key) =\texorpdfstring{$>$}{>} Promise\texorpdfstring{$<$}{<}any\texorpdfstring{$>$}{>} = (url) =\texorpdfstring{$>$}{>} fetch(url).then((res) =\texorpdfstring{$>$}{>} res.\+json())}\+: Determines the fetcher function to use. This will be called to get the data.
+\item {\ttfamily initial\+Data\+: any = undefined}\+: Represents the initial data to use instead of undefined. Keep in mind the component will still attempt to re-\/validate unless {\ttfamily revalidate\+On\+Mount} is set false.
+\item {\ttfamily revalidate\+On\+Start\+: boolean = true}\+: Determines if the hook should revalidate the key when it is called.
+\item {\ttfamily deduping\+Interval\+: number = 2000}\+: Determines the deduping interval. This interval represents the time SWR will avoid to perform a request if the last one was made before {\ttfamily deduping\+Interval} ago.
+\item {\ttfamily revalidate\+On\+Focus\+: boolean = true}\+: Revalidates the data when the window re-\/gains focus.
+\item {\ttfamily focus\+Throttle\+Interval\+: number = 5000}\+: Interval throttle for the focus event. This will ignore focus re-\/validation if it happened last time {\ttfamily focus\+Throttle\+Interval} ago.
+\item {\ttfamily revalidate\+On\+Reconnect\+: boolean = true}\+: Revalidates the data when a network connect change is detected (basically the browser / app comes back online).
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31158}{}\doxysubsubsubsection{\texorpdfstring{Return Values}{Return Values}}\label{README.md_autotoc_md31158}
+
+\begin{DoxyItemize}
+\item {\ttfamily data\+: Writable\texorpdfstring{$<$}{<}D \texorpdfstring{$\vert$}{|} undefined\texorpdfstring{$>$}{>}}\+: Stores the data of the HTTP response after the fetcher has proceesed it or undefined in case the HTTP request hasn\textquotesingle{}t finished or there was an error.
+\item {\ttfamily error\+: Writable\texorpdfstring{$<$}{<}E \texorpdfstring{$\vert$}{|} undefined\texorpdfstring{$>$}{>}}\+: Determines error of the HTTP response in case it happened or undefined if there was no error or the HTTP request is not completed yet.
+\item {\ttfamily mutate\+: (value, options) =\texorpdfstring{$>$}{>} void}\+: Mutate alias for the global mutate function without the need to append the key to it.
+\item {\ttfamily revalidate\+: (options) =\texorpdfstring{$>$}{>} void}\+: Revalidation alias for the global revalidate function without the need to append the key to it.
+\item {\ttfamily clear\+: (options) =\texorpdfstring{$>$}{>} void}\+: Clears the current key data from the cache.
+\item {\ttfamily is\+Loading\+: Readable\texorpdfstring{$<$}{<}boolean\texorpdfstring{$>$}{>}}\+: Determines if the request is still on its way and therefore, it\textquotesingle{}s still loading.
+\item {\ttfamily is\+Valid\+: Readable\texorpdfstring{$<$}{<}boolean\texorpdfstring{$>$}{>}}\+: Determines if the data is valid. This means that there is no error associated with the data. This exists because errors do not wipe the data value and can still be used.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31159}{}\doxysubsection{\texorpdfstring{Global configuration options}{Global configuration options}}\label{README.md_autotoc_md31159}
+You can configure the options globally by creating a SWR instance and using it in your vue application. This step is not mandatory but it\textquotesingle{}s recommened for most apps.
+
+You can either choose to manually create a SWR instance and import it when needed or replace the default SWR instance used by all exported APIs. The second is recommended if only one instance will be needed for your application.\hypertarget{README.md_autotoc_md31160}{}\doxysubsubsection{\texorpdfstring{Signature}{Signature}}\label{README.md_autotoc_md31160}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ createSWR(options):\ VSWR}
+\DoxyCodeLine{function\ createDefaultSWR(options):\ VSWR}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31161}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md31161}
+
+\begin{DoxyItemize}
+\item {\ttfamily options\+: SWROptions}\+: Parameters of the options that will be passed to all components. They are the same as the ones on each {\ttfamily use\+SWR} function call.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31162}{}\doxysubsubsubsection{\texorpdfstring{Return value}{Return value}}\label{README.md_autotoc_md31162}
+A SWR instance that can be used to access all the API.\hypertarget{README.md_autotoc_md31163}{}\doxysubsection{\texorpdfstring{Dependent fetching}{Dependent fetching}}\label{README.md_autotoc_md31163}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{\ \ import\ \{\ useSWR\ \}\ from\ "{}sswr"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{\ data:\ post\ \}\ =\ useSWR("{}https://jsonplaceholder.typicode.com/posts/1"{});}
+\DoxyCodeLine{\ \ //\ We\ need\ to\ pass\ a\ function\ as\ the\ key.\ Function\ will\ throw\ an\ error\ when\ post\ is\ undefined}
+\DoxyCodeLine{\ \ //\ but\ we\ catch\ that\ and\ wait\ till\ it\ re-\/validates\ into\ a\ valid\ key\ to\ populate\ the\ user\ variable.}
+\DoxyCodeLine{\ \ \$:\ (\{\ data:\ user\ \}\ =\ useSWR(}
+\DoxyCodeLine{\ \ \ \ ()\ =>\ \`{}https://jsonplaceholder.typicode.com/users/\$\{\$post.userId\}`}
+\DoxyCodeLine{\ \ ));}
+\DoxyCodeLine{</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{\#if\ \$post\}}
+\DoxyCodeLine{\ \ <div>\{\$post.title\}</div>}
+\DoxyCodeLine{\{/if\}}
+\DoxyCodeLine{\{\#if\ \$user\}}
+\DoxyCodeLine{\ \ <div>\{\$user.name\}</div>}
+\DoxyCodeLine{\{/if\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31164}{}\doxysubsection{\texorpdfstring{Re-\/validate on demand}{Re-\/validate on demand}}\label{README.md_autotoc_md31164}
+\hypertarget{README.md_autotoc_md31165}{}\doxysubsubsection{\texorpdfstring{Global revalidate function with given key}{Global revalidate function with given key}}\label{README.md_autotoc_md31165}
+You can re-\/validate specific keys by importing the {\ttfamily revalidate} function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ revalidate\ \}\ from\ 'sswr'}
+
+\end{DoxyCode}
+
+
+You can call this method anywhere in your application by giving it the key, and the options.\hypertarget{README.md_autotoc_md31166}{}\doxysubsubsubsection{\texorpdfstring{Signature}{Signature}}\label{README.md_autotoc_md31166}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ revalidate(key,\ options):\ void}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31167}{}\doxysubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md31167}
+
+\begin{DoxyItemize}
+\item {\ttfamily key}\+: Determines the key that is going to be re-\/validated. This must be a resolved key, meaning it must be a string or undefined. If undefined, the function will do nothing.
+\item {\ttfamily options}\+: A partial object (meaning all props can be optional / undefined) that accepts the following options\+:
+\begin{DoxyItemize}
+\item {\ttfamily force\+: boolean = false}\+:Determines if the re-\/validation should be forced. When a re-\/validation is forced, the deduping\+Interval will be ignored and a fetch will be performed.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31168}{}\doxysubsubsection{\texorpdfstring{On specific hooks with keys}{On specific hooks with keys}}\label{README.md_autotoc_md31168}
+You can re-\/validate specific keys by grabing the {\ttfamily revalidate} function of the {\ttfamily use\+SWR} call. This function will allow you to perform a re-\/validation of the data on demand. There\textquotesingle{}s no need to provide the key for this function since it\textquotesingle{}s already bound to the hook key. It only accepts the options.\hypertarget{README.md_autotoc_md31169}{}\doxysubsubsubsection{\texorpdfstring{Signature}{Signature}}\label{README.md_autotoc_md31169}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ revalidate(options):\ void}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31170}{}\doxysubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md31170}
+
+\begin{DoxyItemize}
+\item {\ttfamily options}\+: Same as global revalidate (check above).
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31171}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md31171}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{\ \ import\ \{\ useSWR\ \}\ from\ 'sswr'}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{\ data:\ post,\ revalidate\ \}\ =\ useSWR('https://jsonplaceholder.typicode.com/posts/1')}
+\DoxyCodeLine{</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{\#if\ \$post\}}
+\DoxyCodeLine{\ \ <div>\{\$post.title\}</div>}
+\DoxyCodeLine{\ \ <button\ on:click=\{()\ =>\ revalidate()\}>Revalidate</button>}
+\DoxyCodeLine{\{/if\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31172}{}\doxysubsection{\texorpdfstring{Mutate on demand}{Mutate on demand}}\label{README.md_autotoc_md31172}
+\hypertarget{README.md_autotoc_md31173}{}\doxysubsubsection{\texorpdfstring{Global mutate function with given key}{Global mutate function with given key}}\label{README.md_autotoc_md31173}
+You can mutate specific keys by importing the {\ttfamily mutate} function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ mutate\ \}\ from\ 'sswr'}
+
+\end{DoxyCode}
+
+
+You can call this method anywhere in your application by giving it the key, the value and the options.\hypertarget{README.md_autotoc_md31174}{}\doxysubsubsubsection{\texorpdfstring{Signature}{Signature}}\label{README.md_autotoc_md31174}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ mutate(key,\ value,\ options):\ void}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31175}{}\doxysubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md31175}
+
+\begin{DoxyItemize}
+\item {\ttfamily key}\+: Determines the key that is going to be mutated. This must be a resolved key, meaning it must be a string or undefined. If undefined, the function will do nothing.
+\item {\ttfamily value\+: any \texorpdfstring{$\vert$}{|} ((any) =\texorpdfstring{$>$}{>} any)}\+: Determines the new value to set. This can either be the value itself or a function that receives the current state and returns the new one.
+\item {\ttfamily options}\+: A partial object (meaning all props can be optional / undefined) that accepts the following options\+:
+\begin{DoxyItemize}
+\item {\ttfamily revalidate\+: boolean = true}\+: Determines if the mutation should attempt to revalidate the data afterwards.
+\item {\ttfamily revalidate\+Options\+: Partial\texorpdfstring{$<$}{<}SWRRevalidate\+Options\texorpdfstring{$>$}{>} = \{ ...default\+Revalidate\+Options \}}\+: Determines the revalidation options passed to revalidate in case the parameter {\ttfamily revalidate} is set to true.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31176}{}\doxysubsubsection{\texorpdfstring{On specific hooks with keys}{On specific hooks with keys}}\label{README.md_autotoc_md31176}
+You can mutate specific keys by grabing the {\ttfamily mutate} function of the {\ttfamily use\+SWR} call. This function will allow you to perform a mutation of the data on demand. There\textquotesingle{}s no need to provide the key for this function since it\textquotesingle{}s already bound to the hook key. It only accepts the value and the options.\hypertarget{README.md_autotoc_md31177}{}\doxysubsubsubsection{\texorpdfstring{Signature}{Signature}}\label{README.md_autotoc_md31177}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ mutate(value,\ options):\ void}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31178}{}\doxysubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md31178}
+
+\begin{DoxyItemize}
+\item {\ttfamily value}\+: Same as global mutate (check above).
+\item {\ttfamily options}\+: Same as global mutate (check above).
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31179}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md31179}
+Keep in mind we set revalidate to false to avoid it performing a HTTP request for this example, since this would just over-\/write the static data with the server data again.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{\ \ import\ \{\ useSWR\ \}\ from\ 'sswr'}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{\ data:\ post,\ mutate\ \}\ =\ useSWR('https://jsonplaceholder.typicode.com/posts/1')}
+\DoxyCodeLine{</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{\#if\ \$post\}}
+\DoxyCodeLine{\ \ <div>\{\$post.title\}</div>}
+\DoxyCodeLine{\ \ <button\ on:click=\{()\ =>\ mutate((state)\ =>\ (\{\ ...state,\ title:\ 'Sample'\ \}),\ \{\ revalidate:\ false\ \})\}>}
+\DoxyCodeLine{\ \ \ \ Mutate\ only\ title}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{\ \ <button\ on:click=\{()\ =>\ mutate(\{\ title:\ 'Sample'\ \},\ \{\ revalidate:\ false\ \})\}>}
+\DoxyCodeLine{\ \ \ \ Leave\ only\ title}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{\{/if\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31180}{}\doxysubsection{\texorpdfstring{Error handling}{Error handling}}\label{README.md_autotoc_md31180}
+You can handle request errors by using the {\ttfamily error} return value on a hook call. This will return the specific error that happened to the hook. For example, a failed request.\hypertarget{README.md_autotoc_md31181}{}\doxysubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md31181}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{\ \ import\ \{\ useSWR\ \}\ from\ 'sswr'}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{\ data:\ posts,\ error\ \}\ =\ useSWR('https://jsonplaceholder.typicode.com/posts')}
+\DoxyCodeLine{</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{\#if\ \$error\}}
+\DoxyCodeLine{\ \ <div>There\ was\ an\ error</div>}
+\DoxyCodeLine{\{:else\ if\ \$posts\}}
+\DoxyCodeLine{\ \{\#each\ \$posts\ as\ post\ (post.id)\}}
+\DoxyCodeLine{\ \ \ \ <h1>\{post.title\}</h1>}
+\DoxyCodeLine{\ \{/each\}}
+\DoxyCodeLine{\{/if\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31182}{}\doxysubsection{\texorpdfstring{Clear Cache}{Clear Cache}}\label{README.md_autotoc_md31182}
+\hypertarget{README.md_autotoc_md31183}{}\doxysubsubsection{\texorpdfstring{Global clear function with given keys}{Global clear function with given keys}}\label{README.md_autotoc_md31183}
+You can clear all the cached keys or the specified ones when you need to invalidate some keys.
+
+To do this, you can use the {\ttfamily clear} global function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ clear\ \}\ from\ 'sswr'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31184}{}\doxysubsubsubsection{\texorpdfstring{Signature}{Signature}}\label{README.md_autotoc_md31184}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ clear(keys,\ options):\ void}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31185}{}\doxysubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md31185}
+
+\begin{DoxyItemize}
+\item {\ttfamily keys}\+: A single key or a list with the keys to delete. If keys is undefined, all keys will be cleared from the cache.
+\item {\ttfamily options}\+: A partial object containing one of the following options\+:
+\begin{DoxyItemize}
+\item {\ttfamily broadcast\+: boolean}\+: Determines if the cache should broadcast the cache change to subscribed handlers. That means telling them the value now resolves to undefined.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31186}{}\doxysubsubsection{\texorpdfstring{On specific hooks with keys}{On specific hooks with keys}}\label{README.md_autotoc_md31186}
+You can clear specific keys by grabing the {\ttfamily clear} function of the {\ttfamily use\+SWR} call. This function will allow you to clear the data on demand. There\textquotesingle{}s no need to provide the key for this function since it\textquotesingle{}s already bound to the hook key. It only accepts the options.\hypertarget{README.md_autotoc_md31187}{}\doxysubsubsubsection{\texorpdfstring{Signature}{Signature}}\label{README.md_autotoc_md31187}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ clear(options):\ void}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31188}{}\doxysubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md31188}
+
+\begin{DoxyItemize}
+\item {\ttfamily options}\+: Same as global clear (check above).
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31189}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md31189}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{\ \ import\ \{\ useSWR\ \}\ from\ 'sswr'}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{\ data:\ post,\ clear\ \}\ =\ useSWR('https://jsonplaceholder.typicode.com/posts/1')}
+\DoxyCodeLine{</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{\#if\ \$post\}}
+\DoxyCodeLine{\ \ <div>\{\$post.title\}</div>}
+\DoxyCodeLine{\ \ <button\ on:click=\{()\ =>\ clear()\}>}
+\DoxyCodeLine{\ \ \ \ Clear\ cacheed\ data}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{\{/if\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31190}{}\doxysubsection{\texorpdfstring{Using with Svelte\+Kit SSR}{Using with Svelte\+Kit SSR}}\label{README.md_autotoc_md31190}
+Svelte\+Kit allows you to fetch data on the backend. This allows you to combine SSR (where your data is present in the HTML) with the live updating that this package provides.
+
+Here is an example of how to implement the Getting Started example with support for SSR. In this example, we have disabled the revalidation on the client, althought it is also possible to re-\/hydrate the information on it if needed.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ lang="{}ts"{}\ context="{}module"{}>}
+\DoxyCodeLine{\ \ import\ type\ \{\ Load\ \}\ from\ '@sveltejs/kit';}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ url\ =\ 'https://jsonplaceholder.typicode.com/posts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ export\ const\ load:\ Load\ =\ async\ (\{\ fetch\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ response\ =\ await\ fetch(url);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ return\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ props:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ initialData:\ await\ response.json()}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \};}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<script\ lang="{}ts"{}>}
+\DoxyCodeLine{\ \ import\ \{\ useSWR\ \}\ from\ 'sswr';}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ interface\ Post\ \{}
+\DoxyCodeLine{\ \ \ \ id:\ number;}
+\DoxyCodeLine{\ \ \ \ title:\ string;}
+\DoxyCodeLine{\ \ \ \ body:\ string;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ export\ let\ initialData:\ Post[];}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{\ data:\ posts\ \}\ =\ useSWR<Post[]>(url,\ \{}
+\DoxyCodeLine{\ \ \ \ initialData,}
+\DoxyCodeLine{\ \ \ \ revalidateOnStart:\ false}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{\#if\ \$posts\}}
+\DoxyCodeLine{\ \ \{\#each\ \$posts\ as\ post\ (post.id)\}}
+\DoxyCodeLine{\ \ \ \ <h1>\{post.title\}</h1>}
+\DoxyCodeLine{\ \ \ \ <p>\{post.body\}</p>}
+\DoxyCodeLine{\ \ \{/each\}}
+\DoxyCodeLine{\{/if\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31191}{}\doxysubsection{\texorpdfstring{Contributors}{Contributors}}\label{README.md_autotoc_md31191}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sammccord}{\texttt{ Sam Mc\+Cord}}
+\item \href{https://github.com/kevlened}{\texttt{ Len Boyette}}
+\item \href{https://github.com/khromov}{\texttt{ Stanislav Khromov}} 
+\end{DoxyItemize}

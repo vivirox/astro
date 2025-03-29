@@ -1,0 +1,312 @@
+\doxysection{node\+\_\+modules/@asamuzakjp/css-\/color Directory Reference}
+\hypertarget{dir_7a1834214ee28e1b32af8bd0619d4876}{}\label{dir_7a1834214ee28e1b32af8bd0619d4876}\index{node\_modules/"@asamuzakjp/css-\/color Directory Reference@{node\_modules/"@asamuzakjp/css-\/color Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/asamuzaK/cssColor/actions/workflows/node.js.yml}{\texttt{ }} \href{https://github.com/asamuzaK/cssColor/actions/workflows/github-code-scanning/codeql}{\texttt{ }} \href{https://www.npmjs.com/package/@asamuzakjp/css-color}{\texttt{ }}
+
+Resolve and convert CSS colors.\hypertarget{README.md_autotoc_md148}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md148}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ @asamuzakjp/css-\/color}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md149}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md149}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ convert,\ resolve,\ utils\ \}\ from\ '@asamuzakjp/css-\/color';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ resolvedValue\ =\ resolve(}
+\DoxyCodeLine{\ \ 'color-\/mix(in\ oklab,\ lch(67.5345\ 42.5\ 258.2),\ color(srgb\ 0\ 0.5\ 0))'}
+\DoxyCodeLine{);}
+\DoxyCodeLine{//\ 'oklab(0.620754\ -\/0.0931934\ -\/0.00374881)'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ convertedValue\ =\ covert.colorToHex('lab(46.2775\%\ -\/47.5621\ 48.5837)');}
+\DoxyCodeLine{//\ '\#008000'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ utils.isColor('green');}
+\DoxyCodeLine{//\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md150}{}\doxysubsubsection{\texorpdfstring{resolve(color, opt)}{resolve(color, opt)}}\label{README.md_autotoc_md150}
+resolves CSS color\hypertarget{README.md_autotoc_md151}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md151}
+
+\begin{DoxyItemize}
+\item {\ttfamily color} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\begin{DoxyItemize}
+\item system colors are not supported
+\end{DoxyItemize}
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+current\+Color} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}?}}
+\begin{DoxyItemize}
+\item color to use for {\ttfamily currentcolor} keyword
+\item if omitted, it will be treated as a missing color, i.\+e. {\ttfamily rgb(none none none / none)}
+\end{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties
+\item pair of {\ttfamily -\/-\/} prefixed property name as a key and it\textquotesingle{}s value, e.\+g. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ opt\ =\ \{}
+\DoxyCodeLine{\ \ customProperty:\ \{}
+\DoxyCodeLine{\ \ \ \ '-\/-\/some-\/color':\ '\#008000',}
+\DoxyCodeLine{\ \ \ \ '-\/-\/some-\/length':\ '16px'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+\item and/or {\ttfamily callback} function to get the value of the custom property, e.\+g. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ node\ =\ document.getElementById('foo');}
+\DoxyCodeLine{const\ opt\ =\ \{}
+\DoxyCodeLine{\ \ customProperty:\ \{}
+\DoxyCodeLine{\ \ \ \ callback:\ node.style.getPropertyValue}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, e.\+g. for converting relative length to pixels
+\item pair of unit as a key and number in pixels as it\textquotesingle{}s value, e.\+g. suppose {\ttfamily 1em === 12px}, {\ttfamily 1rem === 16px} and {\ttfamily 100vw === 1024px}, then {\ttfamily javascript const opt = \{ dimension\+: \{ em\+: 12, rem\+: 16, vw\+: 10.\+24 \} \}; }
+\item and/or {\ttfamily callback} function to get the value as a number in pixels, e.\+g. {\ttfamily javascript const opt = \{ dimension\+: \{ callback\+: unit =\texorpdfstring{$>$}{>} \{ switch (unit) \{ case \textquotesingle{}em\textquotesingle{}\+: return 12; case \textquotesingle{}rem\textquotesingle{}\+: return 16; case \textquotesingle{}vw\textquotesingle{}\+: return 10.\+24; default\+: return; \} \} \} \}; }
+\end{DoxyItemize}
+\item {\ttfamily opt.\+format} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}?}}
+\begin{DoxyItemize}
+\item output format, one of below
+\begin{DoxyItemize}
+\item {\ttfamily computed\+Value} (default), \href{https://developer.mozilla.org/en-US/docs/Web/CSS/computed_value}{\texttt{ computed value}} of the color
+\item {\ttfamily specified\+Value}, \href{https://developer.mozilla.org/en-US/docs/Web/CSS/specified_value}{\texttt{ specified value}} of the color
+\item {\ttfamily hex}, hex color notation, i.\+e. {\ttfamily \#rrggbb}
+\item {\ttfamily hex\+Alpha}, hex color notation with alpha channel, i.\+e. {\ttfamily \#rrggbbaa}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}?}} one of {\ttfamily rgba?()}, {\ttfamily \#rrggbb(aa)?}, {\ttfamily color-\/name}, {\ttfamily color(color-\/space r g b / alpha)}, {\ttfamily color(color-\/space x y z / alpha)}, {\ttfamily (ok)?lab(l a b / alpha)}, {\ttfamily (ok)?lch(l c h / alpha)}, `'(empty-\/string)\textquotesingle{}{\ttfamily ,}null\`{}
+
+
+\begin{DoxyItemize}
+\item in {\ttfamily computed\+Value}, values are numbers, however {\ttfamily rgb()} values are integers
+\item in {\ttfamily specified\+Value}, returns {\ttfamily empty string} for unknown and/or invalid color
+\item in {\ttfamily hex}, returns {\ttfamily null} for {\ttfamily transparent}, and also returns {\ttfamily null} if any of {\ttfamily r}, {\ttfamily g}, {\ttfamily b}, {\ttfamily alpha} is not a number
+\item in {\ttfamily hex\+Alpha}, returns {\ttfamily \#00000000} for {\ttfamily transparent}, however returns {\ttfamily null} if any of {\ttfamily r}, {\ttfamily g}, {\ttfamily b}, {\ttfamily alpha} is not a number
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md152}{}\doxysubsubsection{\texorpdfstring{convert}{convert}}\label{README.md_autotoc_md152}
+Contains various color conversion functions.\hypertarget{README.md_autotoc_md153}{}\doxysubsubsection{\texorpdfstring{convert.\+number\+To\+Hex(value)}{convert.\+number\+To\+Hex(value)}}\label{README.md_autotoc_md153}
+convert number to hex string\hypertarget{README.md_autotoc_md154}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md154}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}}} color value
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} hex string\+: 00..ff\hypertarget{README.md_autotoc_md155}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Hex(value, opt)}{convert.\+color\+To\+Hex(value, opt)}}\label{README.md_autotoc_md155}
+convert color to hex\hypertarget{README.md_autotoc_md156}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md156}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+alpha} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean}{\texttt{ boolean}}?}} return in \#rrggbbaa notation
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} \#rrggbb(aa)?\hypertarget{README.md_autotoc_md157}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Hsl(value, opt)}{convert.\+color\+To\+Hsl(value, opt)}}\label{README.md_autotoc_md157}
+convert color to hsl\hypertarget{README.md_autotoc_md158}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md158}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}h, s, l, alpha\mbox{]}\hypertarget{README.md_autotoc_md159}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Hwb(value, opt)}{convert.\+color\+To\+Hwb(value, opt)}}\label{README.md_autotoc_md159}
+convert color to hwb\hypertarget{README.md_autotoc_md160}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md160}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}h, w, b, alpha\mbox{]}\hypertarget{README.md_autotoc_md161}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Lab(value, opt)}{convert.\+color\+To\+Lab(value, opt)}}\label{README.md_autotoc_md161}
+convert color to lab\hypertarget{README.md_autotoc_md162}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md162}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}l, a, b, alpha\mbox{]}\hypertarget{README.md_autotoc_md163}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Lch(value, opt)}{convert.\+color\+To\+Lch(value, opt)}}\label{README.md_autotoc_md163}
+convert color to lch\hypertarget{README.md_autotoc_md164}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md164}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}l, c, h, alpha\mbox{]}\hypertarget{README.md_autotoc_md165}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Oklab(value, opt)}{convert.\+color\+To\+Oklab(value, opt)}}\label{README.md_autotoc_md165}
+convert color to oklab\hypertarget{README.md_autotoc_md166}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md166}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}l, a, b, alpha\mbox{]}\hypertarget{README.md_autotoc_md167}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Oklch(value, opt)}{convert.\+color\+To\+Oklch(value, opt)}}\label{README.md_autotoc_md167}
+convert color to oklch\hypertarget{README.md_autotoc_md168}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md168}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}l, c, h, alpha\mbox{]}\hypertarget{README.md_autotoc_md169}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Rgb(value, opt)}{convert.\+color\+To\+Rgb(value, opt)}}\label{README.md_autotoc_md169}
+convert color to rgb\hypertarget{README.md_autotoc_md170}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md170}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}r, g, b, alpha\mbox{]}\hypertarget{README.md_autotoc_md171}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Xyz(value, opt)}{convert.\+color\+To\+Xyz(value, opt)}}\label{README.md_autotoc_md171}
+convert color to xyz\hypertarget{README.md_autotoc_md172}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md172}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+d50} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean}{\texttt{ boolean}}?}} xyz in d50 white point
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}x, y, z, alpha\mbox{]}\hypertarget{README.md_autotoc_md173}{}\doxysubsubsection{\texorpdfstring{convert.\+color\+To\+Xyz\+D50(value, opt)}{convert.\+color\+To\+Xyz\+D50(value, opt)}}\label{README.md_autotoc_md173}
+convert color to xyz-\/d50\hypertarget{README.md_autotoc_md174}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md174}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\item {\ttfamily opt} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}} options (optional, default {\ttfamily \{\}})
+\begin{DoxyItemize}
+\item {\ttfamily opt.\+custom\+Property} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item custom properties, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\item {\ttfamily opt.\+dimension} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object}{\texttt{ object}}?}}
+\begin{DoxyItemize}
+\item dimension, see {\ttfamily resolve()} function above
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array}{\texttt{ Array}}\texorpdfstring{$<$}{<}\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number}{\texttt{ number}}\texorpdfstring{$>$}{>}}} \mbox{[}x, y, z, alpha\mbox{]}\hypertarget{README.md_autotoc_md175}{}\doxysubsubsection{\texorpdfstring{utils}{utils}}\label{README.md_autotoc_md175}
+Contains utility functions.\hypertarget{README.md_autotoc_md176}{}\doxysubsubsection{\texorpdfstring{utils.\+is\+Color(color)}{utils.\+is\+Color(color)}}\label{README.md_autotoc_md176}
+is valid color type\hypertarget{README.md_autotoc_md177}{}\doxysubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{README.md_autotoc_md177}
+
+\begin{DoxyItemize}
+\item {\ttfamily color} {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String}{\texttt{ string}}}} color value
+\begin{DoxyItemize}
+\item system colors are not supported
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Returns {\bfseries{\href{https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean}{\texttt{ boolean}}}}\hypertarget{README.md_autotoc_md178}{}\doxysubsection{\texorpdfstring{Acknowledgments}{Acknowledgments}}\label{README.md_autotoc_md178}
+The following resources have been of great help in the development of the CSS color.
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/csstools/postcss-plugins}{\texttt{ csstools/postcss-\/plugins}}
+\item \href{https://github.com/isaacs/node-lru-cache}{\texttt{ lru-\/cache}}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+
+
+Copyright (c) 2024 \href{https://github.com/asamuzaK/}{\texttt{ asamuzaK (Kazz)}} 

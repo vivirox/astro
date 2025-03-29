@@ -1,0 +1,221 @@
+\chapter{Plugin System Overview}
+\hypertarget{md_src_2docs_2api_2plugins_2overview}{}\label{md_src_2docs_2api_2plugins_2overview}\index{Plugin System Overview@{Plugin System Overview}}
+\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36977}%
+\Hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36977}%
+
+
+The Gradiant EHR Integration Platform\textquotesingle{}s Plugin System provides a secure and flexible way to extend the platform\textquotesingle{}s functionality. This document provides an overview of the plugin architecture, security model, and basic usage.\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36978}{}\doxysection{\texorpdfstring{Architecture}{Architecture}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36978}
+The Plugin System consists of two main components\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Plugin Service}}\+: Manages plugin lifecycle, security, and resource usage
+\item {\bfseries{Plugin Marketplace Service}}\+: Handles plugin distribution, discovery, and updates
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36979}{}\doxysubsection{\texorpdfstring{Plugin Service}{Plugin Service}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36979}
+The Plugin Service provides\+:
+
+
+\begin{DoxyItemize}
+\item Secure sandbox environment for plugin execution
+\item Resource usage monitoring and limits
+\item Plugin lifecycle management (install, enable, disable, uninstall)
+\item Event emission for plugin state changes
+\item HIPAA-\/compliant audit logging
+\end{DoxyItemize}\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36980}{}\doxysubsection{\texorpdfstring{Plugin Marketplace Service}{Plugin Marketplace Service}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36980}
+The Marketplace Service offers\+:
+
+
+\begin{DoxyItemize}
+\item Plugin discovery and search functionality
+\item Version management and updates
+\item User ratings and reviews
+\item Plugin distribution and installation
+\item Security verification and signing
+\end{DoxyItemize}\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36981}{}\doxysection{\texorpdfstring{Security Model}{Security Model}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36981}
+The Plugin System implements a robust security model\+:\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36982}{}\doxysubsection{\texorpdfstring{Sandbox Environment}{Sandbox Environment}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36982}
+
+\begin{DoxyItemize}
+\item Isolated execution using VM2
+\item Limited access to system resources
+\item Controlled API surface
+\item Memory and CPU usage limits
+\item Network access restrictions
+\end{DoxyItemize}\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36983}{}\doxysubsection{\texorpdfstring{Plugin Validation}{Plugin Validation}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36983}
+
+\begin{DoxyItemize}
+\item Metadata verification
+\item Code signing checks
+\item Permission validation
+\item Dependency scanning
+\item Security policy enforcement
+\end{DoxyItemize}\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36984}{}\doxysubsection{\texorpdfstring{Audit Logging}{Audit Logging}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36984}
+
+\begin{DoxyItemize}
+\item HIPAA-\/compliant event logging
+\item Resource usage tracking
+\item Security event monitoring
+\item Access pattern analysis
+\end{DoxyItemize}\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36985}{}\doxysection{\texorpdfstring{Basic Usage}{Basic Usage}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36985}
+\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36986}{}\doxysubsection{\texorpdfstring{Installing a Plugin}{Installing a Plugin}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36986}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ pluginService\ =\ new\ PluginService(\{}
+\DoxyCodeLine{\ \ auditService,}
+\DoxyCodeLine{\ \ securityService,}
+\DoxyCodeLine{\ \ metricsService}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Install\ a\ plugin}
+\DoxyCodeLine{await\ pluginService.installPlugin(\{}
+\DoxyCodeLine{\ \ id:\ 'my-\/plugin',}
+\DoxyCodeLine{\ \ version:\ '1.0.0',}
+\DoxyCodeLine{\ \ code:\ pluginCode,}
+\DoxyCodeLine{\ \ metadata:\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ 'My\ Plugin',}
+\DoxyCodeLine{\ \ \ \ description:\ 'Extends\ EHR\ functionality',}
+\DoxyCodeLine{\ \ \ \ permissions:\ ['read:patients',\ 'write:appointments'],}
+\DoxyCodeLine{\ \ \ \ author:\ 'Developer\ Name',}
+\DoxyCodeLine{\ \ \ \ homepage:\ 'https://example.com/my-\/plugin'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36987}{}\doxysubsection{\texorpdfstring{Enabling a Plugin}{Enabling a Plugin}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36987}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Enable\ an\ installed\ plugin}
+\DoxyCodeLine{await\ pluginService.enablePlugin('my-\/plugin')}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36988}{}\doxysubsection{\texorpdfstring{Using the Marketplace}{Using the Marketplace}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36988}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ marketplaceService\ =\ new\ PluginMarketplaceService(\{}
+\DoxyCodeLine{\ \ pluginService,}
+\DoxyCodeLine{\ \ auditService,}
+\DoxyCodeLine{\ \ securityService,}
+\DoxyCodeLine{\ \ metricsService}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Search\ for\ plugins}
+\DoxyCodeLine{const\ plugins\ =\ await\ marketplaceService.searchPlugins(\{}
+\DoxyCodeLine{\ \ query:\ 'appointment',}
+\DoxyCodeLine{\ \ tags:\ ['scheduling'],}
+\DoxyCodeLine{\ \ sort:\ 'downloads'}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Download\ and\ install\ a\ plugin}
+\DoxyCodeLine{await\ marketplaceService.downloadAndInstall('appointment-\/scheduler',\ '1.0.0')}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36989}{}\doxysection{\texorpdfstring{Plugin API}{Plugin API}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36989}
+Plugins have access to a controlled set of APIs\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ PluginAPI\ \{}
+\DoxyCodeLine{\ \ //\ EHR\ Data\ Access}
+\DoxyCodeLine{\ \ patients:\ \{}
+\DoxyCodeLine{\ \ \ \ search:\ (criteria:\ SearchCriteria)\ =>\ Promise<Patient[]>}
+\DoxyCodeLine{\ \ \ \ get:\ (id:\ string)\ =>\ Promise<Patient>}
+\DoxyCodeLine{\ \ \ \ update:\ (id:\ string,\ data:\ Partial<Patient>)\ =>\ Promise<Patient>}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Appointment\ Management}
+\DoxyCodeLine{\ \ appointments:\ \{}
+\DoxyCodeLine{\ \ \ \ schedule:\ (appointment:\ Appointment)\ =>\ Promise<Appointment>}
+\DoxyCodeLine{\ \ \ \ cancel:\ (id:\ string,\ reason:\ string)\ =>\ Promise<void>}
+\DoxyCodeLine{\ \ \ \ reschedule:\ (id:\ string,\ newTime:\ Date)\ =>\ Promise<Appointment>}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Utilities}
+\DoxyCodeLine{\ \ logger:\ \{}
+\DoxyCodeLine{\ \ \ \ info:\ (message:\ string,\ meta?:\ object)\ =>\ void}
+\DoxyCodeLine{\ \ \ \ error:\ (message:\ string,\ error?:\ Error)\ =>\ void}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Events}
+\DoxyCodeLine{\ \ events:\ \{}
+\DoxyCodeLine{\ \ \ \ on:\ (event:\ string,\ handler:\ Function)\ =>\ void}
+\DoxyCodeLine{\ \ \ \ emit:\ (event:\ string,\ data:\ any)\ =>\ void}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36990}{}\doxysection{\texorpdfstring{Resource Limits}{Resource Limits}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36990}
+Default resource limits for plugins\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ defaultLimits\ =\ \{}
+\DoxyCodeLine{\ \ memory:\ '128MB',}
+\DoxyCodeLine{\ \ cpu:\ '10\%',}
+\DoxyCodeLine{\ \ storage:\ '50MB',}
+\DoxyCodeLine{\ \ networkCalls:\ 100,\ //\ per\ minute}
+\DoxyCodeLine{\ \ databaseQueries:\ 1000,\ //\ per\ minute}
+\DoxyCodeLine{\ \ executionTimeout:\ '5s'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36991}{}\doxysection{\texorpdfstring{Events}{Events}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36991}
+The Plugin System emits events for various lifecycle stages\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Plugin\ lifecycle\ events}
+\DoxyCodeLine{pluginService.on('plugin:installed',\ (\{\ pluginId,\ version\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(`Plugin\ \$\{pluginId\}@\$\{version\}\ installed`)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{pluginService.on('plugin:enabled',\ (\{\ pluginId\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(`Plugin\ \$\{pluginId\}\ enabled`)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{pluginService.on('plugin:disabled',\ (\{\ pluginId\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(`Plugin\ \$\{pluginId\}\ disabled`)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Error\ events}
+\DoxyCodeLine{pluginService.on('plugin:error',\ (\{\ pluginId,\ error\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ console.error(`Plugin\ \$\{pluginId\}\ error:`,\ error)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Resource\ usage\ events}
+\DoxyCodeLine{pluginService.on('plugin:resource:exceeded',\ (\{\ pluginId,\ resource,\ limit\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ console.warn(`Plugin\ \$\{pluginId\}\ exceeded\ \$\{resource\}\ limit\ of\ \$\{limit\}`)}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36992}{}\doxysection{\texorpdfstring{Best Practices}{Best Practices}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36992}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Security}}
+\begin{DoxyItemize}
+\item Always validate plugin metadata before installation
+\item Use the minimum required permissions
+\item Monitor resource usage
+\item Implement rate limiting for API calls
+\end{DoxyItemize}
+\item {\bfseries{Performance}}
+\begin{DoxyItemize}
+\item Keep plugins focused and lightweight
+\item Implement proper error handling
+\item Use caching when appropriate
+\item Optimize database queries
+\end{DoxyItemize}
+\item {\bfseries{Maintenance}}
+\begin{DoxyItemize}
+\item Follow semantic versioning
+\item Document API changes
+\item Provide migration guides
+\item Test thoroughly before publishing
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2api_2plugins_2overview_autotoc_md36993}{}\doxysection{\texorpdfstring{Next Steps}{Next Steps}}\label{md_src_2docs_2api_2plugins_2overview_autotoc_md36993}
+
+\begin{DoxyItemize}
+\item Read the \doxysectlink{md_src_2docs_2api_2plugins_2api}{Plugin API Reference}{0} for detailed API documentation
+\item Learn about \doxysectlink{md_src_2docs_2api_2plugins_2lifecycle}{Plugin Lifecycle Management}{0}
+\item Understand \doxylink{_s_e_c_u_r_i_t_y_8md}{Plugin Security}
+\item Review \doxysectlink{md_src_2docs_2api_2plugins_2best-practices}{Plugin Development Best Practices}{0}
+\item Explore the Plugin Marketplace 
+\end{DoxyItemize}

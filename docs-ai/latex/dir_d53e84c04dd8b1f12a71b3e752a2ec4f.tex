@@ -1,0 +1,39 @@
+\doxysection{node\+\_\+modules/regexp.prototype.\+flags Directory Reference}
+\hypertarget{dir_d53e84c04dd8b1f12a71b3e752a2ec4f}{}\label{dir_d53e84c04dd8b1f12a71b3e752a2ec4f}\index{node\_modules/regexp.prototype.flags Directory Reference@{node\_modules/regexp.prototype.flags Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Reg\+Exp.\+prototype.\+flags \textsuperscript{\mbox{[}!\mbox{[}Version Badge\mbox{]}\mbox{[}npm-\/version-\/svg\mbox{]}\mbox{]}\mbox{[}package-\/url\mbox{]}}
+
+\href{https://travis-ci.org/es-shims/RegExp.prototype.flags}{\texttt{ }} \href{https://david-dm.org/es-shims/RegExp.prototype.flags}{\texttt{ }} \href{https://david-dm.org/es-shims/RegExp.prototype.flags\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{http://npm-stat.com/charts.html?package=regexp.prototype.flags}{\texttt{ }}
+
+\href{https://npmjs.com/package/regexp.prototype.flags}{\texttt{ }}
+
+\href{https://ci.testling.com/es-shims/RegExp.prototype.flags}{\texttt{ }}
+
+An ES6 spec-\/compliant {\ttfamily Reg\+Exp.\+prototype.\+flags} shim. Invoke its "{}shim"{} method to shim Reg\+Exp.\+prototype.\+flags if it is unavailable. {\itshape Note}\+: {\ttfamily Reg\+Exp\#flags} requires a true ES5 environment -\/ specifically, one with ES5 getters.
+
+This package implements the \href{https://github.com/es-shims/api}{\texttt{ es-\/shim API}} interface. It works in an ES5-\/supported environment and complies with the \href{http://www.ecma-international.org/ecma-262/6.0/\#sec-get-regexp.prototype.flags}{\texttt{ spec}}.
+
+Most common usage\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ flags\ =\ require('regexp.prototype.flags');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert(flags(/a/)\ ===\ '');}
+\DoxyCodeLine{assert(flags(new\ RegExp('a'))\ ===\ '');}
+\DoxyCodeLine{assert(flags(/a/mig)\ ===\ 'gim');}
+\DoxyCodeLine{assert(flags(new\ RegExp('a',\ 'mig'))\ ===\ 'gim');}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (!RegExp.prototype.flags)\ \{}
+\DoxyCodeLine{\ \ \ \ flags.shim();}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert(flags(/a/)\ ===\ /a/.flags);}
+\DoxyCodeLine{assert(flags(new\ RegExp('a'))\ ===\ new\ RegExp('a').flags);}
+\DoxyCodeLine{assert(flags(/a/mig)\ ===\ /a/mig.flags);}
+\DoxyCodeLine{assert(flags(new\ RegExp('a',\ 'mig'))\ ===\ new\ RegExp('a',\ 'mig').flags);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28668}{}\doxysubsubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md28668}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

@@ -1,0 +1,54 @@
+\doxysection{node\+\_\+modules/@volar/source-\/map Directory Reference}
+\hypertarget{dir_48126fc9df25c4634afeb7d80f96e093}{}\label{dir_48126fc9df25c4634afeb7d80f96e093}\index{node\_modules/"@volar/source-\/map Directory Reference@{node\_modules/"@volar/source-\/map Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Provides functionality related to source maps.\hypertarget{README.md_autotoc_md7255}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md7255}
+\hypertarget{README.md_autotoc_md7256}{}\doxysubsubsection{\texorpdfstring{This package exports a {\ttfamily Source\+Map} class with the following methods\+:}{This package exports a {\ttfamily Source\+Map} class with the following methods\+:}}\label{README.md_autotoc_md7256}
+Params\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily fallback\+To\+Any\+Match}(default\+: false)\+: allow the start and end offsets to come from different mappings.
+\item {\ttfamily filter?\+: (data\+: Data) =\texorpdfstring{$>$}{>} boolean)}(default\+: undefined)\+: according to mapping\+: Mapping$<$\+My\+Data\+Type$>$.\+data, filter out offsets that do not meet the custom conditions.
+\end{DoxyItemize}
+
+Methods\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily to\+Source\+Range(generated\+Start\+: number, generated\+End\+: number, fallback\+To\+Any\+Match\+: boolean, filter?\+: (data\+: Data) =\texorpdfstring{$>$}{>} boolean)}\+: Returns all source start and end offsets for the given generated start and end offsets.
+\item {\ttfamily to\+Generated\+Range(source\+Start\+: number, source\+End\+: number, fallback\+To\+Any\+Match\+: boolean, filter?\+: (data\+: Data) =\texorpdfstring{$>$}{>} boolean)}\+: Returns all generated start and end offsets for the given source start and end offsets.
+\item {\ttfamily to\+Source\+Location(generated\+Offset\+: number, filter?\+: (data\+: Data) =\texorpdfstring{$>$}{>} boolean)}\+: Returns all source offsets for a given generated offset.
+\item {\ttfamily to\+Generated\+Location(source\+Offset\+: number, filter?\+: (data\+: Data) =\texorpdfstring{$>$}{>} boolean)}\+: Returns all generated offsets for a given source offset.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md7257}{}\doxysubsection{\texorpdfstring{Data Structures}{Data Structures}}\label{README.md_autotoc_md7257}
+\hypertarget{README.md_autotoc_md7258}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Mapping}}{{\ttfamily Mapping}}}\label{README.md_autotoc_md7258}
+The {\ttfamily Mapping} is a tuple that represents a mapping in the source map. It consists of the following elements\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily source}\+: A string representing the source file. This can be {\ttfamily undefined}.
+\item {\ttfamily source\+Offsets}\+: Offsets in the source code.
+\item {\ttfamily generated\+Offsets}\+: Offsets in the generated code.
+\item {\ttfamily data}\+: The data associated with this mapping. The type of this data is generic and can be specified when creating a {\ttfamily Source\+Map} instance.
+\end{DoxyItemize}
+
+Here is an example of a {\ttfamily Mapping}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ mapping:\ Mapping<MyDataType>\ =\ \{}
+\DoxyCodeLine{\ \ \ \ source:\ '.../sourceFile.ts',}
+\DoxyCodeLine{\ \ \ \ sourceOffsets:\ [10],}
+\DoxyCodeLine{\ \ \ \ generatedOffsets:\ [30],}
+\DoxyCodeLine{\ \ \ \ lengths:\ [10],}
+\DoxyCodeLine{\ \ \ \ data:\ myData,}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+In this example, {\ttfamily my\+Data} is of type {\ttfamily My\+Data\+Type}, which is the type specified for the Source\+Map instance.
+
+Remember to replace {\ttfamily My\+Data\+Type} and {\ttfamily my\+Data} with actual types and data that are relevant to your project.\hypertarget{README.md_autotoc_md7259}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md7259}
+This project is licensed under the MIT License. See the \mbox{[}LICENSE\mbox{]}(LICENSE) file for more details. 

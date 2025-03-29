@@ -1,0 +1,480 @@
+\doxysection{node\+\_\+modules/@pkgjs/parseargs Directory Reference}
+\hypertarget{dir_1eef2a1c2e746fc418e2a598caecb99c}{}\label{dir_1eef2a1c2e746fc418e2a598caecb99c}\index{node\_modules/"@pkgjs/parseargs Directory Reference@{node\_modules/"@pkgjs/parseargs Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{README.md_autotoc_md5446}{}\doxysubsection{\texorpdfstring{parse\+Args}{parse\+Args}}\label{README.md_autotoc_md5446}
+\href{https://github.com/pkgjs/parseargs/blob/main/.nycrc}{\texttt{ }}
+
+Polyfill of {\ttfamily util.\+parse\+Args()}\hypertarget{README.md_autotoc_md5447}{}\doxysubsubsection{\texorpdfstring{{\ttfamily util.\+parse\+Args(\mbox{[}config\mbox{]})}}{{\ttfamily util.\+parse\+Args(\mbox{[}config\mbox{]})}}}\label{README.md_autotoc_md5447}
+\begin{quote}
+Stability\+: 1 -\/ Experimental \end{quote}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily config} \{Object\} Used to provide arguments for parsing and to configure the parser. {\ttfamily config} supports the following properties\+:
+\begin{DoxyItemize}
+\item {\ttfamily args} \{string\mbox{[}\mbox{]}\} array of argument strings. {\bfseries{Default\+:}} {\ttfamily process.\+argv} with {\ttfamily exec\+Path} and {\ttfamily filename} removed.
+\item {\ttfamily options} \{Object\} Used to describe arguments known to the parser. Keys of {\ttfamily options} are the long names of options and values are an \{Object\} accepting the following properties\+:
+\begin{DoxyItemize}
+\item {\ttfamily type} \{string\} Type of argument, which must be either {\ttfamily boolean} or {\ttfamily string}.
+\item {\ttfamily multiple} \{boolean\} Whether this option can be provided multiple times. If {\ttfamily true}, all values will be collected in an array. If {\ttfamily false}, values for the option are last-\/wins. {\bfseries{Default\+:}} {\ttfamily false}.
+\item {\ttfamily short} \{string\} A single character alias for the option.
+\item {\ttfamily default} \{string \texorpdfstring{$\vert$}{|} boolean \texorpdfstring{$\vert$}{|} string\mbox{[}\mbox{]} \texorpdfstring{$\vert$}{|} boolean\mbox{[}\mbox{]}\} The default option value when it is not set by args. It must be of the same type as the the {\ttfamily type} property. When {\ttfamily multiple} is {\ttfamily true}, it must be an array.
+\end{DoxyItemize}
+\item {\ttfamily strict} \{boolean\} Should an error be thrown when unknown arguments are encountered, or when arguments are passed that do not match the {\ttfamily type} configured in {\ttfamily options}. {\bfseries{Default\+:}} {\ttfamily true}.
+\item {\ttfamily allow\+Positionals} \{boolean\} Whether this command accepts positional arguments. {\bfseries{Default\+:}} {\ttfamily false} if {\ttfamily strict} is {\ttfamily true}, otherwise {\ttfamily true}.
+\item {\ttfamily tokens} \{boolean\} Return the parsed tokens. This is useful for extending the built-\/in behavior, from adding additional checks through to reprocessing the tokens in different ways. {\bfseries{Default\+:}} {\ttfamily false}.
+\end{DoxyItemize}
+\item Returns\+: \{Object\} The parsed command line arguments\+:
+\begin{DoxyItemize}
+\item {\ttfamily values} \{Object\} A mapping of parsed option names with their \{string\} or \{boolean\} values.
+\item {\ttfamily positionals} \{string\mbox{[}\mbox{]}\} Positional arguments.
+\item {\ttfamily tokens} \{Object\mbox{[}\mbox{]} \texorpdfstring{$\vert$}{|} undefined\} See parse\+Args tokens section. Only returned if {\ttfamily config} includes {\ttfamily tokens\+: true}.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Provides a higher level API for command-\/line argument parsing than interacting with {\ttfamily process.\+argv} directly. Takes a specification for the expected arguments and returns a structured object with the parsed options and positionals.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseArgs\ \}\ from\ 'node:util';}
+\DoxyCodeLine{const\ args\ =\ ['-\/f',\ '-\/-\/bar',\ 'b'];}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ foo:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'boolean',}
+\DoxyCodeLine{\ \ \ \ short:\ 'f'}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ bar:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'string'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ values,}
+\DoxyCodeLine{\ \ positionals}
+\DoxyCodeLine{\}\ =\ parseArgs(\{\ args,\ options\ \});}
+\DoxyCodeLine{console.log(values,\ positionals);}
+\DoxyCodeLine{//\ Prints:\ [Object:\ null\ prototype]\ \{\ foo:\ true,\ bar:\ 'b'\ \}\ []}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parseArgs\ \}\ =\ require('node:util');}
+\DoxyCodeLine{const\ args\ =\ ['-\/f',\ '-\/-\/bar',\ 'b'];}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ foo:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'boolean',}
+\DoxyCodeLine{\ \ \ \ short:\ 'f'}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ bar:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'string'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ values,}
+\DoxyCodeLine{\ \ positionals}
+\DoxyCodeLine{\}\ =\ parseArgs(\{\ args,\ options\ \});}
+\DoxyCodeLine{console.log(values,\ positionals);}
+\DoxyCodeLine{//\ Prints:\ [Object:\ null\ prototype]\ \{\ foo:\ true,\ bar:\ 'b'\ \}\ []}
+
+\end{DoxyCode}
+
+
+{\ttfamily util.\+parse\+Args} is experimental and behavior may change. Join the conversation in \href{https://github.com/pkgjs/parseargs}{\texttt{ pkgjs/parseargs}} to contribute to the design.\hypertarget{README.md_autotoc_md5448}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily parse\+Args} {\ttfamily tokens}}{{\ttfamily parse\+Args} {\ttfamily tokens}}}\label{README.md_autotoc_md5448}
+Detailed parse information is available for adding custom behaviours by specifying {\ttfamily tokens\+: true} in the configuration. The returned tokens have properties describing\+:
+
+
+\begin{DoxyItemize}
+\item all tokens
+\begin{DoxyItemize}
+\item {\ttfamily kind} \{string\} One of \textquotesingle{}option\textquotesingle{}, \textquotesingle{}positional\textquotesingle{}, or \textquotesingle{}option-\/terminator\textquotesingle{}.
+\item {\ttfamily index} \{number\} Index of element in {\ttfamily args} containing token. So the source argument for a token is {\ttfamily args\mbox{[}token.\+index\mbox{]}}.
+\end{DoxyItemize}
+\item option tokens
+\begin{DoxyItemize}
+\item {\ttfamily name} \{string\} Long name of option.
+\item {\ttfamily raw\+Name} \{string\} How option used in args, like {\ttfamily -\/f} of {\ttfamily -\/-\/foo}.
+\item {\ttfamily value} \{string \texorpdfstring{$\vert$}{|} undefined\} Option value specified in args. Undefined for boolean options.
+\item {\ttfamily inline\+Value} \{boolean \texorpdfstring{$\vert$}{|} undefined\} Whether option value specified inline, like {\ttfamily -\/-\/foo=bar}.
+\end{DoxyItemize}
+\item positional tokens
+\begin{DoxyItemize}
+\item {\ttfamily value} \{string\} The value of the positional argument in args (i.\+e. {\ttfamily args\mbox{[}index\mbox{]}}).
+\end{DoxyItemize}
+\item option-\/terminator token
+\end{DoxyItemize}
+
+The returned tokens are in the order encountered in the input args. Options that appear more than once in args produce a token for each use. Short option groups like {\ttfamily -\/xy} expand to a token for each option. So {\ttfamily -\/xxx} produces three tokens.
+
+For example to use the returned tokens to add support for a negated option like {\ttfamily -\/-\/no-\/color}, the tokens can be reprocessed to change the value stored for the negated option.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseArgs\ \}\ from\ 'node:util';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ 'color':\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\ \ 'no-\/color':\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\ \ 'logfile':\ \{\ type:\ 'string'\ \},}
+\DoxyCodeLine{\ \ 'no-\/logfile':\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ \{\ values,\ tokens\ \}\ =\ parseArgs(\{\ options,\ tokens:\ true\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Reprocess\ the\ option\ tokens\ and\ overwrite\ the\ returned\ values.}
+\DoxyCodeLine{tokens}
+\DoxyCodeLine{\ \ .filter((token)\ =>\ token.kind\ ===\ 'option')}
+\DoxyCodeLine{\ \ .forEach((token)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (token.name.startsWith('no-\/'))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Store\ foo:false\ for\ -\/-\/no-\/foo}
+\DoxyCodeLine{\ \ \ \ \ \ const\ positiveName\ =\ token.name.slice(3);}
+\DoxyCodeLine{\ \ \ \ \ \ values[positiveName]\ =\ false;}
+\DoxyCodeLine{\ \ \ \ \ \ delete\ values[token.name];}
+\DoxyCodeLine{\ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Resave\ value\ so\ last\ one\ wins\ if\ both\ -\/-\/foo\ and\ -\/-\/no-\/foo.}
+\DoxyCodeLine{\ \ \ \ \ \ values[token.name]\ =\ token.value\ ??\ true;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color\ =\ values.color;}
+\DoxyCodeLine{const\ logfile\ =\ values.logfile\ ??\ 'default.log';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(\{\ logfile,\ color\ \});}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parseArgs\ \}\ =\ require('node:util');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ 'color':\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\ \ 'no-\/color':\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\ \ 'logfile':\ \{\ type:\ 'string'\ \},}
+\DoxyCodeLine{\ \ 'no-\/logfile':\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ \{\ values,\ tokens\ \}\ =\ parseArgs(\{\ options,\ tokens:\ true\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Reprocess\ the\ option\ tokens\ and\ overwrite\ the\ returned\ values.}
+\DoxyCodeLine{tokens}
+\DoxyCodeLine{\ \ .filter((token)\ =>\ token.kind\ ===\ 'option')}
+\DoxyCodeLine{\ \ .forEach((token)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (token.name.startsWith('no-\/'))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Store\ foo:false\ for\ -\/-\/no-\/foo}
+\DoxyCodeLine{\ \ \ \ \ \ const\ positiveName\ =\ token.name.slice(3);}
+\DoxyCodeLine{\ \ \ \ \ \ values[positiveName]\ =\ false;}
+\DoxyCodeLine{\ \ \ \ \ \ delete\ values[token.name];}
+\DoxyCodeLine{\ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Resave\ value\ so\ last\ one\ wins\ if\ both\ -\/-\/foo\ and\ -\/-\/no-\/foo.}
+\DoxyCodeLine{\ \ \ \ \ \ values[token.name]\ =\ token.value\ ??\ true;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color\ =\ values.color;}
+\DoxyCodeLine{const\ logfile\ =\ values.logfile\ ??\ 'default.log';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(\{\ logfile,\ color\ \});}
+
+\end{DoxyCode}
+
+
+Example usage showing negated options, and when an option is used multiple ways then last one wins.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ negate.js}
+\DoxyCodeLine{\{\ logfile:\ 'default.log',\ color:\ undefined\ \}}
+\DoxyCodeLine{\$\ node\ negate.js\ -\/-\/no-\/logfile\ -\/-\/no-\/color}
+\DoxyCodeLine{\{\ logfile:\ false,\ color:\ false\ \}}
+\DoxyCodeLine{\$\ node\ negate.js\ -\/-\/logfile=test.log\ -\/-\/color}
+\DoxyCodeLine{\{\ logfile:\ 'test.log',\ color:\ true\ \}}
+\DoxyCodeLine{\$\ node\ negate.js\ -\/-\/no-\/logfile\ -\/-\/logfile=test.log\ -\/-\/color\ -\/-\/no-\/color}
+\DoxyCodeLine{\{\ logfile:\ 'test.log',\ color:\ false\ \}}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md5450}{}\doxysubsubsection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{README.md_autotoc_md5450}
+
+\begin{DoxyItemize}
+\item \`{}util.parse\+Args(\mbox{[}config\mbox{]})\`{}
+\item Scope
+\item Version Matchups
+\item 🚀 Getting Started
+\item 🙌 Contributing
+\item 💡 \`{}process.main\+Args\`{} Proposal
+\begin{DoxyItemize}
+\item Implementation\+:
+\end{DoxyItemize}
+\item 📃 Examples
+\item F.A.Qs
+\item Links \& Resources
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md5452}{}\doxysubsubsection{\texorpdfstring{Scope}{Scope}}\label{README.md_autotoc_md5452}
+It is already possible to build great arg parsing modules on top of what Node.\+js provides; the prickly API is abstracted away by these modules. Thus, process.\+parse\+Args() is not necessarily intended for library authors; it is intended for developers of simple CLI tools, ad-\/hoc scripts, deployed Node.\+js applications, and learning materials.
+
+It is exceedingly difficult to provide an API which would both be friendly to these Node.\+js users while being extensible enough for libraries to build upon. We chose to prioritize these use cases because these are currently not well-\/served by Node.\+js\textquotesingle{} API.
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md5454}{}\doxysubsubsection{\texorpdfstring{Version Matchups}{Version Matchups}}\label{README.md_autotoc_md5454}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Node.\+js   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @pkgjs/parse\+Args    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Node.\+js   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ @pkgjs/parse\+Args    }\\\cline{1-2}
+\endhead
+\href{https://nodejs.org/docs/latest-v18.x/api/util.html\#utilparseargsconfig}{\texttt{ v18.\+3.\+0}}   &\href{https://github.com/pkgjs/parseargs/tree/v0.9.1\#utilparseargsconfig}{\texttt{ v0.\+9.\+1}}    \\\cline{1-2}
+\href{https://nodejs.org/dist/latest-v16.x/docs/api/util.html\#utilparseargsconfig}{\texttt{ v16.\+17.\+0}}, \href{https://nodejs.org/docs/latest-v18.x/api/util.html\#utilparseargsconfig}{\texttt{ v18.\+7.\+0}}   &\href{https://github.com/pkgjs/parseargs/tree/v0.10.0\#utilparseargsconfig}{\texttt{ 0.\+10.\+0}}   \\\cline{1-2}
+\end{longtabu}
+
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md5456}{}\doxysubsubsection{\texorpdfstring{🚀 Getting Started}{🚀 Getting Started}}\label{README.md_autotoc_md5456}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Install dependencies.}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install}
+
+\end{DoxyCode}
+
+\item {\bfseries{Open the index.\+js file and start editing!}}
+\item {\bfseries{Test your code by calling parse\+Args through our test file}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ test}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md5458}{}\doxysubsubsection{\texorpdfstring{🙌 Contributing}{🙌 Contributing}}\label{README.md_autotoc_md5458}
+Any person who wants to contribute to the initiative is welcome! Please first read the \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{Contributing Guide}
+
+Additionally, reading the \`{}\+Examples w/ Output\`{} section of this document will be the best way to familiarize yourself with the target expected behavior for parse\+Args() once it is fully implemented.
+
+This package was implemented using \href{https://www.npmjs.com/package/tape}{\texttt{ tape}} as its test harness.
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md5460}{}\doxysubsubsection{\texorpdfstring{💡 {\ttfamily process.\+main\+Args} Proposal}{💡 {\ttfamily process.\+main\+Args} Proposal}}\label{README.md_autotoc_md5460}
+\begin{quote}
+Note\+: This can be moved forward independently of the {\ttfamily util.\+parse\+Args()} proposal/work. \end{quote}
+\hypertarget{README.md_autotoc_md5461}{}\doxysubsubsubsection{\texorpdfstring{Implementation\+:}{Implementation\+:}}\label{README.md_autotoc_md5461}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{process.mainArgs\ =\ process.argv.slice(process.\_exec\ ?\ 1\ :\ 2)}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md5463}{}\doxysubsubsection{\texorpdfstring{📃 Examples}{📃 Examples}}\label{README.md_autotoc_md5463}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parseArgs\ \}\ =\ require('@pkgjs/parseargs');}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parseArgs\ \}\ =\ require('@pkgjs/parseargs');}
+\DoxyCodeLine{//\ specify\ the\ options\ that\ may\ be\ used}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ foo:\ \{\ type:\ 'string'\},}
+\DoxyCodeLine{\ \ bar:\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ args\ =\ ['-\/-\/foo=a',\ '-\/-\/bar'];}
+\DoxyCodeLine{const\ \{\ values,\ positionals\ \}\ =\ parseArgs(\{\ args,\ options\ \});}
+\DoxyCodeLine{//\ values\ =\ \{\ foo:\ 'a',\ bar:\ true\ \}}
+\DoxyCodeLine{//\ positionals\ =\ []}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parseArgs\ \}\ =\ require('@pkgjs/parseargs');}
+\DoxyCodeLine{//\ type:string\ \&\ multiple}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ foo:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'string',}
+\DoxyCodeLine{\ \ \ \ multiple:\ true,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ args\ =\ ['-\/-\/foo=a',\ '-\/-\/foo',\ 'b'];}
+\DoxyCodeLine{const\ \{\ values,\ positionals\ \}\ =\ parseArgs(\{\ args,\ options\ \});}
+\DoxyCodeLine{//\ values\ =\ \{\ foo:\ [\ 'a',\ 'b'\ ]\ \}}
+\DoxyCodeLine{//\ positionals\ =\ []}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parseArgs\ \}\ =\ require('@pkgjs/parseargs');}
+\DoxyCodeLine{//\ shorts}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ foo:\ \{}
+\DoxyCodeLine{\ \ \ \ short:\ 'f',}
+\DoxyCodeLine{\ \ \ \ type:\ 'boolean'}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ args\ =\ ['-\/f',\ 'b'];}
+\DoxyCodeLine{const\ \{\ values,\ positionals\ \}\ =\ parseArgs(\{\ args,\ options,\ allowPositionals:\ true\ \});}
+\DoxyCodeLine{//\ values\ =\ \{\ foo:\ true\ \}}
+\DoxyCodeLine{//\ positionals\ =\ ['b']}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ parseArgs\ \}\ =\ require('@pkgjs/parseargs');}
+\DoxyCodeLine{//\ unconfigured}
+\DoxyCodeLine{const\ options\ =\ \{\};}
+\DoxyCodeLine{const\ args\ =\ ['-\/f',\ '-\/-\/foo=a',\ '-\/-\/bar',\ 'b'];}
+\DoxyCodeLine{const\ \{\ values,\ positionals\ \}\ =\ parseArgs(\{\ strict:\ false,\ args,\ options,\ allowPositionals:\ true\ \});}
+\DoxyCodeLine{//\ values\ =\ \{\ f:\ true,\ foo:\ 'a',\ bar:\ true\ \}}
+\DoxyCodeLine{//\ positionals\ =\ ['b']}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md5465}{}\doxysubsubsection{\texorpdfstring{F.\+A.\+Qs}{F.\+A.\+Qs}}\label{README.md_autotoc_md5465}
+
+\begin{DoxyItemize}
+\item Is {\ttfamily cmd -\/-\/foo=bar baz} the same as {\ttfamily cmd baz -\/-\/foo=bar}?
+\begin{DoxyItemize}
+\item yes
+\end{DoxyItemize}
+\item Does the parser execute a function?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Does the parser execute one of several functions, depending on input?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Can subcommands take options that are distinct from the main command?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Does it output generated help when no options match?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Does it generated short usage? Like\+: {\ttfamily usage\+: ls \mbox{[}-\/ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1\mbox{]} \mbox{[}file ...\mbox{]}}
+\begin{DoxyItemize}
+\item no (no usage/help at all)
+\end{DoxyItemize}
+\item Does the user provide the long usage text? For each option? For the whole command?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Do subcommands (if implemented) have their own usage output?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Does usage print if the user runs {\ttfamily cmd -\/-\/help}?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Does it set {\ttfamily process.\+exit\+Code}?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Does usage print to stderr or stdout?
+\begin{DoxyItemize}
+\item N/A
+\end{DoxyItemize}
+\item Does it check types? (Say, specify that an option is a boolean, number, etc.)
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Can an option have more than one type? (string or false, for example)
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Can the user define a type? (Say, {\ttfamily type\+: path} to call {\ttfamily path.\+resolve()} on the argument.)
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Does a {\ttfamily -\/-\/foo=0o22} mean 0, 22, 18, or "{}0o22"{}?
+\begin{DoxyItemize}
+\item {\ttfamily "{}0o22"{}}
+\end{DoxyItemize}
+\item Does it coerce types?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}
+\item Does {\ttfamily -\/-\/no-\/foo} coerce to {\ttfamily -\/-\/foo=false}? For all options? Only boolean options?
+\begin{DoxyItemize}
+\item no, it sets `\{values\+:\{\textquotesingle{}no-\/foo'\+: true\}\}{\ttfamily }
+\end{DoxyItemize}
+\item {\ttfamily Is}--foo{\ttfamily the same as}--foo=true{\ttfamily ? Only for known booleans? Only at the end?
+\begin{DoxyItemize}
+\item no, they are not the same. There is no special handling of
+\end{DoxyItemize}}true{\ttfamily as a value so it is just another string.}
+\item {\ttfamily Does it read environment variables? Ie, is}FOO=1 cmd{\ttfamily the same as}cmd --foo=1{\ttfamily ?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}}
+\item {\ttfamily Do unknown arguments raise an error? Are they parsed? Are they treated as positional arguments?
+\begin{DoxyItemize}
+\item no, they are parsed, not treated as positionals
+\end{DoxyItemize}}
+\item {\ttfamily Does}--{\ttfamily signal the end of options?
+\begin{DoxyItemize}
+\item yes
+\end{DoxyItemize}}
+\item {\ttfamily Is}--{\ttfamily included as a positional?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}}
+\item {\ttfamily Is}program -- foo{\ttfamily the same as}program foo{\ttfamily ?
+\begin{DoxyItemize}
+\item yes, both store
+\end{DoxyItemize}}\{positionals\+:\mbox{[}\textquotesingle{}foo\textquotesingle{}\mbox{]}\}{\ttfamily }
+\item {\ttfamily Does the API specify whether a}--{\ttfamily was present/relevant?
+\begin{DoxyItemize}
+\item no
+\end{DoxyItemize}}
+\item {\ttfamily Is}-\/bar{\ttfamily the same as}--bar{\ttfamily ?
+\begin{DoxyItemize}
+\item no,
+\end{DoxyItemize}}-\/bar{\ttfamily is a short option or options, with expansion logic that follows the \mbox{[}Utility Syntax Guidelines in POSIX.\+1-\/2017\mbox{]}(\href{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html}{\texttt{ https\+://pubs.\+opengroup.\+org/onlinepubs/9699919799/basedefs/\+V1\+\_\+chap12.\+html}}).}-\/bar{\ttfamily expands to}-\/b{\ttfamily ,}-\/a{\ttfamily ,}-\/r{\ttfamily .}
+\item {\ttfamily Is}---foo{\ttfamily the same as}--foo{\ttfamily ?
+\begin{DoxyItemize}
+\item no
+\item the first is a long option named
+\end{DoxyItemize}}\textquotesingle{}-\/foo\textquotesingle{}{\ttfamily 
+\begin{DoxyItemize}
+\item the second is a long option named
+\end{DoxyItemize}}\textquotesingle{}foo\textquotesingle{}{\ttfamily }
+\item {\ttfamily Is}-\/{\ttfamily a positional? ie,}bash some-\/test.\+sh \texorpdfstring{$\vert$}{|} tap -\/\`{}
+\begin{DoxyItemize}
+\item yes
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5466}{}\doxysubsubsection{\texorpdfstring{Links \& Resources}{Links \& Resources}}\label{README.md_autotoc_md5466}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/nodejs/tooling/issues/19}{\texttt{ Initial Tooling Issue}}
+\item \href{https://github.com/nodejs/node/pull/35015}{\texttt{ Initial Proposal}}
+\item \href{https://github.com/nodejs/node/pull/42675}{\texttt{ parse\+Args Proposal}} 
+\end{DoxyItemize}

@@ -1,0 +1,170 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/raw Directory Reference}
+\hypertarget{dir_3b08ee7aee52450e5435d5b4a2f60466}{}\label{dir_3b08ee7aee52450e5435d5b4a2f60466}\index{node\_modules/hast-\/util-\/raw Directory Reference@{node\_modules/hast-\/util-\/raw Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_34604e92f4768517809702d0890a67dd}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-raw/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-raw}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-raw}{\texttt{ }} \href{https://bundlejs.com/?q=hast-util-raw}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/hast}{\texttt{ hast}} utility to parse the tree and semistandard {\ttfamily raw} nodes (strings of HTML) again, keeping positional info okay.\hypertarget{readme.md_autotoc_md17151}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md17151}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}raw(tree, options)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17152}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md17152}
+This package is a utility to parse a document again. It passes each node and embedded raw HTML through an HTML parser (\href{https://github.com/inikulin/parse5}{\texttt{ {\ttfamily parse5}}}), to recreate a tree exactly as how a browser would parse it, while keeping the original data and positional info intact.\hypertarget{readme.md_autotoc_md17153}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md17153}
+This utility is particularly useful when coming from markdown and wanting to support HTML embedded inside that markdown (which requires passing {\ttfamily allow\+Dangerous\+Html\+: true} to \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}}). Markdown dictates how, say, a list item or emphasis can be parsed. We can use that to turn the markdown syntax tree into an HTML syntax tree. But markdown also dictates that things that look like HTML, are passed through untouched, even when it just looks like XML but doesn’t really make sense, so we can’t normally use these strings of “\+HTML” to create an HTML syntax tree. This utility can. It can be used to take those strings of HTML and include them into the syntax tree as actual nodes.
+
+If your final result is HTML and you trust content, then “strings” are fine (you can pass {\ttfamily allow\+Dangerous\+Html\+: true} to {\ttfamily hast-\/util-\/to-\/html}, which passes HTML through untouched). But there are two main cases where a proper syntax tree is preferred\+:
+
+
+\begin{DoxyItemize}
+\item hast utilities need a proper syntax tree as they operate on actual nodes to inspect or transform things, they can’t operate on strings of HTML
+\item other output formats (React, MDX, etc) need actual nodes and can’t handle strings of HTML
+\end{DoxyItemize}
+
+The plugin \href{https://github.com/rehypejs/rehype-raw}{\texttt{ {\ttfamily rehype-\/raw}}} wraps this utility at a higher-\/level (easier) abstraction.\hypertarget{readme.md_autotoc_md17154}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md17154}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/raw}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{raw\}\ from\ 'https://esm.sh/hast-\/util-\/raw@9'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{raw\}\ from\ 'https://esm.sh/hast-\/util-\/raw@9?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17155}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md17155}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{raw\}\ from\ 'hast-\/util-\/raw'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ h('div',\ [h('h1',\ ['Foo\ ',\ h('h2',\ 'Bar'),\ '\ Baz'])])}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ reformatted\ =\ raw(tree)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(reformatted)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ type:\ 'element',}
+\DoxyCodeLine{\ \ tagName:\ 'div',}
+\DoxyCodeLine{\ \ properties:\ \{\},}
+\DoxyCodeLine{\ \ children:}
+\DoxyCodeLine{\ \ \ [\ \{\ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ \ tagName:\ 'h1',}
+\DoxyCodeLine{\ \ \ \ \ \ \ properties:\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ children:\ [Object]\ \},}
+\DoxyCodeLine{\ \ \ \ \ \{\ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ \ tagName:\ 'h2',}
+\DoxyCodeLine{\ \ \ \ \ \ \ properties:\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ children:\ [Object]\ \},}
+\DoxyCodeLine{\ \ \ \ \ \{\ type:\ 'text',\ value:\ '\ Baz'\ \}\ ]\ \}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17156}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md17156}
+\hypertarget{readme.md_autotoc_md17157}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md17157}
+Configuration.\hypertarget{readme.md_autotoc_md17158}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md17158}
+
+\begin{DoxyItemize}
+\item {\ttfamily file?} ({\ttfamily VFile \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined}) — corresponding virtual file representing the input document (optional)
+\item {\ttfamily pass\+Through?} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined})
+
+List of custom hast node types to pass through (as in, keep) (optional).
+
+If the passed through nodes have children, those children are expected to be hast again and will be handled.
+\item {\ttfamily tagfilter?} ({\ttfamily boolean \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined})
+
+Whether to disallow irregular tags in {\ttfamily raw} nodes according to GFM tagfilter (default\+: {\ttfamily false}).
+
+This affects the following tags, grouped by their kind\+:
+\begin{DoxyItemize}
+\item {\ttfamily RAWTEXT}\+: {\ttfamily iframe}, {\ttfamily noembed}, {\ttfamily noframes}, {\ttfamily style}, {\ttfamily xmp}
+\item {\ttfamily RCDATA}\+: {\ttfamily textarea}, {\ttfamily title}
+\item {\ttfamily SCRIPT\+\_\+\+DATA}\+: {\ttfamily script}
+\item {\ttfamily PLAINTEXT}\+: {\ttfamily plaintext} When you know that you do not want authors to write these tags, you can enable this option to prevent their use from running amok.
+\end{DoxyItemize}
+
+See\+: \href{https://github.github.com/gfm/\#disallowed-raw-html-extension-}{\texttt{ {\itshape Disallowed Raw HTML} in {\ttfamily cmark-\/gfm}}}.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17159}{}\doxysubsubsection{\texorpdfstring{{\ttfamily raw(tree, options)}}{{\ttfamily raw(tree, options)}}}\label{readme.md_autotoc_md17159}
+Pass a hast tree through an HTML parser, which will fix nesting, and turn raw nodes into actual nodes.\hypertarget{readme.md_autotoc_md17160}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17160}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} ({\ttfamily Root \texorpdfstring{$\vert$}{|} Root\+Content}) — original hast tree to transform
+\item {\ttfamily options?} ({\ttfamily Options \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined}) — configuration (optional)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17161}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17161}
+Parsed again tree ({\ttfamily Root \texorpdfstring{$\vert$}{|} Root\+Content}).\hypertarget{readme.md_autotoc_md17162}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md17162}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.
+
+The {\ttfamily Raw} node type is registered by and exposed from \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}}.\hypertarget{readme.md_autotoc_md17163}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md17163}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily hast-\/util-\/raw@\texorpdfstring{$^\wedge$}{\string^}9}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md17164}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md17164}
+Use of {\ttfamily hast-\/util-\/raw} can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack as {\ttfamily raw} nodes are unsafe. The following example shows how a raw node is used to inject a script that runs when loaded in a browser.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{raw(u('root',\ [u('raw',\ '<script>alert(1)</script>')]))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>alert(1)</script>}
+
+\end{DoxyCode}
+
+
+Either do not use this utility in combination with user input, or use \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/santize}}}.\hypertarget{readme.md_autotoc_md17165}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md17165}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}} — transform mdast to hast
+\item \href{https://github.com/rehypejs/rehype-raw}{\texttt{ {\ttfamily rehype-\/raw}}} — rehype plugin
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17166}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md17166}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md17167}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md17167}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

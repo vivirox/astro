@@ -1,0 +1,94 @@
+\doxysection{node\+\_\+modules/mdast-\/util-\/phrasing Directory Reference}
+\hypertarget{dir_7c3a76ec8a694787a0711447eeb62c0b}{}\label{dir_7c3a76ec8a694787a0711447eeb62c0b}\index{node\_modules/mdast-\/util-\/phrasing Directory Reference@{node\_modules/mdast-\/util-\/phrasing Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/mdast-util-phrasing/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/mdast-util-phrasing}{\texttt{ }} \href{https://www.npmjs.com/package/mdast-util-phrasing}{\texttt{ }} \href{https://bundlejs.com/?q=mdast-util-phrasing}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}} utility to check if a node is phrasing content.\hypertarget{readme.md_autotoc_md22686}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22686}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}phrasing(value)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22687}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22687}
+This package is a tiny utility to check that a given \href{https://github.com/syntax-tree/mdast\#nodes}{\texttt{ node}} is \href{https://github.com/syntax-tree/mdast\#phrasingcontent}{\texttt{ phrasing content}}.\hypertarget{readme.md_autotoc_md22688}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md22688}
+This utility is typically useful if you’re making other utilities. It uses \href{https://github.com/syntax-tree/unist-util-is}{\texttt{ {\ttfamily unist-\/util-\/is}}}, which you can use for your own checks.
+
+A different utility, \href{https://github.com/syntax-tree/hast-util-phrasing}{\texttt{ {\ttfamily hast-\/util-\/phrasing}}}, does the same but on \href{https://github.com/syntax-tree/hast}{\texttt{ hast}}.\hypertarget{readme.md_autotoc_md22689}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22689}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mdast-\/util-\/phrasing}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{phrasing\}\ from\ 'https://esm.sh/mdast-\/util-\/phrasing@4'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{phrasing\}\ from\ 'https://esm.sh/mdast-\/util-\/phrasing@4?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22690}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22690}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{phrasing\}\ from\ 'mdast-\/util-\/phrasing'}
+\DoxyCodeLine{}
+\DoxyCodeLine{phrasing(\{type:\ 'paragraph',\ children:\ [\{type:\ 'text',\ value:\ 'Alpha'\}]\})}
+\DoxyCodeLine{//\ =>\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{phrasing(\{type:\ 'strong',\ children:\ [\{type:\ 'text',\ value:\ 'Delta'\}]\})}
+\DoxyCodeLine{//\ =>\ true}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22691}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22691}
+This package exports the identifier \`{}phrasing\`{}. There is no default export.\hypertarget{readme.md_autotoc_md22692}{}\doxysubsubsection{\texorpdfstring{{\ttfamily phrasing(value)}}{{\ttfamily phrasing(value)}}}\label{readme.md_autotoc_md22692}
+Check if the given value is {\itshape \href{https://github.com/syntax-tree/mdast\#phrasingcontent}{\texttt{ phrasing content}}}.
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: Excludes {\ttfamily html}, which can be both phrasing or flow. \end{quote}
+\hypertarget{readme.md_autotoc_md22693}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22693}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} ({\ttfamily unknown}) — thing to check, typically \href{https://github.com/syntax-tree/mdast\#nodes}{\texttt{ {\ttfamily Node}}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22694}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22694}
+Whether {\ttfamily value} is phrasing content ({\ttfamily boolean}).\hypertarget{readme.md_autotoc_md22695}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md22695}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It does not export extra types.\hypertarget{readme.md_autotoc_md22696}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md22696}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily mdast-\/util-\/phrasing@\texorpdfstring{$^\wedge$}{\string^}4}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md22697}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md22697}
+Use of {\ttfamily mdast-\/util-\/phrasing} does not involve {\bfseries{\href{https://github.com/syntax-tree/hast}{\texttt{ hast}}}}, user content, or change the tree, so there are no openings for \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attacks.\hypertarget{readme.md_autotoc_md22698}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md22698}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/hast-util-phrasing}{\texttt{ {\ttfamily hast-\/util-\/phrasing}}} — check if a hast node is phrasing content
+\item \href{https://github.com/syntax-tree/unist-util-is}{\texttt{ {\ttfamily unist-\/util-\/is}}} — check if a node passes a test
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22699}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md22699}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md22700}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md22700}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://draft.li}{\texttt{ Victor Felder}} 

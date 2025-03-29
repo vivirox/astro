@@ -1,0 +1,98 @@
+\doxysection{node\+\_\+modules/parse-\/json Directory Reference}
+\hypertarget{dir_7ebc6f5aaf42b52337a44ac7196802ac}{}\label{dir_7ebc6f5aaf42b52337a44ac7196802ac}\index{node\_modules/parse-\/json Directory Reference@{node\_modules/parse-\/json Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Parse JSON with more helpful errors \end{quote}
+\hypertarget{readme.md_autotoc_md25605}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md25605}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ parse-\/json}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25606}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md25606}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ parseJson,\ \{JSONError\}\ from\ 'parse-\/json';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ json\ =\ '\{\(\backslash\)n\(\backslash\)t"{}foo"{}:\ true,\(\backslash\)n\}';}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{JSON.parse(json);}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{SyntaxError:\ Expected\ double-\/quoted\ property\ name\ in\ JSON\ at\ position\ 16\ (line\ 3\ column\ 1)}
+\DoxyCodeLine{*/}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{parseJson(json);}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{JSONError:\ Expected\ double-\/quoted\ property\ name\ in\ JSON\ at\ position\ 16\ (line\ 3\ column\ 1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ 1\ |\ \{}
+\DoxyCodeLine{\ \ 2\ |\ \ \ "{}foo"{}:\ true,}
+\DoxyCodeLine{>\ 3\ |\ \}}
+\DoxyCodeLine{\ \ \ \ |\ \string^}
+\DoxyCodeLine{*/}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{parseJson(json,\ 'foo.json');}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{JSONError:\ Expected\ double-\/quoted\ property\ name\ in\ JSON\ at\ position\ 16\ (line\ 3\ column\ 1)\ in\ foo.json}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ 1\ |\ \{}
+\DoxyCodeLine{\ \ 2\ |\ \ \ "{}foo"{}:\ true,}
+\DoxyCodeLine{>\ 3\ |\ \}}
+\DoxyCodeLine{\ \ \ \ |\ \string^}
+\DoxyCodeLine{\ \ fileName:\ 'foo.json',}
+\DoxyCodeLine{\ \ [cause]:\ SyntaxError:\ Expected\ double-\/quoted\ property\ name\ in\ JSON\ at\ position\ 16\ (line\ 3\ column\ 1)}
+\DoxyCodeLine{\ \ \ \ \ \ at\ JSON.parse\ (<anonymous>)}
+\DoxyCodeLine{\ \ \ \ \ \ at\ ...}
+\DoxyCodeLine{*/}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ You\ can\ also\ add\ the\ filename\ at\ a\ later\ point}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ \ \ parseJson(json);}
+\DoxyCodeLine{\}\ catch\ (error)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (error\ instanceof\ JSONError)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ error.fileName\ =\ 'foo.json';}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ throw\ error;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{JSONError:\ Expected\ double-\/quoted\ property\ name\ in\ JSON\ at\ position\ 16\ (line\ 3\ column\ 1)\ in\ foo.json}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ 1\ |\ \{}
+\DoxyCodeLine{\ \ 2\ |\ \ \ "{}foo"{}:\ true,}
+\DoxyCodeLine{>\ 3\ |\ \}}
+\DoxyCodeLine{\ \ \ \ |\ \string^}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ fileName:\ 'foo.json',}
+\DoxyCodeLine{\ \ [cause]:\ SyntaxError:\ Expected\ double-\/quoted\ property\ name\ in\ JSON\ at\ position\ 16\ (line\ 3\ column\ 1)}
+\DoxyCodeLine{\ \ \ \ \ \ at\ JSON.parse\ (<anonymous>)}
+\DoxyCodeLine{\ \ \ \ \ \ at\ ...}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25607}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md25607}
+\hypertarget{readme.md_autotoc_md25608}{}\doxysubsubsection{\texorpdfstring{parse\+Json(string, reviver?, filename?)}{parse\+Json(string, reviver?, filename?)}}\label{readme.md_autotoc_md25608}
+Throws a {\ttfamily JSONError} when there is a parsing error.\hypertarget{readme.md_autotoc_md25609}{}\doxysubsubsubsection{\texorpdfstring{string}{string}}\label{readme.md_autotoc_md25609}
+Type\+: {\ttfamily string}\hypertarget{readme.md_autotoc_md25610}{}\doxysubsubsubsection{\texorpdfstring{reviver}{reviver}}\label{readme.md_autotoc_md25610}
+Type\+: {\ttfamily Function}
+
+Prescribes how the value originally produced by parsing is transformed, before being returned. See \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse\#Using_the_reviver_parameter}{\texttt{ {\ttfamily JSON.\+parse} docs}} for more.\hypertarget{readme.md_autotoc_md25611}{}\doxysubsubsubsection{\texorpdfstring{filename}{filename}}\label{readme.md_autotoc_md25611}
+Type\+: {\ttfamily string}
+
+The filename displayed in the error message.\hypertarget{readme.md_autotoc_md25612}{}\doxysubsubsection{\texorpdfstring{JSONError}{JSONError}}\label{readme.md_autotoc_md25612}
+Exposed for {\ttfamily instanceof} checking.\hypertarget{readme.md_autotoc_md25613}{}\doxysubsubsubsection{\texorpdfstring{file\+Name}{file\+Name}}\label{readme.md_autotoc_md25613}
+Type\+: {\ttfamily string}
+
+The filename displayed in the error message.\hypertarget{readme.md_autotoc_md25614}{}\doxysubsubsubsection{\texorpdfstring{code\+Frame}{code\+Frame}}\label{readme.md_autotoc_md25614}
+Type\+: {\ttfamily string}
+
+The printable section of the JSON which produces the error.\hypertarget{readme.md_autotoc_md25615}{}\doxysubsubsubsection{\texorpdfstring{raw\+Code\+Frame}{raw\+Code\+Frame}}\label{readme.md_autotoc_md25615}
+Type\+: {\ttfamily string}
+
+The raw version of {\ttfamily code\+Frame} without colors. 

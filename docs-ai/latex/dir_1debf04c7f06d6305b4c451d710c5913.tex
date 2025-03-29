@@ -1,0 +1,46 @@
+\doxysection{node\+\_\+modules/remark-\/imgattr Directory Reference}
+\hypertarget{dir_1debf04c7f06d6305b4c451d710c5913}{}\label{dir_1debf04c7f06d6305b4c451d710c5913}\index{node\_modules/remark-\/imgattr Directory Reference@{node\_modules/remark-\/imgattr Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Remark plugin to add attributes to markdown and mdx images
+
+Adds attributes to images by extending the default syntax like{\ttfamily !\mbox{[}\mbox{]}(path)(attribute1\+: value, attribute2\+: value)}. Attributes will be applied to the h\+Properties of that image node.
+
+\begin{DoxyNote}{Note}
+~\newline
+ Should support almost any syntax although {\ttfamily sizes} and any attribute with commas in it needs to be inside quotes. ~\newline
+~\newline
+ If using \href{https://github.com/remarkjs/remark-unwrap-images}{\texttt{ remark-\/unwrap-\/images}} run this plugin first
+\end{DoxyNote}
+\hypertarget{README.md_autotoc_md29152}{}\doxysubsection{\texorpdfstring{Usage in Astro}{Usage in Astro}}\label{README.md_autotoc_md29152}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defineConfig\ \}\ from\ 'astro/config';}
+\DoxyCodeLine{import\ imgAttr\ from\ 'remark-\/imgattr';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ https://astro.build/config}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ \ \ markdown:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ remarkPlugins:[imgAttr]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md29153}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md29153}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{![Style](path)(style:\ border:\ 1px\ solid\ \#ccc;\ padding:\ 10px;,\ width:100)}
+\DoxyCodeLine{}
+\DoxyCodeLine{![alt\ text](path)(width:\ 300,\ height:\ 150)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md29154}{}\doxysubsection{\texorpdfstring{Support for Astro Specific Syntax}{Support for Astro Specific Syntax}}\label{README.md_autotoc_md29154}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{![](path)(\ width:300,\ widths:[300,600],\ sizes:"{}(min-\/width:\ 600px)\ 600w,\ 300w"{}\ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{![](path)(quality:100)}
+
+\end{DoxyCode}
+ 

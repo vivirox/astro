@@ -1,0 +1,111 @@
+\doxysection{node\+\_\+modules/ultrahtml Directory Reference}
+\hypertarget{dir_281d978ef86ee43597c2fe64fe173076}{}\label{dir_281d978ef86ee43597c2fe64fe173076}\index{node\_modules/ultrahtml Directory Reference@{node\_modules/ultrahtml Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+A 1.\+75kB library for enhancing {\ttfamily html}. {\ttfamily ultrahtml} has zero dependencies and is compatible with any Java\+Script runtime.\hypertarget{README.md_autotoc_md34091}{}\doxysubsubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md34091}
+
+\begin{DoxyItemize}
+\item Tiny, fault-\/tolerant and friendly HTML-\/like parser. Works with HTML, Astro, Vue, Svelte, and any other HTML-\/like syntax.
+\item Built-\/in AST {\ttfamily walk} utility
+\item Built-\/in {\ttfamily transform} utility for easy output manipulation
+\item Automatic but configurable sanitization, see Sanitization
+\item Handy {\ttfamily html} template utility
+\item {\ttfamily query\+Selector} and {\ttfamily query\+Selector\+All} support using {\ttfamily ultrahtml/selector}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md34092}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily walk}}{{\ttfamily walk}}}\label{README.md_autotoc_md34092}
+The {\ttfamily walk} function provides full control over the AST. It can be used to scan for text, elements, components, or any other validation you might want to do.
+
+\begin{quote}
+{\bfseries{Note}} \texorpdfstring{$>$}{>} {\ttfamily walk} is {\ttfamily async} and {\bfseries{must}} be {\ttfamily await}ed. Use {\ttfamily walk\+Sync} if it is guaranteed there are no {\ttfamily async} components in the tree. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse,\ walk,\ ELEMENT\_NODE\ \}\ from\ "{}ultrahtml"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ast\ =\ parse(`<h1>Hello\ world!</h1>`);}
+\DoxyCodeLine{await\ walk(ast,\ async\ (node)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (node.type\ ===\ ELEMENT\_NODE\ \&\&\ node.name\ ===\ "{}script"{})\ \{}
+\DoxyCodeLine{\ \ \ \ throw\ new\ Error("{}Found\ a\ script!"{});}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34093}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily walk\+Sync}}{{\ttfamily walk\+Sync}}}\label{README.md_autotoc_md34093}
+The {\ttfamily walk\+Sync} function is identical to the {\ttfamily walk} function, but is synchronous. This should only be used when it is guaranteed there are no {\ttfamily async} components in the tree.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse,\ walkSync,\ ELEMENT\_NODE\ \}\ from\ "{}ultrahtml"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ast\ =\ parse(`<h1>Hello\ world!</h1>`);}
+\DoxyCodeLine{walkSync(ast,\ (node)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (node.type\ ===\ ELEMENT\_NODE\ \&\&\ node.name\ ===\ "{}script"{})\ \{}
+\DoxyCodeLine{\ \ \ \ throw\ new\ Error("{}Found\ a\ script!"{});}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34094}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily render}}{{\ttfamily render}}}\label{README.md_autotoc_md34094}
+The {\ttfamily render} function allows you to serialize an AST back into a string.
+
+\begin{quote}
+{\bfseries{Note}} By default, {\ttfamily render} will sanitize your markup, removing any {\ttfamily script} tags. Pass {\ttfamily \{ sanitize\+: false \}} to disable this behavior. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse,\ render\ \}\ from\ "{}ultrahtml"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ast\ =\ parse(`<h1>Hello\ world!</h1>`);}
+\DoxyCodeLine{const\ output\ =\ await\ render(ast);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34095}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily transform}}{{\ttfamily transform}}}\label{README.md_autotoc_md34095}
+The {\ttfamily transform} function provides a straight-\/forward way to modify any markup. Sanitize content, swap in-\/place elements/\+Components, and more using a set of built-\/in transformers, or write your own custom transformer.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ transform,\ html\ \}\ from\ "{}ultrahtml"{};}
+\DoxyCodeLine{import\ swap\ from\ "{}ultrahtml/transformers/swap"{};}
+\DoxyCodeLine{import\ sanitize\ from\ "{}ultrahtml/transformers/sanitize"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ await\ transform(`<h1>Hello\ world!</h1>`,\ [}
+\DoxyCodeLine{\ \ swap(\{}
+\DoxyCodeLine{\ \ \ \ h1:\ "{}h2"{},}
+\DoxyCodeLine{\ \ \ \ h3:\ (props,\ children)\ =>\ html`<h2\ class="{}ultra"{}>\$\{children\}</h2>`,}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\ \ sanitize(\{\ allowElements:\ ["{}h1"{},\ "{}h2"{},\ "{}h3"{}]\ \}),}
+\DoxyCodeLine{]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output);\ //\ <h2>Hello\ world!</h2>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34096}{}\doxysubsubsubsection{\texorpdfstring{Sanitization}{Sanitization}}\label{README.md_autotoc_md34096}
+{\ttfamily ultrahtml/transformers/sanitize} implements an extension of the \href{https://developer.mozilla.org/en-US/docs/Web/API/Sanitizer/Sanitizer}{\texttt{ HTML Sanitizer API}}.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Default   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Default   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endhead
+allow\+Elements   &{\ttfamily string\mbox{[}\mbox{]}}   &{\ttfamily undefined}   &An array of strings indicating elements that the sanitizer should not remove. All elements not in the array will be dropped.    \\\cline{1-4}
+block\+Elements   &{\ttfamily string\mbox{[}\mbox{]}}   &{\ttfamily undefined}   &An array of strings indicating elements that the sanitizer should remove, but keep their child elements.    \\\cline{1-4}
+drop\+Elements   &{\ttfamily string\mbox{[}\mbox{]}}   &{\ttfamily \mbox{[}"{}script"{}\mbox{]}}   &An array of strings indicating elements (including nested elements) that the sanitizer should remove.    \\\cline{1-4}
+allow\+Attributes   &{\ttfamily Record\texorpdfstring{$<$}{<}string, string\mbox{[}\mbox{]}\texorpdfstring{$>$}{>}}   &{\ttfamily undefined}   &An object where each key is the attribute name and the value is an Array of allowed tag names. Matching attributes will not be removed. All attributes that are not in the array will be dropped.    \\\cline{1-4}
+drop\+Attributes   &{\ttfamily Record\texorpdfstring{$<$}{<}string, string\mbox{[}\mbox{]}\texorpdfstring{$>$}{>}}   &{\ttfamily undefined}   &An object where each key is the attribute name and the value is an Array of dropped tag names. Matching attributes will be removed.    \\\cline{1-4}
+allow\+Components   &{\ttfamily boolean}   &{\ttfamily false}   &A boolean value set to false (default) to remove components and their children. If set to true, components will be subject to built-\/in and custom configuration checks (and will be retained or dropped based on those checks).    \\\cline{1-4}
+allow\+Custom\+Elements   &{\ttfamily boolean}   &{\ttfamily false}   &A boolean value set to false (default) to remove custom elements and their children. If set to true, custom elements will be subject to built-\/in and custom configuration checks (and will be retained or dropped based on those checks).    \\\cline{1-4}
+allow\+Comments   &{\ttfamily boolean}   &{\ttfamily false}   &A boolean value set to false (default) to remove HTML comments. Set to true in order to keep comments.   \\\cline{1-4}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md34097}{}\doxysubsection{\texorpdfstring{Acknowledgements}{Acknowledgements}}\label{README.md_autotoc_md34097}
+
+\begin{DoxyItemize}
+\item \href{https://twitter.com/_developit}{\texttt{ Jason Miller}}\textquotesingle{}s \href{https://github.com/developit/htmlParser}{\texttt{ {\ttfamily html\+Parser}}} provided a great, lightweight base for this parser
+\item \href{https://twitter.com/wooorm}{\texttt{ Titus Wormer}}\textquotesingle{}s \href{https://mdxjs.com}{\texttt{ {\ttfamily mdx}}} for inspiration 
+\end{DoxyItemize}

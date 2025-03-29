@@ -1,0 +1,164 @@
+\doxysection{node\+\_\+modules/@octokit/oauth-\/authorization-\/url Directory Reference}
+\hypertarget{dir_ae3e59a2632a16ef4573512067a25f82}{}\label{dir_ae3e59a2632a16ef4573512067a25f82}\index{node\_modules/"@octokit/oauth-\/authorization-\/url Directory Reference@{node\_modules/"@octokit/oauth-\/authorization-\/url Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Universal library to retrieve Git\+Hub’s identity URL for the OAuth web flow \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/oauth-authorization-url}{\texttt{ }} \href{https://github.com/octokit/oauth-authorization-url.js/actions?query=workflow\%3ATest+branch\%3Amain}{\texttt{ }}
+
+See \href{https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/\#web-application-flow}{\texttt{ Git\+Hub’s Developer Guide for the OAuth App web application flow}}. Note that the \href{https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps\#web-application-flow}{\texttt{ OAuth web application flow for Git\+Hub Apps}} is slightly different. Git\+Hub Apps do not support scopes for its user access tokens (they are called user-\/to-\/server tokens for Git\+Hub Apps), instead they inherit the user permissions from the Git\+Hub App\textquotesingle{}s registration and the repository/organization access and permissions from the respective installation.
+
+
+\begin{DoxyItemize}
+\item \doxylink{readme.md_usage}{Usage}
+\begin{DoxyItemize}
+\item For OAuth Apps
+\item For Git\+Hub Apps
+\end{DoxyItemize}
+\item \doxylink{README.md_options}{Options}
+\item Result
+\item \doxylink{readme.md_types}{Types}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5279}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5279}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers  }&
+
+Load {\ttfamily @octokit/oauth-\/authorization-\/url} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ oauthAuthorizationUrl\ \}\ from\ "{}https://esm.sh/@octokit/oauth-\/authorization-\/url"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node  }&
+
+Install with {\ttfamily npm install @octokit/oauth-\/authorization-\/url}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ oauthAuthorizationUrl\ \}\ =\ require("{}@octokit/oauth-\/authorization-\/url"{});}
+\DoxyCodeLine{//\ or:\ import\ \{\ oauthAuthorizationUrl\ \}\ from\ "{}@octokit/oauth-\/authorization-\/url"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+\begin{DoxyImportant}{Important}
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json} by setting {\ttfamily "{}module\+Resolution"{}\+: "{}node16"{}, "{}module"{}\+: "{}node16"{}}. ~\newline
+~\newline
+ See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.~\newline
+ See this \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ helpful guide on transitioning to ESM}} from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}}
+\end{DoxyImportant}
+\hypertarget{README.md_autotoc_md5280}{}\doxysubsubsection{\texorpdfstring{For OAuth Apps}{For OAuth Apps}}\label{README.md_autotoc_md5280}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ url,\ clientId,\ redirectUrl,\ login,\ scopes,\ state\ \}\ =}
+\DoxyCodeLine{\ \ oauthAuthorizationUrl(\{}
+\DoxyCodeLine{\ \ \ \ clientType:\ "{}oauth-\/app"{},}
+\DoxyCodeLine{\ \ \ \ clientId:\ "{}1234567890abcdef1234"{},}
+\DoxyCodeLine{\ \ \ \ redirectUrl:\ "{}https://example.com"{},}
+\DoxyCodeLine{\ \ \ \ login:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ \ \ scopes:\ ["{}repo"{},\ "{}admin:org"{}],}
+\DoxyCodeLine{\ \ \ \ state:\ "{}secret123"{},}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5281}{}\doxysubsubsection{\texorpdfstring{For Git\+Hub Apps}{For Git\+Hub Apps}}\label{README.md_autotoc_md5281}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ url,\ clientId,\ redirectUrl,\ login,\ state\ \}\ =\ oauthAuthorizationUrl(\{}
+\DoxyCodeLine{\ \ clientType:\ "{}github-\/app"{},}
+\DoxyCodeLine{\ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ redirectUrl:\ "{}https://example.com"{},}
+\DoxyCodeLine{\ \ login:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ state:\ "{}secret123"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5282}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md5282}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-2}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&{\bfseries{Required}}. The client ID you received from Git\+Hub when you registered.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&
+
+Must be set to either {\ttfamily "{}oauth-\/app"{}} or {\ttfamily "{}github-\/app"{}}. Defaults to {\ttfamily "{}oauth-\/app"{}}.
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily redirect\+Url}  }&The URL in your application where users will be sent after authorization. See \href{https://developer.github.com/enterprise/2.16/apps/building-oauth-apps/authorizing-oauth-apps/\#redirect-urls}{\texttt{ Redirect URLs}} in Git\+Hub’s Developer Guide.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily login}  }&Suggests a specific account to use for signing in and authorizing the app.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily scopes}  }&
+
+Only relevant when {\ttfamily client\+Type} is set to {\ttfamily "{}oauth-\/app"{}}.
+
+An array of scope names (or\+: space-\/delimited list of scopes). If not provided, scope defaults to an empty list for users that have not authorized any scopes for the application. For users who have authorized scopes for the application, the user won\textquotesingle{}t be shown the OAuth authorization page with the list of scopes. Instead, this step of the flow will automatically complete with the set of scopes the user has authorized for the application. For example, if a user has already performed the web flow twice and has authorized one token with user scope and another token with repo scope, a third web flow that does not provide a scope will receive a token with user and repo scope.
+
+Defaults to {\ttfamily \mbox{[}\mbox{]}} if {\ttfamily client\+Type} is set to {\ttfamily "{}oauth-\/app"{}}.
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily state}  }&An unguessable random string. It is used to protect against cross-\/site request forgery attacks. Defaults to {\ttfamily Math.\+random().to\+String(36).substr(2)}.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily allow\+Signup}  }&Whether or not unauthenticated users will be offered an option to sign up for Git\+Hub during the OAuth flow. Use {\ttfamily false} in the case that a policy prohibits signups. Defaults to {\ttfamily true}.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily base\+Url}  }&When using Git\+Hub Enterprise Server, set the base\+Url to the origin, e.\+g. {\ttfamily \href{https://github.my-enterprise.com}{\texttt{ https\+://github.\+my-\/enterprise.\+com}}}.    \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5283}{}\doxysubsection{\texorpdfstring{Result}{Result}}\label{README.md_autotoc_md5283}
+{\ttfamily oauth\+Authorization\+Url()} returns an object with the following properties
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-2}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily allow\+Signup}  }&Returns {\ttfamily options.\+allow\+Signup} if it was set. Defaults to {\ttfamily true}.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&Returns {\ttfamily options.\+client\+Type}. Defaults to {\ttfamily "{}oauth-\/app"{}}.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&Returns {\ttfamily options.\+client\+Id}.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily login}  }&Returns {\ttfamily options.\+login} if it was set. Defaults to {\ttfamily null}.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily redirect\+Url}  }&Returns {\ttfamily options.\+redirect\+Url} if it was set. Defaults to {\ttfamily null}.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily scopes}  }&
+
+Only set if {\ttfamily options.\+client\+Type} is set to {\ttfamily "{}oauth-\/app"{}}.
+
+Returns an array of strings. Returns {\ttfamily options.\+scopes} if it was set and turns the string into an array if a string was passed, otherwise {\ttfamily \mbox{[}\mbox{]}}.
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily state}  }&Returns {\ttfamily options.\+state} if it was set. Defaults to Defaults to {\ttfamily Math.\+random().to\+String(36).substr(2)}.   \\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily url}  }&The authorization URL    \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5284}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{README.md_autotoc_md5284}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ ClientType,}
+\DoxyCodeLine{\ \ OAuthAppOptions,}
+\DoxyCodeLine{\ \ OAuthAppResult,}
+\DoxyCodeLine{\ \ GitHubAppOptions,}
+\DoxyCodeLine{\ \ GitHubAppResult,}
+\DoxyCodeLine{\}\ from\ "{}@octokit/oauth-\/authorization-\/url"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5285}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md5285}
+\mbox{[}MIT\mbox{]}(LICENSE) 

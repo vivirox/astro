@@ -1,0 +1,211 @@
+\doxysection{node\+\_\+modules/jest-\/worker Directory Reference}
+\hypertarget{dir_b1d6b35fef802cb08e2079363dbd5bce}{}\label{dir_b1d6b35fef802cb08e2079363dbd5bce}\index{node\_modules/jest-\/worker Directory Reference@{node\_modules/jest-\/worker Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_578acf2ace6269606811257e34a7f087}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Module for executing heavy tasks under forked processes in parallel, by providing a {\ttfamily Promise} based interface, minimum overhead, and bound workers.
+
+The module works by providing an absolute path of the module to be loaded in all forked processes. All methods are exposed on the parent process as promises, so they can be {\ttfamily await}\textquotesingle{}ed. Child (worker) methods can either be synchronous or asynchronous.
+
+The module also implements support for bound workers. Binding a worker means that, based on certain parameters, the same task will always be executed by the same worker. The way bound workers work is by using the returned string of the {\ttfamily compute\+Worker\+Key} method. If the string was used before for a task, the call will be queued to the related worker that processed the task earlier; if not, it will be executed by the first available worker, then sticked to the worker that executed it; so the next time it will be processed by the same worker. If you have no preference on the worker executing the task, but you have defined a {\ttfamily compute\+Worker\+Key} method because you want {\itshape some} of the tasks to be sticked, you can return {\ttfamily null} from it.
+
+The list of exposed methods can be explicitly provided via the {\ttfamily exposed\+Methods} option. If it is not provided, it will be obtained by requiring the child module into the main process, and analyzed via reflection. Check the "{}minimal example"{} section for a valid one.\hypertarget{README.md_autotoc_md20584}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md20584}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ jest-\/worker}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20585}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md20585}
+This example covers the minimal usage\+:\hypertarget{README.md_autotoc_md20586}{}\doxysubsubsection{\texorpdfstring{File {\ttfamily parent.\+js}}{File {\ttfamily parent.\+js}}}\label{README.md_autotoc_md20586}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{Worker\ as\ JestWorker\}\ from\ 'jest-\/worker';}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ main()\ \{}
+\DoxyCodeLine{\ \ const\ worker\ =\ new\ JestWorker(require.resolve('./worker'));}
+\DoxyCodeLine{\ \ const\ result\ =\ await\ worker.hello('Alice');\ //\ "{}Hello,\ Alice"{}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{main();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20587}{}\doxysubsubsection{\texorpdfstring{File {\ttfamily worker.\+js}}{File {\ttfamily worker.\+js}}}\label{README.md_autotoc_md20587}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ function\ hello(param)\ \{}
+\DoxyCodeLine{\ \ return\ \`{}Hello,\ \$\{param\}`;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20588}{}\doxysubsection{\texorpdfstring{Experimental worker}{Experimental worker}}\label{README.md_autotoc_md20588}
+Node shipped with \href{https://nodejs.org/api/worker_threads.html}{\texttt{ {\ttfamily worker\+\_\+threads}}}, a "{}threading API"{} that uses {\ttfamily Shared\+Array\+Buffers} to communicate between the main process and its child threads. This feature can significantly improve the communication time between parent and child processes in {\ttfamily jest-\/worker}.
+
+To use {\ttfamily worker\+\_\+threads} instead of default {\ttfamily child\+\_\+process} you have to pass {\ttfamily enable\+Worker\+Threads\+: true} when instantiating the worker.\hypertarget{README.md_autotoc_md20589}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md20589}
+The {\ttfamily Worker} export is a constructor that is initialized by passing the worker path, plus an options object.\hypertarget{README.md_autotoc_md20590}{}\doxysubsubsection{\texorpdfstring{{\ttfamily worker\+Path\+: string \texorpdfstring{$\vert$}{|} URL} (required)}{{\ttfamily worker\+Path\+: string \texorpdfstring{$\vert$}{|} URL} (required)}}\label{README.md_autotoc_md20590}
+Node module name or absolute path or file URL of the file to be loaded in the child processes. You can use {\ttfamily require.\+resolve} to transform a relative path into an absolute one.\hypertarget{README.md_autotoc_md20591}{}\doxysubsubsection{\texorpdfstring{{\ttfamily options\+: Object} (optional)}{{\ttfamily options\+: Object} (optional)}}\label{README.md_autotoc_md20591}
+\hypertarget{README.md_autotoc_md20592}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily compute\+Worker\+Key\+: (method\+: string, ...args\+: Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}) =\texorpdfstring{$>$}{>} string \texorpdfstring{$\vert$}{|} null} (optional)}{{\ttfamily compute\+Worker\+Key\+: (method\+: string, ...args\+: Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}) =\texorpdfstring{$>$}{>} string \texorpdfstring{$\vert$}{|} null} (optional)}}\label{README.md_autotoc_md20592}
+Every time a method exposed via the API is called, {\ttfamily compute\+Worker\+Key} is also called in order to bound the call to a worker. This is useful for workers that are able to cache the result or part of it. You bound calls to a worker by making {\ttfamily compute\+Worker\+Key} return the same identifier for all different calls. If you do not want to bind the call to any worker, return {\ttfamily null}.
+
+The callback you provide is called with the method name, plus all the rest of the arguments of the call. Thus, you have full control to decide what to return. Check a practical example on bound workers under the "{}bound worker usage"{} section.
+
+By default, no process is bound to any worker.\hypertarget{README.md_autotoc_md20593}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily enable\+Worker\+Threads\+: boolean} (optional)}{{\ttfamily enable\+Worker\+Threads\+: boolean} (optional)}}\label{README.md_autotoc_md20593}
+By default, {\ttfamily jest-\/worker} will use {\ttfamily child\+\_\+process} threads to spawn new Node.\+js processes. If you prefer \href{https://nodejs.org/api/worker_threads.html}{\texttt{ {\ttfamily worker\+\_\+threads}}} instead, pass {\ttfamily enable\+Worker\+Threads\+: true}.\hypertarget{README.md_autotoc_md20594}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily exposed\+Methods\+: Readonly\+Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}} (optional)}{{\ttfamily exposed\+Methods\+: Readonly\+Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}} (optional)}}\label{README.md_autotoc_md20594}
+List of method names that can be called on the child processes from the parent process. You cannot expose any method named like a public {\ttfamily Worker} method, or starting with {\ttfamily \+\_\+}. If you use method auto-\/discovery, then these methods will not be exposed, even if they exist.\hypertarget{README.md_autotoc_md20595}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily fork\+Options\+: Fork\+Options} (optional)}{{\ttfamily fork\+Options\+: Fork\+Options} (optional)}}\label{README.md_autotoc_md20595}
+Allow customizing all options passed to {\ttfamily child\+\_\+process.\+fork}. By default, some values are set ({\ttfamily cwd}, {\ttfamily env}, {\ttfamily exec\+Argv} and {\ttfamily serialization}), but you can override them and customize the rest. For a list of valid values, check \href{https://nodejs.org/api/child_process.html\#child_process_child_process_fork_modulepath_args_options}{\texttt{ the Node documentation}}.\hypertarget{README.md_autotoc_md20596}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily idle\+Memory\+Limit\+: number} (optional)}{{\ttfamily idle\+Memory\+Limit\+: number} (optional)}}\label{README.md_autotoc_md20596}
+Specifies the memory limit for workers before they are recycled and is primarily a work-\/around for \href{https://github.com/jestjs/jest/issues/11956}{\texttt{ this issue}};
+
+After the worker has executed a task the memory usage of it is checked. If it exceeds the value specified the worker is killed and restarted. If no limit is set this process does not occur. The limit can be specified in 2 ways\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily \texorpdfstring{$<$}{<}= 1} -\/ The value is assumed to be a percentage of system memory. So 0.\+5 sets the memory limit of the worker to half of the total system memory
+\item {\ttfamily \textbackslash{}\texorpdfstring{$>$}{>} 1} -\/ Assumed to be a fixed byte value. Because of the previous rule if you wanted a value of 1 byte (I don\textquotesingle{}t know why) you could use {\ttfamily 1.\+1}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md20597}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily max\+Retries\+: number} (optional)}{{\ttfamily max\+Retries\+: number} (optional)}}\label{README.md_autotoc_md20597}
+Maximum amount of times that a dead child can be re-\/spawned, per call. Defaults to {\ttfamily 3}, pass {\ttfamily Infinity} to allow endless retries.\hypertarget{README.md_autotoc_md20598}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily num\+Workers\+: number} (optional)}{{\ttfamily num\+Workers\+: number} (optional)}}\label{README.md_autotoc_md20598}
+Amount of workers to spawn. Defaults to the number of CPUs minus 1.\hypertarget{README.md_autotoc_md20599}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily resource\+Limits\+: Resource\+Limits} (optional)}{{\ttfamily resource\+Limits\+: Resource\+Limits} (optional)}}\label{README.md_autotoc_md20599}
+The {\ttfamily resource\+Limits} option which will be passed to {\ttfamily worker\+\_\+threads} workers.\hypertarget{README.md_autotoc_md20600}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily silent\+: Boolean} (optional)}{{\ttfamily silent\+: Boolean} (optional)}}\label{README.md_autotoc_md20600}
+Set to false for {\ttfamily stdout} and {\ttfamily stderr} to be logged to console.
+
+By default this is true.\hypertarget{README.md_autotoc_md20601}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily setup\+Args\+: Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}} (optional)}{{\ttfamily setup\+Args\+: Array\texorpdfstring{$<$}{<}unknown\texorpdfstring{$>$}{>}} (optional)}}\label{README.md_autotoc_md20601}
+The arguments that will be passed to the {\ttfamily setup} method during initialization.\hypertarget{README.md_autotoc_md20602}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily task\+Queue\+: Task\+Queue} (optional)}{{\ttfamily task\+Queue\+: Task\+Queue} (optional)}}\label{README.md_autotoc_md20602}
+The task queue defines in which order tasks (method calls) are processed by the workers. {\ttfamily jest-\/worker} ships with a {\ttfamily Fifo\+Queue} and {\ttfamily Priority\+Queue}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Fifo\+Queue} (default)\+: Processes the method calls (tasks) in the call order.
+\item {\ttfamily Priority\+Queue}\+: Processes the method calls by a computed priority in natural ordering (lower priorities first). Tasks with the same priority are processed in any order (FIFO not guaranteed). The constructor accepts a single argument, the function that is passed the name of the called function and the arguments and returns a numerical value for the priority\+: `new require(\textquotesingle{}jest-\/worker').Priority\+Queue((method, filename) =\texorpdfstring{$>$}{>} filename.\+length)\`{}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md20603}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Worker\+Pool\+: new (worker\+Path\+: string, options?\+: Worker\+Pool\+Options) =\texorpdfstring{$>$}{>} Worker\+Pool\+Interface} (optional)}{{\ttfamily Worker\+Pool\+: new (worker\+Path\+: string, options?\+: Worker\+Pool\+Options) =\texorpdfstring{$>$}{>} Worker\+Pool\+Interface} (optional)}}\label{README.md_autotoc_md20603}
+Provide a custom Worker\+Pool class to be used for spawning child processes.\hypertarget{README.md_autotoc_md20604}{}\doxysubsubsubsection{\texorpdfstring{`worker\+Scheduling\+Policy\+: \textquotesingle{}round-\/robin' \texorpdfstring{$\vert$}{|} \textquotesingle{}in-\/order\textquotesingle{}\`{} (optional)}{`worker\+Scheduling\+Policy\+: \textquotesingle{}round-\/robin' \texorpdfstring{$\vert$}{|} \textquotesingle{}in-\/order\textquotesingle{}\`{} (optional)}}\label{README.md_autotoc_md20604}
+Specifies the policy how tasks are assigned to workers if multiple workers are {\itshape idle}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily round-\/robin} (default)\+: The task will be sequentially distributed onto the workers. The first task is assigned to the worker 1, the second to the worker 2, to ensure that the work is distributed across workers.
+\item {\ttfamily in-\/order}\+: The task will be assigned to the first free worker starting with worker 1 and only assign the work to worker 2 if the worker 1 is busy.
+\end{DoxyItemize}
+
+Tasks are always assigned to the first free worker as soon as tasks start to queue up. The scheduling policy does not define the task scheduling which is always first-\/in, first-\/out.\hypertarget{README.md_autotoc_md20605}{}\doxysubsection{\texorpdfstring{Jest\+Worker}{Jest\+Worker}}\label{README.md_autotoc_md20605}
+\hypertarget{README.md_autotoc_md20606}{}\doxysubsubsection{\texorpdfstring{Methods}{Methods}}\label{README.md_autotoc_md20606}
+The returned {\ttfamily Jest\+Worker} instance has all the exposed methods, plus some additional ones to interact with the workers itself\+:\hypertarget{README.md_autotoc_md20607}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily get\+Stdout()\+: Readable}}{{\ttfamily get\+Stdout()\+: Readable}}}\label{README.md_autotoc_md20607}
+Returns a {\ttfamily Readable\+Stream} where the standard output of all workers is piped. Note that the {\ttfamily silent} option of the child workers must be set to {\ttfamily true} to make it work. This is the default set by {\ttfamily jest-\/worker}, but keep it in mind when overriding options through {\ttfamily fork\+Options}.\hypertarget{README.md_autotoc_md20608}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily get\+Stderr()\+: Readable}}{{\ttfamily get\+Stderr()\+: Readable}}}\label{README.md_autotoc_md20608}
+Returns a {\ttfamily Readable\+Stream} where the standard error of all workers is piped. Note that the {\ttfamily silent} option of the child workers must be set to {\ttfamily true} to make it work. This is the default set by {\ttfamily jest-\/worker}, but keep it in mind when overriding options through {\ttfamily fork\+Options}.\hypertarget{README.md_autotoc_md20609}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily start()}}{{\ttfamily start()}}}\label{README.md_autotoc_md20609}
+Starts up every worker and calls their {\ttfamily setup} function, if it exists. Returns a {\ttfamily Promise} which resolves when all workers are running and have completed their {\ttfamily setup}.
+
+This is useful if you want to start up all your workers eagerly before they are used to call any other functions.\hypertarget{README.md_autotoc_md20610}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily end()}}{{\ttfamily end()}}}\label{README.md_autotoc_md20610}
+Finishes the workers by killing all workers. No further calls can be done to the {\ttfamily Worker} instance.
+
+Returns a {\ttfamily Promise} that resolves with {\ttfamily \{ force\+Exited\+: boolean \}} once all workers are dead. If {\ttfamily force\+Exited} is {\ttfamily true}, at least one of the workers did not exit gracefully, which likely happened because it executed a leaky task that left handles open. This should be avoided, force exiting workers is a last resort to prevent creating lots of orphans.
+
+{\bfseries{Note\+:}}
+
+{\ttfamily await}ing the {\ttfamily end()} Promise immediately after the workers are no longer needed before proceeding to do other useful things in your program may not be a good idea. If workers have to be force exited, {\ttfamily jest-\/worker} may go through multiple stages of force exiting (e.\+g. SIGTERM, later SIGKILL) and give the worker overall around 1 second time to exit on its own. During this time, your program will wait, even though it may not be necessary that all workers are dead before continuing execution.
+
+Consider deliberately leaving this Promise floating (unhandled resolution). After your program has done the rest of its work and is about to exit, the Node process will wait for the Promise to resolve after all workers are dead as the last event loop task. That way you parallelized computation time of your program and waiting time and you didn\textquotesingle{}t delay the outputs of your program unnecessarily.\hypertarget{README.md_autotoc_md20611}{}\doxysubsubsection{\texorpdfstring{Worker IDs}{Worker IDs}}\label{README.md_autotoc_md20611}
+Each worker has a unique id (index that starts with `\textquotesingle{}1'{\ttfamily ), which is available inside the worker as}process.\+env.\+JEST\+\_\+\+WORKER\+\_\+\+ID\`{}.\hypertarget{README.md_autotoc_md20612}{}\doxysubsection{\texorpdfstring{Setting up and tearing down the child process}{Setting up and tearing down the child process}}\label{README.md_autotoc_md20612}
+The child process can define two special methods (both of them can be asynchronous)\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily setup()}\+: If defined, it\textquotesingle{}s executed before the first call to any method in the child.
+\item {\ttfamily teardown()}\+: If defined, it\textquotesingle{}s executed when the farm ends.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md20613}{}\doxysubsection{\texorpdfstring{More examples}{More examples}}\label{README.md_autotoc_md20613}
+\hypertarget{README.md_autotoc_md20614}{}\doxysubsubsection{\texorpdfstring{Standard usage}{Standard usage}}\label{README.md_autotoc_md20614}
+This example covers the standard usage\+:\hypertarget{README.md_autotoc_md20615}{}\doxysubsubsubsection{\texorpdfstring{File {\ttfamily parent.\+js}}{File {\ttfamily parent.\+js}}}\label{README.md_autotoc_md20615}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{Worker\ as\ JestWorker\}\ from\ 'jest-\/worker';}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ main()\ \{}
+\DoxyCodeLine{\ \ const\ myWorker\ =\ new\ JestWorker(require.resolve('./worker'),\ \{}
+\DoxyCodeLine{\ \ \ \ exposedMethods:\ ['foo',\ 'bar',\ 'getWorkerId'],}
+\DoxyCodeLine{\ \ \ \ numWorkers:\ 4,}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log(await\ myWorker.foo('Alice'));\ //\ "{}Hello\ from\ foo:\ Alice"{}}
+\DoxyCodeLine{\ \ console.log(await\ myWorker.bar('Bob'));\ //\ "{}Hello\ from\ bar:\ Bob"{}}
+\DoxyCodeLine{\ \ console.log(await\ myWorker.getWorkerId());\ //\ "{}3"{}\ -\/>\ this\ message\ has\ sent\ from\ the\ 3rd\ worker}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{forceExited\}\ =\ await\ myWorker.end();}
+\DoxyCodeLine{\ \ if\ (forceExited)\ \{}
+\DoxyCodeLine{\ \ \ \ console.error('Workers\ failed\ to\ exit\ gracefully');}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{main();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20616}{}\doxysubsubsubsection{\texorpdfstring{File {\ttfamily worker.\+js}}{File {\ttfamily worker.\+js}}}\label{README.md_autotoc_md20616}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ function\ foo(param)\ \{}
+\DoxyCodeLine{\ \ return\ \`{}Hello\ from\ foo:\ \$\{param\}`;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ bar(param)\ \{}
+\DoxyCodeLine{\ \ return\ \`{}Hello\ from\ bar:\ \$\{param\}`;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ getWorkerId()\ \{}
+\DoxyCodeLine{\ \ return\ process.env.JEST\_WORKER\_ID;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20617}{}\doxysubsubsection{\texorpdfstring{Bound worker usage\+:}{Bound worker usage\+:}}\label{README.md_autotoc_md20617}
+This example covers the usage with a {\ttfamily compute\+Worker\+Key} method\+:\hypertarget{README.md_autotoc_md20618}{}\doxysubsubsubsection{\texorpdfstring{File {\ttfamily parent.\+js}}{File {\ttfamily parent.\+js}}}\label{README.md_autotoc_md20618}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{Worker\ as\ JestWorker\}\ from\ 'jest-\/worker';}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ main()\ \{}
+\DoxyCodeLine{\ \ const\ myWorker\ =\ new\ JestWorker(require.resolve('./worker'),\ \{}
+\DoxyCodeLine{\ \ \ \ computeWorkerKey:\ (method,\ filename)\ =>\ filename,}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Transform\ the\ given\ file,\ within\ the\ first\ available\ worker.}
+\DoxyCodeLine{\ \ console.log(await\ myWorker.transform('/tmp/foo.js'));}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Wait\ a\ bit.}
+\DoxyCodeLine{\ \ await\ sleep(10000);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Transform\ the\ same\ file\ again.\ Will\ immediately\ return\ because\ the}
+\DoxyCodeLine{\ \ //\ transformed\ file\ is\ cached\ in\ the\ worker,\ and\ \`{}computeWorkerKey`\ ensures}
+\DoxyCodeLine{\ \ //\ the\ same\ worker\ that\ processed\ the\ file\ the\ first\ time\ will\ process\ it\ now.}
+\DoxyCodeLine{\ \ console.log(await\ myWorker.transform('/tmp/foo.js'));}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{forceExited\}\ =\ await\ myWorker.end();}
+\DoxyCodeLine{\ \ if\ (forceExited)\ \{}
+\DoxyCodeLine{\ \ \ \ console.error('Workers\ failed\ to\ exit\ gracefully');}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{main();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20619}{}\doxysubsubsubsection{\texorpdfstring{File {\ttfamily worker.\+js}}{File {\ttfamily worker.\+js}}}\label{README.md_autotoc_md20619}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ babel\ from\ '@babel/core';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ cache\ =\ Object.create(null);}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ transform(filename)\ \{}
+\DoxyCodeLine{\ \ if\ (cache[filename])\ \{}
+\DoxyCodeLine{\ \ \ \ return\ cache[filename];}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ jest-\/worker\ can\ handle\ both\ immediate\ results\ and\ thenables.\ If\ a}
+\DoxyCodeLine{\ \ //\ thenable\ is\ returned,\ it\ will\ be\ await'ed\ until\ it\ resolves.}
+\DoxyCodeLine{\ \ return\ babel.transformFileAsync(filename).then(result\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ cache[filename]\ =\ result;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ return\ result;}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 

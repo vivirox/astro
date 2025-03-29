@@ -1,0 +1,229 @@
+\doxysection{node\+\_\+modules/refractor/node\+\_\+modules/hastscript Directory Reference}
+\hypertarget{dir_f8603df30e073c55aa8f2dce7a626d22}{}\label{dir_f8603df30e073c55aa8f2dce7a626d22}\index{node\_modules/refractor/node\_modules/hastscript Directory Reference@{node\_modules/refractor/node\_modules/hastscript Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/syntax-tree/hastscript}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hastscript}{\texttt{ }} \href{https://www.npmjs.com/package/hastscript}{\texttt{ }} \href{https://bundlephobia.com/result?p=hastscript}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://spectrum.chat/unified/syntax-tree}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/hast}{\texttt{ {\bfseries{hast}}}} utility to create \href{https://github.com/syntax-tree/unist\#tree}{\texttt{ {\itshape trees}}} in HTML or SVG.
+
+Similar to \href{https://github.com/dominictarr/hyperscript}{\texttt{ {\ttfamily hyperscript}}}, \href{https://github.com/Matt-Esch/virtual-dom/tree/HEAD/virtual-hyperscript}{\texttt{ {\ttfamily virtual-\/dom/h}}}, \href{https://reactjs.org/docs/glossary.html\#react-elements}{\texttt{ {\ttfamily React.\+create\+Element}}}, and \href{https://vuejs.org/v2/guide/render-function.html\#createElement-Arguments}{\texttt{ Vue’s {\ttfamily create\+Element}}}, but for \href{https://github.com/syntax-tree/hast}{\texttt{ {\bfseries{hast}}}}.
+
+Use \href{https://github.com/syntax-tree/unist-builder}{\texttt{ {\ttfamily unist-\/builder}}} to create any \href{https://github.com/syntax-tree/unist}{\texttt{ {\bfseries{unist}}}} tree.\hypertarget{readme.md_autotoc_md28194}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md28194}
+\href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hastscript}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28195}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md28195}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ h\ =\ require('hastscript')}
+\DoxyCodeLine{var\ s\ =\ require('hastscript/svg')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Children\ as\ an\ array:}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ h('.foo\#some-\/id',\ [}
+\DoxyCodeLine{\ \ \ \ h('span',\ 'some\ text'),}
+\DoxyCodeLine{\ \ \ \ h('input',\ \{type:\ 'text',\ value:\ 'foo'\}),}
+\DoxyCodeLine{\ \ \ \ h('a.alpha',\ \{class:\ 'bravo\ charlie',\ download:\ 'download'\},\ [}
+\DoxyCodeLine{\ \ \ \ \ \ 'delta',}
+\DoxyCodeLine{\ \ \ \ \ \ 'echo'}
+\DoxyCodeLine{\ \ \ \ ])}
+\DoxyCodeLine{\ \ ])}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Children\ as\ arguments:}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ h(}
+\DoxyCodeLine{\ \ \ \ 'form',}
+\DoxyCodeLine{\ \ \ \ \{method:\ 'POST'\},}
+\DoxyCodeLine{\ \ \ \ h('input',\ \{type:\ 'text',\ name:\ 'foo'\}),}
+\DoxyCodeLine{\ \ \ \ h('input',\ \{type:\ 'text',\ name:\ 'bar'\}),}
+\DoxyCodeLine{\ \ \ \ h('input',\ \{type:\ 'submit',\ value:\ 'send'\})}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ SVG:}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ s('svg',\ \{xmlns:\ 'http://www.w3.org/2000/svg',\ viewbox:\ '0\ 0\ 500\ 500'\},\ [}
+\DoxyCodeLine{\ \ \ \ s('title',\ 'SVG\ \`{}<circle>`\ element'),}
+\DoxyCodeLine{\ \ \ \ s('circle',\ \{cx:\ 120,\ cy:\ 120,\ r:\ 100\})}
+\DoxyCodeLine{\ \ ])}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'element',}
+\DoxyCodeLine{\ \ tagName:\ 'div',}
+\DoxyCodeLine{\ \ properties:\ \{className:\ ['foo'],\ id:\ 'some-\/id'\},}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'span',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'some\ text'\}]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'input',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{type:\ 'text',\ value:\ 'foo'\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ []}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'a',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{className:\ ['alpha',\ 'bravo',\ 'charlie'],\ download:\ true\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'delta'\},\ \{type:\ 'text',\ value:\ 'echo'\}]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'element',}
+\DoxyCodeLine{\ \ tagName:\ 'form',}
+\DoxyCodeLine{\ \ properties:\ \{method:\ 'POST'\},}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'input',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{type:\ 'text',\ name:\ 'foo'\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ []}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'input',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{type:\ 'text',\ name:\ 'bar'\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ []}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'input',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{type:\ 'submit',\ value:\ 'send'\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ []}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'element',}
+\DoxyCodeLine{\ \ tagName:\ 'svg',}
+\DoxyCodeLine{\ \ properties:\ \{xmlns:\ 'http://www.w3.org/2000/svg',\ viewBox:\ '0\ 0\ 500\ 500'\},}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'title',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'SVG\ \`{}<circle>`\ element'\}]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ tagName:\ 'circle',}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{cx:\ 120,\ cy:\ 120,\ r:\ 100\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ []}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28196}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md28196}
+\hypertarget{readme.md_autotoc_md28197}{}\doxysubsubsection{\texorpdfstring{{\ttfamily h(selector?\mbox{[}, properties\mbox{]}\mbox{[}, ...children\mbox{]})}}{{\ttfamily h(selector?\mbox{[}, properties\mbox{]}\mbox{[}, ...children\mbox{]})}}}\label{readme.md_autotoc_md28197}
+\hypertarget{readme.md_autotoc_md28198}{}\doxysubsubsection{\texorpdfstring{{\ttfamily s(selector?\mbox{[}, properties\mbox{]}\mbox{[}, ...children\mbox{]})}}{{\ttfamily s(selector?\mbox{[}, properties\mbox{]}\mbox{[}, ...children\mbox{]})}}}\label{readme.md_autotoc_md28198}
+DSL to create virtual \href{https://github.com/syntax-tree/hast}{\texttt{ {\bfseries{hast}}}} \href{https://github.com/syntax-tree/unist\#tree}{\texttt{ {\itshape trees}}} for HTML or SVG.\hypertarget{readme.md_autotoc_md28199}{}\doxysubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md28199}
+\hypertarget{readme.md_autotoc_md28200}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily selector}}{{\ttfamily selector}}}\label{readme.md_autotoc_md28200}
+Simple CSS selector ({\ttfamily string}, optional). Can contain a tag name ({\ttfamily foo}), IDs ({\ttfamily \#bar}), and classes ({\ttfamily .baz}). If there is no tag name in the selector, {\ttfamily h} defaults to a {\ttfamily div} element, and {\ttfamily s} to a {\ttfamily g} element. {\ttfamily selector} is parsed by \href{https://github.com/syntax-tree/hast-util-parse-selector}{\texttt{ {\ttfamily hast-\/util-\/parse-\/selector}}}.\hypertarget{readme.md_autotoc_md28201}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily properties}}{{\ttfamily properties}}}\label{readme.md_autotoc_md28201}
+Map of properties ({\ttfamily Object.\texorpdfstring{$<$}{<}\texorpdfstring{$\ast$}{*}\texorpdfstring{$>$}{>}}, optional).\hypertarget{readme.md_autotoc_md28202}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily children}}{{\ttfamily children}}}\label{readme.md_autotoc_md28202}
+(Lists of) child nodes ({\ttfamily string}, {\ttfamily Node}, {\ttfamily Array.\texorpdfstring{$<$}{<}string\texorpdfstring{$\vert$}{|}\+Node\texorpdfstring{$>$}{>}}, optional). When strings are encountered, they are mapped to \href{https://github.com/syntax-tree/hast\#text}{\texttt{ {\ttfamily text}}} nodes.\hypertarget{readme.md_autotoc_md28203}{}\doxysubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md28203}
+\href{https://github.com/syntax-tree/hast\#element}{\texttt{ {\ttfamily Element}}}.\hypertarget{readme.md_autotoc_md28204}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md28204}
+Use of {\ttfamily hastscript} can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack as values are injected into the syntax tree. The following example shows how a script is injected that runs when loaded in a browser.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ tree\ =\ \{type:\ 'root',\ children:\ []\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{tree.children.push(h('script',\ 'alert(1)'))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>alert(1)</script>}
+
+\end{DoxyCode}
+
+
+The following example shows how an image is injected that fails loading and therefore runs code in a browser.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ tree\ =\ \{type:\ 'root',\ children:\ []\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Somehow\ someone\ injected\ these\ properties\ instead\ of\ an\ expected\ \`{}src`\ and}
+\DoxyCodeLine{//\ \`{}alt`:}
+\DoxyCodeLine{var\ otherProps\ =\ \{src:\ 'x',\ onError:\ 'alert(2)'\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{tree.children.push(h('img',\ \{src:\ 'default.png',\ ...otherProps\}))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<img\ src="{}x"{}\ onerror="{}alert(2)"{}>}
+
+\end{DoxyCode}
+
+
+The following example shows how code can run in a browser because someone stored an object in a database instead of the expected string.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ tree\ =\ \{type:\ 'root',\ children:\ []\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Somehow\ this\ isn’t\ the\ expected\ \`{}'wooorm'`.}
+\DoxyCodeLine{var\ username\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'element',}
+\DoxyCodeLine{\ \ tagName:\ 'script',}
+\DoxyCodeLine{\ \ children:\ [\{type:\ 'text',\ value:\ 'alert(3)'\}]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{tree.children.push(h('span.handle',\ username))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<span\ class="{}handle"{}><script>alert(3)</script></span>}
+
+\end{DoxyCode}
+
+
+Either do not use user input in {\ttfamily hastscript} or use \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/santize}}}.\hypertarget{readme.md_autotoc_md28205}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md28205}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/unist-builder}{\texttt{ {\ttfamily unist-\/builder}}} — Create any unist tree
+\item \href{https://github.com/syntax-tree/xastscript}{\texttt{ {\ttfamily xastscript}}} — Create a xast tree
+\item \href{https://github.com/syntax-tree/hast-to-hyperscript}{\texttt{ {\ttfamily hast-\/to-\/hyperscript}}} — Convert a Node to React, Virtual DOM, Hyperscript, and more
+\item \href{https://github.com/syntax-tree/hast-util-from-dom}{\texttt{ {\ttfamily hast-\/util-\/from-\/dom}}} — Transform a DOM tree to hast
+\item \href{https://github.com/syntax-tree/hast-util-select}{\texttt{ {\ttfamily hast-\/util-\/select}}} — {\ttfamily query\+Selector}, {\ttfamily query\+Selector\+All}, and {\ttfamily matches}
+\item \href{https://github.com/syntax-tree/hast-util-to-html}{\texttt{ {\ttfamily hast-\/util-\/to-\/html}}} — Stringify nodes to HTML
+\item \href{https://github.com/syntax-tree/hast-util-to-dom}{\texttt{ {\ttfamily hast-\/util-\/to-\/dom}}} — Transform to a DOM tree
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28206}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md28206}
+See \href{https://github.com/syntax-tree/.github/blob/HEAD/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/HEAD/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md28207}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md28207}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

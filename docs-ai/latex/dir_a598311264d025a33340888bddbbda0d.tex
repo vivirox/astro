@@ -1,0 +1,152 @@
+\doxysection{node\+\_\+modules/hosted-\/git-\/info Directory Reference}
+\hypertarget{dir_a598311264d025a33340888bddbbda0d}{}\label{dir_a598311264d025a33340888bddbbda0d}\index{node\_modules/hosted-\/git-\/info Directory Reference@{node\_modules/hosted-\/git-\/info Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This will let you identify and transform various git hosts URLs between protocols. It also can tell you what the URL is for the raw path for particular file for direct access without git.\hypertarget{README.md_autotoc_md17726}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md17726}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ hostedGitInfo\ =\ require("{}hosted-\/git-\/info"{})}
+\DoxyCodeLine{const\ info\ =\ hostedGitInfo.fromUrl("{}git@github.com:npm/hosted-\/git-\/info.git"{},\ opts)}
+\DoxyCodeLine{/*\ info\ looks\ like:}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ "{}github"{},}
+\DoxyCodeLine{\ \ domain:\ "{}github.com"{},}
+\DoxyCodeLine{\ \ user:\ "{}npm"{},}
+\DoxyCodeLine{\ \ project:\ "{}hosted-\/git-\/info"{}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+
+
+If the URL can\textquotesingle{}t be matched with a git host, {\ttfamily null} will be returned. We can match git, ssh and https urls. Additionally, we can match ssh connect strings ({\ttfamily git@github.\+com\+:npm/hosted-\/git-\/info}) and shortcuts (eg, {\ttfamily github\+:npm/hosted-\/git-\/info}). Git\+Hub specifically, is detected in the case of a third, unprefixed, form\+: {\ttfamily npm/hosted-\/git-\/info}.
+
+If it does match, the returned object has properties of\+:
+
+
+\begin{DoxyItemize}
+\item info.\+type -- The short name of the service
+\item info.\+domain -- The domain for git protocol use
+\item info.\+user -- The name of the user/org on the git host
+\item info.\+project -- The name of the project on the git host
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md17727}{}\doxysubsection{\texorpdfstring{Version Contract}{Version Contract}}\label{README.md_autotoc_md17727}
+The major version will be bumped any time…
+
+
+\begin{DoxyItemize}
+\item The constructor stops accepting URLs that it previously accepted.
+\item A method is removed.
+\item A method can no longer accept the number and type of arguments it previously accepted.
+\item A method can return a different type than it currently returns.
+\end{DoxyItemize}
+
+Implications\+:
+
+
+\begin{DoxyItemize}
+\item I do not consider the specific format of the urls returned from, say {\ttfamily .https()} to be a part of the contract. The contract is that it will return a string that can be used to fetch the repo via HTTPS. But what that string looks like, specifically, can change.
+\item Dropping support for a hosted git provider would constitute a breaking change.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md17728}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md17728}
+\hypertarget{README.md_autotoc_md17729}{}\doxysubsubsection{\texorpdfstring{const info = hosted\+Git\+Info.\+from\+Url(git\+Specifier\mbox{[}, options\mbox{]})}{const info = hosted\+Git\+Info.\+from\+Url(git\+Specifier\mbox{[}, options\mbox{]})}}\label{README.md_autotoc_md17729}
+
+\begin{DoxyItemize}
+\item {\itshape git\+Specifer} is a URL of a git repository or a SCP-\/style specifier of one.
+\item {\itshape options} is an optional object. It can have the following properties\+:
+\begin{DoxyItemize}
+\item {\itshape no\+Committish} — If true then committishes won\textquotesingle{}t be included in generated URLs.
+\item {\itshape no\+Git\+Plus} — If true then {\ttfamily git+} won\textquotesingle{}t be prefixed on URLs.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md17730}{}\doxysubsection{\texorpdfstring{Methods}{Methods}}\label{README.md_autotoc_md17730}
+All of the methods take the same options as the {\ttfamily from\+Url} factory. Options provided to a method override those provided to the constructor.
+
+
+\begin{DoxyItemize}
+\item info.\+file(path, opts)
+\end{DoxyItemize}
+
+Given the path of a file relative to the repository, returns a URL for directly fetching it from the githost. If no committish was set then {\ttfamily HEAD} will be used as the default.
+
+For example {\ttfamily hosted\+Git\+Info.\+from\+Url("{}git@github.\+com\+:npm/hosted-\/git-\/info.\+git\#v1.\+0.\+0"{}).file("{}package.\+json"{})} would return {\ttfamily \href{https://raw.githubusercontent.com/npm/hosted-git-info/v1.0.0/package.json}{\texttt{ https\+://raw.\+githubusercontent.\+com/npm/hosted-\/git-\/info/v1.\+0.\+0/package.\+json}}}
+
+
+\begin{DoxyItemize}
+\item info.\+shortcut(opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily github\+:npm/hosted-\/git-\/info}
+
+
+\begin{DoxyItemize}
+\item info.\+browse(path, fragment, opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily \href{https://github.com/npm/hosted-git-info/tree/v1.2.0}{\texttt{ https\+://github.\+com/npm/hosted-\/git-\/info/tree/v1.\+2.\+0}}}, {\ttfamily \href{https://github.com/npm/hosted-git-info/tree/v1.2.0/package.json}{\texttt{ https\+://github.\+com/npm/hosted-\/git-\/info/tree/v1.\+2.\+0/package.\+json}}}, {\ttfamily \href{https://github.com/npm/hosted-git-info/tree/v1.2.0/README.md}{\texttt{ https\+://github.\+com/npm/hosted-\/git-\/info/tree/v1.\+2.\+0/\+README.\+md}}\#supported-\/hosts}
+
+
+\begin{DoxyItemize}
+\item info.\+bugs(opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily \href{https://github.com/npm/hosted-git-info/issues}{\texttt{ https\+://github.\+com/npm/hosted-\/git-\/info/issues}}}
+
+
+\begin{DoxyItemize}
+\item info.\+docs(opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily \href{https://github.com/npm/hosted-git-info/tree/v1.2.0}{\texttt{ https\+://github.\+com/npm/hosted-\/git-\/info/tree/v1.\+2.\+0}}\#readme}
+
+
+\begin{DoxyItemize}
+\item info.\+https(opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily git+https\+://github.com/npm/hosted-\/git-\/info.\+git}
+
+
+\begin{DoxyItemize}
+\item info.\+sshurl(opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily git+ssh\+://git@github.\+com/npm/hosted-\/git-\/info.git}
+
+
+\begin{DoxyItemize}
+\item info.\+ssh(opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily git@github.\+com\+:npm/hosted-\/git-\/info.\+git}
+
+
+\begin{DoxyItemize}
+\item info.\+path(opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily npm/hosted-\/git-\/info}
+
+
+\begin{DoxyItemize}
+\item info.\+tarball(opts)
+\end{DoxyItemize}
+
+eg, {\ttfamily \href{https://github.com/npm/hosted-git-info/archive/v1.2.0.tar.gz}{\texttt{ https\+://github.\+com/npm/hosted-\/git-\/info/archive/v1.\+2.\+0.\+tar.\+gz}}}
+
+
+\begin{DoxyItemize}
+\item info.\+get\+Default\+Representation()
+\end{DoxyItemize}
+
+Returns the default output type. The default output type is based on the string you passed in to be parsed
+
+
+\begin{DoxyItemize}
+\item info.\+to\+String(opts)
+\end{DoxyItemize}
+
+Uses the get\+Default\+Representation to call one of the other methods to get a URL for this resource. As such {\ttfamily hosted\+Git\+Info.\+from\+Url(url).to\+String()} will give you a normalized version of the URL that still uses the same protocol.
+
+Shortcuts will still be returned as shortcuts, but the special case github form of {\ttfamily org/project} will be normalized to {\ttfamily github\+:org/project}.
+
+SSH connect strings will be normalized into {\ttfamily git+ssh} URLs.\hypertarget{README.md_autotoc_md17731}{}\doxysubsection{\texorpdfstring{Supported hosts}{Supported hosts}}\label{README.md_autotoc_md17731}
+Currently this supports Git\+Hub (including Gists), Bitbucket, Git\+Lab and Sourcehut. Pull requests for additional hosts welcome. 

@@ -1,0 +1,157 @@
+\doxysection{node\+\_\+modules/redis-\/parser Directory Reference}
+\hypertarget{dir_d2526aac2f68cb425f87f12140adcd8e}{}\label{dir_d2526aac2f68cb425f87f12140adcd8e}\index{node\_modules/redis-\/parser Directory Reference@{node\_modules/redis-\/parser Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}Build Status\mbox{]}(\href{https://travis-ci.org/NodeRedis/node-redis-parser.png?branch=master}{\texttt{ https\+://travis-\/ci.\+org/\+Node\+Redis/node-\/redis-\/parser.\+png?branch=master}})\mbox{]}(\href{https://travis-ci.org/NodeRedis/node-redis-parser}{\texttt{ https\+://travis-\/ci.\+org/\+Node\+Redis/node-\/redis-\/parser}}) \href{https://codeclimate.com/github/NodeRedis/node-redis-parser/coverage}{\texttt{ }} \href{http://standardjs.com/}{\texttt{ }}\hypertarget{README.md_autotoc_md28061}{}\doxysubsection{\texorpdfstring{redis-\/parser}{redis-\/parser}}\label{README.md_autotoc_md28061}
+A high performance javascript redis parser built for \href{https://github.com/NodeRedis/node_redis}{\texttt{ node\+\_\+redis}} and \href{https://github.com/luin/ioredis}{\texttt{ ioredis}}. Parses all \href{http://redis.io/topics/protocol}{\texttt{ RESP}} data.\hypertarget{README.md_autotoc_md28062}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md28062}
+Install with \href{https://npmjs.org/}{\texttt{ NPM}}\+: \begin{DoxyVerb}npm install redis-parser
+\end{DoxyVerb}
+\hypertarget{README.md_autotoc_md28063}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md28063}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Parser\ =\ require('redis-\/parser');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myParser\ =\ new\ Parser(options);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28064}{}\doxysubsubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md28064}
+
+\begin{DoxyItemize}
+\item {\ttfamily return\+Reply}\+: {\itshape function}; mandatory
+\item {\ttfamily return\+Error}\+: {\itshape function}; mandatory
+\item {\ttfamily return\+Fatal\+Error}\+: {\itshape function}; optional, defaults to the return\+Error function
+\item {\ttfamily return\+Buffers}\+: {\itshape boolean}; optional, defaults to false
+\item {\ttfamily string\+Numbers}\+: {\itshape boolean}; optional, defaults to false
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md28065}{}\doxysubsubsubsection{\texorpdfstring{Functions}{Functions}}\label{README.md_autotoc_md28065}
+
+\begin{DoxyItemize}
+\item {\ttfamily reset()}\+: reset the parser to it\textquotesingle{}s initial state
+\item {\ttfamily set\+Return\+Buffers(boolean)}\+: set the return\+Buffers option on/off without resetting the parser
+\item {\ttfamily set\+String\+Numbers(boolean)}\+: set the string\+Numbers option on/off without resetting the parser
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md28066}{}\doxysubsubsubsection{\texorpdfstring{Error classes}{Error classes}}\label{README.md_autotoc_md28066}
+
+\begin{DoxyItemize}
+\item {\ttfamily Redis\+Error} sub class of Error
+\item {\ttfamily Reply\+Error} sub class of Redis\+Error
+\item {\ttfamily Parser\+Error} sub class of Redis\+Error
+\end{DoxyItemize}
+
+All Redis errors will be returned as {\ttfamily Reply\+Errors} while a parser error is returned as {\ttfamily Parser\+Error}. ~\newline
+ All error classes can be imported by the npm {\ttfamily redis-\/errors} package.\hypertarget{README.md_autotoc_md28067}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md28067}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Parser\ =\ require("{}redis-\/parser"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{class\ Library\ \{}
+\DoxyCodeLine{\ \ returnReply(reply)\ \{\ /*\ ...\ */\ \}}
+\DoxyCodeLine{\ \ returnError(err)\ \{\ /*\ ...\ */\ \}}
+\DoxyCodeLine{\ \ returnFatalError(err)\ \{\ /*\ ...\ */\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ streamHandler()\ \{}
+\DoxyCodeLine{\ \ \ \ this.stream.on('data',\ (buffer)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Here\ the\ data\ (e.g.\ \`{}Buffer.from('\$5\(\backslash\)r\(\backslash\)nHello\(\backslash\)r\(\backslash\)n'`))}
+\DoxyCodeLine{\ \ \ \ \ \ //\ is\ passed\ to\ the\ parser\ and\ the\ result\ is\ passed\ to}
+\DoxyCodeLine{\ \ \ \ \ \ //\ either\ function\ depending\ on\ the\ provided\ data.}
+\DoxyCodeLine{\ \ \ \ \ \ parser.execute(buffer);}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ lib\ =\ new\ Library();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ parser\ =\ new\ Parser(\{}
+\DoxyCodeLine{\ \ returnReply(reply)\ \{}
+\DoxyCodeLine{\ \ \ \ lib.returnReply(reply);}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ returnError(err)\ \{}
+\DoxyCodeLine{\ \ \ \ lib.returnError(err);}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ returnFatalError(err)\ \{}
+\DoxyCodeLine{\ \ \ \ lib.returnFatalError(err);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+You do not have to use the return\+Fatal\+Error function. Fatal errors will be returned in the normal error function in that case.
+
+And if you want to return buffers instead of strings, you can do this by adding the {\ttfamily return\+Buffers} option.
+
+If you handle with big numbers that are to large for JS (Number.\+MAX\+\_\+\+SAFE\+\_\+\+INTEGER === 2\texorpdfstring{$^\wedge$}{\string^}53 -\/ 16) please use the {\ttfamily string\+Numbers} option. That way all numbers are going to be returned as String and you can handle them safely.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Same\ functions\ as\ in\ the\ first\ example}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ parser\ =\ new\ Parser(\{}
+\DoxyCodeLine{\ \ returnReply(reply)\ \{}
+\DoxyCodeLine{\ \ \ \ lib.returnReply(reply);}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ returnError(err)\ \{}
+\DoxyCodeLine{\ \ \ \ lib.returnError(err);}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ returnBuffers:\ true,\ //\ All\ strings\ are\ returned\ as\ Buffer\ e.g.\ <Buffer\ 48\ 65\ 6c\ 6c\ 6f>}
+\DoxyCodeLine{\ \ stringNumbers:\ true\ //\ All\ numbers\ are\ returned\ as\ String}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ streamHandler\ as\ above}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md28068}{}\doxysubsubsection{\texorpdfstring{Protocol errors}{Protocol errors}}\label{README.md_autotoc_md28068}
+To handle protocol errors (this is very unlikely to happen) gracefully you should add the return\+Fatal\+Error option, reject any still running command (they might have been processed properly but the reply is just wrong), destroy the socket and reconnect. Note that while doing this no new command may be added, so all new commands have to be buffered in the meantime, otherwise a chunk might still contain partial data of a following command that was already processed properly but answered in the same chunk as the command that resulted in the protocol error.\hypertarget{README.md_autotoc_md28069}{}\doxysubsubsection{\texorpdfstring{Contribute}{Contribute}}\label{README.md_autotoc_md28069}
+The parser is highly optimized but there may still be further optimizations possible. \begin{DoxyVerb}npm install
+npm test
+npm run benchmark
+\end{DoxyVerb}
+
+
+Currently the benchmark compares the performance against the hiredis parser\+: \begin{DoxyVerb}HIREDIS:   $ multiple chunks in a bulk string x 994,387 ops/sec ±0.22% (554 runs sampled)
+JS PARSER: $ multiple chunks in a bulk string x 1,010,728 ops/sec ±0.28% (559 runs sampled)
+HIREDIS BUF:   $ multiple chunks in a bulk string x 648,742 ops/sec ±0.80% (526 runs sampled)
+JS PARSER BUF: $ multiple chunks in a bulk string x 1,728,849 ops/sec ±0.41% (555 runs sampled)
+
+HIREDIS:   + multiple chunks in a string x 1,861,132 ops/sec ±0.18% (564 runs sampled)
+JS PARSER: + multiple chunks in a string x 2,131,892 ops/sec ±0.31% (558 runs sampled)
+HIREDIS BUF:   + multiple chunks in a string x 965,132 ops/sec ±0.58% (521 runs sampled)
+JS PARSER BUF: + multiple chunks in a string x 2,304,482 ops/sec ±0.31% (559 runs sampled)
+
+HIREDIS:   $ 4mb bulk string x 269 ops/sec ±0.56% (452 runs sampled)
+JS PARSER: $ 4mb bulk string x 763 ops/sec ±0.25% (466 runs sampled)
+HIREDIS BUF:   $ 4mb bulk string x 336 ops/sec ±0.59% (459 runs sampled)
+JS PARSER BUF: $ 4mb bulk string x 994 ops/sec ±0.36% (482 runs sampled)
+
+HIREDIS:   + simple string x 2,504,305 ops/sec ±0.19% (563 runs sampled)
+JS PARSER: + simple string x 5,121,952 ops/sec ±0.30% (560 runs sampled)
+HIREDIS BUF:   + simple string x 1,122,899 ops/sec ±0.52% (516 runs sampled)
+JS PARSER BUF: + simple string x 5,907,323 ops/sec ±0.23% (562 runs sampled)
+
+HIREDIS:   : integer x 2,461,376 ops/sec ±0.14% (561 runs sampled)
+JS PARSER: : integer x 18,543,688 ops/sec ±0.19% (539 runs sampled)
+JS PARSER STR: : integer x 14,149,305 ops/sec ±0.24% (561 runs sampled)
+
+HIREDIS:   : big integer x 2,114,270 ops/sec ±0.15% (561 runs sampled)
+JS PARSER: : big integer x 10,794,439 ops/sec ±0.25% (560 runs sampled)
+JS PARSER STR: : big integer x 4,594,807 ops/sec ±0.24% (558 runs sampled)
+
+HIREDIS:   * array x 45,597 ops/sec ±0.23% (565 runs sampled)
+JS PARSER: * array x 68,396 ops/sec ±0.30% (563 runs sampled)
+HIREDIS BUF:   * array x 14,726 ops/sec ±0.39% (498 runs sampled)
+JS PARSER BUF: * array x 80,961 ops/sec ±0.25% (561 runs sampled)
+
+HIREDIS:   * big nested array x 212 ops/sec ±0.17% (511 runs sampled)
+JS PARSER: * big nested array x 243 ops/sec ±0.21% (496 runs sampled)
+HIREDIS BUF:   * big nested array x 207 ops/sec ±0.37% (430 runs sampled)
+JS PARSER BUF: * big nested array x 297 ops/sec ±1.10% (421 runs sampled)
+
+HIREDIS:   - error x 168,761 ops/sec ±0.28% (559 runs sampled)
+JS PARSER: - error x 424,257 ops/sec ±0.28% (557 runs sampled)
+
+Platform info:
+Ubuntu 17.04
+Node.js 7.10.0
+Intel(R) Core(TM) i7-5600U CPU
+\end{DoxyVerb}
+\hypertarget{README.md_autotoc_md28070}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md28070}
+\href{./LICENSE}{\texttt{ MIT}} 

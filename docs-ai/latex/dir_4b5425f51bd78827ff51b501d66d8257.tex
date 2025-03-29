@@ -1,0 +1,66 @@
+\doxysection{node\+\_\+modules/bufferutil Directory Reference}
+\hypertarget{dir_4b5425f51bd78827ff51b501d66d8257}{}\label{dir_4b5425f51bd78827ff51b501d66d8257}\index{node\_modules/bufferutil Directory Reference@{node\_modules/bufferutil Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_d86de55866149ec1a4af33093508a198}{src}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/bufferutil}{\texttt{ }} \href{https://github.com/websockets/bufferutil/actions?query=workflow\%3ACI+branch\%3Amaster}{\texttt{ }}
+
+{\ttfamily bufferutil} is what makes {\ttfamily ws} fast. It provides some utilities to efficiently perform some operations such as masking and unmasking the data payload of Web\+Socket frames.\hypertarget{README.md_autotoc_md9679}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md9679}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ bufferutil\ -\/-\/save-\/optional}
+
+\end{DoxyCode}
+
+
+The {\ttfamily -\/-\/save-\/optional} flag tells npm to save the package in your package.\+json under the \href{https://docs.npmjs.com/files/package.json\#optionaldependencies}{\texttt{ {\ttfamily optional\+Dependencies}}} key.\hypertarget{README.md_autotoc_md9680}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md9680}
+The module exports two functions. To maximize performance, parameters are not validated. It is the caller\textquotesingle{}s responsibility to ensure that they are correct.\hypertarget{README.md_autotoc_md9681}{}\doxysubsubsection{\texorpdfstring{{\ttfamily buffer\+Util.\+mask(source, mask, output, offset, length)}}{{\ttfamily buffer\+Util.\+mask(source, mask, output, offset, length)}}}\label{README.md_autotoc_md9681}
+Masks a buffer using the given masking-\/key as specified by the Web\+Socket protocol.\hypertarget{README.md_autotoc_md9682}{}\doxysubsubsubsection{\texorpdfstring{Arguments}{Arguments}}\label{README.md_autotoc_md9682}
+
+\begin{DoxyItemize}
+\item {\ttfamily source} -\/ The buffer to mask.
+\item {\ttfamily mask} -\/ A buffer representing the masking-\/key.
+\item {\ttfamily output} -\/ The buffer where to store the result.
+\item {\ttfamily offset} -\/ The offset at which to start writing.
+\item {\ttfamily length} -\/ The number of bytes to mask.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md9683}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md9683}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ bufferUtil\ =\ require('bufferutil');}
+\DoxyCodeLine{const\ crypto\ =\ require('crypto');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ source\ =\ crypto.randomBytes(10);}
+\DoxyCodeLine{const\ mask\ =\ crypto.randomBytes(4);}
+\DoxyCodeLine{}
+\DoxyCodeLine{bufferUtil.mask(source,\ mask,\ source,\ 0,\ source.length);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9684}{}\doxysubsubsection{\texorpdfstring{{\ttfamily buffer\+Util.\+unmask(buffer, mask)}}{{\ttfamily buffer\+Util.\+unmask(buffer, mask)}}}\label{README.md_autotoc_md9684}
+Unmasks a buffer using the given masking-\/key as specified by the Web\+Socket protocol.\hypertarget{README.md_autotoc_md9685}{}\doxysubsubsubsection{\texorpdfstring{Arguments}{Arguments}}\label{README.md_autotoc_md9685}
+
+\begin{DoxyItemize}
+\item {\ttfamily buffer} -\/ The buffer to unmask.
+\item {\ttfamily mask} -\/ A buffer representing the masking-\/key.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md9686}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md9686}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ bufferUtil\ =\ require('bufferutil');}
+\DoxyCodeLine{const\ crypto\ =\ require('crypto');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ buffer\ =\ crypto.randomBytes(10);}
+\DoxyCodeLine{const\ mask\ =\ crypto.randomBytes(4);}
+\DoxyCodeLine{}
+\DoxyCodeLine{bufferUtil.unmask(buffer,\ mask);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9687}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md9687}
+\mbox{[}MIT\mbox{]}(LICENSE) 

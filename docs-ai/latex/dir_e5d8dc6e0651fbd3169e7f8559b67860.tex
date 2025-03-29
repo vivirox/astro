@@ -1,0 +1,68 @@
+\doxysection{node\+\_\+modules/find-\/up/node\+\_\+modules/p-\/locate Directory Reference}
+\hypertarget{dir_e5d8dc6e0651fbd3169e7f8559b67860}{}\label{dir_e5d8dc6e0651fbd3169e7f8559b67860}\index{node\_modules/find-\/up/node\_modules/p-\/locate Directory Reference@{node\_modules/find-\/up/node\_modules/p-\/locate Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Get the first fulfilled promise that satisfies the provided testing function \end{quote}
+
+
+Think of it like an async version of \href{https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/find}{\texttt{ {\ttfamily Array\#find}}}.\hypertarget{readme.md_autotoc_md15554}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md15554}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ p-\/locate}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md15555}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md15555}
+Here we find the first file that exists on disk, in array order.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ pathExists\ =\ require('path-\/exists');}
+\DoxyCodeLine{const\ pLocate\ =\ require('p-\/locate');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ files\ =\ [}
+\DoxyCodeLine{\ \ \ \ 'unicorn.png',}
+\DoxyCodeLine{\ \ \ \ 'rainbow.png',\ //\ Only\ this\ one\ actually\ exists\ on\ disk}
+\DoxyCodeLine{\ \ \ \ 'pony.png'}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ foundPath\ =\ await\ pLocate(files,\ file\ =>\ pathExists(file));}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log(foundPath);}
+\DoxyCodeLine{\ \ \ \ //=>\ 'rainbow'}
+\DoxyCodeLine{\})();}
+
+\end{DoxyCode}
+
+
+{\itshape The above is just an example. Use \href{https://github.com/sindresorhus/locate-path}{\texttt{ {\ttfamily locate-\/path}}} if you need this.}\hypertarget{readme.md_autotoc_md15556}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md15556}
+\hypertarget{readme.md_autotoc_md15557}{}\doxysubsubsection{\texorpdfstring{p\+Locate(input, tester, \mbox{[}options\mbox{]})}{p\+Locate(input, tester, \mbox{[}options\mbox{]})}}\label{readme.md_autotoc_md15557}
+Returns a {\ttfamily Promise} that is fulfilled when {\ttfamily tester} resolves to {\ttfamily true} or the iterable is done, or rejects if any of the promises reject. The fulfilled value is the current iterable value or {\ttfamily undefined} if {\ttfamily tester} never resolved to {\ttfamily true}.\hypertarget{readme.md_autotoc_md15558}{}\doxysubsubsubsection{\texorpdfstring{input}{input}}\label{readme.md_autotoc_md15558}
+Type\+: {\ttfamily Iterable\texorpdfstring{$<$}{<}Promise \texorpdfstring{$\vert$}{|} unknown\texorpdfstring{$>$}{>}}
+
+An iterable of promises/values to test.\hypertarget{readme.md_autotoc_md15559}{}\doxysubsubsubsection{\texorpdfstring{tester(element)}{tester(element)}}\label{readme.md_autotoc_md15559}
+Type\+: {\ttfamily Function}
+
+This function will receive resolved values from {\ttfamily input} and is expected to return a {\ttfamily Promise\texorpdfstring{$<$}{<}boolean\texorpdfstring{$>$}{>}} or {\ttfamily boolean}.\hypertarget{readme.md_autotoc_md15560}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md15560}
+Type\+: {\ttfamily Object}\hypertarget{readme.md_autotoc_md15561}{}\doxysubsubsubsubsection{\texorpdfstring{concurrency}{concurrency}}\label{readme.md_autotoc_md15561}
+Type\+: {\ttfamily number}~\newline
+ Default\+: {\ttfamily Infinity}~\newline
+ Minimum\+: {\ttfamily 1}
+
+Number of concurrently pending promises returned by {\ttfamily tester}.\hypertarget{readme.md_autotoc_md15562}{}\doxysubsubsubsubsection{\texorpdfstring{preserve\+Order}{preserve\+Order}}\label{readme.md_autotoc_md15562}
+Type\+: {\ttfamily boolean}~\newline
+ Default\+: {\ttfamily true}
+
+Preserve {\ttfamily input} order when searching.
+
+Disable this to improve performance if you don\textquotesingle{}t care about the order.\hypertarget{readme.md_autotoc_md15563}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md15563}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/p-map}{\texttt{ p-\/map}} -\/ Map over promises concurrently
+\item \href{https://github.com/sindresorhus/p-filter}{\texttt{ p-\/filter}} -\/ Filter promises concurrently
+\item \href{https://github.com/sindresorhus/p-any}{\texttt{ p-\/any}} -\/ Wait for any promise to be fulfilled
+\item \href{https://github.com/sindresorhus/promise-fun}{\texttt{ More…}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md15564}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md15564}
+MIT © \href{https://sindresorhus.com}{\texttt{ Sindre Sorhus}} 

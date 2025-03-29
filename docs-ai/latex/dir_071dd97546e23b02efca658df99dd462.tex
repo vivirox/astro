@@ -1,0 +1,102 @@
+\doxysection{node\+\_\+modules/rxjs Directory Reference}
+\hypertarget{dir_071dd97546e23b02efca658df99dd462}{}\label{dir_071dd97546e23b02efca658df99dd462}\index{node\_modules/rxjs Directory Reference@{node\_modules/rxjs Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+ \href{http://badge.fury.io/js/rxjs}{\texttt{ }} \href{https://gitter.im/Reactive-Extensions/RxJS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge}{\texttt{ }}\hypertarget{README.md_autotoc_md30086}{}\doxysubsection{\texorpdfstring{The Roadmap from Rx\+JS 7 to 8}{The Roadmap from Rx\+JS 7 to 8}}\label{README.md_autotoc_md30086}
+Curious what\textquotesingle{}s next for Rx\+JS? Follow along with \href{https://github.com/ReactiveX/rxjs/issues/6367}{\texttt{ Issue 6367}}.\hypertarget{README.md_autotoc_md30087}{}\doxysubsection{\texorpdfstring{Rx\+JS 7}{Rx\+JS 7}}\label{README.md_autotoc_md30087}
+\hypertarget{README.md_autotoc_md30088}{}\doxysubsubsubsection{\texorpdfstring{FOR 6.\+X PLEASE GO TO \href{https://github.com/ReactiveX/rxjs/tree/6.x}{\texttt{ THE 6.\+x BRANCH}}}{FOR 6.\+X PLEASE GO TO \href{https://github.com/ReactiveX/rxjs/tree/6.x}{\texttt{ THE 6.\+x BRANCH}}}}\label{README.md_autotoc_md30088}
+Reactive Extensions Library for Java\+Script. This is a rewrite of \href{https://github.com/Reactive-Extensions/RxJS}{\texttt{ Reactive-\/\+Extensions/\+Rx\+JS}} and is the latest production-\/ready version of Rx\+JS. This rewrite is meant to have better performance, better modularity, better debuggable call stacks, while staying mostly backwards compatible, with some breaking changes that reduce the API surface.
+
+\href{LICENSE.txt}{\texttt{ Apache 2.\+0 License}}
+
+
+\begin{DoxyItemize}
+\item \doxysectlink{md_node__modules_2rxjs_2_c_o_d_e___o_f___c_o_n_d_u_c_t}{Code of Conduct}{0}
+\item \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{Contribution Guidelines}
+\item Maintainer Guidelines
+\item \href{https://rxjs.dev/}{\texttt{ API Documentation}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md30089}{}\doxysubsubsection{\texorpdfstring{Versions In This Repository}{Versions In This Repository}}\label{README.md_autotoc_md30089}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/ReactiveX/rxjs/commits/master}{\texttt{ master}} -\/ This is all of the current work, which is against v7 of Rx\+JS right now
+\item \href{https://github.com/ReactiveX/rxjs/tree/6.x}{\texttt{ 6.\+x}} -\/ This is the branch for version 6.\+X
+\end{DoxyItemize}
+
+Most PRs should be made to {\bfseries{master}}.\hypertarget{README.md_autotoc_md30090}{}\doxysubsubsection{\texorpdfstring{Important}{Important}}\label{README.md_autotoc_md30090}
+By contributing or commenting on issues in this repository, whether you\textquotesingle{}ve read them or not, you\textquotesingle{}re agreeing to the \doxysectlink{md_node__modules_2rxjs_2_c_o_d_e___o_f___c_o_n_d_u_c_t}{Contributor Code of Conduct}{0}. Much like traffic laws, ignorance doesn\textquotesingle{}t grant you immunity.\hypertarget{README.md_autotoc_md30091}{}\doxysubsubsection{\texorpdfstring{Installation and Usage}{Installation and Usage}}\label{README.md_autotoc_md30091}
+\hypertarget{README.md_autotoc_md30092}{}\doxysubsubsubsection{\texorpdfstring{ES6 via npm}{ES6 via npm}}\label{README.md_autotoc_md30092}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ rxjs}
+
+\end{DoxyCode}
+
+
+It\textquotesingle{}s recommended to pull in the Observable creation methods you need directly from `\textquotesingle{}rxjs'{\ttfamily as shown below with}range{\ttfamily . If you\textquotesingle{}re using Rx\+JS version 7.\+2 or above, you can pull in any operator you need from the same spot,}\textquotesingle{}rxjs\textquotesingle{}\`{}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ range,\ filter,\ map\ \}\ from\ 'rxjs';}
+\DoxyCodeLine{}
+\DoxyCodeLine{range(1,\ 200)}
+\DoxyCodeLine{\ \ .pipe(}
+\DoxyCodeLine{\ \ \ \ filter(x\ =>\ x\ \%\ 2\ ===\ 1),}
+\DoxyCodeLine{\ \ \ \ map(x\ =>\ x\ +\ x)}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ .subscribe(x\ =>\ console.log(x));}
+
+\end{DoxyCode}
+
+
+If you\textquotesingle{}re using Rx\+JS version below 7.\+2, you can pull in any operator you need from one spot, under `\textquotesingle{}rxjs/operators'\`{}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ range\ \}\ from\ 'rxjs';}
+\DoxyCodeLine{import\ \{\ filter,\ map\ \}\ from\ 'rxjs/operators';}
+\DoxyCodeLine{}
+\DoxyCodeLine{range(1,\ 200)}
+\DoxyCodeLine{\ \ .pipe(}
+\DoxyCodeLine{\ \ \ \ filter(x\ =>\ x\ \%\ 2\ ===\ 1),}
+\DoxyCodeLine{\ \ \ \ map(x\ =>\ x\ +\ x)}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ .subscribe(x\ =>\ console.log(x));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30093}{}\doxysubsubsubsection{\texorpdfstring{CDN}{CDN}}\label{README.md_autotoc_md30093}
+For CDN, you can use \href{https://unpkg.com/}{\texttt{ unpkg}}\+:
+
+\href{https://unpkg.com/rxjs@\%5E7/dist/bundles/rxjs.umd.min.js}{\texttt{ https\+://unpkg.\+com/rxjs@\texorpdfstring{$^\wedge$}{\string^}7/dist/bundles/rxjs.umd.\+min.\+js}}
+
+The global namespace for rxjs is {\ttfamily rxjs}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ range\ \}\ =\ rxjs;}
+\DoxyCodeLine{const\ \{\ filter,\ map\ \}\ =\ rxjs.operators;}
+\DoxyCodeLine{}
+\DoxyCodeLine{range(1,\ 200)}
+\DoxyCodeLine{\ \ .pipe(}
+\DoxyCodeLine{\ \ \ \ filter(x\ =>\ x\ \%\ 2\ ===\ 1),}
+\DoxyCodeLine{\ \ \ \ map(x\ =>\ x\ +\ x)}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ .subscribe(x\ =>\ console.log(x));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30094}{}\doxysubsubsection{\texorpdfstring{Goals}{Goals}}\label{README.md_autotoc_md30094}
+
+\begin{DoxyItemize}
+\item Smaller overall bundles sizes
+\item Provide better performance than preceding versions of Rx\+JS
+\item To model/follow the \href{https://github.com/zenparsing/es-observable}{\texttt{ Observable Spec Proposal}} to the observable
+\item Provide more modular file structure in a variety of formats
+\item Provide more debuggable call stacks than preceding versions of Rx\+JS
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md30095}{}\doxysubsubsection{\texorpdfstring{Building/\+Testing}{Building/\+Testing}}\label{README.md_autotoc_md30095}
+
+\begin{DoxyItemize}
+\item {\ttfamily npm run compile} build everything
+\item {\ttfamily npm test} run tests
+\item {\ttfamily npm run dtslint} run dtslint tests
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md30096}{}\doxysubsubsection{\texorpdfstring{Adding documentation}{Adding documentation}}\label{README.md_autotoc_md30096}
+We appreciate all contributions to the documentation of any type. All of the information needed to get the docs app up and running locally as well as how to contribute can be found in the \href{./docs_app}{\texttt{ documentation directory}}. 

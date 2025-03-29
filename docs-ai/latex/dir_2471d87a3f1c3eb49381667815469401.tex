@@ -1,0 +1,114 @@
+\doxysection{node\+\_\+modules/@atproto/xrpc Directory Reference}
+\hypertarget{dir_2471d87a3f1c3eb49381667815469401}{}\label{dir_2471d87a3f1c3eb49381667815469401}\index{node\_modules/"@atproto/xrpc Directory Reference@{node\_modules/"@atproto/xrpc Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_a3a04e277f1159afb26f48616bb72a00}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Type\+Script client library for talking to \href{https://atproto.com}{\texttt{ atproto}} services, with Lexicon schema validation.
+
+\href{https://www.npmjs.com/package/@atproto/xrpc}{\texttt{ }} \href{https://github.com/bluesky-social/atproto/actions/workflows/repo.yaml}{\texttt{ }}\hypertarget{README.md_autotoc_md2461}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md2461}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ LexiconDoc\ \}\ from\ '@atproto/lexicon'}
+\DoxyCodeLine{import\ \{\ XrpcClient\ \}\ from\ '@atproto/xrpc'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pingLexicon\ =\ \{}
+\DoxyCodeLine{\ \ lexicon:\ 1,}
+\DoxyCodeLine{\ \ id:\ 'io.example.ping',}
+\DoxyCodeLine{\ \ defs:\ \{}
+\DoxyCodeLine{\ \ \ \ main:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'query',}
+\DoxyCodeLine{\ \ \ \ \ \ description:\ 'Ping\ the\ server',}
+\DoxyCodeLine{\ \ \ \ \ \ parameters:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ type:\ 'params',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ properties:\ \{\ message:\ \{\ type:\ 'string'\ \}\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ output:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ encoding:\ 'application/json',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ schema:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'object',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ required:\ ['message'],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ properties:\ \{\ message:\ \{\ type:\ 'string'\ \}\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}\ satisfies\ LexiconDoc}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ xrpc\ =\ new\ XrpcClient('https://ping.example.com',\ [}
+\DoxyCodeLine{\ \ //\ Any\ number\ of\ lexicon\ here}
+\DoxyCodeLine{\ \ pingLexicon,}
+\DoxyCodeLine{])}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ res1\ =\ await\ xrpc.call('io.example.ping',\ \{}
+\DoxyCodeLine{\ \ message:\ 'hello\ world',}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{res1.encoding\ //\ =>\ 'application/json'}
+\DoxyCodeLine{res1.body\ //\ =>\ \{message:\ 'hello\ world'\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2462}{}\doxysubsubsection{\texorpdfstring{With a custom fetch handler}{With a custom fetch handler}}\label{README.md_autotoc_md2462}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ XrpcClient\ \}\ from\ '@atproto/xrpc'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ session\ =\ \{}
+\DoxyCodeLine{\ \ serviceUrl:\ 'https://ping.example.com',}
+\DoxyCodeLine{\ \ token:\ '<my-\/token>',}
+\DoxyCodeLine{\ \ async\ refreshToken()\ \{}
+\DoxyCodeLine{\ \ \ \ const\ \{\ token\ \}\ =\ await\ fetch('https://auth.example.com/refresh',\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ method:\ 'POST',}
+\DoxyCodeLine{\ \ \ \ \ \ headers:\ \{\ Authorization:\ \`{}Bearer\ \$\{this.token\}`\ \},}
+\DoxyCodeLine{\ \ \ \ \}).then((res)\ =>\ res.json())}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ this.token\ =\ token}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ return\ token}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ sessionBasedFetch:\ FetchHandler\ =\ async\ (}
+\DoxyCodeLine{\ \ url:\ string,}
+\DoxyCodeLine{\ \ init:\ RequestInit,}
+\DoxyCodeLine{)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ headers\ =\ new\ Headers(init.headers)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ headers.set('Authorization',\ \`{}Bearer\ \$\{session.token\}`)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ response\ =\ await\ fetch(new\ URL(url,\ session.serviceUrl),\ \{}
+\DoxyCodeLine{\ \ \ \ ...init,}
+\DoxyCodeLine{\ \ \ \ headers,}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ if\ (response.status\ ===\ 401)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Refresh\ token,\ then\ try\ again.}
+\DoxyCodeLine{\ \ \ \ const\ newToken\ =\ await\ session.refreshToken()}
+\DoxyCodeLine{\ \ \ \ headers.set('Authorization',\ \`{}Bearer\ \$\{newToken\}`)}
+\DoxyCodeLine{\ \ \ \ return\ fetch(new\ URL(url,\ session.serviceUrl),\ \{\ ...init,\ headers\ \})}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ response}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ xrpc\ =\ new\ XrpcClient(sessionBasedFetch,\ [}
+\DoxyCodeLine{\ \ //\ Any\ number\ of\ lexicon\ here}
+\DoxyCodeLine{\ \ pingLexicon,}
+\DoxyCodeLine{])}
+\DoxyCodeLine{}
+\DoxyCodeLine{//}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2463}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md2463}
+This project is dual-\/licensed under MIT and Apache 2.\+0 terms\+:
+
+
+\begin{DoxyItemize}
+\item MIT license (\href{https://github.com/bluesky-social/atproto/blob/main/LICENSE-MIT.txt}{\texttt{ LICENSE-\/\+MIT.\+txt}} or \href{http://opensource.org/licenses/MIT}{\texttt{ http\+://opensource.\+org/licenses/\+MIT}})
+\item Apache License, Version 2.\+0, (\href{https://github.com/bluesky-social/atproto/blob/main/LICENSE-APACHE.txt}{\texttt{ LICENSE-\/\+APACHE.\+txt}} or \href{http://www.apache.org/licenses/LICENSE-2.0}{\texttt{ http\+://www.\+apache.\+org/licenses/\+LICENSE-\/2.\+0}})
+\end{DoxyItemize}
+
+Downstream projects and end users may chose either license individually, or both together, at their discretion. The motivation for this dual-\/licensing is the additional software patent assurance provided by Apache 2.\+0. 

@@ -1,0 +1,150 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/format Directory Reference}
+\hypertarget{dir_4e18ddbb6f2187ba422fef56ef8cc1f7}{}\label{dir_4e18ddbb6f2187ba422fef56ef8cc1f7}\index{node\_modules/hast-\/util-\/format Directory Reference@{node\_modules/hast-\/util-\/format Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-format/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-format}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-format}{\texttt{ }} \href{https://bundlejs.com/?q=hast-util-format}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/hast/hast}{\texttt{ hast}} utility to format whitespace in HTML.\hypertarget{readme.md_autotoc_md16547}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md16547}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}format(tree, options)\`{}
+\end{DoxyItemize}
+\item Compatibility
+\item Related
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16548}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md16548}
+This package is a utility that formats whitespace in HTML. In short, it works as follows\+:
+
+
+\begin{DoxyItemize}
+\item collapse all existing whitespace to either a line ending or a single space (\href{https://github.com/rehypejs/rehype-minify/tree/main/packages/hast-util-minify-whitespace}{\texttt{ {\ttfamily hast-\/util-\/minify-\/whitespace}}})
+\item remove those spaces and line endings if they do not contribute to the document
+\item inject needed line endings
+\item indent previously collapsed line endings properly
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16549}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md16549}
+This package is useful when you want to improve the readability of an HTML fragment as it adds insignificant but pretty whitespace between elements. The plugin \href{https://github.com/rehypejs/rehype-format}{\texttt{ {\ttfamily rehype-\/format}}} uses this package to format HTML at the plugin level. The package \href{https://github.com/rehypejs/rehype-minify/tree/main/packages/hast-util-minify-whitespace}{\texttt{ {\ttfamily hast-\/util-\/minify-\/whitespace}}} does the inverse.\hypertarget{readme.md_autotoc_md16550}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md16550}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/format}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{format\}\ from\ 'https://esm.sh/hast-\/util-\/format@1'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{format\}\ from\ 'https://esm.sh/hast-\/util-\/format@1?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16551}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md16551}
+Say we have the following {\ttfamily example.\+html}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!doCTYPE\ HTML><html>}
+\DoxyCodeLine{\ <head>}
+\DoxyCodeLine{\ \ \ \ <title>Hello!</title>}
+\DoxyCodeLine{<meta\ charset=utf8>}
+\DoxyCodeLine{\ \ \ \ \ \ </head>}
+\DoxyCodeLine{\ \ <body><section>\ \ \ \ <p>hi\ there</p>}
+\DoxyCodeLine{\ \ \ \ \ </section>}
+\DoxyCodeLine{\ </body>}
+\DoxyCodeLine{</html>}
+
+\end{DoxyCode}
+
+
+Say we have the following {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{format\}\ from\ 'hast-\/util-\/format'}
+\DoxyCodeLine{import\ \{fromHtml\}\ from\ 'hast-\/util-\/from-\/html'}
+\DoxyCodeLine{import\ \{toHtml\}\ from\ 'hast-\/util-\/to-\/html'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ document\ =\ await\ fs.readFile('example.html',\ 'utf8')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromHtml(document)}
+\DoxyCodeLine{}
+\DoxyCodeLine{format(tree)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ toHtml(tree)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!doctype\ html>}
+\DoxyCodeLine{<html>}
+\DoxyCodeLine{\ \ <head>}
+\DoxyCodeLine{\ \ \ \ <title>Hello!</title>}
+\DoxyCodeLine{\ \ \ \ <meta\ charset="{}utf8"{}>}
+\DoxyCodeLine{\ \ </head>}
+\DoxyCodeLine{\ \ <body>}
+\DoxyCodeLine{\ \ \ \ <section>}
+\DoxyCodeLine{\ \ \ \ \ \ <p>hi\ there</p>}
+\DoxyCodeLine{\ \ \ \ </section>}
+\DoxyCodeLine{\ \ </body>}
+\DoxyCodeLine{</html>}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: some of the changes have been made by {\ttfamily hast-\/util-\/to-\/html}. \end{quote}
+\hypertarget{readme.md_autotoc_md16552}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md16552}
+\hypertarget{readme.md_autotoc_md16553}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md16553}
+Configuration.\hypertarget{readme.md_autotoc_md16554}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md16554}
+
+\begin{DoxyItemize}
+\item {\ttfamily blanks?} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined}) — list of tag names to join with a blank line (default\+: {\ttfamily \mbox{[}\mbox{]}}); these tags, when next to each other, are joined by a blank line ({\ttfamily \textbackslash{}n\textbackslash{}n}); for example, when `\mbox{[}\textquotesingle{}head', \textquotesingle{}body\textquotesingle{}\mbox{]}{\ttfamily is given, a blank line is added between these two \texorpdfstring{$\ast$}{*}}indent?{\ttfamily (}string \texorpdfstring{$\vert$}{|} number \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined{\ttfamily ) — indentation per level (default\+:}2{\ttfamily ); when}number{\ttfamily , uses that amount of spaces; when}string{\ttfamily , uses that per indentation level \texorpdfstring{$\ast$}{*}}indent\+Initial?{\ttfamily (}boolean \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined{\ttfamily ) — whether to indent the first level (default\+:}true{\ttfamily ); this is usually the}$<$html$>${\ttfamily , thus not indenting}head{\ttfamily and}body\`{}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16555}{}\doxysubsubsection{\texorpdfstring{{\ttfamily format(tree, options)}}{{\ttfamily format(tree, options)}}}\label{readme.md_autotoc_md16555}
+Format whitespace in HTML.\hypertarget{readme.md_autotoc_md16556}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md16556}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} ({\ttfamily Root}) — tree
+\item {\ttfamily options?} ({\ttfamily Options \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined}) — configuration (optional)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16557}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md16557}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md16558}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md16558}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily hast-\/util-\/format@1}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md16559}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md16559}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/rehypejs/rehype-minify/tree/main/packages/hast-util-minify-whitespace}{\texttt{ {\ttfamily hast-\/util-\/minify-\/whitespace}}} — minify whitespace between elements
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16560}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md16560}
+This package is safe.\hypertarget{readme.md_autotoc_md16561}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md16561}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md16562}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md16562}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

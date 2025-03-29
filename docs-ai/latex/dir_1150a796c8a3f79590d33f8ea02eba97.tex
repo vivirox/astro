@@ -1,0 +1,331 @@
+\doxysection{node\+\_\+modules/@flydotio/dockerfile/node\+\_\+modules/diff Directory Reference}
+\hypertarget{dir_1150a796c8a3f79590d33f8ea02eba97}{}\label{dir_1150a796c8a3f79590d33f8ea02eba97}\index{node\_modules/"@flydotio/dockerfile/node\_modules/diff Directory Reference@{node\_modules/"@flydotio/dockerfile/node\_modules/diff Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+A Java\+Script text differencing implementation. Try it out in the {\bfseries{\href{https://kpdecker.github.io/jsdiff}{\texttt{ online demo}}}}.
+
+Based on the algorithm proposed in \href{http://www.xmailserver.org/diff2.pdf}{\texttt{ "{}\+An O(\+ND) Difference Algorithm and its Variations"{} (Myers, 1986)}}.\hypertarget{README.md_autotoc_md3323}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md3323}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ diff\ -\/-\/save}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3324}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3324}
+Broadly, jsdiff\textquotesingle{}s diff functions all take an old text and a new text and perform three steps\+:
+
+
+\begin{DoxyEnumerate}
+\item Split both texts into arrays of "{}tokens"{}. What constitutes a token varies; in {\ttfamily diff\+Chars}, each character is a token, while in {\ttfamily diff\+Lines}, each line is a token.
+\item Find the smallest set of single-\/token {\itshape insertions} and {\itshape deletions} needed to transform the first array of tokens into the second.
+
+This step depends upon having some notion of a token from the old array being "{}equal"{} to one from the new array, and this notion of equality affects the results. Usually two tokens are equal if {\ttfamily ===} considers them equal, but some of the diff functions use an alternative notion of equality or have options to configure it. For instance, by default {\ttfamily diff\+Chars("{}\+Foo"{}, "{}\+FOOD"{})} will require two deletions ({\ttfamily o}, {\ttfamily o}) and three insertions ({\ttfamily O}, {\ttfamily O}, {\ttfamily D}), but {\ttfamily diff\+Chars("{}\+Foo"{}, "{}\+FOOD"{}, \{ignore\+Case\+: true\})} will require just one insertion (of a {\ttfamily D}), since {\ttfamily ignore\+Case} causes {\ttfamily o} and {\ttfamily O} to be considered equal.
+\item Return an array representing the transformation computed in the previous step as a series of change objects. The array is ordered from the start of the input to the end, and each change object represents {\itshape inserting} one or more tokens, {\itshape deleting} one or more tokens, or {\itshape keeping} one or more tokens.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md3325}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md3325}
+
+\begin{DoxyItemize}
+\item {\ttfamily Diff.\+diff\+Chars(old\+Str, new\+Str\mbox{[}, options\mbox{]})} -\/ diffs two blocks of text, treating each character as a token.
+
+("{}\+Characters"{} here means Unicode code points -\/ the elements you get when you loop over a string with a {\ttfamily for ... of ...} loop.)
+
+Returns a list of change objects.
+
+Options
+\begin{DoxyItemize}
+\item {\ttfamily ignore\+Case}\+: If {\ttfamily true}, the uppercase and lowercase forms of a character are considered equal. Defaults to {\ttfamily false}.
+\end{DoxyItemize}
+\item {\ttfamily Diff.\+diff\+Words(old\+Str, new\+Str\mbox{[}, options\mbox{]})} -\/ diffs two blocks of text, treating each word and each punctuation mark as a token. Whitespace is ignored when computing the diff (but preserved as far as possible in the final change objects).
+
+Returns a list of change objects.
+
+Options
+\begin{DoxyItemize}
+\item {\ttfamily ignore\+Case}\+: Same as in {\ttfamily diff\+Chars}. Defaults to false.
+\item {\ttfamily intl\+Segmenter}\+: An optional \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter}{\texttt{ {\ttfamily Intl.\+Segmenter}}} object (which must have a {\ttfamily granularity} of `\textquotesingle{}word'{\ttfamily ) for}diff\+Words\`{} to use to split the text into words.
+
+By default, {\ttfamily diff\+Words} does not use an {\ttfamily Intl.\+Segmenter}, just some regexes for splitting text into words. This will tend to give worse results than {\ttfamily Intl.\+Segmenter} would, but ensures the results are consistent across environments; {\ttfamily Intl.\+Segmenter} behaviour is only loosely specced and the implementations in browsers could in principle change dramatically in future. If you want to use {\ttfamily diff\+Words} with an {\ttfamily Intl.\+Segmenter} but ensure it behaves the same whatever environment you run it in, use an {\ttfamily Intl.\+Segmenter} polyfill instead of the Java\+Script engine\textquotesingle{}s native {\ttfamily Intl.\+Segmenter} implementation.
+
+Using an {\ttfamily Intl.\+Segmenter} should allow better word-\/level diffing of non-\/\+English text than the default behaviour. For instance, {\ttfamily Intl.\+Segmenter}s can generally identify via built-\/in dictionaries which sequences of adjacent Chinese characters form words, allowing word-\/level diffing of Chinese. By specifying a language when instantiating the segmenter (e.\+g. `new Intl.\+Segmenter(\textquotesingle{}sv', \{granularity\+: \textquotesingle{}word\textquotesingle{}\})\`{}) you can also support language-\/specific rules, like treating Swedish\textquotesingle{}s colon separated contractions (like {\itshape k\+:a} for {\itshape kyrka}) as single words; by default this would be seen as two words separated by a colon.
+\end{DoxyItemize}
+\item {\ttfamily Diff.\+diff\+Words\+With\+Space(old\+Str, new\+Str\mbox{[}, options\mbox{]})} -\/ diffs two blocks of text, treating each word, punctuation mark, newline, or run of (non-\/newline) whitespace as a token.
+\item {\ttfamily Diff.\+diff\+Lines(old\+Str, new\+Str\mbox{[}, options\mbox{]})} -\/ diffs two blocks of text, treating each line as a token.
+
+Options
+\begin{DoxyItemize}
+\item {\ttfamily ignore\+Whitespace}\+: {\ttfamily true} to ignore leading and trailing whitespace characters when checking if two lines are equal. Defaults to {\ttfamily false}.
+\item {\ttfamily ignore\+Newline\+At\+Eof}\+: {\ttfamily true} to ignore a missing newline character at the end of the last line when comparing it to other lines. (By default, the line `\textquotesingle{}b~\newline
+'{\ttfamily in text}\textquotesingle{}a\textbackslash{}nb\textbackslash{}nc\textquotesingle{}{\ttfamily is not considered equal to the line}\textquotesingle{}b\textquotesingle{}{\ttfamily in text}\textquotesingle{}a\textbackslash{}nb\textquotesingle{}{\ttfamily ; this option makes them be considered equal.) Ignored if}ignore\+Whitespace{\ttfamily or}newline\+Is\+Token{\ttfamily are also true. \texorpdfstring{$\ast$}{*}}strip\+Trailing\+Cr{\ttfamily \+:}true{\ttfamily to remove all trailing CR (}\textbackslash{}r{\ttfamily ) characters before performing the diff. Defaults to}false{\ttfamily . This helps to get a useful diff when diffing UNIX text files against Windows text files. \texorpdfstring{$\ast$}{*}}newline\+Is\+Token{\ttfamily \+:}true{\ttfamily to treat the newline character at the end of each line as its own token. This allows for changes to the newline structure to occur independently of the line content and to be treated as such. In general this is the more human friendly form of}diff\+Lines{\ttfamily ; the default behavior with this option turned off is better suited for patches and other computer friendly output. Defaults to}false\`{}.
+\end{DoxyItemize}
+
+Note that while using {\ttfamily ignore\+Whitespace} in combination with {\ttfamily newline\+Is\+Token} is not an error, results may not be as expected. With {\ttfamily ignore\+Whitespace\+: true} and {\ttfamily newline\+Is\+Token\+: false}, changing a completely empty line to contain some spaces is treated as a non-\/change, but with {\ttfamily ignore\+Whitespace\+: true} and {\ttfamily newline\+Is\+Token\+: true}, it is treated as an insertion. This is because the content of a completely blank line is not a token at all in {\ttfamily newline\+Is\+Token} mode.
+
+Returns a list of change objects.
+\item {\ttfamily Diff.\+diff\+Sentences(old\+Str, new\+Str\mbox{[}, options\mbox{]})} -\/ diffs two blocks of text, treating each sentence as a token. The characters {\ttfamily .}, {\ttfamily !}, and {\ttfamily ?}, when followed by whitespace, are treated as marking the end of a sentence; nothing else is considered to mark a sentence end.
+
+(For more sophisticated detection of sentence breaks, including support for non-\/\+English punctuation, consider instead tokenizing with an \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter}{\texttt{ {\ttfamily Intl.\+Segmenter}}} with `granularity\+: \textquotesingle{}sentence'{\ttfamily and passing the result to}Diff.\+diff\+Arrays\`{}.)
+
+Returns a list of change objects.
+\item {\ttfamily Diff.\+diff\+Css(old\+Str, new\+Str\mbox{[}, options\mbox{]})} -\/ diffs two blocks of text, comparing CSS tokens.
+
+Returns a list of change objects.
+\item {\ttfamily Diff.\+diff\+Json(old\+Obj, new\+Obj\mbox{[}, options\mbox{]})} -\/ diffs two JSON-\/serializable objects by first serializing them to prettily-\/formatted JSON and then treating each line of the JSON as a token. Object properties are ordered alphabetically in the serialized JSON, so the order of properties in the objects being compared doesn\textquotesingle{}t affect the result.
+
+Returns a list of change objects.
+
+Options
+\begin{DoxyItemize}
+\item {\ttfamily stringify\+Replacer}\+: A custom replacer function. Operates similarly to the {\ttfamily replacer} parameter to \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify\#the_replacer_parameter}{\texttt{ {\ttfamily JSON.\+stringify()}}}, but must be a function.
+\item {\ttfamily undefined\+Replacement}\+: A value to replace {\ttfamily undefined} with. Ignored if a {\ttfamily stringify\+Replacer} is provided.
+\end{DoxyItemize}
+\item {\ttfamily Diff.\+diff\+Arrays(old\+Arr, new\+Arr\mbox{[}, options\mbox{]})} -\/ diffs two arrays of tokens, comparing each item for strict equality (===).
+
+Options
+\begin{DoxyItemize}
+\item {\ttfamily comparator}\+: {\ttfamily function(left, right)} for custom equality checks
+\end{DoxyItemize}
+
+Returns a list of change objects.
+\item {\ttfamily Diff.\+create\+Two\+Files\+Patch(old\+File\+Name, new\+File\+Name, old\+Str, new\+Str\mbox{[}, old\+Header\mbox{[}, new\+Header\mbox{[}, options\mbox{]}\mbox{]}\mbox{]})} -\/ creates a unified diff patch by first computing a diff with {\ttfamily diff\+Lines} and then serializing it to unified diff format.
+
+Parameters\+:
+\begin{DoxyItemize}
+\item {\ttfamily old\+File\+Name} \+: String to be output in the filename section of the patch for the removals
+\item {\ttfamily new\+File\+Name} \+: String to be output in the filename section of the patch for the additions
+\item {\ttfamily old\+Str} \+: Original string value
+\item {\ttfamily new\+Str} \+: New string value
+\item {\ttfamily old\+Header} \+: Optional additional information to include in the old file header. Default\+: {\ttfamily undefined}.
+\item {\ttfamily new\+Header} \+: Optional additional information to include in the new file header. Default\+: {\ttfamily undefined}.
+\item {\ttfamily options} \+: An object with options.
+\begin{DoxyItemize}
+\item {\ttfamily context} describes how many lines of context should be included. You can set this to {\ttfamily Number.\+MAX\+\_\+\+SAFE\+\_\+\+INTEGER} or {\ttfamily Infinity} to include the entire file content in one hunk.
+\item {\ttfamily ignore\+Whitespace}\+: Same as in {\ttfamily diff\+Lines}. Defaults to {\ttfamily false}.
+\item {\ttfamily strip\+Trailing\+Cr}\+: Same as in {\ttfamily diff\+Lines}. Defaults to {\ttfamily false}.
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item {\ttfamily Diff.\+create\+Patch(file\+Name, old\+Str, new\+Str\mbox{[}, old\+Header\mbox{[}, new\+Header\mbox{[}, options\mbox{]}\mbox{]}\mbox{]})} -\/ creates a unified diff patch.
+
+Just like Diff.\+create\+Two\+Files\+Patch, but with old\+File\+Name being equal to new\+File\+Name.
+\item {\ttfamily Diff.\+format\+Patch(patch)} -\/ creates a unified diff patch.
+
+{\ttfamily patch} may be either a single structured patch object (as returned by {\ttfamily structured\+Patch}) or an array of them (as returned by {\ttfamily parse\+Patch}).
+\item {\ttfamily Diff.\+structured\+Patch(old\+File\+Name, new\+File\+Name, old\+Str, new\+Str\mbox{[}, old\+Header\mbox{[}, new\+Header\mbox{[}, options\mbox{]}\mbox{]}\mbox{]})} -\/ returns an object with an array of hunk objects.
+
+This method is similar to create\+Two\+Files\+Patch, but returns a data structure suitable for further processing. Parameters are the same as create\+Two\+Files\+Patch. The data structure returned may look like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ oldFileName:\ 'oldfile',\ newFileName:\ 'newfile',}
+\DoxyCodeLine{\ \ oldHeader:\ 'header1',\ newHeader:\ 'header2',}
+\DoxyCodeLine{\ \ hunks:\ [\{}
+\DoxyCodeLine{\ \ \ \ oldStart:\ 1,\ oldLines:\ 3,\ newStart:\ 1,\ newLines:\ 3,}
+\DoxyCodeLine{\ \ \ \ lines:\ ['\ line2',\ '\ line3',\ '-\/line4',\ '+line5',\ '\(\backslash\)\(\backslash\)\ No\ newline\ at\ end\ of\ file'],}
+\DoxyCodeLine{\ \ \}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+\item {\ttfamily Diff.\+apply\+Patch(source, patch\mbox{[}, options\mbox{]})} -\/ attempts to apply a unified diff patch.
+
+Hunks are applied first to last. {\ttfamily apply\+Patch} first tries to apply the first hunk at the line number specified in the hunk header, and with all context lines matching exactly. If that fails, it tries scanning backwards and forwards, one line at a time, to find a place to apply the hunk where the context lines match exactly. If that still fails, and {\ttfamily fuzz\+Factor} is greater than zero, it increments the maximum number of mismatches (missing, extra, or changed context lines) that there can be between the hunk context and a region where we are trying to apply the patch such that the hunk will still be considered to match. Regardless of {\ttfamily fuzz\+Factor}, lines to be deleted in the hunk {\itshape must} be present for a hunk to match, and the context lines {\itshape immediately} before and after an insertion must match exactly.
+
+Once a hunk is successfully fitted, the process begins again with the next hunk. Regardless of {\ttfamily fuzz\+Factor}, later hunks must be applied later in the file than earlier hunks.
+
+If a hunk cannot be successfully fitted {\itshape anywhere} with fewer than {\ttfamily fuzz\+Factor} mismatches, {\ttfamily apply\+Patch} fails and returns {\ttfamily false}.
+
+If a hunk is successfully fitted but not at the line number specified by the hunk header, all subsequent hunks have their target line number adjusted accordingly. (e.\+g. if the first hunk is applied 10 lines below where the hunk header said it should fit, {\ttfamily apply\+Patch} will {\itshape start} looking for somewhere to apply the second hunk 10 lines below where its hunk header says it goes.)
+
+If the patch was applied successfully, returns a string containing the patched text. If the patch could not be applied (because some hunks in the patch couldn\textquotesingle{}t be fitted to the text in {\ttfamily source}), {\ttfamily apply\+Patch} returns false.
+
+{\ttfamily patch} may be a string diff or the output from the {\ttfamily parse\+Patch} or {\ttfamily structured\+Patch} methods.
+
+The optional {\ttfamily options} object may have the following keys\+:
+\begin{DoxyItemize}
+\item {\ttfamily fuzz\+Factor}\+: Maximum Levenshtein distance (in lines deleted, added, or subtituted) between the context shown in a patch hunk and the lines found in the file. Defaults to 0.
+\item {\ttfamily auto\+Convert\+Line\+Endings}\+: If {\ttfamily true}, and if the file to be patched consistently uses different line endings to the patch (i.\+e. either the file always uses Unix line endings while the patch uses Windows ones, or vice versa), then {\ttfamily apply\+Patch} will behave as if the line endings in the patch were the same as those in the source file. (If {\ttfamily false}, the patch will usually fail to apply in such circumstances since lines deleted in the patch won\textquotesingle{}t be considered to match those in the source file.) Defaults to {\ttfamily true}.
+\item {\ttfamily compare\+Line(line\+Number, line, operation, patch\+Content)}\+: Callback used to compare to given lines to determine if they should be considered equal when patching. Defaults to strict equality but may be overridden to provide fuzzier comparison. Should return false if the lines should be rejected.
+\end{DoxyItemize}
+\item {\ttfamily Diff.\+apply\+Patches(patch, options)} -\/ applies one or more patches.
+
+{\ttfamily patch} may be either an array of structured patch objects, or a string representing a patch in unified diff format (which may patch one or more files).
+
+This method will iterate over the contents of the patch and apply to data provided through callbacks. The general flow for each patch index is\+:
+\begin{DoxyItemize}
+\item {\ttfamily options.\+load\+File(index, callback)} is called. The caller should then load the contents of the file and then pass that to the {\ttfamily callback(err, data)} callback. Passing an {\ttfamily err} will terminate further patch execution.
+\item {\ttfamily options.\+patched(index, content, callback)} is called once the patch has been applied. {\ttfamily content} will be the return value from {\ttfamily apply\+Patch}. When it\textquotesingle{}s ready, the caller should call {\ttfamily callback(err)} callback. Passing an {\ttfamily err} will terminate further patch execution.
+\end{DoxyItemize}
+
+Once all patches have been applied or an error occurs, the {\ttfamily options.\+complete(err)} callback is made.
+\item {\ttfamily Diff.\+parse\+Patch(diff\+Str)} -\/ Parses a patch into structured data
+
+Return a JSON object representation of the a patch, suitable for use with the {\ttfamily apply\+Patch} method. This parses to the same structure returned by {\ttfamily Diff.\+structured\+Patch}.
+\item {\ttfamily Diff.\+reverse\+Patch(patch)} -\/ Returns a new structured patch which when applied will undo the original {\ttfamily patch}.
+
+{\ttfamily patch} may be either a single structured patch object (as returned by {\ttfamily structured\+Patch}) or an array of them (as returned by {\ttfamily parse\+Patch}).
+\item {\ttfamily Diff.\+convert\+Changes\+To\+XML(changes)} -\/ converts a list of change objects to a serialized XML format
+\item {\ttfamily Diff.\+convert\+Changes\+To\+DMP(changes)} -\/ converts a list of change objects to the format returned by Google\textquotesingle{}s \href{https://github.com/google/diff-match-patch}{\texttt{ diff-\/match-\/patch}} library
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md3326}{}\doxysubsubsubsection{\texorpdfstring{Universal {\ttfamily options}}{Universal {\ttfamily options}}}\label{README.md_autotoc_md3326}
+Certain options can be provided in the {\ttfamily options} object of {\itshape any} method that calculates a diff (including {\ttfamily diff\+Chars}, {\ttfamily diff\+Lines} etc. as well as {\ttfamily structured\+Patch}, {\ttfamily create\+Patch}, and {\ttfamily create\+Two\+Files\+Patch})\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily callback}\+: if provided, the diff will be computed in async mode to avoid blocking the event loop while the diff is calculated. The value of the {\ttfamily callback} option should be a function and will be passed the computed diff or patch as its first argument.
+
+(Note that if the ONLY option you want to provide is a callback, you can pass the callback function directly as the {\ttfamily options} parameter instead of passing an object with a {\ttfamily callback} property.)
+\item {\ttfamily max\+Edit\+Length}\+: a number specifying the maximum edit distance to consider between the old and new texts. You can use this to limit the computational cost of diffing large, very different texts by giving up early if the cost will be huge. This option can be passed either to diffing functions ({\ttfamily diff\+Lines}, {\ttfamily diff\+Chars}, etc) or to patch-\/creation function ({\ttfamily structured\+Patch}, {\ttfamily create\+Patch}, etc), all of which will indicate that the max edit length was reached by returning {\ttfamily undefined} instead of whatever they\textquotesingle{}d normally return.
+\item {\ttfamily timeout}\+: a number of milliseconds after which the diffing algorithm will abort and return {\ttfamily undefined}. Supported by the same functions as {\ttfamily max\+Edit\+Length}.
+\item {\ttfamily one\+Change\+Per\+Token}\+: if {\ttfamily true}, the array of change objects returned will contain one change object per token (e.\+g. one per line if calling {\ttfamily diff\+Lines}), instead of runs of consecutive tokens that are all added / all removed / all conserved being combined into a single change object.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md3327}{}\doxysubsubsection{\texorpdfstring{Defining custom diffing behaviors}{Defining custom diffing behaviors}}\label{README.md_autotoc_md3327}
+If you need behavior a little different to what any of the text diffing functions above offer, you can roll your own by customizing both the tokenization behavior used and the notion of equality used to determine if two tokens are equal.
+
+The simplest way to customize tokenization behavior is to simply tokenize the texts you want to diff yourself, with your own code, then pass the arrays of tokens to {\ttfamily diff\+Arrays}. For instance, if you wanted a semantically-\/aware diff of some code, you could try tokenizing it using a parser specific to the programming language the code is in, then passing the arrays of tokens to {\ttfamily diff\+Arrays}.
+
+To customize the notion of token equality used, use the {\ttfamily comparator} option to {\ttfamily diff\+Arrays}.
+
+For even more customisation of the diffing behavior, you can create a {\ttfamily new Diff.\+Diff()} object, overwrite its {\ttfamily cast\+Input}, {\ttfamily tokenize}, {\ttfamily remove\+Empty}, {\ttfamily equals}, and {\ttfamily join} properties with your own functions, then call its {\ttfamily diff(old\+String, new\+String\mbox{[}, options\mbox{]})} method. The methods you can overwrite are used as follows\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily cast\+Input(value, options)}\+: used to transform the {\ttfamily old\+String} and {\ttfamily new\+String} before any other steps in the diffing algorithm happen. For instance, {\ttfamily diff\+Json} uses {\ttfamily cast\+Input} to serialize the objects being diffed to JSON. Defaults to a no-\/op.
+\item {\ttfamily tokenize(value, options)}\+: used to convert each of {\ttfamily old\+String} and {\ttfamily new\+String} (after they\textquotesingle{}ve gone through {\ttfamily cast\+Input}) to an array of tokens. Defaults to returning `value.\+split('\textquotesingle{}){\ttfamily (returning an array of individual characters). \texorpdfstring{$\ast$}{*}}remove\+Empty(array){\ttfamily \+: called on the arrays of tokens returned by}tokenize{\ttfamily and can be used to modify them. Defaults to stripping out falsey tokens, such as empty strings.}diff\+Arrays{\ttfamily overrides this to simply return the}array{\ttfamily , which means that falsey values like empty strings can be handled like any other token by}diff\+Arrays{\ttfamily . \texorpdfstring{$\ast$}{*}}equals(left, right, options){\ttfamily \+: called to determine if two tokens (one from the old string, one from the new string) should be considered equal. Defaults to comparing them with}==={\ttfamily . \texorpdfstring{$\ast$}{*}}join(tokens){\ttfamily \+: gets called with an array of consecutive tokens that have either all been added, all been removed, or are all common. Needs to join them into a single value that can be used as the}value{\ttfamily property of the \mbox{[}change object\mbox{]}(\#change-\/objects) for these tokens. Defaults to simply returning}tokens.\+join(\textquotesingle{}\textquotesingle{}){\ttfamily . \texorpdfstring{$\ast$}{*}}post\+Process(change\+Objects){\ttfamily \+: gets called at the end of the algorithm with the \mbox{[}change objects\mbox{]}(\#change-\/objects) produced, and can do final cleanups on them. Defaults to simply returning}change\+Objects\`{} unchanged.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md3328}{}\doxysubsubsection{\texorpdfstring{Change Objects}{Change Objects}}\label{README.md_autotoc_md3328}
+Many of the methods above return change objects. These objects consist of the following fields\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily value}\+: The concatenated content of all the tokens represented by this change object -\/ i.\+e. generally the text that is either added, deleted, or common, as a single string. In cases where tokens are considered common but are non-\/identical (e.\+g. because an option like {\ttfamily ignore\+Case} or a custom {\ttfamily comparator} was used), the value from the {\itshape new} string will be provided here.
+\item {\ttfamily added}\+: true if the value was inserted into the new string, otherwise false
+\item {\ttfamily removed}\+: true if the value was removed from the old string, otherwise false
+\item {\ttfamily count}\+: How many tokens (e.\+g. chars for {\ttfamily diff\+Chars}, lines for {\ttfamily diff\+Lines}) the value in the change object consists of
+\end{DoxyItemize}
+
+(Change objects where {\ttfamily added} and {\ttfamily removed} are both false represent content that is common to the old and new strings.)\hypertarget{README.md_autotoc_md3329}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{README.md_autotoc_md3329}
+\hypertarget{README.md_autotoc_md3330}{}\doxysubsubsubsection{\texorpdfstring{Basic example in Node}{Basic example in Node}}\label{README.md_autotoc_md3330}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('colors');}
+\DoxyCodeLine{const\ Diff\ =\ require('diff');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ one\ =\ 'beep\ boop';}
+\DoxyCodeLine{const\ other\ =\ 'beep\ boob\ blah';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ diff\ =\ Diff.diffChars(one,\ other);}
+\DoxyCodeLine{}
+\DoxyCodeLine{diff.forEach((part)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ green\ for\ additions,\ red\ for\ deletions}
+\DoxyCodeLine{\ \ let\ text\ =\ part.added\ ?\ part.value.bgGreen\ :}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ part.removed\ ?\ part.value.bgRed\ :}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ part.value;}
+\DoxyCodeLine{\ \ process.stderr.write(text);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log();}
+
+\end{DoxyCode}
+ Running the above program should yield
+
+\hypertarget{README.md_autotoc_md3331}{}\doxysubsubsubsection{\texorpdfstring{Basic example in a web page}{Basic example in a web page}}\label{README.md_autotoc_md3331}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<pre\ id="{}display"{}></pre>}
+\DoxyCodeLine{<script\ src="{}diff.js"{}></script>}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{const\ one\ =\ 'beep\ boop',}
+\DoxyCodeLine{\ \ \ \ other\ =\ 'beep\ boob\ blah',}
+\DoxyCodeLine{\ \ \ \ color\ =\ '';}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{let\ span\ =\ null;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ diff\ =\ Diff.diffChars(one,\ other),}
+\DoxyCodeLine{\ \ \ \ display\ =\ document.getElementById('display'),}
+\DoxyCodeLine{\ \ \ \ fragment\ =\ document.createDocumentFragment();}
+\DoxyCodeLine{}
+\DoxyCodeLine{diff.forEach((part)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ green\ for\ additions,\ red\ for\ deletions}
+\DoxyCodeLine{\ \ //\ grey\ for\ common\ parts}
+\DoxyCodeLine{\ \ const\ color\ =\ part.added\ ?\ 'green'\ :}
+\DoxyCodeLine{\ \ \ \ part.removed\ ?\ 'red'\ :\ 'grey';}
+\DoxyCodeLine{\ \ span\ =\ document.createElement('span');}
+\DoxyCodeLine{\ \ span.style.color\ =\ color;}
+\DoxyCodeLine{\ \ span.appendChild(document}
+\DoxyCodeLine{\ \ \ \ .createTextNode(part.value));}
+\DoxyCodeLine{\ \ fragment.appendChild(span);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{display.appendChild(fragment);}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+Open the above .html file in a browser and you should see
+
+\hypertarget{README.md_autotoc_md3332}{}\doxysubsubsubsection{\texorpdfstring{Example of generating a patch from Node}{Example of generating a patch from Node}}\label{README.md_autotoc_md3332}
+The code below is roughly equivalent to the Unix command {\ttfamily diff -\/u file1.\+txt file2.\+txt \texorpdfstring{$>$}{>} mydiff.\+patch}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Diff\ =\ require('diff');}
+\DoxyCodeLine{const\ file1Contents\ =\ fs.readFileSync("{}file1.txt"{}).toString();}
+\DoxyCodeLine{const\ file2Contents\ =\ fs.readFileSync("{}file2.txt"{}).toString();}
+\DoxyCodeLine{const\ patch\ =\ Diff.createTwoFilesPatch("{}file1.txt"{},\ "{}file2.txt"{},\ file1Contents,\ file2Contents);}
+\DoxyCodeLine{fs.writeFileSync("{}mydiff.patch"{},\ patch);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3333}{}\doxysubsubsubsection{\texorpdfstring{Examples of parsing and applying a patch from Node}{Examples of parsing and applying a patch from Node}}\label{README.md_autotoc_md3333}
+\hypertarget{README.md_autotoc_md3334}{}\doxysubsubsubsubsection{\texorpdfstring{Applying a patch to a specified file}{Applying a patch to a specified file}}\label{README.md_autotoc_md3334}
+The code below is roughly equivalent to the Unix command {\ttfamily patch file1.\+txt mydiff.\+patch}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Diff\ =\ require('diff');}
+\DoxyCodeLine{const\ file1Contents\ =\ fs.readFileSync("{}file1.txt"{}).toString();}
+\DoxyCodeLine{const\ patch\ =\ fs.readFileSync("{}mydiff.patch"{}).toString();}
+\DoxyCodeLine{const\ patchedFile\ =\ Diff.applyPatch(file1Contents,\ patch);}
+\DoxyCodeLine{fs.writeFileSync("{}file1.txt"{},\ patchedFile);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3335}{}\doxysubsubsubsubsection{\texorpdfstring{Applying a multi-\/file patch to the files specified by the patch file itself}{Applying a multi-\/file patch to the files specified by the patch file itself}}\label{README.md_autotoc_md3335}
+The code below is roughly equivalent to the Unix command {\ttfamily patch \texorpdfstring{$<$}{<} mydiff.\+patch}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Diff\ =\ require('diff');}
+\DoxyCodeLine{const\ patch\ =\ fs.readFileSync("{}mydiff.patch"{}).toString();}
+\DoxyCodeLine{Diff.applyPatches(patch,\ \{}
+\DoxyCodeLine{\ \ \ \ loadFile:\ (patch,\ callback)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ let\ fileContents;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ fileContents\ =\ fs.readFileSync(patch.oldFileName).toString();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\ catch\ (e)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ callback(`No\ such\ file:\ \$\{patch.oldFileName\}`);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ return;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ callback(undefined,\ fileContents);}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ patched:\ (patch,\ patchedContent,\ callback)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (patchedContent\ ===\ false)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ callback(`Failed\ to\ apply\ patch\ to\ \$\{patch.oldFileName\}`)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ return;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ fs.writeFileSync(patch.oldFileName,\ patchedContent);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ callback();}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ complete:\ (err)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log("{}Failed\ with\ error:"{},\ err);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3336}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{README.md_autotoc_md3336}
+jsdiff supports all ES3 environments with some known issues on IE8 and below. Under these browsers some diff algorithms such as word diff and others may fail due to lack of support for capturing groups in the {\ttfamily split} operation.\hypertarget{README.md_autotoc_md3337}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md3337}
+See \href{https://github.com/kpdecker/jsdiff/blob/master/LICENSE}{\texttt{ LICENSE}}.\hypertarget{README.md_autotoc_md3338}{}\doxysubsection{\texorpdfstring{Deviations from the published Myers diff algorithm}{Deviations from the published Myers diff algorithm}}\label{README.md_autotoc_md3338}
+jsdiff deviates from the published algorithm in a couple of ways that don\textquotesingle{}t affect results but do affect performance\+:
+
+
+\begin{DoxyItemize}
+\item jsdiff keeps track of the diff for each diagonal using a linked list of change objects for each diagonal, rather than the historical array of furthest-\/reaching D-\/paths on each diagonal contemplated on page 8 of Myers\textquotesingle{}s paper.
+\item jsdiff skips considering diagonals where the furthest-\/reaching D-\/path would go off the edge of the edit graph. This dramatically reduces the time cost (from quadratic to linear) in cases where the new text just appends or truncates content at the end of the old text. 
+\end{DoxyItemize}

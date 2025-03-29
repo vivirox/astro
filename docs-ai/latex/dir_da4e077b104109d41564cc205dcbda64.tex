@@ -1,0 +1,97 @@
+\doxysection{node\+\_\+modules/@astrojs/markdown-\/remark/node\+\_\+modules/unist-\/util-\/stringify-\/position Directory Reference}
+\hypertarget{dir_da4e077b104109d41564cc205dcbda64}{}\label{dir_da4e077b104109d41564cc205dcbda64}\index{node\_modules/"@astrojs/markdown-\/remark/node\_modules/unist-\/util-\/stringify-\/position Directory Reference@{node\_modules/"@astrojs/markdown-\/remark/node\_modules/unist-\/util-\/stringify-\/position Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/unist-util-stringify-position/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/unist-util-stringify-position}{\texttt{ }} \href{https://www.npmjs.com/package/unist-util-stringify-position}{\texttt{ }} \href{https://bundlephobia.com/result?p=unist-util-stringify-position}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/unist}{\texttt{ unist}} utility to pretty print the positional info of a node.\hypertarget{readme.md_autotoc_md1010}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md1010}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}stringify\+Position(node\texorpdfstring{$\vert$}{|}position\texorpdfstring{$\vert$}{|}point)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md1011}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md1011}
+This package is a utility that takes any \href{https://github.com/syntax-tree/unist}{\texttt{ unist}} (whether mdast, hast, etc) node, position, or point, and serializes its positional info.\hypertarget{readme.md_autotoc_md1012}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md1012}
+This utility is useful to display where something occurred in the original document, in one standard way, for humans. For example, when throwing errors or warning messages about something.\hypertarget{readme.md_autotoc_md1013}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md1013}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 14.\+14+ and 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ unist-\/util-\/stringify-\/position}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{stringifyPosition\}\ from\ 'https://esm.sh/unist-\/util-\/stringify-\/position@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{stringifyPosition\}\ from\ 'https://esm.sh/unist-\/util-\/stringify-\/position@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md1014}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md1014}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{stringifyPosition\}\ from\ 'unist-\/util-\/stringify-\/position'}
+\DoxyCodeLine{}
+\DoxyCodeLine{stringifyPosition(\{line:\ 2,\ column:\ 3\})\ //\ =>\ '2:3'\ (point)}
+\DoxyCodeLine{stringifyPosition(\{start:\ \{line:\ 2\},\ end:\ \{line:\ 3\}\})\ //\ =>\ '2:1-\/3:1'\ (position)}
+\DoxyCodeLine{stringifyPosition(\{}
+\DoxyCodeLine{\ \ type:\ 'text',}
+\DoxyCodeLine{\ \ value:\ '!',}
+\DoxyCodeLine{\ \ position:\ \{}
+\DoxyCodeLine{\ \ \ \ start:\ \{line:\ 5,\ column:\ 11\},}
+\DoxyCodeLine{\ \ \ \ end:\ \{line:\ 5,\ column:\ 12\}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})\ //\ =>\ '5:11-\/5:12'\ (node)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md1015}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md1015}
+This package exports the identifier \`{}stringify\+Position\`{}. There is no default export.\hypertarget{readme.md_autotoc_md1016}{}\doxysubsubsection{\texorpdfstring{{\ttfamily stringify\+Position(node\texorpdfstring{$\vert$}{|}position\texorpdfstring{$\vert$}{|}point)}}{{\ttfamily stringify\+Position(node\texorpdfstring{$\vert$}{|}position\texorpdfstring{$\vert$}{|}point)}}}\label{readme.md_autotoc_md1016}
+Serialize the positional info of a point, position (start and end points), or node.\hypertarget{readme.md_autotoc_md1017}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md1017}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — node whose {\ttfamily position} fields to serialize
+\item {\ttfamily position} (\href{https://github.com/syntax-tree/unist\#position}{\texttt{ {\ttfamily Position}}}) — position whose {\ttfamily start} and {\ttfamily end} points to serialize
+\item {\ttfamily point} (\href{https://github.com/syntax-tree/unist\#point}{\texttt{ {\ttfamily Point}}}) — point whose {\ttfamily line} and {\ttfamily column} fields to serialize
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md1018}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md1018}
+Pretty printed positional info of a node ({\ttfamily string}).
+
+In the format of a range {\ttfamily ls\+:cs-\/le\+:ce} (when given {\ttfamily node} or {\ttfamily position}) or a point {\ttfamily l\+:c} (when given {\ttfamily point}), where {\ttfamily l} stands for line, {\ttfamily c} for column, {\ttfamily s} for {\ttfamily start}, and {\ttfamily e} for end. An empty string (`'\textquotesingle{}{\ttfamily ) is returned if the given value is neither}node{\ttfamily , }position{\ttfamily , nor}point\`{}.\hypertarget{readme.md_autotoc_md1019}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md1019}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md1020}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md1020}
+Projects maintained by the unified collective are compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 14.\+14+ and 16.\+0+. Our projects sometimes work with older versions, but this is not guaranteed.\hypertarget{readme.md_autotoc_md1021}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md1021}
+This project is safe.\hypertarget{readme.md_autotoc_md1022}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md1022}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/unist-util-generated}{\texttt{ {\ttfamily unist-\/util-\/generated}}} — check if a node is generated
+\item \href{https://github.com/syntax-tree/unist-util-position}{\texttt{ {\ttfamily unist-\/util-\/position}}} — get positional info of nodes
+\item \href{https://github.com/syntax-tree/unist-util-remove-position}{\texttt{ {\ttfamily unist-\/util-\/remove-\/position}}} — remove positional info from trees
+\item \href{https://github.com/syntax-tree/unist-util-source}{\texttt{ {\ttfamily unist-\/util-\/source}}} — get the source of a value (node or position) in a file
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md1023}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md1023}
+See \href{https://github.com/syntax-tree/.github/blob/HEAD/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/HEAD/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md1024}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md1024}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

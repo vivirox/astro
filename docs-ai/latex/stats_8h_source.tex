@@ -1,0 +1,65 @@
+\doxysection{stats.\+h}
+\hypertarget{stats_8h_source}{}\label{stats_8h_source}\index{node\_modules/sharp/src/stats.h@{node\_modules/sharp/src/stats.h}}
+\mbox{\hyperlink{stats_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2013\ Lovell\ Fuller\ and\ others.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ SRC\_STATS\_H\_}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ SRC\_STATS\_H\_}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <napi.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{common_8h}{./common.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_channel_stats_a7f032023baed0ce08ee49d8b8860e1cb}{ChannelStats}}\ \{}
+\DoxyCodeLine{00013\ \ \ \textcolor{comment}{//\ stats\ per\ channel}}
+\DoxyCodeLine{00014\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_channel_stats_a73f4c9b1811664585ca61b5de20f4662}{min}};}
+\DoxyCodeLine{00015\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_channel_stats_af4936722b9149a8b34f2109f40c51bdf}{max}};}
+\DoxyCodeLine{00016\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_channel_stats_ad6432af21da4d6214101d44aad0f029b}{sum}};}
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_channel_stats_aa8679f2665aea872edcd777f48edd546}{squaresSum}};}
+\DoxyCodeLine{00018\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_channel_stats_a514afc08edb6e9c4a1c36d71be3fb13d}{mean}};}
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_channel_stats_a8563212a566d97c0f125af6f5a1d86de}{stdev}};}
+\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_channel_stats_af37898c018a47c4051222f3987f87265}{minX}};}
+\DoxyCodeLine{00021\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_channel_stats_afa19610862eb13bab3c6f4222e7e2d38}{minY}};}
+\DoxyCodeLine{00022\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_channel_stats_a8af7b60b3b5a3c63aa1a379a61a26a70}{maxX}};}
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_channel_stats_a6e13607886feb8fc5aed1f6e4215929a}{maxY}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \mbox{\hyperlink{struct_channel_stats_a7f032023baed0ce08ee49d8b8860e1cb}{ChannelStats}}(\textcolor{keywordtype}{int}\ minVal,\ \textcolor{keywordtype}{int}\ maxVal,\ \textcolor{keywordtype}{double}\ sumVal,\ \textcolor{keywordtype}{double}\ squaresSumVal,}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{double}\ meanVal,\ \textcolor{keywordtype}{double}\ stdevVal,\ \textcolor{keywordtype}{int}\ minXVal,\ \textcolor{keywordtype}{int}\ minYVal,\ \textcolor{keywordtype}{int}\ maxXVal,\ \textcolor{keywordtype}{int}\ maxYVal):}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{struct_channel_stats_a73f4c9b1811664585ca61b5de20f4662}{min}}(minVal),\ \mbox{\hyperlink{struct_channel_stats_af4936722b9149a8b34f2109f40c51bdf}{max}}(maxVal),\ \mbox{\hyperlink{struct_channel_stats_ad6432af21da4d6214101d44aad0f029b}{sum}}(sumVal),\ \mbox{\hyperlink{struct_channel_stats_aa8679f2665aea872edcd777f48edd546}{squaresSum}}(squaresSumVal),}
+\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{struct_channel_stats_a514afc08edb6e9c4a1c36d71be3fb13d}{mean}}(meanVal),\ \mbox{\hyperlink{struct_channel_stats_a8563212a566d97c0f125af6f5a1d86de}{stdev}}(stdevVal),\ \mbox{\hyperlink{struct_channel_stats_af37898c018a47c4051222f3987f87265}{minX}}(minXVal),\ \mbox{\hyperlink{struct_channel_stats_afa19610862eb13bab3c6f4222e7e2d38}{minY}}(minYVal),\ \mbox{\hyperlink{struct_channel_stats_a8af7b60b3b5a3c63aa1a379a61a26a70}{maxX}}(maxXVal),\ \mbox{\hyperlink{struct_channel_stats_a6e13607886feb8fc5aed1f6e4215929a}{maxY}}(maxYVal)\ \{\}}
+\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_stats_baton_a3b3477828326f120c146fb21f6ac88f1}{StatsBaton}}\ \{}
+\DoxyCodeLine{00032\ \ \ \textcolor{comment}{//\ Input}}
+\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor}{sharp::InputDescriptor}}\ *\mbox{\hyperlink{struct_stats_baton_a5bebfe373d156f5dde1dbc9d20a13826}{input}};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \textcolor{comment}{//\ Output}}
+\DoxyCodeLine{00036\ \ \ std::vector<ChannelStats>\ \mbox{\hyperlink{struct_stats_baton_a5a4ceee12709c89c720dff92586c01d3}{channelStats}};}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_stats_baton_a547e2952b07935e0f765499d52067cfa}{isOpaque}};}
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_stats_baton_a75d70758731f5b838f2713af9fb9aadf}{entropy}};}
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_stats_baton_a4346c01fb0d4352c299705d8ff837c14}{sharpness}};}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_stats_baton_a02a57985d461490c245b29612f6a007d}{dominantRed}};}
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_stats_baton_a4f349060240ef4bf7a4736ff5ad1d360}{dominantGreen}};}
+\DoxyCodeLine{00042\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_stats_baton_a1dc21e8a1918c210f9ef1bc771cc1bb7}{dominantBlue}};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ std::string\ \mbox{\hyperlink{struct_stats_baton_a809b3a473feda2fd4f7e94dea7d06d42}{err}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{struct_stats_baton_a3b3477828326f120c146fb21f6ac88f1}{StatsBaton}}():}
+\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{struct_stats_baton_a5bebfe373d156f5dde1dbc9d20a13826}{input}}(nullptr),}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{struct_stats_baton_a547e2952b07935e0f765499d52067cfa}{isOpaque}}(true),}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{struct_stats_baton_a75d70758731f5b838f2713af9fb9aadf}{entropy}}(0.0),}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{struct_stats_baton_a4346c01fb0d4352c299705d8ff837c14}{sharpness}}(0.0),}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{struct_stats_baton_a02a57985d461490c245b29612f6a007d}{dominantRed}}(0),}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{struct_stats_baton_a4f349060240ef4bf7a4736ff5ad1d360}{dominantGreen}}(0),}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{struct_stats_baton_a1dc21e8a1918c210f9ef1bc771cc1bb7}{dominantBlue}}(0)}
+\DoxyCodeLine{00054\ \ \ \ \ \{\}}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ Napi::Value\ \mbox{\hyperlink{stats_8h_ab981ca1894aa565c428ab273a3e95db2}{stats}}(\textcolor{keyword}{const}\ Napi::CallbackInfo\&\ info);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ SRC\_STATS\_H\_}}
+
+\end{DoxyCode}

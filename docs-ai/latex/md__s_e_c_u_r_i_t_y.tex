@@ -1,0 +1,142 @@
+\chapter{Security Policy}
+\hypertarget{md__s_e_c_u_r_i_t_y}{}\label{md__s_e_c_u_r_i_t_y}\index{Security Policy@{Security Policy}}
+\label{md__s_e_c_u_r_i_t_y_autotoc_md36765}%
+\Hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36765}%
+\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36766}{}\doxysection{\texorpdfstring{Reporting a Vulnerability}{Reporting a Vulnerability}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36766}
+If you discover a security vulnerability within this project, please send an email to \mbox{[}SECURITY\+\_\+\+EMAIL\mbox{]}. All security vulnerabilities will be promptly addressed.
+
+Please include the following information in your report\+:
+\begin{DoxyItemize}
+\item Type of vulnerability
+\item Full path of source file(s) related to the vulnerability
+\item Location of the affected source code (tag/branch/commit or direct URL)
+\item Step-\/by-\/step instructions to reproduce the vulnerability
+\item Proof-\/of-\/concept or exploit code (if possible)
+\item Impact of the vulnerability
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36767}{}\doxysection{\texorpdfstring{Security Measures}{Security Measures}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36767}
+\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36768}{}\doxysubsection{\texorpdfstring{1. Access Control}{1. Access Control}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36768}
+
+\begin{DoxyItemize}
+\item All repository access must use 2FA (Two-\/\+Factor Authentication)
+\item SSH keys must be rotated every 90 days
+\item Personal Access Tokens (PATs) must\+:
+\begin{DoxyItemize}
+\item Have limited scope
+\item Expire after 30 days
+\item Never be shared or committed to the repository
+\end{DoxyItemize}
+\item Branch protection rules enforce\+:
+\begin{DoxyItemize}
+\item Required reviews from at least 2 team members
+\item Required status checks to pass before merging
+\item No direct pushes to main/master branch
+\item Linear history (no merge commits)
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36769}{}\doxysubsection{\texorpdfstring{2. Code Security}{2. Code Security}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36769}
+
+\begin{DoxyItemize}
+\item All code must pass automated security scanning before merge, including\+:
+\begin{DoxyItemize}
+\item Static Application Security Testing (SAST)
+\item Software Composition Analysis (SCA)
+\item Secret scanning
+\item Container scanning
+\item Infrastructure as Code (IaC) scanning
+\item Dependency vulnerability scanning
+\end{DoxyItemize}
+\item Automated scanning configuration\+:
+\begin{DoxyItemize}
+\item SAST scanning on every pull request
+\item Weekly full repository scans
+\item Daily dependency vulnerability scans
+\item Real-\/time secret detection
+\item Malware detection in dependencies
+\end{DoxyItemize}
+\item Scanning requirements\+:
+\begin{DoxyItemize}
+\item Zero high-\/severity issues allowed in main branch
+\item All critical vulnerabilities must be addressed within 24 hours
+\item Medium severity issues must be addressed within 7 days
+\item Dependencies must be kept up-\/to-\/date with no known vulnerabilities
+\item All security warnings must be resolved or have documented exceptions
+\end{DoxyItemize}
+\item Code signing required for all commits using GPG keys
+\item Automated security tools configured\+:
+\begin{DoxyItemize}
+\item Code\+QL for SAST
+\item Dependabot for dependency scanning
+\item Git\+Hub Advanced Security features enabled
+\item Container scanning using Trivy
+\item IaC scanning using Checkov
+\end{DoxyItemize}
+\item Security scan reports\+:
+\begin{DoxyItemize}
+\item Automated reports generated after each scan
+\item Weekly security metrics collection
+\item Monthly trend analysis
+\item Quarterly security posture review
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36770}{}\doxysubsection{\texorpdfstring{3. HIPAA Compliance}{3. HIPAA Compliance}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36770}
+
+\begin{DoxyItemize}
+\item PHI (Protected Health Information) must never be committed to the repository
+\item Test data must be anonymized
+\item All deployed instances must use HIPAA-\/compliant infrastructure
+\item Access logs maintained for audit purposes
+\item Regular HIPAA compliance training required for all contributors
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36771}{}\doxysubsection{\texorpdfstring{4. Development Practices}{4. Development Practices}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36771}
+
+\begin{DoxyItemize}
+\item Code review required for all changes
+\item Secure coding guidelines must be followed
+\item Regular security training for all developers
+\item Dependency updates reviewed weekly
+\item Security incidents documented and reviewed
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36772}{}\doxysubsection{\texorpdfstring{5. Infrastructure Security}{5. Infrastructure Security}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36772}
+
+\begin{DoxyItemize}
+\item All deployments must use HTTPS
+\item Production credentials never stored in repository
+\item Infrastructure as Code (IaC) security scanning enabled
+\item Regular penetration testing performed
+\item Backup procedures documented and tested
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36773}{}\doxysubsection{\texorpdfstring{6. Incident Response}{6. Incident Response}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36773}
+
+\begin{DoxyEnumerate}
+\item Immediate notification to security team
+\item Assessment of vulnerability impact
+\item Patch development and testing
+\item Coordinated disclosure if necessary
+\item Post-\/incident review and documentation
+\end{DoxyEnumerate}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36774}{}\doxysubsection{\texorpdfstring{7. Compliance Requirements}{7. Compliance Requirements}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36774}
+
+\begin{DoxyItemize}
+\item Annual security assessments
+\item Regular compliance audits
+\item Documentation of all security measures
+\item Training records maintained
+\item Access review quarterly
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36775}{}\doxysubsection{\texorpdfstring{8. Data Protection}{8. Data Protection}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36775}
+
+\begin{DoxyItemize}
+\item No PHI in repositories
+\item No credentials in code
+\item Data encryption in transit and at rest
+\item Regular backup verification
+\item Data retention policies enforced
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36776}{}\doxysection{\texorpdfstring{Security Contacts}{Security Contacts}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36776}
+
+\begin{DoxyItemize}
+\item Security Team\+: \mbox{[}SECURITY\+\_\+\+TEAM\+\_\+\+EMAIL\mbox{]}
+\item HIPAA Compliance Officer\+: \mbox{[}COMPLIANCE\+\_\+\+OFFICER\+\_\+\+EMAIL\mbox{]}
+\item Emergency Contact\+: \mbox{[}EMERGENCY\+\_\+\+CONTACT\mbox{]}
+\end{DoxyItemize}\hypertarget{md__s_e_c_u_r_i_t_y_autotoc_md36777}{}\doxysection{\texorpdfstring{Updates}{Updates}}\label{md__s_e_c_u_r_i_t_y_autotoc_md36777}
+This security policy will be reviewed and updated quarterly or as needed based on\+:
+\begin{DoxyItemize}
+\item New security threats
+\item Changes in HIPAA requirements
+\item Incident response learnings
+\item Team feedback
+\end{DoxyItemize}
+
+Last Updated\+: March 2025 

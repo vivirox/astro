@@ -1,0 +1,331 @@
+\doxysection{node\+\_\+modules/vue-\/eslint-\/parser Directory Reference}
+\hypertarget{dir_ec4cd2d8f16d08a42637c7fb48d4033f}{}\label{dir_ec4cd2d8f16d08a42637c7fb48d4033f}\index{node\_modules/vue-\/eslint-\/parser Directory Reference@{node\_modules/vue-\/eslint-\/parser Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/vue-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/vue-eslint-parser}{\texttt{ }} \href{https://github.com/vuejs/vue-eslint-parser/actions}{\texttt{ }} \href{https://codecov.io/gh/vuejs/vue-eslint-parser}{\texttt{ }}
+
+The ESLint custom parser for {\ttfamily .vue} files.\hypertarget{README.md_autotoc_md35435}{}\doxysubsection{\texorpdfstring{⤴️ Motivation}{⤴️ Motivation}}\label{README.md_autotoc_md35435}
+This parser allows us to lint the {\ttfamily \texorpdfstring{$<$}{<}template\texorpdfstring{$>$}{>}} of {\ttfamily .vue} files. We can make mistakes easily on {\ttfamily \texorpdfstring{$<$}{<}template\texorpdfstring{$>$}{>}} if we use complex directives and expressions in the template. This parser and the rules of \href{https://github.com/vuejs/eslint-plugin-vue}{\texttt{ eslint-\/plugin-\/vue}} would catch some of the mistakes.\hypertarget{README.md_autotoc_md35436}{}\doxysubsection{\texorpdfstring{💿 Installation}{💿 Installation}}\label{README.md_autotoc_md35436}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ eslint\ vue-\/eslint-\/parser}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35437}{}\doxysubsection{\texorpdfstring{📖 Usage}{📖 Usage}}\label{README.md_autotoc_md35437}
+Write {\ttfamily parser} option into your {\ttfamily eslint.\+config.\texorpdfstring{$\ast$}{*}} file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ vueParser\ from\ "{}vue-\/eslint-\/parser"{}}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ js.configs.recommended,}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}*.vue"{},\ "{}**/*.vue"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parser:\ vueParser,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35438}{}\doxysubsection{\texorpdfstring{🔧 Options}{🔧 Options}}\label{README.md_autotoc_md35438}
+{\ttfamily parser\+Options} has the same properties as what \href{https://github.com/eslint/espree\#usage}{\texttt{ espree}}, the default parser of ESLint, is supporting. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ vueParser\ from\ "{}vue-\/eslint-\/parser"{}}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}*.vue"{},\ "{}**/*.vue"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parser:\ vueParser,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ sourceType:\ "{}module"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ecmaVersion:\ "{}latest"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ecmaFeatures:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ globalReturn:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ impliedStrict:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jsx:\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35439}{}\doxysubsubsection{\texorpdfstring{parser\+Options.\+parser}{parser\+Options.\+parser}}\label{README.md_autotoc_md35439}
+You can use {\ttfamily parser\+Options.\+parser} property to specify a custom parser to parse {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} tags. Other properties than parser would be given to the specified parser. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ vueParser\ from\ "{}vue-\/eslint-\/parser"{}}
+\DoxyCodeLine{import\ babelParser\ from\ "{}@babel/eslint-\/parser"{}}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}*.vue"{},\ "{}**/*.vue"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parser:\ vueParser,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parser:\ babelParser,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ vueParser\ from\ "{}vue-\/eslint-\/parser"{}}
+\DoxyCodeLine{import\ tsParser\ from\ "{}@typescript-\/eslint/parser"{}}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}*.vue"{},\ "{}**/*.vue"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parser:\ vueParser,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parser:\ tsParser,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+You can also specify an object and change the parser separately for {\ttfamily \texorpdfstring{$<$}{<}script lang="{}..."{}\texorpdfstring{$>$}{>}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ vueParser\ from\ "{}vue-\/eslint-\/parser"{}}
+\DoxyCodeLine{import\ tsParser\ from\ "{}@typescript-\/eslint/parser"{}}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}*.vue"{},\ "{}**/*.vue"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parser:\ vueParser,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}parser"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Script\ parser\ for\ \`{}<script>`}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}js"{}:\ "{}espree"{},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Script\ parser\ for\ \`{}<script\ lang="{}ts"{}>`}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}ts"{}:\ tsParser,}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Script\ parser\ for\ vue\ directives\ (e.g.\ \`{}v-\/if=`\ or\ \`{}:attribute=`)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ and\ vue\ interpolations\ (e.g.\ \`{}\{\{variable\}\}`).}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ If\ not\ specified,\ the\ parser\ determined\ by\ \`{}<script\ lang\ ="{}..."{}>`\ is\ used.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}<template>"{}:\ "{}espree"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+If the {\ttfamily parser\+Options.\+parser} is {\ttfamily false}, the {\ttfamily vue-\/eslint-\/parser} skips parsing {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} tags completely. This is useful for people who use the language ESLint community doesn\textquotesingle{}t provide custom parser implementation.\hypertarget{README.md_autotoc_md35440}{}\doxysubsubsection{\texorpdfstring{parser\+Options.\+vue\+Features}{parser\+Options.\+vue\+Features}}\label{README.md_autotoc_md35440}
+You can use {\ttfamily parser\+Options.\+vue\+Features} property to specify how to parse related to Vue features. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ vueParser\ from\ "{}vue-\/eslint-\/parser"{}}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ files:\ ["{}*.vue"{},\ "{}**/*.vue"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parser:\ vueParser,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vueFeatures:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filter:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interpolationAsNonHTML:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ styleCSSVariableInjection:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ customMacros:\ []}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35441}{}\doxysubsubsection{\texorpdfstring{parser\+Options.\+vue\+Features.\+filter}{parser\+Options.\+vue\+Features.\+filter}}\label{README.md_autotoc_md35441}
+You can use {\ttfamily parser\+Options.\+vue\+Features.\+filter} property to specify whether to parse the Vue2 filter. If you specify {\ttfamily false}, the parser does not parse {\ttfamily \texorpdfstring{$\vert$}{|}} as a filter. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}parserOptions"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}vueFeatures"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}filter"{}:\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you specify {\ttfamily false}, it can be parsed in the same way as Vue 3. The following template parses as a bitwise operation.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<template>}
+\DoxyCodeLine{\ \ <div>\{\{\ a\ |\ b\ \}\}</div>}
+\DoxyCodeLine{</template>}
+
+\end{DoxyCode}
+
+
+However, the following template that are valid in Vue 2 cannot be parsed.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<template>}
+\DoxyCodeLine{\ \ <div>\{\{\ a\ |\ valid:filter\ \}\}</div>}
+\DoxyCodeLine{</template>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35442}{}\doxysubsubsection{\texorpdfstring{parser\+Options.\+vue\+Features.\+interpolation\+As\+Non\+HTML}{parser\+Options.\+vue\+Features.\+interpolation\+As\+Non\+HTML}}\label{README.md_autotoc_md35442}
+You can use {\ttfamily parser\+Options.\+vue\+Features.\+interpolation\+As\+Non\+HTML} property to specify whether to parse the interpolation as HTML. If you specify {\ttfamily true}, the parser handles the interpolation as non-\/\+HTML (However, you can use HTML escaping in the interpolation). Default is {\ttfamily true}. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}parserOptions"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}vueFeatures"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}interpolationAsNonHTML"{}:\ true}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you specify {\ttfamily true}, it can be parsed in the same way as Vue 3. The following template can be parsed well.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<template>}
+\DoxyCodeLine{\ \ <div>\{\{a<b\}\}</div>}
+\DoxyCodeLine{</template>}
+
+\end{DoxyCode}
+
+
+But, it cannot be parsed with Vue 2.\hypertarget{README.md_autotoc_md35443}{}\doxysubsubsection{\texorpdfstring{parser\+Options.\+vue\+Features.\+style\+CSSVariable\+Injection}{parser\+Options.\+vue\+Features.\+style\+CSSVariable\+Injection}}\label{README.md_autotoc_md35443}
+If set to {\ttfamily true}, to parse expressions in {\ttfamily v-\/bind} CSS functions inside {\ttfamily \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>}} tags. {\ttfamily v-\/bind()} is parsed into the {\ttfamily VExpression\+Container} AST node and held in the {\ttfamily VElement} of {\ttfamily \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>}}. Default is {\ttfamily true}.
+
+See also to \href{https://github.com/vuejs/rfcs/blob/master/active-rfcs/0043-sfc-style-variables.md}{\texttt{ here}}.\hypertarget{README.md_autotoc_md35444}{}\doxysubsubsection{\texorpdfstring{parser\+Options.\+vue\+Features.\+custom\+Macros}{parser\+Options.\+vue\+Features.\+custom\+Macros}}\label{README.md_autotoc_md35444}
+Specifies an array of names of custom macros other than Vue standard macros. ~\newline
+ For example, if you have a custom macro {\ttfamily define\+Foo()} and you want it processed by the parser, specify {\ttfamily \mbox{[}"{}define\+Foo"{}\mbox{]}}.
+
+Note that this option only works in {\ttfamily \texorpdfstring{$<$}{<}script setup\texorpdfstring{$>$}{>}}.\hypertarget{README.md_autotoc_md35445}{}\doxysubsubsection{\texorpdfstring{parser\+Options.\+template\+Tokenizer}{parser\+Options.\+template\+Tokenizer}}\label{README.md_autotoc_md35445}
+{\bfseries{This is an experimental feature. It may be changed or deleted without notice in the minor version.}}
+
+You can use {\ttfamily parser\+Options.\+template\+Tokenizer} property to specify custom tokenizers to parse {\ttfamily \texorpdfstring{$<$}{<}template lang="{}..."{}\texorpdfstring{$>$}{>}} tags.
+
+For example to enable parsing of pug templates\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}parserOptions"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}templateTokenizer"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ //\ template\ tokenizer\ for\ \`{}<template\ lang="{}pug"{}>`}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}pug"{}:\ "{}vue-\/eslint-\/parser-\/template-\/tokenizer-\/pug"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+This option is only intended for plugin developers. {\bfseries{Be careful}} when using this option directly, as it may change behaviour of rules you might have enabled. ~\newline
+ If you just want {\bfseries{pug}} support, use \href{https://github.com/rashfael/eslint-plugin-vue-pug}{\texttt{ eslint-\/plugin-\/vue-\/pug}} instead, which uses this option internally.
+
+See implementing-\/custom-\/template-\/tokenizers.md for information on creating your own template tokenizer.\hypertarget{README.md_autotoc_md35446}{}\doxysubsection{\texorpdfstring{🎇 Usage for custom rules / plugins}{🎇 Usage for custom rules / plugins}}\label{README.md_autotoc_md35446}
+
+\begin{DoxyItemize}
+\item This parser provides {\ttfamily parser\+Services} to traverse {\ttfamily \texorpdfstring{$<$}{<}template\texorpdfstring{$>$}{>}}.
+\begin{DoxyItemize}
+\item {\ttfamily define\+Template\+Body\+Visitor(template\+Visitor, script\+Visitor, options)} ... returns ESLint visitor to traverse {\ttfamily \texorpdfstring{$<$}{<}template\texorpdfstring{$>$}{>}}.
+\item {\ttfamily get\+Template\+Body\+Token\+Store()} ... returns ESLint {\ttfamily Token\+Store} to get the tokens of {\ttfamily \texorpdfstring{$<$}{<}template\texorpdfstring{$>$}{>}}.
+\item {\ttfamily get\+Document\+Fragment()} ... returns the root {\ttfamily VDocument\+Fragment}.
+\item {\ttfamily define\+Custom\+Blocks\+Visitor(context, custom\+Parser, rule, script\+Visitor)} ... returns ESLint visitor that parses and traverses the contents of the custom block.
+\item {\ttfamily define\+Document\+Visitor(document\+Visitor, options)} ... returns ESLint visitor to traverses the document.
+\end{DoxyItemize}
+\item ast.md is {\ttfamily \texorpdfstring{$<$}{<}template\texorpdfstring{$>$}{>}} AST specification.
+\item \href{https://github.com/vuejs/eslint-plugin-vue/blob/b434ff99d37f35570fa351681e43ba2cf5746db3/lib/rules/mustache-interpolation-spacing.js}{\texttt{ mustache-\/interpolation-\/spacing.\+js}} is an example.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md35447}{}\doxysubsubsection{\texorpdfstring{{\ttfamily define\+Template\+Body\+Visitor(template\+Body\+Visitor, script\+Visitor, options)}}{{\ttfamily define\+Template\+Body\+Visitor(template\+Body\+Visitor, script\+Visitor, options)}}}\label{README.md_autotoc_md35447}
+{\itshape Arguments}
+
+
+\begin{DoxyItemize}
+\item {\ttfamily template\+Body\+Visitor} ... Event handlers for {\ttfamily \texorpdfstring{$<$}{<}template\texorpdfstring{$>$}{>}}.
+\item {\ttfamily script\+Visitor} ... Event handlers for {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} or scripts. (optional)
+\item {\ttfamily options} ... Options. (optional)
+\begin{DoxyItemize}
+\item {\ttfamily template\+Body\+Trigger\+Selector} ... Script AST node selector that triggers the template\+Body\+Visitor. Default is {\ttfamily "{}\+Program\+:exit"{}}. (optional)
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ AST\ \}\ from\ "{}vue-\/eslint-\/parser"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ create(context)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ context.parserServices.defineTemplateBodyVisitor(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Event\ handlers\ for\ <template>.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ VElement(node:\ AST.VElement):\ void\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //...}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Event\ handlers\ for\ <script>\ or\ scripts.\ (optional)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ Program(node:\ AST.ESLintProgram):\ void\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //...}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Options.\ (optional)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ templateBodyTriggerSelector:\ "{}Program:exit"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ )}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35448}{}\doxysubsection{\texorpdfstring{⚠️ Known Limitations}{⚠️ Known Limitations}}\label{README.md_autotoc_md35448}
+Some rules make warnings due to the outside of {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} tags. Please disable those rules for {\ttfamily .vue} files as necessary.
+
+
+\begin{DoxyItemize}
+\item \href{http://eslint.org/docs/rules/eol-last}{\texttt{ eol-\/last}}
+\item \href{http://eslint.org/docs/rules/linebreak-style}{\texttt{ linebreak-\/style}}
+\item \href{http://eslint.org/docs/rules/max-len}{\texttt{ max-\/len}}
+\item \href{http://eslint.org/docs/rules/max-lines}{\texttt{ max-\/lines}}
+\item \href{http://eslint.org/docs/rules/no-trailing-spaces}{\texttt{ no-\/trailing-\/spaces}}
+\item \href{http://eslint.org/docs/rules/unicode-bom}{\texttt{ unicode-\/bom}}
+\item Other rules which are using the source code text instead of AST might be confused as well.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md35449}{}\doxysubsection{\texorpdfstring{📰 Changelog}{📰 Changelog}}\label{README.md_autotoc_md35449}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/vuejs/vue-eslint-parser/releases}{\texttt{ Git\+Hub Releases}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md35450}{}\doxysubsection{\texorpdfstring{🍻 Contributing}{🍻 Contributing}}\label{README.md_autotoc_md35450}
+Welcome contributing!
+
+Please use Git\+Hub\textquotesingle{}s Issues/\+PRs.
+
+If you want to write code, please execute {\ttfamily npm install} after you cloned this repository. The {\ttfamily npm install} command installs dependencies.\hypertarget{README.md_autotoc_md35451}{}\doxysubsubsection{\texorpdfstring{Development Tools}{Development Tools}}\label{README.md_autotoc_md35451}
+
+\begin{DoxyItemize}
+\item {\ttfamily npm test} runs tests and measures coverage.
+\item {\ttfamily npm run build} compiles Type\+Script source code to {\ttfamily index.\+js}, {\ttfamily index.\+js.\+map}, and {\ttfamily index.\+d.\+ts}.
+\item {\ttfamily npm run coverage} shows the coverage result of {\ttfamily npm test} command with the default browser.
+\item {\ttfamily npm run clean} removes the temporary files which are created by {\ttfamily npm test} and {\ttfamily npm run build}.
+\item {\ttfamily npm run lint} runs ESLint.
+\item {\ttfamily npm run update-\/fixtures} updates files in {\ttfamily test/fixtures/ast} directory based on {\ttfamily test/fixtures/ast/\texorpdfstring{$\ast$}{*}/source.vue} files.
+\item {\ttfamily npm run watch} runs {\ttfamily build}, {\ttfamily update-\/fixtures}, and tests with {\ttfamily -\/-\/watch} option. 
+\end{DoxyItemize}

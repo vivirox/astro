@@ -1,0 +1,539 @@
+\doxysection{node\+\_\+modules/emittery Directory Reference}
+\hypertarget{dir_21962c79cefedc0f77058d276dc05f8b}{}\label{dir_21962c79cefedc0f77058d276dc05f8b}\index{node\_modules/emittery Directory Reference@{node\_modules/emittery Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Simple and modern async event emitter \end{quote}
+
+
+\href{https://codecov.io/gh/sindresorhus/emittery}{\texttt{ }} \href{https://bundlephobia.com/result?p=emittery}{\texttt{ }}
+
+It works in Node.\+js and the browser (using a bundler).
+
+Emitting events asynchronously is important for production code where you want the least amount of synchronous operations. Since Java\+Script is single-\/threaded, no other code can run while doing synchronous operations. For Node.\+js, that means it will block other requests, defeating the strength of the platform, which is scalability through async. In the browser, a synchronous operation could potentially cause lags and block user interaction.\hypertarget{readme.md_autotoc_md12373}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md12373}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ emittery}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12374}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md12374}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on('🦄',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myUnicorn\ =\ Symbol('🦄');}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on(myUnicorn,\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(`Unicorns\ love\ \$\{data\}`);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈');\ //\ Will\ trigger\ printing\ '🌈'}
+\DoxyCodeLine{emitter.emit(myUnicorn,\ '🦋');\ \ //\ Will\ trigger\ printing\ 'Unicorns\ love\ 🦋'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12375}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md12375}
+\hypertarget{readme.md_autotoc_md12376}{}\doxysubsubsection{\texorpdfstring{event\+Name}{event\+Name}}\label{readme.md_autotoc_md12376}
+Emittery accepts strings, symbols, and numbers as event names.
+
+Symbol event names are preferred given that they can be used to avoid name collisions when your classes are extended, especially for internal events.\hypertarget{readme.md_autotoc_md12377}{}\doxysubsubsection{\texorpdfstring{is\+Debug\+Enabled}{is\+Debug\+Enabled}}\label{readme.md_autotoc_md12377}
+Toggle debug mode for all instances.
+
+Default\+: {\ttfamily true} if the {\ttfamily DEBUG} environment variable is set to {\ttfamily emittery} or {\ttfamily \texorpdfstring{$\ast$}{*}}, otherwise {\ttfamily false}.
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{Emittery.isDebugEnabled\ =\ true;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter1\ =\ new\ Emittery(\{debug:\ \{name:\ 'myEmitter1'\}\});}
+\DoxyCodeLine{const\ emitter2\ =\ new\ Emittery(\{debug:\ \{name:\ 'myEmitter2'\}\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter1.on('test',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ …}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter2.on('otherTest',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ …}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter1.emit('test');}
+\DoxyCodeLine{//=>\ [16:43:20.417][emittery:subscribe][myEmitter1]\ Event\ Name:\ test}
+\DoxyCodeLine{//\ \ data:\ undefined}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter2.emit('otherTest');}
+\DoxyCodeLine{//=>\ [16:43:20.417][emittery:subscribe][myEmitter2]\ Event\ Name:\ otherTest}
+\DoxyCodeLine{//\ \ data:\ undefined}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12378}{}\doxysubsubsection{\texorpdfstring{emitter = new Emittery(options?)}{emitter = new Emittery(options?)}}\label{readme.md_autotoc_md12378}
+Create a new instance of Emittery.\hypertarget{readme.md_autotoc_md12379}{}\doxysubsubsubsection{\texorpdfstring{options?}{options?}}\label{readme.md_autotoc_md12379}
+Type\+: {\ttfamily object}
+
+Configure the new instance of Emittery.\hypertarget{readme.md_autotoc_md12380}{}\doxysubsubsubsubsection{\texorpdfstring{debug?}{debug?}}\label{readme.md_autotoc_md12380}
+Type\+: {\ttfamily object}
+
+Configure the debugging options for this instance.\hypertarget{readme.md_autotoc_md12381}{}\doxysubsubsubsubsubsection{\texorpdfstring{name}{name}}\label{readme.md_autotoc_md12381}
+Type\+: {\ttfamily string}\textbackslash{} Default\+: {\ttfamily undefined}
+
+Define a name for the instance of Emittery to use when outputting debug data.
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{Emittery.isDebugEnabled\ =\ true;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery(\{debug:\ \{name:\ 'myEmitter'\}\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on('test',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ …}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('test');}
+\DoxyCodeLine{//=>\ [16:43:20.417][emittery:subscribe][myEmitter]\ Event\ Name:\ test}
+\DoxyCodeLine{//\ \ data:\ undefined}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12382}{}\doxysubsubsubsubsubsection{\texorpdfstring{enabled?}{enabled?}}\label{readme.md_autotoc_md12382}
+Type\+: {\ttfamily boolean}\textbackslash{} Default\+: {\ttfamily false}
+
+Toggle debug logging just for this instance.
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter1\ =\ new\ Emittery(\{debug:\ \{name:\ 'emitter1',\ enabled:\ true\}\});}
+\DoxyCodeLine{const\ emitter2\ =\ new\ Emittery(\{debug:\ \{name:\ 'emitter2'\}\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter1.on('test',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ …}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter2.on('test',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ …}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter1.emit('test');}
+\DoxyCodeLine{//=>\ [16:43:20.417][emittery:subscribe][emitter1]\ Event\ Name:\ test}
+\DoxyCodeLine{//\ \ data:\ undefined}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter2.emit('test');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12383}{}\doxysubsubsubsubsubsection{\texorpdfstring{logger?}{logger?}}\label{readme.md_autotoc_md12383}
+Type\+: {\ttfamily Function(string, string, Event\+Name?, Record\texorpdfstring{$<$}{<}string, any\texorpdfstring{$>$}{>}?) =\texorpdfstring{$>$}{>} void}
+
+Default\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(type,\ debugName,\ eventName,\ eventData)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (typeof\ eventData\ ===\ 'object')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ eventData\ =\ JSON.stringify(eventData);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ if\ (typeof\ eventName\ ===\ 'symbol'\ ||\ typeof\ eventName\ ===\ 'number')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ eventName\ =\ eventName.toString();}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ const\ currentTime\ =\ new\ Date();}
+\DoxyCodeLine{\ \ \ \ const\ logTime\ =\ \`{}\$\{currentTime.getHours()\}:\$\{currentTime.getMinutes()\}:\$\{currentTime.getSeconds()\}.\$\{currentTime.getMilliseconds()\}`;}
+\DoxyCodeLine{\ \ \ \ console.log(`[\$\{logTime\}][emittery:\$\{type\}][\$\{debugName\}]\ Event\ Name:\ \$\{eventName\}\(\backslash\)n\(\backslash\)tdata:\ \$\{eventData\}`);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Function that handles debug data.
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myLogger\ =\ (type,\ debugName,\ eventName,\ eventData)\ =>\ console.log(`[\$\{type\}]:\ \$\{eventName\}`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery(\{}
+\DoxyCodeLine{\ \ \ \ debug:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ 'myEmitter',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ enabled:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ logger:\ myLogger}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on('test',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ …}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('test');}
+\DoxyCodeLine{//=>\ [subscribe]:\ test}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12384}{}\doxysubsubsubsection{\texorpdfstring{on(event\+Name \texorpdfstring{$\vert$}{|} event\+Name\mbox{[}\mbox{]}, listener)}{on(event\+Name \texorpdfstring{$\vert$}{|} event\+Name\mbox{[}\mbox{]}, listener)}}\label{readme.md_autotoc_md12384}
+Subscribe to one or more events.
+
+Returns an unsubscribe method.
+
+Using the same listener multiple times for the same event will result in only one method call per emitted event.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on('🦄',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on(['🦄',\ '🐶'],\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈');\ //\ log\ =>\ '🌈'\ x2}
+\DoxyCodeLine{emitter.emit('🐶',\ '🍖');\ //\ log\ =>\ '🍖'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12385}{}\doxysubsubsubsubsection{\texorpdfstring{Custom subscribable events}{Custom subscribable events}}\label{readme.md_autotoc_md12385}
+Emittery exports some symbols which represent "{}meta"{} events that can be passed to {\ttfamily Emitter.\+on} and similar methods.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Emittery.\+listener\+Added} -\/ Fires when an event listener was added.
+\item {\ttfamily Emittery.\+listener\+Removed} -\/ Fires when an event listener was removed.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on(Emittery.listenerAdded,\ (\{listener,\ eventName\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(listener);}
+\DoxyCodeLine{\ \ \ \ //=>\ data\ =>\ \{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log(eventName);}
+\DoxyCodeLine{\ \ \ \ //=>\ '🦄'}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on('🦄',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Handle\ data}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12386}{}\doxysubsubsubsubsubsection{\texorpdfstring{Listener data}{Listener data}}\label{readme.md_autotoc_md12386}
+
+\begin{DoxyItemize}
+\item {\ttfamily listener} -\/ The listener that was added.
+\item {\ttfamily event\+Name} -\/ The name of the event that was added or removed if {\ttfamily .on()} or {\ttfamily .off()} was used, or {\ttfamily undefined} if {\ttfamily .on\+Any()} or {\ttfamily .off\+Any()} was used.
+\end{DoxyItemize}
+
+Only events that are not of this type are able to trigger these events.\hypertarget{readme.md_autotoc_md12387}{}\doxysubsubsubsubsection{\texorpdfstring{listener(data)}{listener(data)}}\label{readme.md_autotoc_md12387}
+\hypertarget{readme.md_autotoc_md12388}{}\doxysubsubsubsection{\texorpdfstring{off(event\+Name \texorpdfstring{$\vert$}{|} event\+Name\mbox{[}\mbox{]}, listener)}{off(event\+Name \texorpdfstring{$\vert$}{|} event\+Name\mbox{[}\mbox{]}, listener)}}\label{readme.md_autotoc_md12388}
+Remove one or more event subscriptions.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ listener\ =\ data\ =>\ console.log(data);}
+\DoxyCodeLine{}
+\DoxyCodeLine{(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ emitter.on(['🦄',\ '🐶',\ '🦊'],\ listener);}
+\DoxyCodeLine{\ \ \ \ await\ emitter.emit('🦄',\ 'a');}
+\DoxyCodeLine{\ \ \ \ await\ emitter.emit('🐶',\ 'b');}
+\DoxyCodeLine{\ \ \ \ await\ emitter.emit('🦊',\ 'c');}
+\DoxyCodeLine{\ \ \ \ emitter.off('🦄',\ listener);}
+\DoxyCodeLine{\ \ \ \ emitter.off(['🐶',\ '🦊'],\ listener);}
+\DoxyCodeLine{\ \ \ \ await\ emitter.emit('🦄',\ 'a');\ //\ Nothing\ happens}
+\DoxyCodeLine{\ \ \ \ await\ emitter.emit('🐶',\ 'b');\ //\ Nothing\ happens}
+\DoxyCodeLine{\ \ \ \ await\ emitter.emit('🦊',\ 'c');\ //\ Nothing\ happens}
+\DoxyCodeLine{\})();}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12389}{}\doxysubsubsubsubsection{\texorpdfstring{listener(data)}{listener(data)}}\label{readme.md_autotoc_md12389}
+\hypertarget{readme.md_autotoc_md12390}{}\doxysubsubsubsection{\texorpdfstring{once(event\+Name \texorpdfstring{$\vert$}{|} event\+Name\mbox{[}\mbox{]})}{once(event\+Name \texorpdfstring{$\vert$}{|} event\+Name\mbox{[}\mbox{]})}}\label{readme.md_autotoc_md12390}
+Subscribe to one or more events only once. It will be unsubscribed after the first event.
+
+Returns a promise for the event data when {\ttfamily event\+Name} is emitted. This promise is extended with an {\ttfamily off} method.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.once('🦄').then(data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data);}
+\DoxyCodeLine{\ \ \ \ //=>\ '🌈'}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.once(['🦄',\ '🐶']).then(data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈');\ //\ Log\ =>\ '🌈'\ x2}
+\DoxyCodeLine{emitter.emit('🐶',\ '🍖');\ //\ Nothing\ happens}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12391}{}\doxysubsubsubsection{\texorpdfstring{events(event\+Name)}{events(event\+Name)}}\label{readme.md_autotoc_md12391}
+Get an async iterator which buffers data each time an event is emitted.
+
+Call {\ttfamily return()} on the iterator to remove the subscription.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{const\ iterator\ =\ emitter.events('🦄');}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈1');\ //\ Buffered}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈2');\ //\ Buffered}
+\DoxyCodeLine{}
+\DoxyCodeLine{iterator}
+\DoxyCodeLine{\ \ \ \ .next()}
+\DoxyCodeLine{\ \ \ \ .then((\{value,\ done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ value\ ===\ '🌈1'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ iterator.next();}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ .then((\{value,\ done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ value\ ===\ '🌈2'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Revoke\ subscription}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ iterator.return();}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ .then((\{done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ true}
+\DoxyCodeLine{\ \ \ \ \});}
+
+\end{DoxyCode}
+
+
+In practice, you would usually consume the events using the \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of}{\texttt{ for await}} statement. In that case, to revoke the subscription simply break the loop.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{const\ iterator\ =\ emitter.events('🦄');}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈1');\ //\ Buffered}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈2');\ //\ Buffered}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ In\ an\ async\ context.}
+\DoxyCodeLine{for\ await\ (const\ data\ of\ iterator)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (data\ ===\ '🌈2')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ break;\ //\ Revoke\ the\ subscription\ when\ we\ see\ the\ value\ '🌈2'.}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+It accepts multiple event names.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{const\ iterator\ =\ emitter.events(['🦄',\ '🦊']);}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈1');\ //\ Buffered}
+\DoxyCodeLine{emitter.emit('🦊',\ '🌈2');\ //\ Buffered}
+\DoxyCodeLine{}
+\DoxyCodeLine{iterator}
+\DoxyCodeLine{\ \ \ \ .next()}
+\DoxyCodeLine{\ \ \ \ .then((\{value,\ done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ value\ ===\ '🌈1'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ iterator.next();}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ .then((\{value,\ done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ value\ ===\ '🌈2'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Revoke\ subscription}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ iterator.return();}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ .then((\{done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ true}
+\DoxyCodeLine{\ \ \ \ \});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12392}{}\doxysubsubsubsection{\texorpdfstring{emit(event\+Name, data?)}{emit(event\+Name, data?)}}\label{readme.md_autotoc_md12392}
+Trigger an event asynchronously, optionally with some data. Listeners are called in the order they were added, but executed concurrently.
+
+Returns a promise that resolves when all the event listeners are done. {\itshape Done} meaning executed if synchronous or resolved when an async/promise-\/returning function. You usually wouldn\textquotesingle{}t want to wait for this, but you could for example catch possible errors. If any of the listeners throw/reject, the returned promise will be rejected with the error, but the other listeners will not be affected.\hypertarget{readme.md_autotoc_md12393}{}\doxysubsubsubsection{\texorpdfstring{emit\+Serial(event\+Name, data?)}{emit\+Serial(event\+Name, data?)}}\label{readme.md_autotoc_md12393}
+Same as above, but it waits for each listener to resolve before triggering the next one. This can be useful if your events depend on each other. Although ideally they should not. Prefer {\ttfamily emit()} whenever possible.
+
+If any of the listeners throw/reject, the returned promise will be rejected with the error and the remaining listeners will {\itshape not} be called.\hypertarget{readme.md_autotoc_md12394}{}\doxysubsubsubsection{\texorpdfstring{on\+Any(listener)}{on\+Any(listener)}}\label{readme.md_autotoc_md12394}
+Subscribe to be notified about any event.
+
+Returns a method to unsubscribe.\hypertarget{readme.md_autotoc_md12395}{}\doxysubsubsubsubsection{\texorpdfstring{listener(event\+Name, data)}{listener(event\+Name, data)}}\label{readme.md_autotoc_md12395}
+\hypertarget{readme.md_autotoc_md12396}{}\doxysubsubsubsection{\texorpdfstring{off\+Any(listener)}{off\+Any(listener)}}\label{readme.md_autotoc_md12396}
+Remove an {\ttfamily on\+Any} subscription.\hypertarget{readme.md_autotoc_md12397}{}\doxysubsubsubsection{\texorpdfstring{any\+Event()}{any\+Event()}}\label{readme.md_autotoc_md12397}
+Get an async iterator which buffers a tuple of an event name and data each time an event is emitted.
+
+Call {\ttfamily return()} on the iterator to remove the subscription.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery();}
+\DoxyCodeLine{const\ iterator\ =\ emitter.anyEvent();}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄',\ '🌈1');\ //\ Buffered}
+\DoxyCodeLine{emitter.emit('🌟',\ '🌈2');\ //\ Buffered}
+\DoxyCodeLine{}
+\DoxyCodeLine{iterator.next()}
+\DoxyCodeLine{\ \ \ \ .then((\{value,\ done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ value\ is\ ['🦄',\ '🌈1']}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ iterator.next();}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ .then((\{value,\ done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ value\ is\ ['🌟',\ '🌈2']}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Revoke\ subscription}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ iterator.return();}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ .then((\{done\})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ done\ ===\ true}
+\DoxyCodeLine{\ \ \ \ \});}
+
+\end{DoxyCode}
+
+
+In the same way as for {\ttfamily events}, you can subscribe by using the {\ttfamily for await} statement\hypertarget{readme.md_autotoc_md12398}{}\doxysubsubsubsection{\texorpdfstring{clear\+Listeners(event\+Names?)}{clear\+Listeners(event\+Names?)}}\label{readme.md_autotoc_md12398}
+Clear all event listeners on the instance.
+
+If {\ttfamily event\+Names} is given, only the listeners for that events are cleared.\hypertarget{readme.md_autotoc_md12399}{}\doxysubsubsubsection{\texorpdfstring{listener\+Count(event\+Names?)}{listener\+Count(event\+Names?)}}\label{readme.md_autotoc_md12399}
+The number of listeners for the {\ttfamily event\+Names} or all events if not specified.\hypertarget{readme.md_autotoc_md12400}{}\doxysubsubsubsection{\texorpdfstring{bind\+Methods(target, method\+Names?)}{bind\+Methods(target, method\+Names?)}}\label{readme.md_autotoc_md12400}
+Bind the given {\ttfamily method\+Names}, or all {\ttfamily Emittery} methods if {\ttfamily method\+Names} is not defined, into the {\ttfamily target} object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ object\ =\ \{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{new\ Emittery().bindMethods(object);}
+\DoxyCodeLine{}
+\DoxyCodeLine{object.emit('event');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12401}{}\doxysubsection{\texorpdfstring{Type\+Script}{Type\+Script}}\label{readme.md_autotoc_md12401}
+The default {\ttfamily Emittery} class has generic types that can be provided by Type\+Script users to strongly type the list of events and the data passed to their event listeners.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ new\ Emittery<}
+\DoxyCodeLine{\ \ \ \ //\ Pass\ \`{}\{[eventName]:\ undefined\ |\ <eventArg>\}`\ as\ the\ first\ type\ argument\ for\ events\ that\ pass\ data\ to\ their\ listeners.}
+\DoxyCodeLine{\ \ \ \ //\ A\ value\ of\ \`{}undefined`\ in\ this\ map\ means\ the\ event\ listeners\ should\ expect\ no\ data,\ and\ a\ type\ other\ than\ \`{}undefined`\ means\ the\ listeners\ will\ receive\ one\ argument\ of\ that\ type.}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ open:\ string,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ close:\ undefined}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{>();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Typechecks\ just\ fine\ because\ the\ data\ type\ for\ the\ \`{}open`\ event\ is\ \`{}string`.}
+\DoxyCodeLine{emitter.emit('open',\ 'foo\(\backslash\)n');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Typechecks\ just\ fine\ because\ \`{}close`\ is\ present\ but\ points\ to\ undefined\ in\ the\ event\ data\ type\ map.}
+\DoxyCodeLine{emitter.emit('close');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ TS\ compilation\ error\ because\ \`{}1`\ isn't\ assignable\ to\ \`{}string`.}
+\DoxyCodeLine{emitter.emit('open',\ 1);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ TS\ compilation\ error\ because\ \`{}other`\ isn't\ defined\ in\ the\ event\ data\ type\ map.}
+\DoxyCodeLine{emitter.emit('other');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12402}{}\doxysubsubsection{\texorpdfstring{Emittery.\+mixin(emittery\+Property\+Name, method\+Names?)}{Emittery.\+mixin(emittery\+Property\+Name, method\+Names?)}}\label{readme.md_autotoc_md12402}
+A decorator which mixins {\ttfamily Emittery} as property {\ttfamily emittery\+Property\+Name} and {\ttfamily method\+Names}, or all {\ttfamily Emittery} methods if {\ttfamily method\+Names} is not defined, into the target class.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Emittery\ =\ require('emittery');}
+\DoxyCodeLine{}
+\DoxyCodeLine{@Emittery.mixin('emittery')}
+\DoxyCodeLine{class\ MyClass\ \{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ instance\ =\ new\ MyClass();}
+\DoxyCodeLine{}
+\DoxyCodeLine{instance.emit('event');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12403}{}\doxysubsection{\texorpdfstring{Scheduling details}{Scheduling details}}\label{readme.md_autotoc_md12403}
+Listeners are not invoked for events emitted {\itshape before} the listener was added. Removing a listener will prevent that listener from being invoked, even if events are in the process of being (asynchronously!) emitted. This also applies to {\ttfamily .clear\+Listeners()}, which removes all listeners. Listeners will be called in the order they were added. So-\/called {\itshape any} listeners are called {\itshape after} event-\/specific listeners.
+
+Note that when using {\ttfamily .emit\+Serial()}, a slow listener will delay invocation of subsequent listeners. It\textquotesingle{}s possible for newer events to overtake older ones.\hypertarget{readme.md_autotoc_md12404}{}\doxysubsection{\texorpdfstring{Debugging}{Debugging}}\label{readme.md_autotoc_md12404}
+Emittery can collect and log debug information.
+
+To enable this feature set the DEBUG environment variable to \textquotesingle{}emittery\textquotesingle{} or \textquotesingle{}\texorpdfstring{$\ast$}{*}\textquotesingle{}. Additionally you can set the static {\ttfamily is\+Debug\+Enabled} variable to true on the Emittery class, or {\ttfamily my\+Emitter.\+debug.\+enabled} on an instance of it for debugging a single instance.
+
+See \doxylink{README.md_api}{API} for more details on how debugging works.\hypertarget{readme.md_autotoc_md12405}{}\doxysubsection{\texorpdfstring{FAQ}{FAQ}}\label{readme.md_autotoc_md12405}
+\hypertarget{readme.md_autotoc_md12406}{}\doxysubsubsection{\texorpdfstring{How is this different than the built-\/in {\ttfamily Event\+Emitter} in Node.\+js?}{How is this different than the built-\/in {\ttfamily Event\+Emitter} in Node.\+js?}}\label{readme.md_autotoc_md12406}
+There are many things to not like about {\ttfamily Event\+Emitter}\+: its huge API surface, synchronous event emitting, magic error event, flawed memory leak detection. Emittery has none of that.\hypertarget{readme.md_autotoc_md12407}{}\doxysubsubsection{\texorpdfstring{Isn\textquotesingle{}t {\ttfamily Event\+Emitter} synchronous for a reason?}{Isn\textquotesingle{}t {\ttfamily Event\+Emitter} synchronous for a reason?}}\label{readme.md_autotoc_md12407}
+Mostly backwards compatibility reasons. The Node.\+js team can\textquotesingle{}t break the whole ecosystem.
+
+It also allows silly code like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ unicorn\ =\ false;}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on('🦄',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ unicorn\ =\ true;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄');}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(unicorn);}
+\DoxyCodeLine{//=>\ true}
+
+\end{DoxyCode}
+
+
+But I would argue doing that shows a deeper lack of Node.\+js and async comprehension and is not something we should optimize for. The benefit of async emitting is much greater.\hypertarget{readme.md_autotoc_md12408}{}\doxysubsubsection{\texorpdfstring{Can you support multiple arguments for {\ttfamily emit()}?}{Can you support multiple arguments for {\ttfamily emit()}?}}\label{readme.md_autotoc_md12408}
+No, just use \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment}{\texttt{ destructuring}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{emitter.on('🦄',\ ([foo,\ bar])\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(foo,\ bar);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.emit('🦄',\ [foo,\ bar]);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12409}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md12409}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/p-event}{\texttt{ p-\/event}} -\/ Promisify an event by waiting for it to be emitted 
+\end{DoxyItemize}

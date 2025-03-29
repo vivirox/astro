@@ -1,0 +1,72 @@
+\doxysection{node\+\_\+modules/fast-\/content-\/type-\/parse Directory Reference}
+\hypertarget{dir_8a8d0505ab5b571067f48c77973e4aa5}{}\label{dir_8a8d0505ab5b571067f48c77973e4aa5}\index{node\_modules/fast-\/content-\/type-\/parse Directory Reference@{node\_modules/fast-\/content-\/type-\/parse Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+
+
+\href{https://www.npmjs.com/package/fast-content-type-parse}{\texttt{ }} \href{https://www.npmjs.com/package/fast-content-type-parse}{\texttt{ }} \href{https://github.com/fastify/fast-content-type-parse/actions/workflows/ci.yml}{\texttt{ }} \href{https://github.com/neostandard/neostandard}{\texttt{ }} \href{https://github.com/fastify/.github/blob/main/SECURITY.md}{\texttt{ }}
+
+
+
+Parse HTTP Content-\/\+Type header according to RFC 7231.\hypertarget{README.md_autotoc_md14963}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md14963}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ fast-\/content-\/type-\/parse}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14964}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md14964}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fastContentTypeParse\ =\ require('fast-\/content-\/type-\/parse')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14965}{}\doxysubsubsection{\texorpdfstring{fast\+Content\+Type\+Parse.\+parse(string)}{fast\+Content\+Type\+Parse.\+parse(string)}}\label{README.md_autotoc_md14965}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ contentType\ =\ fastContentTypeParse.parse('application/json;\ charset=utf-\/8')}
+
+\end{DoxyCode}
+
+
+Parse a {\ttfamily Content-\/\+Type} header. Throws a {\ttfamily Type\+Error} if the string is invalid.
+
+It will return an object with the following properties (examples are shown for the string `\textquotesingle{}application/json; charset=utf-\/8'\`{})\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily type}\+: The media type (the type and subtype, always lowercase). Example\+: `\textquotesingle{}application/json'\`{}
+\item {\ttfamily parameters}\+: An object of the parameters in the media type (name of parameter always lowercase). Example\+: `\{charset\+: \textquotesingle{}utf-\/8'\}\`{}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md14966}{}\doxysubsubsection{\texorpdfstring{fast\+Content\+Type\+Parse.\+safe\+Parse(string)}{fast\+Content\+Type\+Parse.\+safe\+Parse(string)}}\label{README.md_autotoc_md14966}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ contentType\ =\ fastContentTypeParse.safeParse('application/json;\ charset=utf-\/8')}
+
+\end{DoxyCode}
+
+
+Parse a {\ttfamily Content-\/\+Type} header. It will not throw an Error if the header is invalid.
+
+This will return an object with the following properties (examples are shown for the string `\textquotesingle{}application/json; charset=utf-\/8'\`{})\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily type}\+: The media type (the type and subtype, always lowercase). Example\+: `\textquotesingle{}application/json'\`{}
+\item {\ttfamily parameters}\+: An object of the parameters in the media type (name of parameter always lowercase). Example\+: `\{charset\+: \textquotesingle{}utf-\/8'\}\`{}
+\end{DoxyItemize}
+
+In case the header is invalid, it will return an object with an empty string `'\textquotesingle{}{\ttfamily as type and an empty Object for}parameters\`{}.\hypertarget{README.md_autotoc_md14967}{}\doxysubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{README.md_autotoc_md14967}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ benchmarks/index.js}
+\DoxyCodeLine{util\#MIMEType\ x\ 1,206,781\ ops/sec\ ±0.22\%\ (96\ runs\ sampled)}
+\DoxyCodeLine{fast-\/content-\/type-\/parse\#parse\ x\ 3,752,236\ ops/sec\ ±0.42\%\ (96\ runs\ sampled)}
+\DoxyCodeLine{fast-\/content-\/type-\/parse\#safeParse\ x\ 3,675,645\ ops/sec\ ±1.09\%\ (94\ runs\ sampled)}
+\DoxyCodeLine{content-\/type\#parse\ x\ 1,452,582\ ops/sec\ ±0.37\%\ (95\ runs\ sampled)}
+\DoxyCodeLine{busboy\#parseContentType\ x\ 924,306\ ops/sec\ ±0.43\%\ (94\ runs\ sampled)}
+\DoxyCodeLine{Fastest\ is\ fast-\/content-\/type-\/parse\#parse}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14968}{}\doxysubsection{\texorpdfstring{Credits}{Credits}}\label{README.md_autotoc_md14968}
+Based on the npm package {\ttfamily content-\/type}.\hypertarget{README.md_autotoc_md14969}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md14969}
+Licensed under \href{./LICENSE}{\texttt{ MIT}}. 

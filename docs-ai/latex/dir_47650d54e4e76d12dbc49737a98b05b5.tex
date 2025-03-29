@@ -1,0 +1,242 @@
+\doxysection{node\+\_\+modules/tsconfck Directory Reference}
+\hypertarget{dir_47650d54e4e76d12dbc49737a98b05b5}{}\label{dir_47650d54e4e76d12dbc49737a98b05b5}\index{node\_modules/tsconfck Directory Reference@{node\_modules/tsconfck Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/tsconfck}{\texttt{ }} \href{https://github.com/dominikg/tsconfck/actions/workflows/test.yml}{\texttt{ }}
+
+A utility to find and parse tsconfig files without depending on typescript\hypertarget{README.md_autotoc_md33761}{}\doxysubsection{\texorpdfstring{Why}{Why}}\label{README.md_autotoc_md33761}
+Because no simple official api exists and tsconfig isn\textquotesingle{}t actual json.\hypertarget{README.md_autotoc_md33762}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md33762}
+
+\begin{DoxyItemize}
+\item[\DoxyChecked] find closest tsconfig (tsconfig.\+json or jsconfig.\+json)
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] convert tsconfig to actual json and parse it
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] resolve "{}extends"{}
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] resolve "{}references"{} of solution-\/style tsconfig
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] optional caching for improved performance
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] optional find\+Native and parse\+Native to use official typescript api
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] zero dependencies (typescript optional)
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] extensive testsuite
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] completely async and optimized (it\textquotesingle{}s \href{https://github.com/dominikg/tsconfck/blob/main/docs/benchmark.md}{\texttt{ fast}})
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] tiny \href{https://pkg-size.dev/tsconfck}{\texttt{ 4.\+8\+KB gzip}}
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] unbundled esm js, no sourcemaps needed
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] \href{https://github.com/dominikg/tsconfck/blob/main/packages/tsconfck/types/index.d.ts}{\texttt{ types}} generated with \href{https://github.com/Rich-Harris/dts-buddy}{\texttt{ dts-\/buddy}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md33763}{}\doxysubsection{\texorpdfstring{Users}{Users}}\label{README.md_autotoc_md33763}
+Used by \href{https://github.com/vitejs/vite}{\texttt{ vite}}\texorpdfstring{$\ast$}{*}, \href{https://github.com/aleclarson/vite-tsconfig-paths}{\texttt{ vite-\/tsconfig-\/paths}}, \href{https://github.com/withastro/astro}{\texttt{ astro}} and \href{https://github.com/dominikg/tsconfck/network/dependents}{\texttt{ many more}}
+
+\begin{quote}
+(\texorpdfstring{$\ast$}{*}) vite bundles tsconfck so it is listed as a dev\+Dependency \end{quote}
+\hypertarget{README.md_autotoc_md33764}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md33764}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ tsconfck\ \#\ or\ pnpm,\ yarn}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33765}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md33765}
+\hypertarget{README.md_autotoc_md33766}{}\doxysubsubsection{\texorpdfstring{without typescript installed}{without typescript installed}}\label{README.md_autotoc_md33766}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse\ \}\ from\ 'tsconfck';}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ \ \ tsconfigFile,\ //\ full\ path\ to\ found\ tsconfig}
+\DoxyCodeLine{\ \ \ \ tsconfig,\ //\ tsconfig\ object\ including\ merged\ values\ from\ extended\ configs}
+\DoxyCodeLine{\ \ \ \ extended,\ //\ separate\ unmerged\ results\ of\ all\ tsconfig\ files\ that\ contributed\ to\ tsconfig}
+\DoxyCodeLine{\ \ \ \ solution,\ //\ solution\ result\ if\ tsconfig\ is\ part\ of\ a\ solution}
+\DoxyCodeLine{\ \ \ \ referenced\ //\ referenced\ tsconfig\ results\ if\ tsconfig\ is\ a\ solution}
+\DoxyCodeLine{\}\ =\ await\ parse('foo/bar.ts');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33767}{}\doxysubsubsection{\texorpdfstring{with typescript}{with typescript}}\label{README.md_autotoc_md33767}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseNative\ \}\ from\ 'tsconfck';}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ \ \ tsconfigFile,\ //\ full\ path\ to\ found\ tsconfig}
+\DoxyCodeLine{\ \ \ \ tsconfig,\ //\ tsconfig\ object\ including\ merged\ values\ from\ extended\ configs,\ normalized}
+\DoxyCodeLine{\ \ \ \ result,\ //\ output\ of\ ts.parseJsonConfigFileContent}
+\DoxyCodeLine{\ \ \ \ solution,\ //\ solution\ result\ if\ tsconfig\ is\ part\ of\ a\ solution}
+\DoxyCodeLine{\ \ \ \ referenced\ //\ referenced\ tsconfig\ results\ if\ tsconfig\ is\ a\ solution}
+\DoxyCodeLine{\}\ =\ await\ parseNative('foo/bar.ts');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33768}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md33768}
+see API-\/\+DOCS\hypertarget{README.md_autotoc_md33769}{}\doxysubsubsection{\texorpdfstring{Advanced}{Advanced}}\label{README.md_autotoc_md33769}
+\hypertarget{README.md_autotoc_md33770}{}\doxysubsubsubsection{\texorpdfstring{ignoring tsconfig for files inside node\+\_\+modules}{ignoring tsconfig for files inside node\+\_\+modules}}\label{README.md_autotoc_md33770}
+esbuild ignores node\+\_\+modules so when you want to use tsconfck with esbuild, you can set {\ttfamily ignore\+Node\+Modules\+: true}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ find,\ parse\ \}\ from\ 'tsconfck';}
+\DoxyCodeLine{//\ returns\ some-\/lib/tsconfig.json}
+\DoxyCodeLine{const\ fooTSConfig\ =\ await\ find('node\_modules/some-\/lib/src/foo.ts');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ null}
+\DoxyCodeLine{const\ fooTSConfigIgnored\ =\ await\ find('node\_modules/some-\/lib/src/foo.ts',\ \{}
+\DoxyCodeLine{\ \ \ \ ignoreNodeModules:\ true}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ empty\ config}
+\DoxyCodeLine{const\ \{\ tsconfig\ \}\ =\ await\ parse('node\_modules/some-\/lib/src/foo.ts',\ \{\ ignoreNodeModules:\ true\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33771}{}\doxysubsubsubsection{\texorpdfstring{caching}{caching}}\label{README.md_autotoc_md33771}
+a TSConfck\+Cache instance can be created and passed to find and parse functions to reduce overhead when they are called often within the same project
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ find,\ parse,\ TSCOnfckCache\ \}\ from\ 'tsconfck';}
+\DoxyCodeLine{//\ 1.\ create\ cache\ instance}
+\DoxyCodeLine{const\ cache\ =\ new\ TSCOnfckCache();}
+\DoxyCodeLine{//\ 2.\ pass\ cache\ instance\ in\ options}
+\DoxyCodeLine{const\ fooTSConfig\ =\ await\ find(('src/foo.ts',\ \{\ cache\ \}));\ //\ stores\ tsconfig\ for\ src\ in\ cache}
+\DoxyCodeLine{const\ barTSConfig\ =\ await\ find(('src/bar.ts',\ \{\ cache\ \}));\ //\ reuses\ tsconfig\ result\ for\ src\ without\ fs\ call}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ fooResult\ =\ await\ parse('src/foo.ts',\ \{\ cache\ \});\ //\ uses\ cached\ path\ for\ tsconfig,\ stores\ parse\ result\ in\ cache}
+\DoxyCodeLine{const\ barResult\ =\ await\ parse('src/bar.ts',\ \{\ cache\ \});\ //\ uses\ cached\ parse\ result\ without\ fs\ call\ or\ resolving}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33772}{}\doxysubsubsubsubsection{\texorpdfstring{cache invalidation}{cache invalidation}}\label{README.md_autotoc_md33772}
+You are responsible for clearing the cache if tsconfig files are added/removed/changed after reading them during the cache lifetime.
+
+Call {\ttfamily cache.\+clear()} and also discard all previous compilation results based previously cached configs.\hypertarget{README.md_autotoc_md33773}{}\doxysubsubsubsubsection{\texorpdfstring{cache mutation}{cache mutation}}\label{README.md_autotoc_md33773}
+Returned results are direct cache objects. If you want to modify them, deep-\/clone first.\hypertarget{README.md_autotoc_md33774}{}\doxysubsubsubsubsection{\texorpdfstring{cache reuse}{cache reuse}}\label{README.md_autotoc_md33774}
+Never use the same cache instance for mixed calls of find/find\+Native or parse/parse\+Native as result structures are different\hypertarget{README.md_autotoc_md33775}{}\doxysubsubsubsection{\texorpdfstring{root}{root}}\label{README.md_autotoc_md33775}
+This option can be used to limit finding tsconfig files outside of a root directory
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse,\ TSConfckCache\ \}\ from\ 'tsconfck';}
+\DoxyCodeLine{const\ root\ =\ '.';}
+\DoxyCodeLine{const\ parseOptions\ =\ \{\ root\ \};}
+\DoxyCodeLine{//\ these\ calls\ are\ not\ going\ to\ look\ for\ tsconfig\ files\ outside\ root}
+\DoxyCodeLine{const\ fooResult\ =\ await\ find('src/foo.ts',\ parseOptions);}
+\DoxyCodeLine{const\ barResult\ =\ await\ parse('src/bar.ts',\ parseOptions);}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+Using the root option can lead to errors if there is no tsconfig found inside root. \end{quote}
+\hypertarget{README.md_autotoc_md33776}{}\doxysubsubsubsection{\texorpdfstring{error handling}{error handling}}\label{README.md_autotoc_md33776}
+find and parse reject for errors they encounter, but return null or empty result if no config was found
+
+If you want them to error instead, test the result and throw
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse\ \}\ from\ 'tsconfck';}
+\DoxyCodeLine{find('some/path/without/tsconfig/foo.ts').then((result)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (result\ ===\ null)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ throw\ new\ Error('not\ found');}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ return\ result;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{parse('some/path/without/tsconfig/foo.ts').then((result)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (result.tsconfigFile\ ===\ null)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ throw\ new\ Error('not\ found');}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ return\ result;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33777}{}\doxysubsubsubsection{\texorpdfstring{TSConfig type (optional, requires typescript as dev\+Dependency)}{TSConfig type (optional, requires typescript as dev\+Dependency)}}\label{README.md_autotoc_md33777}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ TSConfig\ \}\ from\ 'pkg-\/types';}
+
+\end{DoxyCode}
+
+
+Check out \href{https://github.com/unjs/pkg-types}{\texttt{ https\+://github.\+com/unjs/pkg-\/types}}\hypertarget{README.md_autotoc_md33778}{}\doxysubsubsubsection{\texorpdfstring{cli}{cli}}\label{README.md_autotoc_md33778}
+A simple cli wrapper is included, you can use it like this\hypertarget{README.md_autotoc_md33779}{}\doxysubsubsubsubsection{\texorpdfstring{find}{find}}\label{README.md_autotoc_md33779}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ prints\ /path/to/tsconfig.json\ on\ stdout}
+\DoxyCodeLine{tsconfck\ find\ src/index.ts}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33780}{}\doxysubsubsubsubsection{\texorpdfstring{find-\/all}{find-\/all}}\label{README.md_autotoc_md33780}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ prints\ all\ tsconfig.json\ in\ dir\ on\ stdout}
+\DoxyCodeLine{tsconfck\ find-\/all\ src/}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33781}{}\doxysubsubsubsubsection{\texorpdfstring{parse}{parse}}\label{README.md_autotoc_md33781}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ print\ content\ of\ ParseResult.tsconfig\ on\ stdout}
+\DoxyCodeLine{tsconfck\ parse\ src/index.ts}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ print\ to\ file}
+\DoxyCodeLine{tsconfck\ parse\ src/index.ts\ >\ output.json}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33782}{}\doxysubsubsubsubsection{\texorpdfstring{parse-\/result}{parse-\/result}}\label{README.md_autotoc_md33782}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ print\ content\ of\ ParseResult\ on\ stdout}
+\DoxyCodeLine{tsconfck\ parse-\/result\ src/index.ts}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ print\ to\ file}
+\DoxyCodeLine{tsconfck\ parse-\/result\ src/index.ts\ >\ output.json}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33783}{}\doxysubsubsubsubsection{\texorpdfstring{help}{help}}\label{README.md_autotoc_md33783}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ print\ usage}
+\DoxyCodeLine{tsconfck\ -\/h\ \#\ or\ -\/-\/help,\ -\/?,\ help}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33784}{}\doxysubsection{\texorpdfstring{Links}{Links}}\label{README.md_autotoc_md33784}
+
+\begin{DoxyItemize}
+\item \doxylink{tests_2security_2node__modules_2_8pnpm_2axios_0d1_88_83_2node__modules_2axios_2_c_h_a_n_g_e_l_o_g_8md}{changelog}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md33785}{}\doxysubsection{\texorpdfstring{Develop}{Develop}}\label{README.md_autotoc_md33785}
+This repo uses
+
+
+\begin{DoxyItemize}
+\item \href{https://pnpm.io}{\texttt{ pnpm}}
+\item \href{https://github.com/changesets/changesets}{\texttt{ changesets}}
+\end{DoxyItemize}
+
+In every PR you have to add a changeset by running {\ttfamily pnpm changeset} and following the prompts
+
+PRs are going to be squash-\/merged
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ install\ dependencies}
+\DoxyCodeLine{pnpm\ install}
+\DoxyCodeLine{\#\ run\ tests}
+\DoxyCodeLine{pnpm\ test}
+\DoxyCodeLine{\#run\ tests\ in\ watch\ mode\ (doesn't\ require\ dev\ in\ parallel)}
+\DoxyCodeLine{pnpm\ test:watch}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33786}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md33786}
+\href{./LICENSE}{\texttt{ MIT}} 

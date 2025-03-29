@@ -1,0 +1,58 @@
+\doxysection{node\+\_\+modules/@ioredis/commands Directory Reference}
+\hypertarget{dir_fb7d48bf05a47c96cee454aeb046941a}{}\label{dir_fb7d48bf05a47c96cee454aeb046941a}\index{node\_modules/"@ioredis/commands Directory Reference@{node\_modules/"@ioredis/commands Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This module exports all the commands that Redis supports.\hypertarget{README.md_autotoc_md3827}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md3827}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ @ioredis/commands}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3828}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3828}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ commands\ =\ require('@ioredis/commands');}
+
+\end{DoxyCode}
+
+
+{\ttfamily .list} is an array contains all the lowercased commands\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{commands.list.forEach((command)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(command);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+{\ttfamily .exists()} is used to check if the command exists\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{commands.exists('set')\ //\ true}
+\DoxyCodeLine{commands.exists('other-\/command')\ //\ false}
+
+\end{DoxyCode}
+
+
+{\ttfamily .has\+Flag()} is used to check if the command has the flag\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{commands.hasFlag('set',\ 'readonly')\ //\ false}
+
+\end{DoxyCode}
+
+
+{\ttfamily .get\+Key\+Indexes()} is used to get the indexes of keys in the command arguments\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{commands.getKeyIndexes('set',\ ['key',\ 'value'])\ //\ [0]}
+\DoxyCodeLine{commands.getKeyIndexes('mget',\ ['key1',\ 'key2'])\ //\ [0,\ 1]}
+
+\end{DoxyCode}
+ 

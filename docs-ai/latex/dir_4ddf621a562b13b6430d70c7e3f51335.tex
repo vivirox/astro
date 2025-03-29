@@ -1,0 +1,164 @@
+\doxysection{node\+\_\+modules/htmlparser2 Directory Reference}
+\hypertarget{dir_4ddf621a562b13b6430d70c7e3f51335}{}\label{dir_4ddf621a562b13b6430d70c7e3f51335}\index{node\_modules/htmlparser2 Directory Reference@{node\_modules/htmlparser2 Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.org/package/htmlparser2}{\texttt{ }} \href{https://npmjs.org/package/htmlparser2}{\texttt{ }} \href{https://github.com/fb55/htmlparser2/actions/workflows/nodejs-test.yml}{\texttt{ }} \href{https://coveralls.io/r/fb55/htmlparser2}{\texttt{ }}
+
+The fast \& forgiving HTML/\+XML parser.
+
+{\itshape htmlparser2 is the fastest HTML parser, and takes some shortcuts to get there. If you need strict HTML spec compliance, have a look at \href{https://github.com/inikulin/parse5}{\texttt{ parse5}}.}\hypertarget{README.md_autotoc_md17894}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md17894}
+\begin{DoxyVerb}npm install htmlparser2
+\end{DoxyVerb}
+
+
+A live demo of {\ttfamily htmlparser2} is available \href{https://astexplorer.net/\#/2AmVrGuGVJ}{\texttt{ on AST Explorer}}.\hypertarget{README.md_autotoc_md17895}{}\doxysubsection{\texorpdfstring{Ecosystem}{Ecosystem}}\label{README.md_autotoc_md17895}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+\href{https://github.com/fb55/htmlparser2}{\texttt{ htmlparser2}}   &Fast \& forgiving HTML/\+XML parser    \\\cline{1-2}
+\href{https://github.com/fb55/domhandler}{\texttt{ domhandler}}   &Handler for htmlparser2 that turns documents into a DOM    \\\cline{1-2}
+\href{https://github.com/fb55/domutils}{\texttt{ domutils}}   &Utilities for working with domhandler\textquotesingle{}s DOM    \\\cline{1-2}
+\href{https://github.com/fb55/css-select}{\texttt{ css-\/select}}   &CSS selector engine, compatible with domhandler\textquotesingle{}s DOM    \\\cline{1-2}
+\href{https://github.com/cheeriojs/cheerio}{\texttt{ cheerio}}   &The j\+Query API for domhandler\textquotesingle{}s DOM    \\\cline{1-2}
+\href{https://github.com/cheeriojs/dom-serializer}{\texttt{ dom-\/serializer}}   &Serializer for domhandler\textquotesingle{}s DOM   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md17896}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md17896}
+{\ttfamily htmlparser2} itself provides a callback interface that allows consumption of documents with minimal allocations. For a more ergonomic experience, read Getting a DOM below.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ htmlparser2\ from\ "{}htmlparser2"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ parser\ =\ new\ htmlparser2.Parser(\{}
+\DoxyCodeLine{\ \ \ \ onopentag(name,\ attributes)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ This\ fires\ when\ a\ new\ tag\ is\ opened.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ If\ you\ don't\ need\ an\ aggregated\ \`{}attributes`\ object,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ have\ a\ look\ at\ the\ \`{}onopentagname`\ and\ \`{}onattribute`\ events.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ */}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (name\ ===\ "{}script"{}\ \&\&\ attributes.type\ ===\ "{}text/javascript"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log("{}JS!\ Hooray!"{});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ontext(text)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ Fires\ whenever\ a\ section\ of\ text\ was\ processed.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ Note\ that\ this\ can\ fire\ at\ any\ point\ within\ text\ and\ you\ might}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ have\ to\ stitch\ together\ multiple\ pieces.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ */}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log("{}-\/-\/>"{},\ text);}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ onclosetag(tagname)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ Fires\ when\ a\ tag\ is\ closed.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ You\ can\ rely\ on\ this\ event\ only\ firing\ when\ you\ have\ received\ an}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ equivalent\ opening\ tag\ before.\ Closing\ tags\ without\ corresponding}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ *\ opening\ tags\ will\ be\ ignored.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ */}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (tagname\ ===\ "{}script"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log("{}That's\ it?!"{});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{parser.write(}
+\DoxyCodeLine{\ \ \ \ "{}Xyz\ <script\ type='text/javascript'>const\ foo\ =\ '<<bar>>';</script>"{}}
+\DoxyCodeLine{);}
+\DoxyCodeLine{parser.end();}
+
+\end{DoxyCode}
+
+
+Output (with multiple text events combined)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/>\ Xyz}
+\DoxyCodeLine{JS!\ Hooray!}
+\DoxyCodeLine{-\/-\/>\ const\ foo\ =\ '<<bar>>';}
+\DoxyCodeLine{That's\ it?!}
+
+\end{DoxyCode}
+
+
+This example only shows three of the possible events. Read more about the parser, its events and options in the \href{https://github.com/fb55/htmlparser2/wiki/Parser-options}{\texttt{ wiki}}.\hypertarget{README.md_autotoc_md17897}{}\doxysubsubsection{\texorpdfstring{Usage with streams}{Usage with streams}}\label{README.md_autotoc_md17897}
+While the {\ttfamily Parser} interface closely resembles Node.\+js streams, it\textquotesingle{}s not a 100\% match. Use the {\ttfamily Writable\+Stream} interface to process a streaming input\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ WritableStream\ \}\ from\ "{}htmlparser2/lib/WritableStream"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ parserStream\ =\ new\ WritableStream(\{}
+\DoxyCodeLine{\ \ \ \ ontext(text)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log("{}Streaming:"{},\ text);}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ htmlStream\ =\ fs.createReadStream("{}./my-\/file.html"{});}
+\DoxyCodeLine{htmlStream.pipe(parserStream).on("{}finish"{},\ ()\ =>\ console.log("{}done"{}));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17898}{}\doxysubsection{\texorpdfstring{Getting a DOM}{Getting a DOM}}\label{README.md_autotoc_md17898}
+The {\ttfamily Dom\+Handler} produces a DOM (document object model) that can be manipulated using the \href{https://github.com/fb55/DomUtils}{\texttt{ {\ttfamily Dom\+Utils}}} helper.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ htmlparser2\ from\ "{}htmlparser2"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ dom\ =\ htmlparser2.parseDocument(htmlString);}
+
+\end{DoxyCode}
+
+
+The {\ttfamily Dom\+Handler}, while still bundled with this module, was moved to its \href{https://github.com/fb55/domhandler}{\texttt{ own module}}. Have a look at that for further information.\hypertarget{README.md_autotoc_md17899}{}\doxysubsection{\texorpdfstring{Parsing RSS/\+RDF/\+Atom Feeds}{Parsing RSS/\+RDF/\+Atom Feeds}}\label{README.md_autotoc_md17899}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ feed\ =\ htmlparser2.parseFeed(content,\ options);}
+
+\end{DoxyCode}
+
+
+Note\+: While the provided feed handler works for most feeds, you might want to use \href{https://github.com/danmactough/node-feedparser}{\texttt{ danmactough/node-\/feedparser}}, which is much better tested and actively maintained.\hypertarget{README.md_autotoc_md17900}{}\doxysubsection{\texorpdfstring{Performance}{Performance}}\label{README.md_autotoc_md17900}
+After having some artificial benchmarks for some time, {\bfseries{@\+Andreas\+Madsen}} published his \href{https://github.com/AndreasMadsen/htmlparser-benchmark}{\texttt{ {\ttfamily htmlparser-\/benchmark}}}, which benchmarks HTML parses based on real-\/world websites.
+
+At the time of writing, the latest versions of all supported parsers show the following performance characteristics on Git\+Hub Actions (sourced from \href{https://github.com/AndreasMadsen/htmlparser-benchmark/blob/e78cd8fc6c2adac08deedd4f274c33537451186b/stats.txt}{\texttt{ here}})\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{htmlparser2\ \ \ \ \ \ \ \ :\ 2.17215\ ms/file\ ±\ 3.81587}
+\DoxyCodeLine{node-\/html-\/parser\ \ \ :\ 2.35983\ ms/file\ ±\ 1.54487}
+\DoxyCodeLine{html5parser\ \ \ \ \ \ \ \ :\ 2.43468\ ms/file\ ±\ 2.81501}
+\DoxyCodeLine{neutron-\/html5parser:\ 2.61356\ ms/file\ ±\ 1.70324}
+\DoxyCodeLine{htmlparser2-\/dom\ \ \ \ :\ 3.09034\ ms/file\ ±\ 4.77033}
+\DoxyCodeLine{html-\/dom-\/parser\ \ \ \ :\ 3.56804\ ms/file\ ±\ 5.15621}
+\DoxyCodeLine{libxmljs\ \ \ \ \ \ \ \ \ \ \ :\ 4.07490\ ms/file\ ±\ 2.99869}
+\DoxyCodeLine{htmljs-\/parser\ \ \ \ \ \ :\ 6.15812\ ms/file\ ±\ 7.52497}
+\DoxyCodeLine{parse5\ \ \ \ \ \ \ \ \ \ \ \ \ :\ 9.70406\ ms/file\ ±\ 6.74872}
+\DoxyCodeLine{htmlparser\ \ \ \ \ \ \ \ \ :\ 15.0596\ ms/file\ ±\ 89.0826}
+\DoxyCodeLine{html-\/parser\ \ \ \ \ \ \ \ :\ 28.6282\ ms/file\ ±\ 22.6652}
+\DoxyCodeLine{saxes\ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ 45.7921\ ms/file\ ±\ 128.691}
+\DoxyCodeLine{html5\ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ 120.844\ ms/file\ ±\ 153.944}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md17901}{}\doxysubsection{\texorpdfstring{How does this module differ from \href{https://github.com/tautologistics/node-htmlparser}{\texttt{ node-\/htmlparser}}?}{How does this module differ from \href{https://github.com/tautologistics/node-htmlparser}{\texttt{ node-\/htmlparser}}?}}\label{README.md_autotoc_md17901}
+In 2011, this module started as a fork of the {\ttfamily htmlparser} module. {\ttfamily htmlparser2} was rewritten multiple times and, while it maintains an API that\textquotesingle{}s mostly compatible with {\ttfamily htmlparser}, the projects don\textquotesingle{}t share any code anymore.
+
+The parser now provides a callback interface inspired by \href{https://github.com/isaacs/sax-js}{\texttt{ sax.\+js}} (originally targeted at \href{https://github.com/fb55/readabilitysax}{\texttt{ readability\+SAX}}). As a result, old handlers won\textquotesingle{}t work anymore.
+
+The {\ttfamily Default\+Handler} was renamed to clarify its purpose (to {\ttfamily Dom\+Handler}). The old name is still available when requiring {\ttfamily htmlparser2} and your code should work as expected.
+
+The {\ttfamily Rss\+Handler} was replaced with a {\ttfamily get\+Feed} function that takes a {\ttfamily Dom\+Handler} DOM and returns a feed object. There is a {\ttfamily parse\+Feed} helper function that can be used to parse a feed from a string.\hypertarget{README.md_autotoc_md17902}{}\doxysubsection{\texorpdfstring{Security contact information}{Security contact information}}\label{README.md_autotoc_md17902}
+To report a security vulnerability, please use the \href{https://tidelift.com/security}{\texttt{ Tidelift security contact}}. Tidelift will coordinate the fix and disclosure.\hypertarget{README.md_autotoc_md17903}{}\doxysubsection{\texorpdfstring{{\ttfamily htmlparser2} for enterprise}{{\ttfamily htmlparser2} for enterprise}}\label{README.md_autotoc_md17903}
+Available as part of the Tidelift Subscription.
+
+The maintainers of {\ttfamily htmlparser2} and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. \href{https://tidelift.com/subscription/pkg/npm-htmlparser2?utm_source=npm-htmlparser2&utm_medium=referral&utm_campaign=enterprise&utm_term=repo}{\texttt{ Learn more.}} 

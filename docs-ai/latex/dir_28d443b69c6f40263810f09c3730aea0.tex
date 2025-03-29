@@ -1,0 +1,89 @@
+\doxysection{node\+\_\+modules/vfile-\/location Directory Reference}
+\hypertarget{dir_28d443b69c6f40263810f09c3730aea0}{}\label{dir_28d443b69c6f40263810f09c3730aea0}\index{node\_modules/vfile-\/location Directory Reference@{node\_modules/vfile-\/location Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/vfile/vfile-location/actions}{\texttt{ }} \href{https://codecov.io/github/vfile/vfile-location}{\texttt{ }} \href{https://www.npmjs.com/package/vfile-location}{\texttt{ }} \href{https://bundlejs.com/?q=vfile-location}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/vfile/vfile/discussions}{\texttt{ }}
+
+\href{https://github.com/vfile/vfile}{\texttt{ vfile}} utility to convert between positional (line and column-\/based) and offsets (range-\/based) locations.\hypertarget{readme.md_autotoc_md34801}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md34801}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}\+Location\`{}
+\item \`{}location(file)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34802}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md34802}
+This is a tiny but useful package to convert between arbitrary places in a file.\hypertarget{readme.md_autotoc_md34803}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md34803}
+This utility is useful when ASTs nodes don’t cut it. For example, when you are making a lint rule that looks for dangerous characters in a file, which you accomplish by searching the raw file value, and still want to report it to users.\hypertarget{readme.md_autotoc_md34804}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md34804}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ vfile-\/location}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{location\}\ from\ 'https://esm.sh/vfile-\/location@5'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{location\}\ from\ 'https://esm.sh/vfile-\/location@5?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34805}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md34805}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{VFile\}\ from\ 'vfile'}
+\DoxyCodeLine{import\ \{location\}\ from\ 'vfile-\/location'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ place\ =\ location(new\ VFile('foo\(\backslash\)nbar\(\backslash\)nbaz'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ offset\ =\ place.toOffset(\{line:\ 3,\ column:\ 3\})\ //\ =>\ 10}
+\DoxyCodeLine{place.toPoint(offset)\ //\ =>\ \{line:\ 3,\ column:\ 3,\ offset:\ 10\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34806}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md34806}
+\hypertarget{readme.md_autotoc_md34807}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Location}}{{\ttfamily Location}}}\label{readme.md_autotoc_md34807}
+Accessors for index.\hypertarget{readme.md_autotoc_md34808}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md34808}
+
+\begin{DoxyItemize}
+\item {\ttfamily to\+Offset} ({\ttfamily (point?\+: Point\+Like \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined) =\texorpdfstring{$>$}{>} number \texorpdfstring{$\vert$}{|} undefined}) — get the {\ttfamily offset} from a line/column based {\ttfamily Point} in the bound indices; returns {\ttfamily undefined} when given out of bounds input
+\item {\ttfamily to\+Point} ({\ttfamily (offset?\+: number \texorpdfstring{$\vert$}{|} null \texorpdfstring{$\vert$}{|} undefined) =\texorpdfstring{$>$}{>} Unist\+Point \texorpdfstring{$\vert$}{|} undefined}) — get the line/column based {\ttfamily Point} for {\ttfamily offset} in the bound indices; returns {\ttfamily undefined} when given out of bounds input
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34809}{}\doxysubsubsection{\texorpdfstring{{\ttfamily location(file)}}{{\ttfamily location(file)}}}\label{readme.md_autotoc_md34809}
+Create an index of the given document to translate between line/column and offset based positional info.
+
+Also implemented in Rust in \href{https://github.com/wooorm/markdown-rs/blob/main/src/util/location.rs}{\texttt{ {\ttfamily wooorm/markdown-\/rs}}}.\hypertarget{readme.md_autotoc_md34810}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md34810}
+
+\begin{DoxyItemize}
+\item {\ttfamily file} ({\ttfamily VFile \texorpdfstring{$\vert$}{|} Value}) — file to index
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34811}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md34811}
+Accessors for index ({\ttfamily Location}).\hypertarget{readme.md_autotoc_md34812}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md34812}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \`{}\+Location\`{}.\hypertarget{readme.md_autotoc_md34813}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md34813}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily vfile-\/location@\texorpdfstring{$^\wedge$}{\string^}5}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md34814}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md34814}
+See \href{https://github.com/vfile/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/vfile/.github}{\texttt{ {\ttfamily vfile/.github}}} for ways to get started. See \href{https://github.com/vfile/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/vfile/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md34815}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md34815}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

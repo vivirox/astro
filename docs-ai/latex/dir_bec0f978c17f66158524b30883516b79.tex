@@ -1,0 +1,289 @@
+\doxysection{node\+\_\+modules/path-\/scurry Directory Reference}
+\hypertarget{dir_bec0f978c17f66158524b30883516b79}{}\label{dir_bec0f978c17f66158524b30883516b79}\index{node\_modules/path-\/scurry Directory Reference@{node\_modules/path-\/scurry Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Extremely high performant utility for building tools that read the file system, minimizing filesystem and path string munging operations to the greatest degree possible.\hypertarget{README.md_autotoc_md25713}{}\doxysubsection{\texorpdfstring{Ugh, yet another file traversal thing on npm?}{Ugh, yet another file traversal thing on npm?}}\label{README.md_autotoc_md25713}
+Yes. None of the existing ones gave me exactly what I wanted.\hypertarget{README.md_autotoc_md25714}{}\doxysubsection{\texorpdfstring{Well what is it you wanted?}{Well what is it you wanted?}}\label{README.md_autotoc_md25714}
+While working on \href{http://npm.im/glob}{\texttt{ glob}}, I found that I needed a module to very efficiently manage the traversal over a folder tree, such that\+:
+
+
+\begin{DoxyEnumerate}
+\item No {\ttfamily readdir()} or {\ttfamily stat()} would ever be called on the same file or directory more than one time.
+\item No {\ttfamily readdir()} calls would be made if we can be reasonably sure that the path is not a directory. (Ie, a previous {\ttfamily readdir()} or {\ttfamily stat()} covered the path, and {\ttfamily ent.\+is\+Directory()} is false.)
+\item {\ttfamily path.\+resolve()}, {\ttfamily dirname()}, {\ttfamily basename()}, and other string-\/parsing/munging operations are be minimized. This means it has to track "{}provisional"{} child nodes that may not exist (and if we find that they {\itshape don\textquotesingle{}t} exist, store that information as well, so we don\textquotesingle{}t have to ever check again).
+\item The API is not limited to use as a stream/iterator/etc. There are many cases where an API like node\textquotesingle{}s {\ttfamily fs} is preferrable.
+\item It\textquotesingle{}s more important to prevent excess syscalls than to be up to date, but it should be smart enough to know what it {\itshape doesn\textquotesingle{}t} know, and go get it seamlessly when requested.
+\item Do not blow up the JS heap allocation if operating on a directory with a huge number of entries.
+\item Handle all the weird aspects of Windows paths, like UNC paths and drive letters and wrongway slashes, so that the consumer can return canonical platform-\/specific paths without having to parse or join or do any error-\/prone string munging.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md25715}{}\doxysubsection{\texorpdfstring{PERFORMANCE}{PERFORMANCE}}\label{README.md_autotoc_md25715}
+Java\+Script people throw around the word "{}blazing"{} a lot. I hope that this module doesn\textquotesingle{}t blaze anyone. But it does go very fast, in the cases it\textquotesingle{}s optimized for, if used properly.
+
+Path\+Scurry provides ample opportunities to get extremely good performance, as well as several options to trade performance for convenience.
+
+Benchmarks can be run by executing {\ttfamily npm run bench}.
+
+As is always the case, doing more means going slower, doing less means going faster, and there are trade offs between speed and memory usage.
+
+Path\+Scurry makes heavy use of \href{http://npm.im/lru-cache}{\texttt{ LRUCache}} to efficiently cache whatever it can, and {\ttfamily Path} objects remain in the graph for the lifetime of the walker, so repeated calls with a single Path\+Scurry object will be extremely fast. However, adding items to a cold cache means "{}doing more"{}, so in those cases, we pay a price. Nothing is free, but every effort has been made to reduce costs wherever possible.
+
+Also, note that a "{}cache as long as possible"{} approach means that changes to the filesystem may not be reflected in the results of repeated Path\+Scurry operations.
+
+For resolving string paths, {\ttfamily Path\+Scurry} ranges from 5-\/50 times faster than {\ttfamily path.\+resolve} on repeated resolutions, but around 100 to 1000 times {\itshape slower} on the first resolution. If your program is spending a lot of time resolving the {\itshape same} paths repeatedly (like, thousands or millions of times), then this can be beneficial. But both implementations are pretty fast, and speeding up an infrequent operation from 4µs to 400ns is not going to move the needle on your app\textquotesingle{}s performance.
+
+For walking file system directory trees, a lot depends on how often a given Path\+Scurry object will be used, and also on the walk method used.
+
+With default settings on a folder tree of 100,000 items, consisting of around a 10-\/to-\/1 ratio of normal files to directories, Path\+Scurry performs comparably to \href{http://npm.im/@nodelib/fs.walk}{\texttt{ @nodelib/fs.walk}}, which is the fastest and most reliable file system walker I could find. As far as I can tell, it\textquotesingle{}s almost impossible to go much faster in a Node.\+js program, just based on how fast you can push syscalls out to the fs thread pool.
+
+On my machine, that is about 1000-\/1200 completed walks per second for async or stream walks, and around 500-\/600 walks per second synchronously.
+
+In the warm cache state, Path\+Scurry\textquotesingle{}s performance increases around 4x for async {\ttfamily for await} iteration, 10-\/15x faster for streams and synchronous {\ttfamily for of} iteration, and anywhere from 30x to 80x faster for the rest.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ walk\ 100,000\ fs\ entries,\ 10/1\ file/dir\ ratio}
+\DoxyCodeLine{\#\ operations\ /\ ms}
+\DoxyCodeLine{\ New\ PathScurry\ object\ \ |\ \ Reuse\ PathScurry\ object}
+\DoxyCodeLine{\ \ \ \ \ stream:\ \ 1112.589\ \ |\ \ 13974.917}
+\DoxyCodeLine{sync\ stream:\ \ \ 492.718\ \ |\ \ 15028.343}
+\DoxyCodeLine{\ async\ walk:\ \ 1095.648\ \ |\ \ 32706.395}
+\DoxyCodeLine{\ \ sync\ walk:\ \ \ 527.632\ \ |\ \ 46129.772}
+\DoxyCodeLine{\ async\ iter:\ \ 1288.821\ \ |\ \ \ 5045.510}
+\DoxyCodeLine{\ \ sync\ iter:\ \ \ 498.496\ \ |\ \ 17920.746}
+
+\end{DoxyCode}
+
+
+A hand-\/rolled walk calling {\ttfamily entry.\+readdir()} and recursing through the entries can benefit even more from caching, with greater flexibility and without the overhead of streams or generators.
+
+The cold cache state is still limited by the costs of file system operations, but with a warm cache, the only bottleneck is CPU speed and VM optimizations. Of course, in that case, some care must be taken to ensure that you don\textquotesingle{}t lose performance as a result of silly mistakes, like calling {\ttfamily readdir()} on entries that you know are not directories.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ manual\ recursive\ iteration\ functions}
+\DoxyCodeLine{\ \ \ \ \ \ cold\ cache\ \ |\ \ warm\ cache}
+\DoxyCodeLine{async:\ \ 1164.901\ \ |\ \ 17923.320}
+\DoxyCodeLine{\ \ \ cb:\ \ 1101.127\ \ |\ \ 40999.344}
+\DoxyCodeLine{zalgo:\ \ 1082.240\ \ |\ \ 66689.936}
+\DoxyCodeLine{\ sync:\ \ \ 526.935\ \ |\ \ 87097.591}
+
+\end{DoxyCode}
+
+
+In this case, the speed improves by around 10-\/20x in the async case, 40x in the case of using {\ttfamily entry.\+readdir\+CB} with protections against synchronous callbacks, and 50-\/100x with callback deferrals disabled, and {\itshape several hundred times faster} for synchronous iteration.
+
+If you can think of a case that is not covered in these benchmarks, or an implementation that performs significantly better than Path\+Scurry, please \href{https://github.com/isaacs/path-scurry/issues}{\texttt{ let me know}}.\hypertarget{README.md_autotoc_md25716}{}\doxysubsection{\texorpdfstring{USAGE}{USAGE}}\label{README.md_autotoc_md25716}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ hybrid\ module,\ load\ with\ either\ method}
+\DoxyCodeLine{import\ \{\ PathScurry,\ Path\ \}\ from\ 'path-\/scurry'}
+\DoxyCodeLine{//\ or:}
+\DoxyCodeLine{const\ \{\ PathScurry,\ Path\ \}\ =\ require('path-\/scurry')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ very\ simple\ example,\ say\ we\ want\ to\ find\ and}
+\DoxyCodeLine{//\ delete\ all\ the\ .DS\_Store\ files\ in\ a\ given\ path}
+\DoxyCodeLine{//\ note\ that\ the\ API\ is\ very\ similar\ to\ just\ a}
+\DoxyCodeLine{//\ naive\ walk\ with\ fs.readdir()}
+\DoxyCodeLine{import\ \{\ unlink\ \}\ from\ 'fs/promises'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ easy\ way,\ iterate\ over\ the\ directory\ and\ do\ the\ thing}
+\DoxyCodeLine{const\ pw\ =\ new\ PathScurry(process.cwd())}
+\DoxyCodeLine{for\ await\ (const\ entry\ of\ pw)\ \{}
+\DoxyCodeLine{\ \ if\ (entry.isFile()\ \&\&\ entry.name\ ===\ '.DS\_Store')\ \{}
+\DoxyCodeLine{\ \ \ \ unlink(entry.fullpath())}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ here\ it\ is\ as\ a\ manual\ recursive\ method}
+\DoxyCodeLine{const\ walk\ =\ async\ (entry:\ Path)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ promises:\ Promise<any>\ =\ []}
+\DoxyCodeLine{\ \ //\ readdir\ doesn't\ throw\ on\ non-\/directories,\ it\ just\ doesn't}
+\DoxyCodeLine{\ \ //\ return\ any\ entries,\ to\ save\ stack\ trace\ costs.}
+\DoxyCodeLine{\ \ //\ Items\ are\ returned\ in\ arbitrary\ unsorted\ order}
+\DoxyCodeLine{\ \ for\ (const\ child\ of\ await\ pw.readdir(entry))\ \{}
+\DoxyCodeLine{\ \ \ \ //\ each\ child\ is\ a\ Path\ object}
+\DoxyCodeLine{\ \ \ \ if\ (child.name\ ===\ '.DS\_Store'\ \&\&\ child.isFile())\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ could\ also\ do\ pw.resolve(entry,\ child.name),}
+\DoxyCodeLine{\ \ \ \ \ \ //\ just\ like\ fs.readdir\ walking,\ but\ .fullpath\ is}
+\DoxyCodeLine{\ \ \ \ \ \ //\ a\ *slightly*\ more\ efficient\ shorthand.}
+\DoxyCodeLine{\ \ \ \ \ \ promises.push(unlink(child.fullpath()))}
+\DoxyCodeLine{\ \ \ \ \}\ else\ if\ (child.isDirectory())\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ promises.push(walk(child))}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ Promise.all(promises)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{walk(pw.cwd).then(()\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('all\ .DS\_Store\ files\ removed')}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pw2\ =\ new\ PathScurry('/a/b/c')\ //\ pw2.cwd\ is\ the\ Path\ for\ /a/b/c}
+\DoxyCodeLine{const\ relativeDir\ =\ pw2.cwd.resolve('../x')\ //\ Path\ entry\ for\ '/a/b/x'}
+\DoxyCodeLine{const\ relative2\ =\ pw2.cwd.resolve('/a/b/d/../x')\ //\ same\ path,\ same\ entry}
+\DoxyCodeLine{assert.equal(relativeDir,\ relative2)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25717}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md25717}
+\href{https://isaacs.github.io/path-scurry}{\texttt{ Full Type\+Doc API}}
+
+There are platform-\/specific classes exported, but for the most part, the default {\ttfamily Path\+Scurry} and {\ttfamily Path} exports are what you most likely need, unless you are testing behavior for other platforms.
+
+Intended public API is documented here, but the full documentation does include internal types, which should not be accessed directly.\hypertarget{README.md_autotoc_md25718}{}\doxysubsubsection{\texorpdfstring{Interface {\ttfamily Path\+Scurry\+Opts}}{Interface {\ttfamily Path\+Scurry\+Opts}}}\label{README.md_autotoc_md25718}
+The type of the {\ttfamily options} argument passed to the {\ttfamily Path\+Scurry} constructor.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily nocase}\+: Boolean indicating that file names should be compared case-\/insensitively. Defaults to {\ttfamily true} on darwin and win32 implementations, {\ttfamily false} elsewhere.
+
+{\bfseries{Warning}} Performing case-\/insensitive matching on a case-\/sensitive filesystem will result in occasionally very bizarre behavior. Performing case-\/sensitive matching on a case-\/insensitive filesystem may negatively impact performance.
+\item {\ttfamily children\+Cache\+Size}\+: Number of child entries to cache, in order to speed up {\ttfamily resolve()} and {\ttfamily readdir()} calls. Defaults to {\ttfamily 16 \texorpdfstring{$\ast$}{*} 1024} (ie, {\ttfamily 16384}).
+
+Setting it to a higher value will run the risk of JS heap allocation errors on large directory trees. Setting it to {\ttfamily 256} or smaller will significantly reduce the construction time and data consumption overhead, but with the downside of operations being slower on large directory trees. Setting it to {\ttfamily 0} will mean that effectively no operations are cached, and this module will be roughly the same speed as {\ttfamily fs} for file system operations, and {\itshape much} slower than {\ttfamily path.\+resolve()} for repeated path resolution.
+\item {\ttfamily fs} An object that will be used to override the default {\ttfamily fs} methods. Any methods that are not overridden will use Node\textquotesingle{}s built-\/in implementations.
+\begin{DoxyItemize}
+\item lstat\+Sync
+\item readdir (callback {\ttfamily with\+File\+Types} Dirent variant, used for readdir\+CB and most walks)
+\item readdir\+Sync
+\item readlink\+Sync
+\item realpath\+Sync
+\item promises\+: Object containing the following async methods\+:
+\begin{DoxyItemize}
+\item lstat
+\item readdir (Dirent variant only)
+\item readlink
+\item realpath
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25719}{}\doxysubsubsection{\texorpdfstring{Interface {\ttfamily Walk\+Options}}{Interface {\ttfamily Walk\+Options}}}\label{README.md_autotoc_md25719}
+The options object that may be passed to all walk methods.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily with\+File\+Types}\+: Boolean, default true. Indicates that {\ttfamily Path} objects should be returned. Set to {\ttfamily false} to get string paths instead.
+\item {\ttfamily follow}\+: Boolean, default false. Attempt to read directory entries from symbolic links. Otherwise, only actual directories are traversed. Regardless of this setting, a given target path will only ever be walked once, meaning that a symbolic link to a previously traversed directory will never be followed.
+
+Setting this imposes a slight performance penalty, because {\ttfamily readlink} must be called on all symbolic links encountered, in order to avoid infinite cycles.
+\item {\ttfamily filter}\+: Function {\ttfamily (entry\+: Path) =\texorpdfstring{$>$}{>} boolean}. If provided, will prevent the inclusion of any entry for which it returns a falsey value. This will not prevent directories from being traversed if they do not pass the filter, though it will prevent the directories themselves from being included in the results. By default, if no filter is provided, then all entries are included in the results.
+\item {\ttfamily walk\+Filter}\+: Function {\ttfamily (entry\+: Path) =\texorpdfstring{$>$}{>} boolean}. If provided, will prevent the traversal of any directory (or in the case of {\ttfamily follow\+:true} symbolic links to directories) for which the function returns false. This will not prevent the directories themselves from being included in the result set. Use {\ttfamily filter} for that.
+\end{DoxyItemize}
+
+Note that Type\+Script return types will only be inferred properly from static analysis if the {\ttfamily with\+File\+Types} option is omitted, or a constant {\ttfamily true} or {\ttfamily false} value.\hypertarget{README.md_autotoc_md25720}{}\doxysubsubsection{\texorpdfstring{Class {\ttfamily Path\+Scurry}}{Class {\ttfamily Path\+Scurry}}}\label{README.md_autotoc_md25720}
+The main interface. Defaults to an appropriate class based on the current platform.
+
+Use {\ttfamily Path\+Scurry\+Win32}, {\ttfamily Path\+Scurry\+Darwin}, or {\ttfamily Path\+Scurry\+Posix} if implementation-\/specific behavior is desired.
+
+All walk methods may be called with a {\ttfamily Walk\+Options} argument to walk over the object\textquotesingle{}s current working directory with the supplied options.\hypertarget{README.md_autotoc_md25721}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily async pw.\+walk(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}{{\ttfamily async pw.\+walk(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}}\label{README.md_autotoc_md25721}
+Walk the directory tree according to the options provided, resolving to an array of all entries found.\hypertarget{README.md_autotoc_md25722}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+walk\+Sync(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}{{\ttfamily pw.\+walk\+Sync(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}}\label{README.md_autotoc_md25722}
+Walk the directory tree according to the options provided, returning an array of all entries found.\hypertarget{README.md_autotoc_md25723}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+iterate(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}{{\ttfamily pw.\+iterate(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}}\label{README.md_autotoc_md25723}
+Iterate over the directory asynchronously, for use with {\ttfamily for await of}. This is also the default async iterator method.\hypertarget{README.md_autotoc_md25724}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+iterate\+Sync(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}{{\ttfamily pw.\+iterate\+Sync(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}}\label{README.md_autotoc_md25724}
+Iterate over the directory synchronously, for use with {\ttfamily for of}. This is also the default sync iterator method.\hypertarget{README.md_autotoc_md25725}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+stream(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}{{\ttfamily pw.\+stream(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}}\label{README.md_autotoc_md25725}
+Return a \href{http://npm.im/minipass}{\texttt{ Minipass}} stream that emits each entry or path string in the walk. Results are made available asynchronously.\hypertarget{README.md_autotoc_md25726}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+stream\+Sync(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}{{\ttfamily pw.\+stream\+Sync(entry?\+: string \texorpdfstring{$\vert$}{|} Path \texorpdfstring{$\vert$}{|} Walk\+Options, opts?\+: Walk\+Options)}}}\label{README.md_autotoc_md25726}
+Return a \href{http://npm.im/minipass}{\texttt{ Minipass}} stream that emits each entry or path string in the walk. Results are made available synchronously, meaning that the walk will complete in a single tick if the stream is fully consumed.\hypertarget{README.md_autotoc_md25727}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+cwd}}{{\ttfamily pw.\+cwd}}}\label{README.md_autotoc_md25727}
+Path object representing the current working directory for the Path\+Scurry.\hypertarget{README.md_autotoc_md25728}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+chdir(path\+: string)}}{{\ttfamily pw.\+chdir(path\+: string)}}}\label{README.md_autotoc_md25728}
+Set the new effective current working directory for the scurry object, so that {\ttfamily path.\+relative()} and {\ttfamily path.\+relative\+Posix()} return values relative to the new cwd path.\hypertarget{README.md_autotoc_md25729}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+depth(path?\+: Path \texorpdfstring{$\vert$}{|} string)\+: number}}{{\ttfamily pw.\+depth(path?\+: Path \texorpdfstring{$\vert$}{|} string)\+: number}}}\label{README.md_autotoc_md25729}
+Return the depth of the specified path (or the Path\+Scurry cwd) within the directory tree.
+
+Root entries have a depth of {\ttfamily 0}.\hypertarget{README.md_autotoc_md25730}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+resolve(...\+paths\+: string\mbox{[}$\,$\mbox{]})}}{{\ttfamily pw.\+resolve(...\+paths\+: string\mbox{[}$\,$\mbox{]})}}}\label{README.md_autotoc_md25730}
+Caching {\ttfamily path.\+resolve()}.
+
+Significantly faster than {\ttfamily path.\+resolve()} if called repeatedly with the same paths. Significantly slower otherwise, as it builds out the cached Path entries.
+
+To get a {\ttfamily Path} object resolved from the {\ttfamily Path\+Scurry}, use {\ttfamily pw.\+cwd.\+resolve(path)}. Note that {\ttfamily Path.\+resolve} only takes a single string argument, not multiple.\hypertarget{README.md_autotoc_md25731}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+resolve\+Posix(...\+paths\+: string\mbox{[}$\,$\mbox{]})}}{{\ttfamily pw.\+resolve\+Posix(...\+paths\+: string\mbox{[}$\,$\mbox{]})}}}\label{README.md_autotoc_md25731}
+Caching {\ttfamily path.\+resolve()}, but always using posix style paths.
+
+This is identical to {\ttfamily pw.\+resolve(...\+paths)} on posix systems (ie, everywhere except Windows).
+
+On Windows, it returns the full absolute UNC path using {\ttfamily /} separators. Ie, instead of {\ttfamily \textquotesingle{}C\+:\textbackslash{}\textbackslash{}foo\textbackslash{}\textbackslash{}bar}, it would return {\ttfamily //?/C\+:/foo/bar}.\hypertarget{README.md_autotoc_md25732}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+relative(path\+: string \texorpdfstring{$\vert$}{|} Path)\+: string}}{{\ttfamily pw.\+relative(path\+: string \texorpdfstring{$\vert$}{|} Path)\+: string}}}\label{README.md_autotoc_md25732}
+Return the relative path from the Path\+Walker cwd to the supplied path string or entry.
+
+If the nearest common ancestor is the root, then an absolute path is returned.\hypertarget{README.md_autotoc_md25733}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+relative\+Posix(path\+: string \texorpdfstring{$\vert$}{|} Path)\+: string}}{{\ttfamily pw.\+relative\+Posix(path\+: string \texorpdfstring{$\vert$}{|} Path)\+: string}}}\label{README.md_autotoc_md25733}
+Return the relative path from the Path\+Walker cwd to the supplied path string or entry, using {\ttfamily /} path separators.
+
+If the nearest common ancestor is the root, then an absolute path is returned.
+
+On posix platforms (ie, all platforms except Windows), this is identical to {\ttfamily pw.\+relative(path)}.
+
+On Windows systems, it returns the resulting string as a {\ttfamily /}-\/delimited path. If an absolute path is returned (because the target does not share a common ancestor with {\ttfamily pw.\+cwd}), then a full absolute UNC path will be returned. Ie, instead of {\ttfamily \textquotesingle{}C\+:\textbackslash{}\textbackslash{}foo\textbackslash{}\textbackslash{}bar}, it would return {\ttfamily //?/C\+:/foo/bar}.\hypertarget{README.md_autotoc_md25734}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+basename(path\+: string \texorpdfstring{$\vert$}{|} Path)\+: string}}{{\ttfamily pw.\+basename(path\+: string \texorpdfstring{$\vert$}{|} Path)\+: string}}}\label{README.md_autotoc_md25734}
+Return the basename of the provided string or Path.\hypertarget{README.md_autotoc_md25735}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+dirname(path\+: string \texorpdfstring{$\vert$}{|} Path)\+: string}}{{\ttfamily pw.\+dirname(path\+: string \texorpdfstring{$\vert$}{|} Path)\+: string}}}\label{README.md_autotoc_md25735}
+Return the parent directory of the supplied string or Path.\hypertarget{README.md_autotoc_md25736}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily async pw.\+readdir(dir = pw.\+cwd, opts = \{ with\+File\+Types\+: true \})}}{{\ttfamily async pw.\+readdir(dir = pw.\+cwd, opts = \{ with\+File\+Types\+: true \})}}}\label{README.md_autotoc_md25736}
+Read the directory and resolve to an array of strings if {\ttfamily with\+File\+Types} is explicitly set to {\ttfamily false} or Path objects otherwise.
+
+Can be called as {\ttfamily pw.\+readdir(\{ with\+File\+Types\+: boolean \})} as well.
+
+Returns {\ttfamily \mbox{[}\mbox{]}} if no entries are found, or if any error occurs.
+
+Note that Type\+Script return types will only be inferred properly from static analysis if the {\ttfamily with\+File\+Types} option is omitted, or a constant {\ttfamily true} or {\ttfamily false} value.\hypertarget{README.md_autotoc_md25737}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+readdir\+Sync(dir = pw.\+cwd, opts = \{ with\+File\+Types\+: true \})}}{{\ttfamily pw.\+readdir\+Sync(dir = pw.\+cwd, opts = \{ with\+File\+Types\+: true \})}}}\label{README.md_autotoc_md25737}
+Synchronous {\ttfamily pw.\+readdir()}\hypertarget{README.md_autotoc_md25738}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily async pw.\+readlink(link = pw.\+cwd, opts = \{ with\+File\+Types\+: false \})}}{{\ttfamily async pw.\+readlink(link = pw.\+cwd, opts = \{ with\+File\+Types\+: false \})}}}\label{README.md_autotoc_md25738}
+Call {\ttfamily fs.\+readlink} on the supplied string or Path object, and return the result.
+
+Can be called as {\ttfamily pw.\+readlink(\{ with\+File\+Types\+: boolean \})} as well.
+
+Returns {\ttfamily undefined} if any error occurs (for example, if the argument is not a symbolic link), or a {\ttfamily Path} object if {\ttfamily with\+File\+Types} is explicitly set to {\ttfamily true}, or a string otherwise.
+
+Note that Type\+Script return types will only be inferred properly from static analysis if the {\ttfamily with\+File\+Types} option is omitted, or a constant {\ttfamily true} or {\ttfamily false} value.\hypertarget{README.md_autotoc_md25739}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+readlink\+Sync(link = pw.\+cwd, opts = \{ with\+File\+Types\+: false \})}}{{\ttfamily pw.\+readlink\+Sync(link = pw.\+cwd, opts = \{ with\+File\+Types\+: false \})}}}\label{README.md_autotoc_md25739}
+Synchronous {\ttfamily pw.\+readlink()}\hypertarget{README.md_autotoc_md25740}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily async pw.\+lstat(entry = pw.\+cwd)}}{{\ttfamily async pw.\+lstat(entry = pw.\+cwd)}}}\label{README.md_autotoc_md25740}
+Call {\ttfamily fs.\+lstat} on the supplied string or Path object, and fill in as much information as possible, returning the updated {\ttfamily Path} object.
+
+Returns {\ttfamily undefined} if the entry does not exist, or if any error is encountered.
+
+Note that some {\ttfamily Stats} data (such as {\ttfamily ino}, {\ttfamily dev}, and {\ttfamily mode}) will not be supplied. For those things, you\textquotesingle{}ll need to call {\ttfamily fs.\+lstat} yourself.\hypertarget{README.md_autotoc_md25741}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+lstat\+Sync(entry = pw.\+cwd)}}{{\ttfamily pw.\+lstat\+Sync(entry = pw.\+cwd)}}}\label{README.md_autotoc_md25741}
+Synchronous {\ttfamily pw.\+lstat()}\hypertarget{README.md_autotoc_md25742}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+realpath(entry = pw.\+cwd, opts = \{ with\+File\+Types\+: false \})}}{{\ttfamily pw.\+realpath(entry = pw.\+cwd, opts = \{ with\+File\+Types\+: false \})}}}\label{README.md_autotoc_md25742}
+Call {\ttfamily fs.\+realpath} on the supplied string or Path object, and return the realpath if available.
+
+Returns {\ttfamily undefined} if any error occurs.
+
+May be called as {\ttfamily pw.\+realpath(\{ with\+File\+Types\+: boolean \})} to run on {\ttfamily pw.\+cwd}.\hypertarget{README.md_autotoc_md25743}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily pw.\+realpath\+Sync(entry = pw.\+cwd, opts = \{ with\+File\+Types\+: false \})}}{{\ttfamily pw.\+realpath\+Sync(entry = pw.\+cwd, opts = \{ with\+File\+Types\+: false \})}}}\label{README.md_autotoc_md25743}
+Synchronous {\ttfamily pw.\+realpath()}\hypertarget{README.md_autotoc_md25744}{}\doxysubsubsection{\texorpdfstring{Class {\ttfamily Path} implements \href{https://nodejs.org/docs/latest/api/fs.html\#class-fsdirent}{\texttt{ fs.\+Dirent}}}{Class {\ttfamily Path} implements \href{https://nodejs.org/docs/latest/api/fs.html\#class-fsdirent}{\texttt{ fs.\+Dirent}}}}\label{README.md_autotoc_md25744}
+Object representing a given path on the filesystem, which may or may not exist.
+
+Note that the actual class in use will be either {\ttfamily Path\+Win32} or {\ttfamily Path\+Posix}, depending on the implementation of {\ttfamily Path\+Scurry} in use. They differ in the separators used to split and join path strings, and the handling of root paths.
+
+In {\ttfamily Path\+Posix} implementations, paths are split and joined using the `'/\textquotesingle{}{\ttfamily character, and}\textquotesingle{}/\textquotesingle{}\`{} is the only root path ever in use.
+
+In {\ttfamily Path\+Win32} implementations, paths are split using either `'/\textquotesingle{}{\ttfamily or}\textquotesingle{}\textbackslash{}\textquotesingle{}{\ttfamily and joined using}\textquotesingle{}\textbackslash{}\textquotesingle{}{\ttfamily , and multiple roots may be in use based on the drives and UNC paths encountered. UNC paths such as}//?/C\+:/{\ttfamily that identify a drive letter, will be treated as an alias for the same root entry as their associated drive letter (in this case}\textquotesingle{}C\+:\textbackslash{}\textquotesingle{}\`{}).\hypertarget{README.md_autotoc_md25745}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+name}}{{\ttfamily path.\+name}}}\label{README.md_autotoc_md25745}
+Name of this file system entry.
+
+{\bfseries{Important}}\+: {\itshape always} test the path name against any test string using the {\ttfamily is\+Named} method, and not by directly comparing this string. Otherwise, unicode path strings that the system sees as identical will not be properly treated as the same path, leading to incorrect behavior and possible security issues.\hypertarget{README.md_autotoc_md25746}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+is\+Named(name\+: string)\+: boolean}}{{\ttfamily path.\+is\+Named(name\+: string)\+: boolean}}}\label{README.md_autotoc_md25746}
+Return true if the path is a match for the given path name. This handles case sensitivity and unicode normalization.
+
+Note\+: even on case-\/sensitive systems, it is {\bfseries{not}} safe to test the equality of the {\ttfamily .name} property to determine whether a given pathname matches, due to unicode normalization mismatches.
+
+Always use this method instead of testing the {\ttfamily path.\+name} property directly.\hypertarget{README.md_autotoc_md25747}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+is\+CWD}}{{\ttfamily path.\+is\+CWD}}}\label{README.md_autotoc_md25747}
+Set to true if this {\ttfamily Path} object is the current working directory of the {\ttfamily Path\+Scurry} collection that contains it.\hypertarget{README.md_autotoc_md25748}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+get\+Type()}}{{\ttfamily path.\+get\+Type()}}}\label{README.md_autotoc_md25748}
+Returns the type of the Path object, `\textquotesingle{}File'{\ttfamily ,}\textquotesingle{}Directory\textquotesingle{}\`{}, etc.\hypertarget{README.md_autotoc_md25749}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+is\+Type(t\+: type)}}{{\ttfamily path.\+is\+Type(t\+: type)}}}\label{README.md_autotoc_md25749}
+Returns true if {\ttfamily is\{t\}()} returns true.
+
+For example, `path.\+is\+Type(\textquotesingle{}Directory'){\ttfamily is equivalent to }path.\+is\+Directory()\`{}.\hypertarget{README.md_autotoc_md25750}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+depth()}}{{\ttfamily path.\+depth()}}}\label{README.md_autotoc_md25750}
+Return the depth of the Path entry within the directory tree. Root paths have a depth of {\ttfamily 0}.\hypertarget{README.md_autotoc_md25751}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+fullpath()}}{{\ttfamily path.\+fullpath()}}}\label{README.md_autotoc_md25751}
+The fully resolved path to the entry.\hypertarget{README.md_autotoc_md25752}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+fullpath\+Posix()}}{{\ttfamily path.\+fullpath\+Posix()}}}\label{README.md_autotoc_md25752}
+The fully resolved path to the entry, using {\ttfamily /} separators.
+
+On posix systems, this is identical to {\ttfamily path.\+fullpath()}. On windows, this will return a fully resolved absolute UNC path using {\ttfamily /} separators. Eg, instead of `\textquotesingle{}C\+:\textbackslash{}foo\textbackslash{}bar'{\ttfamily , it will return}\textquotesingle{}//?/C\+:/foo/bar\textquotesingle{}\`{}.\hypertarget{README.md_autotoc_md25753}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+is\+File()}, {\ttfamily path.\+is\+Directory()}, etc.}{{\ttfamily path.\+is\+File()}, {\ttfamily path.\+is\+Directory()}, etc.}}\label{README.md_autotoc_md25753}
+Same as the identical {\ttfamily fs.\+Dirent.\+is\+X()} methods.\hypertarget{README.md_autotoc_md25754}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+is\+Unknown()}}{{\ttfamily path.\+is\+Unknown()}}}\label{README.md_autotoc_md25754}
+Returns true if the path\textquotesingle{}s type is unknown. Always returns true when the path is known to not exist.\hypertarget{README.md_autotoc_md25755}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+resolve(p\+: string)}}{{\ttfamily path.\+resolve(p\+: string)}}}\label{README.md_autotoc_md25755}
+Return a {\ttfamily Path} object associated with the provided path string as resolved from the current Path object.\hypertarget{README.md_autotoc_md25756}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+relative()\+: string}}{{\ttfamily path.\+relative()\+: string}}}\label{README.md_autotoc_md25756}
+Return the relative path from the Path\+Walker cwd to the supplied path string or entry.
+
+If the nearest common ancestor is the root, then an absolute path is returned.\hypertarget{README.md_autotoc_md25757}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+relative\+Posix()\+: string}}{{\ttfamily path.\+relative\+Posix()\+: string}}}\label{README.md_autotoc_md25757}
+Return the relative path from the Path\+Walker cwd to the supplied path string or entry, using {\ttfamily /} path separators.
+
+If the nearest common ancestor is the root, then an absolute path is returned.
+
+On posix platforms (ie, all platforms except Windows), this is identical to {\ttfamily pw.\+relative(path)}.
+
+On Windows systems, it returns the resulting string as a {\ttfamily /}-\/delimited path. If an absolute path is returned (because the target does not share a common ancestor with {\ttfamily pw.\+cwd}), then a full absolute UNC path will be returned. Ie, instead of {\ttfamily \textquotesingle{}C\+:\textbackslash{}\textbackslash{}foo\textbackslash{}\textbackslash{}bar}, it would return {\ttfamily //?/C\+:/foo/bar}.\hypertarget{README.md_autotoc_md25758}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily async path.\+readdir()}}{{\ttfamily async path.\+readdir()}}}\label{README.md_autotoc_md25758}
+Return an array of {\ttfamily Path} objects found by reading the associated path entry.
+
+If path is not a directory, or if any error occurs, returns {\ttfamily \mbox{[}\mbox{]}}, and marks all children as provisional and non-\/existent.\hypertarget{README.md_autotoc_md25759}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+readdir\+Sync()}}{{\ttfamily path.\+readdir\+Sync()}}}\label{README.md_autotoc_md25759}
+Synchronous {\ttfamily path.\+readdir()}\hypertarget{README.md_autotoc_md25760}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily async path.\+readlink()}}{{\ttfamily async path.\+readlink()}}}\label{README.md_autotoc_md25760}
+Return the {\ttfamily Path} object referenced by the {\ttfamily path} as a symbolic link.
+
+If the {\ttfamily path} is not a symbolic link, or any error occurs, returns {\ttfamily undefined}.\hypertarget{README.md_autotoc_md25761}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+readlink\+Sync()}}{{\ttfamily path.\+readlink\+Sync()}}}\label{README.md_autotoc_md25761}
+Synchronous {\ttfamily path.\+readlink()}\hypertarget{README.md_autotoc_md25762}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily async path.\+lstat()}}{{\ttfamily async path.\+lstat()}}}\label{README.md_autotoc_md25762}
+Call {\ttfamily lstat} on the path object, and fill it in with details determined.
+
+If path does not exist, or any other error occurs, returns {\ttfamily undefined}, and marks the path as "{}unknown"{} type.\hypertarget{README.md_autotoc_md25763}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+lstat\+Sync()}}{{\ttfamily path.\+lstat\+Sync()}}}\label{README.md_autotoc_md25763}
+Synchronous {\ttfamily path.\+lstat()}\hypertarget{README.md_autotoc_md25764}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily async path.\+realpath()}}{{\ttfamily async path.\+realpath()}}}\label{README.md_autotoc_md25764}
+Call {\ttfamily realpath} on the path, and return a Path object corresponding to the result, or {\ttfamily undefined} if any error occurs.\hypertarget{README.md_autotoc_md25765}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily path.\+realpath\+Sync()}}{{\ttfamily path.\+realpath\+Sync()}}}\label{README.md_autotoc_md25765}
+Synchornous {\ttfamily path.\+realpath()} 

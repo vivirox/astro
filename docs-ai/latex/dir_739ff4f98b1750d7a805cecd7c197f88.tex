@@ -1,0 +1,45 @@
+\doxysection{node\+\_\+modules/postgres-\/date Directory Reference}
+\hypertarget{dir_739ff4f98b1750d7a805cecd7c197f88}{}\label{dir_739ff4f98b1750d7a805cecd7c197f88}\index{node\_modules/postgres-\/date Directory Reference@{node\_modules/postgres-\/date Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Postgres date output parser \end{quote}
+
+
+This package parses \href{https://www.postgresql.org/docs/current/datatype-datetime.html\#DATATYPE-DATETIME-OUTPUT}{\texttt{ date/time outputs}} from Postgres into Javascript {\ttfamily Date} objects. Its goal is to match Postgres behavior and preserve data accuracy.
+
+If you find a case where a valid Postgres output results in incorrect parsing (including loss of precision), please \href{https://github.com/bendrucker/postgres-date/compare}{\texttt{ create a pull request}} and provide a failing test.
+
+{\bfseries{Supported Postgres Versions\+:}} {\ttfamily \texorpdfstring{$>$}{>}= 9.\+6}
+
+All prior versions of Postgres are likely compatible but not officially supported.\hypertarget{readme.md_autotoc_md26263}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md26263}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ postgres-\/date}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26264}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md26264}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ parse\ =\ require('postgres-\/date')}
+\DoxyCodeLine{parse('2011-\/01-\/23\ 22:15:51Z')}
+\DoxyCodeLine{//\ =>\ 2011-\/01-\/23T22:15:51.000Z}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26265}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md26265}
+\hypertarget{readme.md_autotoc_md26266}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily parse(iso\+Date)} -\/\texorpdfstring{$>$}{>} {\ttfamily date}}{{\ttfamily parse(iso\+Date)} -\/\texorpdfstring{$>$}{>} {\ttfamily date}}}\label{readme.md_autotoc_md26266}
+\hypertarget{readme.md_autotoc_md26267}{}\doxysubsubsubsubsection{\texorpdfstring{iso\+Date}{iso\+Date}}\label{readme.md_autotoc_md26267}
+{\itshape Required} ~\newline
+ Type\+: {\ttfamily string}
+
+A date string from Postgres.\hypertarget{readme.md_autotoc_md26268}{}\doxysubsection{\texorpdfstring{Releases}{Releases}}\label{readme.md_autotoc_md26268}
+The following semantic versioning increments will be used for changes\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Major}}\+: Removal of support for Node.\+js versions or Postgres versions (not expected)
+\item {\bfseries{Minor}}\+: Unused, since Postgres returns dates in standard ISO 8601 format
+\item {\bfseries{Patch}}\+: Any fix for parsing behavior
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md26269}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md26269}
+MIT © \href{http://bendrucker.me}{\texttt{ Ben Drucker}} 

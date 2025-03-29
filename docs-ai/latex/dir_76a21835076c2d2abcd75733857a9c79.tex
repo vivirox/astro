@@ -1,0 +1,532 @@
+\doxysection{node\+\_\+modules/eslint-\/plugin-\/astro Directory Reference}
+\hypertarget{dir_76a21835076c2d2abcd75733857a9c79}{}\label{dir_76a21835076c2d2abcd75733857a9c79}\index{node\_modules/eslint-\/plugin-\/astro Directory Reference@{node\_modules/eslint-\/plugin-\/astro Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_c7c12dacb004a2f4f86e2e18b93b3d68}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+{\ttfamily eslint-\/plugin-\/astro} is \href{https://eslint.org/}{\texttt{ ESLint}} plugin for \href{https://docs.astro.build/en/core-concepts/astro-components/}{\texttt{ Astro components}}. ~\newline
+ You can check on the \href{https://ota-meshi.github.io/eslint-plugin-astro/playground/}{\texttt{ Online DEMO}}.
+
+\href{https://github.com/sponsors/ota-meshi}{\texttt{ }}
+
+\href{https://www.npmjs.com/package/eslint-plugin-astro}{\texttt{ }} \href{https://www.npmjs.com/package/eslint-plugin-astro}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-astro}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-astro}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-astro}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-astro}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-astro}{\texttt{ }} \href{https://github.com/ota-meshi/eslint-plugin-astro/actions?query=workflow\%3ACI}{\texttt{ }} \href{https://coveralls.io/github/ota-meshi/eslint-plugin-astro?branch=main}{\texttt{ }}
+
+This plugin is in the \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\+\_\+experimental stages\+\_\+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} of development.
+
+At least it works fine with a \href{https://github.com/withastro/docs}{\texttt{ withastro/docs}} repository.\hypertarget{README.md_autotoc_md13155}{}\doxysubsection{\texorpdfstring{📛 What is this plugin?}{📛 What is this plugin?}}\label{README.md_autotoc_md13155}
+\href{https://eslint.org/}{\texttt{ ESLint}} plugin for \href{https://docs.astro.build/en/core-concepts/astro-components/}{\texttt{ Astro components}}.
+
+
+\begin{DoxyItemize}
+\item Linting Astro components using ESLint.
+\item Find problems with Astro components.
+\item Apply a consistent code style to Astro components.
+\item Linting targets include \href{https://docs.astro.build/en/core-concepts/astro-components/\#the-component-script}{\texttt{ Frontmatter}}, \href{https://docs.astro.build/en/core-concepts/astro-components/\#the-component-template}{\texttt{ HTML Template}}, \href{https://docs.astro.build/en/core-concepts/astro-syntax/\#jsx-like-expressions}{\texttt{ JSX-\/like Expressions}}, \href{https://docs.astro.build/en/guides/client-side-scripts/}{\texttt{ Client-\/\+Side Scripts}}, \href{https://docs.astro.build/en/reference/directives-reference/}{\texttt{ Directives}}, and more.
+\item Check code in real time with the ESLint editor integrations.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md13156}{}\doxysubsection{\texorpdfstring{📖 Documentation}{📖 Documentation}}\label{README.md_autotoc_md13156}
+See \href{https://ota-meshi.github.io/eslint-plugin-astro/}{\texttt{ documents}}.\hypertarget{README.md_autotoc_md13157}{}\doxysubsection{\texorpdfstring{💿 Installation}{💿 Installation}}\label{README.md_autotoc_md13157}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ eslint\ eslint-\/plugin-\/astro}
+
+\end{DoxyCode}
+
+
+If you write Type\+Script in Astro components, you also need to install the {\ttfamily @typescript-\/eslint/parser}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ @typescript-\/eslint/parser}
+
+\end{DoxyCode}
+
+
+If you want to use the rules for checking accessibility (A11Y), you also need to install \href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y}{\texttt{ eslint-\/plugin-\/jsx-\/a11y}} additionally\+: ~\newline
+ (It is used internally in the rules for A11Y.)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ eslint-\/plugin-\/jsx-\/a11y}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+{\bfseries{Requirements}}
+
+
+\begin{DoxyItemize}
+\item ESLint v7.\+0.\+0 and above
+\item Node.\+js v18.\+18, v20.\+9, v21.\+1 and above 
+\end{DoxyItemize}\end{quote}
+\hypertarget{README.md_autotoc_md13158}{}\doxysubsection{\texorpdfstring{📖 Usage}{📖 Usage}}\label{README.md_autotoc_md13158}
+\hypertarget{README.md_autotoc_md13159}{}\doxysubsubsection{\texorpdfstring{Configuration}{Configuration}}\label{README.md_autotoc_md13159}
+\hypertarget{README.md_autotoc_md13160}{}\doxysubsubsubsection{\texorpdfstring{New Config ({\ttfamily eslint.\+config.\+js})}{New Config ({\ttfamily eslint.\+config.\+js})}}\label{README.md_autotoc_md13160}
+Use {\ttfamily eslint.\+config.\+js} file to configure rules. See also\+: \href{https://eslint.org/docs/latest/use/configure/configuration-files-new}{\texttt{ https\+://eslint.\+org/docs/latest/use/configure/configuration-\/files-\/new}}.
+
+Example {\bfseries{eslint.\+config.\+js}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ eslintPluginAstro\ from\ 'eslint-\/plugin-\/astro';}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ //\ add\ more\ generic\ rule\ sets\ here,\ such\ as:}
+\DoxyCodeLine{\ \ //\ js.configs.recommended,}
+\DoxyCodeLine{\ \ ...eslintPluginAstro.configs.recommended,}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ //\ "{}astro/no-\/set-\/html-\/directive"{}:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+Example {\bfseries{eslint.\+config.\+cjs}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ eslintPluginAstro\ =\ require('eslint-\/plugin-\/astro');}
+\DoxyCodeLine{module.exports\ =\ [}
+\DoxyCodeLine{\ \ //\ add\ more\ generic\ rule\ sets\ here,\ such\ as:}
+\DoxyCodeLine{\ \ //\ js.configs.recommended,}
+\DoxyCodeLine{\ \ ...eslintPluginAstro.configs['flat/recommended'],\ //\ In\ CommonJS,\ the\ \`{}flat/`\ prefix\ is\ required.}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ //\ "{}astro/no-\/set-\/html-\/directive"{}:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+This plugin provides configs\+:
+
+
+\begin{DoxyItemize}
+\item `\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}base'\mbox{]}{\ttfamily ... Minimal configuration to enable correct Astro component linting. -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}recommended\textquotesingle{}\mbox{]}{\ttfamily ... Above, plus rules to prevent errors or unintended behavior. -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}all\textquotesingle{}\mbox{]}{\ttfamily ... Configuration enables all astro rules. It\textquotesingle{}s meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.}
+\item {\ttfamily Extension of sharable configuration provided by \mbox{[}eslint-\/plugin-\/jsx-\/a11y\mbox{]}. You need to install \mbox{[}eslint-\/plugin-\/jsx-\/a11y\mbox{]} to use it. -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}jsx-\/a11y-\/recommended\textquotesingle{}\mbox{]}{\ttfamily ... Similar to the \mbox{[}}"{}plugin\+:jsx-\/a11y/recommended"{}{\ttfamily configuration\mbox{]}(\href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y}{\texttt{ https\+://github.\+com/jsx-\/eslint/eslint-\/plugin-\/jsx-\/a11y}}\#rule-\/strictness-\/in-\/different-\/modes), but with the rules extended for Astro components enabled. -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}jsx-\/a11y-\/strict\textquotesingle{}\mbox{]}{\ttfamily ... Similar to the \mbox{[}}"{}plugin\+:jsx-\/a11y/strict"{}\`{} configuration\mbox{]}(\href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y\#rule-strictness-in-different-modes}{\texttt{ https\+://github.\+com/jsx-\/eslint/eslint-\/plugin-\/jsx-\/a11y\#rule-\/strictness-\/in-\/different-\/modes}}), but with the rules extended for Astro components enabled.
+\end{DoxyItemize}
+
+See \href{https://ota-meshi.github.io/eslint-plugin-astro/rules/}{\texttt{ the rule list}} to get the {\ttfamily rules} that this plugin provides.\hypertarget{README.md_autotoc_md13161}{}\doxysubsubsubsection{\texorpdfstring{Legacy Config ({\ttfamily .eslintrc})}{Legacy Config ({\ttfamily .eslintrc})}}\label{README.md_autotoc_md13161}
+Use {\ttfamily .eslintrc.\texorpdfstring{$\ast$}{*}} file to configure rules. See also\+: \href{https://eslint.org/docs/latest/use/configure}{\texttt{ https\+://eslint.\+org/docs/latest/use/configure}}.
+
+Example {\bfseries{.eslintrc.\+js}}. When using the shareable configuration provided by the plugin\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ extends:\ [}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ "{}plugin:astro/recommended"{},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ overrides:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Define\ the\ configuration\ for\ \`{}.astro`\ file.}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}*.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Allows\ Astro\ components\ to\ be\ parsed.}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ "{}astro-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Parse\ the\ script\ in\ \`{}.astro`\ as\ TypeScript\ by\ adding\ the\ following\ configuration.}
+\DoxyCodeLine{\ \ \ \ \ \ //\ It's\ the\ setting\ you\ need\ when\ using\ TypeScript.}
+\DoxyCodeLine{\ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ parser:\ "{}@typescript-\/eslint/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ extraFileExtensions:\ ["{}.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ "{}astro/no-\/set-\/html-\/directive"{}:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you do not use a shareable configuration, it is the same as the following configuration\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ overrides:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Define\ the\ configuration\ for\ \`{}.astro`\ file.}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}*.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Enable\ this\ plugin}
+\DoxyCodeLine{\ \ \ \ \ \ plugins:\ ["{}astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ env:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Enables\ global\ variables\ available\ in\ Astro\ components.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ node:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}astro/astro"{}:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ es2020:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Allows\ Astro\ components\ to\ be\ parsed.}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ "{}astro-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Parse\ the\ script\ in\ \`{}.astro`\ as\ TypeScript\ by\ adding\ the\ following\ configuration.}
+\DoxyCodeLine{\ \ \ \ \ \ //\ It's\ the\ setting\ you\ need\ when\ using\ TypeScript.}
+\DoxyCodeLine{\ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ parser:\ "{}@typescript-\/eslint/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ extraFileExtensions:\ ["{}.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ The\ script\ of\ Astro\ components\ uses\ ESM.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ sourceType:\ "{}module"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Enable\ recommended\ rules}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}astro/no-\/conflict-\/set-\/directives"{}:\ "{}error"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}astro/no-\/unused-\/define-\/vars-\/in-\/style"{}:\ "{}error"{},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ "{}astro/no-\/set-\/html-\/directive"{}:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Define\ the\ configuration\ for\ \`{}<script>`\ tag.}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Script\ in\ \`{}<script>`\ is\ assigned\ a\ virtual\ file\ name\ with\ the\ \`{}.js`\ extension.}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}**/*.astro/*.js"{},\ "{}*.astro/*.js"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ env:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ browser:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ es2020:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ sourceType:\ "{}module"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ "{}no-\/unused-\/vars"{}:\ "{}error"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ If\ you\ are\ using\ "{}prettier/prettier"{}\ rule,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ you\ don't\ need\ to\ format\ inside\ <script>\ as\ it\ will\ be\ formatted\ as\ a\ \`{}.astro`\ file.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}prettier/prettier"{}:\ "{}off"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Define\ the\ configuration\ for\ \`{}<script>`\ tag\ when\ using\ \`{}client-\/side-\/ts`\ processor.}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Script\ in\ \`{}<script>`\ is\ assigned\ a\ virtual\ file\ name\ with\ the\ \`{}.ts`\ extension.}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}**/*.astro/*.ts"{},\ "{}*.astro/*.ts"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ env:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ browser:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ es2020:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ "{}@typescript-\/eslint/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ sourceType:\ "{}module"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ project:\ null,}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ "{}no-\/unused-\/vars"{}:\ "{}error"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ If\ you\ are\ using\ "{}prettier/prettier"{}\ rule,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ you\ don't\ need\ to\ format\ inside\ <script>\ as\ it\ will\ be\ formatted\ as\ a\ \`{}.astro`\ file.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}prettier/prettier"{}:\ "{}off"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you are writing client-\/side scripts in Type\+Script and want to use {\ttfamily @typescript-\/eslint/parser} as the Type\+Script parser, you will need to use {\ttfamily client-\/side-\/ts} processor and configure it as follows.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ extends:\ [}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ "{}plugin:astro/recommended"{},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ overrides:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}*.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ \ \ processor:\ "{}astro/client-\/side-\/ts"{},\ //\ <-\/\ Uses\ the\ "{}client-\/side-\/ts"{}\ processor.}
+\DoxyCodeLine{\ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The pull request diff \href{https://github.com/withastro/docs/pull/710/files}{\texttt{ here}} is an example of introducing {\ttfamily eslint-\/plugin-\/astro} to the \href{https://github.com/withastro/docs}{\texttt{ withastro/docs}} repository.
+
+This plugin provides configs\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily plugin\+:astro/base} ... Minimal configuration to enable correct Astro component linting.
+\item {\ttfamily plugin\+:astro/recommended} ... Above, plus rules to prevent errors or unintended behavior.
+\item {\ttfamily plugin\+:astro/all} ... Configuration enables all astro rules. It\textquotesingle{}s meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
+\item Extension of sharable configuration provided by \href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y}{\texttt{ eslint-\/plugin-\/jsx-\/a11y}}. You need to install \href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y}{\texttt{ eslint-\/plugin-\/jsx-\/a11y}} to use it.
+\begin{DoxyItemize}
+\item {\ttfamily plugin\+:astro/jsx-\/a11y-\/recommended} ... Similar to the \href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y\#rule-strictness-in-different-modes}{\texttt{ {\ttfamily "{}plugin\+:jsx-\/a11y/recommended"{}} configuration}}, but with the rules extended for Astro components enabled.
+\item {\ttfamily plugin\+:astro/jsx-\/a11y-\/strict} ... Similar to the \href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y\#rule-strictness-in-different-modes}{\texttt{ {\ttfamily "{}plugin\+:jsx-\/a11y/strict"{}} configuration}}, but with the rules extended for Astro components enabled.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+See \href{https://ota-meshi.github.io/eslint-plugin-astro/rules/}{\texttt{ the rule list}} to get the {\ttfamily rules} that this plugin provides.\hypertarget{README.md_autotoc_md13162}{}\doxysubsubsubsection{\texorpdfstring{Parser Configuration}{Parser Configuration}}\label{README.md_autotoc_md13162}
+See \href{https://github.com/ota-meshi/astro-eslint-parser\#readme}{\texttt{ https\+://github.\+com/ota-\/meshi/astro-\/eslint-\/parser\#readme}}.\hypertarget{README.md_autotoc_md13163}{}\doxysubsubsection{\texorpdfstring{Resolving Error in JSX\+: Unsafe return of an {\ttfamily any} typed value}{Resolving Error in JSX\+: Unsafe return of an {\ttfamily any} typed value}}\label{README.md_autotoc_md13163}
+Astro supports JSX from multiple frameworks such as {\bfseries{React}}, {\bfseries{Preact}}, and {\bfseries{Solid.\+js}} by defining JSX Elements as {\ttfamily HTMLElement \texorpdfstring{$\vert$}{|} any;}. When a framework with a JSX type definition is not present in your project this {\bfseries{any}} can cause the ESLint error {\ttfamily @typescript-\/eslint/no-\/unsafe-\/return}.
+
+This can be resolved by overriding the astro\+HTML.\+JSX.\+Element definition with a {\ttfamily \texorpdfstring{$\ast$}{*}.d.\+ts} file such as {\ttfamily jsx.\+d.\+ts} in your project root directory\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ "{}astro/astro-\/jsx"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{declare\ global\ \{}
+\DoxyCodeLine{\ \ namespace\ JSX\ \{}
+\DoxyCodeLine{\ \ \ \ //\ type\ Element\ =\ astroHTML.JSX.Element\ //\ We\ want\ to\ use\ this,\ but\ it\ is\ defined\ as\ any.}
+\DoxyCodeLine{\ \ \ \ type\ Element\ =\ HTMLElement;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Add this {\ttfamily \texorpdfstring{$\ast$}{*}.d.\+ts} to your {\ttfamily tsconfig.\+eslint.\+json}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}extends"{}:\ "{}./tsconfig.json"{},}
+\DoxyCodeLine{\ \ "{}include"{}:\ [}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ "{}jsx.d.ts"{}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Ensure that any necessary parser\+Options in your {\ttfamily .eslintrc.\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}} have a project key also pointing to this config\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ "{}overrides"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}files"{}:\ ["{}*.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ "{}parser"{}:\ "{}astro-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}parserOptions"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}parser"{}:\ "{}@typescript-\/eslint/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}extraFileExtensions"{}:\ ["{}.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ add\ this\ line}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}project"{}:\ "{}./tsconfig.eslint.json"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ ]\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13164}{}\doxysubsubsection{\texorpdfstring{Running ESLint from the command line}{Running ESLint from the command line}}\label{README.md_autotoc_md13164}
+If you want to run {\ttfamily eslint} from the command line, make sure you include the {\ttfamily .astro} extension using \href{https://eslint.org/docs/user-guide/configuring\#specifying-file-extensions-to-lint}{\texttt{ the {\ttfamily -\/-\/ext} option}} or a glob pattern, because ESLint targets only {\ttfamily .js} files by default.
+
+Examples\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{eslint\ -\/-\/ext\ .js,.astro\ src}
+\DoxyCodeLine{eslint\ "{}src/**/*.\{js,astro\}"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13165}{}\doxysubsection{\texorpdfstring{💻 Editor Integrations}{💻 Editor Integrations}}\label{README.md_autotoc_md13165}
+\hypertarget{README.md_autotoc_md13166}{}\doxysubsubsection{\texorpdfstring{Visual Studio Code}{Visual Studio Code}}\label{README.md_autotoc_md13166}
+Use the \href{https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint}{\texttt{ dbaeumer.\+vscode-\/eslint}} extension that Microsoft provides officially.
+
+You have to configure the {\ttfamily eslint.\+validate} option of the extension to check {\ttfamily .astro} files, because the extension targets only {\ttfamily \texorpdfstring{$\ast$}{*}.js} or {\ttfamily \texorpdfstring{$\ast$}{*}.jsx} files by default.
+
+Example {\bfseries{.vscode/settings.\+json}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}eslint.validate"{}:\ [}
+\DoxyCodeLine{\ \ \ \ "{}javascript"{},}
+\DoxyCodeLine{\ \ \ \ "{}javascriptreact"{},}
+\DoxyCodeLine{\ \ \ \ "{}astro"{},\ //\ Enable\ .astro}
+\DoxyCodeLine{\ \ \ \ "{}typescript"{},\ //\ Enable\ .ts}
+\DoxyCodeLine{\ \ \ \ "{}typescriptreact"{}\ //\ Enable\ .tsx}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13167}{}\doxysubsection{\texorpdfstring{✅ Rules}{✅ Rules}}\label{README.md_autotoc_md13167}
+The {\ttfamily -\/-\/fix} option on the \href{https://eslint.org/docs/user-guide/command-line-interface\#fixing-problems}{\texttt{ command line}} automatically fixes problems reported by rules which have a wrench 🔧 below. ~\newline
+ The rules with the following star ⭐ are included in the {\ttfamily plugin\+:astro/recommended} configs.
+
+\begin{quote}
+Doesn\textquotesingle{}t the rule you want exist? \href{https://github.com/ota-meshi/eslint-plugin-astro/issues/new?template=new_rule_request.yml}{\texttt{ Share your idea of that rule with us}}. \end{quote}
+\hypertarget{README.md_autotoc_md13168}{}\doxysubsection{\texorpdfstring{Possible Errors}{Possible Errors}}\label{README.md_autotoc_md13168}
+These rules relate to possible syntax or logic errors in Astro component code\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/missing-client-only-directive-value/}{\texttt{ astro/missing-\/client-\/only-\/directive-\/value}}   &the client\+:only directive is missing the correct component\textquotesingle{}s framework value   &⭐    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-conflict-set-directives/}{\texttt{ astro/no-\/conflict-\/set-\/directives}}   &disallow conflicting set directives and child contents   &⭐    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-deprecated-astro-canonicalurl/}{\texttt{ astro/no-\/deprecated-\/astro-\/canonicalurl}}   &disallow using deprecated {\ttfamily Astro.\+canonical\+URL}   &⭐    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-deprecated-astro-fetchcontent/}{\texttt{ astro/no-\/deprecated-\/astro-\/fetchcontent}}   &disallow using deprecated {\ttfamily Astro.\+fetch\+Content()}   &⭐🔧    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-deprecated-astro-resolve/}{\texttt{ astro/no-\/deprecated-\/astro-\/resolve}}   &disallow using deprecated {\ttfamily Astro.\+resolve()}   &⭐    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-deprecated-getentrybyslug/}{\texttt{ astro/no-\/deprecated-\/getentrybyslug}}   &disallow using deprecated {\ttfamily get\+Entry\+By\+Slug()}   &⭐    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-exports-from-components/}{\texttt{ astro/no-\/exports-\/from-\/components}}   &disallow value export   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-unused-define-vars-in-style/}{\texttt{ astro/no-\/unused-\/define-\/vars-\/in-\/style}}   &disallow unused {\ttfamily define\+:vars=\{...\}} in {\ttfamily style} tag   &⭐    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/valid-compile/}{\texttt{ astro/valid-\/compile}}   &disallow warnings when compiling.   &⭐   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md13169}{}\doxysubsection{\texorpdfstring{Security Vulnerability}{Security Vulnerability}}\label{README.md_autotoc_md13169}
+These rules relate to security vulnerabilities in Astro component code\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-set-html-directive/}{\texttt{ astro/no-\/set-\/html-\/directive}}   &disallow use of {\ttfamily set\+:html} to prevent XSS attack   &\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md13170}{}\doxysubsection{\texorpdfstring{Best Practices}{Best Practices}}\label{README.md_autotoc_md13170}
+These rules relate to better ways of doing things to help you avoid problems\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-set-text-directive/}{\texttt{ astro/no-\/set-\/text-\/directive}}   &disallow use of {\ttfamily set\+:text}   &🔧    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/no-unused-css-selector/}{\texttt{ astro/no-\/unused-\/css-\/selector}}   &disallow selectors defined in {\ttfamily style} tag that don\textquotesingle{}t use in HTML   &\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md13171}{}\doxysubsection{\texorpdfstring{Stylistic Issues}{Stylistic Issues}}\label{README.md_autotoc_md13171}
+These rules relate to style guidelines, and are therefore quite subjective\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/prefer-class-list-directive/}{\texttt{ astro/prefer-\/class-\/list-\/directive}}   &require {\ttfamily class\+:list} directives instead of {\ttfamily class} with expressions   &🔧    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/prefer-object-class-list/}{\texttt{ astro/prefer-\/object-\/class-\/list}}   &require use object instead of ternary expression in {\ttfamily class\+:list}   &🔧    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/prefer-split-class-list/}{\texttt{ astro/prefer-\/split-\/class-\/list}}   &require use split array elements in {\ttfamily class\+:list}   &🔧    \\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/sort-attributes/}{\texttt{ astro/sort-\/attributes}}   &enforce sorting of attributes   &🔧   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md13172}{}\doxysubsection{\texorpdfstring{A11Y Extension Rules}{A11Y Extension Rules}}\label{README.md_autotoc_md13172}
+These rules extend the rules provided by \href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y}{\texttt{ eslint-\/plugin-\/jsx-\/a11y}} to work well in Astro component\+: ~\newline
+ (You need to install \href{https://github.com/jsx-eslint/eslint-plugin-jsx-a11y}{\texttt{ eslint-\/plugin-\/jsx-\/a11y}} to use the rules.)
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/alt-text/}{\texttt{ astro/jsx-\/a11y/alt-\/text}}   &apply {\ttfamily jsx-\/a11y/alt-\/text} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-ambiguous-text/}{\texttt{ astro/jsx-\/a11y/anchor-\/ambiguous-\/text}}   &apply {\ttfamily jsx-\/a11y/anchor-\/ambiguous-\/text} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-has-content/}{\texttt{ astro/jsx-\/a11y/anchor-\/has-\/content}}   &apply {\ttfamily jsx-\/a11y/anchor-\/has-\/content} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-is-valid/}{\texttt{ astro/jsx-\/a11y/anchor-\/is-\/valid}}   &apply {\ttfamily jsx-\/a11y/anchor-\/is-\/valid} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-activedescendant-has-tabindex/}{\texttt{ astro/jsx-\/a11y/aria-\/activedescendant-\/has-\/tabindex}}   &apply {\ttfamily jsx-\/a11y/aria-\/activedescendant-\/has-\/tabindex} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-props/}{\texttt{ astro/jsx-\/a11y/aria-\/props}}   &apply {\ttfamily jsx-\/a11y/aria-\/props} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-proptypes/}{\texttt{ astro/jsx-\/a11y/aria-\/proptypes}}   &apply {\ttfamily jsx-\/a11y/aria-\/proptypes} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-role/}{\texttt{ astro/jsx-\/a11y/aria-\/role}}   &apply {\ttfamily jsx-\/a11y/aria-\/role} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-unsupported-elements/}{\texttt{ astro/jsx-\/a11y/aria-\/unsupported-\/elements}}   &apply {\ttfamily jsx-\/a11y/aria-\/unsupported-\/elements} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/autocomplete-valid/}{\texttt{ astro/jsx-\/a11y/autocomplete-\/valid}}   &apply {\ttfamily jsx-\/a11y/autocomplete-\/valid} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/click-events-have-key-events/}{\texttt{ astro/jsx-\/a11y/click-\/events-\/have-\/key-\/events}}   &apply {\ttfamily jsx-\/a11y/click-\/events-\/have-\/key-\/events} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/control-has-associated-label/}{\texttt{ astro/jsx-\/a11y/control-\/has-\/associated-\/label}}   &apply {\ttfamily jsx-\/a11y/control-\/has-\/associated-\/label} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/heading-has-content/}{\texttt{ astro/jsx-\/a11y/heading-\/has-\/content}}   &apply {\ttfamily jsx-\/a11y/heading-\/has-\/content} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/html-has-lang/}{\texttt{ astro/jsx-\/a11y/html-\/has-\/lang}}   &apply {\ttfamily jsx-\/a11y/html-\/has-\/lang} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/iframe-has-title/}{\texttt{ astro/jsx-\/a11y/iframe-\/has-\/title}}   &apply {\ttfamily jsx-\/a11y/iframe-\/has-\/title} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/img-redundant-alt/}{\texttt{ astro/jsx-\/a11y/img-\/redundant-\/alt}}   &apply {\ttfamily jsx-\/a11y/img-\/redundant-\/alt} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/interactive-supports-focus/}{\texttt{ astro/jsx-\/a11y/interactive-\/supports-\/focus}}   &apply {\ttfamily jsx-\/a11y/interactive-\/supports-\/focus} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/label-has-associated-control/}{\texttt{ astro/jsx-\/a11y/label-\/has-\/associated-\/control}}   &apply {\ttfamily jsx-\/a11y/label-\/has-\/associated-\/control} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/lang/}{\texttt{ astro/jsx-\/a11y/lang}}   &apply {\ttfamily jsx-\/a11y/lang} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/media-has-caption/}{\texttt{ astro/jsx-\/a11y/media-\/has-\/caption}}   &apply {\ttfamily jsx-\/a11y/media-\/has-\/caption} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/mouse-events-have-key-events/}{\texttt{ astro/jsx-\/a11y/mouse-\/events-\/have-\/key-\/events}}   &apply {\ttfamily jsx-\/a11y/mouse-\/events-\/have-\/key-\/events} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-access-key/}{\texttt{ astro/jsx-\/a11y/no-\/access-\/key}}   &apply {\ttfamily jsx-\/a11y/no-\/access-\/key} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-aria-hidden-on-focusable/}{\texttt{ astro/jsx-\/a11y/no-\/aria-\/hidden-\/on-\/focusable}}   &apply {\ttfamily jsx-\/a11y/no-\/aria-\/hidden-\/on-\/focusable} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-autofocus/}{\texttt{ astro/jsx-\/a11y/no-\/autofocus}}   &apply {\ttfamily jsx-\/a11y/no-\/autofocus} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-distracting-elements/}{\texttt{ astro/jsx-\/a11y/no-\/distracting-\/elements}}   &apply {\ttfamily jsx-\/a11y/no-\/distracting-\/elements} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-interactive-element-to-noninteractive-role/}{\texttt{ astro/jsx-\/a11y/no-\/interactive-\/element-\/to-\/noninteractive-\/role}}   &apply {\ttfamily jsx-\/a11y/no-\/interactive-\/element-\/to-\/noninteractive-\/role} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-element-interactions/}{\texttt{ astro/jsx-\/a11y/no-\/noninteractive-\/element-\/interactions}}   &apply {\ttfamily jsx-\/a11y/no-\/noninteractive-\/element-\/interactions} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-element-to-interactive-role/}{\texttt{ astro/jsx-\/a11y/no-\/noninteractive-\/element-\/to-\/interactive-\/role}}   &apply {\ttfamily jsx-\/a11y/no-\/noninteractive-\/element-\/to-\/interactive-\/role} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-tabindex/}{\texttt{ astro/jsx-\/a11y/no-\/noninteractive-\/tabindex}}   &apply {\ttfamily jsx-\/a11y/no-\/noninteractive-\/tabindex} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-redundant-roles/}{\texttt{ astro/jsx-\/a11y/no-\/redundant-\/roles}}   &apply {\ttfamily jsx-\/a11y/no-\/redundant-\/roles} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-static-element-interactions/}{\texttt{ astro/jsx-\/a11y/no-\/static-\/element-\/interactions}}   &apply {\ttfamily jsx-\/a11y/no-\/static-\/element-\/interactions} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/prefer-tag-over-role/}{\texttt{ astro/jsx-\/a11y/prefer-\/tag-\/over-\/role}}   &apply {\ttfamily jsx-\/a11y/prefer-\/tag-\/over-\/role} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/role-has-required-aria-props/}{\texttt{ astro/jsx-\/a11y/role-\/has-\/required-\/aria-\/props}}   &apply {\ttfamily jsx-\/a11y/role-\/has-\/required-\/aria-\/props} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/role-supports-aria-props/}{\texttt{ astro/jsx-\/a11y/role-\/supports-\/aria-\/props}}   &apply {\ttfamily jsx-\/a11y/role-\/supports-\/aria-\/props} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/scope/}{\texttt{ astro/jsx-\/a11y/scope}}   &apply {\ttfamily jsx-\/a11y/scope} rule to Astro components   &\\\cline{1-3}
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/tabindex-no-positive/}{\texttt{ astro/jsx-\/a11y/tabindex-\/no-\/positive}}   &apply {\ttfamily jsx-\/a11y/tabindex-\/no-\/positive} rule to Astro components   &\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md13173}{}\doxysubsection{\texorpdfstring{Extension Rules}{Extension Rules}}\label{README.md_autotoc_md13173}
+These rules extend the rules provided by ESLint itself to work well in Astro component\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-3}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-astro/rules/semi/}{\texttt{ astro/semi}}   &Require or disallow semicolons instead of ASI   &🔧   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md13174}{}\doxysubsection{\texorpdfstring{🍻 Contributing}{🍻 Contributing}}\label{README.md_autotoc_md13174}
+Welcome contributing!
+
+Please use Git\+Hub\textquotesingle{}s Issues/\+PRs.\hypertarget{README.md_autotoc_md13175}{}\doxysubsubsection{\texorpdfstring{Development Tools}{Development Tools}}\label{README.md_autotoc_md13175}
+
+\begin{DoxyItemize}
+\item {\ttfamily npm test} runs tests and measures coverage.
+\item {\ttfamily npm run update} runs in order to update readme and recommended configuration.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md13176}{}\doxysubsubsection{\texorpdfstring{Working With Rules}{Working With Rules}}\label{README.md_autotoc_md13176}
+This plugin uses \href{https://github.com/ota-meshi/astro-eslint-parser}{\texttt{ astro-\/eslint-\/parser}} for the parser. Check \href{https://ota-meshi.github.io/astro-eslint-parser/}{\texttt{ here}} to find out about AST.\hypertarget{README.md_autotoc_md13177}{}\doxysubsection{\texorpdfstring{❤️ Supporting}{❤️ Supporting}}\label{README.md_autotoc_md13177}
+If you are willing to see that this package continues to be maintained, please consider sponsoring me.
+
+\href{https://github.com/sponsors/ota-meshi}{\texttt{ }}\hypertarget{README.md_autotoc_md13178}{}\doxysubsection{\texorpdfstring{🔒 License}{🔒 License}}\label{README.md_autotoc_md13178}
+See the \mbox{[}LICENSE\mbox{]}(LICENSE) file for license rights and limitations (MIT). 

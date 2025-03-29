@@ -1,0 +1,349 @@
+\doxysection{node\+\_\+modules/d3-\/ease Directory Reference}
+\hypertarget{dir_8fd43dcda32df41be51631675055b29d}{}\label{dir_8fd43dcda32df41be51631675055b29d}\index{node\_modules/d3-\/ease Directory Reference@{node\_modules/d3-\/ease Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+{\itshape Easing} is a method of distorting time to control apparent motion in animation. It is most commonly used for \href{https://en.wikipedia.org/wiki/12_basic_principles_of_animation\#Slow_In_and_Slow_Out}{\texttt{ slow-\/in, slow-\/out}}. By easing time, \href{https://github.com/d3/d3-transition}{\texttt{ animated transitions}} are smoother and exhibit more plausible motion.
+
+The easing types in this module implement the ease method, which takes a normalized time {\itshape t} and returns the corresponding “eased” time {\itshape tʹ}. Both the normalized time and the eased time are typically in the range \mbox{[}0,1\mbox{]}, where 0 represents the start of the animation and 1 represents the end; some easing types, such as \doxylink{README.md_easeElastic}{elastic}, may return eased times slightly outside this range. A good easing type should return 0 if {\itshape t} = 0 and 1 if {\itshape t} = 1. See the \href{https://observablehq.com/@d3/easing}{\texttt{ easing explorer}} for a visual demonstration.
+
+These easing types are largely based on work by \href{http://robertpenner.com/easing/}{\texttt{ Robert Penner}}.\hypertarget{README.md_autotoc_md11222}{}\doxysubsection{\texorpdfstring{Installing}{Installing}}\label{README.md_autotoc_md11222}
+If you use npm, {\ttfamily npm install d3-\/ease}. You can also download the \href{https://github.com/d3/d3-ease/releases/latest}{\texttt{ latest release on Git\+Hub}}. For vanilla HTML in modern browsers, import d3-\/ease from Skypack\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{easeCubic\}\ from\ "{}https://cdn.skypack.dev/d3-\/ease@3"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ e\ =\ easeCubic(0.25);}
+\DoxyCodeLine{}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+For legacy environments, you can load d3-\/ease’s UMD bundle from an npm-\/based CDN such as js\+Delivr; a {\ttfamily d3} global is exported\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/npm/d3-\/ease@3"{}></script>}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ e\ =\ d3.easeCubic(0.25);}
+\DoxyCodeLine{}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\href{https://observablehq.com/@d3/easing-animations}{\texttt{ Try d3-\/ease in your browser.}}\hypertarget{README.md_autotoc_md11223}{}\doxysubsection{\texorpdfstring{API Reference}{API Reference}}\label{README.md_autotoc_md11223}
+\label{README.md__ease}%
+\Hypertarget{README.md__ease}%
+\# {\itshape ease}({\itshape t})
+
+Given the specified normalized time {\itshape t}, typically in the range \mbox{[}0,1\mbox{]}, returns the “eased” time {\itshape tʹ}, also typically in \mbox{[}0,1\mbox{]}. 0 represents the start of the animation and 1 represents the end. A good implementation returns 0 if {\itshape t} = 0 and 1 if {\itshape t} = 1. See the \href{https://observablehq.com/@d3/easing}{\texttt{ easing explorer}} for a visual demonstration. For example, to apply \doxylink{README.md_easeCubic}{cubic} easing\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ te\ =\ d3.easeCubic(t);}
+
+\end{DoxyCode}
+
+
+Similarly, to apply custom \doxylink{README.md_easeElastic}{elastic} easing\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Before\ the\ animation\ starts,\ create\ your\ easing\ function.}
+\DoxyCodeLine{const\ customElastic\ =\ d3.easeElastic.period(0.4);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ During\ the\ animation,\ apply\ the\ easing\ function.}
+\DoxyCodeLine{const\ te\ =\ customElastic(t);}
+
+\end{DoxyCode}
+
+
+\label{README.md_easeLinear}%
+\Hypertarget{README.md_easeLinear}%
+\# d3.{\bfseries{ease\+Linear}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/linear.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Linear easing; the identity function; {\itshape linear}({\itshape t}) returns {\itshape t}.
+
+\href{https://observablehq.com/@d3/easing\#linear}{\texttt{ }}
+
+\label{README.md_easePolyIn}%
+\Hypertarget{README.md_easePolyIn}%
+\# d3.{\bfseries{ease\+Poly\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/poly.js\#L3}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Polynomial easing; raises {\itshape t} to the specified \doxylink{README.md_poly_exponent}{exponent}. If the exponent is not specified, it defaults to 3, equivalent to \doxylink{README.md_easeCubicIn}{cubic\+In}.
+
+\href{https://observablehq.com/@d3/easing\#polyIn}{\texttt{ }}
+
+\label{README.md_easePolyOut}%
+\Hypertarget{README.md_easePolyOut}%
+\# d3.{\bfseries{ease\+Poly\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/poly.js\#L15}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse polynomial easing; equivalent to 1 -\/ \doxylink{README.md_easePolyIn}{poly\+In}(1 -\/ {\itshape t}). If the \doxylink{README.md_poly_exponent}{exponent} is not specified, it defaults to 3, equivalent to \doxylink{README.md_easeCubicOut}{cubic\+Out}.
+
+\href{https://observablehq.com/@d3/easing\#polyOut}{\texttt{ }}
+
+\label{README.md_easePoly}%
+\Hypertarget{README.md_easePoly}%
+\# d3.{\bfseries{ease\+Poly}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/poly.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easePolyInOut}%
+\Hypertarget{README.md_easePolyInOut}%
+\# d3.{\bfseries{ease\+Poly\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/poly.js\#L27}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric polynomial easing; scales \doxylink{README.md_easePolyIn}{poly\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easePolyOut}{poly\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}. If the \doxylink{README.md_poly_exponent}{exponent} is not specified, it defaults to 3, equivalent to \doxylink{README.md_easeCubic}{cubic}.
+
+\href{https://observablehq.com/@d3/easing\#polyInOut}{\texttt{ }}
+
+\label{README.md_poly_exponent}%
+\Hypertarget{README.md_poly_exponent}%
+\# {\itshape poly}.{\bfseries{exponent}}({\itshape e}) \href{https://github.com/d3/d3-ease/blob/master/src/poly.js\#L1}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Returns a new polynomial easing with the specified exponent {\itshape e}. For example, to create equivalents of \doxylink{README.md_easeLinear}{linear}, \doxylink{README.md_easeQuad}{quad}, and \doxylink{README.md_easeCubic}{cubic}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ linear\ =\ d3.easePoly.exponent(1);}
+\DoxyCodeLine{const\ quad\ =\ d3.easePoly.exponent(2);}
+\DoxyCodeLine{const\ cubic\ =\ d3.easePoly.exponent(3);}
+
+\end{DoxyCode}
+
+
+\label{README.md_easeQuadIn}%
+\Hypertarget{README.md_easeQuadIn}%
+\# d3.{\bfseries{ease\+Quad\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/quad.js\#L1}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Quadratic easing; equivalent to \doxylink{README.md_easePolyIn}{poly\+In}.\doxylink{README.md_poly_exponent}{exponent}(2).
+
+\href{https://observablehq.com/@d3/easing\#quadIn}{\texttt{ }}
+
+\label{README.md_easeQuadOut}%
+\Hypertarget{README.md_easeQuadOut}%
+\# d3.{\bfseries{ease\+Quad\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/quad.js\#L5}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse quadratic easing; equivalent to 1 -\/ \doxylink{README.md_easeQuadIn}{quad\+In}(1 -\/ {\itshape t}). Also equivalent to \doxylink{README.md_easePolyOut}{poly\+Out}.\doxylink{README.md_poly_exponent}{exponent}(2).
+
+\href{https://observablehq.com/@d3/easing\#quadOut}{\texttt{ }}
+
+\label{README.md_easeQuad}%
+\Hypertarget{README.md_easeQuad}%
+\# d3.{\bfseries{ease\+Quad}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/quad.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easeQuadInOut}%
+\Hypertarget{README.md_easeQuadInOut}%
+\# d3.{\bfseries{ease\+Quad\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/quad.js\#L9}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric quadratic easing; scales \doxylink{README.md_easeQuadIn}{quad\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easeQuadOut}{quad\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}. Also equivalent to \doxylink{README.md_easePoly}{poly}.\doxylink{README.md_poly_exponent}{exponent}(2).
+
+\href{https://observablehq.com/@d3/easing\#quadInOut}{\texttt{ }}
+
+\label{README.md_easeCubicIn}%
+\Hypertarget{README.md_easeCubicIn}%
+\# d3.{\bfseries{ease\+Cubic\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/cubic.js\#L1}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Cubic easing; equivalent to \doxylink{README.md_easePolyIn}{poly\+In}.\doxylink{README.md_poly_exponent}{exponent}(3).
+
+\href{https://observablehq.com/@d3/easing\#cubicIn}{\texttt{ }}
+
+\label{README.md_easeCubicOut}%
+\Hypertarget{README.md_easeCubicOut}%
+\# d3.{\bfseries{ease\+Cubic\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/cubic.js\#L5}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse cubic easing; equivalent to 1 -\/ \doxylink{README.md_easeCubicIn}{cubic\+In}(1 -\/ {\itshape t}). Also equivalent to \doxylink{README.md_easePolyOut}{poly\+Out}.\doxylink{README.md_poly_exponent}{exponent}(3).
+
+\href{https://observablehq.com/@d3/easing\#cubicOut}{\texttt{ }}
+
+\label{README.md_easeCubic}%
+\Hypertarget{README.md_easeCubic}%
+\# d3.{\bfseries{ease\+Cubic}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/cubic.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easeCubicInOut}%
+\Hypertarget{README.md_easeCubicInOut}%
+\# d3.{\bfseries{ease\+Cubic\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/cubic.js\#L9}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric cubic easing; scales \doxylink{README.md_easeCubicIn}{cubic\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easeCubicOut}{cubic\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}. Also equivalent to \doxylink{README.md_easePoly}{poly}.\doxylink{README.md_poly_exponent}{exponent}(3).
+
+\href{https://observablehq.com/@d3/easing\#cubicInOut}{\texttt{ }}
+
+\label{README.md_easeSinIn}%
+\Hypertarget{README.md_easeSinIn}%
+\# d3.{\bfseries{ease\+Sin\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/sin.js\#L4}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Sinusoidal easing; returns sin({\itshape t}).
+
+\href{https://observablehq.com/@d3/easing\#sinIn}{\texttt{ }}
+
+\label{README.md_easeSinOut}%
+\Hypertarget{README.md_easeSinOut}%
+\# d3.{\bfseries{ease\+Sin\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/sin.js\#L8}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse sinusoidal easing; equivalent to 1 -\/ \doxylink{README.md_easeSinIn}{sin\+In}(1 -\/ {\itshape t}).
+
+\href{https://observablehq.com/@d3/easing\#sinOut}{\texttt{ }}
+
+\label{README.md_easeSin}%
+\Hypertarget{README.md_easeSin}%
+\# d3.{\bfseries{ease\+Sin}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/sin.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easeSinInOut}%
+\Hypertarget{README.md_easeSinInOut}%
+\# d3.{\bfseries{ease\+Sin\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/sin.js\#L12}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric sinusoidal easing; scales \doxylink{README.md_easeSinIn}{sin\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easeSinOut}{sin\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}.
+
+\href{https://observablehq.com/@d3/easing\#sinInOut}{\texttt{ }}
+
+\label{README.md_easeExpIn}%
+\Hypertarget{README.md_easeExpIn}%
+\# d3.{\bfseries{ease\+Exp\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/exp.js\#L1}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Exponential easing; raises 2 to the exponent 10 \texorpdfstring{$\ast$}{*} ({\itshape t} -\/ 1).
+
+\href{https://observablehq.com/@d3/easing\#expIn}{\texttt{ }}
+
+\label{README.md_easeExpOut}%
+\Hypertarget{README.md_easeExpOut}%
+\# d3.{\bfseries{ease\+Exp\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/exp.js\#L5}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse exponential easing; equivalent to 1 -\/ \doxylink{README.md_easeExpIn}{exp\+In}(1 -\/ {\itshape t}).
+
+\href{https://observablehq.com/@d3/easing\#expOut}{\texttt{ }}
+
+\label{README.md_easeExp}%
+\Hypertarget{README.md_easeExp}%
+\# d3.{\bfseries{ease\+Exp}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/exp.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easeExpInOut}%
+\Hypertarget{README.md_easeExpInOut}%
+\# d3.{\bfseries{ease\+Exp\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/exp.js\#L9}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric exponential easing; scales \doxylink{README.md_easeExpIn}{exp\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easeExpOut}{exp\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}.
+
+\href{https://observablehq.com/@d3/easing\#expInOut}{\texttt{ }}
+
+\label{README.md_easeCircleIn}%
+\Hypertarget{README.md_easeCircleIn}%
+\# d3.{\bfseries{ease\+Circle\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/circle.js\#L1}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Circular easing.
+
+\href{https://observablehq.com/@d3/easing\#circleIn}{\texttt{ }}
+
+\label{README.md_easeCircleOut}%
+\Hypertarget{README.md_easeCircleOut}%
+\# d3.{\bfseries{ease\+Circle\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/circle.js\#L5}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse circular easing; equivalent to 1 -\/ \doxylink{README.md_easeCircleIn}{circle\+In}(1 -\/ {\itshape t}).
+
+\href{https://observablehq.com/@d3/easing\#circleOut}{\texttt{ }}
+
+\label{README.md_easeCircle}%
+\Hypertarget{README.md_easeCircle}%
+\# d3.{\bfseries{ease\+Circle}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/circle.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easeCircleInOut}%
+\Hypertarget{README.md_easeCircleInOut}%
+\# d3.{\bfseries{ease\+Circle\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/circle.js\#L9}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric circular easing; scales \doxylink{README.md_easeCircleIn}{circle\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easeCircleOut}{circle\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}.
+
+\href{https://observablehq.com/@d3/easing\#circleInOut}{\texttt{ }}
+
+\label{README.md_easeElasticIn}%
+\Hypertarget{README.md_easeElasticIn}%
+\# d3.{\bfseries{ease\+Elastic\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/elastic.js\#L5}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Elastic easing, like a rubber band. The \doxylink{README.md_elastic_amplitude}{amplitude} and \doxylink{README.md_elastic_period}{period} of the oscillation are configurable; if not specified, they default to 1 and 0.\+3, respectively.
+
+\href{https://observablehq.com/@d3/easing\#elasticIn}{\texttt{ }}
+
+\label{README.md_easeElastic}%
+\Hypertarget{README.md_easeElastic}%
+\# d3.{\bfseries{ease\+Elastic}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/elastic.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easeElasticOut}%
+\Hypertarget{README.md_easeElasticOut}%
+\# d3.{\bfseries{ease\+Elastic\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/elastic.js\#L18}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse elastic easing; equivalent to 1 -\/ \doxylink{README.md_easeElasticIn}{elastic\+In}(1 -\/ {\itshape t}).
+
+\href{https://observablehq.com/@d3/easing\#elasticOut}{\texttt{ }}
+
+\label{README.md_easeElasticInOut}%
+\Hypertarget{README.md_easeElasticInOut}%
+\# d3.{\bfseries{ease\+Elastic\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/elastic.js\#L31}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric elastic easing; scales \doxylink{README.md_easeElasticIn}{elastic\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easeElasticOut}{elastic\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}.
+
+\href{https://observablehq.com/@d3/easing\#elasticInOut}{\texttt{ }}
+
+\label{README.md_elastic_amplitude}%
+\Hypertarget{README.md_elastic_amplitude}%
+\# {\itshape elastic}.{\bfseries{amplitude}}({\itshape a}) \href{https://github.com/d3/d3-ease/blob/master/src/elastic.js\#L40}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Returns a new elastic easing with the specified amplitude {\itshape a}.
+
+\label{README.md_elastic_period}%
+\Hypertarget{README.md_elastic_period}%
+\# {\itshape elastic}.{\bfseries{period}}({\itshape p}) \href{https://github.com/d3/d3-ease/blob/master/src/elastic.js\#L41}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Returns a new elastic easing with the specified period {\itshape p}.
+
+\label{README.md_easeBackIn}%
+\Hypertarget{README.md_easeBackIn}%
+\# d3.{\bfseries{ease\+Back\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/back.js\#L3}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+\href{https://en.wikipedia.org/wiki/12_basic_principles_of_animation\#Anticipation}{\texttt{ Anticipatory}} easing, like a dancer bending his knees before jumping off the floor. The degree of \doxylink{README.md_back_overshoot}{overshoot} is configurable; if not specified, it defaults to 1.\+70158.
+
+\href{https://observablehq.com/@d3/easing\#backIn}{\texttt{ }}
+
+\label{README.md_easeBackOut}%
+\Hypertarget{README.md_easeBackOut}%
+\# d3.{\bfseries{ease\+Back\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/back.js\#L15}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse anticipatory easing; equivalent to 1 -\/ \doxylink{README.md_easeBackIn}{back\+In}(1 -\/ {\itshape t}).
+
+\href{https://observablehq.com/@d3/easing\#backOut}{\texttt{ }}
+
+\label{README.md_easeBack}%
+\Hypertarget{README.md_easeBack}%
+\# d3.{\bfseries{ease\+Back}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/back.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easeBackInOut}%
+\Hypertarget{README.md_easeBackInOut}%
+\# d3.{\bfseries{ease\+Back\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/back.js\#L27}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric anticipatory easing; scales \doxylink{README.md_easeBackIn}{back\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easeBackOut}{back\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}.
+
+\href{https://observablehq.com/@d3/easing\#backInOut}{\texttt{ }}
+
+\label{README.md_back_overshoot}%
+\Hypertarget{README.md_back_overshoot}%
+\# {\itshape back}.{\bfseries{overshoot}}({\itshape s}) \href{https://github.com/d3/d3-ease/blob/master/src/back.js\#L1}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Returns a new back easing with the specified overshoot {\itshape s}.
+
+\label{README.md_easeBounceIn}%
+\Hypertarget{README.md_easeBounceIn}%
+\# d3.{\bfseries{ease\+Bounce\+In}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/bounce.js\#L12}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Bounce easing, like a rubber ball.
+
+\href{https://observablehq.com/@d3/easing\#bounceIn}{\texttt{ }}
+
+\label{README.md_easeBounce}%
+\Hypertarget{README.md_easeBounce}%
+\# d3.{\bfseries{ease\+Bounce}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/bounce.js}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}} ~\newline
+\label{README.md_easeBounceOut}%
+\Hypertarget{README.md_easeBounceOut}%
+\# d3.{\bfseries{ease\+Bounce\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/bounce.js\#L16}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Reverse bounce easing; equivalent to 1 -\/ \doxylink{README.md_easeBounceIn}{bounce\+In}(1 -\/ {\itshape t}).
+
+\href{https://observablehq.com/@d3/easing\#bounceOut}{\texttt{ }}
+
+\label{README.md_easeBounceInOut}%
+\Hypertarget{README.md_easeBounceInOut}%
+\# d3.{\bfseries{ease\+Bounce\+In\+Out}}({\itshape t}) \href{https://github.com/d3/d3-ease/blob/master/src/bounce.js\#L20}{\texttt{ \texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}}}
+
+Symmetric bounce easing; scales \doxylink{README.md_easeBounceIn}{bounce\+In} for {\itshape t} in \mbox{[}0, 0.\+5\mbox{]} and \doxylink{README.md_easeBounceOut}{bounce\+Out} for {\itshape t} in \mbox{[}0.\+5, 1\mbox{]}.
+
+\href{https://observablehq.com/@d3/easing\#bounceInOut}{\texttt{ }} 

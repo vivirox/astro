@@ -1,0 +1,40 @@
+var searchData = [
+  [
+    'determineimagetype_0',
+    [
+      'DetermineImageType',
+      [
+        '../namespacesharp.html#a0eb20fe29ada937e987b100c9ac9ebb5',
+        1,
+        'sharp::DetermineImageType(void *buffer, size_t const length)',
+      ],
+      [
+        '../namespacesharp.html#aa06026d000a4eccd66d2f45ced9a95aa',
+        1,
+        'sharp::DetermineImageType(char const *file)',
+      ],
+    ],
+  ],
+  [
+    'display_5fsession_5fsummary_1',
+    [
+      'display_session_summary',
+      [
+        '../namespacetoken__tracker.html#a43770e110670b70db3e7ebbd92f5f74a',
+        1,
+        'token_tracker',
+      ],
+    ],
+  ],
+  [
+    'div_2',
+    [
+      'div',
+      [
+        '../class_zq_field.html#a59e6fbf6b60dac5e48676249e73d9712',
+        1,
+        'ZqField',
+      ],
+    ],
+  ],
+]

@@ -1,0 +1,105 @@
+\doxysection{node\+\_\+modules/@ungap/structured-\/clone Directory Reference}
+\hypertarget{dir_315aa0853f76e50422619060cf759474}{}\label{dir_315aa0853f76e50422619060cf759474}\index{node\_modules/"@ungap/structured-\/clone Directory Reference@{node\_modules/"@ungap/structured-\/clone Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/@ungap/structured-clone}{\texttt{ }} \href{https://github.com/ungap/structured-clone/actions}{\texttt{ }} \href{https://coveralls.io/github/ungap/structured-clone?branch=main}{\texttt{ }}
+
+An env agnostic serializer and deserializer with recursion ability and types beyond {\itshape JSON} from the {\itshape HTML} standard itself.
+
+
+\begin{DoxyItemize}
+\item \href{https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm\#supported_types}{\texttt{ Supported Types}}
+\begin{DoxyItemize}
+\item {\itshape not supported yet}\+: Blob, File, File\+List, Image\+Bitmap, Image\+Data or others non {\itshape JS} types but typed arrays are supported without major issues, but u/int8, u/int16, and u/int32 are the only safely suppored (right now).
+\item {\itshape not possible to implement}\+: the {\ttfamily \{transfer\+: \mbox{[}\mbox{]}\}} option can be passed but it\textquotesingle{}s completely ignored.
+\end{DoxyItemize}
+\item \href{https://developer.mozilla.org/en-US/docs/Web/API/structuredClone}{\texttt{ MDN Documentation}}
+\item \href{https://html.spec.whatwg.org/multipage/structured-data.html\#structuredserializeinternal}{\texttt{ Serializer}}
+\item \href{https://html.spec.whatwg.org/multipage/structured-data.html\#structureddeserialize}{\texttt{ Deserializer}}
+\end{DoxyItemize}
+
+Serialized values can be safely stringified as {\itshape JSON} too, and deserialization resurrect all values, even recursive, or more complex than what {\itshape JSON} allows.\hypertarget{README.md_autotoc_md7024}{}\doxysubsubsection{\texorpdfstring{Examples}{Examples}}\label{README.md_autotoc_md7024}
+Check the \href{./test/index.js}{\texttt{ 100\% test coverage}} to know even more.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ as\ default\ export}
+\DoxyCodeLine{import\ structuredClone\ from\ '@ungap/structured-\/clone';}
+\DoxyCodeLine{const\ cloned\ =\ structuredClone(\{any:\ 'serializable'\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ as\ independent\ serializer/deserializer}
+\DoxyCodeLine{import\ \{serialize,\ deserialize\}\ from\ '@ungap/structured-\/clone';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ the\ result\ can\ be\ stringified\ as\ JSON\ without\ issues}
+\DoxyCodeLine{//\ even\ if\ there\ is\ recursive\ data,\ bigint\ values,}
+\DoxyCodeLine{//\ typed\ arrays,\ and\ so\ on}
+\DoxyCodeLine{const\ serialized\ =\ serialize(\{any:\ 'serializable'\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ the\ result\ will\ be\ a\ replica\ of\ the\ original\ object}
+\DoxyCodeLine{const\ deserialized\ =\ deserialize(serialized);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7025}{}\doxysubsubsubsection{\texorpdfstring{Global Polyfill}{Global Polyfill}}\label{README.md_autotoc_md7025}
+Note\+: Only monkey patch the global if needed. This polyfill works just fine as an explicit import\+: {\ttfamily import structured\+Clone from "{}@ungap/structured-\/clone"{}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Attach\ the\ polyfill\ as\ a\ Global\ function}
+\DoxyCodeLine{import\ structuredClone\ from\ "{}@ungap/structured-\/clone"{};}
+\DoxyCodeLine{if\ (!("{}structuredClone"{}\ in\ globalThis))\ \{}
+\DoxyCodeLine{\ \ globalThis.structuredClone\ =\ structuredClone;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Or\ don't\ monkey\ patch}
+\DoxyCodeLine{import\ structuredClone\ from\ "{}@ungap/structured-\/clone"{}}
+\DoxyCodeLine{//\ Just\ use\ it\ in\ the\ file}
+\DoxyCodeLine{structuredClone()}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note}}\+: Do not attach this module\textquotesingle{}s default export directly to the global scope, whithout a conditional guard to detect a native implementation. In environments where there is a native global implementation of {\ttfamily structured\+Clone()} already, assignment to the global object will result in an infinite loop when {\ttfamily global\+This.\+structured\+Clone()} is called. See the example above for a safe way to provide the polyfill globally in your project.\hypertarget{README.md_autotoc_md7026}{}\doxysubsubsection{\texorpdfstring{Extra Features}{Extra Features}}\label{README.md_autotoc_md7026}
+There is no middle-\/ground between the structured clone algorithm and JSON\+:
+
+
+\begin{DoxyItemize}
+\item JSON is more relaxed about incompatible values\+: it just ignores these
+\item Structured clone is inflexible regarding incompatible values, yet it makes specialized instances impossible to reconstruct, plus it doesn\textquotesingle{}t offer any helper, such as {\ttfamily to\+JSON()}, to make serialization possible, or better, with specific cases
+\end{DoxyItemize}
+
+This module specialized {\ttfamily serialize} export offers, within the optional extra argument, a {\bfseries{lossy}} property to avoid throwing when incompatible types are found down the road (function, symbol, ...), so that it is possible to send with less worrying about thrown errors.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ as\ default\ export}
+\DoxyCodeLine{import\ structuredClone\ from\ '@ungap/structured-\/clone';}
+\DoxyCodeLine{const\ cloned\ =\ structuredClone(}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ method()\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ ignored,\ won't\ be\ cloned}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ special:\ Symbol('also\ ignored')}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ //\ avoid\ throwing}
+\DoxyCodeLine{\ \ \ \ lossy:\ true,}
+\DoxyCodeLine{\ \ \ \ //\ avoid\ throwing\ *and*\ looks\ for\ toJSON}
+\DoxyCodeLine{\ \ \ \ json:\ true}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+The behavior is the same found in {\itshape JSON} when it comes to {\itshape Array}, so that unsupported values will result as {\ttfamily null} placeholders instead.\hypertarget{README.md_autotoc_md7027}{}\doxysubsubsubsection{\texorpdfstring{to\+JSON}{to\+JSON}}\label{README.md_autotoc_md7027}
+If {\ttfamily lossy} option is not enough, {\ttfamily json} will actually enforce {\ttfamily lossy} and also check for {\ttfamily to\+JSON} method when objects are parsed.
+
+Alternative, the {\ttfamily json} exports combines all features\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{stringify,\ parse\}\ from\ '@ungap/structured-\/clone/json';}
+\DoxyCodeLine{}
+\DoxyCodeLine{parse(stringify(\{any:\ 'serializable'\}));}
+
+\end{DoxyCode}
+ 

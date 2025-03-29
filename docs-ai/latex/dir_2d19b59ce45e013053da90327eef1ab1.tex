@@ -1,0 +1,138 @@
+\doxysection{node\+\_\+modules/@vitejs/plugin-\/react Directory Reference}
+\hypertarget{dir_2d19b59ce45e013053da90327eef1ab1}{}\label{dir_2d19b59ce45e013053da90327eef1ab1}\index{node\_modules/"@vitejs/plugin-\/react Directory Reference@{node\_modules/"@vitejs/plugin-\/react Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+The default Vite plugin for React projects.
+
+
+\begin{DoxyItemize}
+\item enable \href{https://www.npmjs.com/package/react-refresh}{\texttt{ Fast Refresh}} in development (requires react \texorpdfstring{$>$}{>}= 16.\+9)
+\item use the \href{https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html}{\texttt{ automatic JSX runtime}}
+\item use custom Babel plugins/presets
+\item small installation size
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ vite.config.js}
+\DoxyCodeLine{import\ \{\ defineConfig\ \}\ from\ 'vite'}
+\DoxyCodeLine{import\ react\ from\ '@vitejs/plugin-\/react'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ plugins:\ [react()],}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7211}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md7211}
+\hypertarget{README.md_autotoc_md7212}{}\doxysubsubsection{\texorpdfstring{include/exclude}{include/exclude}}\label{README.md_autotoc_md7212}
+Includes {\ttfamily .js}, {\ttfamily .jsx}, {\ttfamily .ts} \& {\ttfamily .tsx} by default. This option can be used to add fast refresh to {\ttfamily .mdx} files\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defineConfig\ \}\ from\ 'vite'}
+\DoxyCodeLine{import\ react\ from\ '@vitejs/plugin-\/react'}
+\DoxyCodeLine{import\ mdx\ from\ '@mdx-\/js/rollup'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ plugins:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ enforce:\ 'pre',\ ...mdx()\ \},}
+\DoxyCodeLine{\ \ \ \ react(\{\ include:\ /\(\backslash\).(mdx|js|jsx|ts|tsx)\$/\ \}),}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+{\ttfamily node\+\_\+modules} are never processed by this plugin (but esbuild will) \end{quote}
+\hypertarget{README.md_autotoc_md7213}{}\doxysubsubsection{\texorpdfstring{jsx\+Import\+Source}{jsx\+Import\+Source}}\label{README.md_autotoc_md7213}
+Control where the JSX factory is imported from. Default to `\textquotesingle{}react'\`{}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{react(\{\ jsxImportSource:\ '@emotion/react'\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7214}{}\doxysubsubsection{\texorpdfstring{jsx\+Runtime}{jsx\+Runtime}}\label{README.md_autotoc_md7214}
+By default, the plugin uses the \href{https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html}{\texttt{ automatic JSX runtime}}. However, if you encounter any issues, you may opt out using the {\ttfamily jsx\+Runtime} option.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{react(\{\ jsxRuntime:\ 'classic'\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7215}{}\doxysubsubsection{\texorpdfstring{babel}{babel}}\label{README.md_autotoc_md7215}
+The {\ttfamily babel} option lets you add plugins, presets, and \href{https://babeljs.io/docs/en/options}{\texttt{ other configuration}} to the Babel transformation performed on each included file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{react(\{}
+\DoxyCodeLine{\ \ babel:\ \{}
+\DoxyCodeLine{\ \ \ \ presets:\ [...],}
+\DoxyCodeLine{\ \ \ \ //\ Your\ plugins\ run\ before\ any\ built-\/in\ transform\ (eg:\ Fast\ Refresh)}
+\DoxyCodeLine{\ \ \ \ plugins:\ [...],}
+\DoxyCodeLine{\ \ \ \ //\ Use\ .babelrc\ files}
+\DoxyCodeLine{\ \ \ \ babelrc:\ true,}
+\DoxyCodeLine{\ \ \ \ //\ Use\ babel.config.js\ files}
+\DoxyCodeLine{\ \ \ \ configFile:\ true,}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+Note\+: When not using plugins, only esbuild is used for production builds, resulting in faster builds.\hypertarget{README.md_autotoc_md7216}{}\doxysubsubsubsection{\texorpdfstring{Proposed syntax}{Proposed syntax}}\label{README.md_autotoc_md7216}
+If you are using ES syntax that are still in proposal status (e.\+g. class properties), you can selectively enable them with the {\ttfamily babel.\+parser\+Opts.\+plugins} option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{react(\{}
+\DoxyCodeLine{\ \ babel:\ \{}
+\DoxyCodeLine{\ \ \ \ parserOpts:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ plugins:\ ['decorators-\/legacy'],}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+This option does not enable {\itshape code transformation}. That is handled by esbuild.
+
+{\bfseries{Note\+:}} Type\+Script syntax is handled automatically.
+
+Here\textquotesingle{}s the \href{https://babeljs.io/docs/en/babel-parser\#ecmascript-proposalshttpsgithubcombabelproposals}{\texttt{ complete list of Babel parser plugins}}.\hypertarget{README.md_autotoc_md7217}{}\doxysubsection{\texorpdfstring{Middleware mode}{Middleware mode}}\label{README.md_autotoc_md7217}
+In \href{https://vitejs.dev/config/server-options.html\#server-middlewaremode}{\texttt{ middleware mode}}, you should make sure your entry {\ttfamily index.\+html} file is transformed by Vite. Here\textquotesingle{}s an example for an Express server\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{app.get('/',\ async\ (req,\ res,\ next)\ =>\ \{}
+\DoxyCodeLine{\ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ let\ html\ =\ fs.readFileSync(path.resolve(root,\ 'index.html'),\ 'utf-\/8')}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Transform\ HTML\ using\ Vite\ plugins.}
+\DoxyCodeLine{\ \ \ \ html\ =\ await\ viteServer.transformIndexHtml(req.url,\ html)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ res.send(html)}
+\DoxyCodeLine{\ \ \}\ catch\ (e)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ next(e)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+Otherwise, you\textquotesingle{}ll probably get this error\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Uncaught\ Error:\ @vitejs/plugin-\/react\ can't\ detect\ preamble.\ Something\ is\ wrong.}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7218}{}\doxysubsection{\texorpdfstring{Consistent components exports}{Consistent components exports}}\label{README.md_autotoc_md7218}
+For React refresh to work correctly, your file should only export React components. You can find a good explanation in the \href{https://www.gatsbyjs.com/docs/reference/local-development/fast-refresh/\#how-it-works}{\texttt{ Gatsby docs}}.
+
+If an incompatible change in exports is found, the module will be invalidated and HMR will propagate. To make it easier to export simple constants alongside your component, the module is only invalidated when their value changes.
+
+You can catch mistakes and get more detailed warning with this \href{https://github.com/ArnaudBarre/eslint-plugin-react-refresh}{\texttt{ eslint rule}}. 

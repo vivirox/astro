@@ -1,0 +1,214 @@
+\doxysection{node\+\_\+modules/magicast Directory Reference}
+\hypertarget{dir_054dbff75407af8fc5fa5de33b0b7681}{}\label{dir_054dbff75407af8fc5fa5de33b0b7681}\index{node\_modules/magicast Directory Reference@{node\_modules/magicast Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/magicast}{\texttt{ }} \href{https://npmjs.com/package/magicast}{\texttt{ }} \href{https://bundlephobia.com/result?p=magicast}{\texttt{ }} \href{https://codecov.io/gh/unjs/magicast}{\texttt{ }} \href{https://github.com/unjs/magicast/blob/main/LICENSE}{\texttt{ }} \href{https://www.jsdocs.io/package/magicast}{\texttt{ }}
+
+Programmatically modify Java\+Script and Type\+Script source codes with a simplified, elegant and familiar syntax. Built on top of the \href{https://en.wikipedia.org/wiki/Abstract_syntax_tree}{\texttt{ AST}} parsed by \href{https://github.com/benjamn/recast}{\texttt{ recast}} and \href{https://babeljs.io/}{\texttt{ babel}}.
+
+❯ 🧙🏼 {\bfseries{Magical}} modify a JS/\+TS file and write back magically just like JSON!~\newline
+ ❯ 🔀 {\bfseries{Exports/\+Import}} manipulate module\textquotesingle{}s imports and exports at ease~\newline
+ ❯ 💼 {\bfseries{Function Arguments}} easily manipulate arguments passed to a function call, like {\ttfamily define\+Config()}~\newline
+ ❯ 🎨 {\bfseries{Smart Formatting}} preseves the formatting style (quotes, tabs, etc.) from the original code~\newline
+ ❯ 🧑‍💻 {\bfseries{Readable}} get rid of the complexity of AST manipulation and make your code super readable~\newline
+\hypertarget{README.md_autotoc_md22175}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md22175}
+Install npm package\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ using\ yarn}
+\DoxyCodeLine{yarn\ add\ -\/-\/dev\ magicast}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ using\ npm}
+\DoxyCodeLine{npm\ install\ -\/D\ magicast}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ using\ pnpm}
+\DoxyCodeLine{pnpm\ add\ -\/D\ magicast}
+
+\end{DoxyCode}
+
+
+Import utilities\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ESM\ /\ Bundler}
+\DoxyCodeLine{import\ \{\ parseModule,\ generateCode,\ builders,\ createNode\ \}\ from\ "{}magicast"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ parseModule,\ generateCode,\ builders,\ createNode\ \}\ =\ require("{}magicast"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22176}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{README.md_autotoc_md22176}
+{\bfseries{Example\+:}} Modify a file\+:
+
+{\ttfamily config.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ \{}
+\DoxyCodeLine{\ \ foo:\ ["{}a"{}],}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+Code to modify and append {\ttfamily b} to {\ttfamily foo} prop of default\+Export\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ loadFile,\ writeFile\ \}\ from\ "{}magicast"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mod\ =\ await\ loadFile("{}config.js"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{mod.exports.default.foo.push("{}b"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ writeFile(mod,\ "{}config.js"{});}
+
+\end{DoxyCode}
+
+
+Updated {\ttfamily config.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ \{}
+\DoxyCodeLine{\ \ foo:\ ["{}a"{},\ "{}b"{}],}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} Directly use AST utils\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseModule,\ generateCode\ \}\ from\ "{}magicast"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Parse\ to\ AST}
+\DoxyCodeLine{const\ mod\ =\ parseModule(`export\ default\ \{\ \}`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Ensure\ foo\ is\ an\ array}
+\DoxyCodeLine{mod.exports.default.foo\ ||=\ [];}
+\DoxyCodeLine{//\ Add\ a\ new\ array\ member}
+\DoxyCodeLine{mod.exports.default.foo.push("{}b"{});}
+\DoxyCodeLine{mod.exports.default.foo.unshift("{}a"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Generate\ code}
+\DoxyCodeLine{const\ \{\ code,\ map\ \}\ =\ generateCode(mod);}
+
+\end{DoxyCode}
+
+
+Generated code\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ \{}
+\DoxyCodeLine{\ \ foo:\ ["{}a"{},\ "{}b"{}],}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} Get the AST directly\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseModule,\ generateCode\ \}\ from\ "{}magicast"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mod\ =\ parseModule(`export\ default\ \{\ \}`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ast\ =\ mod.exports.default.\$ast;}
+\DoxyCodeLine{//\ do\ something\ with\ ast}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} Function arguments\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseModule,\ generateCode\ \}\ from\ "{}magicast"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mod\ =\ parseModule(`export\ default\ defineConfig(\{\ foo:\ 'bar'\ \})`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Support\ for\ both\ bare\ object\ export\ and\ \`{}defineConfig`\ wrapper}
+\DoxyCodeLine{const\ options\ =}
+\DoxyCodeLine{\ \ mod.exports.default.\$type\ ===\ "{}function-\/call"{}}
+\DoxyCodeLine{\ \ \ \ ?\ mod.exports.default.\$args[0]}
+\DoxyCodeLine{\ \ \ \ :\ mod.exports.default;}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(options.foo);\ //\ bar}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} Create a function call\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parseModule,\ generateCode,\ builders\ \}\ from\ "{}magicast"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mod\ =\ parseModule(`export\ default\ \{\}`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ (mod.exports.default.list\ =\ builders.functionCall(}
+\DoxyCodeLine{\ \ "{}create"{},}
+\DoxyCodeLine{\ \ [1,\ 2,\ 3],}
+\DoxyCodeLine{));}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(mod.generateCode());\ //\ export\ default\ \{\ list:\ create([1,\ 2,\ 3])\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22177}{}\doxysubsection{\texorpdfstring{Notes}{Notes}}\label{README.md_autotoc_md22177}
+As Java\+Script is a very dynamic language, you should be aware that Magicast\textquotesingle{}s convention {\bfseries{CAN NOT cover all possible cases}}. Magicast serves as a simple and maintainable interface to update static-\/ish Java\+Script code. When interacting with Magicast node, be aware that every option might have chance to throw an error depending on the input code. We recommend to always wrap the code in a {\ttfamily try/catch} block (even better to do some defensive coding), for example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ loadFile,\ writeFile\ \}\ from\ "{}magicast"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ updateConfig()\ \{}
+\DoxyCodeLine{\ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ const\ mod\ =\ await\ loadFile("{}config.js"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ mod.exports.default.foo.push("{}b"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ await\ writeFile(mod);}
+\DoxyCodeLine{\ \ \}\ catch\ \{}
+\DoxyCodeLine{\ \ \ \ console.error("{}Unable\ to\ update\ config.js"{});}
+\DoxyCodeLine{\ \ \ \ console.error(}
+\DoxyCodeLine{\ \ \ \ \ \ "{}Please\ update\ it\ manually\ with\ the\ following\ instructions:\ ..."{},}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{\ \ \ \ //\ handle\ error}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22178}{}\doxysubsection{\texorpdfstring{High Level Helpers}{High Level Helpers}}\label{README.md_autotoc_md22178}
+We also experiment to provide a few high level helpers to make common tasks easier. You could import them from {\ttfamily magicast/helpers}. They might be moved to a separate package in the future.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ deepMergeObject,}
+\DoxyCodeLine{\ \ addNuxtModule,}
+\DoxyCodeLine{\ \ addVitePlugin,}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\}\ from\ "{}magicast/helpers"{};}
+
+\end{DoxyCode}
+
+
+We recommend to check out the \href{./src/helpers}{\texttt{ source code}} and \href{./test/helpers}{\texttt{ test cases}} for more details.\hypertarget{README.md_autotoc_md22179}{}\doxysubsection{\texorpdfstring{Development}{Development}}\label{README.md_autotoc_md22179}
+
+\begin{DoxyItemize}
+\item Clone this repository
+\item Install latest LTS version of \href{https://nodejs.org/en/}{\texttt{ Node.\+js}}
+\item Enable \href{https://github.com/nodejs/corepack}{\texttt{ Corepack}} using {\ttfamily corepack enable}
+\item Install dependencies using {\ttfamily pnpm install}
+\item Run interactive tests using {\ttfamily pnpm dev}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md22180}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md22180}
+Made with 💛
+
+Published under \href{./LICENSE}{\texttt{ MIT License}}. 

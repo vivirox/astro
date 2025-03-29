@@ -1,0 +1,420 @@
+\chapter{README-\/es}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es}{}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es}\index{README-\/es@{README-\/es}}
+ 🎉 announcing \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}}. {\itshape run anywhere, multi-\/environment, encrypted envs}. 
+
+~
+
+
+
+
+
+ \textsuperscript{ \href{https://github.com/sponsors/motdotla}{\texttt{ Dotenv es apoyado por la comunidad.}} } 
+
+ \textsuperscript{Gracias espaciales a\+:} ~\newline
+ ~\newline
+ \href{https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=dotenv_p_20220831}{\texttt{   {\bfseries{Warp es una rápida e impresionante terminal basada en Rust, reinventado para funcionar como una aplicación moderna.}}  \textsuperscript{Haga más en la CLI con edición de texto real, resultado básado en bloques, y busqueda de comandos de IA.}  }} ~\newline
+ \href{https://retool.com/?utm_source=sponsor&utm_campaign=dotenv}{\texttt{   {\bfseries{Retool ayuda a los desarrolladores a crear software interno personalizado, como aplicaciones CRUD y paneles de administración, realmente rápido.}}  \textsuperscript{Construya Interfaces de Usuario de forma visual con componentes flexibles, conéctese a cualquier fuente de datos, y escriba lógica de negocio en Java\+Script.}  }} ~\newline
+ \href{https://workos.com/?utm_campaign=github_repo&utm_medium=referral&utm_content=dotenv&utm_source=github}{\texttt{   {\bfseries{Su Apliación, Lista para la Empresa.}}  \textsuperscript{Agrega Inicio de Sesión Único, Autenticación Multi-\/\+Factor, y mucho más, en minutos en lugar de meses.}  }} \DoxyHorRuler{0}
+ ~\newline
+ ~\newline
+ ~\newline
+ ~\newline
+
+
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12206}{}\doxysection{\texorpdfstring{dotenv \href{https://www.npmjs.com/package/dotenv}{\texttt{ }}}{dotenv \href{https://www.npmjs.com/package/dotenv}{\texttt{ }}}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12206}
+
+
+Dotenv es un módulo de dependencia cero que carga las variables de entorno desde un archivo {\ttfamily .env} en \href{https://nodejs.org/docs/latest/api/process.html\#process_process_env}{\texttt{ {\ttfamily process.\+env}}}. El almacenamiento de la configuración del entorno separado del código está basado en la metodología \href{http://12factor.net/config}{\texttt{ The Twelve-\/\+Factor App}}.
+
+\href{https://github.com/feross/standard}{\texttt{ }} \mbox{[}\mbox{]}(LICENSE)\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12207}{}\doxysubsection{\texorpdfstring{Instalación}{Instalación}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12207}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ instalación\ local\ (recomendado)}
+\DoxyCodeLine{npm\ install\ dotenv\ -\/-\/save}
+
+\end{DoxyCode}
+
+
+O installación con yarn? {\ttfamily yarn add dotenv}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12208}{}\doxysubsection{\texorpdfstring{Uso}{Uso}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12208}
+Cree un archivo {\ttfamily .env} en la raíz de su proyecto\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{S3\_BUCKET="{}YOURS3BUCKET"{}}
+\DoxyCodeLine{SECRET\_KEY="{}YOURSECRETKEYGOESHERE"{}}
+
+\end{DoxyCode}
+
+
+Tan prónto como sea posible en su aplicación, importe y configure dotenv\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config()}
+\DoxyCodeLine{console.log(process.env)\ //\ elimine\ esto\ después\ que\ haya\ confirmado\ que\ esta\ funcionando}
+
+\end{DoxyCode}
+
+
+.. o usa ES6?
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ dotenv\ from\ 'dotenv'\ //\ vea\ en\ https://github.com/motdotla/dotenv\#como-\/uso-\/dotenv-\/con-\/import}
+\DoxyCodeLine{//\ REVISAR\ LINK\ DE\ REFERENCIA\ DE\ IMPORTACIÓN}
+\DoxyCodeLine{dotenv.config()}
+\DoxyCodeLine{import\ express\ from\ 'express'}
+
+\end{DoxyCode}
+
+
+Eso es todo. {\ttfamily process.\+env} ahora tiene las claves y los valores que definiste en tu archivo {\ttfamily .env}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config()}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{s3.getBucketCors(\{Bucket:\ process.env.S3\_BUCKET\},\ function(err,\ data)\ \{\})}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12209}{}\doxysubsubsection{\texorpdfstring{Valores multilínea}{Valores multilínea}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12209}
+Si necesita variables de varias líneas, por ejemplo, claves privadas, ahora se admiten en la versión ({\ttfamily \texorpdfstring{$>$}{>}= v15.\+0.\+0}) con saltos de línea\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{PRIVATE\_KEY="{}-\/-\/-\/-\/-\/BEGIN\ RSA\ PRIVATE\ KEY-\/-\/-\/-\/-\/}
+\DoxyCodeLine{...}
+\DoxyCodeLine{Kh9NV...}
+\DoxyCodeLine{...}
+\DoxyCodeLine{-\/-\/-\/-\/-\/END\ RSA\ PRIVATE\ KEY-\/-\/-\/-\/-\/"{}}
+
+\end{DoxyCode}
+
+
+Alternativamente, puede usar comillas dobles y usar el carácter {\ttfamily \textbackslash{}n}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{PRIVATE\_KEY="{}-\/-\/-\/-\/-\/BEGIN\ RSA\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)nKh9NV...\(\backslash\)n-\/-\/-\/-\/-\/END\ RSA\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n"{}}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12210}{}\doxysubsubsection{\texorpdfstring{Comentarios}{Comentarios}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12210}
+Los comentarios pueden ser agregados en tu archivo o en la misma línea\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ This\ is\ a\ comment}
+\DoxyCodeLine{SECRET\_KEY=YOURSECRETKEYGOESHERE\ \#\ comment}
+\DoxyCodeLine{SECRET\_HASH="{}something-\/with-\/a-\/\#-\/hash"{}}
+
+\end{DoxyCode}
+
+
+Los comentarios comienzan donde existe un {\ttfamily \#}, entonces, si su valor contiene un {\ttfamily \#}, enciérrelo entre comillas. Este es un cambio importante desde la versión {\ttfamily \texorpdfstring{$>$}{>}= v15.\+0.\+0} en adelante.\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12211}{}\doxysubsubsection{\texorpdfstring{Análisis}{Análisis}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12211}
+El motor que analiza el contenido de su archivo que contiene variables de entorno está disponible para su uso. Este Acepta una Cadena o un Búfer y devolverá un Objeto con las claves y los valores analizados.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ buf\ =\ Buffer.from('BASICO=basico')}
+\DoxyCodeLine{const\ config\ =\ dotenv.parse(buf)\ //\ devolverá\ un\ objeto}
+\DoxyCodeLine{console.log(typeof\ config,\ config)\ //\ objeto\ \{\ BASICO\ :\ 'basico'\ \}}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12212}{}\doxysubsubsection{\texorpdfstring{Precarga}{Precarga}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12212}
+Puede usar el {\ttfamily -\/-\/require} ({\ttfamily -\/r}) \href{https://nodejs.org/api/cli.html\#-r---require-module}{\texttt{ opción de línea de comando}} para precargar dotenv. Al hacer esto, no necesita requerir ni cargar dotnev en el código de su aplicación.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ -\/r\ dotenv/config\ tu\_script.js}
+
+\end{DoxyCode}
+
+
+Las opciones de configuración a continuación se admiten como argumentos de línea de comandos en el formato {\ttfamily dotenv\+\_\+config\+\_\+\texorpdfstring{$<$}{<}option\texorpdfstring{$>$}{>}=value}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ -\/r\ dotenv/config\ tu\_script.js\ dotenv\_config\_path=/custom/path/to/.env\ dotenv\_config\_debug=true}
+
+\end{DoxyCode}
+
+
+Además, puede usar variables de entorno para establecer opciones de configuración. Los argumentos de línea de comandos precederán a estos.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ DOTENV\_CONFIG\_<OPTION>=value\ node\ -\/r\ dotenv/config\ tu\_script.js}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ DOTENV\_CONFIG\_ENCODING=latin1\ DOTENV\_CONFIG\_DEBUG=true\ node\ -\/r\ dotenv/config\ tu\_script.js\ dotenv\_config\_path=/custom/path/to/.env}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12213}{}\doxysubsubsection{\texorpdfstring{Expansión Variable}{Expansión Variable}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12213}
+Necesitaras agregar el valor de otro variable en una de sus variables? Usa \href{https://github.com/motdotla/dotenv-expand}{\texttt{ dotenv-\/expand}}.\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12214}{}\doxysubsubsection{\texorpdfstring{Sincronizando}{Sincronizando}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12214}
+Necesitas mentener sincronizados los archivos {\ttfamily .env} entre maquinas, entornos, o miembros del equipo? Usa \href{https://github.com/dotenv-org/dotenv-vault}{\texttt{ dotenv-\/vault}}.\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12215}{}\doxysubsection{\texorpdfstring{Ejemplos}{Ejemplos}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12215}
+Vea \href{https://github.com/dotenv-org/examples}{\texttt{ ejemplos}} sobre el uso de dotenv con varios frameworks, lenguajes y configuraciones.
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-nodejs}{\texttt{ nodejs}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-nodejs-debug}{\texttt{ nodejs (depurar en)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-nodejs-override}{\texttt{ nodejs (anular en)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-esm}{\texttt{ esm}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-esm-preload}{\texttt{ esm (precarga)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-typescript}{\texttt{ typescript}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-typescript-parse}{\texttt{ typescript parse}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-typescript-config}{\texttt{ typescript config}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-webpack}{\texttt{ webpack}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-webpack2}{\texttt{ webpack (plugin)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-react}{\texttt{ react}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-react-typescript}{\texttt{ react (typescript)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-express}{\texttt{ express}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/dotenv-nestjs}{\texttt{ nestjs}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12216}{}\doxysubsection{\texorpdfstring{Documentación}{Documentación}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12216}
+Dotenv expone dos funciones\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily configuración}
+\item {\ttfamily analizar}
+\end{DoxyItemize}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12217}{}\doxysubsubsection{\texorpdfstring{Configuración}{Configuración}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12217}
+{\ttfamily Configuración} leerá su archivo {\ttfamily .env}, analizará el contenido, lo asignará a \href{https://nodejs.org/docs/latest/api/process.html\#process_process_env}{\texttt{ {\ttfamily process.\+env}}}, y devolverá un Objeto con una clave {\ttfamily parsed} que contiene el contenido cargado o una clave {\ttfamily error} si falla.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ result\ =\ dotenv.config()}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (result.error)\ \{}
+\DoxyCodeLine{\ \ throw\ result.error}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result.parsed)}
+
+\end{DoxyCode}
+
+
+Adicionalmente, puede pasar opciones a {\ttfamily configuracion}.\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12218}{}\doxysubsubsubsection{\texorpdfstring{Opciones}{Opciones}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12218}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12219}{}\doxysubsubsubsubsection{\texorpdfstring{Ruta}{Ruta}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12219}
+Por defecto\+: `path.\+resolve(process.\+cwd(), '.env\textquotesingle{})\`{}
+
+Especifique una ruta personalizada si el archivo que contiene las variables de entorno se encuentra localizado en otro lugar.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ path:\ '/personalizado/ruta/a/.env'\ \})}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12220}{}\doxysubsubsubsubsection{\texorpdfstring{Codificación}{Codificación}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12220}
+Por defecto\+: {\ttfamily utf8}
+
+Especifique la codificación del archivo que contiene las variables de entorno.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ encoding:\ 'latin1'\ \})}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12221}{}\doxysubsubsubsubsection{\texorpdfstring{Depurar}{Depurar}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12221}
+Por defecto\+: {\ttfamily false}
+
+Active el registro de ayuda para depurar por qué ciertas claves o valores no se inician como lo esperabas.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ debug:\ process.env.DEBUG\ \})}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12222}{}\doxysubsubsubsubsection{\texorpdfstring{Anular}{Anular}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12222}
+Por defecto\+: {\ttfamily false}
+
+Anule cualquier variable de entorno que ya se haya configurada en su maquina con los valores de su archivo .env.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ override:\ true\ \})}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12223}{}\doxysubsubsection{\texorpdfstring{Analizar}{Analizar}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12223}
+El motor que analiza el contenido del archivo que contiene las variables de entorno está disponible para su uso. Acepta una Cadena o un Búfer y retornará un objecto con los valores analizados.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ buf\ =\ Buffer.from('BASICO=basico')}
+\DoxyCodeLine{const\ config\ =\ dotenv.parse(buf)\ //\ devolverá\ un\ objeto}
+\DoxyCodeLine{console.log(typeof\ config,\ config)\ //\ objeto\ \{\ BASICO\ :\ 'basico'\ \}}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12224}{}\doxysubsubsubsection{\texorpdfstring{Opciones}{Opciones}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12224}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12225}{}\doxysubsubsubsubsection{\texorpdfstring{Depurar}{Depurar}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12225}
+Por defecto\+: {\ttfamily false}
+
+Active el registro de ayuda para depurar por qué ciertas claves o valores no se inician como lo esperabas.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ buf\ =\ Buffer.from('hola\ mundo')}
+\DoxyCodeLine{const\ opt\ =\ \{\ debug:\ true\ \}}
+\DoxyCodeLine{const\ config\ =\ dotenv.parse(buf,\ opt)}
+\DoxyCodeLine{//\ espere\ por\ un\ mensaje\ de\ depuración\ porque\ el\ búfer\ no\ esta\ listo\ KEY=VAL}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12226}{}\doxysubsection{\texorpdfstring{FAQ}{FAQ}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12226}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12227}{}\doxysubsubsection{\texorpdfstring{¿\+Por qué el archivo {\ttfamily .env} no carga mis variables de entorno correctamente?}{¿\+Por qué el archivo {\ttfamily .env} no carga mis variables de entorno correctamente?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12227}
+Lo más probable es que su archivo {\ttfamily .env} no esté en el lugar correcto. \href{https://stackoverflow.com/questions/42335016/dotenv-file-is-not-loading-environment-variables}{\texttt{ Vea este stack overflow}}.
+
+Active el modo de depuración y vuelva a intentarlo...
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ debug:\ true\ \})}
+
+\end{DoxyCode}
+
+
+Recibirá un error apropiado en su consola.\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12228}{}\doxysubsubsection{\texorpdfstring{¿\+Debo confirmar mi archivo {\ttfamily .env}?}{¿\+Debo confirmar mi archivo {\ttfamily .env}?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12228}
+No. Recomendamos {\bfseries{enfáticamente}} no enviar su archivo {\ttfamily .env} a la versión de control. Solo debe incluir los valores especificos del entorno, como la base de datos, contraseñas o claves API.\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12229}{}\doxysubsubsection{\texorpdfstring{¿\+Debería tener multiples archivos {\ttfamily .env}?}{¿\+Debería tener multiples archivos {\ttfamily .env}?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12229}
+No. Recomendamos {\bfseries{enfáticamente}} no tener un archivo {\ttfamily .env} "{}principal"{} y un archivo {\ttfamily .env} de "{}entorno"{} como {\ttfamily .env.\+test}. Su configuración debe variar entre implementaciones y no debe compartir valores entre entornos.
+
+\begin{quote}
+En una Aplicación de Doce Factores, las variables de entorno son controles diferenciados, cada uno totalmente independiente a otras variables de entorno. Nunca se agrupan como "{}entornos"{}, sino que se gestionan de manera independiente para cada despliegue. Este es un modelo que se escala sin problemas a medida que la aplicación se expande de forma natural en más despliegues a lo largo de su vida.
+
+– \href{https://12factor.net/es/}{\texttt{ La Apliación de los Doce Factores}} \end{quote}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12230}{}\doxysubsubsection{\texorpdfstring{¿\+Qué reglas sigue el motor de análisis?}{¿\+Qué reglas sigue el motor de análisis?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12230}
+El motor de análisis actualmente admite las siguientes reglas\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily BASICO=basico} se convierte en `\{BASICO\+: \textquotesingle{}basico'\}{\ttfamily }
+\item {\ttfamily las líneas vacías se saltan}
+\item {\ttfamily las líneas que comienzan con}\#{\ttfamily se tratan como comentarios -\/}\#{\ttfamily marca el comienzo de un comentario (a menos que el valor esté entre comillas)}
+\item {\ttfamily valores vacíos se convierten en cadenas vacías (}VACIO={\ttfamily se convierte en}\{VACIO\+: \textquotesingle{}\textquotesingle{}\}{\ttfamily )}
+\item {\ttfamily las comillas internas se mantienen (piensa en JSON) (}JSON=\{"{}foo"{}\+: "{}bar"{}\}{\ttfamily se convierte en}\{JSON\+:"{}\{\textbackslash{}"{}foo\textbackslash{}"{}\+: \textbackslash{}"{}bar\textbackslash{}"{}\}"{}{\ttfamily )}
+\item {\ttfamily los espacios en blanco se eliminan de ambos extremos de los valores no citanos (aprende más en \mbox{[}}trim{\ttfamily \mbox{]}(\href{https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/String/Trim}{\texttt{ https\+://developer.\+mozilla.\+org/es/docs/\+Web/\+Java\+Script/\+Reference/\+Global\+\_\+\+Objects/\+String/\+Trim}})) (}FOO= algo {\ttfamily se convierte en}\{FOO\+: \textquotesingle{}algo\textquotesingle{}\}{\ttfamily )}
+\item {\ttfamily los valores entre comillas simples y dobles se escapan (}CITA\+\_\+\+SIMPLE=\textquotesingle{}citado\textquotesingle{}{\ttfamily se convierte en}\{CITA\+\_\+\+SIMPLE\+: "{}citado"{}\}{\ttfamily )}
+\item {\ttfamily los valores entre comillas simples y dobles mantienen los espacios en blanco en ambos extremos (}FOO="{}  algo  "{}{\ttfamily se convierte en}\{FOO\+: \textquotesingle{} algo \textquotesingle{}\}{\ttfamily )}
+\item {\ttfamily los valores entre comillas dobles expanden nuevas líneas (}MULTILINEA="{}nueva\textbackslash{}nlínea"{}\`{} se convierte en
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{MULTILINEA:\ 'nueva}
+\DoxyCodeLine{línea'\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item se admite la comilla simple invertida ({\ttfamily SIGNO\+\_\+\+ACENTO=\`{}\+Esto tiene comillas \textquotesingle{}simples\textquotesingle{} y "{}dobles"{} en su interior.\`{}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12231}{}\doxysubsubsection{\texorpdfstring{¿\+Qué sucede con las variables de entorno que ya estaban configuradas?}{¿\+Qué sucede con las variables de entorno que ya estaban configuradas?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12231}
+Por defecto, nunca modificaremos ninguna variable de entorno que ya haya sido establecida. En particular, si hay una variable en su archivo {\ttfamily .env} que colisiona con una que ya existe en su entorno, entonces esa variable se omitirá.
+
+Si por el contrario, quieres anular {\ttfamily process.\+env} utiliza la opción {\ttfamily override}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ override:\ true\ \})}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12232}{}\doxysubsubsection{\texorpdfstring{¿\+Por qué mis variables de entorno no aparecen para React?}{¿\+Por qué mis variables de entorno no aparecen para React?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12232}
+Su código React se ejecuta en Webpack, donde el módulo {\ttfamily fs} o incluso el propio {\ttfamily process} global no son accesibles fuera-\/de-\/la-\/caja. El módulo {\ttfamily process.\+env} sólo puede ser inyectado a través de la configuración de Webpack.
+
+Si estás usando \href{https://www.npmjs.com/package/react-scripts}{\texttt{ {\ttfamily react-\/scripts}}}, el cual se distribuye a través de \href{https://create-react-app.dev/}{\texttt{ {\ttfamily create-\/react-\/app}}}, tiene dotenv incorporado pero con una singularidad. Escriba sus variables de entorno con {\ttfamily REACT\+\_\+\+APP\+\_\+}. Vea \href{https://stackoverflow.com/questions/42182577/is-it-possible-to-use-dotenv-in-a-react-project}{\texttt{ este stack overflow}} para más detalles.
+
+Si estás utilizando otros frameworks (por ejemplo, Next.\+js, Gatsby...), debes consultar su documentación para saber cómo injectar variables de entorno en el cliente.\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12233}{}\doxysubsubsection{\texorpdfstring{¿\+Puedo personalizar/escribir plugins para dotenv?}{¿\+Puedo personalizar/escribir plugins para dotenv?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12233}
+Sí! {\ttfamily dotenv.\+config()} devuelve un objeto que representa el archivo {\ttfamily .env} analizado. Esto te da todo lo que necesitas para poder establecer valores en {\ttfamily process.\+env}. Por ejemplo\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ variableExpansion\ =\ require('dotenv-\/expand')}
+\DoxyCodeLine{const\ miEnv\ =\ dotenv.config()}
+\DoxyCodeLine{variableExpansion(miEnv)}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12234}{}\doxysubsubsection{\texorpdfstring{Cómo uso dotnev con {\ttfamily import}?}{Cómo uso dotnev con {\ttfamily import}?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12234}
+Simplemente..
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ index.mjs\ (ESM)}
+\DoxyCodeLine{import\ *\ as\ dotenv\ from\ 'dotenv'\ //\ vea\ https://github.com/motdotla/dotenv\#como-\/uso-\/dotenv-\/con-\/import}
+\DoxyCodeLine{dotenv.config()}
+\DoxyCodeLine{import\ express\ from\ 'express'}
+
+\end{DoxyCode}
+
+
+Un poco de historia...
+
+\begin{quote}
+Cuando se ejecuta un módulo que contiene una sentencia {\ttfamily import}, los módulos que importa serán cargados primero, y luego se ejecuta cada bloque del módulo en un recorrido en profundidad del gráfico de dependencias, evitando los ciclos al saltarse todo lo que ya se ha ejecutado.
+
+– \href{https://hacks.mozilla.org/2015/08/es6-in-depth-modules/}{\texttt{ ES6 en Profundidad\+: Módulos}} \end{quote}
+
+
+¿\+Qué significa esto en lenguaje sencillo? Significa que se podrías pensar que lo siguiente funcionaría pero no lo hará.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ notificarError.mjs}
+\DoxyCodeLine{import\ \{\ Cliente\ \}\ from\ 'mejor-\/servicio-\/para-\/notificar-\/error'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ new\ Client(process.env.CLAVE\_API)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ index.mjs}
+\DoxyCodeLine{import\ dotenv\ from\ 'dotenv'}
+\DoxyCodeLine{dotenv.config()}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ notificarError\ from\ './notificarError.mjs'}
+\DoxyCodeLine{notificarError.report(new\ Error('ejemplo\ documentado'))}
+
+\end{DoxyCode}
+
+
+{\ttfamily process.\+env.\+CLAVE\+\_\+\+API} será vacio.
+
+En su lugar, el código anterior debe ser escrito como...
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ notificarError.mjs}
+\DoxyCodeLine{import\ \{\ Cliente\ \}\ from\ 'mejor-\/servicio-\/para-\/notificar-\/errores'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ new\ Client(process.env.CLAVE\_API)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ index.mjs}
+\DoxyCodeLine{import\ *\ as\ dotenv\ from\ 'dotenv'}
+\DoxyCodeLine{dotenv.config()}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ notificarError\ from\ './notificarError.mjs'}
+\DoxyCodeLine{notificarError.report(new\ Error('ejemplo\ documentado'))}
+
+\end{DoxyCode}
+
+
+¿\+Esto tiene algo de sentido? Esto es poco poco intuitivo, pero es como funciona la importación de módulos en ES6. Aquí hay un ejemplo \href{https://github.com/dotenv-org/examples/tree/master/dotenv-es6-import-pitfall}{\texttt{ ejemplo práctico de esta trampa}}.
+
+Existen dos arternativas a este planteamiento\+:
+
+
+\begin{DoxyEnumerate}
+\item Precarga dotenv\+: {\ttfamily node -\/-\/require dotenv/config index.\+js} ({\itshape Nota\+: no es necesario usar {\ttfamily import} dotenv con este método})
+\item Cree un archivo separado que ejecutará {\ttfamily config} primero como se describe en \href{https://github.com/motdotla/dotenv/issues/133\#issuecomment-255298822}{\texttt{ este comentario \#133}}
+\end{DoxyEnumerate}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12235}{}\doxysubsubsection{\texorpdfstring{¿\+Qué pasa con la expansión de variable?}{¿\+Qué pasa con la expansión de variable?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12235}
+Prueba \href{https://github.com/motdotla/dotenv-expand}{\texttt{ dotenv-\/expand}}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12236}{}\doxysubsubsection{\texorpdfstring{¿\+Qué pasa con la sincronización y la seguridad de los archivos .env?}{¿\+Qué pasa con la sincronización y la seguridad de los archivos .env?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12236}
+Vea \href{https://github.com/dotenv-org/dotenv-vault}{\texttt{ dotenv-\/vault}}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12237}{}\doxysubsection{\texorpdfstring{Guía de contribución}{Guía de contribución}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12237}
+Vea \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{CONTRIBUTING.md}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12238}{}\doxysubsection{\texorpdfstring{REGISTRO DE CAMBIOS}{REGISTRO DE CAMBIOS}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12238}
+Vea \doxysectlink{md_node__modules_2dotenv_2_c_h_a_n_g_e_l_o_g}{CHANGELOG.md}{0}\hypertarget{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12239}{}\doxysubsection{\texorpdfstring{¿\+Quiénes utilizan dotenv?}{¿\+Quiénes utilizan dotenv?}}\label{md_node__modules_2dotenv_2_r_e_a_d_m_e-es_autotoc_md12239}
+\href{https://www.npmjs.com/browse/depended/dotenv}{\texttt{ Estos módulos npm dependen de él.}}
+
+Los proyectos que lo amplían suelen utilizar la \href{https://www.npmjs.com/search?q=keywords:dotenv}{\texttt{ palabra clave "{}dotenv"{} en npm}}. 

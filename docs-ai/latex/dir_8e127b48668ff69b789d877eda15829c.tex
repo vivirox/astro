@@ -1,0 +1,160 @@
+\doxysection{node\+\_\+modules/defu Directory Reference}
+\hypertarget{dir_8e127b48668ff69b789d877eda15829c}{}\label{dir_8e127b48668ff69b789d877eda15829c}\index{node\_modules/defu Directory Reference@{node\_modules/defu Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Assign default properties, recursively. Lightweight and Fast.
+
+\href{https://npmjs.com/package/defu}{\texttt{ }} \href{https://npmjs.com/package/defu}{\texttt{ }} \href{https://bundlephobia.com/result?p=defu}{\texttt{ }} \href{https://codecov.io/gh/unjs/defu}{\texttt{ }} \href{https://github.com/unjs/defu/blob/main/LICENSE}{\texttt{ }}\hypertarget{README.md_autotoc_md11721}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md11721}
+Install package\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ defu}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ install\ defu}
+\DoxyCodeLine{\#\ pnpm}
+\DoxyCodeLine{pnpm\ install\ defu}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11722}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md11722}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defu\ \}\ from\ "{}defu"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ defu(object,\ ...defaults);}
+
+\end{DoxyCode}
+
+
+Leftmost arguments have more priority when assigning defaults.\hypertarget{README.md_autotoc_md11723}{}\doxysubsubsection{\texorpdfstring{Arguments}{Arguments}}\label{README.md_autotoc_md11723}
+
+\begin{DoxyItemize}
+\item {\bfseries{object (Object)\+:}} The destination object.
+\item {\bfseries{source (Object)\+:}} The source object.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defu\ \}\ from\ "{}defu"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(defu(\{\ a:\ \{\ b:\ 2\ \}\ \},\ \{\ a:\ \{\ b:\ 1,\ c:\ 3\ \}\ \}));}
+\DoxyCodeLine{//\ =>\ \{\ a:\ \{\ b:\ 2,\ c:\ 3\ \}\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11724}{}\doxysubsubsection{\texorpdfstring{Using with Common\+JS}{Using with Common\+JS}}\label{README.md_autotoc_md11724}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ defu\ \}\ =\ require("{}defu"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11725}{}\doxysubsection{\texorpdfstring{Custom Merger}{Custom Merger}}\label{README.md_autotoc_md11725}
+Sometimes default merging strategy is not desirable. Using {\ttfamily create\+Defu} we can create a custom instance with different merging strategy.
+
+This function accepts {\ttfamily obj} (source object), {\ttfamily key} and {\ttfamily value} (current value) and should return {\ttfamily true} if applied custom merging.
+
+{\bfseries{Example\+:}} Sum numbers instead of overriding
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createDefu\ \}\ from\ "{}defu"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ext\ =\ createDefu((obj,\ key,\ value)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (typeof\ obj[key]\ ===\ "{}number"{}\ \&\&\ typeof\ value\ ===\ "{}number"{})\ \{}
+\DoxyCodeLine{\ \ \ \ obj[key]\ +=\ value;}
+\DoxyCodeLine{\ \ \ \ return\ true;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{ext(\{\ cost:\ 15\ \},\ \{\ cost:\ 10\ \});\ //\ \{\ cost:\ 25\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11726}{}\doxysubsection{\texorpdfstring{Function Merger}{Function Merger}}\label{README.md_autotoc_md11726}
+Using {\ttfamily defu\+Fn}, if user provided a function, it will be called with default value instead of merging.
+
+It can be useful for default values manipulation.
+
+{\bfseries{Example\+:}} Filter some items from defaults (array) and add 20 to the count default value.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defuFn\ \}\ from\ "{}defu"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{defuFn(}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ ignore:\ (val)\ =>\ val.filter((item)\ =>\ item\ !==\ "{}dist"{}),}
+\DoxyCodeLine{\ \ \ \ count:\ (count)\ =>\ count\ +\ 20,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ ignore:\ ["{}node\_modules"{},\ "{}dist"{}],}
+\DoxyCodeLine{\ \ \ \ count:\ 10,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{\ \{}
+\DoxyCodeLine{\ \ \ \ ignore:\ ['node\_modules'],}
+\DoxyCodeLine{\ \ \ \ count:\ 30}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note\+:}} if the default value is not defined, the function defined won\textquotesingle{}t be called and kept as value.\hypertarget{README.md_autotoc_md11727}{}\doxysubsection{\texorpdfstring{Array Function Merger}{Array Function Merger}}\label{README.md_autotoc_md11727}
+{\ttfamily defu\+Array\+Fn} is similar to {\ttfamily defu\+Fn} but {\bfseries{only applies to array values defined in defaults}}.
+
+{\bfseries{Example\+:}} Filter some items from defaults (array) and add 20 to the count default value.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defuArrayFn\ \}\ from\ 'defu'}
+\DoxyCodeLine{}
+\DoxyCodeLine{defuArrayFn(\{}
+\DoxyCodeLine{\ \ ignore:\ (val)\ =>\ val.filter(i\ =>\ i\ !==\ 'dist'),}
+\DoxyCodeLine{\ \ count:\ ()\ =>\ 20}
+\DoxyCodeLine{\ \},\ \{}
+\DoxyCodeLine{\ \ \ ignore:\ [}
+\DoxyCodeLine{\ \ \ \ \ 'node\_modules',}
+\DoxyCodeLine{\ \ \ \ \ 'dist'}
+\DoxyCodeLine{\ \ \ ],}
+\DoxyCodeLine{\ \ \ count:\ 10}
+\DoxyCodeLine{\ \})}
+\DoxyCodeLine{\ /*}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ ignore:\ ['node\_modules'],}
+\DoxyCodeLine{\ \ \ \ count:\ ()\ =>\ 20}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note\+:}} the function is called only if the value defined in defaults is an aray.\hypertarget{README.md_autotoc_md11728}{}\doxysubsubsection{\texorpdfstring{Remarks}{Remarks}}\label{README.md_autotoc_md11728}
+
+\begin{DoxyItemize}
+\item {\ttfamily object} and {\ttfamily defaults} are not modified
+\item Nullish values (\href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null}{\texttt{ {\ttfamily null}}} and \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined}{\texttt{ {\ttfamily undefined}}}) are skipped. Please use \href{https://www.npmjs.com/package/defaults-deep}{\texttt{ defaults-\/deep}} or \href{http://npmjs.com/package/omit-deep}{\texttt{ omit-\/deep}} or \href{https://www.npmjs.com/package/lodash.defaultsdeep}{\texttt{ lodash.\+defaultsdeep}} if you need to preserve or different behavior.
+\item Assignment of {\ttfamily \+\_\+\+\_\+proto\+\_\+\+\_\+} and {\ttfamily constructor} keys will be skipped to prevent security issues with object pollution.
+\item Will concat {\ttfamily array} values (if default property is defined)
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(defu(\{\ array:\ ["{}b"{},\ "{}c"{}]\ \},\ \{\ array:\ ["{}a"{}]\ \}));}
+\DoxyCodeLine{//\ =>\ \{\ array:\ ['b',\ 'c',\ 'a']\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11729}{}\doxysubsection{\texorpdfstring{Type}{Type}}\label{README.md_autotoc_md11729}
+We expose {\ttfamily Defu} as a type utility to return a merged type that follows the rules that defu follows.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ Defu\ \}\ from\ 'defu'}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Options\ =\ Defu<\{\ foo:\ 'bar'\ \},\ [\{\},\ \{\ bar:\ 'baz'\ \},\ \{\ something:\ 42\ \}]>}
+\DoxyCodeLine{//\ returns\ \{\ foo:\ 'bar',\ bar:\ 'baz',\ 'something':\ 42\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11730}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md11730}
+MIT. Made with 💖 

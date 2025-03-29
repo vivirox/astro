@@ -1,0 +1,166 @@
+\doxysection{node\+\_\+modules/mdast-\/util-\/toc Directory Reference}
+\hypertarget{dir_cefc8fb51ed77eb73d38f91c0ec8000d}{}\label{dir_cefc8fb51ed77eb73d38f91c0ec8000d}\index{node\_modules/mdast-\/util-\/toc Directory Reference@{node\_modules/mdast-\/util-\/toc Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/mdast-util-toc/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/mdast-util-toc}{\texttt{ }} \href{https://www.npmjs.com/package/mdast-util-toc}{\texttt{ }} \href{https://bundlejs.com/?q=mdast-util-toc}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}} utility to generate a table of contents.\hypertarget{readme.md_autotoc_md22848}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22848}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}toc(tree\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Result\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22849}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22849}
+This package is a utility that generates a table of contents from a document.\hypertarget{readme.md_autotoc_md22850}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md22850}
+This utility is useful to generate a section so users can more easily navigate through a document.
+
+This package is wrapped in \href{https://github.com/remarkjs/remark-toc}{\texttt{ {\ttfamily remark-\/toc}}} for ease of use with \href{https://github.com/remarkjs/remark}{\texttt{ remark}}, where it also injects the table of contents into the document.\hypertarget{readme.md_autotoc_md22851}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22851}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mdast-\/util-\/toc}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{toc\}\ from\ 'https://esm.sh/mdast-\/util-\/toc@7'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{toc\}\ from\ 'https://esm.sh/mdast-\/util-\/toc@7?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22852}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22852}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{toc\}\ from\ 'mdast-\/util-\/toc'}
+\DoxyCodeLine{}
+\DoxyCodeLine{/**\ @type\ \{import('mdast').Root\}\ */}
+\DoxyCodeLine{const\ tree\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'heading',\ depth:\ 1,\ children:\ [\{type:\ 'text',\ value:\ 'Alpha'\}]\},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'heading',\ depth:\ 2,\ children:\ [\{type:\ 'text',\ value:\ 'Bravo'\}]\},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'heading',\ depth:\ 3,\ children:\ [\{type:\ 'text',\ value:\ 'Charlie'\}]\},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'heading',\ depth:\ 2,\ children:\ [\{type:\ 'text',\ value:\ 'Delta'\}]\}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ table\ =\ toc(tree)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.dir(table,\ \{depth:\ 3\})}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ index:\ undefined,}
+\DoxyCodeLine{\ \ endIndex:\ undefined,}
+\DoxyCodeLine{\ \ map:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'list',}
+\DoxyCodeLine{\ \ \ \ ordered:\ false,}
+\DoxyCodeLine{\ \ \ \ spread:\ true,}
+\DoxyCodeLine{\ \ \ \ children:\ [\ \{\ type:\ 'listItem',\ spread:\ true,\ children:\ [Array]\ \}\ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22853}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22853}
+This package exports the identifier \`{}toc\`{}. There is no default export.\hypertarget{readme.md_autotoc_md22854}{}\doxysubsubsection{\texorpdfstring{{\ttfamily toc(tree\mbox{[}, options\mbox{]})}}{{\ttfamily toc(tree\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md22854}
+Generate a table of contents from {\ttfamily tree}.
+
+Looks for the first heading matching {\ttfamily options.\+heading} (case insensitive) and returns a table of contents (a list) for all following headings. If no {\ttfamily heading} is specified, creates a table of contents for all headings in {\ttfamily tree}. {\ttfamily tree} is not changed.
+
+Links in the list to headings are based on Git\+Hub’s style. Only top-\/level headings (those not in blockquotes or lists), are used. This default behavior can be changed by passing {\ttfamily options.\+parents}.\hypertarget{readme.md_autotoc_md22855}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22855}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/syntax-tree/mdast\#node}{\texttt{ {\ttfamily Node}}}) — tree to search and generate from
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22856}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22856}
+Results (\`{}\+Result\`{}).\hypertarget{readme.md_autotoc_md22857}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md22857}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md22858}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md22858}
+
+\begin{DoxyItemize}
+\item {\ttfamily heading} ({\ttfamily string}, optional) — heading to look for, wrapped in `new Reg\+Exp('\texorpdfstring{$^\wedge$}{\string^}(\textquotesingle{} + value + \textquotesingle{})\$\textquotesingle{}, \textquotesingle{}i\textquotesingle{}){\ttfamily  \texorpdfstring{$\ast$}{*}}max\+Depth{\ttfamily (}number{\ttfamily , default\+:}6{\ttfamily ) — maximum heading depth to include in the table of contents. This is inclusive\+: when set to}3{\ttfamily , level three headings are included (those with three hashes,}\#\#\#{\ttfamily ) \texorpdfstring{$\ast$}{*}}min\+Depth{\ttfamily (}number{\ttfamily , default\+:}1{\ttfamily ) — minimum heading depth to include in the table of contents. This is inclusive\+: when set to}3{\ttfamily , level three headings are included (those with three hashes,}\#\#\#{\ttfamily ) \texorpdfstring{$\ast$}{*}}skip{\ttfamily (}string{\ttfamily , optional) — headings to skip, wrapped in}new Reg\+Exp(\textquotesingle{}\texorpdfstring{$^\wedge$}{\string^}(\textquotesingle{} + value + \textquotesingle{})\$\textquotesingle{}, \textquotesingle{}i\textquotesingle{}){\ttfamily . Any heading matching this expression will not be present in the table of contents \texorpdfstring{$\ast$}{*}}parents{\ttfamily (\mbox{[}}Test{\ttfamily \mbox{]}\mbox{[}test\mbox{]}, default\+:}tree{\ttfamily ) — allow headings to be children of certain node types. Can by any \mbox{[}}unist-\/util-\/is{\ttfamily \mbox{]}\mbox{[}is\mbox{]} compatible test \texorpdfstring{$\ast$}{*}}tight{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — whether to compile list items tightly \texorpdfstring{$\ast$}{*}}ordered{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — whether to compile list items as an ordered list, otherwise they are unordered \texorpdfstring{$\ast$}{*}}prefix{\ttfamily (}string{\ttfamily , optional) — add a prefix to links to headings in the table of contents. Useful for example when later going from mdast to hast and sanitizing with }hast-\/util-\/sanitize\`{}.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22859}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Result}}{{\ttfamily Result}}}\label{readme.md_autotoc_md22859}
+Results (Type\+Script type).\hypertarget{readme.md_autotoc_md22860}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md22860}
+
+\begin{DoxyItemize}
+\item {\ttfamily index} ({\ttfamily number} or {\ttfamily undefined}) — index of the node right after the table of contents heading, {\ttfamily -\/1} if no heading was found, {\ttfamily undefined} if no {\ttfamily heading} was given
+\item {\ttfamily end\+Index} ({\ttfamily number} or {\ttfamily undefined}) — index of the first node after {\ttfamily heading} that is not part of its section, {\ttfamily -\/1} if no heading was found, {\ttfamily undefined} if no {\ttfamily heading} was given, same as {\ttfamily index} if there are no nodes between {\ttfamily heading} and the first heading in the table of contents
+\item {\ttfamily map} (\href{https://github.com/syntax-tree/mdast\#list}{\texttt{ {\ttfamily List}}} or {\ttfamily undefined}) — list representing the generated table of contents, {\ttfamily undefined} if no table of contents could be created, either because no heading was found or because no following headings were found
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22861}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md22861}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the types \doxylink{README.md_options}{\`{}\+Options\`{}} and \`{}\+Result\`{}.\hypertarget{readme.md_autotoc_md22862}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md22862}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily mdast-\/util-\/toc@\texorpdfstring{$^\wedge$}{\string^}7}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md22863}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md22863}
+Use of {\ttfamily mdast-\/util-\/toc} does not involve \href{https://github.com/syntax-tree/hast}{\texttt{ hast}}, user content, or change the tree, so there are no openings for \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attacks.
+
+Injecting {\ttfamily map} into the syntax tree may open you up to XSS attacks as existing nodes are copied into the table of contents. The following example shows how an existing script is copied into the table of contents.
+
+For the following Markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Alpha}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Bravo<script>alert(1)</script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Charlie}
+
+\end{DoxyCode}
+
+
+Yields in {\ttfamily map}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/\ \ \ [Alpha](\#alpha)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ -\/\ \ \ [Bravo<script>alert(1)</script>](\#bravoscriptalert1script)}
+\DoxyCodeLine{\ \ \ \ -\/\ \ \ [Charlie](\#charlie)}
+
+\end{DoxyCode}
+
+
+Always use \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/santize}}} when transforming to \href{https://github.com/syntax-tree/hast}{\texttt{ hast}}.\hypertarget{readme.md_autotoc_md22864}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md22864}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/Flet/github-slugger}{\texttt{ {\ttfamily github-\/slugger}}} — generate a slug just like Git\+Hub does
+\item \href{https://github.com/syntax-tree/unist-util-visit}{\texttt{ {\ttfamily unist-\/util-\/visit}}} — visit nodes
+\item \href{https://github.com/syntax-tree/unist-util-visit-parents}{\texttt{ {\ttfamily unist-\/util-\/visit-\/parents}}} — like {\ttfamily visit}, but with a stack of parents
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22865}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md22865}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md22866}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md22866}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://barrythepenguin.github.io}{\texttt{ Jonathan Haines}} 

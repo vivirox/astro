@@ -1,0 +1,392 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/mdx-\/jsx Directory Reference}
+\hypertarget{dir_fe8cbd5f2e12691a7e92e0756414fce8}{}\label{dir_fe8cbd5f2e12691a7e92e0756414fce8}\index{node\_modules/micromark-\/extension-\/mdx-\/jsx Directory Reference@{node\_modules/micromark-\/extension-\/mdx-\/jsx Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-mdx-jsx/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-mdx-jsx}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-mdx-jsx}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-mdx-jsx}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extension to support \href{https://mdxjs.com}{\texttt{ MDX}} JSX ({\ttfamily \texorpdfstring{$<$}{<}Component /\texorpdfstring{$>$}{>}}).\hypertarget{readme.md_autotoc_md23382}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23382}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}mdx\+Jsx(options?)\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item Authoring
+\item Syntax
+\item Errors
+\begin{DoxyItemize}
+\item Unexpected end of file \$at, expected \$expect
+\item Unexpected character \$at, expected \$expect
+\item Unexpected lazy line in container, expected line to be…
+\end{DoxyItemize}
+\item Tokens
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23383}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23383}
+This package contains an extension that adds support for the JSX syntax enabled by \href{https://mdxjs.com}{\texttt{ MDX}} to \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. These extensions are used inside MDX. It mostly matches how JSX works in most places that support it (Type\+Script, Babel, esbuild, SWC, etc).
+
+This package can be made aware or unaware of Java\+Script syntax. When unaware, expressions could include Rust or variables or whatnot.\hypertarget{readme.md_autotoc_md23384}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23384}
+This project is useful when you want to support JSX in markdown.
+
+You can use this extension when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. To support all MDX features, use \href{https://github.com/micromark/micromark-extension-mdxjs}{\texttt{ {\ttfamily micromark-\/extension-\/mdxjs}}} instead.
+
+When you need a syntax tree, combine this package with \href{https://github.com/syntax-tree/mdast-util-mdx-jsx}{\texttt{ {\ttfamily mdast-\/util-\/mdx-\/jsx}}}.
+
+All these packages are used in \href{https://mdxjs.com/packages/remark-mdx/}{\texttt{ {\ttfamily remark-\/mdx}}}, which focusses on making it easier to transform content by abstracting these internals away.
+
+When you are using \href{https://mdxjs.com}{\texttt{ {\ttfamily mdx-\/js/mdx}}}, all of this is already included.\hypertarget{readme.md_autotoc_md23385}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23385}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/mdx-\/jsx}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{mdxJsx\}\ from\ 'https://esm.sh/micromark-\/extension-\/mdx-\/jsx@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{mdxJsx\}\ from\ 'https://esm.sh/micromark-\/extension-\/mdx-\/jsx@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23386}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23386}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{mdxJsx\}\ from\ 'micromark-\/extension-\/mdx-\/jsx'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ micromark('a\ <b\ c\ d="{}e"{}\ />\ f',\ \{extensions:\ [mdxJsx()]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>a\ \ f</p>}
+
+\end{DoxyCode}
+
+
+…which is useless\+: go to a syntax tree with \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} and \href{https://github.com/syntax-tree/mdast-util-mdx-jsx}{\texttt{ {\ttfamily mdast-\/util-\/mdx-\/jsx}}} instead.\hypertarget{readme.md_autotoc_md23387}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23387}
+This package exports the identifier \`{}mdx\+Jsx\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development module.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md23388}{}\doxysubsubsection{\texorpdfstring{{\ttfamily mdx\+Jsx(options?)}}{{\ttfamily mdx\+Jsx(options?)}}}\label{readme.md_autotoc_md23388}
+Create an extension for {\ttfamily micromark} to enable MDX JSX syntax.\hypertarget{readme.md_autotoc_md23389}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23389}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23390}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23390}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions} to enable MDX JSX syntax (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23391}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md23391}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md23392}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md23392}
+
+\begin{DoxyItemize}
+\item {\ttfamily acorn} (\href{https://github.com/acornjs/acorn}{\texttt{ {\ttfamily Acorn}}}, optional) — acorn parser to use
+\item {\ttfamily acorn\+Options} (\href{https://github.com/acornjs/acorn/blob/96c721dbf89d0ccc3a8c7f39e69ef2a6a3c04dfa/acorn/dist/acorn.d.ts\#L16}{\texttt{ {\ttfamily Acorn\+Options}}}, default\+: `\{ecma\+Version\+: 2024, locations\+: true, source\+Type\+: \textquotesingle{}module'\}{\ttfamily ) — configuration for acorn; all fields except}locations{\ttfamily can be set \texorpdfstring{$\ast$}{*}}add\+Result{\ttfamily  (}boolean{\ttfamily , default\+:}false{\ttfamily ) — whether to add}estree\`{} fields to tokens with results from acorn
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23393}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23393}
+When authoring markdown with JSX, keep in mind that MDX is a whitespace sensitive and line-\/based language, while Java\+Script is insensitive to whitespace. This affects how markdown and JSX interleave with eachother in MDX. For more info on how it works, see \href{https://mdxjs.com/docs/what-is-mdx/\#interleaving}{\texttt{ § Interleaving}} on the MDX site.\hypertarget{readme.md_autotoc_md23394}{}\doxysubsubsubsubsubsection{\texorpdfstring{Comments inside tags}{Comments inside tags}}\label{readme.md_autotoc_md23394}
+Java\+Script comments in JSX are not supported.
+
+Incorrect\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{<hi/*comment!*//>}
+\DoxyCodeLine{<hello//\ comment!}
+\DoxyCodeLine{/>}
+
+\end{DoxyCode}
+
+
+Correct\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<hi/>}
+\DoxyCodeLine{<hello}
+\DoxyCodeLine{/>}
+
+\end{DoxyCode}
+
+
+A PR that adds support for them would be accepted.\hypertarget{readme.md_autotoc_md23395}{}\doxysubsubsubsubsubsection{\texorpdfstring{Element or fragment attribute values}{Element or fragment attribute values}}\label{readme.md_autotoc_md23395}
+JSX elements or JSX fragments as attribute values are not supported. The reason for this change is that it would be confusing whether markdown would work.
+
+Incorrect\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{<welcome\ name=<>Venus</>\ />}
+\DoxyCodeLine{<welcome\ name=<span>Pluto</span>\ />}
+
+\end{DoxyCode}
+
+
+Correct\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<welcome\ name='Mars'\ />}
+\DoxyCodeLine{<welcome\ name=\{<span>Jupiter</span>\}\ />}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23396}{}\doxysubsubsubsubsubsection{\texorpdfstring{Greater than ({\ttfamily \texorpdfstring{$>$}{>}}) and right curly brace ({\ttfamily \}})}{Greater than ({\ttfamily \texorpdfstring{$>$}{>}}) and right curly brace ({\ttfamily \}})}}\label{readme.md_autotoc_md23396}
+JSX does not allow U+003E GREATER THAN ({\ttfamily \texorpdfstring{$>$}{>}}) or U+007D RIGHT CURLY BRACE ({\ttfamily \}}) literally in text, they need to be encoded as character references (or expressions). There is no good reason for this (some JSX parsers agree with us and don’t crash either). Therefore, in MDX, U+003E GREATER THAN ({\ttfamily \texorpdfstring{$>$}{>}}) and U+007D RIGHT CURLY BRACE ({\ttfamily \}}) are fine literally and don’t need to be encoded.\hypertarget{readme.md_autotoc_md23397}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md23397}
+JSX forms with the following BNF\+:
+
+
+\begin{DoxyPre}{\ttfamily \label{readme.md_x-mdx-jsx-flow}%
+\Hypertarget{readme.md_x-mdx-jsx-flow}%
+mdx\_jsx\_flow ::= \href{\#x-mdx-jsx}{\texttt{ mdx\_jsx}} *\href{\#x-space-or-tab}{\texttt{ space\_or\_tab}} [\href{\#x-mdx-jsx}{\texttt{ mdx\_jsx}} *\href{\#x-space-or-tab}{\texttt{ space\_or\_tab}}]
+\label{readme.md_x-mdx-jsx-text}%
+\Hypertarget{readme.md_x-mdx-jsx-text}%
+mdx\_jsx\_text ::= \href{\#x-mdx-jsx}{\texttt{ mdx\_jsx}}
+
+; constraint: markdown whitespace ({\ttfamily <a href=\#x-\/space-\/or-\/tab>space\_or\_tab</a> | <a href=\#x-\/eol>eol</a>}) is NOT
+; allowed directly after {\ttfamily \&lt;} in order to allow {\ttfamily 1 \&lt; 3} in markdown.
+\label{readme.md_x-mdx-jsx}%
+\Hypertarget{readme.md_x-mdx-jsx}%
+mdx\_jsx ::=
+  '<' [\href{\#x-closing}{\texttt{ closing}}]
+  [*\href{\#x-whitespace}{\texttt{ whitespace}} \href{\#x-name}{\texttt{ name}} [\href{\#x-attributes-after-identifier}{\texttt{ attributes\_after\_identifier}}] [\href{\#x-closing}{\texttt{ closing}}]]
+  *\href{\#x-whitespace}{\texttt{ whitespace}} '>'
+
+\label{readme.md_x-attributes-after-identifier}%
+\Hypertarget{readme.md_x-attributes-after-identifier}%
+attributes\_after\_identifier ::=
+  1*\href{\#x-whitespace}{\texttt{ whitespace}} (\href{\#x-attributes-boolean}{\texttt{ attributes\_boolean}} | \href{\#x-attributes-value}{\texttt{ attributes\_value}}) |
+  *\href{\#x-whitespace}{\texttt{ whitespace}} \href{\#x-attributes-expression}{\texttt{ attributes\_expression}} |
+\label{readme.md_x-attributes-after-value}%
+\Hypertarget{readme.md_x-attributes-after-value}%
+attributes\_after\_value ::=
+  *\href{\#x-whitespace}{\texttt{ whitespace}} (\href{\#x-attributes-boolean}{\texttt{ attributes\_boolean}} | \href{\#x-attributes-expression}{\texttt{ attributes\_expression}} | \href{\#x-attributes-value}{\texttt{ attributes\_value}})
+\label{readme.md_x-attributes-boolean}%
+\Hypertarget{readme.md_x-attributes-boolean}%
+attributes\_boolean ::= \href{\#x-key}{\texttt{ key}} [\href{\#x-attributes-after-identifier}{\texttt{ attributes\_after\_identifier}}]
+; Note: in gnostic mode the value of the expression must instead be a single valid ES spread
+; expression
+\label{readme.md_x-attributes-expression}%
+\Hypertarget{readme.md_x-attributes-expression}%
+attributes\_expression ::= \href{\#x-expression}{\texttt{ expression}} [\href{\#x-attributes-after-value}{\texttt{ attributes\_after\_value}}]
+\label{readme.md_x-attributes-value}%
+\Hypertarget{readme.md_x-attributes-value}%
+attributes\_value ::= \href{\#x-key}{\texttt{ key}} \href{\#x-initializer}{\texttt{ initializer}} [\href{\#x-attributes-after-value}{\texttt{ attributes\_after\_value}}]
+
+\label{readme.md_x-closing}%
+\Hypertarget{readme.md_x-closing}%
+closing ::= *\href{\#x-whitespace}{\texttt{ whitespace}} '/'
+
+\label{readme.md_x-name}%
+\Hypertarget{readme.md_x-name}%
+name ::= \href{\#x-identifier}{\texttt{ identifier}} [\href{\#x-local}{\texttt{ local}} | \href{\#x-members}{\texttt{ members}}]
+\label{readme.md_x-key}%
+\Hypertarget{readme.md_x-key}%
+key ::= \href{\#x-identifier}{\texttt{ identifier}} [\href{\#x-local}{\texttt{ local}}]
+\label{readme.md_x-local}%
+\Hypertarget{readme.md_x-local}%
+local ::= *\href{\#x-whitespace}{\texttt{ whitespace}} ':' *\href{\#x-whitespace}{\texttt{ whitespace}} \href{\#x-identifier}{\texttt{ identifier}}
+\label{readme.md_x-members}%
+\Hypertarget{readme.md_x-members}%
+members ::= \href{\#x-member}{\texttt{ member}} *\href{\#x-member}{\texttt{ member}}
+\label{readme.md_x-member}%
+\Hypertarget{readme.md_x-member}%
+member ::= *\href{\#x-whitespace}{\texttt{ whitespace}} '.' *\href{\#x-whitespace}{\texttt{ whitespace}} \href{\#x-identifier}{\texttt{ identifier}}
+
+\label{readme.md_x-identifier}%
+\Hypertarget{readme.md_x-identifier}%
+identifier ::= \href{\#x-identifier-start}{\texttt{ identifier\_start}} *\href{\#x-identifier-part}{\texttt{ identifier\_part}}
+\label{readme.md_x-initializer}%
+\Hypertarget{readme.md_x-initializer}%
+initializer ::= *\href{\#x-whitespace}{\texttt{ whitespace}} '=' *\href{\#x-whitespace}{\texttt{ whitespace}} \href{\#x-value}{\texttt{ value}}
+\label{readme.md_x-value}%
+\Hypertarget{readme.md_x-value}%
+value ::= \href{\#x-double-quoted}{\texttt{ double\_quoted}} | \href{\#x-single-quoted}{\texttt{ single\_quoted}} | \href{\#x-expression}{\texttt{ expression}}
+; Note: in gnostic mode the value must instead be a single valid ES expression
+\label{readme.md_x-expression}%
+\Hypertarget{readme.md_x-expression}%
+expression ::= '\{' *(\href{\#x-expression-text}{\texttt{ expression\_text}} | \href{\#x-expression}{\texttt{ expression}}) '\}'
+
+\label{readme.md_x-double-quoted}%
+\Hypertarget{readme.md_x-double-quoted}%
+double\_quoted ::= '"{}' *\href{\#x-double-quoted-text}{\texttt{ double\_quoted\_text}} '"{}'
+\label{readme.md_x-single-quoted}%
+\Hypertarget{readme.md_x-single-quoted}%
+single\_quoted ::= "{}'"{} *\href{\#x-single-quoted-text}{\texttt{ single\_quoted\_text}} "{}'"{}
+
+\label{readme.md_x-whitespace}%
+\Hypertarget{readme.md_x-whitespace}%
+whitespace ::= \href{\#x-es-whitespace}{\texttt{ es\_whitespace}}
+\label{readme.md_x-double-quoted-text}%
+\Hypertarget{readme.md_x-double-quoted-text}%
+double\_quoted\_text ::= char -\/ '"{}'
+\label{readme.md_x-single-quoted-text}%
+\Hypertarget{readme.md_x-single-quoted-text}%
+single\_quoted\_text ::= char -\/ "{}'"{}
+\label{readme.md_x-expression-text}%
+\Hypertarget{readme.md_x-expression-text}%
+expression\_text ::= char -\/ '\{' -\/ '\}'
+\label{readme.md_x-identifier-start}%
+\Hypertarget{readme.md_x-identifier-start}%
+identifier\_start ::= \href{\#x-es-identifier-start}{\texttt{ es\_identifier\_start}}
+\label{readme.md_x-identifier-part}%
+\Hypertarget{readme.md_x-identifier-part}%
+identifier\_part ::= \href{\#x-es-identifier-part}{\texttt{ es\_identifier\_part}} | '-\/'
+
+\label{readme.md_x-space-or-tab}%
+\Hypertarget{readme.md_x-space-or-tab}%
+space\_or\_tab ::= '\(\backslash\)t' | ' '
+\label{readme.md_x-eol}%
+\Hypertarget{readme.md_x-eol}%
+eol ::= '~\newline
+' | '\(\backslash\)r' | '\(\backslash\)r~\newline
+'
+
+; ECMAScript
+; See “IdentifierStart”: <\href{https://tc39.es/ecma262/\#prod-IdentifierStart}{\texttt{ https://tc39.es/ecma262/\#prod-\/IdentifierStart}}>
+\label{readme.md_x-es-identifier-start}%
+\Hypertarget{readme.md_x-es-identifier-start}%
+es\_identifier\_start ::= ?
+; See “IdentifierPart”: <\href{https://tc39.es/ecma262/\#prod-IdentifierPart}{\texttt{ https://tc39.es/ecma262/\#prod-\/IdentifierPart}}>
+\label{readme.md_x-es-identifier-part}%
+\Hypertarget{readme.md_x-es-identifier-part}%
+es\_identifier\_part ::= ?
+; See “Whitespace”: <\href{https://tc39.es/ecma262/\#prod-WhiteSpace}{\texttt{ https://tc39.es/ecma262/\#prod-\/WhiteSpace}}>
+\label{readme.md_x-es-whitespace}%
+\Hypertarget{readme.md_x-es-whitespace}%
+es\_whitespace ::= ?
+}\end{DoxyPre}
+
+
+As the flow construct occurs in flow, like all flow constructs, it must be followed by an eol (line ending) or eof (end of file).
+
+The grammar for JSX in markdown is much stricter than that of HTML in markdown. The primary benefit of this is that tags are parsed into tokens, and thus can be processed. Another, arguable, benefit of this is that it comes with syntax errors\+: if an author types something that is nonsensical, an error is thrown with information about where it happened, what occurred, and what was expected instead.
+
+This extension supports expressions both aware and unaware to Java\+Script (respectively gnostic and agnostic). Depending on whether acorn is passed, either valid Java\+Script must be used in expressions, or arbitrary text (such as Rust code or so) can be used.
+
+More on this can be found in \href{https://github.com/micromark/micromark-extension-mdx-expression/blob/main/packages/micromark-extension-mdx-expression/readme.md\#syntax}{\texttt{ § Syntax of {\ttfamily micromark-\/extension-\/mdx-\/expression}}}.\hypertarget{readme.md_autotoc_md23398}{}\doxysubsection{\texorpdfstring{Errors}{Errors}}\label{readme.md_autotoc_md23398}
+In aware (gnostic) mode, expressions are parsed with \href{https://github.com/micromark/micromark-extension-mdx-expression}{\texttt{ {\ttfamily micromark-\/extension-\/mdx-\/expression}}}, which throws some more errors.\hypertarget{readme.md_autotoc_md23399}{}\doxysubsubsection{\texorpdfstring{Unexpected end of file \$at, expected \$expect}{Unexpected end of file \$at, expected \$expect}}\label{readme.md_autotoc_md23399}
+This error occurs for many different reasons if something was opened but not closed (source\+: {\ttfamily micromark-\/extension-\/mdx-\/jsx}, rule id\+: {\ttfamily unexpected-\/eof}).
+
+Some examples are\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{<}
+\DoxyCodeLine{</}
+\DoxyCodeLine{<a}
+\DoxyCodeLine{<a:}
+\DoxyCodeLine{<a.}
+\DoxyCodeLine{<a\ b}
+\DoxyCodeLine{<a\ b:}
+\DoxyCodeLine{<a\ b=}
+\DoxyCodeLine{<a\ b="{}}
+\DoxyCodeLine{<a\ b='}
+\DoxyCodeLine{<a\ b=\{}
+\DoxyCodeLine{<a/}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23400}{}\doxysubsubsection{\texorpdfstring{Unexpected character \$at, expected \$expect}{Unexpected character \$at, expected \$expect}}\label{readme.md_autotoc_md23400}
+This error occurs for many different reasons if an unexpected character is seen (source\+: {\ttfamily micromark-\/extension-\/mdx-\/jsx}, rule id\+: {\ttfamily unexpected-\/character}).
+
+Some examples are\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{<.>}
+\DoxyCodeLine{</.>}
+\DoxyCodeLine{<a?>}
+\DoxyCodeLine{<a:+>}
+\DoxyCodeLine{<a./>}
+\DoxyCodeLine{<a\ b!>}
+\DoxyCodeLine{<a\ b:1>}
+\DoxyCodeLine{<a\ b=>}
+\DoxyCodeLine{<a/-\/>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23401}{}\doxysubsubsection{\texorpdfstring{Unexpected lazy line in container, expected line to be…}{Unexpected lazy line in container, expected line to be…}}\label{readme.md_autotoc_md23401}
+This error occurs if a {\ttfamily \texorpdfstring{$<$}{<}} was seen in a container which then has lazy content (source\+: {\ttfamily micromark-\/extension-\/mdx-\/jsx}, rule id\+: {\ttfamily unexpected-\/lazy}). For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{>\ <a}
+\DoxyCodeLine{b>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23402}{}\doxysubsection{\texorpdfstring{Tokens}{Tokens}}\label{readme.md_autotoc_md23402}
+Many tokens are used\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag} for the whole JSX tag ({\ttfamily \texorpdfstring{$<$}{<}a\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Marker} for the tag markers ({\ttfamily \texorpdfstring{$<$}{<}}, {\ttfamily \texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Marker} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Closing\+Marker} for the {\ttfamily /} marking a closing tag ({\ttfamily \texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Closing\+Marker} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Self\+Closing\+Marker} for the {\ttfamily /} marking a self-\/closing tag ({\ttfamily \texorpdfstring{$<$}{<}a/\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Self\+Closing\+Marker} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Name} for the whole tag name ({\ttfamily a\+:b} in {\ttfamily \texorpdfstring{$<$}{<}a\+:b\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Name} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Name\+Primary} for the first name ({\ttfamily a} in {\ttfamily \texorpdfstring{$<$}{<}a\+:b\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Name\+Primary} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Name\+Member\+Marker} for the {\ttfamily .} marking in members ({\ttfamily \texorpdfstring{$<$}{<}a.\+b\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Name\+Member\+Marker} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Name\+Member} for member names ({\ttfamily b} in {\ttfamily \texorpdfstring{$<$}{<}a\+:b\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Name\+Member} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Name\+Prefix\+Marker} for the {\ttfamily \+:} between primary and local ({\ttfamily \texorpdfstring{$<$}{<}a\+:b\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Name\+Prefix\+Marker} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Name\+Local} for the local name ({\ttfamily b} in {\ttfamily \texorpdfstring{$<$}{<}a\+:b\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Name\+Local} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Expression\+Attribute} for whole expression attributes ({\ttfamily \texorpdfstring{$<$}{<}a \{...b\}\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Expression\+Attribute} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Expression\+Attribute\+Marker} for {\ttfamily \{}, {\ttfamily \}} in expression attributes
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Expression\+Attribute\+Marker} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Expression\+Attribute\+Value} for chunks of what’s inside expression attributes
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Expression\+Attribute\+Value} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Attribute} for a whole normal attribute ({\ttfamily \texorpdfstring{$<$}{<}a b\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Attribute} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Attribute\+Name} for the whole name of an attribute ({\ttfamily b\+:c} in {\ttfamily \texorpdfstring{$<$}{<}a b\+:c\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Attribute\+Name} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Attribute\+Name\+Primary} for the first name of an attribute ({\ttfamily b} in {\ttfamily \texorpdfstring{$<$}{<}a b\+:c\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Attribute\+Name\+Primary} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Attribute\+Name\+Prefix\+Marker} for the {\ttfamily \+:} between primary and local ({\ttfamily \texorpdfstring{$<$}{<}a b\+:c\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Attribute\+Name\+Prefix\+Marker} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Attribute\+Name\+Local} for the local name of an attribute ({\ttfamily c} in {\ttfamily \texorpdfstring{$<$}{<}a b\+:c\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Attribute\+Name\+Local} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Attribute\+Initializer\+Marker} for the {\ttfamily =} between an attribute name and value
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Attribute\+Initializer\+Marker} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Attribute\+Value\+Literal} for a string attribute value ({\ttfamily \texorpdfstring{$<$}{<}a b="{}"{}\texorpdfstring{$>$}{>}})
+\item {\ttfamily mdx\+Jsx\+Text\+Tag\+Attribute\+Value\+Literal} \texorpdfstring{$^\wedge$}{\string^}
+\item {\ttfamily mdx\+Jsx\+Flow\+Tag\+Attribute\+Value\+Literal\+Marker} for the quotes around a string attribute value ({\ttfamily "{}$<$/tt$>$ or `'$<$tt$>$) \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Text\+Tag\+Attribute\+Value\+Literal\+Marker$<$tt$>$\texorpdfstring{$^\wedge$}{\string^} \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Flow\+Tag\+Attribute\+Value\+Literal\+Value$<$tt$>$for chunks of what’s inside   string attribute values \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Text\+Tag\+Attribute\+Value\+Literal\+Value$<$tt$>$\texorpdfstring{$^\wedge$}{\string^} \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Flow\+Tag\+Attribute\+Value\+Expression$<$tt$>$for an expression attribute value   ($<$/tt$>$$<$a b=\{1\}$>$$<$tt$>$) \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Text\+Tag\+Attribute\+Value\+Expression$<$tt$>$\texorpdfstring{$^\wedge$}{\string^} \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Flow\+Tag\+Attribute\+Value\+Expression\+Marker$<$tt$>$for the$<$/tt$>$\{$<$tt$>$and$<$/tt$>$\}$<$tt$>$of   expression attribute values \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Text\+Tag\+Attribute\+Value\+Expression\+Marker$<$tt$>$\texorpdfstring{$^\wedge$}{\string^} \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Flow\+Tag\+Attribute\+Value\+Expression\+Value$<$tt$>$for chunks of what’s inside   expression attribute values \texorpdfstring{$\ast$}{*}$<$/tt$>$mdx\+Jsx\+Text\+Tag\+Attribute\+Value\+Expression\+Value\`{} \texorpdfstring{$^\wedge$}{\string^}  @section autotoc\+\_\+md23403 Types  \+This package is fully typed with $<$a href="{}\href{https://www.typescriptlang.org}{\texttt{ https\+://www.\+typescriptlang.\+org}}"{} $>$\+Type\+Script$<$/a$>$. \+It exports the additional type @ref "{}options"{} "{}\`{}\+Options\`{}"{}.  @section autotoc\+\_\+md23404 Compatibility  \+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.  \+When we cut a new major release, we drop support for unmaintained versions of Node. \+This means we try to keep the current release line, $<$tt$>$micromark-\/extension-\/mdx-\/jsx\textbackslash{}@2$<$/tt$>$, compatible with Node.\+js 16.  \+This package works with $<$tt$>$micromark$<$/tt$>$ version $<$tt$>$3$<$/tt$>$ and later.  @section autotoc\+\_\+md23405 Security  \+This package is safe.  @section autotoc\+\_\+md23406 Related  \texorpdfstring{$\ast$}{*} $<$a href="{}\href{https://github.com/micromark/micromark-extension-mdxjs}{\texttt{ https\+://github.\+com/micromark/micromark-\/extension-\/mdxjs}}"{} $>$$<$tt$>$micromark-\/extension-\/mdxjs$<$/tt$>$$<$/a$>$   — support all MDX syntax \texorpdfstring{$\ast$}{*} $<$a href="{}\href{https://github.com/syntax-tree/mdast-util-mdx-jsx}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast-\/util-\/mdx-\/jsx}}"{} $>$$<$tt$>$mdast-\/util-\/mdx-\/jsx$<$/tt$>$$<$/a$>$   — support MDX JSX in mdast \texorpdfstring{$\ast$}{*} $<$a href="{}\href{https://mdxjs.com/packages/remark-mdx/}{\texttt{ https\+://mdxjs.\+com/packages/remark-\/mdx/}}"{} $>$$<$tt$>$remark-\/mdx$<$/tt$>$$<$/a$>$   — support all MDX syntax in remark  @section autotoc\+\_\+md23407 Contribute  \+See $<$a href="{}\href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ https\+://github.\+com/micromark/.\+github/blob/main/contributing.\+md}}"{} $>$$<$tt$>$contributing.\+md$<$/tt$>$ in $<$tt$>$micromark/.\+github$<$/tt$>$$<$/a$>$ for ways to get started. \+See $<$a href="{}\href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ https\+://github.\+com/micromark/.\+github/blob/main/support.\+md}}"{} $>$$<$tt$>$support.\+md$<$/tt$>$$<$/a$>$ for ways to get help.  \+This project has a $<$a href="{}\href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ https\+://github.\+com/micromark/.\+github/blob/main/code-\/of-\/conduct.\+md}}"{} $>$code of conduct$<$/a$>$. \+By interacting with this repository, organization, or community you agree to abide by its terms.  @section autotoc\+\_\+md23408 License  \mbox{[}\+MIT\mbox{]}\mbox{[}file-\/license\mbox{]} © $<$a href="{}\href{https://wooorm.com}{\texttt{ https\+://wooorm.\+com}}"{} \texorpdfstring{$>$}{>}Titus Wormer }
+\end{DoxyItemize}

@@ -1,0 +1,58 @@
+\doxysection{node\+\_\+modules/vitest-\/canvas-\/mock Directory Reference}
+\hypertarget{dir_9ec5cb85806e01724507e11d9aaa2ba9}{}\label{dir_9ec5cb85806e01724507e11d9aaa2ba9}\index{node\_modules/vitest-\/canvas-\/mock Directory Reference@{node\_modules/vitest-\/canvas-\/mock Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/vitest-canvas-mock}{\texttt{ }}  
+
+Mock {\ttfamily canvas} when running unit tests with \href{https://vitest.dev/}{\texttt{ vitest}}. Uses \href{https://github.com/hustcc/jest-canvas-mock}{\texttt{ jest-\/canvas-\/mock}}.\hypertarget{README.md_autotoc_md35147}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md35147}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ vitest-\/canvas-\/mock\ -\/D}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35148}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md35148}
+
+\begin{DoxyEnumerate}
+\item Create a new setup file that imports {\ttfamily vitest-\/canvas-\/mock} or add it to an existing setup file.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ vitest.setup.ts}
+\DoxyCodeLine{import\ 'vitest-\/canvas-\/mock'}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item In your {\ttfamily vitest.\+config.\+ts} file, create a {\ttfamily setup\+Files} array and add that file\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defineConfig\ \}\ from\ 'vitest/config'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ test:\ \{}
+\DoxyCodeLine{\ \ \ \ setupFiles:\ ['./vitest.setup.ts'],}
+\DoxyCodeLine{\ \ \ \ environment:\ 'jsdom',}
+\DoxyCodeLine{\ \ \ \ deps:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ inline:\ ['vitest-\/canvas-\/mock'],}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ For\ this\ config,\ check\ https://github.com/vitest-\/dev/vitest/issues/740}
+\DoxyCodeLine{\ \ \ \ threads:\ false,}
+\DoxyCodeLine{\ \ \ \ environmentOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ jsdom:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ resources:\ 'usable',}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35149}{}\doxysubsection{\texorpdfstring{Mock Strategy}{Mock Strategy}}\label{README.md_autotoc_md35149}
+View mock strategy doc \href{https://github.com/hustcc/jest-canvas-mock\#mock-strategy}{\texttt{ here}}.\hypertarget{README.md_autotoc_md35150}{}\doxysubsection{\texorpdfstring{Snapshots}{Snapshots}}\label{README.md_autotoc_md35150}
+View snapshots doc \href{https://github.com/hustcc/jest-canvas-mock\#snapshots}{\texttt{ here}}\hypertarget{README.md_autotoc_md35151}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md35151}
+MIT 

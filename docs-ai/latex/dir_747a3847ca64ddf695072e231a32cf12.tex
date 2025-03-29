@@ -1,0 +1,67 @@
+\doxysection{node\+\_\+modules/mimic-\/function Directory Reference}
+\hypertarget{dir_747a3847ca64ddf695072e231a32cf12}{}\label{dir_747a3847ca64ddf695072e231a32cf12}\index{node\_modules/mimic-\/function Directory Reference@{node\_modules/mimic-\/function Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+$<$picture$>$ $<$source media="{}(prefers-\/color-\/scheme\+: dark)"{} srcset="{}media/logo\+\_\+dark.\+svg"{}$>$  $<$/picture$>$ ~\newline
+
+
+\begin{quote}
+Make a function mimic another one \end{quote}
+
+
+Useful when you wrap a function in another function and you would like to preserve the original name and other properties.\hypertarget{readme.md_autotoc_md24114}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md24114}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mimic-\/function}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md24115}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md24115}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ mimicFunction\ from\ 'mimic-\/function';}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ foo()\ \{\}}
+\DoxyCodeLine{foo.unicorn\ =\ '🦄';}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ wrapper()\ \{}
+\DoxyCodeLine{\ \ \ \ return\ foo();}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(wrapper.name);}
+\DoxyCodeLine{//=>\ 'wrapper'}
+\DoxyCodeLine{}
+\DoxyCodeLine{mimicFunction(wrapper,\ foo);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(wrapper.name);}
+\DoxyCodeLine{//=>\ 'foo'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(wrapper.unicorn);}
+\DoxyCodeLine{//=>\ '🦄'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(wrapper));}
+\DoxyCodeLine{//=>\ '/*\ Wrapped\ with\ wrapper()\ */\(\backslash\)nfunction\ foo()\ \{\}'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md24116}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md24116}
+\hypertarget{readme.md_autotoc_md24117}{}\doxysubsubsubsection{\texorpdfstring{mimic\+Function(to, from, options?)}{mimic\+Function(to, from, options?)}}\label{readme.md_autotoc_md24117}
+Modifies the {\ttfamily to} function to mimic the {\ttfamily from} function. Returns the {\ttfamily to} function.
+
+{\ttfamily name}, {\ttfamily display\+Name}, and any other properties of {\ttfamily from} are copied. The {\ttfamily length} property is not copied. Prototype, class, and inherited properties are copied.
+
+{\ttfamily to.\+to\+String()} will return the same as {\ttfamily from.\+to\+String()} but prepended with a {\ttfamily Wrapped with to()} comment.\hypertarget{readme.md_autotoc_md24118}{}\doxysubsubsubsubsection{\texorpdfstring{to}{to}}\label{readme.md_autotoc_md24118}
+Type\+: {\ttfamily Function}
+
+Mimicking function.\hypertarget{readme.md_autotoc_md24119}{}\doxysubsubsubsubsection{\texorpdfstring{from}{from}}\label{readme.md_autotoc_md24119}
+Type\+: {\ttfamily Function}
+
+Function to mimic.\hypertarget{readme.md_autotoc_md24120}{}\doxysubsubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md24120}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md24121}{}\doxysubsubsubsubsubsection{\texorpdfstring{ignore\+Non\+Configurable}{ignore\+Non\+Configurable}}\label{readme.md_autotoc_md24121}
+Type\+: {\ttfamily boolean}\textbackslash{} Default\+: {\ttfamily false}
+
+Skip modifying \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor\#Description}{\texttt{ non-\/configurable properties}} instead of throwing an error.\hypertarget{readme.md_autotoc_md24122}{}\doxysubsubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md24122}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/rename-fn}{\texttt{ rename-\/fn}} -\/ Rename a function
+\item \href{https://github.com/ehmicky/keep-func-props}{\texttt{ keep-\/func-\/props}} -\/ Wrap a function without changing its name and other properties 
+\end{DoxyItemize}

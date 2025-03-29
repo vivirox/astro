@@ -1,0 +1,129 @@
+\doxysection{node\+\_\+modules/uint8arrays Directory Reference}
+\hypertarget{dir_26175c6dd95c3316b396ec85b33d201c}{}\label{dir_26175c6dd95c3316b396ec85b33d201c}\index{node\_modules/uint8arrays Directory Reference@{node\_modules/uint8arrays Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Some utility functions to make dealing with {\ttfamily Uint8\+Array}s more pleasant.
+
+
+\begin{DoxyItemize}
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item compare(a, b)
+\begin{DoxyItemize}
+\item Example
+\end{DoxyItemize}
+\item concat(arrays, \mbox{[}length\mbox{]})
+\begin{DoxyItemize}
+\item Example
+\end{DoxyItemize}
+\item equals(a, b)
+\begin{DoxyItemize}
+\item Example
+\end{DoxyItemize}
+\item from\+String(string, encoding = \textquotesingle{}utf8\textquotesingle{})
+\begin{DoxyItemize}
+\item Example
+\end{DoxyItemize}
+\item to\+String(array, encoding = \textquotesingle{}utf8\textquotesingle{})
+\begin{DoxyItemize}
+\item Example
+\end{DoxyItemize}
+\item xor(a, b)
+\begin{DoxyItemize}
+\item Example
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md33999}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md33999}
+\hypertarget{README.md_autotoc_md34000}{}\doxysubsubsection{\texorpdfstring{compare(a, b)}{compare(a, b)}}\label{README.md_autotoc_md34000}
+Compare two {\ttfamily Uint8\+Arrays}\hypertarget{README.md_autotoc_md34001}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md34001}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ compare\ \}\ from\ 'uint8arrays/compare'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ arrays\ =\ [}
+\DoxyCodeLine{\ \ Uint8Array.from([3,\ 4,\ 5]),}
+\DoxyCodeLine{\ \ Uint8Array.from([0,\ 1,\ 2])}
+\DoxyCodeLine{]}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ sorted\ =\ arrays.sort(compare)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.info(sorted)}
+\DoxyCodeLine{//\ [}
+\DoxyCodeLine{//\ \ \ \ Uint8Array[0,\ 1,\ 2]}
+\DoxyCodeLine{//\ \ \ \ Uint8Array[3,\ 4,\ 5]}
+\DoxyCodeLine{//\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34002}{}\doxysubsubsection{\texorpdfstring{concat(arrays, \mbox{[}length\mbox{]})}{concat(arrays, \mbox{[}length\mbox{]})}}\label{README.md_autotoc_md34002}
+Concatenate one or more array-\/likes and return a {\ttfamily Uint8\+Array} with their contents.
+
+If you know the length of the arrays, pass it as a second parameter, otherwise it will be calculated by traversing the list of arrays.\hypertarget{README.md_autotoc_md34003}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md34003}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ concat\ \}\ from\ 'uint8arrays/concat'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ arrays\ =\ [}
+\DoxyCodeLine{\ \ Uint8Array.from([0,\ 1,\ 2]),}
+\DoxyCodeLine{\ \ Uint8Array.from([3,\ 4,\ 5])}
+\DoxyCodeLine{]}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ all\ =\ concat(arrays,\ 6)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.info(all)}
+\DoxyCodeLine{//\ Uint8Array[0,\ 1,\ 2,\ 3,\ 4,\ 5]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34004}{}\doxysubsubsection{\texorpdfstring{equals(a, b)}{equals(a, b)}}\label{README.md_autotoc_md34004}
+Returns true if the two arrays are the same array or if they have the same length and contents.\hypertarget{README.md_autotoc_md34005}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md34005}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ equals\ \}\ from\ 'uint8arrays/equals'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ a\ =\ Uint8Array.from([0,\ 1,\ 2])}
+\DoxyCodeLine{const\ b\ =\ Uint8Array.from([3,\ 4,\ 5])}
+\DoxyCodeLine{const\ c\ =\ Uint8Array.from([0,\ 1,\ 2])}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.info(equals(a,\ b))\ //\ false}
+\DoxyCodeLine{console.info(equals(a,\ c))\ //\ true}
+\DoxyCodeLine{console.info(equals(a,\ a))\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34006}{}\doxysubsubsection{\texorpdfstring{from\+String(string, encoding = \textquotesingle{}utf8\textquotesingle{})}{from\+String(string, encoding = \textquotesingle{}utf8\textquotesingle{})}}\label{README.md_autotoc_md34006}
+Returns a new {\ttfamily Uint8\+Array} created from the passed string and interpreted as the passed encoding.
+
+Supports {\ttfamily utf8} and any of the \href{https://github.com/multiformats/multibase/blob/master/multibase.csv}{\texttt{ multibase encodings}} as implemented by the \href{https://www.npmjs.com/package/multiformats}{\texttt{ multiformats module}}.\hypertarget{README.md_autotoc_md34007}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md34007}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ fromString\ \}\ from\ 'uint8arrays/from-\/string'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.info(fromString('hello\ world'))\ //\ Uint8Array[104,\ 101\ ...}
+\DoxyCodeLine{console.info(fromString('00010203aabbcc',\ 'base16'))\ //\ Uint8Array[0,\ 1\ ...}
+\DoxyCodeLine{console.info(fromString('AAECA6q7zA',\ 'base64'))\ //\ Uint8Array[0,\ 1\ ...}
+\DoxyCodeLine{console.info(fromString('01234',\ 'ascii'))\ //\ Uint8Array[48,\ 49\ ...}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34008}{}\doxysubsubsection{\texorpdfstring{to\+String(array, encoding = \textquotesingle{}utf8\textquotesingle{})}{to\+String(array, encoding = \textquotesingle{}utf8\textquotesingle{})}}\label{README.md_autotoc_md34008}
+Returns a string created from the passed {\ttfamily Uint8\+Array} in the passed encoding.
+
+Supports {\ttfamily utf8} and any of the \href{https://github.com/multiformats/multibase/blob/master/multibase.csv}{\texttt{ multibase encodings}} as implemented by the \href{https://www.npmjs.com/package/multiformats}{\texttt{ multiformats module}}.\hypertarget{README.md_autotoc_md34009}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md34009}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ toString\ \}\ from\ 'uint8arrays/to-\/string'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.info(toString(Uint8Array.from([104,\ 101...])))\ //\ 'hello\ world'}
+\DoxyCodeLine{console.info(toString(Uint8Array.from([0,\ 1,\ 2...]),\ 'base16'))\ //\ '00010203aabbcc'}
+\DoxyCodeLine{console.info(toString(Uint8Array.from([0,\ 1,\ 2...]),\ 'base64'))\ //\ 'AAECA6q7zA'}
+\DoxyCodeLine{console.info(toString(Uint8Array.from([48,\ 49,\ 50...]),\ 'ascii'))\ //\ '01234'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34010}{}\doxysubsubsection{\texorpdfstring{xor(a, b)}{xor(a, b)}}\label{README.md_autotoc_md34010}
+Returns a {\ttfamily Uint8\+Array} containing {\ttfamily a} and {\ttfamily b} xored together.\hypertarget{README.md_autotoc_md34011}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md34011}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ xor\ \}\ from\ 'uint8arrays/xor'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.info(xor(Uint8Array.from([1,\ 0]),\ Uint8Array.from([0,\ 1])))\ //\ Uint8Array[1,\ 1]}
+
+\end{DoxyCode}
+ 

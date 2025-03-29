@@ -1,0 +1,179 @@
+\doxysection{node\+\_\+modules/detect-\/libc Directory Reference}
+\hypertarget{dir_db987a62e8987a103163524e89b0126d}{}\label{dir_db987a62e8987a103163524e89b0126d}\index{node\_modules/detect-\/libc Directory Reference@{node\_modules/detect-\/libc Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Node.\+js module to detect details of the C standard library (libc) implementation provided by a given Linux system.
+
+Currently supports detection of GNU glibc and MUSL libc.
+
+Provides asychronous and synchronous functions for the family (e.\+g. {\ttfamily glibc}, {\ttfamily musl}) and version (e.\+g. {\ttfamily 1.\+23}, {\ttfamily 1.\+2.\+3}).
+
+The version numbers of libc implementations are not guaranteed to be semver-\/compliant.
+
+For previous v1.\+x releases, please see the \href{https://github.com/lovell/detect-libc/tree/v1}{\texttt{ v1}} branch.\hypertarget{README.md_autotoc_md11844}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md11844}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ detect-\/libc}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11845}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md11845}
+\hypertarget{README.md_autotoc_md11846}{}\doxysubsubsection{\texorpdfstring{GLIBC}{GLIBC}}\label{README.md_autotoc_md11846}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ GLIBC:\ string\ =\ 'glibc';}
+
+\end{DoxyCode}
+
+
+A String constant containing the value {\ttfamily glibc}.\hypertarget{README.md_autotoc_md11847}{}\doxysubsubsection{\texorpdfstring{MUSL}{MUSL}}\label{README.md_autotoc_md11847}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MUSL:\ string\ =\ 'musl';}
+
+\end{DoxyCode}
+
+
+A String constant containing the value {\ttfamily musl}.\hypertarget{README.md_autotoc_md11848}{}\doxysubsubsection{\texorpdfstring{family}{family}}\label{README.md_autotoc_md11848}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ family():\ Promise<string\ |\ null>;}
+
+\end{DoxyCode}
+
+
+Resolves asychronously with\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily glibc} or {\ttfamily musl} when the libc family can be determined
+\item {\ttfamily null} when the libc family cannot be determined
+\item {\ttfamily null} when run on a non-\/\+Linux platform
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ family,\ GLIBC,\ MUSL\ \}\ =\ require('detect-\/libc');}
+\DoxyCodeLine{}
+\DoxyCodeLine{switch\ (await\ family())\ \{}
+\DoxyCodeLine{\ \ case\ GLIBC:\ ...}
+\DoxyCodeLine{\ \ case\ MUSL:\ ...}
+\DoxyCodeLine{\ \ case\ null:\ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11849}{}\doxysubsubsection{\texorpdfstring{family\+Sync}{family\+Sync}}\label{README.md_autotoc_md11849}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ familySync():\ string\ |\ null;}
+
+\end{DoxyCode}
+
+
+Synchronous version of {\ttfamily family()}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ familySync,\ GLIBC,\ MUSL\ \}\ =\ require('detect-\/libc');}
+\DoxyCodeLine{}
+\DoxyCodeLine{switch\ (familySync())\ \{}
+\DoxyCodeLine{\ \ case\ GLIBC:\ ...}
+\DoxyCodeLine{\ \ case\ MUSL:\ ...}
+\DoxyCodeLine{\ \ case\ null:\ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11850}{}\doxysubsubsection{\texorpdfstring{version}{version}}\label{README.md_autotoc_md11850}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ version():\ Promise<string\ |\ null>;}
+
+\end{DoxyCode}
+
+
+Resolves asychronously with\+:
+
+
+\begin{DoxyItemize}
+\item The version when it can be determined
+\item {\ttfamily null} when the libc family cannot be determined
+\item {\ttfamily null} when run on a non-\/\+Linux platform
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ version\ \}\ =\ require('detect-\/libc');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ v\ =\ await\ version();}
+\DoxyCodeLine{if\ (v)\ \{}
+\DoxyCodeLine{\ \ const\ [major,\ minor,\ patch]\ =\ v.split('.');}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11851}{}\doxysubsubsection{\texorpdfstring{version\+Sync}{version\+Sync}}\label{README.md_autotoc_md11851}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ versionSync():\ string\ |\ null;}
+
+\end{DoxyCode}
+
+
+Synchronous version of {\ttfamily version()}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ versionSync\ \}\ =\ require('detect-\/libc');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ v\ =\ versionSync();}
+\DoxyCodeLine{if\ (v)\ \{}
+\DoxyCodeLine{\ \ const\ [major,\ minor,\ patch]\ =\ v.split('.');}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11852}{}\doxysubsubsection{\texorpdfstring{is\+Non\+Glibc\+Linux}{is\+Non\+Glibc\+Linux}}\label{README.md_autotoc_md11852}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ isNonGlibcLinux():\ Promise<boolean>;}
+
+\end{DoxyCode}
+
+
+Resolves asychronously with\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily false} when the libc family is {\ttfamily glibc}
+\item {\ttfamily true} when the libc family is not {\ttfamily glibc}
+\item {\ttfamily false} when run on a non-\/\+Linux platform
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ isNonGlibcLinux\ \}\ =\ require('detect-\/libc');}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (await\ isNonGlibcLinux())\ \{\ ...\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11853}{}\doxysubsubsection{\texorpdfstring{is\+Non\+Glibc\+Linux\+Sync}{is\+Non\+Glibc\+Linux\+Sync}}\label{README.md_autotoc_md11853}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ isNonGlibcLinuxSync():\ boolean;}
+
+\end{DoxyCode}
+
+
+Synchronous version of {\ttfamily is\+Non\+Glibc\+Linux()}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ isNonGlibcLinuxSync\ \}\ =\ require('detect-\/libc');}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (isNonGlibcLinuxSync())\ \{\ ...\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11854}{}\doxysubsection{\texorpdfstring{Licensing}{Licensing}}\label{README.md_autotoc_md11854}
+Copyright 2017 Lovell Fuller and others.
+
+Licensed under the Apache License, Version 2.\+0 (the "{}\+License"{}); you may not use this file except in compliance with the License. You may obtain a copy of the License at \href{http://www.apache.org/licenses/LICENSE-2.0.html}{\texttt{ http\+://www.\+apache.\+org/licenses/\+LICENSE-\/2.\+0}}
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "{}\+AS IS"{} BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. 

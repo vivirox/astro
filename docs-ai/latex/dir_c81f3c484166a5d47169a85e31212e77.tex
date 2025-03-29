@@ -1,0 +1,117 @@
+\doxysection{node\+\_\+modules/eslint-\/scope Directory Reference}
+\hypertarget{dir_c81f3c484166a5d47169a85e31212e77}{}\label{dir_c81f3c484166a5d47169a85e31212e77}\index{node\_modules/eslint-\/scope Directory Reference@{node\_modules/eslint-\/scope Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}npm version\mbox{]}(\href{https://img.shields.io/npm/v/eslint-scope.svg}{\texttt{ https\+://img.\+shields.\+io/npm/v/eslint-\/scope.\+svg}})\mbox{]}(\href{https://www.npmjs.com/package/eslint-scope}{\texttt{ https\+://www.\+npmjs.\+com/package/eslint-\/scope}}) \href{https://www.npmjs.com/package/eslint-scope}{\texttt{ }} \href{https://github.com/eslint/js/actions}{\texttt{ }}\hypertarget{README.md_autotoc_md14266}{}\doxysubsection{\texorpdfstring{ESLint Scope}{ESLint Scope}}\label{README.md_autotoc_md14266}
+ESLint Scope is the \href{http://www.ecma-international.org/publications/standards/Ecma-262.htm}{\texttt{ ECMAScript}} scope analyzer used in ESLint. It is a fork of \href{http://github.com/estools/escope}{\texttt{ escope}}.\hypertarget{README.md_autotoc_md14267}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md14267}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ eslint-\/scope\ -\/-\/save}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14268}{}\doxysubsubsection{\texorpdfstring{📖 Usage}{📖 Usage}}\label{README.md_autotoc_md14268}
+To use in an ESM file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ eslintScope\ from\ 'eslint-\/scope';}
+
+\end{DoxyCode}
+
+
+To use in a Common\+JS file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ eslintScope\ =\ require('eslint-\/scope');}
+
+\end{DoxyCode}
+
+
+In order to analyze scope, you\textquotesingle{}ll need to have an \href{https://github.com/estree/estree}{\texttt{ ESTree}} compliant AST structure to run it on. The primary method is {\ttfamily eslint\+Scope.\+analyze()}, which takes two arguments\+:
+
+
+\begin{DoxyEnumerate}
+\item {\ttfamily ast} -\/ the ESTree-\/compliant AST structure to analyze.
+\item {\ttfamily options} (optional) -\/ Options to adjust how the scope is analyzed, including\+:
+\begin{DoxyItemize}
+\item {\ttfamily ignore\+Eval} (default\+: {\ttfamily false}) -\/ Set to {\ttfamily true} to ignore all {\ttfamily eval()} calls (which would normally create scopes).
+\item {\ttfamily nodejs\+Scope} (default\+: {\ttfamily false}) -\/ Set to {\ttfamily true} to create a top-\/level function scope needed for Common\+JS evaluation.
+\item {\ttfamily implied\+Strict} (default\+: {\ttfamily false}) -\/ Set to {\ttfamily true} to evaluate the code in strict mode even outside of modules and without {\ttfamily "{}use strict"{}}.
+\item {\ttfamily ecma\+Version} (default\+: {\ttfamily 5}) -\/ The version of ECMAScript to use to evaluate the code.
+\item {\ttfamily source\+Type} (default\+: {\ttfamily "{}script"{}}) -\/ The type of Java\+Script file to evaluate. Change to {\ttfamily "{}module"{}} for ECMAScript module code.
+\item {\ttfamily child\+Visitor\+Keys} (default\+: {\ttfamily null}) -\/ An object with visitor key information (like \href{https://github.com/eslint/js/tree/main/packages/eslint-visitor-keys}{\texttt{ {\ttfamily eslint-\/visitor-\/keys}}}). Without this, {\ttfamily eslint-\/scope} finds child nodes to visit algorithmically. Providing this option is a performance enhancement.
+\item {\ttfamily fallback} (default\+: {\ttfamily "{}iteration"{}}) -\/ The strategy to use when {\ttfamily child\+Visitor\+Keys} is not specified. May be a function.
+\item {\ttfamily jsx} (default\+: {\ttfamily false}) -\/ Enables the tracking of JSX components as variable references.
+\end{DoxyItemize}
+\end{DoxyEnumerate}
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ eslintScope\ from\ 'eslint-\/scope';}
+\DoxyCodeLine{import\ *\ as\ espree\ from\ 'espree';}
+\DoxyCodeLine{import\ estraverse\ from\ 'estraverse';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ \ \ ecmaVersion:\ 2022,}
+\DoxyCodeLine{\ \ \ \ sourceType:\ "{}module"{}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ast\ =\ espree.parse(code,\ \{\ range:\ true,\ ...options\ \});}
+\DoxyCodeLine{const\ scopeManager\ =\ eslintScope.analyze(ast,\ options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ currentScope\ =\ scopeManager.acquire(ast);\ \ \ //\ global\ scope}
+\DoxyCodeLine{}
+\DoxyCodeLine{estraverse.traverse(ast,\ \{}
+\DoxyCodeLine{\ \ \ \ enter\ (node,\ parent)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ do\ stuff}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (/Function/.test(node.type))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ currentScope\ =\ scopeManager.acquire(node);\ \ //\ get\ current\ function\ scope}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ leave(node,\ parent)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (/Function/.test(node.type))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ currentScope\ =\ currentScope.upper;\ \ //\ set\ to\ parent\ scope}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ do\ stuff}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14269}{}\doxysubsubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md14269}
+Issues and pull requests will be triaged and responded to as quickly as possible. We operate under the \href{http://eslint.org/docs/developer-guide/contributing}{\texttt{ ESLint Contributor Guidelines}}, so please be sure to read them before contributing. If you\textquotesingle{}re not sure where to dig in, check out the \href{https://github.com/eslint/js/issues}{\texttt{ issues}}.\hypertarget{README.md_autotoc_md14270}{}\doxysubsubsection{\texorpdfstring{Security Policy}{Security Policy}}\label{README.md_autotoc_md14270}
+We work hard to ensure that ESLint Scope is safe for everyone and that security issues are addressed quickly and responsibly. Read the full \href{https://github.com/eslint/.github/blob/master/SECURITY.md}{\texttt{ security policy}}.\hypertarget{README.md_autotoc_md14271}{}\doxysubsubsection{\texorpdfstring{Build Commands}{Build Commands}}\label{README.md_autotoc_md14271}
+
+\begin{DoxyItemize}
+\item {\ttfamily npm test} -\/ run all linting and tests
+\item {\ttfamily npm run lint} -\/ run all linting
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md14272}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md14272}
+ESLint Scope is licensed under a permissive BSD 2-\/clause license.\hypertarget{README.md_autotoc_md14273}{}\doxysubsubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md14273}
+The following companies, organizations, and individuals support ESLint\textquotesingle{}s ongoing maintenance and development. \href{https://eslint.org/donate}{\texttt{ Become a Sponsor}} to get your logo on our READMEs and \href{https://eslint.org/sponsors}{\texttt{ website}}.
+
+\doxysubsubsubsection*{Platinum Sponsors}
+
+\href{https://automattic.com}{\texttt{ }} \href{https://www.airbnb.com/}{\texttt{ }}
+
+\doxysubsubsubsection*{Gold Sponsors}
+
+\href{https://qlty.sh/}{\texttt{ }} \href{https://trunk.io/}{\texttt{ }} \href{https://shopify.engineering/}{\texttt{ }}
+
+\doxysubsubsubsection*{Silver Sponsors}
+
+\href{https://vite.dev/}{\texttt{ }} \href{https://www.jetbrains.com/}{\texttt{ }} \href{https://liftoff.io/}{\texttt{ }} \href{https://stackblitz.com}{\texttt{ }}
+
+\doxysubsubsubsection*{Bronze Sponsors}
+
+\href{https://cybozu.co.jp/}{\texttt{ }} \href{https://www.crosswordsolver.org/anagram-solver/}{\texttt{ }} \href{https://icons8.com/}{\texttt{ }} \href{https://discord.com}{\texttt{ }} \href{https://www.gitbook.com}{\texttt{ }} \href{https://nolebase.ayaka.io}{\texttt{ }} \href{https://nx.dev}{\texttt{ }} \href{https://opensource.mercedes-benz.com/}{\texttt{ }} \href{https://herocoders.com}{\texttt{ }} \href{https://www.lambdatest.com}{\texttt{ }}
+
+\doxysubsubsubsection*{Technology Sponsors}
+
+Technology sponsors allow us to use their products and services for free as part of a contribution to the open source ecosystem and our work. 
+
+\href{https://netlify.com}{\texttt{ }} \href{https://algolia.com}{\texttt{ }} \href{https://1password.com}{\texttt{ }}

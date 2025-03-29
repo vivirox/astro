@@ -1,0 +1,367 @@
+\doxysection{node\+\_\+modules/eslint-\/plugin-\/import-\/x/node\+\_\+modules/minimatch Directory Reference}
+\hypertarget{dir_bb855490e33a98683ea071d69e4cdf8d}{}\label{dir_bb855490e33a98683ea071d69e4cdf8d}\index{node\_modules/eslint-\/plugin-\/import-\/x/node\_modules/minimatch Directory Reference@{node\_modules/eslint-\/plugin-\/import-\/x/node\_modules/minimatch Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+A minimal matching utility.
+
+This is the matching library used internally by npm.
+
+It works by converting glob expressions into Java\+Script {\ttfamily Reg\+Exp} objects.\hypertarget{README.md_autotoc_md13350}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md13350}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ hybrid\ module,\ load\ with\ require()\ or\ import}
+\DoxyCodeLine{import\ \{\ minimatch\ \}\ from\ 'minimatch'}
+\DoxyCodeLine{//\ or:}
+\DoxyCodeLine{const\ \{\ minimatch\ \}\ =\ require('minimatch')}
+\DoxyCodeLine{}
+\DoxyCodeLine{minimatch('bar.foo',\ '*.foo')\ //\ true!}
+\DoxyCodeLine{minimatch('bar.foo',\ '*.bar')\ //\ false!}
+\DoxyCodeLine{minimatch('bar.foo',\ '*.+(bar|foo)',\ \{\ debug:\ true\ \})\ //\ true,\ and\ noisy!}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13351}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md13351}
+Supports these glob features\+:
+
+
+\begin{DoxyItemize}
+\item Brace Expansion
+\item Extended glob matching
+\item "{}\+Globstar"{} {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}} matching
+\item \href{https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html}{\texttt{ Posix character classes}}, like {\ttfamily \mbox{[}\mbox{[}\+:alpha\+:\mbox{]}\mbox{]}}, supporting the full range of Unicode characters. For example, {\ttfamily \mbox{[}\mbox{[}\+:alpha\+:\mbox{]}\mbox{]}} will match against `\textquotesingle{}é'{\ttfamily , though}\mbox{[}a-\/z\+A-\/Z\mbox{]}{\ttfamily will not. Collating symbol and set matching is not supported, so}\mbox{[}\mbox{[}=e=\mbox{]}\mbox{]}{\ttfamily will \+\_\+not\+\_\+ match}\textquotesingle{}é\textquotesingle{}{\ttfamily  and}\mbox{[}\mbox{[}.ch.\mbox{]}\mbox{]}{\ttfamily will not match}\textquotesingle{}ch\textquotesingle{}{\ttfamily in locales where}ch\`{} is considered a single character.
+\end{DoxyItemize}
+
+See\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily man sh}
+\item {\ttfamily man bash} \href{https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html}{\texttt{ Pattern Matching}}
+\item {\ttfamily man 3 fnmatch}
+\item {\ttfamily man 5 gitignore}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md13352}{}\doxysubsection{\texorpdfstring{Windows}{Windows}}\label{README.md_autotoc_md13352}
+{\bfseries{Please only use forward-\/slashes in glob expressions.}}
+
+Though windows uses either {\ttfamily /} or {\ttfamily \textbackslash{}} as its path separator, only {\ttfamily /} characters are used by this glob implementation. You must use forward-\/slashes {\bfseries{only}} in glob expressions. Back-\/slashes in patterns will always be interpreted as escape characters, not path separators.
+
+Note that {\ttfamily \textbackslash{}} or {\ttfamily /} {\itshape will} be interpreted as path separators in paths on Windows, and will match against {\ttfamily /} in glob expressions.
+
+So just always use {\ttfamily /} in patterns.\hypertarget{README.md_autotoc_md13353}{}\doxysubsubsection{\texorpdfstring{UNC Paths}{UNC Paths}}\label{README.md_autotoc_md13353}
+On Windows, UNC paths like {\ttfamily //?/c\+:/...} or {\ttfamily //\+Computer\+Name/\+Share/...} are handled specially.
+
+
+\begin{DoxyItemize}
+\item Patterns starting with a double-\/slash followed by some non-\/slash characters will preserve their double-\/slash. As a result, a pattern like {\ttfamily //\texorpdfstring{$\ast$}{*}} will match {\ttfamily //x}, but not {\ttfamily /x}.
+\item Patterns staring with {\ttfamily //?/\texorpdfstring{$<$}{<}drive letter\texorpdfstring{$>$}{>}\+:} will {\itshape not} treat the {\ttfamily ?} as a wildcard character. Instead, it will be treated as a normal string.
+\item Patterns starting with {\ttfamily //?/\texorpdfstring{$<$}{<}drive letter\texorpdfstring{$>$}{>}\+:/...} will match file paths starting with {\ttfamily \texorpdfstring{$<$}{<}drive letter\texorpdfstring{$>$}{>}\+:/...}, and vice versa, as if the {\ttfamily //?/} was not present. This behavior only is present when the drive letters are a case-\/insensitive match to one another. The remaining portions of the path/pattern are compared case sensitively, unless {\ttfamily nocase\+:true} is set.
+\end{DoxyItemize}
+
+Note that specifying a UNC path using {\ttfamily \textbackslash{}} characters as path separators is always allowed in the file path argument, but only allowed in the pattern argument when {\ttfamily windows\+Paths\+No\+Escape\+: true} is set in the options.\hypertarget{README.md_autotoc_md13354}{}\doxysubsection{\texorpdfstring{Minimatch Class}{Minimatch Class}}\label{README.md_autotoc_md13354}
+Create a minimatch object by instantiating the {\ttfamily minimatch.\+Minimatch} class.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ Minimatch\ =\ require('minimatch').Minimatch}
+\DoxyCodeLine{var\ mm\ =\ new\ Minimatch(pattern,\ options)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13355}{}\doxysubsubsection{\texorpdfstring{Properties}{Properties}}\label{README.md_autotoc_md13355}
+
+\begin{DoxyItemize}
+\item {\ttfamily pattern} The original pattern the minimatch object represents.
+\item {\ttfamily options} The options supplied to the constructor.
+\item {\ttfamily set} A 2-\/dimensional array of regexp or string expressions. Each row in the array corresponds to a brace-\/expanded pattern. Each item in the row corresponds to a single path-\/part. For example, the pattern {\ttfamily \{a,b/c\}/d} would expand to a set of patterns like\+: \begin{DoxyVerb}  [ [ a, d ]
+  , [ b, c, d ] ]
+\end{DoxyVerb}
+
+
+If a portion of the pattern doesn\textquotesingle{}t have any "{}magic"{} in it (that is, it\textquotesingle{}s something like {\ttfamily "{}foo"{}} rather than {\ttfamily fo\texorpdfstring{$\ast$}{*}o?}), then it will be left as a string rather than converted to a regular expression.
+\item {\ttfamily regexp} Created by the {\ttfamily make\+Re} method. A single regular expression expressing the entire pattern. This is useful in cases where you wish to use the pattern somewhat like {\ttfamily fnmatch(3)} with {\ttfamily FNM\+\_\+\+PATH} enabled.
+\item {\ttfamily negate} True if the pattern is negated.
+\item {\ttfamily comment} True if the pattern is a comment.
+\item {\ttfamily empty} True if the pattern is {\ttfamily "{}"{}}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md13356}{}\doxysubsubsection{\texorpdfstring{Methods}{Methods}}\label{README.md_autotoc_md13356}
+
+\begin{DoxyItemize}
+\item {\ttfamily make\+Re()} Generate the {\ttfamily regexp} member if necessary, and return it. Will return {\ttfamily false} if the pattern is invalid.
+\item {\ttfamily match(fname)} Return true if the filename matches the pattern, or false otherwise.
+\item {\ttfamily match\+One(file\+Array, pattern\+Array, partial)} Take a {\ttfamily /}-\/split filename, and match it against a single row in the {\ttfamily reg\+Exp\+Set}. This method is mainly for internal use, but is exposed so that it can be used by a glob-\/walker that needs to avoid excessive filesystem calls.
+\item {\ttfamily has\+Magic()} Returns true if the parsed pattern contains any magic characters. Returns false if all comparator parts are string literals. If the {\ttfamily magical\+Braces} option is set on the constructor, then it will consider brace expansions which are not otherwise magical to be magic. If not set, then a pattern like {\ttfamily a\{b,c\}d} will return {\ttfamily false}, because neither {\ttfamily abd} nor {\ttfamily acd} contain any special glob characters.
+
+This does {\bfseries{not}} mean that the pattern string can be used as a literal filename, as it may contain magic glob characters that are escaped. For example, the pattern {\ttfamily \textbackslash{}\textbackslash{}\texorpdfstring{$\ast$}{*}} or {\ttfamily \mbox{[}\texorpdfstring{$\ast$}{*}\mbox{]}} would not be considered to have magic, as the matching portion parses to the literal string `'{\itshape \textquotesingle{}{\ttfamily and would match a path named}\textquotesingle{}}\textquotesingle{}{\ttfamily , not}\textquotesingle{}\textbackslash{}\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily or}\textquotesingle{}\mbox{[}\texorpdfstring{$\ast$}{*}\mbox{]}\textquotesingle{}{\ttfamily . The}minimatch.\+unescape()\`{} method may be used to remove escape characters.
+\end{DoxyItemize}
+
+All other methods are internal, and will be called as necessary.\hypertarget{README.md_autotoc_md13357}{}\doxysubsubsection{\texorpdfstring{minimatch(path, pattern, options)}{minimatch(path, pattern, options)}}\label{README.md_autotoc_md13357}
+Main export. Tests a path against the pattern using the options.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ isJS\ =\ minimatch(file,\ '*.js',\ \{\ matchBase:\ true\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13358}{}\doxysubsubsection{\texorpdfstring{minimatch.\+filter(pattern, options)}{minimatch.\+filter(pattern, options)}}\label{README.md_autotoc_md13358}
+Returns a function that tests its supplied argument, suitable for use with {\ttfamily Array.\+filter}. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ javascripts\ =\ fileList.filter(minimatch.filter('*.js',\ \{\ matchBase:\ true\ \}))}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13359}{}\doxysubsubsection{\texorpdfstring{minimatch.\+escape(pattern, options = \{\})}{minimatch.\+escape(pattern, options = \{\})}}\label{README.md_autotoc_md13359}
+Escape all magic characters in a glob pattern, so that it will only ever match literal strings
+
+If the {\ttfamily windows\+Paths\+No\+Escape} option is used, then characters are escaped by wrapping in {\ttfamily \mbox{[}\mbox{]}}, because a magic character wrapped in a character class can only be satisfied by that exact character.
+
+Slashes (and backslashes in {\ttfamily windows\+Paths\+No\+Escape} mode) cannot be escaped or unescaped.\hypertarget{README.md_autotoc_md13360}{}\doxysubsubsection{\texorpdfstring{minimatch.\+unescape(pattern, options = \{\})}{minimatch.\+unescape(pattern, options = \{\})}}\label{README.md_autotoc_md13360}
+Un-\/escape a glob string that may contain some escaped characters.
+
+If the {\ttfamily windows\+Paths\+No\+Escape} option is used, then square-\/brace escapes are removed, but not backslash escapes. For example, it will turn the string `'\mbox{[}\texorpdfstring{$\ast$}{*}\mbox{]}\textquotesingle{}{\ttfamily into}\texorpdfstring{$\ast$}{*}{\ttfamily , but it will not turn }\textquotesingle{}\textbackslash{}\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily into}\textquotesingle{}\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily , because}\`{} is a path separator in {\ttfamily windows\+Paths\+No\+Escape} mode.
+
+When {\ttfamily windows\+Paths\+No\+Escape} is not set, then both brace escapes and backslash escapes are removed.
+
+Slashes (and backslashes in {\ttfamily windows\+Paths\+No\+Escape} mode) cannot be escaped or unescaped.\hypertarget{README.md_autotoc_md13361}{}\doxysubsubsection{\texorpdfstring{minimatch.\+match(list, pattern, options)}{minimatch.\+match(list, pattern, options)}}\label{README.md_autotoc_md13361}
+Match against the list of files, in the style of fnmatch or glob. If nothing is matched, and options.\+nonull is set, then return a list containing the pattern itself.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ javascripts\ =\ minimatch.match(fileList,\ '*.js',\ \{\ matchBase:\ true\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13362}{}\doxysubsubsection{\texorpdfstring{minimatch.\+make\+Re(pattern, options)}{minimatch.\+make\+Re(pattern, options)}}\label{README.md_autotoc_md13362}
+Make a regular expression object from the pattern.\hypertarget{README.md_autotoc_md13363}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md13363}
+All options are {\ttfamily false} by default.\hypertarget{README.md_autotoc_md13364}{}\doxysubsubsection{\texorpdfstring{debug}{debug}}\label{README.md_autotoc_md13364}
+Dump a ton of stuff to stderr.\hypertarget{README.md_autotoc_md13365}{}\doxysubsubsection{\texorpdfstring{nobrace}{nobrace}}\label{README.md_autotoc_md13365}
+Do not expand {\ttfamily \{a,b\}} and {\ttfamily \{1..3\}} brace sets.\hypertarget{README.md_autotoc_md13366}{}\doxysubsubsection{\texorpdfstring{noglobstar}{noglobstar}}\label{README.md_autotoc_md13366}
+Disable {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}} matching against multiple folder names.\hypertarget{README.md_autotoc_md13367}{}\doxysubsubsection{\texorpdfstring{dot}{dot}}\label{README.md_autotoc_md13367}
+Allow patterns to match filenames starting with a period, even if the pattern does not explicitly have a period in that spot.
+
+Note that by default, {\ttfamily a/\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}/b} will {\bfseries{not}} match {\ttfamily a/.d/b}, unless {\ttfamily dot} is set.\hypertarget{README.md_autotoc_md13368}{}\doxysubsubsection{\texorpdfstring{noext}{noext}}\label{README.md_autotoc_md13368}
+Disable "{}extglob"{} style patterns like {\ttfamily +(a\texorpdfstring{$\vert$}{|}b)}.\hypertarget{README.md_autotoc_md13369}{}\doxysubsubsection{\texorpdfstring{nocase}{nocase}}\label{README.md_autotoc_md13369}
+Perform a case-\/insensitive match.\hypertarget{README.md_autotoc_md13370}{}\doxysubsubsection{\texorpdfstring{nocase\+Magic\+Only}{nocase\+Magic\+Only}}\label{README.md_autotoc_md13370}
+When used with {\ttfamily \{nocase\+: true\}}, create regular expressions that are case-\/insensitive, but leave string match portions untouched. Has no effect when used without {\ttfamily \{nocase\+: true\}}
+
+Useful when some other form of case-\/insensitive matching is used, or if the original string representation is useful in some other way.\hypertarget{README.md_autotoc_md13371}{}\doxysubsubsection{\texorpdfstring{nonull}{nonull}}\label{README.md_autotoc_md13371}
+When a match is not found by {\ttfamily minimatch.\+match}, return a list containing the pattern itself if this option is set. When not set, an empty list is returned if there are no matches.\hypertarget{README.md_autotoc_md13372}{}\doxysubsubsection{\texorpdfstring{magical\+Braces}{magical\+Braces}}\label{README.md_autotoc_md13372}
+This only affects the results of the {\ttfamily Minimatch.\+has\+Magic} method.
+
+If the pattern contains brace expansions, such as {\ttfamily a\{b,c\}d}, but no other magic characters, then the {\ttfamily Minimatch.\+has\+Magic()} method will return {\ttfamily false} by default. When this option set, it will return {\ttfamily true} for brace expansion as well as other magic glob characters.\hypertarget{README.md_autotoc_md13373}{}\doxysubsubsection{\texorpdfstring{match\+Base}{match\+Base}}\label{README.md_autotoc_md13373}
+If set, then patterns without slashes will be matched against the basename of the path if it contains slashes. For example, {\ttfamily a?b} would match the path {\ttfamily /xyz/123/acb}, but not {\ttfamily /xyz/acb/123}.\hypertarget{README.md_autotoc_md13374}{}\doxysubsubsection{\texorpdfstring{nocomment}{nocomment}}\label{README.md_autotoc_md13374}
+Suppress the behavior of treating {\ttfamily \#} at the start of a pattern as a comment.\hypertarget{README.md_autotoc_md13375}{}\doxysubsubsection{\texorpdfstring{nonegate}{nonegate}}\label{README.md_autotoc_md13375}
+Suppress the behavior of treating a leading {\ttfamily !} character as negation.\hypertarget{README.md_autotoc_md13376}{}\doxysubsubsection{\texorpdfstring{flip\+Negate}{flip\+Negate}}\label{README.md_autotoc_md13376}
+Returns from negate expressions the same as if they were not negated. (Ie, true on a hit, false on a miss.)\hypertarget{README.md_autotoc_md13377}{}\doxysubsubsection{\texorpdfstring{partial}{partial}}\label{README.md_autotoc_md13377}
+Compare a partial path to a pattern. As long as the parts of the path that are present are not contradicted by the pattern, it will be treated as a match. This is useful in applications where you\textquotesingle{}re walking through a folder structure, and don\textquotesingle{}t yet have the full path, but want to ensure that you do not walk down paths that can never be a match.
+
+For example,
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{minimatch('/a/b',\ '/a/*/c/d',\ \{\ partial:\ true\ \})\ //\ true,\ might\ be\ /a/b/c/d}
+\DoxyCodeLine{minimatch('/a/b',\ '/**/d',\ \{\ partial:\ true\ \})\ //\ true,\ might\ be\ /a/b/.../d}
+\DoxyCodeLine{minimatch('/x/y/z',\ '/a/**/z',\ \{\ partial:\ true\ \})\ //\ false,\ because\ x\ !==\ a}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13378}{}\doxysubsubsection{\texorpdfstring{windows\+Paths\+No\+Escape}{windows\+Paths\+No\+Escape}}\label{README.md_autotoc_md13378}
+Use {\ttfamily \textbackslash{}\textbackslash{}} as a path separator {\itshape only}, and {\itshape never} as an escape character. If set, all {\ttfamily \textbackslash{}\textbackslash{}} characters are replaced with {\ttfamily /} in the pattern. Note that this makes it {\bfseries{impossible}} to match against paths containing literal glob pattern characters, but allows matching with patterns constructed using {\ttfamily path.\+join()} and {\ttfamily path.\+resolve()} on Windows platforms, mimicking the (buggy!) behavior of earlier versions on Windows. Please use with caution, and be mindful of the caveat about Windows paths.
+
+For legacy reasons, this is also set if {\ttfamily options.\+allow\+Windows\+Escape} is set to the exact value {\ttfamily false}.\hypertarget{README.md_autotoc_md13379}{}\doxysubsubsection{\texorpdfstring{windows\+No\+Magic\+Root}{windows\+No\+Magic\+Root}}\label{README.md_autotoc_md13379}
+When a pattern starts with a UNC path or drive letter, and in {\ttfamily nocase\+:true} mode, do not convert the root portions of the pattern into a case-\/insensitive regular expression, and instead leave them as strings.
+
+This is the default when the platform is {\ttfamily win32} and {\ttfamily nocase\+:true} is set.\hypertarget{README.md_autotoc_md13380}{}\doxysubsubsection{\texorpdfstring{preserve\+Multiple\+Slashes}{preserve\+Multiple\+Slashes}}\label{README.md_autotoc_md13380}
+By default, multiple {\ttfamily /} characters (other than the leading {\ttfamily //} in a UNC path, see "{}\+UNC Paths"{} above) are treated as a single {\ttfamily /}.
+
+That is, a pattern like {\ttfamily a///b} will match the file path {\ttfamily a/b}.
+
+Set {\ttfamily preserve\+Multiple\+Slashes\+: true} to suppress this behavior.\hypertarget{README.md_autotoc_md13381}{}\doxysubsubsection{\texorpdfstring{optimization\+Level}{optimization\+Level}}\label{README.md_autotoc_md13381}
+A number indicating the level of optimization that should be done to the pattern prior to parsing and using it for matches.
+
+Globstar parts {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}} are always converted to {\ttfamily \texorpdfstring{$\ast$}{*}} when {\ttfamily noglobstar} is set, and multiple adjacent {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}} parts are converted into a single {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}} (ie, {\ttfamily a/\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}/\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}/b} will be treated as {\ttfamily a/\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}/b}, as this is equivalent in all cases).
+
+
+\begin{DoxyItemize}
+\item {\ttfamily 0} -\/ Make no further changes. In this mode, {\ttfamily .} and {\ttfamily ..} are maintained in the pattern, meaning that they must also appear in the same position in the test path string. Eg, a pattern like {\ttfamily a/\texorpdfstring{$\ast$}{*}/../c} will match the string {\ttfamily a/b/../c} but not the string {\ttfamily a/c}.
+\item {\ttfamily 1} -\/ (default) Remove cases where a double-\/dot {\ttfamily ..} follows a pattern portion that is not {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}, {\ttfamily .}, {\ttfamily ..}, or empty `'\textquotesingle{}{\ttfamily . For example, the pattern}./a/b/../\texorpdfstring{$\ast$}{*}{\ttfamily is converted to}./a/\texorpdfstring{$\ast$}{*}{\ttfamily , and so it will match the path string}./a/c{\ttfamily , but not the path string}./a/b/../c{\ttfamily . Dots and empty path portions in the pattern are preserved. -\/}2\`{} (or higher) -\/ Much more aggressive optimizations, suitable for use with file-\/walking cases\+:
+\begin{DoxyItemize}
+\item Remove cases where a double-\/dot {\ttfamily ..} follows a pattern portion that is not {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}, {\ttfamily .}, or empty `'\textquotesingle{}{\ttfamily . Remove empty and}.{\ttfamily portions of the pattern, where safe to do so (ie, anywhere other than the last position, the first position, or the second position in a pattern starting with}/{\ttfamily , as this may indicate a UNC path on Windows).}
+\item {\ttfamily Convert patterns containing}
+\begin{DoxyPre}/**/../\end{DoxyPre}
+
+\end{DoxyItemize}
+
+
+\begin{DoxyPre}/<rest>{\ttfamily into the
+    equivalent}
+\begin{DoxyPre}/\{..,**\}/\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}/<rest>{\ttfamily , where}\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}{\ttfamily is a
+    a pattern portion other than}.{\ttfamily ,}..{\ttfamily ,}**{\ttfamily , or empty
+}''{\ttfamily .
+  -\/ Dedupe patterns where a}**{\ttfamily portion is present in one and
+    omitted in another, and it is not the final path portion, and
+    they are otherwise equivalent. So}\{a/**/b,a/b\}{\ttfamily becomes
+}a/**/b{\ttfamily , because}**{\ttfamily matches against an empty path portion.
+  -\/ Dedupe patterns where a}*{\ttfamily portion is present in one, and a
+    non-\/dot pattern other than}**{\ttfamily ,}.{\ttfamily ,}..{\ttfamily , or}''{\ttfamily is in the
+    same position in the other. So}a/\{{\itshape ,x\}/b{\ttfamily becomes}a/}/b{\ttfamily ,
+    because}*{\ttfamily can match against}x`.
+
+  While these optimizations improve the performance of
+  file-\/walking use cases such as \href{http://npm.im/glob}{\texttt{ glob}} (ie,
+  the reason this module exists), there are cases where it will
+  fail to match a literal string that would have been matched in
+  optimization level 1 or 0.
+
+  Specifically, while the {\ttfamily Minimatch.match()} method will
+  optimize the file path string in the same ways, resulting in
+  the same matches, it will fail when tested with the regular
+  expression provided by {\ttfamily Minimatch.makeRe()}, unless the path
+  string is first processed with
+  {\ttfamily minimatch.levelTwoFileOptimize()} or similar.
+
+\end{DoxyPre}
+\end{DoxyPre}
+
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md13382}{}\doxysubsubsection{\texorpdfstring{
+\begin{DoxyPre}
+\begin{DoxyPre}platform\end{DoxyPre}
+\end{DoxyPre}
+}{
+\begin{DoxyPre}
+\begin{DoxyPre}platform\end{DoxyPre}
+\end{DoxyPre}
+}}\label{README.md_autotoc_md13382}
+
+\begin{DoxyPre}
+\begin{DoxyPre}\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}When set to {\ttfamily win32}, this will trigger all windows-\/specific
+behaviors (special handling for UNC paths, and treating {\ttfamily \textbackslash{}} as
+separators in file paths for comparison.)\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}Defaults to the value of {\ttfamily process.platform}.\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}\end{DoxyPre}
+\end{DoxyPre}
+\hypertarget{README.md_autotoc_md13383}{}\doxysubsection{\texorpdfstring{
+\begin{DoxyPre}
+\begin{DoxyPre}Comparisons to other fnmatch/glob implementations\end{DoxyPre}
+\end{DoxyPre}
+}{
+\begin{DoxyPre}
+\begin{DoxyPre}Comparisons to other fnmatch/glob implementations\end{DoxyPre}
+\end{DoxyPre}
+}}\label{README.md_autotoc_md13383}
+
+\begin{DoxyPre}
+\begin{DoxyPre}\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}While strict compliance with the existing standards is a
+worthwhile goal, some discrepancies exist between minimatch and
+other implementations. Some are intentional, and some are
+unavoidable.\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}If the pattern starts with a {\ttfamily !} character, then it is negated. Set the
+{\ttfamily nonegate} flag to suppress this behavior, and treat leading {\ttfamily !}
+characters normally. This is perhaps relevant if you wish to start the
+pattern with a negative extglob pattern like {\ttfamily !(a|B)}. Multiple {\ttfamily !}
+characters at the start of a pattern will negate the pattern multiple
+times.\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}If a pattern starts with {\ttfamily \#}, then it is treated as a comment, and
+will not match anything. Use {\ttfamily \textbackslash{}\#} to match a literal {\ttfamily \#} at the
+start of a line, or set the {\ttfamily nocomment} flag to suppress this behavior.\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}The double-\/star character {\ttfamily **} is supported by default, unless the
+{\ttfamily noglobstar} flag is set. This is supported in the manner of bsdglob
+and bash 4.1, where {\ttfamily **} only has special significance if it is the only
+thing in a path part. That is, {\ttfamily a/**/b} will match {\ttfamily a/x/y/b}, but
+{\ttfamily a/**b} will not.\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}If an escaped pattern has no matches, and the {\ttfamily nonull} flag is set,
+then minimatch.match returns the pattern as-\/provided, rather than
+interpreting the character escapes. For example,
+{\ttfamily minimatch.match([], "{}\(\backslash\)\(\backslash\)*a\(\backslash\)\(\backslash\)?"{})} will return {\ttfamily "{}\(\backslash\)\(\backslash\)*a\(\backslash\)\(\backslash\)?"{}} rather than
+{\ttfamily "{}*a?"{}}. This is akin to setting the {\ttfamily nullglob} option in bash, except
+that it does not resolve escaped pattern characters.\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}If brace expansion is not disabled, then it is performed before any
+other interpretation of the glob pattern. Thus, a pattern like
+{\ttfamily +(a|\{b),c)\}}, which would not be valid in bash or zsh, is expanded
+{\bfseries{first}} into the set of {\ttfamily +(a|b)} and {\ttfamily +(a|c)}, and those patterns are
+checked for validity. Since those two are valid, matching proceeds.\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}Negated extglob patterns are handled as closely as possible to
+Bash semantics, but there are some cases with negative extglobs
+which are exceedingly difficult to express in a JavaScript
+regular expression. In particular the negated pattern
+{\ttfamily <start>!(<pattern>*|)*} will in bash match anything that does
+not start with {\ttfamily <start><pattern>}. However,
+{\ttfamily <start>!(<pattern>*)*} {\itshape will} match paths starting with
+{\ttfamily <start><pattern>}, because the empty string can match against
+the negated portion. In this library, {\ttfamily <start>!(<pattern>*|)*}
+will {\itshape not} match any pattern starting with {\ttfamily <start>}, due to a
+difference in precisely which patterns are considered "{}greedy"{} in
+Regular Expressions vs bash path expansion. This may be fixable,
+but not without incurring some complexity and performance costs,
+and the trade-\/off seems to not be worth pursuing.\end{DoxyPre}
+\end{DoxyPre}
+
+
+
+\begin{DoxyPre}
+\begin{DoxyPre}Note that {\ttfamily fnmatch(3)} in libc is an extremely naive string comparison
+matcher, which does not do anything special for slashes. This library is
+designed to be used in glob searching and file walkers, and so it does do
+special things with {\ttfamily /}. Thus, {\ttfamily foo*} will not match {\ttfamily foo/bar} in this
+library, even though it would in {\ttfamily fnmatch(3)}.
+\end{DoxyPre}
+\end{DoxyPre}

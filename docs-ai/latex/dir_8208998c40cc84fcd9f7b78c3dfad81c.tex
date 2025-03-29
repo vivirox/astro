@@ -1,0 +1,154 @@
+\doxysection{src/lib/fhe Directory Reference}
+\hypertarget{dir_8208998c40cc84fcd9f7b78c3dfad81c}{}\label{dir_8208998c40cc84fcd9f7b78c3dfad81c}\index{src/lib/fhe Directory Reference@{src/lib/fhe Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This module provides a production-\/grade Fully Homomorphic Encryption (FHE) implementation for the therapy chat system using TFHE-\/rs Web\+Assembly bindings.\hypertarget{README.md_autotoc_md37487}{}\doxysubsection{\texorpdfstring{Overview}{Overview}}\label{README.md_autotoc_md37487}
+Fully Homomorphic Encryption (FHE) allows computation on encrypted data without decrypting it first. This is particularly valuable for therapy chat applications where sensitive client information needs to remain private while still allowing AI models to process the data.\hypertarget{README.md_autotoc_md37488}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md37488}
+
+\begin{DoxyItemize}
+\item {\bfseries{Production-\/grade encryption}} using TFHE-\/rs, a Rust implementation of TFHE (Fast Fully Homomorphic Encryption over the Torus)
+\item {\bfseries{Web\+Assembly integration}} for client-\/side FHE operations
+\item {\bfseries{Homomorphic Operations}}\+: Perform operations on encrypted data\+:
+\begin{DoxyItemize}
+\item Sentiment analysis
+\item Text categorization
+\item Content summarization
+\item Text tokenization
+\item Content filtering
+\end{DoxyItemize}
+\item {\bfseries{Privacy-\/\+Preserving Analytics}}\+: Process and visualize encrypted data without decryption\+:
+\begin{DoxyItemize}
+\item Sentiment trends
+\item Topic clustering
+\item Emotional pattern detection
+\item Intervention effectiveness analysis
+\item Risk assessment
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37489}{}\doxysubsection{\texorpdfstring{Implementation Details}{Implementation Details}}\label{README.md_autotoc_md37489}
+The implementation uses\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/zama-ai/tfhe-rs}{\texttt{ TFHE-\/rs}} via its Web\+Assembly bindings
+\item AES-\/256-\/\+GCM for standard encryption modes
+\item Node.\+js crypto module for cryptographic operations
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37490}{}\doxysubsection{\texorpdfstring{Security Modes}{Security Modes}}\label{README.md_autotoc_md37490}
+The module supports different encryption modes\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily NONE}\+: No encryption
+\item {\ttfamily STANDARD}\+: AES-\/256-\/\+GCM encryption
+\item {\ttfamily HIPAA}\+: HIPAA-\/compliant AES-\/256-\/\+GCM encryption with additional safeguards
+\item {\ttfamily FHE}\+: Fully Homomorphic Encryption using TFHE-\/rs
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37491}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md37491}
+\hypertarget{README.md_autotoc_md37492}{}\doxysubsubsection{\texorpdfstring{Initialize the FHE Service}{Initialize the FHE Service}}\label{README.md_autotoc_md37492}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ EncryptionMode,\ fheService\ \}\ from\ '@/lib/fhe'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Initialize\ with\ default\ settings}
+\DoxyCodeLine{await\ fheService.initialize()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Or\ with\ custom\ settings}
+\DoxyCodeLine{await\ fheService.initialize(\{}
+\DoxyCodeLine{\ \ mode:\ EncryptionMode.FHE,}
+\DoxyCodeLine{\ \ keySize:\ 2048,}
+\DoxyCodeLine{\ \ securityLevel:\ 'high',}
+\DoxyCodeLine{\ \ enableDebug:\ true}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37493}{}\doxysubsubsection{\texorpdfstring{Encrypt a Message}{Encrypt a Message}}\label{README.md_autotoc_md37493}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ plaintext\ =\ 'Client\ message\ with\ sensitive\ information'}
+\DoxyCodeLine{const\ encrypted\ =\ await\ fheService.encrypt(plaintext)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37494}{}\doxysubsubsection{\texorpdfstring{Decrypt a Message}{Decrypt a Message}}\label{README.md_autotoc_md37494}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ decrypted\ =\ await\ fheService.decrypt(encrypted)}
+\DoxyCodeLine{console.log(decrypted)\ //\ "{}Client\ message\ with\ sensitive\ information"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37495}{}\doxysubsubsection{\texorpdfstring{Process Encrypted Data}{Process Encrypted Data}}\label{README.md_autotoc_md37495}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ FHEOperation\ \}\ from\ '@/lib/fhe'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Analyze\ sentiment\ without\ decryption}
+\DoxyCodeLine{const\ sentimentResult\ =\ await\ fheService.processEncrypted(}
+\DoxyCodeLine{\ \ encrypted,}
+\DoxyCodeLine{\ \ FHEOperation.SENTIMENT}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ result\ is\ still\ encrypted}
+\DoxyCodeLine{const\ sentiment\ =\ await\ fheService.decrypt(sentimentResult)}
+\DoxyCodeLine{console.log(sentiment)\ //\ "{}positive"{},\ "{}negative"{},\ or\ "{}neutral"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37496}{}\doxysubsubsection{\texorpdfstring{Generate Analytics on Encrypted Conversations}{Generate Analytics on Encrypted Conversations}}\label{README.md_autotoc_md37496}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ AnalyticsType,\ fheAnalytics\ \}\ from\ '@/lib/fhe/analytics'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Initialize\ analytics\ service}
+\DoxyCodeLine{await\ fheAnalytics.initialize()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Analyze\ sentiment\ trends\ in\ encrypted\ messages}
+\DoxyCodeLine{const\ sentimentTrend\ =\ await\ fheAnalytics.analyzeSentimentTrend(messages)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ full\ analytics\ dashboard}
+\DoxyCodeLine{const\ dashboard\ =\ await\ fheAnalytics.createAnalyticsDashboard(messages)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37497}{}\doxysubsubsection{\texorpdfstring{Export Public Key for External Use}{Export Public Key for External Use}}\label{README.md_autotoc_md37497}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ publicKey\ =\ fheService.exportPublicKey()}
+\DoxyCodeLine{//\ Share\ this\ key\ with\ external\ systems\ that\ need\ to\ encrypt\ data}
+\DoxyCodeLine{//\ that\ your\ system\ will\ process\ homomorphically}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37498}{}\doxysubsection{\texorpdfstring{Architecture}{Architecture}}\label{README.md_autotoc_md37498}
+The FHE module consists of\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{FHEService}}\+: Main service class implementing the singleton pattern
+\item {\bfseries{Encryption\+Mode}}\+: Enum of available encryption modes
+\item {\bfseries{FHEOperation}}\+: Enum of operations that can be performed on encrypted data
+\item {\bfseries{TFHE Context}}\+: Management of cryptographic keys and operations
+\item {\bfseries{Types}}\+: Interfaces for requests, responses, and metadata
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37499}{}\doxysubsection{\texorpdfstring{Performance Considerations}{Performance Considerations}}\label{README.md_autotoc_md37499}
+FHE operations are computationally intensive. Consider the following\+:
+
+
+\begin{DoxyEnumerate}
+\item Key generation is slow and should be done during initialization
+\item Encrypting and decrypting with FHE takes more time than standard encryption
+\item Homomorphic operations are slower than plaintext operations
+\item For maximum performance, consider using Web Workers for FHE operations
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37500}{}\doxysubsection{\texorpdfstring{Security Considerations}{Security Considerations}}\label{README.md_autotoc_md37500}
+While using FHE\+:
+
+
+\begin{DoxyEnumerate}
+\item Store private keys securely and never expose them
+\item Use proper key rotation policies
+\item Apply appropriate access controls to FHE operations
+\item Monitor for timing attacks and side-\/channel vulnerabilities
+\item Ensure all communication channels are properly secured
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37501}{}\doxysubsection{\texorpdfstring{Real-\/world Application}{Real-\/world Application}}\label{README.md_autotoc_md37501}
+In the therapy chat context, FHE enables\+:
+
+
+\begin{DoxyEnumerate}
+\item AI models to analyze encrypted therapy transcripts without seeing the content
+\item Detection of concerning patterns without compromising patient privacy
+\item Generation of insights while maintaining HIPAA compliance
+\item Secure collaboration between different healthcare providers 
+\end{DoxyEnumerate}

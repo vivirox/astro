@@ -1,0 +1,68 @@
+\doxysection{node\+\_\+modules/array.prototype.\+flatmap Directory Reference}
+\hypertarget{dir_d4c00acb0d6e578b3107ea49abca182a}{}\label{dir_d4c00acb0d6e578b3107ea49abca182a}\index{node\_modules/array.prototype.flatmap Directory Reference@{node\_modules/array.prototype.flatmap Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/es-shims/Array.prototype.flatMap/actions}{\texttt{ }} \href{https://app.codecov.io/gh/es-shims/Array.prototype.flatMap/}{\texttt{ }} \href{https://david-dm.org/es-shims/Array.prototype.flatMap}{\texttt{ }} \href{https://david-dm.org/es-shims/Array.prototype.flatMap\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=array.prototype.flatmap}{\texttt{ }}
+
+\href{https://npmjs.org/package/array.prototype.flatmap}{\texttt{ }}
+
+An ES2019 spec-\/compliant {\ttfamily Array.\+prototype.\+flat\+Map} shim/polyfill/replacement that works as far down as ES3.
+
+This package implements the \href{https://github.com/es-shims/api}{\texttt{ es-\/shim API}} interface. It works in an ES3-\/supported environment and complies with the \href{https://tc39.es/ecma262/\#sec-array.prototype.flatmap}{\texttt{ spec}}.
+
+Because {\ttfamily Array.\+prototype.\+flat\+Map} depends on a receiver (the {\ttfamily this} value), the main export takes the array to operate on as the first argument.\hypertarget{README.md_autotoc_md8161}{}\doxysubsection{\texorpdfstring{Getting started}{Getting started}}\label{README.md_autotoc_md8161}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ array.prototype.flatmap}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8162}{}\doxysubsection{\texorpdfstring{Usage/\+Examples}{Usage/\+Examples}}\label{README.md_autotoc_md8162}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ flatMap\ =\ require('array.prototype.flatmap');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ arr\ =\ [1,\ [2],\ [],\ 3];}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ results\ =\ flatMap(arr,\ function\ (x,\ i)\ \{}
+\DoxyCodeLine{\ \ \ \ assert.equal(x,\ arr[i]);}
+\DoxyCodeLine{\ \ \ \ return\ x;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(results,\ [1,\ 2,\ 3]);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ flatMap\ =\ require('array.prototype.flatmap');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{/*\ when\ Array\#flatMap\ is\ not\ present\ */}
+\DoxyCodeLine{delete\ Array.prototype.flatMap;}
+\DoxyCodeLine{var\ shimmedFlatMap\ =\ flatMap.shim();}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ mapper\ =\ function\ (x)\ \{\ return\ [x,\ 1];\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(shimmedFlatMap,\ flatMap.getPolyfill());}
+\DoxyCodeLine{assert.deepEqual(arr.flatMap(mapper),\ flatMap(arr,\ mapper));}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ flatMap\ =\ require('array.prototype.flatmap');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{/*\ when\ Array\#flatMap\ is\ present\ */}
+\DoxyCodeLine{var\ shimmedIncludes\ =\ flatMap.shim();}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ mapper\ =\ function\ (x)\ \{\ return\ [x,\ 1];\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(shimmedIncludes,\ Array.prototype.flatMap);}
+\DoxyCodeLine{assert.deepEqual(arr.flatMap(mapper),\ flatMap(arr,\ mapper));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8163}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md8163}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

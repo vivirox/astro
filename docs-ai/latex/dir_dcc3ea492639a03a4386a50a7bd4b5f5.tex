@@ -1,0 +1,258 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/to-\/estree Directory Reference}
+\hypertarget{dir_dcc3ea492639a03a4386a50a7bd4b5f5}{}\label{dir_dcc3ea492639a03a4386a50a7bd4b5f5}\index{node\_modules/hast-\/util-\/to-\/estree Directory Reference@{node\_modules/hast-\/util-\/to-\/estree Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_c7e76e7d5e4a8b6a8bcec9af4dfea616}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-to-estree/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-to-estree}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-to-estree}{\texttt{ }} \href{https://bundlejs.com/?q=hast-util-to-estree}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/hast}{\texttt{ hast}} utility to transform to \href{https://github.com/estree/estree}{\texttt{ estree}} (JSX).\hypertarget{readme.md_autotoc_md17292}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md17292}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}to\+Estree(tree\mbox{[}, options\mbox{]})\`{}
+\item \`{}default\+Handlers\`{}
+\item \`{}\+Element\+Attribute\+Name\+Case\`{}
+\item \`{}\+Handle\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Space\`{}
+\item \`{}\+State\`{}
+\item \`{}\+Style\+Property\+Name\+Case\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17293}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md17293}
+This package is a utility that takes a \href{https://github.com/syntax-tree/hast}{\texttt{ hast}} (HTML) syntax tree as input and turns it into an \href{https://github.com/estree/estree}{\texttt{ estree}} (Java\+Script) syntax tree (with a JSX extension). This package also supports embedded MDX nodes.\hypertarget{readme.md_autotoc_md17294}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md17294}
+This project is useful when you want to embed HTML as JSX inside JS while working with syntax trees. This is used in \href{https://mdxjs.com}{\texttt{ MDX}}.\hypertarget{readme.md_autotoc_md17295}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md17295}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/to-\/estree}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{toEstree\}\ from\ 'https://esm.sh/hast-\/util-\/to-\/estree@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{toEstree\}\ from\ 'https://esm.sh/hast-\/util-\/to-\/estree@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17296}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md17296}
+Say our module {\ttfamily example.\+html} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!doctype\ html>}
+\DoxyCodeLine{<html\ lang=en>}
+\DoxyCodeLine{<title>Hi!</title>}
+\DoxyCodeLine{<link\ rel=stylesheet\ href=index.css>}
+\DoxyCodeLine{<h1>Hello,\ world!</h1>}
+\DoxyCodeLine{<a\ download\ style="{}width:1;height:10px"{}></a>}
+\DoxyCodeLine{<!-\/-\/commentz-\/-\/>}
+\DoxyCodeLine{<svg\ xmlns="{}http://www.w3.org/2000/svg"{}>}
+\DoxyCodeLine{\ \ <title>SVG\ \`{}\&lt;ellipse\&gt;`\ element</title>}
+\DoxyCodeLine{\ \ <ellipse}
+\DoxyCodeLine{\ \ \ \ cx="{}120"{}}
+\DoxyCodeLine{\ \ \ \ cy="{}70"{}}
+\DoxyCodeLine{\ \ \ \ rx="{}100"{}}
+\DoxyCodeLine{\ \ \ \ ry="{}50"{}}
+\DoxyCodeLine{\ \ />}
+\DoxyCodeLine{</svg>}
+\DoxyCodeLine{<script\ src="{}index.js"{}></script>}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{jsx,\ toJs\}\ from\ 'estree-\/util-\/to-\/js'}
+\DoxyCodeLine{import\ \{fromHtml\}\ from\ 'hast-\/util-\/from-\/html'}
+\DoxyCodeLine{import\ \{toEstree\}\ from\ 'hast-\/util-\/to-\/estree'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ hast\ =\ fromHtml(await\ fs.readFile('example.html'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ estree\ =\ toEstree(hast)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(toJs(estree,\ \{handlers:\ jsx\}).value)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} (and prettier) yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ Commentz\ */}
+\DoxyCodeLine{;<>}
+\DoxyCodeLine{\ \ <html\ lang="{}en"{}>}
+\DoxyCodeLine{\ \ \ \ <head>}
+\DoxyCodeLine{\ \ \ \ \ \ <title>\{'Hi!'\}</title>}
+\DoxyCodeLine{\ \ \ \ \ \ \{'\(\backslash\)n'\}}
+\DoxyCodeLine{\ \ \ \ \ \ <link\ rel="{}stylesheet"{}\ href="{}index.css"{}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \{'\(\backslash\)n'\}}
+\DoxyCodeLine{\ \ \ \ </head>}
+\DoxyCodeLine{\ \ \ \ <body>}
+\DoxyCodeLine{\ \ \ \ \ \ <h1>\{'Hello,\ world!'\}</h1>}
+\DoxyCodeLine{\ \ \ \ \ \ \{'\(\backslash\)n'\}}
+\DoxyCodeLine{\ \ \ \ \ \ <a}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ download}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ style=\{\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ width:\ '1',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ height:\ '10px'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\}}
+\DoxyCodeLine{\ \ \ \ \ \ />}
+\DoxyCodeLine{\ \ \ \ \ \ \{'\(\backslash\)n'\}}
+\DoxyCodeLine{\ \ \ \ \ \ \{\}}
+\DoxyCodeLine{\ \ \ \ \ \ \{'\(\backslash\)n'\}}
+\DoxyCodeLine{\ \ \ \ \ \ <svg\ xmlns="{}http://www.w3.org/2000/svg"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{'\(\backslash\)n\ \ '\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <title>\{'SVG\ \`{}<ellipse>`\ element'\}</title>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{'\(\backslash\)n\ \ '\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <ellipse\ cx="{}120"{}\ cy="{}70"{}\ rx="{}100"{}\ ry="{}50"{}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{'\(\backslash\)n'\}}
+\DoxyCodeLine{\ \ \ \ \ \ </svg>}
+\DoxyCodeLine{\ \ \ \ \ \ \{'\(\backslash\)n'\}}
+\DoxyCodeLine{\ \ \ \ \ \ <script\ src="{}index.js"{}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \{'\(\backslash\)n'\}}
+\DoxyCodeLine{\ \ \ \ </body>}
+\DoxyCodeLine{\ \ </html>}
+\DoxyCodeLine{</>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17297}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md17297}
+This package exports the identifiers \`{}default\+Handlers\`{} and \`{}to\+Estree\`{}. There is no default export.\hypertarget{readme.md_autotoc_md17298}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+Estree(tree\mbox{[}, options\mbox{]})}}{{\ttfamily to\+Estree(tree\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md17298}
+Transform a hast tree (with embedded MDX nodes) into an estree (with JSX nodes).\hypertarget{readme.md_autotoc_md17299}{}\doxysubsubsubsubsection{\texorpdfstring{Notes}{Notes}}\label{readme.md_autotoc_md17299}
+\hypertarget{readme.md_autotoc_md17300}{}\doxysubsubsubsubsubsection{\texorpdfstring{Comments}{Comments}}\label{readme.md_autotoc_md17300}
+Comments are attached to the tree in their neighbouring nodes ({\ttfamily recast}, {\ttfamily babel} style) and also added as a {\ttfamily comments} array on the program node ({\ttfamily espree} style). You may have to do {\ttfamily program.\+comments = undefined} for certain compilers.\hypertarget{readme.md_autotoc_md17301}{}\doxysubsubsubsubsubsection{\texorpdfstring{Frameworks}{Frameworks}}\label{readme.md_autotoc_md17301}
+There are differences between what JSX frameworks accept, such as whether they accept {\ttfamily class} or {\ttfamily class\+Name}, or {\ttfamily background-\/color} or {\ttfamily background\+Color}.
+
+For JSX components written in MDX, the author has to be aware of this difference and write code accordingly. For hast elements transformed by this project, this will be handled through options.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Framework   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily element\+Attribute\+Name\+Case}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily style\+Property\+Name\+Case}    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Framework   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily element\+Attribute\+Name\+Case}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily style\+Property\+Name\+Case}    }\\\cline{1-3}
+\endhead
+Preact   &`\textquotesingle{}html'{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}dom\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} React \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}react\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}dom\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Odd"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} Solid \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}html\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}css\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} Vue \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}html\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}dom\textquotesingle{}\`{}   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{readme.md_autotoc_md17302}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17302}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Hast\+Node}}}) — hast tree
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17303}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17303}
+estree program node (\href{https://github.com/estree/estree/blob/master/es5.md\#programs}{\texttt{ {\ttfamily Program}}}).
+
+The program’s last child in {\ttfamily body} is most likely an {\ttfamily Expression\+Statement}, whose expression is a {\ttfamily JSXFragment} or a {\ttfamily JSXElement}.
+
+Typically, there is only one node in {\ttfamily body}, however, this utility also supports embedded MDX nodes in the HTML (when \href{https://github.com/syntax-tree/mdast-util-mdx}{\texttt{ {\ttfamily mdast-\/util-\/mdx}}} is used with mdast to parse markdown before passing its nodes through to hast). When MDX ESM import/exports are used, those nodes are added before the fragment or element in body.
+
+There aren’t many great estree serializers out there that support JSX. To do that, you can use \href{https://github.com/syntax-tree/estree-util-to-js}{\texttt{ {\ttfamily estree-\/util-\/to-\/js}}}. Or, use \href{https://github.com/wooorm/estree-util-build-jsx}{\texttt{ {\ttfamily estree-\/util-\/build-\/jsx}}} to turn JSX into function calls, and then serialize with whatever ({\ttfamily astring}, {\ttfamily escodegen}).\hypertarget{readme.md_autotoc_md17304}{}\doxysubsubsection{\texorpdfstring{{\ttfamily default\+Handlers}}{{\ttfamily default\+Handlers}}}\label{readme.md_autotoc_md17304}
+Default handlers for elements ({\ttfamily Record\texorpdfstring{$<$}{<}string, Handle\texorpdfstring{$>$}{>}}).
+
+Each key is a node type, each value is a \`{}\+Handle\`{}.\hypertarget{readme.md_autotoc_md17305}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Element\+Attribute\+Name\+Case}}{{\ttfamily Element\+Attribute\+Name\+Case}}}\label{readme.md_autotoc_md17305}
+Specify casing to use for attribute names (Type\+Script type).
+
+HTML casing is for example {\ttfamily class}, {\ttfamily stroke-\/linecap}, {\ttfamily xml\+:lang}. React casing is for example {\ttfamily class\+Name}, {\ttfamily stroke\+Linecap}, {\ttfamily xml\+Lang}.\hypertarget{readme.md_autotoc_md17306}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17306}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ ElementAttributeNameCase\ =\ 'html'\ |\ 'react'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17307}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Handle}}{{\ttfamily Handle}}}\label{readme.md_autotoc_md17307}
+Turn a hast node into an estree node (Type\+Script type).\hypertarget{readme.md_autotoc_md17308}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17308}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Hast\+Node}}}) — expected hast node
+\item {\ttfamily state} (\`{}\+State\`{}) — info passed around about the current state
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17309}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17309}
+JSX child ({\ttfamily Jsx\+Child}, optional).
+
+You can also add more results to {\ttfamily state.\+esm} and {\ttfamily state.\+comments}.\hypertarget{readme.md_autotoc_md17310}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md17310}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md17311}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md17311}
+
+\begin{DoxyItemize}
+\item {\ttfamily element\+Attribute\+Name\+Case} (\`{}\+Element\+Attribute\+Name\+Case\`{}, default\+: `\textquotesingle{}react'{\ttfamily ) — specify casing to use for attribute names; this casing is used for hast elements, not for embedded MDX JSX nodes (components that someone authored manually) \texorpdfstring{$\ast$}{*}}handlers{\ttfamily (}Record$<$string, Handle$>${\ttfamily , optional) — custom handlers \texorpdfstring{$\ast$}{*}}space{\ttfamily (\mbox{[}}Space{\ttfamily \mbox{]}\mbox{[}api-\/space\mbox{]}, default\+:}\textquotesingle{}html\textquotesingle{}{\ttfamily ) — which space the document is in; when an}$<$svg$>${\ttfamily element is found in the HTML space, this package already automatically switches to and from the SVG space when entering and exiting it \texorpdfstring{$\ast$}{*}}style\+Property\+Name\+Case{\ttfamily  (\mbox{[}}Style\+Property\+Name\+Case{\ttfamily \mbox{]}\mbox{[}api-\/style-\/property-\/name-\/case\mbox{]}, default\+:}\textquotesingle{}dom\textquotesingle{}{\ttfamily ) — specify casing to use for property names in}style{\ttfamily objects; this casing is used for hast elements, not for embedded MDX JSX nodes (components that someone authored manually) \texorpdfstring{$\ast$}{*}}table\+Cell\+Align\+To\+Style{\ttfamily (}boolean{\ttfamily , default\+:}true{\ttfamily ) — turn obsolete}align{\ttfamily props on}td{\ttfamily and}th{\ttfamily into CSS}style\`{} props
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17312}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Space}}{{\ttfamily Space}}}\label{readme.md_autotoc_md17312}
+Namespace (Type\+Script type).\hypertarget{readme.md_autotoc_md17313}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17313}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Space\ =\ 'html'\ |\ 'svg'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17314}{}\doxysubsubsection{\texorpdfstring{{\ttfamily State}}{{\ttfamily State}}}\label{readme.md_autotoc_md17314}
+Info passed around about the current state (Type\+Script type).\hypertarget{readme.md_autotoc_md17315}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md17315}
+
+\begin{DoxyItemize}
+\item {\ttfamily all} ({\ttfamily (node\+: Hast\+Parent) =\texorpdfstring{$>$}{>} Estree\+Jsx\+Child \texorpdfstring{$\vert$}{|} undefined}) — transform children of a hast parent to estree
+\item {\ttfamily comments} ({\ttfamily Array\texorpdfstring{$<$}{<}Estree\+Comment\texorpdfstring{$>$}{>}}) — list of estree comments
+\item {\ttfamily create\+Jsx\+Attribute\+Name} ({\ttfamily (name\+: string) =\texorpdfstring{$>$}{>} Estree\+Jsx\+Attribute\+Name}) — create a JSX attribute name
+\item {\ttfamily create\+Jsx\+Element\+Name} ({\ttfamily (name\+: string) =\texorpdfstring{$>$}{>} Estree\+Jsx\+Element\+Name}) — create a JSX attribute name
+\item {\ttfamily element\+Attribute\+Name\+Case} (\`{}\+Element\+Attribute\+Name\+Case\`{}) — casing to use for attribute names
+\item {\ttfamily esm} ({\ttfamily Array\texorpdfstring{$<$}{<}Estree\+Node\texorpdfstring{$>$}{>}}) — list of top-\/level estree nodes
+\item {\ttfamily handle} ({\ttfamily (node\+: Hast\+Node) =\texorpdfstring{$>$}{>} Estree\+Jsx\+Child \texorpdfstring{$\vert$}{|} undefined}) — transform a hast node to estree
+\item {\ttfamily inherit} ({\ttfamily (from\+: Hast\+Node, to\+: Estree\+Node) =\texorpdfstring{$>$}{>} undefined}) — take positional info and data from {\ttfamily from} (use {\ttfamily patch} if you don’t want data)
+\item {\ttfamily patch} ({\ttfamily (from\+: Hast\+Node, to\+: Estree\+Node) =\texorpdfstring{$>$}{>} undefined}) — take positional info from {\ttfamily from} (use {\ttfamily inherit} if you also want data)
+\item {\ttfamily schema} (\href{https://github.com/wooorm/property-information\#api}{\texttt{ {\ttfamily Schema}}}) — current schema
+\item {\ttfamily style\+Property\+Name\+Case} (\`{}\+Style\+Property\+Name\+Case\`{}) — casing for property names in {\ttfamily style} objects
+\item {\ttfamily table\+Cell\+Align\+To\+Style} ({\ttfamily boolean}) — turn obsolete {\ttfamily align} props on {\ttfamily td} and {\ttfamily th} into CSS {\ttfamily style} props
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17316}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Style\+Property\+Name\+Case}}{{\ttfamily Style\+Property\+Name\+Case}}}\label{readme.md_autotoc_md17316}
+Casing to use for property names in {\ttfamily style} objects (Type\+Script type).
+
+CSS casing is for example {\ttfamily background-\/color} and {\ttfamily -\/webkit-\/line-\/clamp}. DOM casing is for example {\ttfamily background\+Color} and {\ttfamily Webkit\+Line\+Clamp}.\hypertarget{readme.md_autotoc_md17317}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17317}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ StylePropertyNameCase\ =\ 'css'\ |\ 'dom'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17318}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md17318}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Element\+Attribute\+Name\+Case\`{}, \`{}\+Handle\`{}, \doxylink{README.md_options}{\`{}\+Options\`{}}, \`{}\+Space\`{}, \`{}\+State\`{}, and \`{}\+Style\+Property\+Name\+Case\`{}.\hypertarget{readme.md_autotoc_md17319}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md17319}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily hast-\/util-\/to-\/estree@\texorpdfstring{$^\wedge$}{\string^}3}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md17320}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md17320}
+You’re working with Java\+Script. It’s not safe.\hypertarget{readme.md_autotoc_md17321}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md17321}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/wooorm/estree-util-build-jsx}{\texttt{ {\ttfamily estree-\/util-\/build-\/jsx}}} — transform JSX to function calls
+\item \href{https://github.com/syntax-tree/hastscript}{\texttt{ {\ttfamily hastscript}}} — hyperscript compatible interface for creating nodes
+\item \href{https://github.com/syntax-tree/hast-util-from-dom}{\texttt{ {\ttfamily hast-\/util-\/from-\/dom}}} — transform a DOM tree to hast
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17322}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md17322}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md17323}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md17323}
+\mbox{[}MIT\mbox{]}\mbox{[}file-\/license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

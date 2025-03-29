@@ -1,0 +1,468 @@
+\doxysection{node\+\_\+modules/@octokit/request Directory Reference}
+\hypertarget{dir_9dad2f0dbb8985e119fc1c37c7d8f231}{}\label{dir_9dad2f0dbb8985e119fc1c37c7d8f231}\index{node\_modules/"@octokit/request Directory Reference@{node\_modules/"@octokit/request Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Send parameterized requests to Git\+Hub’s APIs with sensible defaults in browsers and Node \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/request}{\texttt{ }} \href{https://github.com/octokit/request.js/actions?query=workflow\%3ATest+branch\%3Amain}{\texttt{ }}
+
+{\ttfamily @octokit/request} is a request library for browsers \& node that makes it easier to interact with \href{https://developer.github.com/v3/}{\texttt{ Git\+Hub’s REST API}} and \href{https://developer.github.com/v4/guides/forming-calls/\#the-graphql-endpoint}{\texttt{ Git\+Hub’s Graph\+QL API}}.
+
+It uses \href{https://github.com/octokit/endpoint.js}{\texttt{ {\ttfamily @octokit/endpoint}}} to parse the passed options and sends the request using \href{https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API}{\texttt{ fetch}}. You can pass a custom {\ttfamily fetch} function using the {\ttfamily options.\+request.\+fetch} option, see below.
+
+
+\begin{DoxyItemize}
+\item request.js
+\begin{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_features}{Features}
+\item \doxylink{readme.md_usage}{Usage}
+\begin{DoxyItemize}
+\item REST API example
+\item Graph\+QL example
+\item Alternative\+: pass \`{}method\`{} \& \`{}url\`{} as part of options
+\end{DoxyItemize}
+\item Authentication
+\item request()
+\item \`{}request.defaults()\`{}
+\item \`{}request.endpoint\`{}
+\item Special cases
+\begin{DoxyItemize}
+\item The \`{}data\`{} parameter – set request body directly
+\item Set parameters for both the URL/query and the request body
+\item Set a custom Agent to your requests
+\end{DoxyItemize}
+\item \doxylink{README.md_license}{LICENSE}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5355}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md5355}
+🤩 1\+:1 mapping of REST API endpoint documentation, e.\+g. \href{https://developer.github.com/v3/issues/labels/\#add-labels-to-an-issue}{\texttt{ Add labels to an issue}} becomes
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{request("{}POST\ /repos/\{owner\}/\{repo\}/issues/\{number\}/labels"{},\ \{}
+\DoxyCodeLine{\ \ mediaType:\ \{}
+\DoxyCodeLine{\ \ \ \ previews:\ ["{}symmetra"{}],}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ owner:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ repo:\ "{}request.js"{},}
+\DoxyCodeLine{\ \ number:\ 1,}
+\DoxyCodeLine{\ \ labels:\ ["{}🐛\ bug"{}],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+👶 \href{https://bundlephobia.com/result?p=@octokit/request@5.0.3}{\texttt{ Small bundle size}} (\texorpdfstring{$<$}{<}4kb minified + gzipped)
+
+😎 Authenticate with any of \href{https://github.com/octokit/auth.js}{\texttt{ Git\+Hubs Authentication Strategies}}.
+
+👍 Sensible defaults
+
+
+\begin{DoxyItemize}
+\item {\ttfamily base\+Url}\+: {\ttfamily \href{https://api.github.com}{\texttt{ https\+://api.\+github.\+com}}}
+\item {\ttfamily headers.\+accept}\+: {\ttfamily application/vnd.\+github.\+v3+json}
+\item `headers\mbox{[}\textquotesingle{}user-\/agent'\mbox{]}{\ttfamily \+:}octokit-\/request.\+js/$<$current version$>$ $<$\+OS information$>${\ttfamily , e.\+g.}octokit-\/request.\+js/1.2.\+3 Node.\+js/10.15.\+0 (mac\+OS Mojave; x64)\`{}
+\end{DoxyItemize}
+
+👌 Simple to test\+: mock requests by passing a custom fetch method.
+
+🧐 Simple to debug\+: Sets {\ttfamily error.\+request} to request options causing the error (with redacted credentials).\hypertarget{README.md_autotoc_md5356}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5356}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers }&Load {\ttfamily @octokit/request} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ request\ \}\ from\ "{}https://esm.sh/@octokit/request"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node }&
+
+Install with {\ttfamily npm install @octokit/request}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ request\ \}\ from\ "{}@octokit/request"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5357}{}\doxysubsubsection{\texorpdfstring{REST API example}{REST API example}}\label{README.md_autotoc_md5357}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Following\ GitHub\ docs\ formatting:}
+\DoxyCodeLine{//\ https://developer.github.com/v3/repos/\#list-\/organization-\/repositories}
+\DoxyCodeLine{const\ result\ =\ await\ request("{}GET\ /orgs/\{org\}/repos"{},\ \{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ "{}token\ 0000000000000000000000000000000000000001"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ org:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ type:\ "{}private"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(`\$\{result.data.length\}\ repos\ found.`);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5358}{}\doxysubsubsection{\texorpdfstring{Graph\+QL example}{Graph\+QL example}}\label{README.md_autotoc_md5358}
+For Graph\+QL request we recommend using \href{https://github.com/octokit/graphql.js\#readme}{\texttt{ {\ttfamily @octokit/graphql}}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ result\ =\ await\ request("{}POST\ /graphql"{},\ \{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ "{}token\ 0000000000000000000000000000000000000001"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ query:\ \`{}query\ (\$login:\ String!)\ \{}
+\DoxyCodeLine{\ \ \ \ organization(login:\ \$login)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ repositories(privacy:\ PRIVATE)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ totalCount}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}`,}
+\DoxyCodeLine{\ \ variables:\ \{}
+\DoxyCodeLine{\ \ \ \ login:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5359}{}\doxysubsubsection{\texorpdfstring{Alternative\+: pass {\ttfamily method} \& {\ttfamily url} as part of options}{Alternative\+: pass {\ttfamily method} \& {\ttfamily url} as part of options}}\label{README.md_autotoc_md5359}
+Alternatively, pass in a method and a url
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ result\ =\ await\ request(\{}
+\DoxyCodeLine{\ \ method:\ "{}GET"{},}
+\DoxyCodeLine{\ \ url:\ "{}/orgs/\{org\}/repos"{},}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ "{}token\ 0000000000000000000000000000000000000001"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ org:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ type:\ "{}private"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5360}{}\doxysubsection{\texorpdfstring{Authentication}{Authentication}}\label{README.md_autotoc_md5360}
+The simplest way to authenticate a request is to set the {\ttfamily Authorization} header directly, e.\+g. to a \href{https://github.com/settings/tokens/}{\texttt{ personal access token}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ requestWithAuth\ =\ request.defaults(\{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ "{}token\ 0000000000000000000000000000000000000001"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ result\ =\ await\ requestWithAuth("{}GET\ /user"{});}
+
+\end{DoxyCode}
+
+
+For more complex authentication strategies such as Git\+Hub Apps or Basic, we recommend the according authentication library exported by \href{https://github.com/octokit/auth.js}{\texttt{ {\ttfamily @octokit/auth}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createAppAuth\ \}\ from\ "{}@octokit/auth-\/app"{};}
+\DoxyCodeLine{const\ auth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ process.env.APP\_ID,}
+\DoxyCodeLine{\ \ privateKey:\ process.env.PRIVATE\_KEY,}
+\DoxyCodeLine{\ \ installationId:\ 123,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ requestWithAuth\ =\ request.defaults(\{}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ hook:\ auth.hook,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ mediaType:\ \{}
+\DoxyCodeLine{\ \ \ \ previews:\ ["{}machine-\/man"{}],}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data:\ app\ \}\ =\ await\ requestWithAuth("{}GET\ /app"{});}
+\DoxyCodeLine{const\ \{\ data:\ app\ \}\ =\ await\ requestWithAuth(}
+\DoxyCodeLine{\ \ "{}POST\ /repos/\{owner\}/\{repo\}/issues"{},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ \ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ \ \ title:\ "{}Hello\ from\ the\ engine\ room"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5361}{}\doxysubsection{\texorpdfstring{request()}{request()}}\label{README.md_autotoc_md5361}
+{\ttfamily request(route, options)} or {\ttfamily request(options)}.
+
+{\bfseries{Options}}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{9}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description    }\\\cline{1-9}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description    }\\\cline{1-9}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily route}  }&String  &{\bfseries{Required}}. If {\ttfamily route} is set it has to be a string consisting of the request method and URL, e.\+g. {\ttfamily GET /orgs/\{org\}}   \\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily options.\+base\+Url}  }&String  &The base URL that {\ttfamily route} or {\ttfamily url} will be prefixed with, if they use relative paths. {\itshape Defaults to {\ttfamily \href{https://api.github.com}{\texttt{ https\+://api.\+github.\+com}}}}.   &\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily options.\+headers}  }&Object  &Custom headers. Passed headers are merged with defaults\+:~\newline
+ {\itshape {\ttfamily headers\mbox{[}\textquotesingle{}user-\/agent\textquotesingle{}\mbox{]}} defaults to {\ttfamily octokit-\/rest.\+js/1.2.\+3} (where {\ttfamily 1.\+2.\+3} is the released version)}.~\newline
+ {\itshape {\ttfamily headers\mbox{[}\textquotesingle{}accept\textquotesingle{}\mbox{]}} defaults to {\ttfamily application/vnd.\+github.\+v3+json}.~\newline
+ Use {\ttfamily options.\+media\+Type.\{format,previews\}} to request API previews and custom media types.   }\\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+method}  }}&{\itshape  String  }&{\itshape  Any supported \href{https://developer.github.com/v3/\#http-verbs}{\texttt{ http verb}}, case-\/insensitive. {\itshape Defaults to {\ttfamily Get}}.   }\\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+media\+Type.\+format}  }}&{\itshape  String  }&{\itshape  Media type param, such as {\ttfamily raw}, {\ttfamily html}, or {\ttfamily full}. See \href{https://developer.github.com/v3/media/}{\texttt{ Media Types}}.   }\\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+media\+Type.\+previews}  }}&{\itshape  Array of strings  }&{\itshape  Name of previews, such as {\ttfamily mercy}, {\ttfamily symmetra}, or {\ttfamily scarlet-\/witch}. See \href{https://docs.github.com/graphql/overview/schema-previews}{\texttt{ Graph\+QL Schema Previews}}. Note that these only apply to Graph\+QL requests and have no effect on REST routes.   }\\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+url}  }}&{\itshape  String  }&{\itshape  {\bfseries{Required}}. A path or full URL which may contain {\ttfamily \+:variable} or {\ttfamily \{variable\}} placeholders, e.\+g. {\ttfamily /orgs/\{org\}/repos}. The {\ttfamily url} is parsed using \href{https://github.com/bramstein/url-template}{\texttt{ url-\/template}}.   }\\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+data}  }}&{\itshape  Any  }&{\itshape  Set request body directly instead of setting it to JSON based on additional parameters. See \href{\#data-parameter}{\texttt{ "{}\+The \`{}data\`{} parameter"{}}} below.  }
+
+{\itshape  }\\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+request.\+fetch}  }}&{\itshape  Function  }&{\itshape  Custom replacement for \href{https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API}{\texttt{ fetch}}. Useful for testing or request hooks.   }\\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+request.\+hook}  }}&{\itshape  Function  }&{\itshape  Function with the signature {\ttfamily hook(request, endpoint\+Options)}, where {\ttfamily endpoint\+Options} are the parsed options as returned by \href{https://github.com/octokit/endpoint.js\#endpointmergeroute-options-or-endpointmergeoptions}{\texttt{ {\ttfamily endpoint.\+merge()}}}, and {\ttfamily request} is \href{https://github.com/octokit/request.js\#request}{\texttt{ {\ttfamily request()}}}. This option works great in conjunction with \href{https://github.com/gr2m/before-after-hook}{\texttt{ before-\/after-\/hook}}.   }\\\cline{1-9}
+\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  \label{README.md_options-request-signal}%
+\Hypertarget{README.md_options-request-signal}%
+{\ttfamily options.\+request.\+signal}  }}&{\itshape  \href{https://github.com/bitinn/node-fetch/tree/e996bdab73baf996cf2dbf25643c8fe2698c3249\#request-cancellation-with-abortsignal}{\texttt{ new Abort\+Controller().signal}}  }&{\itshape  Use an {\ttfamily Abort\+Controller} instance to cancel a request. In node you can only cancel streamed requests.   }&\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+request.\+log}  }}&{\itshape  {\ttfamily object}  }&{\itshape  Used for internal logging. Defaults to \href{https://developer.mozilla.org/en-US/docs/Web/API/console}{\texttt{ {\ttfamily console}}}.    }&\cellcolor{\tableheadbgcolor}\textbf{ {\itshape  {\ttfamily options.\+request.\+parse\+Success\+Response\+Body}  }}&{\itshape  {\ttfamily boolean}  }&{\itshape  If set to {\ttfamily false} the returned {\ttfamily response} will be passed through from {\ttfamily fetch}. This is useful to stream response.\+body when downloading files from the Git\+Hub API.   }\\\cline{1-9}
+\end{longtabu}
+
+
+{\itshape All other options except {\ttfamily options.\+request.\texorpdfstring{$\ast$}{*}} will be passed depending on the {\ttfamily method} and {\ttfamily url} options.}
+
+{\itshape 
+\begin{DoxyEnumerate}
+\item If the option key is a placeholder in the {\ttfamily url}, it will be used as replacement. For example, if the passed options are `\{url\+: '/orgs/\{org\}/repos\textquotesingle{}, org\+: \textquotesingle{}foo\textquotesingle{}\}{\ttfamily the returned}options.\+url{\ttfamily is}\href{https://api.github.com/orgs/foo/repos}{\texttt{ https\+://api.\+github.\+com/orgs/foo/repos}}{\ttfamily }
+\item {\ttfamily If the}method{\ttfamily is}GET{\ttfamily or}HEAD\`{}, the option is passed as query parameter
+\item Otherwise the parameter is passed in the request body as JSON key.
+\end{DoxyEnumerate}}
+
+{\itshape {\bfseries{Result}}}
+
+{\itshape {\ttfamily request} returns a promise. If the request was successful, the promise resolves with an object containing 4 keys\+:}
+
+{\itshape \tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ key  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ key  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description    }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily status} }&Integer &Response status status  \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily url} }&String &URL of response. If a request results in redirects, this is the final URL. You can send a {\ttfamily HEAD} request to retrieve it without loading the full response body.  \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily headers} }&Object &All response headers  \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily data} }&Any &The response body as returned from server. If the response is JSON then it will be parsed into an object  \\\cline{1-3}
+\end{longtabu}
+}
+
+{\itshape If an error occurs, the promise is rejected with an {\ttfamily error} object containing 3 keys to help with debugging\+:}
+
+{\itshape 
+\begin{DoxyItemize}
+\item {\ttfamily error.\+status} The http response status code
+\item {\ttfamily error.\+request} The request options such as {\ttfamily method}, {\ttfamily url} and {\ttfamily data}
+\item {\ttfamily error.\+response} The http response object with {\ttfamily url}, {\ttfamily headers}, and {\ttfamily data}
+\end{DoxyItemize}}
+
+{\itshape If the error is due to an {\ttfamily Abort\+Signal} being used, the resulting {\ttfamily Abort\+Error} is bubbled up to the caller.}
+
+{\itshape }\hypertarget{README.md_autotoc_md5362}{}\doxysubsection{\texorpdfstring{{\itshape {\ttfamily request.\+defaults()}}}{{\itshape {\ttfamily request.\+defaults()}}}}\label{README.md_autotoc_md5362}
+{\itshape }
+
+{\itshape Override or set default options. Example\+:}
+
+{\itshape 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ request\ \}\ from\ "{}@octokit/request"{};}
+\DoxyCodeLine{const\ myrequest\ =\ request.defaults(\{}
+\DoxyCodeLine{\ \ baseUrl:\ "{}https://github-\/enterprise.acme-\/inc.com/api/v3"{},}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}user-\/agent"{}:\ "{}myApp/1.2.3"{},}
+\DoxyCodeLine{\ \ \ \ authorization:\ \`{}token\ 0000000000000000000000000000000000000001`,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ org:\ "{}my-\/project"{},}
+\DoxyCodeLine{\ \ per\_page:\ 100,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{myrequest(`GET\ /orgs/\{org\}/repos`);}
+
+\end{DoxyCode}
+}
+
+{\itshape You can call {\ttfamily .defaults()} again on the returned method, the defaults will cascade.}
+
+{\itshape 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ myProjectRequest\ =\ request.defaults(\{}
+\DoxyCodeLine{\ \ baseUrl:\ "{}https://github-\/enterprise.acme-\/inc.com/api/v3"{},}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}user-\/agent"{}:\ "{}myApp/1.2.3"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ org:\ "{}my-\/project"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ myProjectRequestWithAuth\ =\ myProjectRequest.defaults(\{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ \`{}token\ 0000000000000000000000000000000000000001`,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}
+
+{\itshape {\ttfamily my\+Project\+Request} now defaults the {\ttfamily base\+Url}, `headers\mbox{[}\textquotesingle{}user-\/agent'\mbox{]}{\ttfamily , }org{\ttfamily and}headers\mbox{[}\textquotesingle{}authorization\textquotesingle{}\mbox{]}{\ttfamily on top of}headers\mbox{[}\textquotesingle{}accept\textquotesingle{}\mbox{]}\`{} that is set by the global default.}
+
+{\itshape }\hypertarget{README.md_autotoc_md5363}{}\doxysubsection{\texorpdfstring{{\itshape {\ttfamily request.\+endpoint}}}{{\itshape {\ttfamily request.\+endpoint}}}}\label{README.md_autotoc_md5363}
+{\itshape }
+
+{\itshape See \href{https://github.com/octokit/endpoint.js}{\texttt{ https\+://github.\+com/octokit/endpoint.\+js}}. Example}
+
+{\itshape 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ options\ =\ request.endpoint("{}GET\ /orgs/\{org\}/repos"{},\ \{}
+\DoxyCodeLine{\ \ org:\ "{}my-\/project"{},}
+\DoxyCodeLine{\ \ type:\ "{}private"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \{}
+\DoxyCodeLine{//\ \ \ method:\ 'GET',}
+\DoxyCodeLine{//\ \ \ url:\ 'https://api.github.com/orgs/my-\/project/repos?type=private',}
+\DoxyCodeLine{//\ \ \ headers:\ \{}
+\DoxyCodeLine{//\ \ \ \ \ accept:\ 'application/vnd.github.v3+json',}
+\DoxyCodeLine{//\ \ \ \ \ authorization:\ 'token\ 0000000000000000000000000000000000000001',}
+\DoxyCodeLine{//\ \ \ \ \ 'user-\/agent':\ 'octokit/endpoint.js\ v1.2.3'}
+\DoxyCodeLine{//\ \ \ \}}
+\DoxyCodeLine{//\ \}}
+
+\end{DoxyCode}
+}
+
+{\itshape All of the \href{https://github.com/octokit/endpoint.js}{\texttt{ {\ttfamily @octokit/endpoint}}} API can be used\+:}
+
+{\itshape 
+\begin{DoxyItemize}
+\item \`{}octokit\+Request.endpoint()\`{}
+\item \`{}octokit\+Request.endpoint.defaults()\`{}
+\item \`{}octokit\+Request.endpoint.merge()\`{}
+\item \`{}octokit\+Request.endpoint.parse()\`{}
+\end{DoxyItemize}}
+
+{\itshape }\hypertarget{README.md_autotoc_md5364}{}\doxysubsection{\texorpdfstring{{\itshape Special cases}}{{\itshape Special cases}}}\label{README.md_autotoc_md5364}
+{\itshape }
+
+{\itshape \label{README.md_data-parameter}%
+\Hypertarget{README.md_data-parameter}%
+}
+
+{\itshape }\hypertarget{README.md_autotoc_md5365}{}\doxysubsubsection{\texorpdfstring{{\itshape The {\ttfamily data} parameter – set request body directly}}{{\itshape The {\ttfamily data} parameter – set request body directly}}}\label{README.md_autotoc_md5365}
+{\itshape }
+
+{\itshape Some endpoints such as \href{https://developer.github.com/v3/markdown/\#render-a-markdown-document-in-raw-mode}{\texttt{ Render a Markdown document in raw mode}} don’t have parameters that are sent as request body keys, instead the request body needs to be set directly. In these cases, set the {\ttfamily data} parameter.}
+
+{\itshape 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ response\ =\ await\ request("{}POST\ /markdown/raw"{},\ \{}
+\DoxyCodeLine{\ \ data:\ "{}Hello\ world\ github/linguist\#1\ **cool**,\ and\ \#1!"{},}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ accept:\ "{}text/html;charset=utf-\/8"{},}
+\DoxyCodeLine{\ \ \ \ "{}content-\/type"{}:\ "{}text/plain"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Request\ is\ sent\ as}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ \ \ \ \ \{}
+\DoxyCodeLine{//\ \ \ \ \ \ \ method:\ 'post',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ url:\ 'https://api.github.com/markdown/raw',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ headers:\ \{}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ accept:\ 'text/html;charset=utf-\/8',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ 'content-\/type':\ 'text/plain',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ 'user-\/agent':\ userAgent}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \},}
+\DoxyCodeLine{//\ \ \ \ \ \ \ body:\ 'Hello\ world\ github/linguist\#1\ **cool**,\ and\ \#1!'}
+\DoxyCodeLine{//\ \ \ \ \ \}}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ not\ as}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ \ \ \ \ \{}
+\DoxyCodeLine{//\ \ \ \ \ \ \ ...}
+\DoxyCodeLine{//\ \ \ \ \ \ \ body:\ '\{"{}data"{}:\ "{}Hello\ world\ github/linguist\#1\ **cool**,\ and\ \#1!"{}\}'}
+\DoxyCodeLine{//\ \ \ \ \ \}}
+
+\end{DoxyCode}
+}
+
+{\itshape }\hypertarget{README.md_autotoc_md5366}{}\doxysubsubsection{\texorpdfstring{{\itshape Set parameters for both the URL/query and the request body}}{{\itshape Set parameters for both the URL/query and the request body}}}\label{README.md_autotoc_md5366}
+{\itshape }
+
+{\itshape There are API endpoints that accept both query parameters as well as a body. In that case you need to add the query parameters as templates to {\ttfamily options.\+url}, as defined in the \href{https://tools.ietf.org/html/rfc6570}{\texttt{ RFC 6570 URI Template specification}}.}
+
+{\itshape Example}
+
+{\itshape 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{request(}
+\DoxyCodeLine{\ \ "{}POST\ https://uploads.github.com/repos/octocat/Hello-\/World/releases/1/assets\{?name,label\}"{},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ name:\ "{}example.zip"{},}
+\DoxyCodeLine{\ \ \ \ label:\ "{}short\ description"{},}
+\DoxyCodeLine{\ \ \ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}content-\/type"{}:\ "{}text/plain"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}content-\/length"{}:\ 14,}
+\DoxyCodeLine{\ \ \ \ \ \ authorization:\ \`{}token\ 0000000000000000000000000000000000000001`,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ data:\ "{}Hello,\ world!"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+}
+
+{\itshape }\hypertarget{README.md_autotoc_md5367}{}\doxysubsubsection{\texorpdfstring{{\itshape Set a custom Agent to your requests}}{{\itshape Set a custom Agent to your requests}}}\label{README.md_autotoc_md5367}
+{\itshape }
+
+{\itshape The way to pass a custom {\ttfamily Agent} to requests is by creating a custom {\ttfamily fetch} function and pass it as {\ttfamily options.\+request.\+fetch}. A good example can be \href{https://undici.nodejs.org/\#/?id=undicifetchinput-init-promise}{\texttt{ undici\textquotesingle{}s {\ttfamily fetch} implementation}}.}
+
+{\itshape Example (\href{https://codesandbox.io/p/sandbox/nifty-stitch-wdlwlf}{\texttt{ See example in Code\+Sandbox}})}
+
+{\itshape 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ request\ \}\ from\ "{}@octokit/request"{};}
+\DoxyCodeLine{import\ \{\ fetch\ as\ undiciFetch,\ Agent\ \}\ from\ "{}undici"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{/**\ @type\ \{typeof\ import("{}undici"{}).fetch\}\ */}
+\DoxyCodeLine{const\ myFetch\ =\ (url,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ return\ undiciFetch(url,\ \{}
+\DoxyCodeLine{\ \ \ \ ...options,}
+\DoxyCodeLine{\ \ \ \ dispatcher:\ new\ Agent(\{}
+\DoxyCodeLine{\ \ \ \ \ \ keepAliveTimeout:\ 10,}
+\DoxyCodeLine{\ \ \ \ \ \ keepAliveMaxTimeout:\ 10,}
+\DoxyCodeLine{\ \ \ \ \}),}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data\ \}\ =\ await\ request("{}GET\ /users/\{username\}"{},\ \{}
+\DoxyCodeLine{\ \ username:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}X-\/GitHub-\/Api-\/Version"{}:\ "{}2022-\/11-\/28"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ options:\ \{}
+\DoxyCodeLine{\ \ \ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ fetch:\ myFetch,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}
+
+{\itshape }\hypertarget{README.md_autotoc_md5368}{}\doxysubsection{\texorpdfstring{{\itshape LICENSE}}{{\itshape LICENSE}}}\label{README.md_autotoc_md5368}
+{\itshape }
+
+{\itshape \mbox{[}MIT\mbox{]}(LICENSE) }

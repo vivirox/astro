@@ -1,0 +1,248 @@
+\doxysection{node\+\_\+modules/@unocss/transformer-\/directives Directory Reference}
+\hypertarget{dir_8246b3f04b6a3d553217f2e9a1cd3282}{}\label{dir_8246b3f04b6a3d553217f2e9a1cd3282}\index{node\_modules/"@unocss/transformer-\/directives Directory Reference@{node\_modules/"@unocss/transformer-\/directives Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Uno\+CSS transformer for {\ttfamily @apply}、{\ttfamily @screen} and {\ttfamily theme()} directive\hypertarget{README.md_autotoc_md7115}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md7115}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ -\/D\ @unocss/transformer-\/directives}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ transformerDirectives\ from\ '@unocss/transformer-\/directives'}
+\DoxyCodeLine{//\ uno.config.ts}
+\DoxyCodeLine{import\ \{\ defineConfig\ \}\ from\ 'unocss'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ transformers:\ [}
+\DoxyCodeLine{\ \ \ \ transformerDirectives(),}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7116}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md7116}
+\hypertarget{README.md_autotoc_md7117}{}\doxysubsubsection{\texorpdfstring{{\ttfamily @apply}}{{\ttfamily @apply}}}\label{README.md_autotoc_md7117}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.custom-\/div\ \{}
+\DoxyCodeLine{\ \ @apply\ text-\/center\ my-\/0\ font-\/medium;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Will be transformed to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.custom-\/div\ \{}
+\DoxyCodeLine{\ \ margin-\/top:\ 0rem;}
+\DoxyCodeLine{\ \ margin-\/bottom:\ 0rem;}
+\DoxyCodeLine{\ \ text-\/align:\ center;}
+\DoxyCodeLine{\ \ font-\/weight:\ 500;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7118}{}\doxysubsubsubsection{\texorpdfstring{CSS Variable Style}{CSS Variable Style}}\label{README.md_autotoc_md7118}
+To be compatible with vanilla CSS, you can use CSS custom properties to replace the {\ttfamily @apply} directive.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.custom-\/div\ \{}
+\DoxyCodeLine{\ \ -\/-\/at-\/apply:\ text-\/center\ my-\/0\ font-\/medium;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+To use rules with {\ttfamily \+:}, you will need to quote the value
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.custom-\/div\ \{}
+\DoxyCodeLine{\ \ -\/-\/at-\/apply:\ 'hover:text-\/red';}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+This feature is enabled by default with a few alias, you can configure or disable it via\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{transformerDirectives(\{}
+\DoxyCodeLine{\ \ //\ the\ defaults}
+\DoxyCodeLine{\ \ applyVariable:\ ['-\/-\/at-\/apply',\ '-\/-\/uno-\/apply',\ '-\/-\/uno'],}
+\DoxyCodeLine{\ \ //\ or\ disable\ with:}
+\DoxyCodeLine{\ \ //\ applyVariable:\ false}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7119}{}\doxysubsubsection{\texorpdfstring{{\ttfamily @screen}}{{\ttfamily @screen}}}\label{README.md_autotoc_md7119}
+The {\ttfamily @screen} directive allows you to create media queries that reference your breakpoints by name comes from \href{https://github.com/unocss/unocss/blob/main/README.md\#extend-theme}{\texttt{ {\ttfamily theme.\+breakpoints}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.grid\ \{}
+\DoxyCodeLine{\ \ -\/-\/uno:\ grid\ grid-\/cols-\/2;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@screen\ xs\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ -\/-\/uno:\ grid-\/cols-\/1;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@screen\ sm\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ -\/-\/uno:\ grid-\/cols-\/3;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{/*\ ...\ */}
+\DoxyCodeLine{...;}
+
+\end{DoxyCode}
+
+
+Will be transformed to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.grid\ \{}
+\DoxyCodeLine{\ \ display:\ grid;}
+\DoxyCodeLine{\ \ grid-\/template-\/columns:\ repeat(2,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@media\ (min-\/width:\ 320px)\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ grid-\/template-\/columns:\ repeat(1,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@media\ (min-\/width:\ 640px)\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ grid-\/template-\/columns:\ repeat(3,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{/*\ ...\ */}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7120}{}\doxysubsubsubsection{\texorpdfstring{Breakpoint Variant Support}{Breakpoint Variant Support}}\label{README.md_autotoc_md7120}
+{\ttfamily @screen} also supports {\ttfamily lt}、{\ttfamily at} variants\hypertarget{README.md_autotoc_md7121}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily @screen lt}}{{\ttfamily @screen lt}}}\label{README.md_autotoc_md7121}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.grid\ \{}
+\DoxyCodeLine{\ \ -\/-\/uno:\ grid\ grid-\/cols-\/2;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@screen\ lt-\/xs\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ -\/-\/uno:\ grid-\/cols-\/1;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@screen\ lt-\/sm\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ -\/-\/uno:\ grid-\/cols-\/3;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{/*\ ...\ */}
+
+\end{DoxyCode}
+
+
+Will be transformed to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.grid\ \{}
+\DoxyCodeLine{\ \ display:\ grid;}
+\DoxyCodeLine{\ \ grid-\/template-\/columns:\ repeat(2,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@media\ (max-\/width:\ 319.9px)\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ grid-\/template-\/columns:\ repeat(1,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@media\ (max-\/width:\ 639.9px)\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ grid-\/template-\/columns:\ repeat(3,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{/*\ ...\ */}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7122}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily @screen at}}{{\ttfamily @screen at}}}\label{README.md_autotoc_md7122}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.grid\ \{}
+\DoxyCodeLine{\ \ -\/-\/uno:\ grid\ grid-\/cols-\/2;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@screen\ at-\/xs\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ -\/-\/uno:\ grid-\/cols-\/1;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@screen\ at-\/xl\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ -\/-\/uno:\ grid-\/cols-\/3;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@screen\ at-\/xxl\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ -\/-\/uno:\ grid-\/cols-\/4;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{/*\ ...\ */}
+
+\end{DoxyCode}
+
+
+Will be transformed to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.grid\ \{}
+\DoxyCodeLine{\ \ display:\ grid;}
+\DoxyCodeLine{\ \ grid-\/template-\/columns:\ repeat(2,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@media\ (min-\/width:\ 320px)\ and\ (max-\/width:\ 639.9px)\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ grid-\/template-\/columns:\ repeat(1,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@media\ (min-\/width:\ 1280px)\ and\ (max-\/width:\ 1535.9px)\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ grid-\/template-\/columns:\ repeat(3,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@media\ (min-\/width:\ 1536px)\ \{}
+\DoxyCodeLine{\ \ .grid\ \{}
+\DoxyCodeLine{\ \ \ \ grid-\/template-\/columns:\ repeat(4,\ minmax(0,\ 1fr));}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{/*\ ...\ */}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7123}{}\doxysubsubsection{\texorpdfstring{{\ttfamily theme()}}{{\ttfamily theme()}}}\label{README.md_autotoc_md7123}
+Use the {\ttfamily theme()} function to access your theme config values using dot notation.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.btn-\/blue\ \{}
+\DoxyCodeLine{\ \ background-\/color:\ theme('colors.blue.500');}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Will be compiled to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.btn-\/blue\ \{}
+\DoxyCodeLine{\ \ background-\/color:\ \#3b82f6;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7124}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md7124}
+MIT License \copyright{} 2022-\/PRESENT \href{https://github.com/hannoeru}{\texttt{ hannoeru}} 

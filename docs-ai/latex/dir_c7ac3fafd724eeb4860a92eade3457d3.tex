@@ -1,0 +1,44 @@
+\doxysection{node\+\_\+modules/three/examples/jsm/libs/basis Directory Reference}
+\hypertarget{dir_c7ac3fafd724eeb4860a92eade3457d3}{}\label{dir_c7ac3fafd724eeb4860a92eade3457d3}\index{node\_modules/three/examples/jsm/libs/basis Directory Reference@{node\_modules/three/examples/jsm/libs/basis Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Basis Universal is a "{}\mbox{[}supercompressed\mbox{]}(http\+://gamma.\+cs.\+unc.\+edu/\+GST/gst.\+pdf)"{} GPU texture and texture video compression system that outputs a highly compressed intermediate file format (.basis) that can be quickly transcoded to a wide variety of GPU texture compression formats.
+
+\href{https://github.com/BinomialLLC/basis_universal}{\texttt{ Git\+Hub}}\hypertarget{README.md_autotoc_md32804}{}\doxysubsection{\texorpdfstring{Transcoders}{Transcoders}}\label{README.md_autotoc_md32804}
+Basis Universal texture data may be used in two different file formats\+: {\ttfamily .basis} and {\ttfamily .ktx2}, where {\ttfamily ktx2} is a standardized wrapper around basis texture data.
+
+For further documentation about the Basis compressor and transcoder, refer to the \href{https://github.com/BinomialLLC/basis_universal}{\texttt{ Basis Git\+Hub repository}}.
+
+The folder contains two files required for transcoding {\ttfamily .basis} or {\ttfamily .ktx2} textures\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily basis\+\_\+transcoder.\+js} — Java\+Script wrapper for the Web\+Assembly transcoder.
+\item {\ttfamily basis\+\_\+transcoder.\+wasm} — Web\+Assembly transcoder.
+\end{DoxyItemize}
+
+Both are dependencies of {\ttfamily KTX2\+Loader}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ ktx2Loader\ =\ new\ KTX2Loader();}
+\DoxyCodeLine{ktx2Loader.setTranscoderPath(\ 'examples/jsm/libs/basis/'\ );}
+\DoxyCodeLine{ktx2Loader.detectSupport(\ renderer\ );}
+\DoxyCodeLine{ktx2Loader.load(\ 'diffuse.ktx2',\ function\ (\ texture\ )\ \{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ const\ material\ =\ new\ THREE.MeshStandardMaterial(\ \{\ map:\ texture\ \}\ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{\},\ function\ ()\ \{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log(\ 'onProgress'\ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{\},\ function\ (\ e\ )\ \{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.error(\ e\ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{\}\ );}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32805}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md32805}
+\href{https://github.com/BinomialLLC/basis_universal/blob/master/LICENSE}{\texttt{ Apache License 2.\+0}} 

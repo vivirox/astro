@@ -1,0 +1,37 @@
+\doxysection{node\+\_\+modules/siginfo Directory Reference}
+\hypertarget{dir_19910e7be0b51208206b4b6c0c2d897f}{}\label{dir_19910e7be0b51208206b4b6c0c2d897f}\index{node\_modules/siginfo Directory Reference@{node\_modules/siginfo Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/eemilbayes/siginfo}{\texttt{ }}
+
+\begin{quote}
+Utility module to print pretty messages on SIGINFO/\+SIGUSR1 \end{quote}
+
+
+{\ttfamily SIGINFO} on BSD / mac\+OS and {\ttfamily SIGUSR1} on Linux, usually triggered by {\ttfamily Ctrl + T}, are by convention used to print information about a long running process internal state. Eg. {\ttfamily dd} will tell you how many blocks it has written and at what speed, while {\ttfamily xz} will tell you progress, compression ratio and estimated time remaining.
+
+This module wraps both signals, checks if the process is connected to TTY and lets you do whatever you want.\hypertarget{README.md_autotoc_md30716}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md30716}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ siginfo\ =\ require('siginfo')}
+\DoxyCodeLine{var\ pkg\ =\ require('./package.json')}
+\DoxyCodeLine{}
+\DoxyCodeLine{siginfo(function\ ()\ \{}
+\DoxyCodeLine{\ \ console.dir(\{}
+\DoxyCodeLine{\ \ \ \ version:\ pkg.version,}
+\DoxyCodeLine{\ \ \ \ uptime:\ process.uptime()}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30717}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md30717}
+\hypertarget{README.md_autotoc_md30718}{}\doxysubsubsection{\texorpdfstring{{\ttfamily var remove\+Listener = siginfo(query\+Fn, \mbox{[}force\mbox{]})}}{{\ttfamily var remove\+Listener = siginfo(query\+Fn, \mbox{[}force\mbox{]})}}}\label{README.md_autotoc_md30718}
+{\ttfamily query\+Fn} can be used for whatever you want (logging, sending a UDP message, etc.). Setting {\ttfamily force = true} will attach the event handlers whether a TTY is present or not.\hypertarget{README.md_autotoc_md30719}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md30719}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ siginfo}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30720}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md30720}
+\mbox{[}ISC\mbox{]}(LICENSE) 

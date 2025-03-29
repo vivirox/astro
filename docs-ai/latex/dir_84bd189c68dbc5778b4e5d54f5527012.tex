@@ -1,0 +1,322 @@
+\doxysection{node\+\_\+modules/eslint-\/plugin-\/jsonc Directory Reference}
+\hypertarget{dir_84bd189c68dbc5778b4e5d54f5527012}{}\label{dir_84bd189c68dbc5778b4e5d54f5527012}\index{node\_modules/eslint-\/plugin-\/jsonc Directory Reference@{node\_modules/eslint-\/plugin-\/jsonc Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_1466b272f9ff71e1fa9c78348ad5053c}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/eslint-plugin-jsonc}{\texttt{ eslint-\/plugin-\/jsonc}} is ESLint plugin for \href{https://json.org/}{\texttt{ JSON}}, \href{https://github.com/microsoft/node-jsonc-parser}{\texttt{ JSONC}} and \href{https://json5.org/}{\texttt{ JSON5}} files.
+
+\href{https://www.npmjs.com/package/eslint-plugin-jsonc}{\texttt{ }} \href{https://www.npmjs.com/package/eslint-plugin-jsonc}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-jsonc}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-jsonc}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-jsonc}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-jsonc}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-jsonc}{\texttt{ }} \href{https://github.com/ota-meshi/eslint-plugin-jsonc/actions?query=workflow\%3ACI}{\texttt{ }} \href{https://coveralls.io/github/ota-meshi/eslint-plugin-jsonc?branch=master}{\texttt{ }}\hypertarget{README.md_autotoc_md13592}{}\doxysubsection{\texorpdfstring{\+:name\+\_\+badge\+: Features}{\+:name\+\_\+badge\+: Features}}\label{README.md_autotoc_md13592}
+This ESLint plugin provides linting rules relate to better ways to help you avoid problems when using \href{https://json.org/}{\texttt{ JSON}}, \href{https://github.com/microsoft/node-jsonc-parser}{\texttt{ JSONC}} and \href{https://json5.org/}{\texttt{ JSON5}}.
+
+
+\begin{DoxyItemize}
+\item You can use ESLint to lint \href{https://json.org/}{\texttt{ JSON}}.
+\item You can apply rules similar to the rules you use for Java\+Script to JSON using the \href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html}{\texttt{ {\ttfamily "{}jsonc/auto"{}}}} rule provided by this plugin.
+\item You can choose the appropriate config provided by this plugin depending on whether you are using \href{https://json.org/}{\texttt{ JSON}}, \href{https://github.com/microsoft/node-jsonc-parser}{\texttt{ JSONC}} or \href{https://json5.org/}{\texttt{ JSON5}}.
+\item Supports \href{https://vue-loader.vuejs.org/spec.html}{\texttt{ Vue SFC}} custom blocks such as {\ttfamily \texorpdfstring{$<$}{<}i18n\texorpdfstring{$>$}{>}}. ~\newline
+ Requirements {\ttfamily vue-\/eslint-\/parser} v7.\+3.\+0 and above.
+\item Supports ESLint directives. e.\+g. {\ttfamily // eslint-\/disable-\/next-\/line}
+\item You can check your code in real-\/time using the ESLint editor integrations.
+\end{DoxyItemize}
+
+You can check on the \href{https://ota-meshi.github.io/eslint-plugin-jsonc/playground/}{\texttt{ Online DEMO}}.\hypertarget{README.md_autotoc_md13593}{}\doxysubsection{\texorpdfstring{\+:question\+: Why is it ESLint plugin?}{\+:question\+: Why is it ESLint plugin?}}\label{README.md_autotoc_md13593}
+ESLint is a great linter for Java\+Script. ~\newline
+ Since \href{https://json.org/}{\texttt{ JSON}} is a subset of Java\+Script, the same parser and rules can be applied to \href{https://json.org/}{\texttt{ JSON}}. ~\newline
+ Also, \href{https://github.com/microsoft/node-jsonc-parser}{\texttt{ JSONC}} and \href{https://json5.org/}{\texttt{ JSON5}}, which are variants of \href{https://json.org/}{\texttt{ JSON}}, are more similar to Java\+Script than \href{https://json.org/}{\texttt{ JSON}}. Applying a Java\+Script linter to \href{https://json.org/}{\texttt{ JSON}} is more rational than creating a JSON-\/specific linter.\hypertarget{README.md_autotoc_md13594}{}\doxysubsubsection{\texorpdfstring{How does {\ttfamily eslint-\/plugin-\/jsonc} work?}{How does {\ttfamily eslint-\/plugin-\/jsonc} work?}}\label{README.md_autotoc_md13594}
+This plugin parses {\ttfamily .json} with its own parser, but this parser just converts AST parsed by {\ttfamily acorn} (It is used internally by the ESLint standard parser) into AST with another name. However, ASTs that do not exist in \href{https://json.org/}{\texttt{ JSON}} and the superset of JSON syntaxes are reported as parsing errors. By converting the AST to another name, we prevent false positives from ESLint core rules. ~\newline
+ Moreover, You can do the same linting using the extended rules of the ESLint core rules provided by this plugin.
+
+The parser package used by this plugin is \href{https://github.com/ota-meshi/jsonc-eslint-parser}{\texttt{ jsonc-\/eslint-\/parser}}.\hypertarget{README.md_autotoc_md13595}{}\doxysubsection{\texorpdfstring{\+:question\+: How is it different from other JSON plugins?}{\+:question\+: How is it different from other JSON plugins?}}\label{README.md_autotoc_md13595}
+\hypertarget{README.md_autotoc_md13596}{}\doxysubsubsection{\texorpdfstring{\href{https://github.com/eslint/json}{\texttt{ {\ttfamily @eslint/json}}}}{\href{https://github.com/eslint/json}{\texttt{ {\ttfamily @eslint/json}}}}}\label{README.md_autotoc_md13596}
+They work similarly, but \href{https://github.com/eslint/json}{\texttt{ {\ttfamily @eslint/json}}} is an ESLint JSON language plugin, but {\ttfamily eslint-\/plugin-\/jsonc} is an ESLint plugin.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily eslint-\/plugin-\/jsonc} was created 4 years before \href{https://github.com/eslint/json}{\texttt{ {\ttfamily @eslint/json}}} and it has more rules than \href{https://github.com/eslint/json}{\texttt{ {\ttfamily @eslint/json}}}.
+\item The parser used by {\ttfamily eslint-\/plugin-\/jsonc} accepts more non-\/standard JSON syntax than \href{https://github.com/eslint/json}{\texttt{ {\ttfamily @eslint/json}}}. {\ttfamily eslint-\/plugin-\/jsonc} has rules that can auto-\/fixed these non-\/standard syntax to standard syntax.
+\item {\ttfamily eslint-\/plugin-\/jsonc} can also be used together with \href{https://github.com/eslint/json}{\texttt{ {\ttfamily @eslint/json}}}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md13597}{}\doxysubsubsection{\texorpdfstring{Plugins that do not use AST}{Plugins that do not use AST}}\label{README.md_autotoc_md13597}
+e.\+g. \href{https://www.npmjs.com/package/eslint-plugin-json}{\texttt{ eslint-\/plugin-\/json}}
+
+These plugins use the processor to parse and return the results independently, without providing the ESLint engine with AST and source code text.
+
+Plugins don\textquotesingle{}t provide AST, so you can\textquotesingle{}t use directive comments (e.\+g. {\ttfamily /\texorpdfstring{$\ast$}{*} eslint-\/disable \texorpdfstring{$\ast$}{*}/}). ~\newline
+ Plugins don\textquotesingle{}t provide source code text, so you can\textquotesingle{}t use it with plugins and rules that use text (e.\+g. \href{https://github.com/prettier/eslint-plugin-prettier}{\texttt{ eslint-\/plugin-\/prettier}}, \href{https://eslint.org/docs/rules/eol-last}{\texttt{ eol-\/last}}). ~\newline
+ Also, most plugins don\textquotesingle{}t support JSON5.
+
+{\bfseries{eslint-\/plugin-\/jsonc}} works by providing AST and source code text to ESLint.\hypertarget{README.md_autotoc_md13598}{}\doxysubsubsection{\texorpdfstring{Plugins that use the same AST as Java\+Script}{Plugins that use the same AST as Java\+Script}}\label{README.md_autotoc_md13598}
+e.\+g. \href{https://www.npmjs.com/package/eslint-plugin-json-files}{\texttt{ eslint-\/plugin-\/json-\/files}}, \href{https://www.npmjs.com/package/eslint-plugin-json-es}{\texttt{ eslint-\/plugin-\/json-\/es}}
+
+These plugins use the same AST as Java\+Script for linting.
+
+Since the plugin uses the same AST as Java\+Script, it may not report syntax that is not available in JSON (e.\+g. {\ttfamily 1 + 1}, {\ttfamily (42)}). Also, ESLint core rules and other plugin rules can false positives (e.\+g. \href{https://eslint.org/docs/rules/quote-props}{\texttt{ quote-\/props}} rule reports quote on keys), which can complicate the your configuration.
+
+The AST used by {\bfseries{eslint-\/plugin-\/jsonc}} is similar to Java\+Script AST, but with a different node name. This will prevent false positives. This means that it can be easily used in combination with other plugins.\hypertarget{README.md_autotoc_md13599}{}\doxysubsection{\texorpdfstring{\+:book\+: Documentation}{\+:book\+: Documentation}}\label{README.md_autotoc_md13599}
+See \href{https://ota-meshi.github.io/eslint-plugin-jsonc/}{\texttt{ documents}}.\hypertarget{README.md_autotoc_md13600}{}\doxysubsection{\texorpdfstring{\+:cd\+: Installation}{\+:cd\+: Installation}}\label{README.md_autotoc_md13600}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ eslint\ eslint-\/plugin-\/jsonc}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+{\bfseries{Requirements}}
+
+
+\begin{DoxyItemize}
+\item ESLint v6.\+0.\+0 and above
+\item Node.\+js v12.\+22.\+x, v14.\+17.\+x, v16.\+x and above 
+\end{DoxyItemize}\end{quote}
+\hypertarget{README.md_autotoc_md13601}{}\doxysubsection{\texorpdfstring{\+:book\+: Usage}{\+:book\+: Usage}}\label{README.md_autotoc_md13601}
+\hypertarget{README.md_autotoc_md13602}{}\doxysubsubsection{\texorpdfstring{Configuration}{Configuration}}\label{README.md_autotoc_md13602}
+\hypertarget{README.md_autotoc_md13603}{}\doxysubsubsubsection{\texorpdfstring{New Config ({\ttfamily eslint.\+config.\+js})}{New Config ({\ttfamily eslint.\+config.\+js})}}\label{README.md_autotoc_md13603}
+Use {\ttfamily eslint.\+config.\+js} file to configure rules. See also\+: \href{https://eslint.org/docs/latest/use/configure/configuration-files-new}{\texttt{ https\+://eslint.\+org/docs/latest/use/configure/configuration-\/files-\/new}}.
+
+Example {\bfseries{eslint.\+config.\+js}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ eslintPluginJsonc\ from\ 'eslint-\/plugin-\/jsonc';}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ //\ add\ more\ generic\ rule\ sets\ here,\ such\ as:}
+\DoxyCodeLine{\ \ //\ js.configs.recommended,}
+\DoxyCodeLine{\ \ ...eslintPluginJsonc.configs['flat/recommended-\/with-\/jsonc'],}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ //\ 'jsonc/rule-\/name':\ 'error'}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+This plugin provides configs\+:
+
+
+\begin{DoxyItemize}
+\item `\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}flat/base'\mbox{]}{\ttfamily ... Configuration to enable correct JSON parsing. -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}flat/recommended-\/with-\/json\textquotesingle{}\mbox{]}{\ttfamily ... Recommended configuration for JSON. -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}flat/recommended-\/with-\/jsonc\textquotesingle{}\mbox{]}{\ttfamily ... Recommended configuration for JSONC. -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}flat/recommended-\/with-\/json5\textquotesingle{}\mbox{]}{\ttfamily ... Recommended configuration for JSON5. -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}flat/prettier\textquotesingle{}\mbox{]}{\ttfamily ... Turn off rules that may conflict with \mbox{[}Prettier\mbox{]}(\href{https://prettier.io/}{\texttt{ https\+://prettier.\+io/}}). -\/}\texorpdfstring{$\ast$}{*}.configs\mbox{[}\textquotesingle{}flat/all\textquotesingle{}\mbox{]}\`{} ... Enables all rules. It\textquotesingle{}s meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
+\end{DoxyItemize}
+
+This plugin will parse {\ttfamily .json}, {\ttfamily .jsonc} and {\ttfamily .json5} by default using the configuration provided by the plugin (unless you already have a parser configured -\/ see below).
+
+See \href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/}{\texttt{ the rule list}} to get the {\ttfamily rules} that this plugin provides.\hypertarget{README.md_autotoc_md13604}{}\doxysubsubsubsection{\texorpdfstring{Legacy Config ({\ttfamily .eslintrc})}{Legacy Config ({\ttfamily .eslintrc})}}\label{README.md_autotoc_md13604}
+Use {\ttfamily .eslintrc.\texorpdfstring{$\ast$}{*}} file to configure rules. See also\+: \href{https://eslint.org/docs/latest/use/configure/}{\texttt{ https\+://eslint.\+org/docs/latest/use/configure/}}.
+
+Example {\bfseries{.eslintrc.\+js}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ extends:\ [}
+\DoxyCodeLine{\ \ \ \ //\ add\ more\ generic\ rulesets\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ //\ 'eslint:recommended',}
+\DoxyCodeLine{\ \ \ \ "{}plugin:jsonc/recommended-\/with-\/jsonc"{},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ //\ 'jsonc/rule-\/name':\ 'error'}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+This plugin provides configs\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily plugin\+:jsonc/base} ... Configuration to enable correct JSON parsing.
+\item {\ttfamily plugin\+:jsonc/recommended-\/with-\/json} ... Recommended configuration for JSON.
+\item {\ttfamily plugin\+:jsonc/recommended-\/with-\/jsonc} ... Recommended configuration for JSONC.
+\item {\ttfamily plugin\+:jsonc/recommended-\/with-\/json5} ... Recommended configuration for JSON5.
+\item {\ttfamily plugin\+:jsonc/prettier} ... Turn off rules that may conflict with \href{https://prettier.io/}{\texttt{ Prettier}}.
+\item {\ttfamily plugin\+:jsonc/all} ... Enables all rules. It\textquotesingle{}s meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
+\end{DoxyItemize}
+
+This plugin will parse {\ttfamily .json}, {\ttfamily .jsonc} and {\ttfamily .json5} by default using the configuration provided by the plugin (unless you already have a parser configured -\/ see below).
+
+See \href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/}{\texttt{ the rule list}} to get the {\ttfamily rules} that this plugin provides.\hypertarget{README.md_autotoc_md13605}{}\doxysubsubsubsection{\texorpdfstring{Parser Configuration}{Parser Configuration}}\label{README.md_autotoc_md13605}
+If you have already specified a parser in your {\ttfamily .eslintrc}, you will also need to manually configure the parser for JSON files (your parser config takes priority over that defined by {\ttfamily extends} shared configs).
+
+For example, if you are using the {\ttfamily "{}@babel/eslint-\/parser"{}}, configure it as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ extends:\ ["{}plugin:jsonc/recommended-\/with-\/jsonc"{}],}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ parser:\ "{}@babel/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ //\ Add\ an\ \`{}overrides`\ section\ to\ add\ a\ parser\ configuration\ for\ json.}
+\DoxyCodeLine{\ \ overrides:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}*.json"{},\ "{}*.json5"{},\ "{}*.jsonc"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ "{}jsonc-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13606}{}\doxysubsubsubsection{\texorpdfstring{{\bfseries{Experimental}} support for {\ttfamily @eslint/json}}{{\bfseries{Experimental}} support for {\ttfamily @eslint/json}}}\label{README.md_autotoc_md13606}
+We\textquotesingle{}ve launched experimental support for \href{https://github.com/eslint/json}{\texttt{ {\ttfamily @eslint/json}}}.
+
+Configure it as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ json\ from\ "{}@eslint/json"{};}
+\DoxyCodeLine{import\ jsonc\ from\ 'eslint-\/plugin-\/jsonc';}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ json,}
+\DoxyCodeLine{\ \ \ \ \ \ jsonc}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ files:\ ["{}**/*.json"{}],}
+\DoxyCodeLine{\ \ \ \ language:\ "{}json/json"{},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ 'json/rule-\/name':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ //\ 'jsonc/rule-\/name':\ 'error'}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ files:\ ["{}**/*.jsonc"{},\ "{}.vscode/*.json"{}],}
+\DoxyCodeLine{\ \ \ \ language:\ "{}json/jsonc"{},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ 'json/rule-\/name':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ //\ 'jsonc/rule-\/name':\ 'error'}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ files:\ ["{}**/*.json5"{}],}
+\DoxyCodeLine{\ \ \ \ language:\ "{}json/json5"{},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ 'json/rule-\/name':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ //\ 'jsonc/rule-\/name':\ 'error'}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+However, we\textquotesingle{}re not yet sure how best to make this work. Please note that we may change behavior without notice.\hypertarget{README.md_autotoc_md13607}{}\doxysubsection{\texorpdfstring{\+:computer\+: Editor Integrations}{\+:computer\+: Editor Integrations}}\label{README.md_autotoc_md13607}
+\hypertarget{README.md_autotoc_md13608}{}\doxysubsubsection{\texorpdfstring{Visual Studio Code}{Visual Studio Code}}\label{README.md_autotoc_md13608}
+Use the \href{https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint}{\texttt{ dbaeumer.\+vscode-\/eslint}} extension that Microsoft provides officially.
+
+You have to configure the {\ttfamily eslint.\+validate} option of the extension to check {\ttfamily .json} files, because the extension targets only {\ttfamily \texorpdfstring{$\ast$}{*}.js} or {\ttfamily \texorpdfstring{$\ast$}{*}.jsx} files by default.
+
+Example {\bfseries{.vscode/settings.\+json}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}eslint.validate"{}:\ ["{}javascript"{},\ "{}javascriptreact"{},\ "{}json"{},\ "{}jsonc"{},\ "{}json5"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md13609}{}\doxysubsection{\texorpdfstring{\+:white\+\_\+check\+\_\+mark\+: Rules}{\+:white\+\_\+check\+\_\+mark\+: Rules}}\label{README.md_autotoc_md13609}
+The {\ttfamily -\/-\/fix} option on the \href{https://eslint.org/docs/user-guide/command-line-interface\#fixing-problems}{\texttt{ command line}} automatically fixes problems reported by rules which have a wrench \+:wrench\+: below. ~\newline
+ The rules with the following star \+:star\+: are included in the config.\hypertarget{README.md_autotoc_md13610}{}\doxysubsubsection{\texorpdfstring{JSONC Rules}{JSONC Rules}}\label{README.md_autotoc_md13610}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Fixable   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSON   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSONC   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSON5    }\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Fixable   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSON   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSONC   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSON5    }\\\cline{1-6}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html}{\texttt{ jsonc/auto}}   &apply jsonc rules similar to your configured ESLint core rules   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/key-name-casing.html}{\texttt{ jsonc/key-\/name-\/casing}}   &enforce naming convention to property key names   &\PBS\centering &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-bigint-literals.html}{\texttt{ jsonc/no-\/bigint-\/literals}}   &disallow Big\+Int literals   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-binary-expression.html}{\texttt{ jsonc/no-\/binary-\/expression}}   &disallow binary expression   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-binary-numeric-literals.html}{\texttt{ jsonc/no-\/binary-\/numeric-\/literals}}   &disallow binary numeric literals   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-comments.html}{\texttt{ jsonc/no-\/comments}}   &disallow comments   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-escape-sequence-in-identifier.html}{\texttt{ jsonc/no-\/escape-\/sequence-\/in-\/identifier}}   &disallow escape sequences in identifiers.   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-hexadecimal-numeric-literals.html}{\texttt{ jsonc/no-\/hexadecimal-\/numeric-\/literals}}   &disallow hexadecimal numeric literals   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-infinity.html}{\texttt{ jsonc/no-\/infinity}}   &disallow Infinity   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-nan.html}{\texttt{ jsonc/no-\/nan}}   &disallow NaN   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-number-props.html}{\texttt{ jsonc/no-\/number-\/props}}   &disallow number property keys   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-numeric-separators.html}{\texttt{ jsonc/no-\/numeric-\/separators}}   &disallow numeric separators   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal-numeric-literals.html}{\texttt{ jsonc/no-\/octal-\/numeric-\/literals}}   &disallow octal numeric literals   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-parenthesized.html}{\texttt{ jsonc/no-\/parenthesized}}   &disallow parentheses around the expression   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-plus-sign.html}{\texttt{ jsonc/no-\/plus-\/sign}}   &disallow plus sign   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-regexp-literals.html}{\texttt{ jsonc/no-\/regexp-\/literals}}   &disallow Reg\+Exp literals   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-template-literals.html}{\texttt{ jsonc/no-\/template-\/literals}}   &disallow template literals   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-undefined-value.html}{\texttt{ jsonc/no-\/undefined-\/value}}   &disallow {\ttfamily undefined}   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-unicode-codepoint-escapes.html}{\texttt{ jsonc/no-\/unicode-\/codepoint-\/escapes}}   &disallow Unicode code point escape sequences.   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/sort-array-values.html}{\texttt{ jsonc/sort-\/array-\/values}}   &require array values to be sorted   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/sort-keys.html}{\texttt{ jsonc/sort-\/keys}}   &require object keys to be sorted   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/valid-json-number.html}{\texttt{ jsonc/valid-\/json-\/number}}   &disallow invalid number for JSON   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/vue-custom-block/no-parsing-error.html}{\texttt{ jsonc/vue-\/custom-\/block/no-\/parsing-\/error}}   &disallow parsing errors in Vue custom blocks   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   \\\cline{1-6}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md13611}{}\doxysubsubsection{\texorpdfstring{Extension Rules}{Extension Rules}}\label{README.md_autotoc_md13611}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Fixable   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSON   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSONC   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSON5    }\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Fixable   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSON   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSONC   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSON5    }\\\cline{1-6}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/array-bracket-newline.html}{\texttt{ jsonc/array-\/bracket-\/newline}}   &enforce line breaks after opening and before closing array brackets   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/array-bracket-spacing.html}{\texttt{ jsonc/array-\/bracket-\/spacing}}   &disallow or enforce spaces inside of brackets   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/array-element-newline.html}{\texttt{ jsonc/array-\/element-\/newline}}   &enforce line breaks between array elements   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/comma-dangle.html}{\texttt{ jsonc/comma-\/dangle}}   &require or disallow trailing commas   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/comma-style.html}{\texttt{ jsonc/comma-\/style}}   &enforce consistent comma style   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/indent.html}{\texttt{ jsonc/indent}}   &enforce consistent indentation   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/key-spacing.html}{\texttt{ jsonc/key-\/spacing}}   &enforce consistent spacing between keys and values in object literal properties   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-dupe-keys.html}{\texttt{ jsonc/no-\/dupe-\/keys}}   &disallow duplicate keys in object literals   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-floating-decimal.html}{\texttt{ jsonc/no-\/floating-\/decimal}}   &disallow leading or trailing decimal points in numeric literals   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-irregular-whitespace.html}{\texttt{ jsonc/no-\/irregular-\/whitespace}}   &disallow irregular whitespace   &\PBS\centering &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-multi-str.html}{\texttt{ jsonc/no-\/multi-\/str}}   &disallow multiline strings   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal-escape.html}{\texttt{ jsonc/no-\/octal-\/escape}}   &disallow octal escape sequences in string literals   &\PBS\centering &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal.html}{\texttt{ jsonc/no-\/octal}}   &disallow legacy octal literals   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-sparse-arrays.html}{\texttt{ jsonc/no-\/sparse-\/arrays}}   &disallow sparse arrays   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-useless-escape.html}{\texttt{ jsonc/no-\/useless-\/escape}}   &disallow unnecessary escape usage   &\PBS\centering &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/object-curly-newline.html}{\texttt{ jsonc/object-\/curly-\/newline}}   &enforce consistent line breaks inside braces   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/object-curly-spacing.html}{\texttt{ jsonc/object-\/curly-\/spacing}}   &enforce consistent spacing inside braces   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/object-property-newline.html}{\texttt{ jsonc/object-\/property-\/newline}}   &enforce placing object properties on separate lines   &\PBS\centering \+:wrench\+:   &\PBS\centering &\PBS\centering &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/quote-props.html}{\texttt{ jsonc/quote-\/props}}   &require quotes around object literal property names   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/quotes.html}{\texttt{ jsonc/quotes}}   &enforce use of double or single quotes   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-jsonc/rules/space-unary-ops.html}{\texttt{ jsonc/space-\/unary-\/ops}}   &disallow spaces after unary operators   &\PBS\centering \+:wrench\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   &\PBS\centering \+:star\+:   \\\cline{1-6}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md13612}{}\doxysubsection{\texorpdfstring{\+:rocket\+: To Do More Verification}{\+:rocket\+: To Do More Verification}}\label{README.md_autotoc_md13612}
+\hypertarget{README.md_autotoc_md13613}{}\doxysubsubsection{\texorpdfstring{Verify using JSON Schema}{Verify using JSON Schema}}\label{README.md_autotoc_md13613}
+You can verify using JSON Schema by checking and installing \href{https://github.com/ota-meshi/eslint-plugin-json-schema-validator}{\texttt{ eslint-\/plugin-\/json-\/schema-\/validator}}.\hypertarget{README.md_autotoc_md13614}{}\doxysubsubsection{\texorpdfstring{Verify the \href{https://github.com/intlify/vue-i18n-next}{\texttt{ Vue I18n}} message resource files}{Verify the \href{https://github.com/intlify/vue-i18n-next}{\texttt{ Vue I18n}} message resource files}}\label{README.md_autotoc_md13614}
+You can verify the message files by checking and installing \href{https://github.com/intlify/eslint-plugin-vue-i18n}{\texttt{ @intlify/eslint-\/plugin-\/vue-\/i18n}}.\hypertarget{README.md_autotoc_md13615}{}\doxysubsection{\texorpdfstring{\+:traffic\+\_\+light\+: Semantic Versioning Policy}{\+:traffic\+\_\+light\+: Semantic Versioning Policy}}\label{README.md_autotoc_md13615}
+{\bfseries{eslint-\/plugin-\/jsonc}} follows \href{http://semver.org/}{\texttt{ Semantic Versioning}} and \href{https://github.com/eslint/eslint\#semantic-versioning-policy}{\texttt{ ESLint\textquotesingle{}s Semantic Versioning Policy}}.\hypertarget{README.md_autotoc_md13616}{}\doxysubsection{\texorpdfstring{\+:beers\+: Contributing}{\+:beers\+: Contributing}}\label{README.md_autotoc_md13616}
+Welcome contributing!
+
+Please use Git\+Hub\textquotesingle{}s Issues/\+PRs.\hypertarget{README.md_autotoc_md13617}{}\doxysubsubsection{\texorpdfstring{Development Tools}{Development Tools}}\label{README.md_autotoc_md13617}
+
+\begin{DoxyItemize}
+\item {\ttfamily npm test} runs tests and measures coverage.
+\item {\ttfamily npm run update} runs in order to update readme and recommended configuration.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md13618}{}\doxysubsection{\texorpdfstring{\+:couple\+: Related Packages}{\+:couple\+: Related Packages}}\label{README.md_autotoc_md13618}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/ota-meshi/eslint-plugin-yml}{\texttt{ eslint-\/plugin-\/yml}} ... ESLint plugin for YAML.
+\item \href{https://github.com/ota-meshi/eslint-plugin-toml}{\texttt{ eslint-\/plugin-\/toml}} ... ESLint plugin for TOML.
+\item \href{https://github.com/ota-meshi/eslint-plugin-json-schema-validator}{\texttt{ eslint-\/plugin-\/json-\/schema-\/validator}} ... ESLint plugin that validates data using JSON Schema Validator.
+\item \href{https://github.com/ota-meshi/jsonc-eslint-parser}{\texttt{ jsonc-\/eslint-\/parser}} ... JSON, JSONC and JSON5 parser for use with ESLint plugins.
+\item \href{https://github.com/ota-meshi/yaml-eslint-parser}{\texttt{ yaml-\/eslint-\/parser}} ... YAML parser for use with ESLint plugins.
+\item \href{https://github.com/ota-meshi/toml-eslint-parser}{\texttt{ toml-\/eslint-\/parser}} ... TOML parser for use with ESLint plugins.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md13619}{}\doxysubsection{\texorpdfstring{\+:lock\+: License}{\+:lock\+: License}}\label{README.md_autotoc_md13619}
+See the \mbox{[}LICENSE\mbox{]}(LICENSE) file for license rights and limitations (MIT). 

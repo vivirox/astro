@@ -1,0 +1,116 @@
+\doxysection{node\+\_\+modules/destr Directory Reference}
+\hypertarget{dir_c1c153140f34c69258f21f43f77469c5}{}\label{dir_c1c153140f34c69258f21f43f77469c5}\index{node\_modules/destr Directory Reference@{node\_modules/destr Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/destr}{\texttt{ }} \href{https://npmjs.com/package/destr}{\texttt{ }} \href{https://bundlephobia.com/result?p=destr}{\texttt{ }} \href{https://github.com/unjs/destr/blob/main/LICENSE}{\texttt{ }}
+
+A faster, secure and convenient alternative for \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse}{\texttt{ {\ttfamily JSON.\+parse}}}.\hypertarget{README.md_autotoc_md11831}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md11831}
+\hypertarget{README.md_autotoc_md11832}{}\doxysubsubsection{\texorpdfstring{Node.\+js}{Node.\+js}}\label{README.md_autotoc_md11832}
+Install dependency\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ i\ destr}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ destr}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ pnpm}
+\DoxyCodeLine{pnpm\ i\ destr}
+
+\end{DoxyCode}
+
+
+Import into your Node.\+js project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ESM}
+\DoxyCodeLine{import\ \{\ destr,\ safeDestr\ \}\ from\ "{}destr"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ destr,\ safeDestr\ \}\ =\ require("{}destr"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11833}{}\doxysubsubsection{\texorpdfstring{Deno}{Deno}}\label{README.md_autotoc_md11833}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ destr,\ safeDestr\ \}\ from\ "{}https://deno.land/x/destr/src/index.ts"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(destr('\{\ "{}deno"{}:\ "{}yay"{}\ \}'));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11834}{}\doxysubsection{\texorpdfstring{Why?}{Why?}}\label{README.md_autotoc_md11834}
+\hypertarget{README.md_autotoc_md11835}{}\doxysubsubsection{\texorpdfstring{✅ Type Safe}{✅ Type Safe}}\label{README.md_autotoc_md11835}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ obj\ =\ JSON.parse("{}\{\}"{});\ //\ obj\ type\ is\ any}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ obj\ =\ destr("{}\{\}"{});\ //\ obj\ type\ is\ unknown\ by\ default}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ obj\ =\ destr<MyInterface>("{}\{\}"{});\ //\ obj\ is\ well-\/typed}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11836}{}\doxysubsubsection{\texorpdfstring{✅ Fast fallback to input if is not string}{✅ Fast fallback to input if is not string}}\label{README.md_autotoc_md11836}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Uncaught\ SyntaxError:\ Unexpected\ token\ u\ in\ JSON\ at\ position\ 0}
+\DoxyCodeLine{JSON.parse();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ undefined}
+\DoxyCodeLine{destr();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11837}{}\doxysubsubsection{\texorpdfstring{✅ Fast lookup for known string values}{✅ Fast lookup for known string values}}\label{README.md_autotoc_md11837}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Uncaught\ SyntaxError:\ Unexpected\ token\ T\ in\ JSON\ at\ position\ 0}
+\DoxyCodeLine{JSON.parse("{}TRUE"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ true}
+\DoxyCodeLine{destr("{}TRUE"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11838}{}\doxysubsubsection{\texorpdfstring{✅ Fallback to original value if parse fails (empty or any plain string)}{✅ Fallback to original value if parse fails (empty or any plain string)}}\label{README.md_autotoc_md11838}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Uncaught\ SyntaxError:\ Unexpected\ token\ s\ in\ JSON\ at\ position\ 0}
+\DoxyCodeLine{JSON.parse("{}salam"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ "{}salam"{}}
+\DoxyCodeLine{destr("{}salam"{});}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note\+:}} This fails in safe/strict mode with {\ttfamily safe\+Destr}.\hypertarget{README.md_autotoc_md11839}{}\doxysubsubsection{\texorpdfstring{✅ Avoid prototype pollution}{✅ Avoid prototype pollution}}\label{README.md_autotoc_md11839}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ input\ =\ '\{\ "{}user"{}:\ \{\ "{}\_\_proto\_\_"{}:\ \{\ "{}isAdmin"{}:\ true\ \}\ \}\ \}';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \{\ user:\ \{\ \_\_proto\_\_:\ \{\ isAdmin:\ true\ \}\ \}\ \}}
+\DoxyCodeLine{JSON.parse(input);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \{\ user:\ \{\}\ \}}
+\DoxyCodeLine{destr(input);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11840}{}\doxysubsubsection{\texorpdfstring{✅ Strict Mode}{✅ Strict Mode}}\label{README.md_autotoc_md11840}
+When using {\ttfamily safe\+Destr} it will throw an error if the input is not a valid JSON string or parsing fails. (non string values and built-\/ins will be still returned as-\/is)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Returns\ "{}[foo"{}}
+\DoxyCodeLine{destr("{}[foo"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Throws\ an\ error}
+\DoxyCodeLine{safeDestr("{}[foo"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11841}{}\doxysubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{README.md_autotoc_md11841}
+{\ttfamily destr} is faster generally for arbitrary inputs but also sometimes little bit slower than {\ttfamily JSON.\+parse} when parsing a valid JSON string mainly because of transform to avoid \href{https://learn.snyk.io/lessons/prototype-pollution/javascript/}{\texttt{ prototype pollution}} which can lead to serious security issues if not being sanitized. In the other words, {\ttfamily destr} is better when input is not always a JSON string or from untrusted source like request body.
+
+Check Benchmark Results or run with {\ttfamily pnpm run bench\+:node} or {\ttfamily pnpm run bench\+:bun} yourself!\hypertarget{README.md_autotoc_md11842}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md11842}
+MIT. Made with 💖 

@@ -1,0 +1,107 @@
+\doxysection{node\+\_\+modules/@inquirer/password Directory Reference}
+\hypertarget{dir_e5765785e799d503b59fa4c9adbce4b0}{}\label{dir_e5765785e799d503b59fa4c9adbce4b0}\index{node\_modules/"@inquirer/password Directory Reference@{node\_modules/"@inquirer/password Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Interactive password input component for command line interfaces. Supports input validation and masked or transparent modes.
+
+\hypertarget{README.md_autotoc_md3766}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md3766}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ npm }&\cellcolor{\tableheadbgcolor}\textbf{ yarn  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ npm }&\cellcolor{\tableheadbgcolor}\textbf{ yarn  }\\\cline{1-2}
+\endhead
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @inquirer/prompts}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ @inquirer/prompts}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\multicolumn{2}{|c|}{\PBS\centering Or  }\\\cline{1-2}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @inquirer/password}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ @inquirer/password}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md3767}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3767}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ password\ \}\ from\ '@inquirer/prompts';}
+\DoxyCodeLine{//\ Or}
+\DoxyCodeLine{//\ import\ password\ from\ '@inquirer/password';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ answer\ =\ await\ password(\{\ message:\ 'Enter\ your\ name'\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3768}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md3768}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Property   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Required   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Property   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Required   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endhead
+message   &{\ttfamily string}   &yes   &The question to ask    \\\cline{1-4}
+mask   &{\ttfamily boolean}   &no   &Show a {\ttfamily \texorpdfstring{$\ast$}{*}} mask over the input or keep it transparent    \\\cline{1-4}
+validate   &{\ttfamily string =\texorpdfstring{$>$}{>} boolean \textbackslash{}\texorpdfstring{$\vert$}{|} string \textbackslash{}\texorpdfstring{$\vert$}{|} Promise\texorpdfstring{$<$}{<}boolean \textbackslash{}\texorpdfstring{$\vert$}{|} string\texorpdfstring{$>$}{>}}   &no   &On submit, validate the filtered answered content. When returning a string, it\textquotesingle{}ll be used as the error message displayed to the user. Note\+: returning a rejected promise, we\textquotesingle{}ll assume a code error happened and crash.    \\\cline{1-4}
+theme   &See Theming   &no   &Customize look of the prompt.   \\\cline{1-4}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md3769}{}\doxysubsubsection{\texorpdfstring{Theming}{Theming}}\label{README.md_autotoc_md3769}
+You can theme a prompt by passing a {\ttfamily theme} object option. The theme object only need to includes the keys you wish to modify, we\textquotesingle{}ll fallback on the defaults for the rest.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Theme\ =\ \{}
+\DoxyCodeLine{\ \ prefix:\ string\ |\ \{\ idle:\ string;\ done:\ string\ \};}
+\DoxyCodeLine{\ \ spinner:\ \{}
+\DoxyCodeLine{\ \ \ \ interval:\ number;}
+\DoxyCodeLine{\ \ \ \ frames:\ string[];}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\ \ style:\ \{}
+\DoxyCodeLine{\ \ \ \ answer:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ message:\ (text:\ string,\ status:\ 'idle'\ |\ 'done'\ |\ 'loading')\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ error:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ help:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3770}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md3770}
+Copyright (c) 2023 Simon Boudrias (twitter\+: \href{https://twitter.com/Vaxilart}{\texttt{ @vaxilart}})~\newline
+ Licensed under the MIT license. 

@@ -1,0 +1,306 @@
+\doxysection{node\+\_\+modules/@iconify/json Directory Reference}
+\hypertarget{dir_b3abdc2406cf400f77c792aa318d726e}{}\label{dir_b3abdc2406cf400f77c792aa318d726e}\index{node\_modules/"@iconify/json Directory Reference@{node\_modules/"@iconify/json Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_c4c7146724ff014634ed95bfc5a4ba15}{lib}}
+\item 
+directory \mbox{\hyperlink{dir_94aa460e408adbecb1aa5334245e0cbd}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This is a big collection of open source vector icons, all validated, cleaned up and converted to the same easy to use format.
+
+Even though all icon sets are open source, some icon sets require attribution.
+
+See \doxysectlink{md_node__modules_2_0diconify_2json_2collections}{collections.md}{0} for list of icon sets and their licenses.\hypertarget{readme.md_autotoc_md3637}{}\doxysubsection{\texorpdfstring{Validation and clean up}{Validation and clean up}}\label{readme.md_autotoc_md3637}
+All icons have been processed with \href{https://iconify.design/docs/libraries/tools/}{\texttt{ Iconify Tools}} to clean them up.
+
+Icon parsing process includes\+:
+
+
+\begin{DoxyItemize}
+\item Very strict validation and clean up. Icons do not contain scripts, event listeners, fonts, raster images, external resources and unknown elements.
+\item Colors for monotone icons have been replaced with {\ttfamily current\+Color}, making it easy to change icon color by changing text color.
+\item Icon content has been optimised to reduce its size.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md3638}{}\doxysubsection{\texorpdfstring{Maintenance}{Maintenance}}\label{readme.md_autotoc_md3638}
+This repository is automatically updated several times a week, so it always contains the latest icons for all icon sets.\hypertarget{readme.md_autotoc_md3639}{}\doxysubsection{\texorpdfstring{Format}{Format}}\label{readme.md_autotoc_md3639}
+Icon sets are stored in {\ttfamily Iconify\+JSON} format. Type\+Script definition is available in {\ttfamily @iconify/types} package. Documentation is \href{https://iconify.design/docs/types/iconify-json.html}{\texttt{ available on Iconify Documentation website}}.
+
+To work with icon sets, use \href{https://iconify.design/docs/libraries/utils/}{\texttt{ Iconify Utils}}. Utils package works in any Java\+Script environment\+: Node.\+js, Deno, browsers, isolated Java\+Script environments.\hypertarget{readme.md_autotoc_md3640}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md3640}
+These icons can be used with many tools, plugins and components. They can also be exported as individual SVG files.
+
+See \href{https://iconify.design/docs/usage/}{\texttt{ Iconify documentation}} for more details.\hypertarget{readme.md_autotoc_md3641}{}\doxysubsection{\texorpdfstring{How to get this repository}{How to get this repository}}\label{readme.md_autotoc_md3641}
+Instructions below are for Node.\+js and PHP projects.\hypertarget{readme.md_autotoc_md3642}{}\doxysubsubsection{\texorpdfstring{Node.\+js}{Node.\+js}}\label{readme.md_autotoc_md3642}
+Run this command to add icons to your project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ @iconify/json}
+
+\end{DoxyCode}
+
+
+Icons will be available in node\+\_\+modules/@iconify/json
+
+To resolve filename for any json file, use this if you are using Common\+JS syntax\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ locate\ \}\ from\ '@iconify/json';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ location\ of\ mdi-\/light.json}
+\DoxyCodeLine{const\ mdiLightFilename\ =\ locate('mdi-\/light');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md3643}{}\doxysubsubsection{\texorpdfstring{PHP}{PHP}}\label{readme.md_autotoc_md3643}
+Install and initialize Composer project. See documentation at \href{https://getcomposer.org}{\texttt{ https\+://getcomposer.\+org}}
+
+Then open composer.\+json and add following code\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}require"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}php"{}:\ "{}>=5.6"{},}
+\DoxyCodeLine{\ \ \ \ "{}iconify/json"{}:\ "{}*"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+then run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{composer\ install}
+
+\end{DoxyCode}
+
+
+Icons will be available in vendor/iconify/json/
+
+If you don\textquotesingle{}t use Composer, clone Git\+Hub repository and add necessary autoload code.
+
+To resolve filename for any json file, use this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{//\ Returns\ location\ of\ mdi-\/light.json}}
+\DoxyCodeLine{\$mdiLightLocation\ =\ \mbox{\hyperlink{class_iconify_1_1_icons_j_s_o_n_1_1_finder_a3a9170f78cb667c43231f1e68f4d4750}{\(\backslash\)Iconify\(\backslash\)IconsJSON\(\backslash\)Finder::locate}}(\textcolor{stringliteral}{'mdi-\/light'});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md3644}{}\doxysubsection{\texorpdfstring{Data format}{Data format}}\label{readme.md_autotoc_md3644}
+Icons used by Iconify are in directory json, in Iconify JSON format.
+
+Why JSON instead of SVG? There are several reasons for that\+:
+
+
+\begin{DoxyItemize}
+\item Easy to store images in bulk.
+\item Contains only content of icon without {\ttfamily \texorpdfstring{$<$}{<}svg\texorpdfstring{$>$}{>}} element, making it easy to manipulate content without doing complex parsing. It also makes it easier to create components, such as React icon component, allowing to use framework native SVG element.
+\item Data can contain additional content\+: aliases for icons, icon set information, categories/tags/themes.
+\end{DoxyItemize}
+
+Why not XML?
+
+
+\begin{DoxyItemize}
+\item JSON is much easier to parse without additional tools. All languages support it.
+\end{DoxyItemize}
+
+Format of json file is very simple\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}prefix"{}:\ "{}mdi-\/light"{},}
+\DoxyCodeLine{\ \ "{}icons"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}icon-\/name"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}body"{}:\ "{}<g\ />"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}width"{}:\ 24,}
+\DoxyCodeLine{\ \ \ \ \ \ "{}height"{}:\ 24}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}aliases"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}icon-\/alias"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}parent"{}:\ "{}icon-\/name"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+"{}icons"{} object contains list of all icons.
+
+Each icon has following properties\+:
+
+
+\begin{DoxyItemize}
+\item body\+: icon body.
+\item left, top\+: left and top coordinates of view\+Box, default is 0.
+\item width, height\+: dimensions of view\+Box, default is 16.
+\item rotate\+: rotation. Default = 0. Values\+: 0 = 0deg, 1 = 90deg, 2 = 180deg, 3 = 270deg.
+\item h\+Flip\+: horizontal flip. Boolean value, default = false.
+\item v\+Flip\+: vertical flip. Boolean value, default = false.
+\item hidden\+: if set to true, icon is hidden. That means icon was removed from collection for some reason, but it is kept in JSON file to prevent applications that rely on old icon from breaking.
+\end{DoxyItemize}
+
+Optional "{}aliases"{} object contains list of aliases for icons. Format is similar to "{}icons"{} object, but without "{}body"{} property and with additional property "{}parent"{} that points to parent icon. Transformation properties (rotate, h\+Flip, v\+Flip) are merged with parent icon\textquotesingle{}s properties. Any other properties overwrite properties of parent icon.
+
+When multiple icons have the same value, it is moved to root object to reduce duplication\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}prefix"{}:\ "{}mdi-\/light"{},}
+\DoxyCodeLine{\ \ "{}icons"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}icon1"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}body"{}:\ "{}<g\ />"{}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ "{}icon2"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}body"{}:\ "{}<g\ />"{}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ "{}icon-\/20"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}body"{}:\ "{}<g\ />"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}width"{}:\ 20,}
+\DoxyCodeLine{\ \ \ \ \ \ "{}height"{}:\ 20}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}width"{}:\ 24,}
+\DoxyCodeLine{\ \ "{}height"{}:\ 24}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+In example above, "{}icon1"{} and "{}icon2"{} are 24x24, "{}icon-\/20"{} is 20x20.
+
+For more information see developer documentation on \href{https://docs.iconify.design/types/iconify-json.html}{\texttt{ https\+://iconify.\+design/docs/types/iconify-\/json.\+html}}\hypertarget{readme.md_autotoc_md3645}{}\doxysubsection{\texorpdfstring{Extracting individual SVG icons}{Extracting individual SVG icons}}\label{readme.md_autotoc_md3645}
+You can use \href{https://iconify.design/docs/libraries/utils/}{\texttt{ Iconify Utils}} for simple export process or \href{https://iconify.design/docs/libraries/tools/}{\texttt{ Iconify Tools}} for more options.
+
+Example using Iconify Utils (Type\+Script)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ promises\ as\ fs\ \}\ from\ 'fs';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Function\ to\ locate\ JSON\ file}
+\DoxyCodeLine{import\ \{\ locate\ \}\ from\ '@iconify/json';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Various\ functions\ from\ Iconify\ Utils}
+\DoxyCodeLine{import\ \{\ parseIconSet\ \}\ from\ '@iconify/utils/lib/icon-\/set/parse';}
+\DoxyCodeLine{import\ \{\ iconToSVG\ \}\ from\ '@iconify/utils/lib/svg/build';}
+\DoxyCodeLine{import\ \{\ defaults\ \}\ from\ '@iconify/utils/lib/customisations';}
+\DoxyCodeLine{}
+\DoxyCodeLine{(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Locate\ icons}
+\DoxyCodeLine{\ \ const\ filename\ =\ locate('mdi');}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Load\ icon\ set}
+\DoxyCodeLine{\ \ const\ icons\ =\ JSON.parse(await\ fs.readFile(filename,\ 'utf8'));}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Parse\ all\ icons}
+\DoxyCodeLine{\ \ const\ exportedSVG:\ Record<string,\ string>\ =\ Object.create(null);}
+\DoxyCodeLine{\ \ parseIconSet(icons,\ (iconName,\ iconData)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (!iconData)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Invalid\ icon}
+\DoxyCodeLine{\ \ \ \ \ \ console.error(`Error\ parsing\ icon\ \$\{iconName\}`);}
+\DoxyCodeLine{\ \ \ \ \ \ return;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Render\ icon}
+\DoxyCodeLine{\ \ \ \ const\ renderData\ =\ iconToSVG(iconData,\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ ...defaults,}
+\DoxyCodeLine{\ \ \ \ \ \ height:\ 'auto',}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Generate\ attributes\ for\ SVG\ element}
+\DoxyCodeLine{\ \ \ \ const\ svgAttributes:\ Record<string,\ string>\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'xmlns':\ 'http://www.w3.org/2000/svg',}
+\DoxyCodeLine{\ \ \ \ \ \ 'xmlns:xlink':\ 'http://www.w3.org/1999/xlink',}
+\DoxyCodeLine{\ \ \ \ \ \ ...renderData.attributes,}
+\DoxyCodeLine{\ \ \ \ \};}
+\DoxyCodeLine{\ \ \ \ const\ svgAttributesStr\ =\ Object.keys(svgAttributes)}
+\DoxyCodeLine{\ \ \ \ \ \ .map(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ (attr)\ =>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ //\ No\ need\ to\ check\ attributes\ for\ special\ characters,\ such\ as\ quotes,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ //\ they\ cannot\ contain\ anything\ that\ needs\ escaping.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \`{}\$\{attr\}="{}\$\{svgAttributes[attr\ as\ keyof\ typeof\ svgAttributes]\}"{}`}
+\DoxyCodeLine{\ \ \ \ \ \ )}
+\DoxyCodeLine{\ \ \ \ \ \ .join('\ ');}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Generate\ SVG}
+\DoxyCodeLine{\ \ \ \ const\ svg\ =\ \`{}<svg\ \$\{svgAttributesStr\}>\$\{renderData.body\}</svg>`;}
+\DoxyCodeLine{\ \ \ \ exportedSVG[iconName]\ =\ svg;}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Output\ directory}
+\DoxyCodeLine{\ \ const\ outputDir\ =\ 'mdi-\/export';}
+\DoxyCodeLine{\ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ await\ fs.mkdir(outputDir,\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ recursive:\ true,}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\ \ \}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ //}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Save\ all\ files}
+\DoxyCodeLine{\ \ const\ filenames\ =\ Object.keys(exportedSVG);}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 0;\ i\ <\ filenames.length;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ filename\ =\ filenames[i];}
+\DoxyCodeLine{\ \ \ \ const\ svg\ =\ exportedSVG[filename];}
+\DoxyCodeLine{\ \ \ \ await\ fs.writeFile(outputDir\ +\ '/'\ +\ filename\ +\ '.svg',\ svg,\ 'utf8');}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})();}
+
+\end{DoxyCode}
+
+
+Same example using Iconify Tools\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ readFile,\ writeFile,\ mkdir\ \}\ from\ 'fs';}
+\DoxyCodeLine{import\ \{\ SVG\ \}\ from\ '@iconify/tools';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ outputDir\ =\ 'mdi-\/export';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ target\ directory}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ await\ mkdir(outputDir,\ \{}
+\DoxyCodeLine{\ \ \ \ recursive:\ true,}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ //}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Locate\ icons}
+\DoxyCodeLine{const\ filename\ =\ locate('mdi');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Load\ icon\ set}
+\DoxyCodeLine{const\ data\ =\ JSON.parse(await\ fs.readFile(filename,\ 'utf8'));}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ IconSet\ instance}
+\DoxyCodeLine{const\ iconSet\ =\ new\ IconSet(data);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Export\ all\ icons}
+\DoxyCodeLine{await\ iconSet.forEach(async\ (name)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ svg\ =\ iconSet.toString(name);}
+\DoxyCodeLine{\ \ if\ (!svg)\ \{}
+\DoxyCodeLine{\ \ \ \ return;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Save\ to\ file}
+\DoxyCodeLine{\ \ await\ writeFile(`\$\{outputDir\}/\$\{name\}.svg`,\ svg,\ 'utf8');}
+\DoxyCodeLine{\ \ console.log(`Saved\ \$\{outputDir\}/\$\{name\}.svg\ (\$\{svg.length\}\ bytes)`);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+See \href{https://iconify.design/docs/libraries/tools/export/}{\texttt{ Iconify Tools documentation}} for more export options.\hypertarget{readme.md_autotoc_md3646}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md3646}
+This is collection of icon sets created by various authors.
+
+See \doxysectlink{md_node__modules_2_0diconify_2json_2collections}{collections.md}{0} for list of icon sets and their licenses. 

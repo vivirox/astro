@@ -1,0 +1,74 @@
+\doxysection{node\+\_\+modules/log-\/update Directory Reference}
+\hypertarget{dir_376aa770a1e119380f6446a94077446b}{}\label{dir_376aa770a1e119380f6446a94077446b}\index{node\_modules/log-\/update Directory Reference@{node\_modules/log-\/update Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_97f88ca057812be89fdaf1afdb138d2f}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Log by overwriting the previous output in the terminal.\textbackslash{} Useful for rendering progress bars, animations, etc. \end{quote}
+
+
+\hypertarget{readme.md_autotoc_md22027}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22027}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ log-\/update}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22028}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md22028}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ logUpdate\ from\ 'log-\/update';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ frames\ =\ ['-\/',\ '\(\backslash\)\(\backslash\)',\ '|',\ '/'];}
+\DoxyCodeLine{let\ index\ =\ 0;}
+\DoxyCodeLine{}
+\DoxyCodeLine{setInterval(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ frame\ =\ frames[index\ =\ ++index\ \%\ frames.length];}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ logUpdate(}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ♥♥}
+\DoxyCodeLine{\ \ \ \$\{frame\}\ unicorns\ \$\{frame\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ♥♥}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{\},\ 80);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22029}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22029}
+\hypertarget{readme.md_autotoc_md22030}{}\doxysubsubsection{\texorpdfstring{log\+Update(text…)}{log\+Update(text…)}}\label{readme.md_autotoc_md22030}
+Log to stdout.\hypertarget{readme.md_autotoc_md22031}{}\doxysubsubsection{\texorpdfstring{log\+Update.\+clear()}{log\+Update.\+clear()}}\label{readme.md_autotoc_md22031}
+Clear the logged output.\hypertarget{readme.md_autotoc_md22032}{}\doxysubsubsection{\texorpdfstring{log\+Update.\+done()}{log\+Update.\+done()}}\label{readme.md_autotoc_md22032}
+Persist the logged output.
+
+Useful if you want to start a new log session below the current one.\hypertarget{readme.md_autotoc_md22033}{}\doxysubsubsection{\texorpdfstring{log\+Update\+Stderr(text…)}{log\+Update\+Stderr(text…)}}\label{readme.md_autotoc_md22033}
+Log to stderr.\hypertarget{readme.md_autotoc_md22034}{}\doxysubsubsection{\texorpdfstring{log\+Update\+Stderr.\+clear()}{log\+Update\+Stderr.\+clear()}}\label{readme.md_autotoc_md22034}
+\hypertarget{readme.md_autotoc_md22035}{}\doxysubsubsection{\texorpdfstring{log\+Update\+Stderr.\+done()}{log\+Update\+Stderr.\+done()}}\label{readme.md_autotoc_md22035}
+\hypertarget{readme.md_autotoc_md22036}{}\doxysubsubsection{\texorpdfstring{create\+Log\+Update(stream, options?)}{create\+Log\+Update(stream, options?)}}\label{readme.md_autotoc_md22036}
+Get a {\ttfamily log\+Update} method that logs to the specified stream.\hypertarget{readme.md_autotoc_md22037}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md22037}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md22038}{}\doxysubsubsubsubsection{\texorpdfstring{show\+Cursor}{show\+Cursor}}\label{readme.md_autotoc_md22038}
+Type\+: {\ttfamily boolean}\textbackslash{} Default\+: {\ttfamily false}
+
+Show the cursor. This can be useful when a CLI accepts input from a user.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{createLogUpdate\}\ from\ 'log-\/update';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Write\ output\ but\ don't\ hide\ the\ cursor}
+\DoxyCodeLine{const\ log\ =\ createLogUpdate(process.stdout,\ \{}
+\DoxyCodeLine{\ \ \ \ showCursor:\ true}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22039}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md22039}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/SamVerschueren/listr}{\texttt{ listr}} -\/ Uses this module to render an interactive task list
+\item \href{https://github.com/sindresorhus/ora}{\texttt{ ora}} -\/ Uses this module to render awesome spinners
+\item \href{https://github.com/sindresorhus/speed-test}{\texttt{ speed-\/test}} -\/ Uses this module to render a \href{https://github.com/sindresorhus/elegant-spinner}{\texttt{ spinner}} 
+\end{DoxyItemize}

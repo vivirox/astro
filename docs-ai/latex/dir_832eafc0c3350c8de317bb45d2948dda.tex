@@ -1,0 +1,291 @@
+\doxysection{node\+\_\+modules/@adobe/css-\/tools Directory Reference}
+\hypertarget{dir_832eafc0c3350c8de317bb45d2948dda}{}\label{dir_832eafc0c3350c8de317bb45d2948dda}\index{node\_modules/"@adobe/css-\/tools Directory Reference@{node\_modules/"@adobe/css-\/tools Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+This is a fork of the npm css package due to low maintenance \end{quote}
+
+
+CSS parser / stringifier.\hypertarget{Readme.md_autotoc_md5}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{Readme.md_autotoc_md5}
+\begin{DoxyVerb}$ npm install @adobe/css-tools
+\end{DoxyVerb}
+\hypertarget{Readme.md_autotoc_md6}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{Readme.md_autotoc_md6}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ parse,\ stringify\ \}\ from\ '@adobe/css-\/tools'}
+\DoxyCodeLine{let\ obj\ =\ parse('body\ \{\ font-\/size:\ 12px;\ \}',\ options);}
+\DoxyCodeLine{let\ css\ =\ stringify(obj,\ options);}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md7}{}\doxysubsection{\texorpdfstring{API}{API}}\label{Readme.md_autotoc_md7}
+\hypertarget{Readme.md_autotoc_md8}{}\doxysubsubsection{\texorpdfstring{parse(code, \mbox{[}options\mbox{]})}{parse(code, \mbox{[}options\mbox{]})}}\label{Readme.md_autotoc_md8}
+Accepts a CSS string and returns an AST {\ttfamily object}.
+
+{\ttfamily options}\+:
+
+
+\begin{DoxyItemize}
+\item silent\+: silently fail on parse errors.
+\item source\+: the path to the file containing {\ttfamily css}. Makes errors and source maps more helpful, by letting them know where code comes from.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md9}{}\doxysubsubsection{\texorpdfstring{stringify(object, \mbox{[}options\mbox{]})}{stringify(object, \mbox{[}options\mbox{]})}}\label{Readme.md_autotoc_md9}
+Accepts an AST {\ttfamily object} (as {\ttfamily css.\+parse} produces) and returns a CSS string.
+
+{\ttfamily options}\+:
+
+
+\begin{DoxyItemize}
+\item indent\+: the string used to indent the output. Defaults to two spaces.
+\item compress\+: omit comments and extraneous whitespace.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md10}{}\doxysubsubsection{\texorpdfstring{Example}{Example}}\label{Readme.md_autotoc_md10}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ ast\ =\ parse('body\ \{\ font-\/size:\ 12px;\ \}',\ \{\ source:\ 'source.css'\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ css\ =\ stringify(ast);}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md11}{}\doxysubsubsection{\texorpdfstring{Errors}{Errors}}\label{Readme.md_autotoc_md11}
+Errors thrown during parsing have the following properties\+:
+
+
+\begin{DoxyItemize}
+\item message\+: {\ttfamily String}. The full error message with the source position.
+\item reason\+: {\ttfamily String}. The error message without position.
+\item filename\+: {\ttfamily String} or {\ttfamily undefined}. The value of {\ttfamily options.\+source} if passed to {\ttfamily css.\+parse}. Otherwise {\ttfamily undefined}.
+\item line\+: {\ttfamily Integer}.
+\item column\+: {\ttfamily Integer}.
+\item source\+: {\ttfamily String}. The portion of code that couldn\textquotesingle{}t be parsed.
+\end{DoxyItemize}
+
+When parsing with the {\ttfamily silent} option, errors are listed in the {\ttfamily parsing\+Errors} property of the \`{}stylesheet\`{} node instead of being thrown.
+
+If you create any errors in plugins such as in \href{https://github.com/reworkcss/rework}{\texttt{ rework}}, you {\bfseries{must}} set the same properties for consistency.\hypertarget{Readme.md_autotoc_md12}{}\doxysubsection{\texorpdfstring{AST}{AST}}\label{Readme.md_autotoc_md12}
+Interactively explore the AST with \href{http://iamdustan.com/reworkcss_ast_explorer/}{\texttt{ http\+://iamdustan.\+com/reworkcss\+\_\+ast\+\_\+explorer/}}.\hypertarget{Readme.md_autotoc_md13}{}\doxysubsubsection{\texorpdfstring{Common properties}{Common properties}}\label{Readme.md_autotoc_md13}
+All nodes have the following properties.\hypertarget{Readme.md_autotoc_md14}{}\doxysubsubsubsection{\texorpdfstring{position}{position}}\label{Readme.md_autotoc_md14}
+Information about the position in the source string that corresponds to the node.
+
+{\ttfamily Object}\+:
+
+
+\begin{DoxyItemize}
+\item start\+: {\ttfamily Object}\+:
+\begin{DoxyItemize}
+\item line\+: {\ttfamily Number}.
+\item column\+: {\ttfamily Number}.
+\end{DoxyItemize}
+\item end\+: {\ttfamily Object}\+:
+\begin{DoxyItemize}
+\item line\+: {\ttfamily Number}.
+\item column\+: {\ttfamily Number}.
+\end{DoxyItemize}
+\item source\+: {\ttfamily String} or {\ttfamily undefined}. The value of {\ttfamily options.\+source} if passed to {\ttfamily css.\+parse}. Otherwise {\ttfamily undefined}.
+\item content\+: {\ttfamily String}. The full source string passed to {\ttfamily css.\+parse}.
+\end{DoxyItemize}
+
+The line and column numbers are 1-\/based\+: The first line is 1 and the first column of a line is 1 (not 0).
+
+The {\ttfamily position} property lets you know from which source file the node comes from (if available), what that file contains, and what part of that file was parsed into the node.\hypertarget{Readme.md_autotoc_md15}{}\doxysubsubsubsection{\texorpdfstring{type}{type}}\label{Readme.md_autotoc_md15}
+{\ttfamily String}. The possible values are the ones listed in the Types section below.\hypertarget{Readme.md_autotoc_md16}{}\doxysubsubsubsection{\texorpdfstring{parent}{parent}}\label{Readme.md_autotoc_md16}
+A reference to the parent node, or {\ttfamily null} if the node has no parent.\hypertarget{Readme.md_autotoc_md17}{}\doxysubsubsection{\texorpdfstring{Types}{Types}}\label{Readme.md_autotoc_md17}
+The available values of {\ttfamily node.\+type} are listed below, as well as the available properties of each node (other than the common properties listed above.)\hypertarget{Readme.md_autotoc_md18}{}\doxysubsubsubsection{\texorpdfstring{stylesheet}{stylesheet}}\label{Readme.md_autotoc_md18}
+The root node returned by {\ttfamily css.\+parse}.
+
+
+\begin{DoxyItemize}
+\item stylesheet\+: {\ttfamily Object}\+:
+\begin{DoxyItemize}
+\item rules\+: {\ttfamily Array} of nodes with the types {\ttfamily rule}, {\ttfamily comment} and any of the at-\/rule types.
+\item parsing\+Errors\+: {\ttfamily Array} of {\ttfamily Error}s. Errors collected during parsing when option {\ttfamily silent} is true.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md19}{}\doxysubsubsubsection{\texorpdfstring{rule}{rule}}\label{Readme.md_autotoc_md19}
+
+\begin{DoxyItemize}
+\item selectors\+: {\ttfamily Array} of {\ttfamily String}s. The list of selectors of the rule, split on commas. Each selector is trimmed from whitespace and comments.
+\item declarations\+: {\ttfamily Array} of nodes with the types {\ttfamily declaration} and {\ttfamily comment}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md20}{}\doxysubsubsubsection{\texorpdfstring{declaration}{declaration}}\label{Readme.md_autotoc_md20}
+
+\begin{DoxyItemize}
+\item property\+: {\ttfamily String}. The property name, trimmed from whitespace and comments. May not be empty.
+\item value\+: {\ttfamily String}. The value of the property, trimmed from whitespace and comments. Empty values are allowed.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md21}{}\doxysubsubsubsection{\texorpdfstring{comment}{comment}}\label{Readme.md_autotoc_md21}
+A rule-\/level or declaration-\/level comment. Comments inside selectors, properties and values etc. are lost.
+
+
+\begin{DoxyItemize}
+\item comment\+: {\ttfamily String}. The part between the starting {\ttfamily /\texorpdfstring{$\ast$}{*}} and the ending {\ttfamily \texorpdfstring{$\ast$}{*}/} of the comment, including whitespace.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md22}{}\doxysubsubsubsection{\texorpdfstring{charset}{charset}}\label{Readme.md_autotoc_md22}
+The {\ttfamily @charset} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item charset\+: {\ttfamily String}. The part following {\ttfamily @charset}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md23}{}\doxysubsubsubsection{\texorpdfstring{custom-\/media}{custom-\/media}}\label{Readme.md_autotoc_md23}
+The {\ttfamily @custom-\/media} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item name\+: {\ttfamily String}. The {\ttfamily -\/-\/}-\/prefixed name.
+\item media\+: {\ttfamily String}. The part following the name.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md24}{}\doxysubsubsubsection{\texorpdfstring{document}{document}}\label{Readme.md_autotoc_md24}
+The {\ttfamily @document} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item document\+: {\ttfamily String}. The part following {\ttfamily @document}.
+\item vendor\+: {\ttfamily String} or {\ttfamily undefined}. The vendor prefix in {\ttfamily @document}, or {\ttfamily undefined} if there is none.
+\item rules\+: {\ttfamily Array} of nodes with the types {\ttfamily rule}, {\ttfamily comment} and any of the at-\/rule types.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md25}{}\doxysubsubsubsection{\texorpdfstring{font-\/face}{font-\/face}}\label{Readme.md_autotoc_md25}
+The {\ttfamily @font-\/face} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item declarations\+: {\ttfamily Array} of nodes with the types {\ttfamily declaration} and {\ttfamily comment}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md26}{}\doxysubsubsubsection{\texorpdfstring{host}{host}}\label{Readme.md_autotoc_md26}
+The {\ttfamily @host} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item rules\+: {\ttfamily Array} of nodes with the types {\ttfamily rule}, {\ttfamily comment} and any of the at-\/rule types.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md27}{}\doxysubsubsubsection{\texorpdfstring{import}{import}}\label{Readme.md_autotoc_md27}
+The {\ttfamily @import} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item import\+: {\ttfamily String}. The part following {\ttfamily @import}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md28}{}\doxysubsubsubsection{\texorpdfstring{keyframes}{keyframes}}\label{Readme.md_autotoc_md28}
+The {\ttfamily @keyframes} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item name\+: {\ttfamily String}. The name of the keyframes rule.
+\item vendor\+: {\ttfamily String} or {\ttfamily undefined}. The vendor prefix in {\ttfamily @keyframes}, or {\ttfamily undefined} if there is none.
+\item keyframes\+: {\ttfamily Array} of nodes with the types {\ttfamily keyframe} and {\ttfamily comment}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md29}{}\doxysubsubsubsection{\texorpdfstring{keyframe}{keyframe}}\label{Readme.md_autotoc_md29}
+
+\begin{DoxyItemize}
+\item values\+: {\ttfamily Array} of {\ttfamily String}s. The list of “selectors” of the keyframe rule, split on commas. Each “selector” is trimmed from whitespace.
+\item declarations\+: {\ttfamily Array} of nodes with the types {\ttfamily declaration} and {\ttfamily comment}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md30}{}\doxysubsubsubsection{\texorpdfstring{media}{media}}\label{Readme.md_autotoc_md30}
+The {\ttfamily @media} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item media\+: {\ttfamily String}. The part following {\ttfamily @media}.
+\item rules\+: {\ttfamily Array} of nodes with the types {\ttfamily rule}, {\ttfamily comment} and any of the at-\/rule types.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md31}{}\doxysubsubsubsection{\texorpdfstring{namespace}{namespace}}\label{Readme.md_autotoc_md31}
+The {\ttfamily @namespace} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item namespace\+: {\ttfamily String}. The part following {\ttfamily @namespace}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md32}{}\doxysubsubsubsection{\texorpdfstring{page}{page}}\label{Readme.md_autotoc_md32}
+The {\ttfamily @page} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item selectors\+: {\ttfamily Array} of {\ttfamily String}s. The list of selectors of the rule, split on commas. Each selector is trimmed from whitespace and comments.
+\item declarations\+: {\ttfamily Array} of nodes with the types {\ttfamily declaration} and {\ttfamily comment}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md33}{}\doxysubsubsubsection{\texorpdfstring{supports}{supports}}\label{Readme.md_autotoc_md33}
+The {\ttfamily @supports} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item supports\+: {\ttfamily String}. The part following {\ttfamily @supports}.
+\item rules\+: {\ttfamily Array} of nodes with the types {\ttfamily rule}, {\ttfamily comment} and any of the at-\/rule types.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md34}{}\doxysubsubsection{\texorpdfstring{container}{container}}\label{Readme.md_autotoc_md34}
+The {\ttfamily @container} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item conatiner\+: {\ttfamily String}. The part following {\ttfamily @container}.
+\item rules\+: {\ttfamily Array} of nodes with the types {\ttfamily rule}, {\ttfamily comment} and any of the at-\/rule types.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md35}{}\doxysubsubsection{\texorpdfstring{layer}{layer}}\label{Readme.md_autotoc_md35}
+The {\ttfamily @layer} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item layer\+: {\ttfamily String}. The part following {\ttfamily @layer}.
+\item rules\+: {\ttfamily Array} of nodes with the types {\ttfamily rule}, {\ttfamily comment} and any of the at-\/rule types. This may be null, if the rule did not contain any.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md36}{}\doxysubsubsection{\texorpdfstring{starting-\/style}{starting-\/style}}\label{Readme.md_autotoc_md36}
+The {\ttfamily @starting-\/style} at-\/rule.
+
+
+\begin{DoxyItemize}
+\item rules\+: {\ttfamily Array} of nodes with the types {\ttfamily rule}, {\ttfamily comment} and any of the at-\/rule types.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md37}{}\doxysubsubsection{\texorpdfstring{Example}{Example}}\label{Readme.md_autotoc_md37}
+CSS\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{body\ \{}
+\DoxyCodeLine{\ \ background:\ \#eee;}
+\DoxyCodeLine{\ \ color:\ \#888;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Parse tree\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}:\ "{}stylesheet"{},}
+\DoxyCodeLine{\ \ "{}stylesheet"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}rules"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}type"{}:\ "{}rule"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}selectors"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}body"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}declarations"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}type"{}:\ "{}declaration"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}property"{}:\ "{}background"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}value"{}:\ "{}\#eee"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}position"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}start"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}line"{}:\ 2,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}column"{}:\ 3}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}end"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}line"{}:\ 2,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}column"{}:\ 19}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}type"{}:\ "{}declaration"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}property"{}:\ "{}color"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}value"{}:\ "{}\#888"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}position"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}start"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}line"{}:\ 3,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}column"{}:\ 3}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}end"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}line"{}:\ 3,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}column"{}:\ 14}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}position"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}start"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}line"{}:\ 1,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}column"{}:\ 1}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}end"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}line"{}:\ 4,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}column"{}:\ 2}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md38}{}\doxysubsection{\texorpdfstring{License}{License}}\label{Readme.md_autotoc_md38}
+MIT 

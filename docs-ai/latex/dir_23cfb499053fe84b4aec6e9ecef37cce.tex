@@ -1,0 +1,89 @@
+\doxysection{node\+\_\+modules/eslint-\/plugin-\/pnpm Directory Reference}
+\hypertarget{dir_23cfb499053fe84b4aec6e9ecef37cce}{}\label{dir_23cfb499053fe84b4aec6e9ecef37cce}\index{node\_modules/eslint-\/plugin-\/pnpm Directory Reference@{node\_modules/eslint-\/plugin-\/pnpm Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/eslint-plugin-pnpm}{\texttt{ }} \href{https://npmjs.com/package/eslint-plugin-pnpm}{\texttt{ }} \href{https://bundlephobia.com/result?p=eslint-plugin-pnpm}{\texttt{ }} \href{https://www.jsdocs.io/package/eslint-plugin-pnpm}{\texttt{ }} \href{https://github.com/antfu/eslint-plugin-pnpm/blob/main/LICENSE}{\texttt{ }}
+
+ESLint plugin to enforce and auto-\/fix pnpm catalogs.
+
+This plugin consist with two set of rules that applies to {\ttfamily package.\+json} and {\ttfamily pnpm-\/workspace.\+yaml} respectively.
+
+
+\begin{DoxyItemize}
+\item \href{./src/rules/json}{\texttt{ {\ttfamily json-\/} rules}} applies to {\ttfamily package.\+json} and requires \href{https://github.com/ota-meshi/jsonc-eslint-parser}{\texttt{ {\ttfamily jsonc-\/eslint-\/parser}}} to be used as parser.
+\item \href{./src/rules/yaml}{\texttt{ {\ttfamily yaml-\/} rules}} applies to {\ttfamily pnpm-\/workspace.\+yaml} and requires \href{https://github.com/ota-meshi/yaml-eslint-parser}{\texttt{ {\ttfamily yaml-\/eslint-\/parser}}} to be used as parser.
+\begin{DoxyItemize}
+\item YAML support is still experimental as it might have race conditions with other plugins.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md14112}{}\doxysubsection{\texorpdfstring{Setup}{Setup}}\label{README.md_autotoc_md14112}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ add\ -\/D\ eslint-\/plugin-\/pnpm}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14113}{}\doxysubsubsection{\texorpdfstring{Basic Usage}{Basic Usage}}\label{README.md_autotoc_md14113}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.mjs}
+\DoxyCodeLine{import\ \{\ configs\ \}\ from\ 'eslint-\/plugin-\/pnpm'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ ignores:\ ['**/node\_modules/**',\ '**/dist/**'],}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ ...configs.json,}
+\DoxyCodeLine{\ \ ...configs.yaml,}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14114}{}\doxysubsubsection{\texorpdfstring{Manual Configuration}{Manual Configuration}}\label{README.md_autotoc_md14114}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.mjs}
+\DoxyCodeLine{import\ pluginPnpm\ from\ 'eslint-\/plugin-\/pnpm'}
+\DoxyCodeLine{import\ *\ as\ jsoncParser\ from\ 'jsonc-\/eslint-\/parser'}
+\DoxyCodeLine{import\ *\ as\ yamlParser\ from\ 'yaml-\/eslint-\/parser'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ ignores:\ ['**/node\_modules/**',\ '**/dist/**'],}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ name:\ 'pnpm/package.json',}
+\DoxyCodeLine{\ \ \ \ files:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ 'package.json',}
+\DoxyCodeLine{\ \ \ \ \ \ '**/package.json',}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ jsoncParser,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ pnpm:\ pluginPnpm,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'pnpm/json-\/enforce-\/catalog':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ 'pnpm/json-\/valid-\/catalog':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ 'pnpm/json-\/prefer-\/workspace-\/settings':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ name:\ 'pnpm/pnpm-\/workspace-\/yaml',}
+\DoxyCodeLine{\ \ \ \ files:\ ['pnpm-\/workspace.yaml'],}
+\DoxyCodeLine{\ \ \ \ languageOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ yamlParser,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ plugins:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ pnpm:\ pluginPnpm,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'pnpm/yaml-\/no-\/unused-\/catalog-\/item':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \ \ 'pnpm/yaml-\/no-\/duplicate-\/catalog-\/item':\ 'error',}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14115}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md14115}
+\href{https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg}{\texttt{  }} \hypertarget{README.md_autotoc_md14116}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md14116}
+\href{./LICENSE}{\texttt{ MIT}} License © \href{https://github.com/antfu}{\texttt{ Anthony Fu}} 

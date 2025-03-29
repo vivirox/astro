@@ -1,0 +1,142 @@
+\doxysection{src/lib/ai/mental-\/llama Directory Reference}
+\hypertarget{dir_110183797cf1009d70eebe8f13d9b8d4}{}\label{dir_110183797cf1009d70eebe8f13d9b8d4}\index{src/lib/ai/mental-\/llama Directory Reference@{src/lib/ai/mental-\/llama Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This directory contains an integration with \href{https://github.com/SteveKGYang/MentalLLaMA}{\texttt{ Mental\+LLa\+MA}}, the first open-\/source instruction following large language model for interpretable mental health analysis.\hypertarget{README.md_autotoc_md37406}{}\doxysubsection{\texorpdfstring{Overview}{Overview}}\label{README.md_autotoc_md37406}
+Mental\+LLa\+MA enhances our Emotion\+LLa\+MA implementation by providing\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Interpretable Mental Health Analysis}} -\/ Analyze and explain mental health indicators in text
+\item {\bfseries{IMHI Benchmark}} -\/ Comprehensive benchmark for evaluating mental health analysis capabilities
+\item {\bfseries{Explanation Quality Evaluation}} -\/ Assess explanations using BART-\/score and other metrics
+\item {\bfseries{Expert-\/\+Written Explanations}} -\/ Use expert-\/written examples as templates and references
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37407}{}\doxysubsection{\texorpdfstring{Integration Components}{Integration Components}}\label{README.md_autotoc_md37407}
+
+\begin{DoxyItemize}
+\item {\ttfamily Mental\+LLa\+MAAdapter} -\/ Type\+Script adapter for Mental\+LLa\+MA functionality
+\item {\ttfamily Mental\+LLa\+MAFactory} -\/ Factory for creating Mental\+LLa\+MA adapters
+\item {\ttfamily Mental\+LLa\+MAPython\+Bridge} -\/ Bridge to execute original Mental\+LLa\+MA Python code
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37408}{}\doxysubsection{\texorpdfstring{Supported Mental Health Categories}{Supported Mental Health Categories}}\label{README.md_autotoc_md37408}
+The integration now supports comprehensive detection and analysis of the following mental health categories\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Depression}} -\/ Major depressive disorder
+\item {\bfseries{Anxiety}} -\/ Generalized anxiety disorder
+\item {\bfseries{PTSD}} -\/ Post-\/traumatic stress disorder
+\item {\bfseries{Suicidality}} -\/ Suicide risk assessment
+\item {\bfseries{Bipolar Disorder}} -\/ Mood episodes with mania and depression
+\item {\bfseries{OCD}} -\/ Obsessive-\/compulsive disorder
+\item {\bfseries{Eating Disorders}} -\/ Various eating-\/related disorders
+\item {\bfseries{Social Anxiety}} -\/ Social anxiety disorder
+\item {\bfseries{Panic Disorder}} -\/ Panic attacks and related anxiety
+\end{DoxyItemize}
+
+Each category includes specific detection patterns, evidence extraction rules, and expert-\/written explanations.\hypertarget{README.md_autotoc_md37409}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md37409}
+\hypertarget{README.md_autotoc_md37410}{}\doxysubsubsection{\texorpdfstring{Type\+Script Implementation}{Type\+Script Implementation}}\label{README.md_autotoc_md37410}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ MentalLLaMAFactory\ \}\ from\ '../lib/ai/mental-\/llama'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ adapter\ from\ environment\ variables}
+\DoxyCodeLine{const\ \{\ adapter\ \}\ =\ await\ MentalLLaMAFactory.createFromEnv()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Analyze\ text\ for\ mental\ health\ indicators}
+\DoxyCodeLine{const\ analysisResult\ =\ await\ adapter.analyzeMentalHealth(text)}
+\DoxyCodeLine{console.log(`Mental\ Health\ Issue:\ \$\{analysisResult.hasMentalHealthIssue\}`)}
+\DoxyCodeLine{console.log(`Category:\ \$\{analysisResult.mentalHealthCategory\}`)}
+\DoxyCodeLine{console.log(`Explanation:\ \$\{analysisResult.explanation\}`)}
+\DoxyCodeLine{console.log(`Supporting\ Evidence:`,\ analysisResult.supportingEvidence)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Using\ expert-\/guided\ explanations\ (NEW)}
+\DoxyCodeLine{const\ expertAnalysis\ =\ await\ adapter.analyzeMentalHealthWithExpertGuidance(text)}
+\DoxyCodeLine{console.log(`Expert-\/guided\ explanation:\ \$\{expertAnalysis.explanation\}`)}
+\DoxyCodeLine{console.log(`Expert\ guidance\ used:\ \$\{expertAnalysis.expertGuided\}`)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Evaluate\ explanation\ quality}
+\DoxyCodeLine{const\ qualityMetrics\ =\ await\ adapter.evaluateExplanationQuality(analysisResult.explanation)}
+\DoxyCodeLine{console.log(`Quality:\ \$\{qualityMetrics.overall.toFixed(2)\}/5.00`)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37411}{}\doxysubsubsection{\texorpdfstring{Python Bridge}{Python Bridge}}\label{README.md_autotoc_md37411}
+For advanced features, you can use the Python bridge to interact with the original Mental\+LLa\+MA codebase\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ MentalLLaMAFactory\ \}\ from\ '../lib/ai/mental-\/llama'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ adapter\ with\ Python\ bridge}
+\DoxyCodeLine{const\ \{\ adapter,\ pythonBridge\ \}\ =\ await\ MentalLLaMAFactory.createFromEnv()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Run\ IMHI\ benchmark\ evaluation}
+\DoxyCodeLine{if\ (pythonBridge)\ \{}
+\DoxyCodeLine{\ \ const\ result\ =\ await\ pythonBridge.runIMHIEvaluation(\{}
+\DoxyCodeLine{\ \ \ \ modelPath:\ '/path/to/model',}
+\DoxyCodeLine{\ \ \ \ outputPath:\ './imhi-\/results',}
+\DoxyCodeLine{\ \ \ \ testDataset:\ 'IMHI',}
+\DoxyCodeLine{\ \ \ \ isLlama:\ true}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ }
+\DoxyCodeLine{\ \ //\ Evaluate\ explanation\ quality\ using\ BART-\/score}
+\DoxyCodeLine{\ \ await\ pythonBridge.evaluateExplanationQuality(\{}
+\DoxyCodeLine{\ \ \ \ generatedDirName:\ 'responses',}
+\DoxyCodeLine{\ \ \ \ scoreMethod:\ 'bart\_score'}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37412}{}\doxysubsection{\texorpdfstring{Command Line Tool}{Command Line Tool}}\label{README.md_autotoc_md37412}
+A command-\/line tool is available for analyzing text with Mental\+LLa\+MA\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ List\ supported\ mental\ health\ categories}
+\DoxyCodeLine{ts-\/node\ src/scripts/mental-\/llama-\/analyze.ts\ -\/-\/list-\/categories}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Analyze\ text\ for\ mental\ health\ indicators}
+\DoxyCodeLine{ts-\/node\ src/scripts/mental-\/llama-\/analyze.ts\ -\/-\/text\ "{}I've\ been\ feeling\ really\ sad\ and\ hopeless\ lately.\ Nothing\ seems\ worth\ doing\ anymore."{}\ -\/-\/evaluate-\/explanation}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Use\ expert-\/guided\ explanations\ (NEW)}
+\DoxyCodeLine{ts-\/node\ src/scripts/mental-\/llama-\/analyze.ts\ -\/-\/text\ "{}I've\ been\ feeling\ really\ sad\ and\ hopeless\ lately.\ Nothing\ seems\ worth\ doing\ anymore."{}\ -\/-\/expert}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Analyze\ text\ from\ a\ file}
+\DoxyCodeLine{ts-\/node\ src/scripts/mental-\/llama-\/analyze.ts\ -\/-\/file\ ./patient-\/notes.txt\ -\/-\/output-\/path\ ./analysis-\/results.json}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Run\ IMHI\ benchmark\ evaluation\ (requires\ Python\ bridge)}
+\DoxyCodeLine{ts-\/node\ src/scripts/mental-\/llama-\/analyze.ts\ -\/-\/imhi\ -\/-\/model-\/path\ /path/to/model\ -\/-\/output-\/path\ ./imhi-\/results}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37413}{}\doxysubsection{\texorpdfstring{Environment Variables}{Environment Variables}}\label{README.md_autotoc_md37413}
+The following environment variables are required\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily EMOTION\+\_\+\+LLAMA\+\_\+\+API\+\_\+\+URL} -\/ URL for the Emotion\+LLa\+MA API
+\item {\ttfamily EMOTION\+\_\+\+LLAMA\+\_\+\+API\+\_\+\+KEY} -\/ API key for Emotion\+LLa\+MA
+\item {\ttfamily FHE\+\_\+\+KEY\+\_\+\+PATH} -\/ Path to FHE key file
+\item {\ttfamily FHE\+\_\+\+CERT\+\_\+\+PATH} -\/ Path to FHE certificate file
+\item {\ttfamily MENTAL\+\_\+\+LLAMA\+\_\+\+PATH} -\/ (Optional) Path to Mental\+LLa\+MA repository for Python bridge
+\item {\ttfamily PYTHON\+\_\+\+PATH} -\/ (Optional) Path to Python executable for Python bridge
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37414}{}\doxysubsection{\texorpdfstring{Integration with Together\+AI}{Integration with Together\+AI}}\label{README.md_autotoc_md37414}
+To use the Mental\+LLa\+MA integration with Together\+AI\+:
+
+
+\begin{DoxyEnumerate}
+\item Fine-\/tune a model on mental health data using Mental\+LLa\+MA\textquotesingle{}s approach
+\item Deploy the fine-\/tuned model on Together\+AI
+\item Update the Mental\+LLa\+MA adapter to use the deployed model
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37415}{}\doxysubsection{\texorpdfstring{Ethical Considerations}{Ethical Considerations}}\label{README.md_autotoc_md37415}
+As stated in the Mental\+LLa\+MA repository, this integration is provided for {\bfseries{non-\/clinical research only}}. None of the material constitutes actual diagnosis or advice, and help-\/seekers should get assistance from professional psychiatrists or clinical practitioners.\hypertarget{README.md_autotoc_md37416}{}\doxysubsection{\texorpdfstring{Next Steps}{Next Steps}}\label{README.md_autotoc_md37416}
+
+\begin{DoxyItemize}
+\item[\DoxyChecked] Add more mental health categories and patterns
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] Integrate with expert-\/written explanations
+\item[\DoxyUnchecked] Implement complete IMHI benchmark support
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Create visualization tools for analysis results 
+\end{DoxyItemize}

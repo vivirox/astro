@@ -1,0 +1,218 @@
+\doxysection{node\+\_\+modules/jsonpath Directory Reference}
+\hypertarget{dir_dc2633ef65a5b657ce1873f7b889b9da}{}\label{dir_dc2633ef65a5b657ce1873f7b889b9da}\index{node\_modules/jsonpath Directory Reference@{node\_modules/jsonpath Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_7c5cee1790db5a0a2f8326c70decd83f}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}Build Status\mbox{]}(\href{https://travis-ci.org/dchester/jsonpath.png?branch=master}{\texttt{ https\+://travis-\/ci.\+org/dchester/jsonpath.\+png?branch=master}})\mbox{]}(\href{https://travis-ci.org/dchester/jsonpath}{\texttt{ https\+://travis-\/ci.\+org/dchester/jsonpath}})\hypertarget{README.md_autotoc_md21242}{}\doxysubsection{\texorpdfstring{jsonpath}{jsonpath}}\label{README.md_autotoc_md21242}
+Query Java\+Script objects with JSONPath expressions. Robust / safe JSONPath engine for Node.\+js.\hypertarget{README.md_autotoc_md21243}{}\doxysubsubsection{\texorpdfstring{Query Example}{Query Example}}\label{README.md_autotoc_md21243}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ cities\ =\ [}
+\DoxyCodeLine{\ \ \{\ name:\ "{}London"{},\ "{}population"{}:\ 8615246\ \},}
+\DoxyCodeLine{\ \ \{\ name:\ "{}Berlin"{},\ "{}population"{}:\ 3517424\ \},}
+\DoxyCodeLine{\ \ \{\ name:\ "{}Madrid"{},\ "{}population"{}:\ 3165235\ \},}
+\DoxyCodeLine{\ \ \{\ name:\ "{}Rome"{},\ \ \ "{}population"{}:\ 2870528\ \}}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ jp\ =\ require('jsonpath');}
+\DoxyCodeLine{var\ names\ =\ jp.query(cities,\ '\$..name');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ [\ "{}London"{},\ "{}Berlin"{},\ "{}Madrid"{},\ "{}Rome"{}\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21244}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md21244}
+Install from npm\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ jsonpath}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21245}{}\doxysubsubsection{\texorpdfstring{JSONPath Syntax}{JSONPath Syntax}}\label{README.md_autotoc_md21245}
+Here are syntax and examples adapted from \href{http://goessner.net/articles/JsonPath/}{\texttt{ Stefan Goessner\textquotesingle{}s original post}} introducing JSONPath in 2007.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSONPath   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSONPath   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+{\ttfamily \$}   &The root object/element    \\\cline{1-2}
+{\ttfamily @}   &The current object/element    \\\cline{1-2}
+{\ttfamily .}   &Child member operator    \\\cline{1-2}
+{\ttfamily ..}   &Recursive descendant operator; JSONPath borrows this syntax from E4X    \\\cline{1-2}
+{\ttfamily \texorpdfstring{$\ast$}{*}}   &Wildcard matching all objects/elements regardless their names    \\\cline{1-2}
+{\ttfamily \mbox{[}\mbox{]}}   &Subscript operator    \\\cline{1-2}
+{\ttfamily \mbox{[},\mbox{]}}   &Union operator for alternate names or array indices as a set    \\\cline{1-2}
+{\ttfamily \mbox{[}start\+:end\+:step\mbox{]}}   &Array slice operator borrowed from ES4 / Python    \\\cline{1-2}
+{\ttfamily ?()}   &Applies a filter (script) expression via static evaluation    \\\cline{1-2}
+{\ttfamily ()}   &Script expression via static evaluation   \\\cline{1-2}
+\end{longtabu}
+
+
+Given this sample data set, see example expressions below\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}store"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}book"{}:\ [\ }
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}category"{}:\ "{}reference"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}author"{}:\ "{}Nigel\ Rees"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}title"{}:\ "{}Sayings\ of\ the\ Century"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}price"{}:\ 8.95}
+\DoxyCodeLine{\ \ \ \ \ \ \},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}category"{}:\ "{}fiction"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}author"{}:\ "{}Evelyn\ Waugh"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}title"{}:\ "{}Sword\ of\ Honour"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}price"{}:\ 12.99}
+\DoxyCodeLine{\ \ \ \ \ \ \},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}category"{}:\ "{}fiction"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}author"{}:\ "{}Herman\ Melville"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}title"{}:\ "{}Moby\ Dick"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}isbn"{}:\ "{}0-\/553-\/21311-\/3"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}price"{}:\ 8.99}
+\DoxyCodeLine{\ \ \ \ \ \ \},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ "{}category"{}:\ "{}fiction"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}author"{}:\ "{}J.\ R.\ R.\ Tolkien"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}title"{}:\ "{}The\ Lord\ of\ the\ Rings"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}isbn"{}:\ "{}0-\/395-\/19395-\/8"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}price"{}:\ 22.99}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ "{}bicycle"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}color"{}:\ "{}red"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}price"{}:\ 19.95}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Example JSONPath expressions\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSONPath   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ JSONPath   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+{\ttfamily \$.store.\+book\mbox{[}\texorpdfstring{$\ast$}{*}\mbox{]}.author}   &The authors of all books in the store    \\\cline{1-2}
+{\ttfamily \$..author}   &All authors    \\\cline{1-2}
+{\ttfamily \$.store.\texorpdfstring{$\ast$}{*}}   &All things in store, which are some books and a red bicycle    \\\cline{1-2}
+{\ttfamily \$.store..price}   &The price of everything in the store    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}2\mbox{]}}   &The third book    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}(@.length-\/1)\mbox{]}}   &The last book via script subscript    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}-\/1\+:\mbox{]}}   &The last book via slice    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}0,1\mbox{]}}   &The first two books via subscript union    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}\+:2\mbox{]}}   &The first two books via subscript array slice    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}?(@.isbn)\mbox{]}}   &Filter all books with isbn number    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}?(@.price\texorpdfstring{$<$}{<}10)\mbox{]}}   &Filter all books cheaper than 10    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}?(@.price==8.\+95)\mbox{]}}   &Filter all books that cost 8.\+95    \\\cline{1-2}
+{\ttfamily \$..book\mbox{[}?(@.price\texorpdfstring{$<$}{<}30 \&\& @.category=="{}fiction"{})\mbox{]}}   &Filter all fiction books cheaper than 30    \\\cline{1-2}
+{\ttfamily \$..\texorpdfstring{$\ast$}{*}}   &All members of JSON structure   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md21246}{}\doxysubsubsection{\texorpdfstring{Methods}{Methods}}\label{README.md_autotoc_md21246}
+\hypertarget{README.md_autotoc_md21247}{}\doxysubsubsubsubsection{\texorpdfstring{jp.\+query(obj, path\+Expression\mbox{[}, count\mbox{]})}{jp.\+query(obj, path\+Expression\mbox{[}, count\mbox{]})}}\label{README.md_autotoc_md21247}
+Find elements in {\ttfamily obj} matching {\ttfamily path\+Expression}. Returns an array of elements that satisfy the provided JSONPath expression, or an empty array if none were matched. Returns only first {\ttfamily count} elements if specified.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ authors\ =\ jp.query(data,\ '\$..author');}
+\DoxyCodeLine{//\ [\ 'Nigel\ Rees',\ 'Evelyn\ Waugh',\ 'Herman\ Melville',\ 'J.\ R.\ R.\ Tolkien'\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21248}{}\doxysubsubsubsubsection{\texorpdfstring{jp.\+paths(obj, path\+Expression\mbox{[}, count\mbox{]})}{jp.\+paths(obj, path\+Expression\mbox{[}, count\mbox{]})}}\label{README.md_autotoc_md21248}
+Find paths to elements in {\ttfamily obj} matching {\ttfamily path\+Expression}. Returns an array of element paths that satisfy the provided JSONPath expression. Each path is itself an array of keys representing the location within {\ttfamily obj} of the matching element. Returns only first {\ttfamily count} paths if specified.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ paths\ =\ jp.paths(data,\ '\$..author');}
+\DoxyCodeLine{//\ [}
+\DoxyCodeLine{//\ \ \ ['\$',\ 'store',\ 'book',\ 0,\ 'author']\ \},}
+\DoxyCodeLine{//\ \ \ ['\$',\ 'store',\ 'book',\ 1,\ 'author']\ \},}
+\DoxyCodeLine{//\ \ \ ['\$',\ 'store',\ 'book',\ 2,\ 'author']\ \},}
+\DoxyCodeLine{//\ \ \ ['\$',\ 'store',\ 'book',\ 3,\ 'author']\ \}}
+\DoxyCodeLine{//\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21249}{}\doxysubsubsubsubsection{\texorpdfstring{jp.\+nodes(obj, path\+Expression\mbox{[}, count\mbox{]})}{jp.\+nodes(obj, path\+Expression\mbox{[}, count\mbox{]})}}\label{README.md_autotoc_md21249}
+Find elements and their corresponding paths in {\ttfamily obj} matching {\ttfamily path\+Expression}. Returns an array of node objects where each node has a {\ttfamily path} containing an array of keys representing the location within {\ttfamily obj}, and a {\ttfamily value} pointing to the matched element. Returns only first {\ttfamily count} nodes if specified.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ nodes\ =\ jp.nodes(data,\ '\$..author');}
+\DoxyCodeLine{//\ [}
+\DoxyCodeLine{//\ \ \ \{\ path:\ ['\$',\ 'store',\ 'book',\ 0,\ 'author'],\ value:\ 'Nigel\ Rees'\ \},}
+\DoxyCodeLine{//\ \ \ \{\ path:\ ['\$',\ 'store',\ 'book',\ 1,\ 'author'],\ value:\ 'Evelyn\ Waugh'\ \},}
+\DoxyCodeLine{//\ \ \ \{\ path:\ ['\$',\ 'store',\ 'book',\ 2,\ 'author'],\ value:\ 'Herman\ Melville'\ \},}
+\DoxyCodeLine{//\ \ \ \{\ path:\ ['\$',\ 'store',\ 'book',\ 3,\ 'author'],\ value:\ 'J.\ R.\ R.\ Tolkien'\ \}}
+\DoxyCodeLine{//\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21250}{}\doxysubsubsubsubsection{\texorpdfstring{jp.\+value(obj, path\+Expression\mbox{[}, new\+Value\mbox{]})}{jp.\+value(obj, path\+Expression\mbox{[}, new\+Value\mbox{]})}}\label{README.md_autotoc_md21250}
+Returns the value of the first element matching {\ttfamily path\+Expression}. If {\ttfamily new\+Value} is provided, sets the value of the first matching element and returns the new value.\hypertarget{README.md_autotoc_md21251}{}\doxysubsubsubsubsection{\texorpdfstring{jp.\+parent(obj, path\+Expression)}{jp.\+parent(obj, path\+Expression)}}\label{README.md_autotoc_md21251}
+Returns the parent of the first matching element.\hypertarget{README.md_autotoc_md21252}{}\doxysubsubsubsubsection{\texorpdfstring{jp.\+apply(obj, path\+Expression, fn)}{jp.\+apply(obj, path\+Expression, fn)}}\label{README.md_autotoc_md21252}
+Runs the supplied function {\ttfamily fn} on each matching element, and replaces each matching element with the return value from the function. The function accepts the value of the matching element as its only parameter. Returns matching nodes with their updated values.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ nodes\ =\ jp.apply(data,\ '\$..author',\ function(value)\ \{\ return\ value.toUpperCase()\ \});}
+\DoxyCodeLine{//\ [}
+\DoxyCodeLine{//\ \ \ \{\ path:\ ['\$',\ 'store',\ 'book',\ 0,\ 'author'],\ value:\ 'NIGEL\ REES'\ \},}
+\DoxyCodeLine{//\ \ \ \{\ path:\ ['\$',\ 'store',\ 'book',\ 1,\ 'author'],\ value:\ 'EVELYN\ WAUGH'\ \},}
+\DoxyCodeLine{//\ \ \ \{\ path:\ ['\$',\ 'store',\ 'book',\ 2,\ 'author'],\ value:\ 'HERMAN\ MELVILLE'\ \},}
+\DoxyCodeLine{//\ \ \ \{\ path:\ ['\$',\ 'store',\ 'book',\ 3,\ 'author'],\ value:\ 'J.\ R.\ R.\ TOLKIEN'\ \}}
+\DoxyCodeLine{//\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21253}{}\doxysubsubsubsubsection{\texorpdfstring{jp.\+parse(path\+Expression)}{jp.\+parse(path\+Expression)}}\label{README.md_autotoc_md21253}
+Parse the provided JSONPath expression into path components and their associated operations.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ path\ =\ jp.parse('\$..author');}
+\DoxyCodeLine{//\ [}
+\DoxyCodeLine{//\ \ \ \{\ expression:\ \{\ type:\ 'root',\ value:\ '\$'\ \}\ \},}
+\DoxyCodeLine{//\ \ \ \{\ expression:\ \{\ type:\ 'identifier',\ value:\ 'author'\ \},\ operation:\ 'member',\ scope:\ 'descendant'\ \}}
+\DoxyCodeLine{//\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21254}{}\doxysubsubsubsubsection{\texorpdfstring{jp.\+stringify(path)}{jp.\+stringify(path)}}\label{README.md_autotoc_md21254}
+Returns a path expression in string form, given a path. The supplied path may either be a flat array of keys, as returned by {\ttfamily jp.\+nodes} for example, or may alternatively be a fully parsed path expression in the form of an array of path components as returned by {\ttfamily jp.\+parse}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pathExpression\ =\ jp.stringify(['\$',\ 'store',\ 'book',\ 0,\ 'author']);}
+\DoxyCodeLine{//\ "{}\$.store.book[0].author"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21255}{}\doxysubsubsection{\texorpdfstring{Differences from Original Implementation}{Differences from Original Implementation}}\label{README.md_autotoc_md21255}
+This implementation aims to be compatible with Stefan Goessner\textquotesingle{}s original implementation with a few notable exceptions described below.\hypertarget{README.md_autotoc_md21256}{}\doxysubsubsubsubsection{\texorpdfstring{Evaluating Script Expressions}{Evaluating Script Expressions}}\label{README.md_autotoc_md21256}
+Script expressions (i.\+e, {\ttfamily (...)} and {\ttfamily ?(...)}) are statically evaluated via \href{https://github.com/substack/static-eval}{\texttt{ static-\/eval}} rather than using the underlying script engine directly. That means both that the scope is limited to the instance variable ({\ttfamily @}), and only simple expressions (with no side effects) will be valid. So for example, {\ttfamily ?(@.length\texorpdfstring{$>$}{>}10)} will be just fine to match arrays with more than ten elements, but {\ttfamily ?(process.\+exit())} will not get evaluated since {\ttfamily process} would yield a {\ttfamily Reference\+Error}. This method is even safer than {\ttfamily vm.\+run\+In\+New\+Context}, since the script engine itself is more limited and entirely distinct from the one running the application code. See more details in the \href{https://github.com/substack/static-eval/blob/master/index.js}{\texttt{ implementation}} of the evaluator.\hypertarget{README.md_autotoc_md21257}{}\doxysubsubsubsubsection{\texorpdfstring{Grammar}{Grammar}}\label{README.md_autotoc_md21257}
+This project uses a formal BNF \href{https://github.com/dchester/jsonpath/blob/master/lib/grammar.js}{\texttt{ grammar}} to parse JSONPath expressions, an attempt at reverse-\/engineering the intent of the original implementation, which parses via a series of creative regular expressions. The original regex approach can sometimes be forgiving for better or for worse (e.\+g., {\ttfamily \$\mbox{[}\textquotesingle{}store\mbox{]}} =\texorpdfstring{$>$}{>} `\$\mbox{[}\textquotesingle{}store'\mbox{]}{\ttfamily ), and in other cases, can be just plain wrong (e.\+g.}\mbox{[}{\ttfamily =\texorpdfstring{$>$}{>}}\$\`{}).\hypertarget{README.md_autotoc_md21258}{}\doxysubsubsubsubsection{\texorpdfstring{Other Minor Differences}{Other Minor Differences}}\label{README.md_autotoc_md21258}
+As a result of using a real parser and static evaluation, there are some arguable bugs in the original library that have not been carried through here\+:
+
+
+\begin{DoxyItemize}
+\item strings in subscripts may now be double-\/quoted
+\item final {\ttfamily step} arguments in slice operators may now be negative
+\item script expressions may now contain {\ttfamily .} and {\ttfamily @} characters not referring to instance variables
+\item subscripts no longer act as character slices on string elements
+\item non-\/ascii non-\/word characters are no-\/longer valid in member identifier names; use quoted subscript strings instead (e.\+g., `\$\mbox{[}'\$\textquotesingle{}\mbox{]}{\ttfamily instead of}\$.\$\`{})
+\item unions now yield real unions with no duplicates rather than concatenated results
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md21259}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md21259}
+\mbox{[}MIT\mbox{]}(LICENSE) 

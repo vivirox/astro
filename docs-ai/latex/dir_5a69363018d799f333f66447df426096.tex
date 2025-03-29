@@ -1,0 +1,34 @@
+\doxysection{node\+\_\+modules/es-\/shim-\/unscopables Directory Reference}
+\hypertarget{dir_5a69363018d799f333f66447df426096}{}\label{dir_5a69363018d799f333f66447df426096}\index{node\_modules/es-\/shim-\/unscopables Directory Reference@{node\_modules/es-\/shim-\/unscopables Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/ljharb/es-shim-unscopables/actions}{\texttt{ }} \href{https://app.codecov.io/gh/ljharb/es-shim-unscopables/}{\texttt{ }} \href{https://david-dm.org/ljharb/es-shim-unscopables}{\texttt{ }} \href{https://david-dm.org/ljharb/es-shim-unscopables\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=es-shim-unscopables}{\texttt{ }}
+
+\href{https://npmjs.org/package/es-shim-unscopables}{\texttt{ }}
+
+Helper package to shim a method into {\ttfamily Array.\+prototype\mbox{[}Symbol.\+unscopables\mbox{]}}\hypertarget{README.md_autotoc_md12717}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md12717}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ shimUnscopables\ =\ require('es-\/shim-\/unscopables');}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ copyWithin;}
+\DoxyCodeLine{let\ concat;}
+\DoxyCodeLine{with\ ([])\ \{}
+\DoxyCodeLine{\ \ \ \ assert.equal(concat,\ Array.prototype.concat);}
+\DoxyCodeLine{\ \ \ \ assert.notEqual(copyWithin,\ Array.prototype.copyWithin);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{shimUnscopables('concat');}
+\DoxyCodeLine{}
+\DoxyCodeLine{with\ ([])\ \{}
+\DoxyCodeLine{\ \ \ \ assert.notEqual(concat,\ Array.prototype.concat);}
+\DoxyCodeLine{\ \ \ \ assert.notEqual(copyWithin,\ Array.prototype.copyWithin);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12718}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md12718}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test}\hypertarget{README.md_autotoc_md12719}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{README.md_autotoc_md12719}
+Please email \href{https://github.com/ljharb}{\texttt{ @ljharb}} or see \href{https://tidelift.com/security}{\texttt{ https\+://tidelift.\+com/security}} if you have a potential security vulnerability to report. 

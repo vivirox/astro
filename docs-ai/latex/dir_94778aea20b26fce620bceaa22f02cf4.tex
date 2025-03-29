@@ -1,0 +1,86 @@
+\doxysection{node\+\_\+modules/@redis/json Directory Reference}
+\hypertarget{dir_94778aea20b26fce620bceaa22f02cf4}{}\label{dir_94778aea20b26fce620bceaa22f02cf4}\index{node\_modules/"@redis/json Directory Reference@{node\_modules/"@redis/json Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package provides support for the \href{https://redis.io/docs/stack/json/}{\texttt{ Redis\+JSON}} module, which adds JSON as a native data type to Redis. It extends the \href{https://github.com/redis/node-redis}{\texttt{ Node Redis client}} to include functions for each of the Redis\+JSON commands.
+
+To use these extra commands, your Redis server must have the Redis\+JSON module installed.\hypertarget{README.md_autotoc_md5606}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5606}
+For a complete example, see \href{https://github.com/redis/node-redis/blob/master/examples/managing-json.js}{\texttt{ {\ttfamily managing-\/json.\+js}}} in the Node Redis examples folder.\hypertarget{README.md_autotoc_md5607}{}\doxysubsubsection{\texorpdfstring{Storing JSON Documents in Redis}{Storing JSON Documents in Redis}}\label{README.md_autotoc_md5607}
+The \href{https://redis.io/commands/json.set/}{\texttt{ {\ttfamily JSON.\+SET}}} command stores a JSON value at a given JSON Path in a Redis key.
+
+Here, we\textquotesingle{}ll store a JSON document in the root of the Redis key "{}\`{}mydoc\`{}"{}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createClient\ \}\ from\ 'redis';}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{await\ client.json.set('noderedis:jsondata',\ '\$',\ \{}
+\DoxyCodeLine{\ \ name:\ 'Roberta\ McDonald',}
+\DoxyCodeLine{\ \ pets:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ name:\ 'Rex',}
+\DoxyCodeLine{\ \ \ \ species:\ 'dog',}
+\DoxyCodeLine{\ \ \ \ age:\ 3,}
+\DoxyCodeLine{\ \ \ \ isMammal:\ true}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ name:\ 'Goldie',}
+\DoxyCodeLine{\ \ \ \ species:\ 'fish',}
+\DoxyCodeLine{\ \ \ \ age:\ 2,}
+\DoxyCodeLine{\ \ \ \ isMammal:\ false}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+For more information about Redis\+JSON\textquotesingle{}s path syntax, \href{https://redis.io/docs/stack/json/path/}{\texttt{ check out the documentation}}.\hypertarget{README.md_autotoc_md5608}{}\doxysubsubsection{\texorpdfstring{Retrieving JSON Documents from Redis}{Retrieving JSON Documents from Redis}}\label{README.md_autotoc_md5608}
+With Redis\+JSON, we can retrieve all or part(s) of a JSON document using the \href{https://redis.io/commands/json.get/}{\texttt{ {\ttfamily JSON.\+GET}}} command and one or more JSON Paths. Let\textquotesingle{}s get the name and age of one of the pets\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ results\ =\ await\ client.json.get('noderedis:jsondata',\ \{}
+\DoxyCodeLine{\ \ path:\ [}
+\DoxyCodeLine{\ \ \ \ '.pets[1].name',}
+\DoxyCodeLine{\ \ \ \ '.pets[1].age'}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+{\ttfamily results} will contain the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ '.pets[1].name':\ 'Goldie',\ '.pets[1].age':\ 2\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5609}{}\doxysubsubsection{\texorpdfstring{Performing Atomic Updates on JSON Documents Stored in Redis}{Performing Atomic Updates on JSON Documents Stored in Redis}}\label{README.md_autotoc_md5609}
+Redis\+JSON includes commands that can atomically update values in a JSON document, in place in Redis without having to first retrieve the entire document.
+
+Using the \href{https://redis.io/commands/json.numincrby/}{\texttt{ {\ttfamily JSON.\+NUMINCRBY}}} command, we can update the age of one of the pets like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.json.numIncrBy('noderedis:jsondata',\ '.pets[1].age',\ 1);}
+
+\end{DoxyCode}
+
+
+And we can add a new object to the pets array with the \href{https://redis.io/commands/json.arrappend/}{\texttt{ {\ttfamily JSON.\+ARRAPPEND}}} command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ client.json.arrAppend('noderedis:jsondata',\ '.pets',\ \{}
+\DoxyCodeLine{\ \ name:\ 'Robin',}
+\DoxyCodeLine{\ \ species:\ 'bird',}
+\DoxyCodeLine{\ \ age:\ 1,}
+\DoxyCodeLine{\ \ isMammal:\ false}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

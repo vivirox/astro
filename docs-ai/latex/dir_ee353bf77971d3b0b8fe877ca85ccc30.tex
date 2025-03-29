@@ -1,0 +1,72 @@
+\doxysection{node\+\_\+modules/jest-\/worker/node\+\_\+modules/supports-\/color Directory Reference}
+\hypertarget{dir_ee353bf77971d3b0b8fe877ca85ccc30}{}\label{dir_ee353bf77971d3b0b8fe877ca85ccc30}\index{node\_modules/jest-\/worker/node\_modules/supports-\/color Directory Reference@{node\_modules/jest-\/worker/node\_modules/supports-\/color Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Detect whether a terminal supports color \end{quote}
+\hypertarget{readme.md_autotoc_md20574}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md20574}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ supports-\/color}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md20575}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md20575}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ supportsColor\ =\ require('supports-\/color');}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (supportsColor.stdout)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Terminal\ stdout\ supports\ color');}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (supportsColor.stdout.has256)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Terminal\ stdout\ supports\ 256\ colors');}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (supportsColor.stderr.has16m)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Terminal\ stderr\ supports\ 16\ million\ colors\ (truecolor)');}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md20576}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md20576}
+Returns an {\ttfamily Object} with a {\ttfamily stdout} and {\ttfamily stderr} property for testing either streams. Each property is an {\ttfamily Object}, or {\ttfamily false} if color is not supported.
+
+The {\ttfamily stdout}/{\ttfamily stderr} objects specifies a level of support for color through a {\ttfamily .level} property and a corresponding flag\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily .level = 1} and {\ttfamily .has\+Basic = true}\+: Basic color support (16 colors)
+\item {\ttfamily .level = 2} and {\ttfamily .has256 = true}\+: 256 color support
+\item {\ttfamily .level = 3} and {\ttfamily .has16m = true}\+: Truecolor support (16 million colors)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md20577}{}\doxysubsubsection{\texorpdfstring{`require(\textquotesingle{}supports-\/color').supports\+Color(stream, options?)\`{}}{`require(\textquotesingle{}supports-\/color').supports\+Color(stream, options?)\`{}}}\label{readme.md_autotoc_md20577}
+Additionally, {\ttfamily supports-\/color} exposes the {\ttfamily .supports\+Color()} function that takes an arbitrary write stream (e.\+g. {\ttfamily process.\+stdout}) and an optional options object to (re-\/)evaluate color support for an arbitrary stream.
+
+For example, `require(\textquotesingle{}supports-\/color').stdout{\ttfamily is the equivalent of}require(\textquotesingle{}supports-\/color\textquotesingle{}).supports\+Color(process.\+stdout)\`{}.
+
+The options object supports a single boolean property {\ttfamily sniff\+Flags}. By default it is {\ttfamily true}, which instructs {\ttfamily supports\+Color()} to sniff {\ttfamily process.\+argv} for the multitude of {\ttfamily -\/-\/color} flags (see {\itshape Info} below). If {\ttfamily false}, then {\ttfamily process.\+argv} is not considered when determining color support.\hypertarget{readme.md_autotoc_md20578}{}\doxysubsection{\texorpdfstring{Info}{Info}}\label{readme.md_autotoc_md20578}
+It obeys the {\ttfamily -\/-\/color} and {\ttfamily -\/-\/no-\/color} CLI flags.
+
+For situations where using {\ttfamily -\/-\/color} is not possible, use the environment variable {\ttfamily FORCE\+\_\+\+COLOR=1} (level 1), {\ttfamily FORCE\+\_\+\+COLOR=2} (level 2), or {\ttfamily FORCE\+\_\+\+COLOR=3} (level 3) to forcefully enable color, or {\ttfamily FORCE\+\_\+\+COLOR=0} to forcefully disable. The use of {\ttfamily FORCE\+\_\+\+COLOR} overrides all other color support checks.
+
+Explicit 256/\+Truecolor mode can be enabled using the {\ttfamily -\/-\/color=256} and {\ttfamily -\/-\/color=16m} flags, respectively.\hypertarget{readme.md_autotoc_md20579}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md20579}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/chalk/supports-color-cli}{\texttt{ supports-\/color-\/cli}} -\/ CLI for this module
+\item \href{https://github.com/chalk/chalk}{\texttt{ chalk}} -\/ Terminal string styling done right
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md20580}{}\doxysubsection{\texorpdfstring{Maintainers}{Maintainers}}\label{readme.md_autotoc_md20580}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus}{\texttt{ Sindre Sorhus}}
+\item \href{https://github.com/qix-}{\texttt{ Josh Junon}}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+
+
+ {\bfseries{ \href{https://tidelift.com/subscription/pkg/npm-supports-color?utm_source=npm-supports-color&utm_medium=referral&utm_campaign=readme}{\texttt{ Get professional support for this package with a Tidelift subscription}} }} ~\newline
+ \textsubscript{ Tidelift helps make open source sustainable for maintainers while giving companies~\newline
+assurances about security, maintenance, and licensing for their dependencies. } 
+
+\DoxyHorRuler{0}
+ 

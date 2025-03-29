@@ -1,0 +1,115 @@
+\doxysection{node\+\_\+modules/make-\/error Directory Reference}
+\hypertarget{dir_d27a589023dd1443e348a5c556b25e3e}{}\label{dir_d27a589023dd1443e348a5c556b25e3e}\index{node\_modules/make-\/error Directory Reference@{node\_modules/make-\/error Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.org/package/make-error}{\texttt{ }} \href{https://travis-ci.org/JsCommunity/make-error}{\texttt{ }} \href{https://packagephobia.now.sh/result?p=make-error}{\texttt{ }} \href{https://github.com/JsCommunity/make-error/commits/master}{\texttt{ }}
+
+\begin{quote}
+Make your own error types! \end{quote}
+\hypertarget{README.md_autotoc_md22195}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md22195}
+
+\begin{DoxyItemize}
+\item Compatible Node \& browsers
+\item {\ttfamily instanceof} support
+\item {\ttfamily error.\+name} \& {\ttfamily error.\+stack} support
+\item compatible with \href{https://en.wikipedia.org/wiki/Content_Security_Policy}{\texttt{ CSP}} (i.\+e. no {\ttfamily eval()})
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md22196}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md22196}
+\hypertarget{README.md_autotoc_md22197}{}\doxysubsubsection{\texorpdfstring{Node \& \href{http://browserify.org/}{\texttt{ Browserify}}/\href{https://webpack.js.org/}{\texttt{ Webpack}}}{Node \& \href{http://browserify.org/}{\texttt{ Browserify}}/\href{https://webpack.js.org/}{\texttt{ Webpack}}}}\label{README.md_autotoc_md22197}
+Installation of the \href{https://npmjs.org/package/make-error}{\texttt{ npm package}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{>\ npm\ install\ -\/-\/save\ make-\/error}
+
+\end{DoxyCode}
+
+
+Then require the package\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ makeError\ =\ require("{}make-\/error"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22198}{}\doxysubsubsection{\texorpdfstring{Browser}{Browser}}\label{README.md_autotoc_md22198}
+You can directly use the build provided at \href{https://unpkg.com}{\texttt{ unpkg.\+com}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}https://unpkg.com/make-\/error@1/dist/make-\/error.js"{}></script>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22199}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md22199}
+\hypertarget{README.md_autotoc_md22200}{}\doxysubsubsection{\texorpdfstring{Basic named error}{Basic named error}}\label{README.md_autotoc_md22200}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ CustomError\ =\ makeError("{}CustomError"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Parameters\ are\ forwarded\ to\ the\ super\ class\ (here\ Error).}
+\DoxyCodeLine{throw\ new\ CustomError("{}a\ message"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22201}{}\doxysubsubsection{\texorpdfstring{Advanced error class}{Advanced error class}}\label{README.md_autotoc_md22201}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ CustomError(customValue)\ \{}
+\DoxyCodeLine{\ \ CustomError.super.call(this,\ "{}custom\ error\ message"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ this.customValue\ =\ customValue;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{makeError(CustomError);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Feel\ free\ to\ extend\ the\ prototype.}
+\DoxyCodeLine{CustomError.prototype.myMethod\ =\ function\ CustomError\$myMethod()\ \{}
+\DoxyCodeLine{\ \ console.log("{}CustomError.myMethod\ (\%s,\ \%s)"{},\ this.code,\ this.message);}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ throw\ new\ CustomError(42);}
+\DoxyCodeLine{\}\ catch\ (error)\ \{}
+\DoxyCodeLine{\ \ error.myMethod();}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22202}{}\doxysubsubsection{\texorpdfstring{Specialized error}{Specialized error}}\label{README.md_autotoc_md22202}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ SpecializedError\ =\ makeError("{}SpecializedError"{},\ CustomError);}
+\DoxyCodeLine{}
+\DoxyCodeLine{throw\ new\ SpecializedError(42);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22203}{}\doxysubsubsection{\texorpdfstring{Inheritance}{Inheritance}}\label{README.md_autotoc_md22203}
+\begin{quote}
+Best for ES2015+. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ BaseError\ \}\ from\ "{}make-\/error"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{class\ CustomError\ extends\ BaseError\ \{}
+\DoxyCodeLine{\ \ constructor()\ \{}
+\DoxyCodeLine{\ \ \ \ super("{}custom\ error\ message"{});}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md22204}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{README.md_autotoc_md22204}
+
+\begin{DoxyItemize}
+\item \href{https://www.npmjs.com/package/make-error-cause}{\texttt{ make-\/error-\/cause}}\+: Make your own error types, with a cause!
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md22205}{}\doxysubsection{\texorpdfstring{Contributions}{Contributions}}\label{README.md_autotoc_md22205}
+Contributions are {\itshape very} welcomed, either on the documentation or on the code.
+
+You may\+:
+
+
+\begin{DoxyItemize}
+\item report any \href{https://github.com/JsCommunity/make-error/issues}{\texttt{ issue}} you\textquotesingle{}ve encountered;
+\item fork and create a pull request.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md22206}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md22206}
+ISC © \href{http://julien.isonoe.net}{\texttt{ Julien Fontanet}} 

@@ -1,0 +1,58 @@
+\doxysection{node\+\_\+modules/unicode-\/trie Directory Reference}
+\hypertarget{dir_12dc4793ff7941a223f546d0909a0355}{}\label{dir_12dc4793ff7941a223f546d0909a0355}\index{node\_modules/unicode-\/trie Directory Reference@{node\_modules/unicode-\/trie Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+A data structure for fast Unicode character metadata lookup, ported from ICU\hypertarget{README.md_autotoc_md34134}{}\doxysubsection{\texorpdfstring{Background}{Background}}\label{README.md_autotoc_md34134}
+When implementing many Unicode algorithms such as text segmentation, normalization, bidi processing, etc., fast access to character metadata is crucial to good performance. There over a million code points in the Unicode standard, many of which produce the same result when looked up, so an array or hash table is not appropriate -\/ those data structures are fast but would require a lot of memory. The data is generally grouped in ranges, so you could do a binary search, but that is not fast enough for some applications.
+
+The \href{http://site.icu-project.org}{\texttt{ International Components for Unicode}} (ICU) project came up with a data structure based on a \href{http://en.wikipedia.org/wiki/Trie}{\texttt{ Trie}} that provides fast access to Unicode metadata. The range data is precompiled to a serialized and flattened trie, which is then used at runtime to lookup the necessary data. According to my own tests, this is generally at least 50\% faster than binary search, with not too much additional memory required.\hypertarget{README.md_autotoc_md34135}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md34135}
+\begin{DoxyVerb}npm install unicode-trie
+\end{DoxyVerb}
+\hypertarget{README.md_autotoc_md34136}{}\doxysubsection{\texorpdfstring{Building a Trie}{Building a Trie}}\label{README.md_autotoc_md34136}
+Unicode Tries are generally precompiled from data in the Unicode database for faster runtime performance. To build a Unicode Trie, use the {\ttfamily Unicode\+Trie\+Builder} class.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ UnicodeTrieBuilder\ =\ require('unicode-\/trie/builder');}
+\DoxyCodeLine{const\ fs\ =\ require('fs');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ a\ trie}
+\DoxyCodeLine{let\ t\ =\ new\ UnicodeTrieBuilder();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ optional\ parameters\ for\ default\ value,\ and\ error\ value}
+\DoxyCodeLine{//\ if\ not\ provided,\ both\ are\ set\ to\ 0}
+\DoxyCodeLine{t\ =\ new\ UnicodeTrieBuilder(10,\ 999);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ set\ individual\ values\ and\ ranges}
+\DoxyCodeLine{t.set(0x4567,\ 99);}
+\DoxyCodeLine{t.setRange(0x40,\ 0xe7,\ 0x1234);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ you\ can\ lookup\ a\ value\ if\ you\ like}
+\DoxyCodeLine{t.get(0x4567);\ //\ =>\ 99}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ get\ a\ compiled\ trie\ (returns\ a\ UnicodeTrie\ object)}
+\DoxyCodeLine{const\ trie\ =\ t.freeze();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ write\ compressed\ trie\ to\ a\ binary\ file}
+\DoxyCodeLine{fs.writeFileSync('data.trie',\ t.toBuffer());}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34137}{}\doxysubsection{\texorpdfstring{Using a precompiled Trie}{Using a precompiled Trie}}\label{README.md_autotoc_md34137}
+Once you\textquotesingle{}ve built a precompiled trie, you can load it into the {\ttfamily Unicode\+Trie} class, which is a readonly representation of the trie. From there, you can lookup values.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ UnicodeTrie\ =\ require('unicode-\/trie');}
+\DoxyCodeLine{const\ fs\ =\ require('fs');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ load\ serialized\ trie\ from\ binary\ file}
+\DoxyCodeLine{const\ data\ =\ fs.readFileSync('data.trie');}
+\DoxyCodeLine{const\ trie\ =\ new\ UnicodeTrie(data);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ lookup\ a\ value}
+\DoxyCodeLine{trie.get(0x4567);\ //\ =>\ 99}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34138}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md34138}
+MIT 

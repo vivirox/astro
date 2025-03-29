@@ -1,0 +1,97 @@
+\doxysection{node\+\_\+modules/eslint-\/plugin-\/no-\/only-\/tests Directory Reference}
+\hypertarget{dir_d27aa038c4e1a84dbcdbf8c634d28668}{}\label{dir_d27aa038c4e1a84dbcdbf8c634d28668}\index{node\_modules/eslint-\/plugin-\/no-\/only-\/tests Directory Reference@{node\_modules/eslint-\/plugin-\/no-\/only-\/tests Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/eslint-plugin-no-only-tests}{\texttt{ }} \href{https://npmcharts.com/compare/eslint-plugin-no-only-tests?minimal=true}{\texttt{ }} \href{https://github.com/levibuzolic/eslint-plugin-no-only-tests/actions?query=workflow\%3ATests}{\texttt{ }}
+
+ESLint rule for {\ttfamily .only} tests in \href{https://mochajs.org/}{\texttt{ Mocha}}, \href{https://jestjs.io/}{\texttt{ Jest}}, \href{https://jasmine.github.io/}{\texttt{ Jasmine}}, \href{https://github.com/iensu/mocha-cakes-2}{\texttt{ Mocha Cakes 2}} and other JS testing libraries.
+
+The following test blocks are matched by default\+: {\ttfamily describe}, {\ttfamily it}, {\ttfamily context}, {\ttfamily tape}, {\ttfamily test}, {\ttfamily fixture}, {\ttfamily serial}, {\ttfamily Feature}, {\ttfamily Scenario}, {\ttfamily Given}, {\ttfamily And}, {\ttfamily When} and {\ttfamily Then}.
+
+Designed to prevent you from committing focused ({\ttfamily .only}) tests to CI, which may prevent your entire test suite from running.
+
+If the testing framework you use doesn\textquotesingle{}t use {\ttfamily .only} to focus tests, you can override the matchers with \doxylink{README.md_options}{options}.\hypertarget{README.md_autotoc_md14086}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md14086}
+\href{https://eslint.org/docs/user-guide/getting-started}{\texttt{ Install ESLint}} if you haven\textquotesingle{}t done so already, then install {\ttfamily eslint-\/plugin-\/no-\/only-\/tests}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ eslint-\/plugin-\/no-\/only-\/tests}
+\DoxyCodeLine{\#\ or}
+\DoxyCodeLine{yarn\ add\ -\/-\/dev\ eslint-\/plugin-\/no-\/only-\/tests}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+{\bfseries{Note\+:}} If you installed ESLint globally (using the {\ttfamily -\/g} flag) then you must also install {\ttfamily eslint-\/plugin-\/no-\/only-\/tests} globally. \end{quote}
+\hypertarget{README.md_autotoc_md14087}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md14087}
+Add {\ttfamily no-\/only-\/tests} to the plugins section of your {\ttfamily .eslintrc} configuration file. You can omit the {\ttfamily eslint-\/plugin-\/} prefix\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ "{}no-\/only-\/tests"{}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+Then add the rule to the rules section of your {\ttfamily .eslintrc}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ "{}no-\/only-\/tests/no-\/only-\/tests"{}:\ "{}error"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you use a testing framework that uses a test block name that isn\textquotesingle{}t present in the \doxylink{README.md_options}{defaults}, or a different way of focusing test (something other than {\ttfamily .only}) you can specify an array of blocks and focus methods to match in the options.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ "{}no-\/only-\/tests/no-\/only-\/tests"{}:\ [}
+\DoxyCodeLine{\ \ \ \ "{}error"{},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}block"{}:\ ["{}test"{},\ "{}it"{},\ "{}assert"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ "{}focus"{}:\ ["{}only"{},\ "{}focus"{}]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The above example will catch any uses of {\ttfamily test.\+only}, {\ttfamily test.\+focus}, {\ttfamily it.\+only}, {\ttfamily it.\+focus}, {\ttfamily assert.\+only} and {\ttfamily assert.\+focus}.
+
+This rule supports opt-\/in autofixing when the {\ttfamily fix} option is set to {\ttfamily true} to avoid changing runtime code unintentionally when configured in an editor.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ "{}no-\/only-\/tests/no-\/only-\/tests"{}:\ ["{}error"{},\ \{"{}fix"{}:\ true\}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14088}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md14088}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-3}
+\endhead
+{\ttfamily block}   &{\ttfamily string\mbox{[}\mbox{]}}   &Specify the block names that your testing framework uses. Add a {\ttfamily \texorpdfstring{$\ast$}{*}} to the end of any string to enable prefix matching (ie. {\ttfamily test\texorpdfstring{$\ast$}{*}} will match {\ttfamily test\+Example.\+only})~\newline
+Defaults to {\ttfamily \mbox{[}"{}describe"{}, "{}it"{}, "{}context"{}, "{}test"{}, "{}tape"{}, "{}fixture"{}, "{}serial"{}, "{}\+Feature"{}, "{}\+Scenario"{}, "{}\+Given"{}, "{}\+And"{}, "{}\+When"{}, "{}\+Then"{}\mbox{]}}    \\\cline{1-3}
+{\ttfamily focus}   &{\ttfamily string\mbox{[}\mbox{]}}   &Specify the focus scope that your testing framework uses.~\newline
+Defaults to {\ttfamily \mbox{[}"{}only"{}\mbox{]}}    \\\cline{1-3}
+{\ttfamily functions}   &{\ttfamily string\mbox{[}\mbox{]}}   &Specify not permitted functions. Good examples are {\ttfamily fit} or {\ttfamily xit}.~\newline
+Defaults to {\ttfamily \mbox{[}\mbox{]}} (disabled)    \\\cline{1-3}
+{\ttfamily fix}   &{\ttfamily boolean}   &Enable this rule to auto-\/fix violations, useful for a pre-\/commit hook, not recommended for users with auto-\/fixing enabled in their editor.~\newline
+Defaults to {\ttfamily false}   \\\cline{1-3}
+\end{longtabu}

@@ -1,0 +1,101 @@
+\doxysection{node\+\_\+modules/jest-\/environment-\/jsdom/node\+\_\+modules/whatwg-\/mimetype Directory Reference}
+\hypertarget{dir_c2870dcea50bf24887bb6c9f734d07ac}{}\label{dir_c2870dcea50bf24887bb6c9f734d07ac}\index{node\_modules/jest-\/environment-\/jsdom/node\_modules/whatwg-\/mimetype Directory Reference@{node\_modules/jest-\/environment-\/jsdom/node\_modules/whatwg-\/mimetype Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package will parse \href{https://mimesniff.spec.whatwg.org/\#understanding-mime-types}{\texttt{ MIME types}} into a structured format, which can then be manipulated and serialized\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MIMEType\ =\ require("{}whatwg-\/mimetype"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mimeType\ =\ new\ MIMEType(`Text/HTML;Charset="{}utf-\/8"{}`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.assert(mimeType.toString()\ ===\ "{}text/html;charset=utf-\/8"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.assert(mimeType.type\ ===\ "{}text"{});}
+\DoxyCodeLine{console.assert(mimeType.subtype\ ===\ "{}html"{});}
+\DoxyCodeLine{console.assert(mimeType.essence\ ===\ "{}text/html"{});}
+\DoxyCodeLine{console.assert(mimeType.parameters.get("{}charset"{})\ ===\ "{}utf-\/8"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{mimeType.parameters.set("{}charset"{},\ "{}windows-\/1252"{});}
+\DoxyCodeLine{console.assert(mimeType.parameters.get("{}charset"{})\ ===\ "{}windows-\/1252"{});}
+\DoxyCodeLine{console.assert(mimeType.toString()\ ===\ "{}text/html;charset=windows-\/1252"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.assert(mimeType.isHTML()\ ===\ true);}
+\DoxyCodeLine{console.assert(mimeType.isXML()\ ===\ false);}
+
+\end{DoxyCode}
+
+
+Parsing is a fairly complex process; see \href{https://mimesniff.spec.whatwg.org/\#parsing-a-mime-type}{\texttt{ the specification}} for details (and similarly \href{https://mimesniff.spec.whatwg.org/\#serializing-a-mime-type}{\texttt{ for serialization}}).
+
+This package\textquotesingle{}s algorithms conform to those of the WHATWG \href{https://mimesniff.spec.whatwg.org/}{\texttt{ MIME Sniffing Standard}}, and is aligned up to commit \href{https://github.com/whatwg/mimesniff/commit/8e9a7dd90717c595a4e4d982cd216e4411d33736}{\texttt{ 8e9a7dd}}.\hypertarget{README.md_autotoc_md20029}{}\doxysubsection{\texorpdfstring{{\ttfamily MIMEType} API}{{\ttfamily MIMEType} API}}\label{README.md_autotoc_md20029}
+This package\textquotesingle{}s main module\textquotesingle{}s default export is a class, {\ttfamily MIMEType}. Its constructor takes a string which it will attempt to parse into a MIME type; if parsing fails, an {\ttfamily Error} will be thrown.\hypertarget{README.md_autotoc_md20030}{}\doxysubsubsection{\texorpdfstring{The {\ttfamily parse()} static factory method}{The {\ttfamily parse()} static factory method}}\label{README.md_autotoc_md20030}
+As an alternative to the constructor, you can use {\ttfamily MIMEType.\+parse(string)}. The only difference is that {\ttfamily parse()} will return {\ttfamily null} on failed parsing, whereas the constructor will throw. It thus makes the most sense to use the constructor in cases where unparseable MIME types would be exceptional, and use {\ttfamily parse()} when dealing with input from some unconstrained source.\hypertarget{README.md_autotoc_md20031}{}\doxysubsubsection{\texorpdfstring{Properties}{Properties}}\label{README.md_autotoc_md20031}
+
+\begin{DoxyItemize}
+\item {\ttfamily type}\+: the MIME type\textquotesingle{}s \href{https://mimesniff.spec.whatwg.org/\#mime-type-type}{\texttt{ type}}, e.\+g. {\ttfamily "{}text"{}}
+\item {\ttfamily subtype}\+: the MIME type\textquotesingle{}s \href{https://mimesniff.spec.whatwg.org/\#mime-type-subtype}{\texttt{ subtype}}, e.\+g. {\ttfamily "{}html"{}}
+\item {\ttfamily essence}\+: the MIME type\textquotesingle{}s \href{https://mimesniff.spec.whatwg.org/\#mime-type-essence}{\texttt{ essence}}, e.\+g. {\ttfamily "{}text/html"{}}
+\item {\ttfamily parameters}\+: an instance of {\ttfamily MIMEType\+Parameters}, containing this MIME type\textquotesingle{}s \href{https://mimesniff.spec.whatwg.org/\#mime-type-parameters}{\texttt{ parameters}}
+\end{DoxyItemize}
+
+{\ttfamily type} and {\ttfamily subtype} can be changed. They will be validated to be non-\/empty and only contain \href{https://mimesniff.spec.whatwg.org/\#http-token-code-point}{\texttt{ HTTP token code points}}.
+
+{\ttfamily essence} is only a getter, and cannot be changed.
+
+{\ttfamily parameters} is also a getter, but the contents of the {\ttfamily MIMEType\+Parameters} object are mutable, as described below.\hypertarget{README.md_autotoc_md20032}{}\doxysubsubsection{\texorpdfstring{Methods}{Methods}}\label{README.md_autotoc_md20032}
+
+\begin{DoxyItemize}
+\item {\ttfamily to\+String()} serializes the MIME type to a string
+\item {\ttfamily is\+HTML()}\+: returns true if this instance represents \href{https://mimesniff.spec.whatwg.org/\#html-mime-type}{\texttt{ a HTML MIME type}}
+\item {\ttfamily is\+XML()}\+: returns true if this instance represents \href{https://mimesniff.spec.whatwg.org/\#xml-mime-type}{\texttt{ an XML MIME type}}
+\item {\ttfamily is\+Java\+Script(\{ prohibit\+Parameters \})}\+: returns true if this instance represents \href{https://html.spec.whatwg.org/multipage/scripting.html\#javascript-mime-type}{\texttt{ a Java\+Script MIME type}}. {\ttfamily prohibit\+Parameters} can be set to true to disallow any parameters, i.\+e. to test if the MIME type\textquotesingle{}s serialization is a \href{https://mimesniff.spec.whatwg.org/\#javascript-mime-type-essence-match}{\texttt{ Java\+Script MIME type essence match}}.
+\end{DoxyItemize}
+
+{\itshape Note\+: the {\ttfamily is\+HTML()}, {\ttfamily is\+XML()}, and {\ttfamily is\+Java\+Script()} methods are speculative, and may be removed or changed in future major versions. See \href{https://github.com/whatwg/mimesniff/issues/48}{\texttt{ whatwg/mimesniff\#48}} for brainstorming in this area. Currently we implement these mainly because they are useful in jsdom.}\hypertarget{README.md_autotoc_md20033}{}\doxysubsection{\texorpdfstring{{\ttfamily MIMEType\+Parameters} API}{{\ttfamily MIMEType\+Parameters} API}}\label{README.md_autotoc_md20033}
+The {\ttfamily MIMEType\+Parameters} class, instances of which are returned by {\ttfamily mime\+Type.\+parameters}, has equivalent surface API to a \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map}{\texttt{ Java\+Script {\ttfamily Map}}}.
+
+However, {\ttfamily MIMEType\+Parameters} methods will always interpret their arguments as appropriate for MIME types, so e.\+g. parameter names will be lowercased, and attempting to set invalid characters will throw.
+
+Some examples\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ mimeType\ =\ new\ MIMEType(`x/x;a=b;c=D;E="{}F"{}`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Logs:}
+\DoxyCodeLine{//\ a\ b}
+\DoxyCodeLine{//\ c\ D}
+\DoxyCodeLine{//\ e\ F}
+\DoxyCodeLine{for\ (const\ [name,\ value]\ of\ mimeType.parameters)\ \{}
+\DoxyCodeLine{\ \ console.log(name,\ value);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.assert(mimeType.parameters.has("{}a"{}));}
+\DoxyCodeLine{console.assert(mimeType.parameters.has("{}A"{}));}
+\DoxyCodeLine{console.assert(mimeType.parameters.get("{}A"{})\ ===\ "{}b"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{mimeType.parameters.set("{}Q"{},\ "{}X"{});}
+\DoxyCodeLine{console.assert(mimeType.parameters.get("{}q"{})\ ===\ "{}X"{});}
+\DoxyCodeLine{console.assert(mimeType.toString()\ ===\ "{}x/x;a=b;c=d;e=F;q=X"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Throws:}
+\DoxyCodeLine{mimeType.parameters.set("{}@"{},\ "{}x"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md20034}{}\doxysubsection{\texorpdfstring{Raw parsing/serialization APIs}{Raw parsing/serialization APIs}}\label{README.md_autotoc_md20034}
+If you want primitives on which to build your own API, you can get direct access to the parsing and serialization algorithms as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ parse\ =\ require("{}whatwg-\/mimetype/parser"{});}
+\DoxyCodeLine{const\ serialize\ =\ require("{}whatwg-\/mimetype/serialize"{});}
+
+\end{DoxyCode}
+
+
+{\ttfamily parse(string)} returns an object containing the {\ttfamily type} and {\ttfamily subtype} strings, plus {\ttfamily parameters}, which is a {\ttfamily Map}. This is roughly our equivalent of the spec\textquotesingle{}s \href{https://mimesniff.spec.whatwg.org/\#mime-type}{\texttt{ MIME type record}}. If parsing fails, it instead returns {\ttfamily null}.
+
+{\ttfamily serialize(record)} operates on the such an object, giving back a string according to the serialization algorithm. 

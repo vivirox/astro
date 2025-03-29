@@ -1,0 +1,217 @@
+\doxysection{node\+\_\+modules/@supabase/realtime-\/js Directory Reference}
+\hypertarget{dir_6dd48564ec23230aa770eeb52c4280d2}{}\label{dir_6dd48564ec23230aa770eeb52c4280d2}\index{node\_modules/"@supabase/realtime-\/js Directory Reference@{node\_modules/"@supabase/realtime-\/js Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+~\newline
+ 
+
+\href{https://supabase.io}{\texttt{   }}
+
+\doxysubsection*{Supabase Realtime Client}
+
+\doxysubsubsubsection*{Send ephemeral messages with {\bfseries{Broadcast}}, track and synchronize state with {\bfseries{Presence}}, and listen to database changes with {\bfseries{Postgres Change Data Capture (CDC)}}.}
+
+
+
+\href{https://supabase.com/docs/guides/realtime}{\texttt{ Guides}} · \href{https://supabase.com/docs/reference/javascript}{\texttt{ Reference Docs}} · \href{https://multiplayer.dev}{\texttt{ Multiplayer Demo}} \hypertarget{README.md_autotoc_md6115}{}\doxysubsection{\texorpdfstring{Overview}{Overview}}\label{README.md_autotoc_md6115}
+This client enables you to use the following Supabase Realtime\textquotesingle{}s features\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Broadcast}}\+: send ephemeral messages from client to clients with minimal latency. Use cases include sharing cursor positions between users.
+\item {\bfseries{Presence}}\+: track and synchronize shared state across clients with the help of CRDTs. Use cases include tracking which users are currently viewing a specific webpage.
+\item {\bfseries{Postgres Change Data Capture (CDC)}}\+: listen for changes in your Postgre\+SQL database and send them to clients.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6116}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md6116}
+\hypertarget{README.md_autotoc_md6117}{}\doxysubsubsection{\texorpdfstring{Installing the Package}{Installing the Package}}\label{README.md_autotoc_md6117}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @supabase/realtime-\/js}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6118}{}\doxysubsubsection{\texorpdfstring{Creating a Channel}{Creating a Channel}}\label{README.md_autotoc_md6118}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ RealtimeClient\ \}\ from\ '@supabase/realtime-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ client\ =\ new\ RealtimeClient(REALTIME\_URL,\ \{}
+\DoxyCodeLine{\ \ params:\ \{}
+\DoxyCodeLine{\ \ \ \ apikey:\ API\_KEY}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ channel\ =\ client.channel('test-\/channel',\ \{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.subscribe((status,\ err)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (status\ ===\ 'SUBSCRIBED')\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Connected!')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ if\ (status\ ===\ 'CHANNEL\_ERROR')\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(`There\ was\ an\ error\ subscribing\ to\ channel:\ \$\{err.message\}`)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ if\ (status\ ===\ 'TIMED\_OUT')\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Realtime\ server\ did\ not\ respond\ in\ time.')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ if\ (status\ ===\ 'CLOSED')\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Realtime\ channel\ was\ unexpectedly\ closed.')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6119}{}\doxysubsubsubsection{\texorpdfstring{Notes\+:}{Notes\+:}}\label{README.md_autotoc_md6119}
+
+\begin{DoxyItemize}
+\item {\ttfamily REALTIME\+\_\+\+URL} is `\textquotesingle{}ws\+://localhost\+:4000/socket'{\ttfamily when developing locally and}\textquotesingle{}wss\+://$<$project\+\_\+ref$>$.supabase.\+co/realtime/v1\textquotesingle{}{\ttfamily when connecting to your Supabase project. -\/}API\+\_\+\+KEY{\ttfamily is a JWT whose claims must contain}exp{\ttfamily and}role$<$tt$>$(existing database role).
+\item Channel name can be any
+\end{DoxyItemize}string\`{}.\hypertarget{README.md_autotoc_md6120}{}\doxysubsubsection{\texorpdfstring{Broadcast}{Broadcast}}\label{README.md_autotoc_md6120}
+Your client can send and receive messages based on the {\ttfamily event}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Setup...}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ channel\ =\ client.channel('broadcast-\/test',\ \{\ broadcast:\ \{\ ack:\ false,\ self:\ false\ \}\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.on('broadcast',\ \{\ event:\ 'some-\/event'\ \},\ (payload)\ =>}
+\DoxyCodeLine{\ \ console.log(payload)}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.subscribe(async\ (status)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (status\ ===\ 'SUBSCRIBED')\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Send\ message\ to\ other\ clients\ listening\ to\ 'broadcast-\/test'\ channel}
+\DoxyCodeLine{\ \ \ \ await\ channel.send(\{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'broadcast',}
+\DoxyCodeLine{\ \ \ \ \ \ event:\ 'some-\/event',}
+\DoxyCodeLine{\ \ \ \ \ \ payload:\ \{\ hello:\ 'world'\ \},}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6121}{}\doxysubsubsubsection{\texorpdfstring{Notes\+:}{Notes\+:}}\label{README.md_autotoc_md6121}
+
+\begin{DoxyItemize}
+\item Setting {\ttfamily ack} to {\ttfamily true} means that the {\ttfamily channel.\+send} promise will resolve once server replies with acknowledgement that it received the broadcast message request.
+\item Setting {\ttfamily self} to {\ttfamily true} means that the client will receive the broadcast message it sent out.
+\item Setting {\ttfamily private} to {\ttfamily true} means that the client will use RLS to determine if the user can connect or not to a given channel.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6122}{}\doxysubsubsection{\texorpdfstring{Presence}{Presence}}\label{README.md_autotoc_md6122}
+Your client can track and sync state that\textquotesingle{}s stored in the channel.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Setup...}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ channel\ =\ client.channel(}
+\DoxyCodeLine{\ \ 'presence-\/test',}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ config:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ presence:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ key:\ ''}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.on('presence',\ \{\ event:\ 'sync'\ \},\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('Online\ users:\ ',\ channel.presenceState())}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.on('presence',\ \{\ event:\ 'join'\ \},\ (\{\ newPresences\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('New\ users\ have\ joined:\ ',\ newPresences)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.on('presence',\ \{\ event:\ 'leave'\ \},\ (\{\ leftPresences\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('Users\ have\ left:\ ',\ leftPresences)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.subscribe(async\ (status)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (status\ ===\ 'SUBSCRIBED')\ \{}
+\DoxyCodeLine{\ \ \ \ const\ status\ =\ await\ channel.track(\{\ 'user\_id':\ 1\ \})}
+\DoxyCodeLine{\ \ \ \ console.log(status)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6123}{}\doxysubsubsection{\texorpdfstring{Postgres CDC}{Postgres CDC}}\label{README.md_autotoc_md6123}
+Receive database changes on the client.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Setup...}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ channel\ =\ client.channel('db-\/changes')}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.on('postgres\_changes',\ \{\ event:\ '*',\ schema:\ 'public'\ \},\ (payload)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('All\ changes\ in\ public\ schema:\ ',\ payload)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.on('postgres\_changes',\ \{\ event:\ 'INSERT',\ schema:\ 'public',\ table:\ 'messages'\ \},\ (payload)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('All\ inserts\ in\ messages\ table:\ ',\ payload)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.on('postgres\_changes',\ \{\ event:\ 'UPDATE',\ schema:\ 'public',\ table:\ 'users',\ filter:\ 'username=eq.Realtime'\ \},\ (payload)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('All\ updates\ on\ users\ table\ when\ username\ is\ Realtime:\ ',\ payload)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.subscribe(async\ (status)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (status\ ===\ 'SUBSCRIBED')\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('Ready\ to\ receive\ database\ changes!')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6124}{}\doxysubsubsection{\texorpdfstring{Get All Channels}{Get All Channels}}\label{README.md_autotoc_md6124}
+You can see all the channels that your client has instantiatied.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Setup...}
+\DoxyCodeLine{}
+\DoxyCodeLine{client.getChannels()}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6125}{}\doxysubsubsection{\texorpdfstring{Cleanup}{Cleanup}}\label{README.md_autotoc_md6125}
+It is highly recommended that you clean up your channels after you\textquotesingle{}re done with them.
+
+
+\begin{DoxyItemize}
+\item Remove a single channel
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Setup...}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ channel\ =\ client.channel('some-\/channel-\/to-\/remove')}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.subscribe()}
+\DoxyCodeLine{}
+\DoxyCodeLine{client.removeChannel(channel)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item Remove all channels
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Setup...}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ channel1\ =\ client.channel('a-\/channel-\/to-\/remove')}
+\DoxyCodeLine{const\ channel2\ =\ client.channel('another-\/channel-\/to-\/remove')}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel1.subscribe()}
+\DoxyCodeLine{channel2.subscribe()}
+\DoxyCodeLine{}
+\DoxyCodeLine{client.removeAllChannels()}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6126}{}\doxysubsubsection{\texorpdfstring{Credits}{Credits}}\label{README.md_autotoc_md6126}
+This repo draws heavily from \href{https://github.com/phoenixframework/phoenix/tree/master/assets/js/phoenix}{\texttt{ phoenix-\/js}}.\hypertarget{README.md_autotoc_md6127}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md6127}
+MIT. 

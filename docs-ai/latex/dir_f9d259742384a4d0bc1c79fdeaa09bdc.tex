@@ -1,0 +1,222 @@
+\doxysection{node\+\_\+modules/word-\/wrap Directory Reference}
+\hypertarget{dir_f9d259742384a4d0bc1c79fdeaa09bdc}{}\label{dir_f9d259742384a4d0bc1c79fdeaa09bdc}\index{node\_modules/word-\/wrap Directory Reference@{node\_modules/word-\/wrap Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Wrap words to a specified length. \end{quote}
+
+
+Please consider following this project\textquotesingle{}s author, \href{https://github.com/jonschlinkert}{\texttt{ Jon Schlinkert}}, and consider starring the project to show your \+:heart\+: and support.\hypertarget{README.md_autotoc_md35708}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md35708}
+Install with \href{https://www.npmjs.com/}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ word-\/wrap}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35709}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md35709}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ wrap\ =\ require('word-\/wrap');}
+\DoxyCodeLine{}
+\DoxyCodeLine{wrap('Lorem\ ipsum\ dolor\ sit\ amet,\ consectetur\ adipiscing\ elit,\ sed\ do\ eiusmod\ tempor\ incididunt\ ut\ labore\ et\ dolore\ magna\ aliqua.\ Ut\ enim\ ad\ minim\ veniam,\ quis\ nostrud\ exercitation\ ullamco\ laboris\ nisi\ ut\ aliquip\ ex\ ea\ commodo\ consequat.');}
+
+\end{DoxyCode}
+
+
+Results in\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Lorem\ ipsum\ dolor\ sit\ amet,\ consectetur\ adipiscing}
+\DoxyCodeLine{elit,\ sed\ do\ eiusmod\ tempor\ incididunt\ ut\ labore}
+\DoxyCodeLine{et\ dolore\ magna\ aliqua.\ Ut\ enim\ ad\ minim\ veniam,}
+\DoxyCodeLine{quis\ nostrud\ exercitation\ ullamco\ laboris\ nisi\ ut}
+\DoxyCodeLine{aliquip\ ex\ ea\ commodo\ consequat.}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35710}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md35710}
+\hypertarget{README.md_autotoc_md35711}{}\doxysubsubsection{\texorpdfstring{options.\+width}{options.\+width}}\label{README.md_autotoc_md35711}
+Type\+: {\ttfamily Number}
+
+Default\+: {\ttfamily 50}
+
+The width of the text before wrapping to a new line.
+
+{\bfseries{Example\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{wrap(str,\ \{width:\ 60\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35712}{}\doxysubsubsection{\texorpdfstring{options.\+indent}{options.\+indent}}\label{README.md_autotoc_md35712}
+Type\+: {\ttfamily String}
+
+Default\+: \`{}\`{} (two spaces)
+
+The string to use at the beginning of each line.
+
+{\bfseries{Example\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{wrap(str,\ \{indent:\ '\ \ \ \ \ \ '\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35713}{}\doxysubsubsection{\texorpdfstring{options.\+newline}{options.\+newline}}\label{README.md_autotoc_md35713}
+Type\+: {\ttfamily String}
+
+Default\+: {\ttfamily \textbackslash{}n}
+
+The string to use at the end of each line.
+
+{\bfseries{Example\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{wrap(str,\ \{newline:\ '\(\backslash\)n\(\backslash\)n'\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35714}{}\doxysubsubsection{\texorpdfstring{options.\+escape}{options.\+escape}}\label{README.md_autotoc_md35714}
+Type\+: {\ttfamily function}
+
+Default\+: {\ttfamily function(str)\{return str;\}}
+
+An escape function to run on each line after splitting them.
+
+{\bfseries{Example\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ xmlescape\ =\ require('xml-\/escape');}
+\DoxyCodeLine{wrap(str,\ \{}
+\DoxyCodeLine{\ \ escape:\ function(string)\{}
+\DoxyCodeLine{\ \ \ \ return\ xmlescape(string);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35715}{}\doxysubsubsection{\texorpdfstring{options.\+trim}{options.\+trim}}\label{README.md_autotoc_md35715}
+Type\+: {\ttfamily Boolean}
+
+Default\+: {\ttfamily false}
+
+Trim trailing whitespace from the returned string. This option is included since {\ttfamily .trim()} would also strip the leading indentation from the first line.
+
+{\bfseries{Example\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{wrap(str,\ \{trim:\ true\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35716}{}\doxysubsubsection{\texorpdfstring{options.\+cut}{options.\+cut}}\label{README.md_autotoc_md35716}
+Type\+: {\ttfamily Boolean}
+
+Default\+: {\ttfamily false}
+
+Break a word between any two letters when the word is longer than the specified width.
+
+{\bfseries{Example\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{wrap(str,\ \{cut:\ true\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35717}{}\doxysubsection{\texorpdfstring{About}{About}}\label{README.md_autotoc_md35717}
+
+
+{\bfseries{{\bfseries{Contributing}}}}\begin{adjustwidth}{1em}{0em}
+
+
+Pull requests and stars are always welcome. For bugs and feature requests, \href{../../issues/new}{\texttt{ please create an issue}}.
+
+\end{adjustwidth}
+
+
+
+
+{\bfseries{{\bfseries{Running Tests}}}}\begin{adjustwidth}{1em}{0em}
+
+
+Running and reviewing unit tests is a great way to get familiarized with a library and its API. You can install dependencies and run tests with the following command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ \&\&\ npm\ test}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+
+
+
+{\bfseries{{\bfseries{Building docs}}}}\begin{adjustwidth}{1em}{0em}
+
+
+{\itshape (This project\textquotesingle{}s readme.\+md is generated by \href{https://github.com/verbose/verb-generate-readme}{\texttt{ verb}}, please don\textquotesingle{}t edit the readme directly. Any changes to the readme must be made in the .verb.md readme template.)}
+
+To generate the readme, run the following command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/g\ verbose/verb\#dev\ verb-\/generate-\/readme\ \&\&\ verb}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+\hypertarget{README.md_autotoc_md35718}{}\doxysubsubsection{\texorpdfstring{Related projects}{Related projects}}\label{README.md_autotoc_md35718}
+You might also be interested in these projects\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://www.npmjs.com/package/common-words}{\texttt{ common-\/words}}\+: Updated list (JSON) of the 100 most common words in the English language. Useful for… \href{https://github.com/jonschlinkert/common-words}{\texttt{ more}} \texorpdfstring{$\vert$}{|} \href{https://github.com/jonschlinkert/common-words}{\texttt{ homepage}}
+\item \href{https://www.npmjs.com/package/shuffle-words}{\texttt{ shuffle-\/words}}\+: Shuffle the words in a string and optionally the letters in each word using the… \href{https://github.com/jonschlinkert/shuffle-words}{\texttt{ more}} \texorpdfstring{$\vert$}{|} \href{https://github.com/jonschlinkert/shuffle-words}{\texttt{ homepage}}
+\item \href{https://www.npmjs.com/package/unique-words}{\texttt{ unique-\/words}}\+: Returns an array of unique words, or the number of occurrences of each word in… \href{https://github.com/jonschlinkert/unique-words}{\texttt{ more}} \texorpdfstring{$\vert$}{|} \href{https://github.com/jonschlinkert/unique-words}{\texttt{ homepage}}
+\item \href{https://www.npmjs.com/package/wordcount}{\texttt{ wordcount}}\+: Count the words in a string. Support for english, CJK and Cyrillic. \texorpdfstring{$\vert$}{|} \href{https://github.com/jonschlinkert/wordcount}{\texttt{ homepage}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md35719}{}\doxysubsubsection{\texorpdfstring{Contributors}{Contributors}}\label{README.md_autotoc_md35719}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Commits}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Contributor}}    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Commits}}   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Contributor}}    }\\\cline{1-2}
+\endhead
+47   &\href{https://github.com/jonschlinkert}{\texttt{ jonschlinkert}}    \\\cline{1-2}
+7   &\href{https://github.com/OlafConijn}{\texttt{ Olaf\+Conijn}}    \\\cline{1-2}
+3   &\href{https://github.com/doowb}{\texttt{ doowb}}    \\\cline{1-2}
+2   &\href{https://github.com/aashutoshrathi}{\texttt{ aashutoshrathi}}    \\\cline{1-2}
+2   &\href{https://github.com/lordvlad}{\texttt{ lordvlad}}    \\\cline{1-2}
+2   &\href{https://github.com/hildjj}{\texttt{ hildjj}}    \\\cline{1-2}
+1   &\href{https://github.com/danilosampaio}{\texttt{ danilosampaio}}    \\\cline{1-2}
+1   &\href{https://github.com/2fd}{\texttt{ 2fd}}    \\\cline{1-2}
+1   &\href{https://github.com/leonard-thieu}{\texttt{ leonard-\/thieu}}    \\\cline{1-2}
+1   &\href{https://github.com/mohd-akram}{\texttt{ mohd-\/akram}}    \\\cline{1-2}
+1   &\href{https://github.com/toddself}{\texttt{ toddself}}    \\\cline{1-2}
+1   &\href{https://github.com/wolfgang42}{\texttt{ wolfgang42}}    \\\cline{1-2}
+1   &\href{https://github.com/zachhale}{\texttt{ zachhale}}   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md35720}{}\doxysubsubsection{\texorpdfstring{Author}{Author}}\label{README.md_autotoc_md35720}
+{\bfseries{Jon Schlinkert}}
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/jonschlinkert}{\texttt{ Git\+Hub Profile}}
+\item \href{https://twitter.com/jonschlinkert}{\texttt{ Twitter Profile}}
+\item \href{https://linkedin.com/in/jonschlinkert}{\texttt{ Linked\+In Profile}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md35721}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md35721}
+Copyright © 2023, \href{https://github.com/jonschlinkert}{\texttt{ Jon Schlinkert}}. Released under the \mbox{[}MIT License\mbox{]}(LICENSE).
+
+\DoxyHorRuler{0}
+
+
+{\itshape This file was generated by \href{https://github.com/verbose/verb-generate-readme}{\texttt{ verb-\/generate-\/readme}}, v0.\+8.\+0, on July 22, 2023.} 

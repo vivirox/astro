@@ -1,0 +1,90 @@
+\doxysection{node\+\_\+modules/@expressive-\/code/core Directory Reference}
+\hypertarget{dir_2c33b97f5cb497f7ff3395ecac9d7145}{}\label{dir_2c33b97f5cb497f7ff3395ecac9d7145}\index{node\_modules/"@expressive-\/code/core Directory Reference@{node\_modules/"@expressive-\/code/core Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+The core package of \href{https://expressive-code.com/}{\texttt{ Expressive Code}}, an engine for presenting source code on the web.\hypertarget{README.md_autotoc_md3293}{}\doxysubsection{\texorpdfstring{Documentation}{Documentation}}\label{README.md_autotoc_md3293}
+\href{https://expressive-code.com/}{\texttt{ Read the Expressive Code docs}} to learn more about the features provided by Expressive Code.\hypertarget{README.md_autotoc_md3294}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{README.md_autotoc_md3294}
+Using this core package directly is {\bfseries{only recommended for advanced use cases}}.
+
+Unless you\textquotesingle{}re a plugin or integration author, you should probably use a higher-\/level package like \href{https://www.npmjs.com/package/astro-expressive-code}{\texttt{ {\ttfamily astro-\/expressive-\/code}}} or \href{https://www.npmjs.com/package/rehype-expressive-code}{\texttt{ {\ttfamily rehype-\/expressive-\/code}}} instead of this one.\hypertarget{README.md_autotoc_md3295}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md3295}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @expressive-\/code/core}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3296}{}\doxysubsection{\texorpdfstring{Usage example}{Usage example}}\label{README.md_autotoc_md3296}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ File:\ generate-\/html-\/core.mjs}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{\ ExpressiveCodeEngine\ \}\ from\ '@expressive-\/code/core'}
+\DoxyCodeLine{import\ \{\ toHtml\ \}\ from\ '@expressive-\/code/core/hast'}
+\DoxyCodeLine{import\ fs\ from\ 'fs'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ec\ =\ new\ ExpressiveCodeEngine(\{}
+\DoxyCodeLine{\ \ plugins:\ [}
+\DoxyCodeLine{\ \ \ \ //\ Add\ your\ plugins\ here}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Get\ base\ styles\ that\ should\ be\ included\ on\ the\ page}
+\DoxyCodeLine{//\ (they\ are\ independent\ of\ the\ rendered\ code\ blocks)}
+\DoxyCodeLine{const\ baseStyles\ =\ await\ ec.getBaseStyles()}
+\DoxyCodeLine{const\ themeStyles\ =\ await\ ec.getThemeStyles()}
+\DoxyCodeLine{const\ jsModules\ =\ await\ ec.getJsModules()}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ renderResult\ =\ await\ ec.render(\{}
+\DoxyCodeLine{\ \ code:\ 'console.log("{}Hello\ world!"{})',}
+\DoxyCodeLine{\ \ language:\ 'js',}
+\DoxyCodeLine{\ \ meta:\ '',}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Output\ results\ to\ the\ console}
+\DoxyCodeLine{console.dir(\{}
+\DoxyCodeLine{\ \ baseStyles,}
+\DoxyCodeLine{\ \ themeStyles,}
+\DoxyCodeLine{\ \ blockStyles:\ renderResult.styles,}
+\DoxyCodeLine{\ \ htmlContent:\ toHtml(renderResult.renderedGroupAst),}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Convert\ the\ rendered\ AST\ to\ HTML}
+\DoxyCodeLine{let\ htmlContent\ =\ toHtml(renderResult.renderedGroupAst)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Collect\ styles\ and\ add\ them\ before\ the\ HTML\ content}
+\DoxyCodeLine{const\ stylesToPrepend\ =\ []}
+\DoxyCodeLine{stylesToPrepend.push(baseStyles)}
+\DoxyCodeLine{stylesToPrepend.push(themeStyles)}
+\DoxyCodeLine{stylesToPrepend.push(...renderResult.styles)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ styleContent\ =\ \`{}<style>\ \$\{[...stylesToPrepend].join('')\}\ </style>`}
+\DoxyCodeLine{const\ jsContent\ =\ \`{}<script\ type="{}module"{}>\ \$\{[...jsModules].join('')\}\ </script>`}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ htmlDocument\ =\ \`{}}
+\DoxyCodeLine{<!doctype\ html>}
+\DoxyCodeLine{<html\ lang="{}en"{}>}
+\DoxyCodeLine{<head>}
+\DoxyCodeLine{\ \ \ \ <meta\ charset="{}UTF-\/8"{}>}
+\DoxyCodeLine{\ \ \ \ <meta\ name="{}viewport"{}\ content="{}width=device-\/width,\ initial-\/scale=1"{}>}
+\DoxyCodeLine{\ \ \ \ <meta\ http-\/equiv="{}X-\/UA-\/Compatible"{}\ content="{}ie=edge"{}>}
+\DoxyCodeLine{\ \ \ \ <title>Document</title>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \$\{styleContent\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \$\{jsContent\}}
+\DoxyCodeLine{</head>}
+\DoxyCodeLine{<body>}
+\DoxyCodeLine{\ \ \ \ \$\{htmlContent\}}
+\DoxyCodeLine{</body>}
+\DoxyCodeLine{</html>}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Output\ HTML\ to\ the\ console}
+\DoxyCodeLine{console.log(htmlDocument)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Run\ \`{}node\ generate-\/html.mjs`\ to\ generate\ the\ HTML\ file}
+\DoxyCodeLine{//\ and\ open\ it\ in\ the\ browser}
+\DoxyCodeLine{fs.writeFileSync('index.html',\ htmlDocument)}
+
+\end{DoxyCode}
+ 

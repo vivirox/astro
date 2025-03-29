@@ -1,0 +1,184 @@
+\doxysection{node\+\_\+modules/astro-\/eslint-\/parser Directory Reference}
+\hypertarget{dir_2aa4b9a688c9fddb8e64924bbdf0c9ac}{}\label{dir_2aa4b9a688c9fddb8e64924bbdf0c9ac}\index{node\_modules/astro-\/eslint-\/parser Directory Reference@{node\_modules/astro-\/eslint-\/parser Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_db84ae6a2b0318708cbeaa96681d76d7}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://astro.build/}{\texttt{ Astro}} component parser for \href{https://eslint.org/}{\texttt{ ESLint}}. ~\newline
+ You can check it on \href{https://ota-meshi.github.io/astro-eslint-parser/playground}{\texttt{ Online DEMO}}.
+
+\href{https://github.com/sponsors/ota-meshi}{\texttt{ }}
+
+\href{https://www.npmjs.com/package/astro-eslint-parser}{\texttt{ }} \href{https://www.npmjs.com/package/astro-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/astro-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/astro-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/astro-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/astro-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/astro-eslint-parser}{\texttt{ }} \href{https://github.com/ota-meshi/astro-eslint-parser/actions?query=workflow\%3ACI}{\texttt{ }} \href{https://coveralls.io/github/ota-meshi/astro-eslint-parser?branch=main}{\texttt{ }}
+
+This parser is in the {\itshape {\bfseries{experimental stages}}} of development.
+
+At least it works fine with a \href{https://github.com/withastro/docs}{\texttt{ withastro/docs}} repository.\hypertarget{README.md_autotoc_md8288}{}\doxysubsection{\texorpdfstring{\+:checkered\+\_\+flag\+: Motivation}{\+:checkered\+\_\+flag\+: Motivation}}\label{README.md_autotoc_md8288}
+This parser allows us to lint the script of {\ttfamily .astro} files.
+
+\begin{quote}
+Note that this parser alone will not lint the scripts inside the {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} tag. Use \href{https://ota-meshi.github.io/eslint-plugin-astro/}{\texttt{ eslint-\/plugin-\/astro}} to lint the script inside the {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} tag as well. \end{quote}
+\hypertarget{README.md_autotoc_md8289}{}\doxysubsubsection{\texorpdfstring{ESLint Plugins Using astro-\/eslint-\/parser}{ESLint Plugins Using astro-\/eslint-\/parser}}\label{README.md_autotoc_md8289}
+\hypertarget{README.md_autotoc_md8290}{}\doxysubsubsubsection{\texorpdfstring{\href{https://ota-meshi.github.io/eslint-plugin-astro/}{\texttt{ eslint-\/plugin-\/astro}}}{\href{https://ota-meshi.github.io/eslint-plugin-astro/}{\texttt{ eslint-\/plugin-\/astro}}}}\label{README.md_autotoc_md8290}
+ESLint plugin for Astro component. ~\newline
+\hypertarget{README.md_autotoc_md8291}{}\doxysubsection{\texorpdfstring{💿 Installation}{💿 Installation}}\label{README.md_autotoc_md8291}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ eslint\ astro-\/eslint-\/parser}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8292}{}\doxysubsection{\texorpdfstring{📖 Usage}{📖 Usage}}\label{README.md_autotoc_md8292}
+{\bfseries{First, we recommend using \href{https://ota-meshi.github.io/eslint-plugin-astro/}{\texttt{ eslint-\/plugin-\/astro}} rather than just the parser.}} ~\newline
+ The following usage it are for introducing only the parser. This is not useful for most people. It can be useful if you create your own plugin.
+
+
+\begin{DoxyEnumerate}
+\item Write {\ttfamily overrides\mbox{[}\texorpdfstring{$\ast$}{*}\mbox{]}.parser} option into your {\ttfamily .eslintrc.\texorpdfstring{$\ast$}{*}} file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}extends"{}:\ "{}eslint:recommended"{},}
+\DoxyCodeLine{\ \ \ \ "{}overrides"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}files"{}:\ ["{}*.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}parser"{}:\ "{}astro-\/eslint-\/parser"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+\item If you have specified the extension in the CLI, add {\ttfamily .astro} as well.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ eslint\ "{}src/**/*.\{js,astro\}"{}}
+\DoxyCodeLine{\#\ or}
+\DoxyCodeLine{\$\ eslint\ src\ -\/-\/ext\ .js,.astro}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}
+
+The commit diff \href{https://github.com/withastro/astro.build/compare/main...ota-meshi:eslint}{\texttt{ here}} is an example of introducing this parser to the {\ttfamily astro.\+build} repository.\hypertarget{README.md_autotoc_md8293}{}\doxysubsection{\texorpdfstring{🔧 Options}{🔧 Options}}\label{README.md_autotoc_md8293}
+{\ttfamily parser\+Options} has the same properties as what \href{https://github.com/eslint/espree\#usage}{\texttt{ espree}}, the default parser of ESLint, is supporting. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}parser"{}:\ "{}astro-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ "{}parserOptions"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}sourceType"{}:\ "{}module"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}ecmaVersion"{}:\ 2021,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}ecmaFeatures"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}globalReturn"{}:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}impliedStrict"{}:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}jsx"{}:\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8294}{}\doxysubsubsection{\texorpdfstring{parser\+Options.\+parser}{parser\+Options.\+parser}}\label{README.md_autotoc_md8294}
+You can use {\ttfamily parser\+Options.\+parser} property to specify a custom parser to parse scripts. Other properties than parser would be given to the specified parser. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}parser"{}:\ "{}astro-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ "{}parserOptions"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}parser"{}:\ "{}@typescript-\/eslint/parser"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+For example, if you are using the {\ttfamily "{}@typescript-\/eslint/parser"{}}, and if you want to use Type\+Script in {\ttfamily .astro}, you need to add more {\ttfamily parser\+Options} configuration.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ parser:\ "{}@typescript-\/eslint/parser"{},}
+\DoxyCodeLine{\ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ project:\ "{}path/to/your/tsconfig.json"{},}
+\DoxyCodeLine{\ \ \ \ extraFileExtensions:\ ["{}.astro"{}],\ //\ This\ is\ a\ required\ setting\ in\ \`{}@typescript-\/eslint/parser`\ v5.}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ overrides:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}*.astro"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ "{}astro-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Parse\ the\ script\ in\ \`{}.astro`\ as\ TypeScript\ by\ adding\ the\ following\ configuration.}
+\DoxyCodeLine{\ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ parser:\ "{}@typescript-\/eslint/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+When using Java\+Script configuration ({\ttfamily .eslintrc.\+js}), you can also give the parser object directly.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ tsParser\ =\ require("{}@typescript-\/eslint/parser"{})}
+\DoxyCodeLine{}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ \ \ parser:\ "{}astro-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ parser:\ tsParser,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8295}{}\doxysubsection{\texorpdfstring{\+:computer\+: Editor Integrations}{\+:computer\+: Editor Integrations}}\label{README.md_autotoc_md8295}
+\hypertarget{README.md_autotoc_md8296}{}\doxysubsubsection{\texorpdfstring{Visual Studio Code}{Visual Studio Code}}\label{README.md_autotoc_md8296}
+Use the \href{https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint}{\texttt{ dbaeumer.\+vscode-\/eslint}} extension that Microsoft provides officially.
+
+You have to configure the {\ttfamily eslint.\+validate} option of the extension to check {\ttfamily .astro} files, because the extension targets only {\ttfamily \texorpdfstring{$\ast$}{*}.js} or {\ttfamily \texorpdfstring{$\ast$}{*}.jsx} files by default.
+
+Example {\bfseries{.vscode/settings.\+json}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}eslint.validate"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}javascript"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}javascriptreact"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}astro"{}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8297}{}\doxysubsection{\texorpdfstring{\+:handshake\+: Compatibility With Existing ESLint Rules}{\+:handshake\+: Compatibility With Existing ESLint Rules}}\label{README.md_autotoc_md8297}
+Most of the rules in the ESLint core work for the script part, but some rules are incompatible. ~\newline
+ This parser will generate a JSX compatible AST for most of the HTML part of the Astro component. Therefore, some rules of \href{https://github.com/jsx-eslint/eslint-plugin-react/}{\texttt{ eslint-\/plugin-\/react}} may work. For example, the \href{https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-target-blank.md}{\texttt{ react/jsx-\/no-\/target-\/blank}} rule works fine. ~\newline
+\hypertarget{README.md_autotoc_md8298}{}\doxysubsection{\texorpdfstring{\+:ghost\+: Limitations}{\+:ghost\+: Limitations}}\label{README.md_autotoc_md8298}
+If this parser is used with {\ttfamily @typescript-\/eslint/parser} and {\ttfamily parser\+Options.\+project} is set, it will temporarily create a {\ttfamily .tsx} file to parse the {\ttfamily .astro} file. ~\newline
+ This parser works by converting the {\ttfamily .astro} file to JSX and letting the Java\+Script parser parse it. Since {\ttfamily @typescript-\/eslint/parser} can only parse files with the extension {\ttfamily .tsx} as JSX, it is necessary to temporarily create a {\ttfamily .tsx} file. Temporarily created files will try to be deleted after parses, but if the parsing takes a long time, the files may be visible to you.
+
+See also \href{https://github.com/typescript-eslint/typescript-eslint/tree/main/packages/parser\#parseroptionsecmafeaturesjsx}{\texttt{ {\ttfamily @typescript-\/eslint/parser} readme}}.\hypertarget{README.md_autotoc_md8299}{}\doxysubsection{\texorpdfstring{\+:hammer\+\_\+and\+\_\+wrench\+: Usage for Custom Rules / Plugins}{\+:hammer\+\_\+and\+\_\+wrench\+: Usage for Custom Rules / Plugins}}\label{README.md_autotoc_md8299}
+
+\begin{DoxyItemize}
+\item TBA
+\item You can check the AST in the \href{https://ota-meshi.github.io/astro-eslint-parser/}{\texttt{ Online DEMO}}. However, AST is subject to major changes in the future.
+\item I have already \href{https://ota-meshi.github.io/eslint-plugin-astro/rules/}{\texttt{ implemented some rules}} in the \href{https://ota-meshi.github.io/eslint-plugin-astro/}{\texttt{ eslint-\/plugin-\/astro}}. The source code for these rules will be helpful to you.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md8300}{}\doxysubsection{\texorpdfstring{\+:beers\+: Contributing}{\+:beers\+: Contributing}}\label{README.md_autotoc_md8300}
+Welcome contributing!
+
+Please use Git\+Hub\textquotesingle{}s Issues/\+PRs.\hypertarget{README.md_autotoc_md8301}{}\doxysubsection{\texorpdfstring{\+:heart\+: Supporting}{\+:heart\+: Supporting}}\label{README.md_autotoc_md8301}
+If you are willing to see that this package continues to be maintained, please consider sponsoring me.
+
+\href{https://github.com/sponsors/ota-meshi}{\texttt{ }}\hypertarget{README.md_autotoc_md8302}{}\doxysubsection{\texorpdfstring{\+:lock\+: License}{\+:lock\+: License}}\label{README.md_autotoc_md8302}
+See the \mbox{[}LICENSE\mbox{]}(LICENSE) file for license rights and limitations (MIT). 

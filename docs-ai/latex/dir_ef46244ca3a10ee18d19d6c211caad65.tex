@@ -1,0 +1,1660 @@
+\doxysection{node\+\_\+modules/d3-\/shape Directory Reference}
+\hypertarget{dir_ef46244ca3a10ee18d19d6c211caad65}{}\label{dir_ef46244ca3a10ee18d19d6c211caad65}\index{node\_modules/d3-\/shape Directory Reference@{node\_modules/d3-\/shape Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Visualizations typically consist of discrete graphical marks, such as symbols, arcs, lines and areas. While the rectangles of a bar chart may be easy enough to generate directly using \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ SVG}} or \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ Canvas}}, other shapes are complex, such as rounded annular sectors and centripetal Catmull–\+Rom splines. This module provides a variety of shape generators for your convenience.
+
+As with other aspects of D3, these shapes are driven by data\+: each shape generator exposes accessors that control how the input data are mapped to a visual representation. For example, you might define a line generator for a time series by \href{https://github.com/d3/d3-scale}{\texttt{ scaling}} fields of your data to fit the chart\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ line\ =\ d3.line()}
+\DoxyCodeLine{\ \ \ \ .x(d\ =>\ x(d.date))}
+\DoxyCodeLine{\ \ \ \ .y(d\ =>\ y(d.value));}
+
+\end{DoxyCode}
+
+
+This line generator can then be used to compute the {\ttfamily d} attribute of an SVG path element\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{path.datum(data).attr("{}d"{},\ line);}
+
+\end{DoxyCode}
+
+
+Or you can use it to render to a Canvas 2D context\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{line.context(context)(data);}
+
+\end{DoxyCode}
+
+
+For more, read \href{https://medium.com/@mbostock/introducing-d3-shape-73f8367e6d12}{\texttt{ Introducing d3-\/shape}}.\hypertarget{README.md_autotoc_md11258}{}\doxysubsection{\texorpdfstring{Installing}{Installing}}\label{README.md_autotoc_md11258}
+If you use npm, {\ttfamily npm install d3-\/shape}. You can also download the \href{https://github.com/d3/d3-shape/releases/latest}{\texttt{ latest release on Git\+Hub}}. For vanilla HTML in modern browsers, import d3-\/shape from js\+Delivr\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{line\}\ from\ "{}https://cdn.jsdelivr.net/npm/d3-\/shape@3/+esm"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ l\ =\ line();}
+\DoxyCodeLine{}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+For legacy environments, you can load d3-\/shape’s UMD bundle; a {\ttfamily d3} global is exported\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/npm/d3-\/path@3"{}></script>}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/npm/d3-\/shape@3"{}></script>}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ l\ =\ d3.line();}
+\DoxyCodeLine{}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11259}{}\doxysubsection{\texorpdfstring{API Reference}{API Reference}}\label{README.md_autotoc_md11259}
+
+\begin{DoxyItemize}
+\item Arcs
+\item Pies
+\item Lines
+\item Areas
+\item Curves
+\item Custom Curves
+\item Links
+\item Symbols
+\item Custom Symbol Types
+\item Stacks
+\end{DoxyItemize}
+
+Note\+: all the methods that accept arrays also accept iterables and convert them to arrays internally.\hypertarget{README.md_autotoc_md11260}{}\doxysubsubsection{\texorpdfstring{Arcs}{Arcs}}\label{README.md_autotoc_md11260}
+\href{https://observablehq.com/@d3/pie-chart}{\texttt{ }}\href{https://observablehq.com/@d3/donut-chart}{\texttt{ }}
+
+The arc generator produces a \href{https://en.wikipedia.org/wiki/Circular_sector}{\texttt{ circular}} or \href{https://en.wikipedia.org/wiki/Annulus_\\(mathematics\\)}{\texttt{ annular}} sector, as in a pie or donut chart. If the absolute difference between the \doxylink{README.md_arc_startAngle}{start} and \doxylink{README.md_arc_endAngle}{end} angles (the {\itshape angular span}) is greater than \href{https://en.wikipedia.org/wiki/Turn_\\(geometry\\)\#Tau_proposal}{\texttt{ τ}}, the arc generator will produce a complete circle or annulus. If it is less than τ, the arc’s angular length will be equal to the absolute difference between the two angles (going clockwise if the signed difference is positive and anticlockwise if it is negative). If the absolute difference is less than τ, the arc may have \doxylink{README.md_arc_cornerRadius}{rounded corners} and \doxylink{README.md_arc_padAngle}{angular padding}. Arcs are always centered at ⟨0,0⟩; use a transform (see\+: \href{http://www.w3.org/TR/SVG/coords.html\#TransformAttribute}{\texttt{ SVG}}, \href{http://www.w3.org/TR/2dcontext/\#transformations}{\texttt{ Canvas}}) to move the arc to a different position.
+
+See also the pie generator, which computes the necessary angles to represent an array of data as a pie or donut chart; these angles can then be passed to an arc generator.
+
+\label{README.md_arc}%
+\Hypertarget{README.md_arc}%
+\# d3.{\bfseries{arc}}() · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+Constructs a new arc generator with the default settings.
+
+\label{README.md__arc}%
+\Hypertarget{README.md__arc}%
+\# {\itshape arc}({\itshape arguments…}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+Generates an arc for the given {\itshape arguments}. The {\itshape arguments} are arbitrary; they are simply propagated to the arc generator’s accessor functions along with the {\ttfamily this} object. For example, with the default settings, an object with radii and angles is expected\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ arc\ =\ d3.arc();}
+\DoxyCodeLine{}
+\DoxyCodeLine{arc(\{}
+\DoxyCodeLine{\ \ innerRadius:\ 0,}
+\DoxyCodeLine{\ \ outerRadius:\ 100,}
+\DoxyCodeLine{\ \ startAngle:\ 0,}
+\DoxyCodeLine{\ \ endAngle:\ Math.PI\ /\ 2}
+\DoxyCodeLine{\});\ //\ "{}M0,-\/100A100,100,0,0,1,100,0L0,0Z"{}}
+
+\end{DoxyCode}
+
+
+If the radii and angles are instead defined as constants, you can generate an arc without any arguments\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ arc\ =\ d3.arc()}
+\DoxyCodeLine{\ \ \ \ .innerRadius(0)}
+\DoxyCodeLine{\ \ \ \ .outerRadius(100)}
+\DoxyCodeLine{\ \ \ \ .startAngle(0)}
+\DoxyCodeLine{\ \ \ \ .endAngle(Math.PI\ /\ 2);}
+\DoxyCodeLine{}
+\DoxyCodeLine{arc();\ //\ "{}M0,-\/100A100,100,0,0,1,100,0L0,0Z"{}}
+
+\end{DoxyCode}
+
+
+If the arc generator has a \doxylink{README.md_arc_context}{context}, then the arc is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls and this function returns void. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string is returned.
+
+\label{README.md_arc_centroid}%
+\Hypertarget{README.md_arc_centroid}%
+\# {\itshape arc}.{\bfseries{centroid}}({\itshape arguments…}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+Computes the midpoint \mbox{[}{\itshape x}, {\itshape y}\mbox{]} of the center line of the arc that would be \doxylink{README.md__arc}{generated} by the given {\itshape arguments}. The {\itshape arguments} are arbitrary; they are simply propagated to the arc generator’s accessor functions along with the {\ttfamily this} object. To be consistent with the generated arc, the accessors must be deterministic, {\itshape i.\+e.}, return the same value given the same arguments. The midpoint is defined as (\doxylink{README.md_arc_startAngle}{start\+Angle} + \doxylink{README.md_arc_endAngle}{end\+Angle}) / 2 and (\doxylink{README.md_arc_innerRadius}{inner\+Radius} + \doxylink{README.md_arc_outerRadius}{outer\+Radius}) / 2. For example\+:
+
+\href{https://observablehq.com/@d3/pie-settings}{\texttt{ }}\href{https://observablehq.com/@d3/pie-settings}{\texttt{ }}
+
+Note that this is {\bfseries{not the geometric center}} of the arc, which may be outside the arc; this method is merely a convenience for positioning labels.
+
+\label{README.md_arc_innerRadius}%
+\Hypertarget{README.md_arc_innerRadius}%
+\# {\itshape arc}.{\bfseries{inner\+Radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape radius} is specified, sets the inner radius to the specified function or number and returns this arc generator. If {\itshape radius} is not specified, returns the current inner radius accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ innerRadius(d)\ \{}
+\DoxyCodeLine{\ \ return\ d.innerRadius;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Specifying the inner radius as a function is useful for constructing a stacked polar bar chart, often in conjunction with a \href{https://github.com/d3/d3-scale\#sqrt}{\texttt{ sqrt scale}}. More commonly, a constant inner radius is used for a donut or pie chart. If the outer radius is smaller than the inner radius, the inner and outer radii are swapped. A negative value is treated as zero.
+
+\label{README.md_arc_outerRadius}%
+\Hypertarget{README.md_arc_outerRadius}%
+\# {\itshape arc}.{\bfseries{outer\+Radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape radius} is specified, sets the outer radius to the specified function or number and returns this arc generator. If {\itshape radius} is not specified, returns the current outer radius accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ outerRadius(d)\ \{}
+\DoxyCodeLine{\ \ return\ d.outerRadius;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Specifying the outer radius as a function is useful for constructing a coxcomb or polar bar chart, often in conjunction with a \href{https://github.com/d3/d3-scale\#sqrt}{\texttt{ sqrt scale}}. More commonly, a constant outer radius is used for a pie or donut chart. If the outer radius is smaller than the inner radius, the inner and outer radii are swapped. A negative value is treated as zero.
+
+\label{README.md_arc_cornerRadius}%
+\Hypertarget{README.md_arc_cornerRadius}%
+\# {\itshape arc}.{\bfseries{corner\+Radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape radius} is specified, sets the corner radius to the specified function or number and returns this arc generator. If {\itshape radius} is not specified, returns the current corner radius accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ cornerRadius()\ \{}
+\DoxyCodeLine{\ \ return\ 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If the corner radius is greater than zero, the corners of the arc are rounded using circles of the given radius. For a circular sector, the two outer corners are rounded; for an annular sector, all four corners are rounded. The corner circles are shown in this diagram\+:
+
+\href{https://observablehq.com/@d3/pie-settings}{\texttt{ }}\href{https://observablehq.com/@d3/pie-settings}{\texttt{ }}
+
+The corner radius may not be larger than (\doxylink{README.md_arc_outerRadius}{outer\+Radius} -\/ \doxylink{README.md_arc_innerRadius}{inner\+Radius}) / 2. In addition, for arcs whose angular span is less than π, the corner radius may be reduced as two adjacent rounded corners intersect. This is occurs more often with the inner corners. See the \href{https://observablehq.com/@d3/arc-corners}{\texttt{ arc corners animation}} for illustration.
+
+\label{README.md_arc_startAngle}%
+\Hypertarget{README.md_arc_startAngle}%
+\# {\itshape arc}.{\bfseries{start\+Angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape angle} is specified, sets the start angle to the specified function or number and returns this arc generator. If {\itshape angle} is not specified, returns the current start angle accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ startAngle(d)\ \{}
+\DoxyCodeLine{\ \ return\ d.startAngle;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The {\itshape angle} is specified in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock) and positive angles proceeding clockwise. If \texorpdfstring{$\vert$}{|}end\+Angle -\/ start\+Angle\texorpdfstring{$\vert$}{|} ≥ τ, a complete circle or annulus is generated rather than a sector.
+
+\label{README.md_arc_endAngle}%
+\Hypertarget{README.md_arc_endAngle}%
+\# {\itshape arc}.{\bfseries{end\+Angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape angle} is specified, sets the end angle to the specified function or number and returns this arc generator. If {\itshape angle} is not specified, returns the current end angle accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ endAngle(d)\ \{}
+\DoxyCodeLine{\ \ return\ d.endAngle;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The {\itshape angle} is specified in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock) and positive angles proceeding clockwise. If \texorpdfstring{$\vert$}{|}end\+Angle -\/ start\+Angle\texorpdfstring{$\vert$}{|} ≥ τ, a complete circle or annulus is generated rather than a sector.
+
+\label{README.md_arc_padAngle}%
+\Hypertarget{README.md_arc_padAngle}%
+\# {\itshape arc}.{\bfseries{pad\+Angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape angle} is specified, sets the pad angle to the specified function or number and returns this arc generator. If {\itshape angle} is not specified, returns the current pad angle accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ padAngle()\ \{}
+\DoxyCodeLine{\ \ return\ d\ \&\&\ d.padAngle;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The pad angle is converted to a fixed linear distance separating adjacent arcs, defined as \doxylink{README.md_arc_padRadius}{pad\+Radius} \texorpdfstring{$\ast$}{*} pad\+Angle. This distance is subtracted equally from the \doxylink{README.md_arc_startAngle}{start} and \doxylink{README.md_arc_endAngle}{end} of the arc. If the arc forms a complete circle or annulus, as when \texorpdfstring{$\vert$}{|}end\+Angle -\/ start\+Angle\texorpdfstring{$\vert$}{|} ≥ τ, the pad angle is ignored.
+
+If the \doxylink{README.md_arc_innerRadius}{inner radius} or angular span is small relative to the pad angle, it may not be possible to maintain parallel edges between adjacent arcs. In this case, the inner edge of the arc may collapse to a point, similar to a circular sector. For this reason, padding is typically only applied to annular sectors ({\itshape i.\+e.}, when inner\+Radius is positive), as shown in this diagram\+:
+
+\href{https://observablehq.com/@d3/pie-settings}{\texttt{ }}\href{https://observablehq.com/@d3/pie-settings}{\texttt{ }}
+
+The recommended minimum inner radius when using padding is outer\+Radius \texorpdfstring{$\ast$}{*} pad\+Angle / sin(θ), where θ is the angular span of the smallest arc before padding. For example, if the outer radius is 200 pixels and the pad angle is 0.\+02 radians, a reasonable θ is 0.\+04 radians, and a reasonable inner radius is 100 pixels. See the \href{https://observablehq.com/@d3/arc-pad-angle}{\texttt{ arc padding animation}} for illustration.
+
+Often, the pad angle is not set directly on the arc generator, but is instead computed by the pie generator so as to ensure that the area of padded arcs is proportional to their value; see \doxylink{README.md_pie_padAngle}{\texorpdfstring{$\ast$}{*}pie\texorpdfstring{$\ast$}{*}.pad\+Angle}. See the \href{https://observablehq.com/@d3/arc-pad-angle}{\texttt{ pie padding animation}} for illustration. If you apply a constant pad angle to the arc generator directly, it tends to subtract disproportionately from smaller arcs, introducing distortion.
+
+\label{README.md_arc_padRadius}%
+\Hypertarget{README.md_arc_padRadius}%
+\# {\itshape arc}.{\bfseries{pad\+Radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape radius} is specified, sets the pad radius to the specified function or number and returns this arc generator. If {\itshape radius} is not specified, returns the current pad radius accessor, which defaults to null, indicating that the pad radius should be automatically computed as sqrt(\doxylink{README.md_arc_innerRadius}{inner\+Radius} \texorpdfstring{$\ast$}{*} inner\+Radius + \doxylink{README.md_arc_outerRadius}{outer\+Radius} \texorpdfstring{$\ast$}{*} outer\+Radius). The pad radius determines the fixed linear distance separating adjacent arcs, defined as pad\+Radius \texorpdfstring{$\ast$}{*} \doxylink{README.md_arc_padAngle}{pad\+Angle}.
+
+\label{README.md_arc_context}%
+\Hypertarget{README.md_arc_context}%
+\# {\itshape arc}.{\bfseries{context}}(\mbox{[}{\itshape context}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape context} is specified, sets the context and returns this arc generator. If {\itshape context} is not specified, returns the current context, which defaults to null. If the context is not null, then the \doxylink{README.md__arc}{generated arc} is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string representing the generated arc is returned.
+
+\label{README.md_arc_digits}%
+\Hypertarget{README.md_arc_digits}%
+\# {\itshape arc}.{\bfseries{digits}}(\mbox{[}{\itshape digits}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/arc.js}{\texttt{ Source}}
+
+If {\itshape digits} is specified, sets the maximum number of digits after the decimal separator and returns this arc generator. If {\itshape digits} is not specified, returns the current maximum fraction digits, which defaults to 3. This option only applies when the associated \doxylink{README.md_arc_context}{\texorpdfstring{$\ast$}{*}context\texorpdfstring{$\ast$}{*}} is null, as when this arc generator is used to produce \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}}.\hypertarget{README.md_autotoc_md11261}{}\doxysubsubsection{\texorpdfstring{Pies}{Pies}}\label{README.md_autotoc_md11261}
+The pie generator does not produce a shape directly, but instead computes the necessary angles to represent a tabular dataset as a pie or donut chart; these angles can then be passed to an arc generator.
+
+\label{README.md_pie}%
+\Hypertarget{README.md_pie}%
+\# d3.{\bfseries{pie}}() · \href{https://github.com/d3/d3-shape/blob/main/src/pie.js}{\texttt{ Source}}
+
+Constructs a new pie generator with the default settings.
+
+\label{README.md__pie}%
+\Hypertarget{README.md__pie}%
+\# {\itshape pie}({\itshape data}\mbox{[}, {\itshape arguments…}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/pie.js}{\texttt{ Source}}
+
+Generates a pie for the given array of {\itshape data}, returning an array of objects representing each datum’s arc angles. Any additional {\itshape arguments} are arbitrary; they are simply propagated to the pie generator’s accessor functions along with the {\ttfamily this} object. The length of the returned array is the same as {\itshape data}, and each element {\itshape i} in the returned array corresponds to the element {\itshape i} in the input data. Each object in the returned array has the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily data} -\/ the input datum; the corresponding element in the input data array.
+\item {\ttfamily value} -\/ the numeric \doxylink{README.md_pie_value}{value} of the arc.
+\item {\ttfamily index} -\/ the zero-\/based \doxylink{README.md_pie_sort}{sorted index} of the arc.
+\item {\ttfamily start\+Angle} -\/ the \doxylink{README.md_pie_startAngle}{start angle} of the arc.
+\item {\ttfamily end\+Angle} -\/ the \doxylink{README.md_pie_endAngle}{end angle} of the arc.
+\item {\ttfamily pad\+Angle} -\/ the \doxylink{README.md_pie_padAngle}{pad angle} of the arc.
+\end{DoxyItemize}
+
+This representation is designed to work with the arc generator’s default \doxylink{README.md_arc_startAngle}{start\+Angle}, \doxylink{README.md_arc_endAngle}{end\+Angle} and \doxylink{README.md_arc_padAngle}{pad\+Angle} accessors. The angular units are arbitrary, but if you plan to use the pie generator in conjunction with an arc generator, you should specify angles in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock) and positive angles proceeding clockwise.
+
+Given a small dataset of numbers, here is how to compute the arc angles to render this data as a pie chart\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ data\ =\ [1,\ 1,\ 2,\ 3,\ 5,\ 8,\ 13,\ 21];}
+\DoxyCodeLine{const\ arcs\ =\ d3.pie()(data);}
+
+\end{DoxyCode}
+
+
+The first pair of parens, {\ttfamily pie()}, \doxylink{README.md_pie}{constructs} a default pie generator. The second, {\ttfamily pie()(data)}, \doxylink{README.md__pie}{invokes} this generator on the dataset, returning an array of objects\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ \{"{}data"{}:\ \ 1,\ "{}value"{}:\ \ 1,\ "{}index"{}:\ 6,\ "{}startAngle"{}:\ 6.050474740247008,\ "{}endAngle"{}:\ 6.166830023713296,\ "{}padAngle"{}:\ 0\},}
+\DoxyCodeLine{\ \ \{"{}data"{}:\ \ 1,\ "{}value"{}:\ \ 1,\ "{}index"{}:\ 7,\ "{}startAngle"{}:\ 6.166830023713296,\ "{}endAngle"{}:\ 6.283185307179584,\ "{}padAngle"{}:\ 0\},}
+\DoxyCodeLine{\ \ \{"{}data"{}:\ \ 2,\ "{}value"{}:\ \ 2,\ "{}index"{}:\ 5,\ "{}startAngle"{}:\ 5.817764173314431,\ "{}endAngle"{}:\ 6.050474740247008,\ "{}padAngle"{}:\ 0\},}
+\DoxyCodeLine{\ \ \{"{}data"{}:\ \ 3,\ "{}value"{}:\ \ 3,\ "{}index"{}:\ 4,\ "{}startAngle"{}:\ 5.468698322915565,\ "{}endAngle"{}:\ 5.817764173314431,\ "{}padAngle"{}:\ 0\},}
+\DoxyCodeLine{\ \ \{"{}data"{}:\ \ 5,\ "{}value"{}:\ \ 5,\ "{}index"{}:\ 3,\ "{}startAngle"{}:\ 4.886921905584122,\ "{}endAngle"{}:\ 5.468698322915565,\ "{}padAngle"{}:\ 0\},}
+\DoxyCodeLine{\ \ \{"{}data"{}:\ \ 8,\ "{}value"{}:\ \ 8,\ "{}index"{}:\ 2,\ "{}startAngle"{}:\ 3.956079637853813,\ "{}endAngle"{}:\ 4.886921905584122,\ "{}padAngle"{}:\ 0\},}
+\DoxyCodeLine{\ \ \{"{}data"{}:\ 13,\ "{}value"{}:\ 13,\ "{}index"{}:\ 1,\ "{}startAngle"{}:\ 2.443460952792061,\ "{}endAngle"{}:\ 3.956079637853813,\ "{}padAngle"{}:\ 0\},}
+\DoxyCodeLine{\ \ \{"{}data"{}:\ 21,\ "{}value"{}:\ 21,\ "{}index"{}:\ 0,\ "{}startAngle"{}:\ 0.000000000000000,\ "{}endAngle"{}:\ 2.443460952792061,\ "{}padAngle"{}:\ 0\}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+Note that the returned array is in the same order as the data, even though this pie chart is \doxylink{README.md_pie_sortValues}{sorted} by descending value, starting with the arc for the last datum (value 21) at 12 o’clock.
+
+\label{README.md_pie_value}%
+\Hypertarget{README.md_pie_value}%
+\# {\itshape pie}.{\bfseries{value}}(\mbox{[}{\itshape value}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/pie.js}{\texttt{ Source}}
+
+If {\itshape value} is specified, sets the value accessor to the specified function or number and returns this pie generator. If {\itshape value} is not specified, returns the current value accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ value(d)\ \{}
+\DoxyCodeLine{\ \ return\ d;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+When a pie is \doxylink{README.md__pie}{generated}, the value accessor will be invoked for each element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. The default value accessor assumes that the input data are numbers, or that they are coercible to numbers using \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf}{\texttt{ value\+Of}}. If your data are not simply numbers, then you should specify an accessor that returns the corresponding numeric value for a given datum. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ data\ =\ [}
+\DoxyCodeLine{\ \ \{"{}number"{}:\ \ 4,\ "{}name"{}:\ "{}Locke"{}\},}
+\DoxyCodeLine{\ \ \{"{}number"{}:\ \ 8,\ "{}name"{}:\ "{}Reyes"{}\},}
+\DoxyCodeLine{\ \ \{"{}number"{}:\ 15,\ "{}name"{}:\ "{}Ford"{}\},}
+\DoxyCodeLine{\ \ \{"{}number"{}:\ 16,\ "{}name"{}:\ "{}Jarrah"{}\},}
+\DoxyCodeLine{\ \ \{"{}number"{}:\ 23,\ "{}name"{}:\ "{}Shephard"{}\},}
+\DoxyCodeLine{\ \ \{"{}number"{}:\ 42,\ "{}name"{}:\ "{}Kwon"{}\}}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ arcs\ =\ d3.pie()}
+\DoxyCodeLine{\ \ \ \ .value(d\ =>\ d.number)}
+\DoxyCodeLine{\ \ \ \ (data);}
+
+\end{DoxyCode}
+
+
+This is similar to \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map}{\texttt{ mapping}} your data to values before invoking the pie generator\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ arcs\ =\ d3.pie()(data.map(d\ =>\ d.number));}
+
+\end{DoxyCode}
+
+
+The benefit of an accessor is that the input data remains associated with the returned objects, thereby making it easier to access other fields of the data, for example to set the color or to add text labels.
+
+\label{README.md_pie_sort}%
+\Hypertarget{README.md_pie_sort}%
+\# {\itshape pie}.{\bfseries{sort}}(\mbox{[}{\itshape compare}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/pie.js}{\texttt{ Source}}
+
+If {\itshape compare} is specified, sets the data comparator to the specified function and returns this pie generator. If {\itshape compare} is not specified, returns the current data comparator, which defaults to null. If both the data comparator and the value comparator are null, then arcs are positioned in the original input order. Otherwise, the data is sorted according to the data comparator, and the resulting order is used. Setting the data comparator implicitly sets the \doxylink{README.md_pie_sortValues}{value comparator} to null.
+
+The {\itshape compare} function takes two arguments {\itshape a} and {\itshape b}, each elements from the input data array. If the arc for {\itshape a} should be before the arc for {\itshape b}, then the comparator must return a number less than zero; if the arc for {\itshape a} should be after the arc for {\itshape b}, then the comparator must return a number greater than zero; returning zero means that the relative order of {\itshape a} and {\itshape b} is unspecified. For example, to sort arcs by their associated name\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pie.sort((a,\ b)\ =>\ a.name.localeCompare(b.name));}
+
+\end{DoxyCode}
+
+
+Sorting does not affect the order of the \doxylink{README.md__pie}{generated arc array} which is always in the same order as the input data array; it merely affects the computed angles of each arc. The first arc starts at the \doxylink{README.md_pie_startAngle}{start angle} and the last arc ends at the \doxylink{README.md_pie_endAngle}{end angle}.
+
+\label{README.md_pie_sortValues}%
+\Hypertarget{README.md_pie_sortValues}%
+\# {\itshape pie}.{\bfseries{sort\+Values}}(\mbox{[}{\itshape compare}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/pie.js}{\texttt{ Source}}
+
+If {\itshape compare} is specified, sets the value comparator to the specified function and returns this pie generator. If {\itshape compare} is not specified, returns the current value comparator, which defaults to descending value. The default value comparator is implemented as\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ compare(a,\ b)\ \{}
+\DoxyCodeLine{\ \ return\ b\ -\/\ a;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If both the data comparator and the value comparator are null, then arcs are positioned in the original input order. Otherwise, the data is sorted according to the data comparator, and the resulting order is used. Setting the value comparator implicitly sets the \doxylink{README.md_pie_sort}{data comparator} to null.
+
+The value comparator is similar to the \doxylink{README.md_pie_sort}{data comparator}, except the two arguments {\itshape a} and {\itshape b} are values derived from the input data array using the \doxylink{README.md_pie_value}{value accessor}, not the data elements. If the arc for {\itshape a} should be before the arc for {\itshape b}, then the comparator must return a number less than zero; if the arc for {\itshape a} should be after the arc for {\itshape b}, then the comparator must return a number greater than zero; returning zero means that the relative order of {\itshape a} and {\itshape b} is unspecified. For example, to sort arcs by ascending value\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pie.sortValues((a,\ b)\ =>\ a\ -\/\ b);}
+
+\end{DoxyCode}
+
+
+Sorting does not affect the order of the \doxylink{README.md__pie}{generated arc array} which is always in the same order as the input data array; it merely affects the computed angles of each arc. The first arc starts at the \doxylink{README.md_pie_startAngle}{start angle} and the last arc ends at the \doxylink{README.md_pie_endAngle}{end angle}.
+
+\label{README.md_pie_startAngle}%
+\Hypertarget{README.md_pie_startAngle}%
+\# {\itshape pie}.{\bfseries{start\+Angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/pie.js}{\texttt{ Source}}
+
+If {\itshape angle} is specified, sets the overall start angle of the pie to the specified function or number and returns this pie generator. If {\itshape angle} is not specified, returns the current start angle accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ startAngle()\ \{}
+\DoxyCodeLine{\ \ return\ 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The start angle here means the {\itshape overall} start angle of the pie, {\itshape i.\+e.}, the start angle of the first arc. The start angle accessor is invoked once, being passed the same arguments and {\ttfamily this} context as the \doxylink{README.md__pie}{pie generator}. The units of {\itshape angle} are arbitrary, but if you plan to use the pie generator in conjunction with an arc generator, you should specify an angle in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock) and positive angles proceeding clockwise.
+
+\label{README.md_pie_endAngle}%
+\Hypertarget{README.md_pie_endAngle}%
+\# {\itshape pie}.{\bfseries{end\+Angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/pie.js}{\texttt{ Source}}
+
+If {\itshape angle} is specified, sets the overall end angle of the pie to the specified function or number and returns this pie generator. If {\itshape angle} is not specified, returns the current end angle accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ endAngle()\ \{}
+\DoxyCodeLine{\ \ return\ 2\ *\ Math.PI;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The end angle here means the {\itshape overall} end angle of the pie, {\itshape i.\+e.}, the end angle of the last arc. The end angle accessor is invoked once, being passed the same arguments and {\ttfamily this} context as the \doxylink{README.md__pie}{pie generator}. The units of {\itshape angle} are arbitrary, but if you plan to use the pie generator in conjunction with an arc generator, you should specify an angle in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock) and positive angles proceeding clockwise.
+
+The value of the end angle is constrained to \doxylink{README.md_pie_startAngle}{start\+Angle} ± τ, such that \texorpdfstring{$\vert$}{|}end\+Angle -\/ start\+Angle\texorpdfstring{$\vert$}{|} ≤ τ.
+
+\label{README.md_pie_padAngle}%
+\Hypertarget{README.md_pie_padAngle}%
+\# {\itshape pie}.{\bfseries{pad\+Angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/pie.js}{\texttt{ Source}}
+
+If {\itshape angle} is specified, sets the pad angle to the specified function or number and returns this pie generator. If {\itshape angle} is not specified, returns the current pad angle accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ padAngle()\ \{}
+\DoxyCodeLine{\ \ return\ 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The pad angle here means the angular separation between each adjacent arc. The total amount of padding reserved is the specified {\itshape angle} times the number of elements in the input data array, and at most \texorpdfstring{$\vert$}{|}end\+Angle -\/ start\+Angle\texorpdfstring{$\vert$}{|}; the remaining space is then divided proportionally by \doxylink{README.md_pie_value}{value} such that the relative area of each arc is preserved. See the \href{https://observablehq.com/@d3/arc-pad-angle}{\texttt{ pie padding animation}} for illustration. The pad angle accessor is invoked once, being passed the same arguments and {\ttfamily this} context as the \doxylink{README.md__pie}{pie generator}. The units of {\itshape angle} are arbitrary, but if you plan to use the pie generator in conjunction with an arc generator, you should specify an angle in radians.\hypertarget{README.md_autotoc_md11262}{}\doxysubsubsection{\texorpdfstring{Lines}{Lines}}\label{README.md_autotoc_md11262}
+\href{https://observablehq.com/@d3/line-chart}{\texttt{ }}
+
+The line generator produces a \href{https://en.wikipedia.org/wiki/Spline_\\(mathematics\\)}{\texttt{ spline}} or \href{https://en.wikipedia.org/wiki/Polygonal_chain}{\texttt{ polyline}}, as in a line chart. Lines also appear in many other visualization types, such as the links in \href{https://observablehq.com/@d3/hierarchical-edge-bundling}{\texttt{ hierarchical edge bundling}}.
+
+\label{README.md_line}%
+\Hypertarget{README.md_line}%
+\# d3.{\bfseries{line}}(\mbox{[}{\itshape x}\mbox{]}\mbox{[}, {\itshape y}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/line.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-line}{\texttt{ Examples}}
+
+Constructs a new line generator with the default settings. If {\itshape x} or {\itshape y} are specified, sets the corresponding accessors to the specified function or number and returns this line generator.
+
+\label{README.md__line}%
+\Hypertarget{README.md__line}%
+\# {\itshape line}({\itshape data}) · \href{https://github.com/d3/d3-shape/blob/main/src/line.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-line}{\texttt{ Examples}}
+
+Generates a line for the given array of {\itshape data}. Depending on this line generator’s associated \doxylink{README.md_line_curve}{curve}, the given input {\itshape data} may need to be sorted by {\itshape x}-\/value before being passed to the line generator. If the line generator has a \doxylink{README.md_line_context}{context}, then the line is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls and this function returns void. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string is returned.
+
+\label{README.md_line_x}%
+\Hypertarget{README.md_line_x}%
+\# {\itshape line}.{\bfseries{x}}(\mbox{[}{\itshape x}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/line.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-line}{\texttt{ Examples}}
+
+If {\itshape x} is specified, sets the x accessor to the specified function or number and returns this line generator. If {\itshape x} is not specified, returns the current x accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ x(d)\ \{}
+\DoxyCodeLine{\ \ return\ d[0];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+When a line is \doxylink{README.md__line}{generated}, the x accessor will be invoked for each \doxylink{README.md_line_defined}{defined} element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. The default x accessor assumes that the input data are two-\/element arrays of numbers. If your data are in a different format, or if you wish to transform the data before rendering, then you should specify a custom accessor. For example, if {\ttfamily x} is a \href{https://github.com/d3/d3-scale\#time-scales}{\texttt{ time scale}} and {\ttfamily y} is a \href{https://github.com/d3/d3-scale\#linear-scales}{\texttt{ linear scale}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ data\ =\ [}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 24),\ value:\ 93.24\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 25),\ value:\ 95.35\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 26),\ value:\ 98.84\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 27),\ value:\ 99.92\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 30),\ value:\ 99.80\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 4,\ \ 1),\ value:\ 99.47\},}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ line\ =\ d3.line()}
+\DoxyCodeLine{\ \ \ \ .x(d\ =>\ x(d.date))}
+\DoxyCodeLine{\ \ \ \ .y(d\ =>\ y(d.value));}
+
+\end{DoxyCode}
+
+
+\label{README.md_line_y}%
+\Hypertarget{README.md_line_y}%
+\# {\itshape line}.{\bfseries{y}}(\mbox{[}{\itshape y}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/line.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-line}{\texttt{ Examples}}
+
+If {\itshape y} is specified, sets the y accessor to the specified function or number and returns this line generator. If {\itshape y} is not specified, returns the current y accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ y(d)\ \{}
+\DoxyCodeLine{\ \ return\ d[1];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+When a line is \doxylink{README.md__line}{generated}, the y accessor will be invoked for each \doxylink{README.md_line_defined}{defined} element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. The default y accessor assumes that the input data are two-\/element arrays of numbers. See \doxylink{README.md_line_x}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.x} for more information.
+
+\label{README.md_line_defined}%
+\Hypertarget{README.md_line_defined}%
+\# {\itshape line}.{\bfseries{defined}}(\mbox{[}{\itshape defined}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/line.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-line}{\texttt{ Examples}}
+
+If {\itshape defined} is specified, sets the defined accessor to the specified function or boolean and returns this line generator. If {\itshape defined} is not specified, returns the current defined accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ defined()\ \{}
+\DoxyCodeLine{\ \ return\ true;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The default accessor thus assumes that the input data is always defined. When a line is \doxylink{README.md__line}{generated}, the defined accessor will be invoked for each element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. If the given element is defined ({\itshape i.\+e.}, if the defined accessor returns a truthy value for this element), the \doxylink{README.md_line_x}{x} and \doxylink{README.md_line_y}{y} accessors will subsequently be evaluated and the point will be added to the current line segment. Otherwise, the element will be skipped, the current line segment will be ended, and a new line segment will be generated for the next defined point. As a result, the generated line may have several discrete segments. For example\+:
+
+\href{https://observablehq.com/@d3/line-with-missing-data}{\texttt{ }}
+
+Note that if a line segment consists of only a single point, it may appear invisible unless rendered with rounded or square \href{https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap}{\texttt{ line caps}}. In addition, some curves such as \doxylink{README.md_curveCardinalOpen}{curve\+Cardinal\+Open} only render a visible segment if it contains multiple points.
+
+\label{README.md_line_curve}%
+\Hypertarget{README.md_line_curve}%
+\# {\itshape line}.{\bfseries{curve}}(\mbox{[}{\itshape curve}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/line.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-line}{\texttt{ Examples}}
+
+If {\itshape curve} is specified, sets the curve factory and returns this line generator. If {\itshape curve} is not specified, returns the current curve factory, which defaults to \doxylink{README.md_curveLinear}{curve\+Linear}.
+
+\label{README.md_line_context}%
+\Hypertarget{README.md_line_context}%
+\# {\itshape line}.{\bfseries{context}}(\mbox{[}{\itshape context}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/line.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-line}{\texttt{ Examples}}
+
+If {\itshape context} is specified, sets the context and returns this line generator. If {\itshape context} is not specified, returns the current context, which defaults to null. If the context is not null, then the \doxylink{README.md__line}{generated line} is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string representing the generated line is returned.
+
+\label{README.md_line_digits}%
+\Hypertarget{README.md_line_digits}%
+\# {\itshape line}.{\bfseries{digits}}(\mbox{[}{\itshape digits}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/line.js}{\texttt{ Source}}
+
+If {\itshape digits} is specified, sets the maximum number of digits after the decimal separator and returns this line generator. If {\itshape digits} is not specified, returns the current maximum fraction digits, which defaults to 3. This option only applies when the associated \doxylink{README.md_line_context}{\texorpdfstring{$\ast$}{*}context\texorpdfstring{$\ast$}{*}} is null, as when this line generator is used to produce \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}}.
+
+\label{README.md_lineRadial}%
+\Hypertarget{README.md_lineRadial}%
+\# d3.{\bfseries{line\+Radial}}() · \href{https://github.com/d3/d3-shape/blob/main/src/lineRadial.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-lineradial}{\texttt{ Examples}}
+
+
+
+Constructs a new radial line generator with the default settings. A radial line generator is equivalent to the standard Cartesian \doxylink{README.md_line}{line generator}, except the \doxylink{README.md_line_x}{x} and \doxylink{README.md_line_y}{y} accessors are replaced with \doxylink{README.md_lineRadial_angle}{angle} and \doxylink{README.md_lineRadial_radius}{radius} accessors. Radial lines are always positioned relative to ⟨0,0⟩; use a transform (see\+: \href{http://www.w3.org/TR/SVG/coords.html\#TransformAttribute}{\texttt{ SVG}}, \href{http://www.w3.org/TR/2dcontext/\#transformations}{\texttt{ Canvas}}) to change the origin.
+
+\label{README.md__lineRadial}%
+\Hypertarget{README.md__lineRadial}%
+\# {\itshape line\+Radial}({\itshape data}) · \href{https://github.com/d3/d3-shape/blob/main/src/lineRadial.js\#L4}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-lineradial}{\texttt{ Examples}}
+
+Equivalent to \doxylink{README.md__line}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}}.
+
+\label{README.md_lineRadial_angle}%
+\Hypertarget{README.md_lineRadial_angle}%
+\# {\itshape line\+Radial}.{\bfseries{angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/lineRadial.js\#L7}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-lineradial}{\texttt{ Examples}}
+
+Equivalent to \doxylink{README.md_line_x}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.x}, except the accessor returns the angle in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock).
+
+\label{README.md_lineRadial_radius}%
+\Hypertarget{README.md_lineRadial_radius}%
+\# {\itshape line\+Radial}.{\bfseries{radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/lineRadial.js\#L8}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-lineradial}{\texttt{ Examples}}
+
+Equivalent to \doxylink{README.md_line_y}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.y}, except the accessor returns the radius\+: the distance from the origin ⟨0,0⟩.
+
+\label{README.md_lineRadial_defined}%
+\Hypertarget{README.md_lineRadial_defined}%
+\# {\itshape line\+Radial}.{\bfseries{defined}}(\mbox{[}{\itshape defined}\mbox{]})
+
+Equivalent to \doxylink{README.md_line_defined}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.defined}.
+
+\label{README.md_lineRadial_curve}%
+\Hypertarget{README.md_lineRadial_curve}%
+\# {\itshape line\+Radial}.{\bfseries{curve}}(\mbox{[}{\itshape curve}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/lineRadial.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/d3-lineradial}{\texttt{ Examples}}
+
+Equivalent to \doxylink{README.md_line_curve}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.curve}. Note that \doxylink{README.md_curveMonotoneX}{curve\+MonotoneX} or \doxylink{README.md_curveMonotoneY}{curve\+MonotoneY} are not recommended for radial lines because they assume that the data is monotonic in {\itshape x} or {\itshape y}, which is typically untrue of radial lines.
+
+\label{README.md_lineRadial_context}%
+\Hypertarget{README.md_lineRadial_context}%
+\# {\itshape line\+Radial}.{\bfseries{context}}(\mbox{[}{\itshape context}\mbox{]})
+
+Equivalent to \doxylink{README.md_line_context}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.context}.\hypertarget{README.md_autotoc_md11263}{}\doxysubsubsection{\texorpdfstring{Areas}{Areas}}\label{README.md_autotoc_md11263}
+\href{https://observablehq.com/@d3/area-chart}{\texttt{ }}\href{https://observablehq.com/@d3/stacked-area-chart}{\texttt{ }}\href{https://observablehq.com/@d3/difference-chart}{\texttt{ }}
+
+The area generator produces an area, as in an area chart. An area is defined by two bounding lines, either splines or polylines. Typically, the two lines share the same \doxylink{README.md_area_x}{\texorpdfstring{$\ast$}{*}x\texorpdfstring{$\ast$}{*}-\/values} (\doxylink{README.md_area_x0}{x0} = \doxylink{README.md_area_x1}{x1}), differing only in {\itshape y}-\/value (\doxylink{README.md_area_y0}{y0} and \doxylink{README.md_area_y1}{y1}); most commonly, y0 is defined as a constant representing \href{http://www.vox.com/2015/11/19/9758062/y-axis-zero-chart}{\texttt{ zero}}. The first line (the {\itshape topline}) is defined by x1 and y1 and is rendered first; the second line (the {\itshape baseline}) is defined by x0 and y0 and is rendered second, with the points in reverse order. With a \doxylink{README.md_curveLinear}{curve\+Linear} \doxylink{README.md_area_curve}{curve}, this produces a clockwise polygon.
+
+\label{README.md_area}%
+\Hypertarget{README.md_area}%
+\# d3.{\bfseries{area}}(\mbox{[}{\itshape x}\mbox{]}\mbox{[}, {\itshape y0}\mbox{]}\mbox{[}, {\itshape y1}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+Constructs a new area generator with the default settings. If {\itshape x}, {\itshape y0} or {\itshape y1} are specified, sets the corresponding accessors to the specified function or number and returns this area generator.
+
+\label{README.md__area}%
+\Hypertarget{README.md__area}%
+\# {\itshape area}({\itshape data}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+Generates an area for the given array of {\itshape data}. Depending on this area generator’s associated \doxylink{README.md_area_curve}{curve}, the given input {\itshape data} may need to be sorted by {\itshape x}-\/value before being passed to the area generator. If the area generator has a \doxylink{README.md_line_context}{context}, then the area is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls and this function returns void. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string is returned.
+
+\label{README.md_area_x}%
+\Hypertarget{README.md_area_x}%
+\# {\itshape area}.{\bfseries{x}}(\mbox{[}{\itshape x}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape x} is specified, sets \doxylink{README.md_area_x0}{x0} to {\itshape x} and \doxylink{README.md_area_x1}{x1} to null and returns this area generator. If {\itshape x} is not specified, returns the current x0 accessor.
+
+\label{README.md_area_x0}%
+\Hypertarget{README.md_area_x0}%
+\# {\itshape area}.{\bfseries{x0}}(\mbox{[}{\itshape x}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape x} is specified, sets the x0 accessor to the specified function or number and returns this area generator. If {\itshape x} is not specified, returns the current x0 accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ x(d)\ \{}
+\DoxyCodeLine{\ \ return\ d[0];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+When an area is \doxylink{README.md__area}{generated}, the x0 accessor will be invoked for each \doxylink{README.md_area_defined}{defined} element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. The default x0 accessor assumes that the input data are two-\/element arrays of numbers. If your data are in a different format, or if you wish to transform the data before rendering, then you should specify a custom accessor. For example, if {\ttfamily x} is a \href{https://github.com/d3/d3-scale\#time-scales}{\texttt{ time scale}} and {\ttfamily y} is a \href{https://github.com/d3/d3-scale\#linear-scales}{\texttt{ linear scale}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ data\ =\ [}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 24),\ value:\ 93.24\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 25),\ value:\ 95.35\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 26),\ value:\ 98.84\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 27),\ value:\ 99.92\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 3,\ 30),\ value:\ 99.80\},}
+\DoxyCodeLine{\ \ \{date:\ new\ Date(2007,\ 4,\ \ 1),\ value:\ 99.47\},}
+\DoxyCodeLine{\ \ …}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ area\ =\ d3.area()}
+\DoxyCodeLine{\ \ \ \ .x(d\ =>\ x(d.date))}
+\DoxyCodeLine{\ \ \ \ .y1(d\ =>\ y(d.value))}
+\DoxyCodeLine{\ \ \ \ .y0(y(0));}
+
+\end{DoxyCode}
+
+
+\label{README.md_area_x1}%
+\Hypertarget{README.md_area_x1}%
+\# {\itshape area}.{\bfseries{x1}}(\mbox{[}{\itshape x}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape x} is specified, sets the x1 accessor to the specified function or number and returns this area generator. If {\itshape x} is not specified, returns the current x1 accessor, which defaults to null, indicating that the previously-\/computed \doxylink{README.md_area_x0}{x0} value should be reused for the x1 value.
+
+When an area is \doxylink{README.md__area}{generated}, the x1 accessor will be invoked for each \doxylink{README.md_area_defined}{defined} element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. See \doxylink{README.md_area_x0}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.x0} for more information.
+
+\label{README.md_area_y}%
+\Hypertarget{README.md_area_y}%
+\# {\itshape area}.{\bfseries{y}}(\mbox{[}{\itshape y}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape y} is specified, sets \doxylink{README.md_area_y0}{y0} to {\itshape y} and \doxylink{README.md_area_y1}{y1} to null and returns this area generator. If {\itshape y} is not specified, returns the current y0 accessor.
+
+\label{README.md_area_y0}%
+\Hypertarget{README.md_area_y0}%
+\# {\itshape area}.{\bfseries{y0}}(\mbox{[}{\itshape y}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape y} is specified, sets the y0 accessor to the specified function or number and returns this area generator. If {\itshape y} is not specified, returns the current y0 accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ y()\ \{}
+\DoxyCodeLine{\ \ return\ 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+When an area is \doxylink{README.md__area}{generated}, the y0 accessor will be invoked for each \doxylink{README.md_area_defined}{defined} element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. See \doxylink{README.md_area_x0}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.x0} for more information.
+
+\label{README.md_area_y1}%
+\Hypertarget{README.md_area_y1}%
+\# {\itshape area}.{\bfseries{y1}}(\mbox{[}{\itshape y}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape y} is specified, sets the y1 accessor to the specified function or number and returns this area generator. If {\itshape y} is not specified, returns the current y1 accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ y(d)\ \{}
+\DoxyCodeLine{\ \ return\ d[1];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+A null accessor is also allowed, indicating that the previously-\/computed \doxylink{README.md_area_y0}{y0} value should be reused for the y1 value. When an area is \doxylink{README.md__area}{generated}, the y1 accessor will be invoked for each \doxylink{README.md_area_defined}{defined} element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. See \doxylink{README.md_area_x0}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.x0} for more information.
+
+\label{README.md_area_defined}%
+\Hypertarget{README.md_area_defined}%
+\# {\itshape area}.{\bfseries{defined}}(\mbox{[}{\itshape defined}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape defined} is specified, sets the defined accessor to the specified function or boolean and returns this area generator. If {\itshape defined} is not specified, returns the current defined accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ defined()\ \{}
+\DoxyCodeLine{\ \ return\ true;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The default accessor thus assumes that the input data is always defined. When an area is \doxylink{README.md__area}{generated}, the defined accessor will be invoked for each element in the input data array, being passed the element {\ttfamily d}, the index {\ttfamily i}, and the array {\ttfamily data} as three arguments. If the given element is defined ({\itshape i.\+e.}, if the defined accessor returns a truthy value for this element), the \doxylink{README.md_area_x0}{x0}, \doxylink{README.md_area_x1}{x1}, \doxylink{README.md_area_y0}{y0} and \doxylink{README.md_area_y1}{y1} accessors will subsequently be evaluated and the point will be added to the current area segment. Otherwise, the element will be skipped, the current area segment will be ended, and a new area segment will be generated for the next defined point. As a result, the generated area may have several discrete segments. For example\+:
+
+\href{https://observablehq.com/@d3/area-with-missing-data}{\texttt{ }}
+
+Note that if an area segment consists of only a single point, it may appear invisible unless rendered with rounded or square \href{https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap}{\texttt{ line caps}}. In addition, some curves such as \doxylink{README.md_curveCardinalOpen}{curve\+Cardinal\+Open} only render a visible segment if it contains multiple points.
+
+\label{README.md_area_curve}%
+\Hypertarget{README.md_area_curve}%
+\# {\itshape area}.{\bfseries{curve}}(\mbox{[}{\itshape curve}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape curve} is specified, sets the curve factory and returns this area generator. If {\itshape curve} is not specified, returns the current curve factory, which defaults to \doxylink{README.md_curveLinear}{curve\+Linear}.
+
+\label{README.md_area_context}%
+\Hypertarget{README.md_area_context}%
+\# {\itshape area}.{\bfseries{context}}(\mbox{[}{\itshape context}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape context} is specified, sets the context and returns this area generator. If {\itshape context} is not specified, returns the current context, which defaults to null. If the context is not null, then the \doxylink{README.md__area}{generated area} is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string representing the generated area is returned.
+
+\label{README.md_area_digits}%
+\Hypertarget{README.md_area_digits}%
+\# {\itshape area}.{\bfseries{digits}}(\mbox{[}{\itshape digits}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+If {\itshape digits} is specified, sets the maximum number of digits after the decimal separator and returns this area generator. If {\itshape digits} is not specified, returns the current maximum fraction digits, which defaults to 3. This option only applies when the associated \doxylink{README.md_area_context}{\texorpdfstring{$\ast$}{*}context\texorpdfstring{$\ast$}{*}} is null, as when this area generator is used to produce \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}}.
+
+\label{README.md_area_lineX0}%
+\Hypertarget{README.md_area_lineX0}%
+\# {\itshape area}.{\bfseries{line\+X0}}() · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}} ~\newline
+\label{README.md_area_lineY0}%
+\Hypertarget{README.md_area_lineY0}%
+\# {\itshape area}.{\bfseries{line\+Y0}}() · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+Returns a new line generator that has this area generator’s current \doxylink{README.md_area_defined}{defined accessor}, \doxylink{README.md_area_curve}{curve} and \doxylink{README.md_area_context}{context}. The line’s \doxylink{README.md_line_x}{\texorpdfstring{$\ast$}{*}x\texorpdfstring{$\ast$}{*}-\/accessor} is this area’s \doxylink{README.md_area_x0}{\texorpdfstring{$\ast$}{*}x0\texorpdfstring{$\ast$}{*}-\/accessor}, and the line’s \doxylink{README.md_line_y}{\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*}-\/accessor} is this area’s \doxylink{README.md_area_y0}{\texorpdfstring{$\ast$}{*}y0\texorpdfstring{$\ast$}{*}-\/accessor}.
+
+\label{README.md_area_lineX1}%
+\Hypertarget{README.md_area_lineX1}%
+\# {\itshape area}.{\bfseries{line\+X1}}() · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+Returns a new line generator that has this area generator’s current \doxylink{README.md_area_defined}{defined accessor}, \doxylink{README.md_area_curve}{curve} and \doxylink{README.md_area_context}{context}. The line’s \doxylink{README.md_line_x}{\texorpdfstring{$\ast$}{*}x\texorpdfstring{$\ast$}{*}-\/accessor} is this area’s \doxylink{README.md_area_x1}{\texorpdfstring{$\ast$}{*}x1\texorpdfstring{$\ast$}{*}-\/accessor}, and the line’s \doxylink{README.md_line_y}{\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*}-\/accessor} is this area’s \doxylink{README.md_area_y0}{\texorpdfstring{$\ast$}{*}y0\texorpdfstring{$\ast$}{*}-\/accessor}.
+
+\label{README.md_area_lineY1}%
+\Hypertarget{README.md_area_lineY1}%
+\# {\itshape area}.{\bfseries{line\+Y1}}() · \href{https://github.com/d3/d3-shape/blob/main/src/area.js}{\texttt{ Source}}
+
+Returns a new line generator that has this area generator’s current \doxylink{README.md_area_defined}{defined accessor}, \doxylink{README.md_area_curve}{curve} and \doxylink{README.md_area_context}{context}. The line’s \doxylink{README.md_line_x}{\texorpdfstring{$\ast$}{*}x\texorpdfstring{$\ast$}{*}-\/accessor} is this area’s \doxylink{README.md_area_x0}{\texorpdfstring{$\ast$}{*}x0\texorpdfstring{$\ast$}{*}-\/accessor}, and the line’s \doxylink{README.md_line_y}{\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*}-\/accessor} is this area’s \doxylink{README.md_area_y1}{\texorpdfstring{$\ast$}{*}y1\texorpdfstring{$\ast$}{*}-\/accessor}.
+
+\label{README.md_areaRadial}%
+\Hypertarget{README.md_areaRadial}%
+\# d3.{\bfseries{area\+Radial}}() · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+
+
+Constructs a new radial area generator with the default settings. A radial area generator is equivalent to the standard Cartesian \doxylink{README.md_area}{area generator}, except the \doxylink{README.md_area_x}{x} and \doxylink{README.md_area_y}{y} accessors are replaced with \doxylink{README.md_areaRadial_angle}{angle} and \doxylink{README.md_areaRadial_radius}{radius} accessors. Radial areas are always positioned relative to ⟨0,0⟩; use a transform (see\+: \href{http://www.w3.org/TR/SVG/coords.html\#TransformAttribute}{\texttt{ SVG}}, \href{http://www.w3.org/TR/2dcontext/\#transformations}{\texttt{ Canvas}}) to change the origin.
+
+\label{README.md__areaRadial}%
+\Hypertarget{README.md__areaRadial}%
+\# {\itshape area\+Radial}({\itshape data})
+
+Equivalent to \doxylink{README.md__area}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}}.
+
+\label{README.md_areaRadial_angle}%
+\Hypertarget{README.md_areaRadial_angle}%
+\# {\itshape area\+Radial}.{\bfseries{angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_area_x}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.x}, except the accessor returns the angle in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock).
+
+\label{README.md_areaRadial_startAngle}%
+\Hypertarget{README.md_areaRadial_startAngle}%
+\# {\itshape area\+Radial}.{\bfseries{start\+Angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_area_x0}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.x0}, except the accessor returns the angle in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock). Note\+: typically \doxylink{README.md_areaRadial_angle}{angle} is used instead of setting separate start and end angles.
+
+\label{README.md_areaRadial_endAngle}%
+\Hypertarget{README.md_areaRadial_endAngle}%
+\# {\itshape area\+Radial}.{\bfseries{end\+Angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_area_x1}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.x1}, except the accessor returns the angle in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock). Note\+: typically \doxylink{README.md_areaRadial_angle}{angle} is used instead of setting separate start and end angles.
+
+\label{README.md_areaRadial_radius}%
+\Hypertarget{README.md_areaRadial_radius}%
+\# {\itshape area\+Radial}.{\bfseries{radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_area_y}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.y}, except the accessor returns the radius\+: the distance from the origin ⟨0,0⟩.
+
+\label{README.md_areaRadial_innerRadius}%
+\Hypertarget{README.md_areaRadial_innerRadius}%
+\# {\itshape area\+Radial}.{\bfseries{inner\+Radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_area_y0}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.y0}, except the accessor returns the radius\+: the distance from the origin ⟨0,0⟩.
+
+\label{README.md_areaRadial_outerRadius}%
+\Hypertarget{README.md_areaRadial_outerRadius}%
+\# {\itshape area\+Radial}.{\bfseries{outer\+Radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_area_y1}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.y1}, except the accessor returns the radius\+: the distance from the origin ⟨0,0⟩.
+
+\label{README.md_areaRadial_defined}%
+\Hypertarget{README.md_areaRadial_defined}%
+\# {\itshape area\+Radial}.{\bfseries{defined}}(\mbox{[}{\itshape defined}\mbox{]})
+
+Equivalent to \doxylink{README.md_area_defined}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.defined}.
+
+\label{README.md_areaRadial_curve}%
+\Hypertarget{README.md_areaRadial_curve}%
+\# {\itshape area\+Radial}.{\bfseries{curve}}(\mbox{[}{\itshape curve}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_area_curve}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.curve}. Note that \doxylink{README.md_curveMonotoneX}{curve\+MonotoneX} or \doxylink{README.md_curveMonotoneY}{curve\+MonotoneY} are not recommended for radial areas because they assume that the data is monotonic in {\itshape x} or {\itshape y}, which is typically untrue of radial areas.
+
+\label{README.md_areaRadial_context}%
+\Hypertarget{README.md_areaRadial_context}%
+\# {\itshape area\+Radial}.{\bfseries{context}}(\mbox{[}{\itshape context}\mbox{]})
+
+Equivalent to \doxylink{README.md_line_context}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.context}.
+
+\label{README.md_areaRadial_lineStartAngle}%
+\Hypertarget{README.md_areaRadial_lineStartAngle}%
+\# {\itshape area\+Radial}.{\bfseries{line\+Start\+Angle}}() · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}} ~\newline
+\label{README.md_areaRadial_lineInnerRadius}%
+\Hypertarget{README.md_areaRadial_lineInnerRadius}%
+\# {\itshape area\+Radial}.{\bfseries{line\+Inner\+Radius}}() · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Returns a new \doxylink{README.md_lineRadial}{radial line generator} that has this radial area generator’s current \doxylink{README.md_areaRadial_defined}{defined accessor}, \doxylink{README.md_areaRadial_curve}{curve} and \doxylink{README.md_areaRadial_context}{context}. The line’s \doxylink{README.md_lineRadial_angle}{angle accessor} is this area’s \doxylink{README.md_areaRadial_startAngle}{start angle accessor}, and the line’s \doxylink{README.md_lineRadial_radius}{radius accessor} is this area’s \doxylink{README.md_areaRadial_innerRadius}{inner radius accessor}.
+
+\label{README.md_areaRadial_lineEndAngle}%
+\Hypertarget{README.md_areaRadial_lineEndAngle}%
+\# {\itshape area\+Radial}.{\bfseries{line\+End\+Angle}}() · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Returns a new \doxylink{README.md_lineRadial}{radial line generator} that has this radial area generator’s current \doxylink{README.md_areaRadial_defined}{defined accessor}, \doxylink{README.md_areaRadial_curve}{curve} and \doxylink{README.md_areaRadial_context}{context}. The line’s \doxylink{README.md_lineRadial_angle}{angle accessor} is this area’s \doxylink{README.md_areaRadial_endAngle}{end angle accessor}, and the line’s \doxylink{README.md_lineRadial_radius}{radius accessor} is this area’s \doxylink{README.md_areaRadial_innerRadius}{inner radius accessor}.
+
+\label{README.md_areaRadial_lineOuterRadius}%
+\Hypertarget{README.md_areaRadial_lineOuterRadius}%
+\# {\itshape area\+Radial}.{\bfseries{line\+Outer\+Radius}}() · \href{https://github.com/d3/d3-shape/blob/main/src/areaRadial.js}{\texttt{ Source}}
+
+Returns a new \doxylink{README.md_lineRadial}{radial line generator} that has this radial area generator’s current \doxylink{README.md_areaRadial_defined}{defined accessor}, \doxylink{README.md_areaRadial_curve}{curve} and \doxylink{README.md_areaRadial_context}{context}. The line’s \doxylink{README.md_lineRadial_angle}{angle accessor} is this area’s \doxylink{README.md_areaRadial_startAngle}{start angle accessor}, and the line’s \doxylink{README.md_lineRadial_radius}{radius accessor} is this area’s \doxylink{README.md_areaRadial_outerRadius}{outer radius accessor}.\hypertarget{README.md_autotoc_md11264}{}\doxysubsubsection{\texorpdfstring{Curves}{Curves}}\label{README.md_autotoc_md11264}
+While lines are defined as a sequence of two-\/dimensional \mbox{[}{\itshape x}, {\itshape y}\mbox{]} points, and areas are similarly defined by a topline and a baseline, there remains the task of transforming this discrete representation into a continuous shape\+: {\itshape i.\+e.}, how to interpolate between the points. A variety of curves are provided for this purpose.
+
+Curves are typically not constructed or used directly, instead being passed to \doxylink{README.md_line_curve}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.curve} and \doxylink{README.md_area_curve}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.curve}. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ line\ =\ d3.line(d\ =>\ d.date,\ d\ =>\ d.value)}
+\DoxyCodeLine{\ \ \ \ .curve(d3.curveCatmullRom.alpha(0.5));}
+
+\end{DoxyCode}
+
+
+\label{README.md_curveBasis}%
+\Hypertarget{README.md_curveBasis}%
+\# d3.{\bfseries{curve\+Basis}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/basis.js}{\texttt{ Source}}
+
+
+
+Produces a cubic \href{https://en.wikipedia.org/wiki/B-spline}{\texttt{ basis spline}} using the specified control points. The first and last points are triplicated such that the spline starts at the first point and ends at the last point, and is tangent to the line between the first and second points, and to the line between the penultimate and last points.
+
+\label{README.md_curveBasisClosed}%
+\Hypertarget{README.md_curveBasisClosed}%
+\# d3.{\bfseries{curve\+Basis\+Closed}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/basisClosed.js}{\texttt{ Source}}
+
+
+
+Produces a closed cubic \href{https://en.wikipedia.org/wiki/B-spline}{\texttt{ basis spline}} using the specified control points. When a line segment ends, the first three control points are repeated, producing a closed loop with C2 continuity.
+
+\label{README.md_curveBasisOpen}%
+\Hypertarget{README.md_curveBasisOpen}%
+\# d3.{\bfseries{curve\+Basis\+Open}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/basisOpen.js}{\texttt{ Source}}
+
+
+
+Produces a cubic \href{https://en.wikipedia.org/wiki/B-spline}{\texttt{ basis spline}} using the specified control points. Unlike basis, the first and last points are not repeated, and thus the curve typically does not intersect these points.
+
+\label{README.md_curveBumpX}%
+\Hypertarget{README.md_curveBumpX}%
+\# d3.{\bfseries{curve\+BumpX}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/bump.js}{\texttt{ Source}}
+
+
+
+Produces a Bézier curve between each pair of points, with horizontal tangents at each point.
+
+\label{README.md_curveBumpY}%
+\Hypertarget{README.md_curveBumpY}%
+\# d3.{\bfseries{curve\+BumpY}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/bump.js}{\texttt{ Source}}
+
+
+
+Produces a Bézier curve between each pair of points, with vertical tangents at each point.
+
+\label{README.md_curveBundle}%
+\Hypertarget{README.md_curveBundle}%
+\# d3.{\bfseries{curve\+Bundle}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/bundle.js}{\texttt{ Source}}
+
+
+
+Produces a straightened cubic \href{https://en.wikipedia.org/wiki/B-spline}{\texttt{ basis spline}} using the specified control points, with the spline straightened according to the curve’s \doxylink{README.md_curveBundle_beta}{\texorpdfstring{$\ast$}{*}beta\texorpdfstring{$\ast$}{*}}, which defaults to 0.\+85. This curve is typically used in \href{https://observablehq.com/@d3/hierarchical-edge-bundling}{\texttt{ hierarchical edge bundling}} to disambiguate connections, as proposed by \href{https://www.win.tue.nl/vis1/home/dholten/}{\texttt{ Danny Holten}} in \href{https://www.win.tue.nl/vis1/home/dholten/papers/bundles_infovis.pdf}{\texttt{ Hierarchical Edge Bundles\+: Visualization of Adjacency Relations in Hierarchical Data}}. This curve does not implement \doxylink{README.md_curve_areaStart}{\texorpdfstring{$\ast$}{*}curve\texorpdfstring{$\ast$}{*}.area\+Start} and \doxylink{README.md_curve_areaEnd}{\texorpdfstring{$\ast$}{*}curve\texorpdfstring{$\ast$}{*}.area\+End}; it is intended to work with d3.line, not d3.area.
+
+\label{README.md_curveBundle_beta}%
+\Hypertarget{README.md_curveBundle_beta}%
+\# {\itshape bundle}.{\bfseries{beta}}({\itshape beta}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/bundle.js}{\texttt{ Source}}
+
+Returns a bundle curve with the specified {\itshape beta} in the range \mbox{[}0, 1\mbox{]}, representing the bundle strength. If {\itshape beta} equals zero, a straight line between the first and last point is produced; if {\itshape beta} equals one, a standard basis spline is produced. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ line\ =\ d3.line().curve(d3.curveBundle.beta(0.5));}
+
+\end{DoxyCode}
+
+
+\label{README.md_curveCardinal}%
+\Hypertarget{README.md_curveCardinal}%
+\# d3.{\bfseries{curve\+Cardinal}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/cardinal.js}{\texttt{ Source}}
+
+
+
+Produces a cubic \href{https://en.wikipedia.org/wiki/Cubic_Hermite_spline\#Cardinal_spline}{\texttt{ cardinal spline}} using the specified control points, with one-\/sided differences used for the first and last piece. The default \doxylink{README.md_curveCardinal_tension}{tension} is 0.
+
+\label{README.md_curveCardinalClosed}%
+\Hypertarget{README.md_curveCardinalClosed}%
+\# d3.{\bfseries{curve\+Cardinal\+Closed}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/cardinalClosed.js}{\texttt{ Source}}
+
+
+
+Produces a closed cubic \href{https://en.wikipedia.org/wiki/Cubic_Hermite_spline\#Cardinal_spline}{\texttt{ cardinal spline}} using the specified control points. When a line segment ends, the first three control points are repeated, producing a closed loop. The default \doxylink{README.md_curveCardinal_tension}{tension} is 0.
+
+\label{README.md_curveCardinalOpen}%
+\Hypertarget{README.md_curveCardinalOpen}%
+\# d3.{\bfseries{curve\+Cardinal\+Open}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/cardinalOpen.js}{\texttt{ Source}}
+
+
+
+Produces a cubic \href{https://en.wikipedia.org/wiki/Cubic_Hermite_spline\#Cardinal_spline}{\texttt{ cardinal spline}} using the specified control points. Unlike \doxylink{README.md_curveCardinal}{curve\+Cardinal}, one-\/sided differences are not used for the first and last piece, and thus the curve starts at the second point and ends at the penultimate point. The default \doxylink{README.md_curveCardinal_tension}{tension} is 0.
+
+\label{README.md_curveCardinal_tension}%
+\Hypertarget{README.md_curveCardinal_tension}%
+\# {\itshape cardinal}.{\bfseries{tension}}({\itshape tension}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/cardinalOpen.js}{\texttt{ Source}}
+
+Returns a cardinal curve with the specified {\itshape tension} in the range \mbox{[}0, 1\mbox{]}. The {\itshape tension} determines the length of the tangents\+: a {\itshape tension} of one yields all zero tangents, equivalent to \doxylink{README.md_curveLinear}{curve\+Linear}; a {\itshape tension} of zero produces a uniform \doxylink{README.md_curveCatmullRom}{Catmull–\+Rom} spline. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ line\ =\ d3.line().curve(d3.curveCardinal.tension(0.5));}
+
+\end{DoxyCode}
+
+
+\label{README.md_curveCatmullRom}%
+\Hypertarget{README.md_curveCatmullRom}%
+\# d3.{\bfseries{curve\+Catmull\+Rom}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/catmullRom.js}{\texttt{ Source}}
+
+
+
+Produces a cubic Catmull–\+Rom spline using the specified control points and the parameter \doxylink{README.md_curveCatmullRom_alpha}{\texorpdfstring{$\ast$}{*}alpha\texorpdfstring{$\ast$}{*}}, which defaults to 0.\+5, as proposed by Yuksel et al. in \href{http://www.cemyuksel.com/research/catmullrom_param/}{\texttt{ On the Parameterization of Catmull–\+Rom Curves}}, with one-\/sided differences used for the first and last piece.
+
+\label{README.md_curveCatmullRomClosed}%
+\Hypertarget{README.md_curveCatmullRomClosed}%
+\# d3.{\bfseries{curve\+Catmull\+Rom\+Closed}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/catmullRomClosed.js}{\texttt{ Source}}
+
+
+
+Produces a closed cubic Catmull–\+Rom spline using the specified control points and the parameter \doxylink{README.md_curveCatmullRom_alpha}{\texorpdfstring{$\ast$}{*}alpha\texorpdfstring{$\ast$}{*}}, which defaults to 0.\+5, as proposed by Yuksel et al. When a line segment ends, the first three control points are repeated, producing a closed loop.
+
+\label{README.md_curveCatmullRomOpen}%
+\Hypertarget{README.md_curveCatmullRomOpen}%
+\# d3.{\bfseries{curve\+Catmull\+Rom\+Open}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/catmullRomOpen.js}{\texttt{ Source}}
+
+
+
+Produces a cubic Catmull–\+Rom spline using the specified control points and the parameter \doxylink{README.md_curveCatmullRom_alpha}{\texorpdfstring{$\ast$}{*}alpha\texorpdfstring{$\ast$}{*}}, which defaults to 0.\+5, as proposed by Yuksel et al. Unlike \doxylink{README.md_curveCatmullRom}{curve\+Catmull\+Rom}, one-\/sided differences are not used for the first and last piece, and thus the curve starts at the second point and ends at the penultimate point.
+
+\label{README.md_curveCatmullRom_alpha}%
+\Hypertarget{README.md_curveCatmullRom_alpha}%
+\# {\itshape catmull\+Rom}.{\bfseries{alpha}}({\itshape alpha}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/catmullRom.js}{\texttt{ Source}}
+
+Returns a cubic Catmull–\+Rom curve with the specified {\itshape alpha} in the range \mbox{[}0, 1\mbox{]}. If {\itshape alpha} is zero, produces a uniform spline, equivalent to \doxylink{README.md_curveCardinal}{curve\+Cardinal} with a tension of zero; if {\itshape alpha} is one, produces a chordal spline; if {\itshape alpha} is 0.\+5, produces a \href{https://en.wikipedia.org/wiki/Centripetal_Catmull\%E2\%80\%93Rom_spline}{\texttt{ centripetal spline}}. Centripetal splines are recommended to avoid self-\/intersections and overshoot. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ line\ =\ d3.line().curve(d3.curveCatmullRom.alpha(0.5));}
+
+\end{DoxyCode}
+
+
+\label{README.md_curveLinear}%
+\Hypertarget{README.md_curveLinear}%
+\# d3.{\bfseries{curve\+Linear}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/linear.js}{\texttt{ Source}}
+
+
+
+Produces a polyline through the specified points.
+
+\label{README.md_curveLinearClosed}%
+\Hypertarget{README.md_curveLinearClosed}%
+\# d3.{\bfseries{curve\+Linear\+Closed}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/linearClosed.js}{\texttt{ Source}}
+
+
+
+Produces a closed polyline through the specified points by repeating the first point when the line segment ends.
+
+\label{README.md_curveMonotoneX}%
+\Hypertarget{README.md_curveMonotoneX}%
+\# d3.{\bfseries{curve\+MonotoneX}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/monotone.js}{\texttt{ Source}}
+
+
+
+Produces a cubic spline that \href{https://en.wikipedia.org/wiki/Monotone_cubic_interpolation}{\texttt{ preserves monotonicity}} in {\itshape y}, assuming monotonicity in {\itshape x}, as proposed by Steffen in \href{http://adsabs.harvard.edu/full/1990A\%26A...239..443S}{\texttt{ A simple method for monotonic interpolation in one dimension}}\+: “a smooth curve with continuous first-\/order derivatives that passes through any given set of data points without spurious oscillations. Local extrema can occur only at grid points where they are given by the data, but not in between two adjacent grid points.\+”
+
+\label{README.md_curveMonotoneY}%
+\Hypertarget{README.md_curveMonotoneY}%
+\# d3.{\bfseries{curve\+MonotoneY}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/monotone.js}{\texttt{ Source}}
+
+
+
+Produces a cubic spline that \href{https://en.wikipedia.org/wiki/Monotone_cubic_interpolation}{\texttt{ preserves monotonicity}} in {\itshape x}, assuming monotonicity in {\itshape y}, as proposed by Steffen in \href{http://adsabs.harvard.edu/full/1990A\%26A...239..443S}{\texttt{ A simple method for monotonic interpolation in one dimension}}\+: “a smooth curve with continuous first-\/order derivatives that passes through any given set of data points without spurious oscillations. Local extrema can occur only at grid points where they are given by the data, but not in between two adjacent grid points.\+”
+
+\label{README.md_curveNatural}%
+\Hypertarget{README.md_curveNatural}%
+\# d3.{\bfseries{curve\+Natural}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/natural.js}{\texttt{ Source}}
+
+
+
+Produces a \href{https://en.wikipedia.org/wiki/Spline_interpolation}{\texttt{ natural}} \href{http://mathworld.wolfram.com/CubicSpline.html}{\texttt{ cubic spline}} with the second derivative of the spline set to zero at the endpoints.
+
+\label{README.md_curveStep}%
+\Hypertarget{README.md_curveStep}%
+\# d3.{\bfseries{curve\+Step}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/step.js}{\texttt{ Source}}
+
+
+
+Produces a piecewise constant function (a \href{https://en.wikipedia.org/wiki/Step_function}{\texttt{ step function}}) consisting of alternating horizontal and vertical lines. The {\itshape y}-\/value changes at the midpoint of each pair of adjacent {\itshape x}-\/values.
+
+\label{README.md_curveStepAfter}%
+\Hypertarget{README.md_curveStepAfter}%
+\# d3.{\bfseries{curve\+Step\+After}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/step.js}{\texttt{ Source}}
+
+
+
+Produces a piecewise constant function (a \href{https://en.wikipedia.org/wiki/Step_function}{\texttt{ step function}}) consisting of alternating horizontal and vertical lines. The {\itshape y}-\/value changes after the {\itshape x}-\/value.
+
+\label{README.md_curveStepBefore}%
+\Hypertarget{README.md_curveStepBefore}%
+\# d3.{\bfseries{curve\+Step\+Before}}({\itshape context}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/step.js}{\texttt{ Source}}
+
+
+
+Produces a piecewise constant function (a \href{https://en.wikipedia.org/wiki/Step_function}{\texttt{ step function}}) consisting of alternating horizontal and vertical lines. The {\itshape y}-\/value changes before the {\itshape x}-\/value.\hypertarget{README.md_autotoc_md11265}{}\doxysubsubsection{\texorpdfstring{Custom Curves}{Custom Curves}}\label{README.md_autotoc_md11265}
+Curves are typically not used directly, instead being passed to \doxylink{README.md_line_curve}{\texorpdfstring{$\ast$}{*}line\texorpdfstring{$\ast$}{*}.curve} and \doxylink{README.md_area_curve}{\texorpdfstring{$\ast$}{*}area\texorpdfstring{$\ast$}{*}.curve}. However, you can define your own curve implementation should none of the built-\/in curves satisfy your needs using the following interface. You can also use this low-\/level interface with a built-\/in curve type as an alternative to the line and area generators.
+
+\label{README.md_curve_areaStart}%
+\Hypertarget{README.md_curve_areaStart}%
+\# {\itshape curve}.{\bfseries{area\+Start}}() · \href{https://github.com/d3/d3-shape/blob/main/src/curve/step.js\#L7}{\texttt{ Source}}
+
+Indicates the start of a new area segment. Each area segment consists of exactly two \doxylink{README.md_curve_lineStart}{line segments}\+: the topline, followed by the baseline, with the baseline points in reverse order.
+
+\label{README.md_curve_areaEnd}%
+\Hypertarget{README.md_curve_areaEnd}%
+\# {\itshape curve}.{\bfseries{area\+End}}() · \href{https://github.com/d3/d3-shape/blob/main/src/curve/step.js}{\texttt{ Source}}
+
+Indicates the end of the current area segment.
+
+\label{README.md_curve_lineStart}%
+\Hypertarget{README.md_curve_lineStart}%
+\# {\itshape curve}.{\bfseries{line\+Start}}() · \href{https://github.com/d3/d3-shape/blob/main/src/curve/step.js}{\texttt{ Source}}
+
+Indicates the start of a new line segment. Zero or more \doxylink{README.md_curve_point}{points} will follow.
+
+\label{README.md_curve_lineEnd}%
+\Hypertarget{README.md_curve_lineEnd}%
+\# {\itshape curve}.{\bfseries{line\+End}}() · \href{https://github.com/d3/d3-shape/blob/main/src/curve/step.js}{\texttt{ Source}}
+
+Indicates the end of the current line segment.
+
+\label{README.md_curve_point}%
+\Hypertarget{README.md_curve_point}%
+\# {\itshape curve}.{\bfseries{point}}({\itshape x}, {\itshape y}) · \href{https://github.com/d3/d3-shape/blob/main/src/curve/step.js}{\texttt{ Source}}
+
+Indicates a new point in the current line segment with the given {\itshape x}-\/ and {\itshape y}-\/values.\hypertarget{README.md_autotoc_md11266}{}\doxysubsubsection{\texorpdfstring{Links}{Links}}\label{README.md_autotoc_md11266}
+\href{https://observablehq.com/@d3/tidy-tree}{\texttt{ }}
+
+The {\bfseries{link}} shape generates a smooth cubic Bézier curve from a source point to a target point. The tangents of the curve at the start and end are either \doxylink{README.md_linkVertical}{vertical}, \doxylink{README.md_linkHorizontal}{horizontal} or \doxylink{README.md_linkRadial}{radial}.
+
+\label{README.md_link}%
+\Hypertarget{README.md_link}%
+\# d3.{\bfseries{link}}({\itshape curve}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+Returns a new \doxylink{README.md__link}{link generator} using the specified {\itshape curve}. For example, to visualize \href{https://github.com/d3/d3-hierarchy/blob/master/README.md\#node_links}{\texttt{ links}} in a \href{https://github.com/d3/d3-hierarchy/blob/master/README.md\#tree}{\texttt{ tree diagram}} rooted on the top edge of the display, you might say\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ link\ =\ d3.link(d3.curveBumpY)}
+\DoxyCodeLine{\ \ \ \ .x(d\ =>\ d.x)}
+\DoxyCodeLine{\ \ \ \ .y(d\ =>\ d.y);}
+
+\end{DoxyCode}
+
+
+\label{README.md_linkVertical}%
+\Hypertarget{README.md_linkVertical}%
+\# d3.{\bfseries{link\+Vertical}}() · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+Shorthand for \doxylink{README.md_link}{d3.link} with \doxylink{README.md_curveBumpY}{d3.curve\+BumpY}; suitable for visualizing \href{https://github.com/d3/d3-hierarchy/blob/master/README.md\#node_links}{\texttt{ links}} in a \href{https://github.com/d3/d3-hierarchy/blob/master/README.md\#tree}{\texttt{ tree diagram}} rooted on the top edge of the display. Equivalent to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ link\ =\ d3.link(d3.curveBumpY);}
+
+\end{DoxyCode}
+
+
+\label{README.md_linkHorizontal}%
+\Hypertarget{README.md_linkHorizontal}%
+\# d3.{\bfseries{link\+Horizontal}}() · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+Shorthand for \doxylink{README.md_link}{d3.link} with \doxylink{README.md_curveBumpX}{d3.curve\+BumpX}; suitable for visualizing \href{https://github.com/d3/d3-hierarchy/blob/master/README.md\#node_links}{\texttt{ links}} in a \href{https://github.com/d3/d3-hierarchy/blob/master/README.md\#tree}{\texttt{ tree diagram}} rooted on the left edge of the display. Equivalent to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ link\ =\ d3.link(d3.curveBumpX);}
+
+\end{DoxyCode}
+
+
+\label{README.md__link}%
+\Hypertarget{README.md__link}%
+\# {\itshape link}({\itshape arguments…}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+Generates a link for the given {\itshape arguments}. The {\itshape arguments} are arbitrary; they are simply propagated to the link generator’s accessor functions along with the {\ttfamily this} object. For example, with the default settings, an object expected\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{link(\{}
+\DoxyCodeLine{\ \ source:\ [100,\ 100],}
+\DoxyCodeLine{\ \ target:\ [300,\ 300]}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\label{README.md_link_source}%
+\Hypertarget{README.md_link_source}%
+\# {\itshape link}.{\bfseries{source}}(\mbox{[}{\itshape source}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+If {\itshape source} is specified, sets the source accessor to the specified function and returns this link generator. If {\itshape source} is not specified, returns the current source accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ source(d)\ \{}
+\DoxyCodeLine{\ \ return\ d.source;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\label{README.md_link_target}%
+\Hypertarget{README.md_link_target}%
+\# {\itshape link}.{\bfseries{target}}(\mbox{[}{\itshape target}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+If {\itshape target} is specified, sets the target accessor to the specified function and returns this link generator. If {\itshape target} is not specified, returns the current target accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ target(d)\ \{}
+\DoxyCodeLine{\ \ return\ d.target;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\label{README.md_link_x}%
+\Hypertarget{README.md_link_x}%
+\# {\itshape link}.{\bfseries{x}}(\mbox{[}{\itshape x}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+If {\itshape x} is specified, sets the {\itshape x}-\/accessor to the specified function or number and returns this link generator. If {\itshape x} is not specified, returns the current {\itshape x}-\/accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ x(d)\ \{}
+\DoxyCodeLine{\ \ return\ d[0];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\label{README.md_link_y}%
+\Hypertarget{README.md_link_y}%
+\# {\itshape link}.{\bfseries{y}}(\mbox{[}{\itshape y}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+If {\itshape y} is specified, sets the {\itshape y}-\/accessor to the specified function or number and returns this link generator. If {\itshape y} is not specified, returns the current {\itshape y}-\/accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ y(d)\ \{}
+\DoxyCodeLine{\ \ return\ d[1];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\label{README.md_link_context}%
+\Hypertarget{README.md_link_context}%
+\# {\itshape link}.{\bfseries{context}}(\mbox{[}{\itshape context}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+If {\itshape context} is specified, sets the context and returns this link generator. If {\itshape context} is not specified, returns the current context, which defaults to null. If the context is not null, then the \doxylink{README.md__link}{generated link} is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string representing the generated link is returned. See also \href{https://github.com/d3/d3-path}{\texttt{ d3-\/path}}.
+
+\label{README.md_link_digits}%
+\Hypertarget{README.md_link_digits}%
+\# {\itshape link}.{\bfseries{digits}}(\mbox{[}{\itshape digits}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+If {\itshape digits} is specified, sets the maximum number of digits after the decimal separator and returns this link generator. If {\itshape digits} is not specified, returns the current maximum fraction digits, which defaults to 3. This option only applies when the associated \doxylink{README.md_link_context}{\texorpdfstring{$\ast$}{*}context\texorpdfstring{$\ast$}{*}} is null, as when this link generator is used to produce \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}}.
+
+\label{README.md_linkRadial}%
+\Hypertarget{README.md_linkRadial}%
+\# d3.{\bfseries{link\+Radial}}() · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+Returns a new \doxylink{README.md__link}{link generator} with radial tangents. For example, to visualize \href{https://github.com/d3/d3-hierarchy/blob/master/README.md\#node_links}{\texttt{ links}} in a \href{https://github.com/d3/d3-hierarchy/blob/master/README.md\#tree}{\texttt{ tree diagram}} rooted in the center of the display, you might say\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ link\ =\ d3.linkRadial()}
+\DoxyCodeLine{\ \ \ \ .angle(d\ =>\ d.x)}
+\DoxyCodeLine{\ \ \ \ .radius(d\ =>\ d.y);}
+
+\end{DoxyCode}
+
+
+\label{README.md_linkRadial_angle}%
+\Hypertarget{README.md_linkRadial_angle}%
+\# {\itshape link\+Radial}.{\bfseries{angle}}(\mbox{[}{\itshape angle}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_link_x}{\texorpdfstring{$\ast$}{*}link\texorpdfstring{$\ast$}{*}.x}, except the accessor returns the angle in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock).
+
+\label{README.md_linkRadial_radius}%
+\Hypertarget{README.md_linkRadial_radius}%
+\# {\itshape link\+Radial}.{\bfseries{radius}}(\mbox{[}{\itshape radius}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/link.js}{\texttt{ Source}}
+
+Equivalent to \doxylink{README.md_link_y}{\texorpdfstring{$\ast$}{*}link\texorpdfstring{$\ast$}{*}.y}, except the accessor returns the radius\+: the distance from the origin ⟨0,0⟩.\hypertarget{README.md_autotoc_md11267}{}\doxysubsubsection{\texorpdfstring{Symbols}{Symbols}}\label{README.md_autotoc_md11267}
+Symbols provide a categorical shape encoding as is commonly used in scatterplots. Symbols are always centered at ⟨0,0⟩; use a transform (see\+: \href{http://www.w3.org/TR/SVG/coords.html\#TransformAttribute}{\texttt{ SVG}}, \href{http://www.w3.org/TR/2dcontext/\#transformations}{\texttt{ Canvas}}) to move the symbol to a different position.
+
+\label{README.md_symbol}%
+\Hypertarget{README.md_symbol}%
+\# d3.{\bfseries{symbol}}(\mbox{[}{\itshape type}\mbox{]}\mbox{[}, {\itshape size}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/symbol.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/fitted-symbols}{\texttt{ Examples}}
+
+Constructs a new symbol generator of the specified \doxylink{README.md_symbol_type}{type} and \doxylink{README.md_symbol_size}{size}. If not specified, {\itshape type} defaults to a circle, and {\itshape size} defaults to 64.
+
+\label{README.md__symbol}%
+\Hypertarget{README.md__symbol}%
+\# {\itshape symbol}({\itshape arguments}…) · \href{https://github.com/d3/d3-shape/blob/main/src/symbol.js}{\texttt{ Source}}
+
+Generates a symbol for the given {\itshape arguments}. The {\itshape arguments} are arbitrary; they are simply propagated to the symbol generator’s accessor functions along with the {\ttfamily this} object. For example, with the default settings, no arguments are needed to produce a circle with area 64 square pixels. If the symbol generator has a \doxylink{README.md_symbol_context}{context}, then the symbol is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls and this function returns void. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string is returned.
+
+\label{README.md_symbol_type}%
+\Hypertarget{README.md_symbol_type}%
+\# {\itshape symbol}.{\bfseries{type}}(\mbox{[}{\itshape type}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/symbol.js}{\texttt{ Source}}
+
+If {\itshape type} is specified, sets the symbol type to the specified function or symbol type and returns this symbol generator. If {\itshape type} is a function, the symbol generator’s arguments and {\itshape this} are passed through. (See \href{https://github.com/d3/d3-selection/blob/master/README.md\#selection_attr}{\texttt{ {\itshape selection}.attr}} if you are using d3-\/selection.) If {\itshape type} is not specified, returns the current symbol type accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ type()\ \{}
+\DoxyCodeLine{\ \ return\ circle;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+See \doxylink{README.md_symbolsFill}{symbols\+Fill} and \doxylink{README.md_symbolsStroke}{symbols\+Stroke} for built-\/in symbol types. To implement a custom symbol type, pass an object that implements \doxylink{README.md_symbolType_draw}{\texorpdfstring{$\ast$}{*}symbol\+Type\texorpdfstring{$\ast$}{*}.draw}.
+
+\label{README.md_symbol_size}%
+\Hypertarget{README.md_symbol_size}%
+\# {\itshape symbol}.{\bfseries{size}}(\mbox{[}{\itshape size}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/symbol.js}{\texttt{ Source}}
+
+If {\itshape size} is specified, sets the size to the specified function or number and returns this symbol generator. If {\itshape size} is a function, the symbol generator’s arguments and {\itshape this} are passed through. (See \href{https://github.com/d3/d3-selection/blob/master/README.md\#selection_attr}{\texttt{ {\itshape selection}.attr}} if you are using d3-\/selection.) If {\itshape size} is not specified, returns the current size accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ size()\ \{}
+\DoxyCodeLine{\ \ return\ 64;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Specifying the size as a function is useful for constructing a scatterplot with a size encoding. If you wish to scale the symbol to fit a given bounding box, rather than by area, try \href{https://observablehq.com/d/1fac2626b9e1b65f}{\texttt{ SVG’s get\+BBox}}.
+
+\label{README.md_symbol_context}%
+\Hypertarget{README.md_symbol_context}%
+\# {\itshape symbol}.{\bfseries{context}}(\mbox{[}{\itshape context}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/symbol.js}{\texttt{ Source}}
+
+If {\itshape context} is specified, sets the context and returns this symbol generator. If {\itshape context} is not specified, returns the current context, which defaults to null. If the context is not null, then the \doxylink{README.md__symbol}{generated symbol} is rendered to this context as a sequence of \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ path method}} calls. Otherwise, a \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}} string representing the generated symbol is returned.
+
+\label{README.md_symbol_digits}%
+\Hypertarget{README.md_symbol_digits}%
+\# {\itshape symbol}.{\bfseries{digits}}(\mbox{[}{\itshape digits}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/symbol.js}{\texttt{ Source}}
+
+If {\itshape digits} is specified, sets the maximum number of digits after the decimal separator and returns this symbol generator. If {\itshape digits} is not specified, returns the current maximum fraction digits, which defaults to 3. This option only applies when the associated \doxylink{README.md_symbol_context}{\texorpdfstring{$\ast$}{*}context\texorpdfstring{$\ast$}{*}} is null, as when this symbol generator is used to produce \href{http://www.w3.org/TR/SVG/paths.html\#PathData}{\texttt{ path data}}.
+
+\label{README.md_symbolsFill}%
+\Hypertarget{README.md_symbolsFill}%
+\# d3.{\bfseries{symbols\+Fill}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol.js}{\texttt{ Source}}
+
+\href{\#symbolCircle}{\texttt{ }}\href{\#symbolCross}{\texttt{ }}\href{\#symbolDiamond}{\texttt{ }}\href{\#symbolSquare}{\texttt{ }}\href{\#symbolStar}{\texttt{ }}\href{\#symbolTriangle}{\texttt{ }}
+
+An array containing a set of symbol types designed for filling\+: \doxylink{README.md_symbolCircle}{circle}, \doxylink{README.md_symbolCross}{cross}, \doxylink{README.md_symbolDiamond}{diamond}, \doxylink{README.md_symbolSquare}{square}, \doxylink{README.md_symbolStar}{star}, \doxylink{README.md_symbolTriangle}{triangle}, and \doxylink{README.md_symbolWye}{wye}. Useful for constructing the range of an \href{https://github.com/d3/d3-scale\#ordinal-scales}{\texttt{ ordinal scale}} should you wish to use a shape encoding for categorical data.
+
+\label{README.md_symbolsStroke}%
+\Hypertarget{README.md_symbolsStroke}%
+\# d3.{\bfseries{symbols\+Stroke}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol.js}{\texttt{ Source}}
+
+An array containing a set of symbol types designed for stroking\+: \doxylink{README.md_symbolCircle}{circle}, \doxylink{README.md_symbolPlus}{plus}, \doxylink{README.md_symbolTimes}{times}, \doxylink{README.md_symbolTriangle2}{triangle2}, \doxylink{README.md_symbolAsterisk}{asterisk}, \doxylink{README.md_symbolSquare2}{square2}, and \doxylink{README.md_symbolDiamond2}{diamond2}. Useful for constructing the range of an \href{https://github.com/d3/d3-scale\#ordinal-scales}{\texttt{ ordinal scale}} should you wish to use a shape encoding for categorical data.
+
+\label{README.md_symbolAsterisk}%
+\Hypertarget{README.md_symbolAsterisk}%
+\# d3.{\bfseries{symbol\+Asterisk}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/asterisk.js}{\texttt{ Source}}
+
+The asterisk symbol type; intended for stroking.
+
+\label{README.md_symbolCircle}%
+\Hypertarget{README.md_symbolCircle}%
+\# d3.{\bfseries{symbol\+Circle}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/circle.js}{\texttt{ Source}}
+
+The circle symbol type; intended for either filling or stroking.
+
+\label{README.md_symbolCross}%
+\Hypertarget{README.md_symbolCross}%
+\# d3.{\bfseries{symbol\+Cross}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/cross.js}{\texttt{ Source}}
+
+The Greek cross symbol type, with arms of equal length; intended for filling.
+
+\label{README.md_symbolDiamond}%
+\Hypertarget{README.md_symbolDiamond}%
+\# d3.{\bfseries{symbol\+Diamond}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/diamond.js}{\texttt{ Source}}
+
+The rhombus symbol type; intended for filling.
+
+\label{README.md_symbolDiamond2}%
+\Hypertarget{README.md_symbolDiamond2}%
+\# d3.{\bfseries{symbol\+Diamond2}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/diamond.js}{\texttt{ Source}}
+
+The rotated square symbol type; intended for stroking.
+
+\label{README.md_symbolPlus}%
+\Hypertarget{README.md_symbolPlus}%
+\# d3.{\bfseries{symbol\+Plus}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/plus.js}{\texttt{ Source}}
+
+The plus symbol type; intended for stroking.
+
+\label{README.md_symbolSquare}%
+\Hypertarget{README.md_symbolSquare}%
+\# d3.{\bfseries{symbol\+Square}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/square.js}{\texttt{ Source}}
+
+The square symbol type; intended for filling.
+
+\label{README.md_symbolSquare2}%
+\Hypertarget{README.md_symbolSquare2}%
+\# d3.{\bfseries{symbol\+Square2}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/square2.js}{\texttt{ Source}}
+
+The square2 symbol type; intended for stroking.
+
+\label{README.md_symbolStar}%
+\Hypertarget{README.md_symbolStar}%
+\# d3.{\bfseries{symbol\+Star}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/star.js}{\texttt{ Source}}
+
+The pentagonal star (pentagram) symbol type; intended for filling.
+
+\label{README.md_symbolTriangle}%
+\Hypertarget{README.md_symbolTriangle}%
+\# d3.{\bfseries{symbol\+Triangle}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/triangle.js}{\texttt{ Source}}
+
+The up-\/pointing triangle symbol type; intended for filling.
+
+\label{README.md_symbolTriangle2}%
+\Hypertarget{README.md_symbolTriangle2}%
+\# d3.{\bfseries{symbol\+Triangle2}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/triangle2.js}{\texttt{ Source}}
+
+The up-\/pointing triangle symbol type; intended for stroking.
+
+\label{README.md_symbolWye}%
+\Hypertarget{README.md_symbolWye}%
+\# d3.{\bfseries{symbol\+Wye}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/wye.js}{\texttt{ Source}}
+
+The Y-\/shape symbol type; intended for filling.
+
+\label{README.md_symbolTimes}%
+\Hypertarget{README.md_symbolTimes}%
+\# d3.{\bfseries{symbol\+Times}} · \href{https://github.com/d3/d3-shape/blob/main/src/symbol/times.js}{\texttt{ Source}}
+
+The X-\/shape symbol type; intended for stroking.
+
+\label{README.md_pointRadial}%
+\Hypertarget{README.md_pointRadial}%
+\# d3.{\bfseries{point\+Radial}}({\itshape angle}, {\itshape radius}) · \href{https://github.com/d3/d3-shape/blob/main/src/pointRadial.js}{\texttt{ Source}}, \href{https://observablehq.com/@d3/radial-area-chart}{\texttt{ Examples}}
+
+Returns the point \mbox{[}{\itshape x}, {\itshape y}\mbox{]} for the given {\itshape angle} in radians, with 0 at -\/\texorpdfstring{$\ast$}{*}y\texorpdfstring{$\ast$}{*} (12 o’clock) and positive angles proceeding clockwise, and the given {\itshape radius}.\hypertarget{README.md_autotoc_md11268}{}\doxysubsubsection{\texorpdfstring{Custom Symbol Types}{Custom Symbol Types}}\label{README.md_autotoc_md11268}
+Symbol types are typically not used directly, instead being passed to \doxylink{README.md_symbol_type}{\texorpdfstring{$\ast$}{*}symbol\texorpdfstring{$\ast$}{*}.type}. However, you can define your own symbol type implementation should none of the built-\/in types satisfy your needs using the following interface. You can also use this low-\/level interface with a built-\/in symbol type as an alternative to the symbol generator.
+
+\label{README.md_symbolType_draw}%
+\Hypertarget{README.md_symbolType_draw}%
+\# {\itshape symbol\+Type}.{\bfseries{draw}}({\itshape context}, {\itshape size})
+
+Renders this symbol type to the specified {\itshape context} with the specified {\itshape size} in square pixels. The {\itshape context} implements the \href{http://www.w3.org/TR/2dcontext/\#canvaspathmethods}{\texttt{ Canvas\+Path\+Methods}} interface. (Note that this is a subset of the Canvas\+Rendering\+Context2D interface!)\hypertarget{README.md_autotoc_md11269}{}\doxysubsubsection{\texorpdfstring{Stacks}{Stacks}}\label{README.md_autotoc_md11269}
+\href{https://observablehq.com/@d3/stacked-bar-chart}{\texttt{ }}\href{https://observablehq.com/@mbostock/streamgraph-transitions}{\texttt{ }}
+
+Some shape types can be stacked, placing one shape adjacent to another. For example, a bar chart of monthly sales might be broken down into a multi-\/series bar chart by product category, stacking bars vertically. This is equivalent to subdividing a bar chart by an ordinal dimension (such as product category) and applying a color encoding.
+
+Stacked charts can show overall value and per-\/category value simultaneously; however, it is typically harder to compare across categories, as only the bottom layer of the stack is aligned. So, chose the \doxylink{README.md_stack_order}{stack order} carefully, and consider a \doxylink{README.md_stackOffsetWiggle}{streamgraph}. (See also \href{https://observablehq.com/@d3/grouped-bar-chart}{\texttt{ grouped charts}}.)
+
+Like the pie generator, the stack generator does not produce a shape directly. Instead it computes positions which you can then pass to an area generator or use directly, say to position bars.
+
+\label{README.md_stack}%
+\Hypertarget{README.md_stack}%
+\# d3.{\bfseries{stack}}() · \href{https://github.com/d3/d3-shape/blob/main/src/stack.js}{\texttt{ Source}}
+
+Constructs a new stack generator with the default settings.
+
+\label{README.md__stack}%
+\Hypertarget{README.md__stack}%
+\# {\itshape stack}({\itshape data}\mbox{[}, {\itshape arguments…}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/stack.js}{\texttt{ Source}}
+
+Generates a stack for the given array of {\itshape data}, returning an array representing each series. Any additional {\itshape arguments} are arbitrary; they are simply propagated to accessors along with the {\ttfamily this} object.
+
+The series are determined by the \doxylink{README.md_stack_keys}{keys accessor}; each series {\itshape i} in the returned array corresponds to the {\itshape i\texorpdfstring{$\ast$}{*}th key. Each series is an array of points, where each point \texorpdfstring{$\ast$}{*}j} corresponds to the {\itshape j\texorpdfstring{$\ast$}{*}th element in the input \texorpdfstring{$\ast$}{*}data}. Lastly, each point is represented as an array \mbox{[}{\itshape y0}, {\itshape y1}\mbox{]} where {\itshape y0} is the lower value (baseline) and {\itshape y1} is the upper value (topline); the difference between {\itshape y0} and {\itshape y1} corresponds to the computed \doxylink{README.md_stack_value}{value} for this point. The key for each series is available as {\itshape series}.key, and the \doxylink{README.md_stack_order}{index} as {\itshape series}.index. The input data element for each point is available as {\itshape point}.data.
+
+For example, consider the following table representing monthly sales of fruits\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{5}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Month   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Apples   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bananas   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Cherries   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Durians    }\\\cline{1-5}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Month   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Apples   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bananas   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Cherries   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Durians    }\\\cline{1-5}
+\endhead
+1/2015   &3840   &1920   &960   &400    \\\cline{1-5}
+2/2015   &1600   &1440   &960   &400    \\\cline{1-5}
+3/2015   &640   &960   &640   &400    \\\cline{1-5}
+4/2015   &320   &480   &640   &400   \\\cline{1-5}
+\end{longtabu}
+
+
+This might be represented in Java\+Script as an array of objects\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ data\ =\ [}
+\DoxyCodeLine{\ \ \{month:\ new\ Date(2015,\ 0,\ 1),\ apples:\ 3840,\ bananas:\ 1920,\ cherries:\ 960,\ durians:\ 400\},}
+\DoxyCodeLine{\ \ \{month:\ new\ Date(2015,\ 1,\ 1),\ apples:\ 1600,\ bananas:\ 1440,\ cherries:\ 960,\ durians:\ 400\},}
+\DoxyCodeLine{\ \ \{month:\ new\ Date(2015,\ 2,\ 1),\ apples:\ \ 640,\ bananas:\ \ 960,\ cherries:\ 640,\ durians:\ 400\},}
+\DoxyCodeLine{\ \ \{month:\ new\ Date(2015,\ 3,\ 1),\ apples:\ \ 320,\ bananas:\ \ 480,\ cherries:\ 640,\ durians:\ 400\}}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+To produce a stack for this data\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ stack\ =\ d3.stack()}
+\DoxyCodeLine{\ \ \ \ .keys(["{}apples"{},\ "{}bananas"{},\ "{}cherries"{},\ "{}durians"{}])}
+\DoxyCodeLine{\ \ \ \ .order(d3.stackOrderNone)}
+\DoxyCodeLine{\ \ \ \ .offset(d3.stackOffsetNone);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ series\ =\ stack(data);}
+
+\end{DoxyCode}
+
+
+The resulting array has one element per {\itshape series}. Each series has one point per month, and each point has a lower and upper value defining the baseline and topline\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ [[\ \ \ 0,\ 3840],\ [\ \ \ 0,\ 1600],\ [\ \ \ 0,\ \ 640],\ [\ \ \ 0,\ \ 320]],\ //\ apples}
+\DoxyCodeLine{\ \ [[3840,\ 5760],\ [1600,\ 3040],\ [\ 640,\ 1600],\ [\ 320,\ \ 800]],\ //\ bananas}
+\DoxyCodeLine{\ \ [[5760,\ 6720],\ [3040,\ 4000],\ [1600,\ 2240],\ [\ 800,\ 1440]],\ //\ cherries}
+\DoxyCodeLine{\ \ [[6720,\ 7120],\ [4000,\ 4400],\ [2240,\ 2640],\ [1440,\ 1840]],\ //\ durians}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+Each series in then typically passed to an area generator to render an area chart, or used to construct rectangles for a bar chart.
+
+\label{README.md_stack_keys}%
+\Hypertarget{README.md_stack_keys}%
+\# {\itshape stack}.{\bfseries{keys}}(\mbox{[}{\itshape keys}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/stack.js}{\texttt{ Source}}
+
+If {\itshape keys} is specified, sets the keys accessor to the specified function or array and returns this stack generator. If {\itshape keys} is not specified, returns the current keys accessor, which defaults to the empty array. A series (layer) is \doxylink{README.md__stack}{generated} for each key. Keys are typically strings, but they may be arbitrary values. The series’ key is passed to the \doxylink{README.md_stack_value}{value accessor}, along with each data point, to compute the point’s value.
+
+\label{README.md_stack_value}%
+\Hypertarget{README.md_stack_value}%
+\# {\itshape stack}.{\bfseries{value}}(\mbox{[}{\itshape value}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/stack.js}{\texttt{ Source}}
+
+If {\itshape value} is specified, sets the value accessor to the specified function or number and returns this stack generator. If {\itshape value} is not specified, returns the current value accessor, which defaults to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ value(d,\ key)\ \{}
+\DoxyCodeLine{\ \ return\ d[key];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Thus, by default the stack generator assumes that the input data is an array of objects, with each object exposing named properties with numeric values; see \doxylink{README.md__stack}{\texorpdfstring{$\ast$}{*}stack\texorpdfstring{$\ast$}{*}} for an example.
+
+\label{README.md_stack_order}%
+\Hypertarget{README.md_stack_order}%
+\# {\itshape stack}.{\bfseries{order}}(\mbox{[}{\itshape order}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/stack.js}{\texttt{ Source}}
+
+If {\itshape order} is specified, sets the order accessor to the specified function or array and returns this stack generator. If {\itshape order} is not specified, returns the current order accessor, which defaults to \doxylink{README.md_stackOrderNone}{stack\+Order\+None}; this uses the order given by the key accessor. See stack orders for the built-\/in orders.
+
+If {\itshape order} is a function, it is passed the generated series array and must return an array of numeric indexes representing the stack order. For example, the default order is defined as\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ orderNone(series)\ \{}
+\DoxyCodeLine{\ \ let\ n\ =\ series.length;}
+\DoxyCodeLine{\ \ const\ o\ =\ new\ Array(n);}
+\DoxyCodeLine{\ \ while\ (-\/-\/n\ >=\ 0)\ o[n]\ =\ n;}
+\DoxyCodeLine{\ \ return\ o;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The stack order is computed prior to the \doxylink{README.md_stack_offset}{offset}; thus, the lower value for all points is zero at the time the order is computed. The index attribute for each series is also not set until after the order is computed.
+
+\label{README.md_stack_offset}%
+\Hypertarget{README.md_stack_offset}%
+\# {\itshape stack}.{\bfseries{offset}}(\mbox{[}{\itshape offset}\mbox{]}) · \href{https://github.com/d3/d3-shape/blob/main/src/stack.js}{\texttt{ Source}}
+
+If {\itshape offset} is specified, sets the offset accessor to the specified function and returns this stack generator. If {\itshape offset} is not specified, returns the current offset acccesor, which defaults to \doxylink{README.md_stackOffsetNone}{stack\+Offset\+None}; this uses a zero baseline. See stack offsets for the built-\/in offsets.
+
+The offset function is passed the generated series array and the order index array; it is then responsible for updating the lower and upper values in the series array. For example, the default offset is defined as\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ offsetNone(series,\ order)\ \{}
+\DoxyCodeLine{\ \ if\ (!((n\ =\ series.length)\ >\ 1))\ return;}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 1,\ s0,\ s1\ =\ series[order[0]],\ n,\ m\ =\ s1.length;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{\ \ \ \ s0\ =\ s1,\ s1\ =\ series[order[i]];}
+\DoxyCodeLine{\ \ \ \ for\ (let\ j\ =\ 0;\ j\ <\ m;\ ++j)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ s1[j][1]\ +=\ s1[j][0]\ =\ s0[j][1];}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11270}{}\doxysubsubsection{\texorpdfstring{Stack Orders}{Stack Orders}}\label{README.md_autotoc_md11270}
+Stack orders are typically not used directly, but are instead passed to \doxylink{README.md_stack_order}{\texorpdfstring{$\ast$}{*}stack\texorpdfstring{$\ast$}{*}.order}.
+
+\label{README.md_stackOrderAppearance}%
+\Hypertarget{README.md_stackOrderAppearance}%
+\# d3.{\bfseries{stack\+Order\+Appearance}}({\itshape series}) · \href{https://github.com/d3/d3-shape/blob/main/src/order/appearance.js}{\texttt{ Source}}
+
+Returns a series order such that the earliest series (according to the maximum value) is at the bottom.
+
+\label{README.md_stackOrderAscending}%
+\Hypertarget{README.md_stackOrderAscending}%
+\# d3.{\bfseries{stack\+Order\+Ascending}}({\itshape series}) · \href{https://github.com/d3/d3-shape/blob/main/src/order/ascending.js}{\texttt{ Source}}
+
+Returns a series order such that the smallest series (according to the sum of values) is at the bottom.
+
+\label{README.md_stackOrderDescending}%
+\Hypertarget{README.md_stackOrderDescending}%
+\# d3.{\bfseries{stack\+Order\+Descending}}({\itshape series}) · \href{https://github.com/d3/d3-shape/blob/main/src/order/descending.js}{\texttt{ Source}}
+
+Returns a series order such that the largest series (according to the sum of values) is at the bottom.
+
+\label{README.md_stackOrderInsideOut}%
+\Hypertarget{README.md_stackOrderInsideOut}%
+\# d3.{\bfseries{stack\+Order\+Inside\+Out}}({\itshape series}) · \href{https://github.com/d3/d3-shape/blob/main/src/order/insideOut.js}{\texttt{ Source}}
+
+Returns a series order such that the earliest series (according to the maximum value) are on the inside and the later series are on the outside. This order is recommended for streamgraphs in conjunction with the \doxylink{README.md_stackOffsetWiggle}{wiggle offset}. See \href{http://leebyron.com/streamgraph/}{\texttt{ Stacked Graphs—\+Geometry \& Aesthetics}} by Byron \& Wattenberg for more information.
+
+\label{README.md_stackOrderNone}%
+\Hypertarget{README.md_stackOrderNone}%
+\# d3.{\bfseries{stack\+Order\+None}}({\itshape series}) · \href{https://github.com/d3/d3-shape/blob/main/src/order/none.js}{\texttt{ Source}}
+
+Returns the given series order \mbox{[}0, 1, … {\itshape n} -\/ 1\mbox{]} where {\itshape n} is the number of elements in {\itshape series}. Thus, the stack order is given by the \doxylink{README.md_stack_keys}{key accessor}.
+
+\label{README.md_stackOrderReverse}%
+\Hypertarget{README.md_stackOrderReverse}%
+\# d3.{\bfseries{stack\+Order\+Reverse}}({\itshape series}) · \href{https://github.com/d3/d3-shape/blob/main/src/order/reverse.js}{\texttt{ Source}}
+
+Returns the reverse of the given series order \mbox{[}{\itshape n} -\/ 1, {\itshape n} -\/ 2, … 0\mbox{]} where {\itshape n} is the number of elements in {\itshape series}. Thus, the stack order is given by the reverse of the \doxylink{README.md_stack_keys}{key accessor}.\hypertarget{README.md_autotoc_md11271}{}\doxysubsubsection{\texorpdfstring{Stack Offsets}{Stack Offsets}}\label{README.md_autotoc_md11271}
+Stack offsets are typically not used directly, but are instead passed to \doxylink{README.md_stack_offset}{\texorpdfstring{$\ast$}{*}stack\texorpdfstring{$\ast$}{*}.offset}.
+
+\label{README.md_stackOffsetExpand}%
+\Hypertarget{README.md_stackOffsetExpand}%
+\# d3.{\bfseries{stack\+Offset\+Expand}}({\itshape series}, {\itshape order}) · \href{https://github.com/d3/d3-shape/blob/main/src/offset/expand.js}{\texttt{ Source}}
+
+Applies a zero baseline and normalizes the values for each point such that the topline is always one.
+
+\label{README.md_stackOffsetDiverging}%
+\Hypertarget{README.md_stackOffsetDiverging}%
+\# d3.{\bfseries{stack\+Offset\+Diverging}}({\itshape series}, {\itshape order}) · \href{https://github.com/d3/d3-shape/blob/main/src/offset/diverging.js}{\texttt{ Source}}
+
+Positive values are stacked above zero, negative values are \href{https://observablehq.com/@d3/diverging-stacked-bar-chart}{\texttt{ stacked below zero}}, and zero values are stacked at zero.
+
+\label{README.md_stackOffsetNone}%
+\Hypertarget{README.md_stackOffsetNone}%
+\# d3.{\bfseries{stack\+Offset\+None}}({\itshape series}, {\itshape order}) · \href{https://github.com/d3/d3-shape/blob/main/src/offset/none.js}{\texttt{ Source}}
+
+Applies a zero baseline.
+
+\label{README.md_stackOffsetSilhouette}%
+\Hypertarget{README.md_stackOffsetSilhouette}%
+\# d3.{\bfseries{stack\+Offset\+Silhouette}}({\itshape series}, {\itshape order}) · \href{https://github.com/d3/d3-shape/blob/main/src/offset/silhouette.js}{\texttt{ Source}}
+
+Shifts the baseline down such that the center of the streamgraph is always at zero.
+
+\label{README.md_stackOffsetWiggle}%
+\Hypertarget{README.md_stackOffsetWiggle}%
+\# d3.{\bfseries{stack\+Offset\+Wiggle}}({\itshape series}, {\itshape order}) · \href{https://github.com/d3/d3-shape/blob/main/src/offset/wiggle.js}{\texttt{ Source}}
+
+Shifts the baseline so as to minimize the weighted wiggle of layers. This offset is recommended for streamgraphs in conjunction with the \doxylink{README.md_stackOrderInsideOut}{inside-\/out order}. See \href{http://leebyron.com/streamgraph/}{\texttt{ Stacked Graphs—\+Geometry \& Aesthetics}} by Bryon \& Wattenberg for more information. 

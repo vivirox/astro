@@ -1,0 +1,160 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/is-\/element Directory Reference}
+\hypertarget{dir_f18e19ffe7948a8546d495836062d7d0}{}\label{dir_f18e19ffe7948a8546d495836062d7d0}\index{node\_modules/hast-\/util-\/is-\/element Directory Reference@{node\_modules/hast-\/util-\/is-\/element Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-is-element/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-is-element}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-is-element}{\texttt{ }} \href{https://bundlejs.com/?q=hast-util-is-element}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/hast}{\texttt{ hast}} utility to check if a node is a (certain) element.\hypertarget{readme.md_autotoc_md16747}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md16747}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}is\+Element(element\mbox{[}, test\mbox{[}, index, parent\mbox{[}, context\mbox{]}\mbox{]}\mbox{]})\`{}
+\item \`{}convert\+Element(test)\`{}
+\item \`{}\+Check\`{}
+\item \`{}\+Test\`{}
+\item \`{}\+Test\+Function\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16748}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md16748}
+This package is a small utility that checks that a node is a certain element.\hypertarget{readme.md_autotoc_md16749}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md16749}
+Use this small utility if you find yourself repeating code for checking what elements nodes are.
+
+A similar package, \href{https://github.com/syntax-tree/unist-util-is}{\texttt{ {\ttfamily unist-\/util-\/is}}}, works on any unist node.
+
+For more advanced tests, \href{https://github.com/syntax-tree/hast-util-select}{\texttt{ {\ttfamily hast-\/util-\/select}}} can be used to match against CSS selectors.\hypertarget{readme.md_autotoc_md16750}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md16750}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/is-\/element}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{isElement\}\ from\ 'https://esm.sh/hast-\/util-\/is-\/element@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{isElement\}\ from\ 'https://esm.sh/hast-\/util-\/is-\/element@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16751}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md16751}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{isElement\}\ from\ 'hast-\/util-\/is-\/element'}
+\DoxyCodeLine{}
+\DoxyCodeLine{isElement(\{type:\ 'text',\ value:\ 'foo'\})\ //\ =>\ false}
+\DoxyCodeLine{isElement(\{type:\ 'element',\ tagName:\ 'a',\ properties:\ \{\},\ children:\ []\})\ //\ =>\ true}
+\DoxyCodeLine{isElement(\{type:\ 'element',\ tagName:\ 'a',\ properties:\ \{\},\ children:\ []\},\ 'a')\ //\ =>\ true}
+\DoxyCodeLine{isElement(\{type:\ 'element',\ tagName:\ 'a',\ properties:\ \{\},\ children:\ []\},\ 'b')\ //\ =>\ false}
+\DoxyCodeLine{isElement(\{type:\ 'element',\ tagName:\ 'a',\ properties:\ \{\},\ children:\ []\},\ ['a',\ 'area'])\ //\ =>\ true}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16752}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md16752}
+This package exports the identifiers \`{}convert\+Element\`{} and \`{}is\+Element\`{}. There is no default export.\hypertarget{readme.md_autotoc_md16753}{}\doxysubsubsection{\texorpdfstring{{\ttfamily is\+Element(element\mbox{[}, test\mbox{[}, index, parent\mbox{[}, context\mbox{]}\mbox{]}\mbox{]})}}{{\ttfamily is\+Element(element\mbox{[}, test\mbox{[}, index, parent\mbox{[}, context\mbox{]}\mbox{]}\mbox{]})}}}\label{readme.md_autotoc_md16753}
+Check if {\ttfamily element} is an {\ttfamily Element} and whether it passes the given test.\hypertarget{readme.md_autotoc_md16754}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md16754}
+
+\begin{DoxyItemize}
+\item {\ttfamily element} ({\ttfamily unknown}, optional) — thing to check, typically \href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Node}}}
+\item {\ttfamily test} (\`{}\+Test\`{}, optional) — check for a specific element
+\item {\ttfamily index} ({\ttfamily number}, optional) — position of {\ttfamily element} in its parent
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/hast\#parent}{\texttt{ {\ttfamily Parent}}}, optional) — parent of {\ttfamily element}
+\item {\ttfamily context} ({\ttfamily unknown}, optional) — context object ({\ttfamily this}) to call {\ttfamily test} with
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16755}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md16755}
+Whether {\ttfamily element} is an {\ttfamily Element} and passes a test ({\ttfamily boolean}).\hypertarget{readme.md_autotoc_md16756}{}\doxysubsubsubsubsubsection{\texorpdfstring{Throws}{Throws}}\label{readme.md_autotoc_md16756}
+When an incorrect {\ttfamily test}, {\ttfamily index}, or {\ttfamily parent} is given. There is no error thrown when {\ttfamily element} is not a node or not an element.\hypertarget{readme.md_autotoc_md16757}{}\doxysubsubsection{\texorpdfstring{{\ttfamily convert\+Element(test)}}{{\ttfamily convert\+Element(test)}}}\label{readme.md_autotoc_md16757}
+Generate a check from a test.
+
+Useful if you’re going to test many nodes, for example when creating a utility where something else passes a compatible test.
+
+The created function is a bit faster because it expects valid input only\+: a {\ttfamily element}, {\ttfamily index}, and {\ttfamily parent}.\hypertarget{readme.md_autotoc_md16758}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md16758}
+
+\begin{DoxyItemize}
+\item {\ttfamily test} (\`{}\+Test\`{}, optional) — a test for a specific element
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16759}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md16759}
+A check (\`{}\+Check\`{}).\hypertarget{readme.md_autotoc_md16760}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Check}}{{\ttfamily Check}}}\label{readme.md_autotoc_md16760}
+Check that an arbitrary value is an element (Type\+Script type).\hypertarget{readme.md_autotoc_md16761}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md16761}
+
+\begin{DoxyItemize}
+\item {\ttfamily this} ({\ttfamily unknown}, optional) — context object ({\ttfamily this}) to call {\ttfamily test} with
+\item {\ttfamily element} ({\ttfamily unknown}) — anything (typically an element)
+\item {\ttfamily index} ({\ttfamily number}, optional) — position of {\ttfamily element} in its parent
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/hast\#parent}{\texttt{ {\ttfamily Parent}}}, optional) — parent of {\ttfamily element}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16762}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md16762}
+Whether this is an element and passes a test ({\ttfamily boolean}).\hypertarget{readme.md_autotoc_md16763}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Test}}{{\ttfamily Test}}}\label{readme.md_autotoc_md16763}
+Check for an arbitrary element (Type\+Script type).
+
+
+\begin{DoxyItemize}
+\item when {\ttfamily string}, checks that the element has that tag name
+\item when {\ttfamily function}, see \`{}\+Test\+Function\`{}
+\item when {\ttfamily Array}, checks if one of the subtests pass
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16764}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md16764}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Test\ =}
+\DoxyCodeLine{\ \ |\ Array<TestFunction\ |\ string>}
+\DoxyCodeLine{\ \ |\ TestFunction}
+\DoxyCodeLine{\ \ |\ string}
+\DoxyCodeLine{\ \ |\ null}
+\DoxyCodeLine{\ \ |\ undefined}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16765}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Test\+Function}}{{\ttfamily Test\+Function}}}\label{readme.md_autotoc_md16765}
+Check if an element passes a test (Type\+Script type).\hypertarget{readme.md_autotoc_md16766}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md16766}
+
+\begin{DoxyItemize}
+\item {\ttfamily element} (\href{https://github.com/syntax-tree/hast\#element}{\texttt{ {\ttfamily Element}}}) — an element
+\item {\ttfamily index} ({\ttfamily number} or {\ttfamily undefined}) — position of {\ttfamily element} in its parent
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/hast\#parent}{\texttt{ {\ttfamily Parent}}} or {\ttfamily undefined}) — parent of {\ttfamily element}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16767}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md16767}
+Whether this element passes the test ({\ttfamily boolean}, optional).\hypertarget{readme.md_autotoc_md16768}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md16768}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Check\`{}, \`{}\+Test\`{}, and \`{}\+Test\+Function\`{}.\hypertarget{readme.md_autotoc_md16769}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md16769}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily hast-\/util-\/is-\/element@\texorpdfstring{$^\wedge$}{\string^}3}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md16770}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md16770}
+{\ttfamily hast-\/util-\/is-\/element} does not change the syntax tree so there are no openings for \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attacks.\hypertarget{readme.md_autotoc_md16771}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md16771}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/hast-util-has-property}{\texttt{ {\ttfamily hast-\/util-\/has-\/property}}} — check if a node has a property
+\item \href{https://github.com/rehypejs/rehype-minify/tree/main/packages/hast-util-is-body-ok-link}{\texttt{ {\ttfamily hast-\/util-\/is-\/body-\/ok-\/link}}} — check if a node is “\+Body OK” link element
+\item \href{https://github.com/rehypejs/rehype-minify/tree/main/packages/hast-util-is-conditional-comment}{\texttt{ {\ttfamily hast-\/util-\/is-\/conditional-\/comment}}} — check if a node is a conditional comment
+\item \href{https://github.com/rehypejs/rehype-minify/tree/main/packages/hast-util-is-css-link}{\texttt{ {\ttfamily hast-\/util-\/is-\/css-\/link}}} — check if a node is a CSS link element
+\item \href{https://github.com/rehypejs/rehype-minify/tree/main/packages/hast-util-is-css-style}{\texttt{ {\ttfamily hast-\/util-\/is-\/css-\/style}}} — check if a node is a CSS style element
+\item \href{https://github.com/syntax-tree/hast-util-embedded}{\texttt{ {\ttfamily hast-\/util-\/embedded}}} — check if a node is an embedded element
+\item \href{https://github.com/syntax-tree/hast-util-heading}{\texttt{ {\ttfamily hast-\/util-\/heading}}} — check if a node is a heading element
+\item \href{https://github.com/syntax-tree/hast-util-interactive}{\texttt{ {\ttfamily hast-\/util-\/interactive}}} — check if a node is interactive
+\item \href{https://github.com/rehypejs/rehype-minify/tree/main/packages/hast-util-is-javascript}{\texttt{ {\ttfamily hast-\/util-\/is-\/javascript}}} — check if a node is a Java\+Script script element
+\item \href{https://github.com/syntax-tree/hast-util-labelable}{\texttt{ {\ttfamily hast-\/util-\/labelable}}} — check whether a node is labelable
+\item \href{https://github.com/syntax-tree/hast-util-phrasing}{\texttt{ {\ttfamily hast-\/util-\/phrasing}}} — check if a node is phrasing content
+\item \href{https://github.com/syntax-tree/hast-util-script-supporting}{\texttt{ {\ttfamily hast-\/util-\/script-\/supporting}}} — check if a node is a script-\/supporting element
+\item \href{https://github.com/syntax-tree/hast-util-sectioning}{\texttt{ {\ttfamily hast-\/util-\/sectioning}}} — check if a node is a sectioning element
+\item \href{https://github.com/syntax-tree/hast-util-transparent}{\texttt{ {\ttfamily hast-\/util-\/transparent}}} — check if a node is a transparent element
+\item \href{https://github.com/syntax-tree/hast-util-whitespace}{\texttt{ {\ttfamily hast-\/util-\/whitespace}}} — check if a node is inter-\/element whitespace
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16772}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md16772}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md16773}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md16773}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

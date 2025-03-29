@@ -1,0 +1,800 @@
+\doxysection{node\+\_\+modules/@octokit/auth-\/app Directory Reference}
+\hypertarget{dir_1c9c5cf5b86c96e64b337ce5aa824c02}{}\label{dir_1c9c5cf5b86c96e64b337ce5aa824c02}\index{node\_modules/"@octokit/auth-\/app Directory Reference@{node\_modules/"@octokit/auth-\/app Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Git\+Hub App authentication for Java\+Script \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/auth-app}{\texttt{ }} \href{https://github.com/octokit/auth-app.js/actions?query=workflow\%3ATest}{\texttt{ }}
+
+{\ttfamily @octokit/auth-\/app} implements authentication for Git\+Hub Apps using \href{https://jwt.io/}{\texttt{ JSON Web Token}}, installation access tokens, and OAuth user-\/to-\/server access tokens.
+
+
+\begin{DoxyItemize}
+\item Standalone usage
+\begin{DoxyItemize}
+\item Authenticate as Git\+Hub App (JSON Web Token)
+\item Authenticate as OAuth App (client ID/client secret)
+\item Authenticate as installation
+\item Authenticate as user
+\end{DoxyItemize}
+\item Usage with Octokit
+\item \`{}create\+App\+Auth(options)\`{} or \`{}new Octokit(\{ auth \})\`{}
+\item \`{}auth(options)\`{} or \`{}octokit.auth(options)\`{}
+\begin{DoxyItemize}
+\item JSON Web Token (JWT) Authentication
+\item OAuth App authentication
+\item Installation authentication
+\item User authentication (web flow)
+\item User authentication (device flow)
+\end{DoxyItemize}
+\item Authentication object
+\begin{DoxyItemize}
+\item JSON Web Token (JWT) authentication
+\item OAuth App authentication
+\item Installation access token authentication
+\item Git\+Hub APP user authentication token with expiring disabled
+\item Git\+Hub APP user authentication token with expiring enabled
+\end{DoxyItemize}
+\item \`{}auth.hook(request, route, parameters)\`{} or \`{}auth.hook(request, options)\`{}
+\item \doxylink{readme.md_types}{Types}
+\item Implementation details
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5116}{}\doxysubsection{\texorpdfstring{Standalone usage}{Standalone usage}}\label{README.md_autotoc_md5116}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers }&
+
+⚠️ {\ttfamily @octokit/auth-\/app} is not meant for usage in the browser. A private key and client secret must not be exposed to users.
+
+The private keys provided by Git\+Hub are in {\ttfamily PKCS\#1} format, but the Web\+Crypto API only supports {\ttfamily PKCS\#8}. You need to convert it first\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{openssl\ pkcs8\ -\/topk8\ -\/inform\ PEM\ -\/outform\ PEM\ -\/nocrypt\ -\/in\ private-\/key.pem\ -\/out\ private-\/key-\/pkcs8.key}
+
+\end{DoxyCode}
+
+
+The OAuth APIs to create user-\/to-\/server tokens cannot be used because they do not have CORS enabled.
+
+If you know what you are doing, load {\ttfamily @octokit/auth-\/app} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ createAppAuth\ \}\ from\ "{}https://esm.sh/@octokit/auth-\/app"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node }&
+
+Install with {\ttfamily npm install @octokit/auth-\/app}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createAppAuth\ \}\ from\ "{}@octokit/auth-\/app"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+\begin{DoxyImportant}{Important}
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json} by setting {\ttfamily "{}module\+Resolution"{}\+: "{}node16"{}, "{}module"{}\+: "{}node16"{}}. ~\newline
+~\newline
+ See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.~\newline
+ See this \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ helpful guide on transitioning to ESM}} from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}}
+\end{DoxyImportant}
+\hypertarget{README.md_autotoc_md5117}{}\doxysubsubsection{\texorpdfstring{Authenticate as Git\+Hub App (JSON Web Token)}{Authenticate as Git\+Hub App (JSON Web Token)}}\label{README.md_autotoc_md5117}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ auth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ clientSecret:\ "{}1234567890abcdef12341234567890abcdef1234"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Retrieve\ JSON\ Web\ Token\ (JWT)\ to\ authenticate\ as\ app}
+\DoxyCodeLine{const\ appAuthentication\ =\ await\ auth(\{\ type:\ "{}app"{}\ \});}
+
+\end{DoxyCode}
+
+
+resolves with
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}:\ "{}app"{},}
+\DoxyCodeLine{\ \ "{}token"{}:\ "{}jsonwebtoken123"{},}
+\DoxyCodeLine{\ \ "{}appId"{}:\ 123,}
+\DoxyCodeLine{\ \ "{}expiresAt"{}:\ "{}2018-\/07-\/07T00:09:30.000Z"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5118}{}\doxysubsubsection{\texorpdfstring{Authenticate as OAuth App (client ID/client secret)}{Authenticate as OAuth App (client ID/client secret)}}\label{README.md_autotoc_md5118}
+The \href{https://docs.github.com/en/rest/reference/apps\#oauth-applications-api}{\texttt{ OAuth Application APIs}} require the app to authenticate using client\+ID/client as Basic Authentication
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ auth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ clientSecret:\ "{}1234567890abcdef12341234567890abcdef1234"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ appAuthentication\ =\ await\ auth(\{}
+\DoxyCodeLine{\ \ type:\ "{}oauth-\/app"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+resolves with
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}:\ "{}oauth-\/app"{},}
+\DoxyCodeLine{\ \ "{}clientId"{}:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ "{}clientSecret"{}:\ "{}1234567890abcdef1234567890abcdef12345678"{},}
+\DoxyCodeLine{\ \ "{}headers"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}authorization"{}:\ "{}basic\ bHYxLjEyMzQ1Njc4OTBhYmNkZWY6MTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3OA=="{}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5119}{}\doxysubsubsection{\texorpdfstring{Authenticate as installation}{Authenticate as installation}}\label{README.md_autotoc_md5119}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ auth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ clientSecret:\ "{}1234567890abcdef12341234567890abcdef1234"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Retrieve\ installation\ access\ token}
+\DoxyCodeLine{const\ installationAuthentication\ =\ await\ auth(\{}
+\DoxyCodeLine{\ \ type:\ "{}installation"{},}
+\DoxyCodeLine{\ \ installationId:\ 123,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+resolves with
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}:\ "{}token"{},}
+\DoxyCodeLine{\ \ "{}tokenType"{}:\ "{}installation"{},}
+\DoxyCodeLine{\ \ "{}token"{}:\ "{}token123"{},}
+\DoxyCodeLine{\ \ "{}installationId"{}:\ 123,}
+\DoxyCodeLine{\ \ "{}createdAt"{}:\ "{}2018-\/07-\/07T00:00:00.000Z"{},}
+\DoxyCodeLine{\ \ "{}expiresAt"{}:\ "{}2018-\/07-\/07T00:59:00.000Z"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5120}{}\doxysubsubsection{\texorpdfstring{Authenticate as user}{Authenticate as user}}\label{README.md_autotoc_md5120}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ auth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ clientSecret:\ "{}1234567890abcdef12341234567890abcdef1234"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Retrieve\ an\ oauth-\/access\ token}
+\DoxyCodeLine{const\ userAuthentication\ =\ await\ auth(\{\ type:\ "{}oauth-\/user"{},\ code:\ "{}123456"{}\ \});}
+
+\end{DoxyCode}
+
+
+Resolves with
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}:\ "{}token"{},}
+\DoxyCodeLine{\ \ "{}tokenType"{}:\ "{}oauth"{},}
+\DoxyCodeLine{\ \ "{}token"{}:\ "{}token123"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5121}{}\doxysubsection{\texorpdfstring{Usage with Octokit}{Usage with Octokit}}\label{README.md_autotoc_md5121}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ 
+
+Browsers
+
+}&
+
+⚠️ {\ttfamily @octokit/auth-\/app} is not meant for usage in the browser. A private key and client secret must not be exposed to users.
+
+The private keys provided by Git\+Hub are in {\ttfamily PKCS\#1} format, but the Web\+Crypto API only supports {\ttfamily PKCS\#8}. You need to convert it first\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{openssl\ pkcs8\ -\/topk8\ -\/inform\ PEM\ -\/outform\ PEM\ -\/nocrypt\ -\/in\ private-\/key.pem\ -\/out\ private-\/key-\/pkcs8.key}
+
+\end{DoxyCode}
+
+
+The OAuth APIs to create user-\/to-\/server tokens cannot be used because they do not have CORS enabled.
+
+If you know what you are doing, load {\ttfamily @octokit/auth-\/app} and {\ttfamily @octokit/core} (or a compatible module) directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ createAppAuth\ \}\ from\ "{}https://esm.sh/@octokit/auth-\/app"{};}
+\DoxyCodeLine{\ \ import\ \{\ Octokit\ \}\ from\ "{}https://esm.sh/@octokit/core"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ 
+
+Node
+
+}&
+
+Install with {\ttfamily npm install @octokit/core @octokit/auth-\/app}. Optionally replace {\ttfamily @octokit/core} with a compatible module
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit\ \}\ from\ "{}@octokit/core"{};}
+\DoxyCodeLine{import\ \{\ createAppAuth,\ createOAuthUserAuth\ \}\ from\ "{}@octokit/auth-\/app"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ appOctokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ authStrategy:\ createAppAuth,}
+\DoxyCodeLine{\ \ auth:\ \{}
+\DoxyCodeLine{\ \ \ \ appId:\ 1,}
+\DoxyCodeLine{\ \ \ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ \ \ clientId:\ "{}1234567890abcdef1234"{},}
+\DoxyCodeLine{\ \ \ \ clientSecret:\ "{}1234567890abcdef1234567890abcdef12345678"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Send\ requests\ as\ GitHub\ App}
+\DoxyCodeLine{const\ \{\ slug\ \}\ =\ await\ appOctokit.request("{}GET\ /app"{});}
+\DoxyCodeLine{console.log("{}authenticated\ as\ \%s"{},\ slug);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Send\ requests\ as\ OAuth\ App}
+\DoxyCodeLine{await\ appOctokit.request("{}POST\ /application/\{client\_id\}/token"{},\ \{}
+\DoxyCodeLine{\ \ client\_id:\ "{}1234567890abcdef1234"{},}
+\DoxyCodeLine{\ \ access\_token:\ "{}existingtoken123"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{console.log("{}token\ is\ valid"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ a\ new\ octokit\ instance\ that\ is\ authenticated\ as\ the\ user}
+\DoxyCodeLine{const\ userOctokit\ =\ await\ appOctokit.auth(\{}
+\DoxyCodeLine{\ \ type:\ "{}oauth-\/user"{},}
+\DoxyCodeLine{\ \ code:\ "{}code123"{},}
+\DoxyCodeLine{\ \ factory:\ (options)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ return\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ \ \ \ \ authStrategy:\ createOAuthUserAuth,}
+\DoxyCodeLine{\ \ \ \ \ \ auth:\ options,}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Exchanges\ the\ code\ for\ the\ user\ access\ token\ authentication\ on\ first\ request}
+\DoxyCodeLine{//\ and\ caches\ the\ authentication\ for\ successive\ requests}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ data:\ \{\ login\ \},}
+\DoxyCodeLine{\}\ =\ await\ userOctokit.request("{}GET\ /user"{});}
+\DoxyCodeLine{console.log("{}Hello,\ \%s!"{},\ login);}
+
+\end{DoxyCode}
+
+
+In order to create an {\ttfamily octokit} instance that is authenticated as an installation, with automated installation token refresh, set {\ttfamily installation\+Id} as {\ttfamily auth} option
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ installationOctokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ authStrategy:\ createAppAuth,}
+\DoxyCodeLine{\ \ auth:\ \{}
+\DoxyCodeLine{\ \ \ \ appId:\ 1,}
+\DoxyCodeLine{\ \ \ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ \ \ installationId:\ 123,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ transparently\ creates\ an\ installation\ access\ token\ the\ first\ time\ it\ is\ needed}
+\DoxyCodeLine{//\ and\ refreshes\ it\ when\ it\ expires}
+\DoxyCodeLine{await\ installationOctokit.request("{}POST\ /repos/\{owner\}/\{repo\}/issues"{},\ \{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ title:\ "{}title"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5122}{}\doxysubsection{\texorpdfstring{{\ttfamily create\+App\+Auth(options)} or {\ttfamily new Octokit(\{ auth \})}}{{\ttfamily create\+App\+Auth(options)} or {\ttfamily new Octokit(\{ auth \})}}}\label{README.md_autotoc_md5122}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily app\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily number}  }&{\bfseries{Required}}. Find {\bfseries{App ID}} on the app’s about page in settings.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily private\+Key}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required}}. Content of the {\ttfamily \texorpdfstring{$\ast$}{*}.pem} file you downloaded from the app’s about page. You can generate a new private key if needed. If your private key contains escaped newlines ({\ttfamily \textbackslash{}\textbackslash{}n}), they will be automatically replaced with actual newlines.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily installation\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily number}  }&Default {\ttfamily installation\+Id} to be used when calling {\ttfamily auth(\{ type\+: "{}installation"{} \})}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The client ID of the Git\+Hub App.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Secret}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&A client secret for the Git\+Hub App.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily request}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily function}  }&
+
+Automatically set to {\ttfamily octokit.\+request} when using with an {\ttfamily Octokit} constructor.
+
+For standalone usage, you can pass in your own \href{https://github.com/octokit/request.js}{\texttt{ {\ttfamily @octokit/request}}} instance. For usage with enterprise, set {\ttfamily base\+Url} to the hostname + {\ttfamily /api/v3}. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ request\ \}\ from\ "{}@octokit/request"{};}
+\DoxyCodeLine{createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ request:\ request.defaults(\{}
+\DoxyCodeLine{\ \ \ \ baseUrl:\ "{}https://ghe.my-\/company.com/api/v3"{},}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily cache}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily object}  }&Installation tokens expire after an hour. By default, {\ttfamily @octokit/auth-\/app} is caching up to 15000 tokens simultaneously using \href{https://github.com/isaacs/node-lru-cache}{\texttt{ lru-\/cache}}. You can pass your own cache implementation by passing {\ttfamily options.\+cache.\{get,set\}} to the constructor. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ CACHE\ =\ \{\};}
+\DoxyCodeLine{createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ cache:\ \{}
+\DoxyCodeLine{\ \ \ \ async\ get(key)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ CACHE[key];}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ async\ set(key,\ value)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ CACHE[key]\ =\ value;}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily log}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily object}  }&You can pass in your preferred logging tool by passing {\ttfamily option.\+log} to the constructor. If you would like to make the log level configurable using an environment variable or external option, we recommend the console-\/log-\/level package. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ consoleLogLevel\ from\ "{}console-\/log-\/level"{};}
+\DoxyCodeLine{createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ log:\ consoleLogLevel(\{\ level:\ "{}info"{}\ \}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5123}{}\doxysubsection{\texorpdfstring{{\ttfamily auth(options)} or {\ttfamily octokit.\+auth(options)}}{{\ttfamily auth(options)} or {\ttfamily octokit.\+auth(options)}}}\label{README.md_autotoc_md5123}
+The async {\ttfamily auth()} method accepts different options depending on your use case\hypertarget{README.md_autotoc_md5124}{}\doxysubsubsection{\texorpdfstring{JSON Web Token (JWT) Authentication}{JSON Web Token (JWT) Authentication}}\label{README.md_autotoc_md5124}
+Authenticate as the Git\+Hub app to list installations, repositories, and create installation access tokens.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required}}. Must be either {\ttfamily "{}app"{}}.    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5125}{}\doxysubsubsection{\texorpdfstring{OAuth App authentication}{OAuth App authentication}}\label{README.md_autotoc_md5125}
+Create, reset, refresh, delete OAuth user-\/to-\/server tokens
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required}}. Must be either {\ttfamily "{}oauth-\/app"{}}.    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5126}{}\doxysubsubsection{\texorpdfstring{Installation authentication}{Installation authentication}}\label{README.md_autotoc_md5126}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required}}. Must be {\ttfamily "{}installation"{}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily installation\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily number}  }&{\bfseries{Required unless a default {\ttfamily installation\+Id} was passed to {\ttfamily create\+App\+Auth()}}}. ID of installation to retrieve authentication for.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily repository\+Ids}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily array of numbers}  }&The {\ttfamily id} of the repositories that the installation token can access. Also known as a {\ttfamily database\+ID} when querying the repository object in Git\+Hub\textquotesingle{}s Graph\+QL API. This option is {\bfseries{(recommended)}} over {\ttfamily repository\+Names} when needing to limit the scope of the access token, due to {\ttfamily repository\+Names} having the possibility of changing. Additionally, you should only include either {\ttfamily repository\+Ids} or {\ttfamily repository\+Names}, but not both.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily repository\+Names}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily array of strings}  }&The {\ttfamily name} of the repositories that the installation token can access. As mentioned in the {\ttfamily repository\+Ids} description, you should only include either {\ttfamily repository\+Ids} or {\ttfamily repository\+Names}, but not both.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily permissions}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily object}  }&The permissions granted to the access token. The permissions object includes the permission names and their access type. For a complete list of permissions and allowable values, see \href{https://docs.github.com/en/developers/apps/creating-a-github-app-using-url-parameters\#github-app-permissions}{\texttt{ Git\+Hub App permissions}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily factory}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily function}  }&
+
+The {\ttfamily auth(\{type\+: "{}installation"{}, installation\+Id, factory \})} call with resolve with whatever the factory function returns. The {\ttfamily factory} function will be called with all the strategy option that {\ttfamily auth} was created with, plus the additional options passed to {\ttfamily auth}, besides {\ttfamily type} and {\ttfamily factory}.
+
+For example, you can create a new {\ttfamily auth} instance for an installation which shares the internal state (especially the access token cache) with the calling {\ttfamily auth} instance\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ appAuth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ installationAuth123\ =\ await\ appAuth(\{}
+\DoxyCodeLine{\ \ type:\ "{}installation"{},}
+\DoxyCodeLine{\ \ installationId:\ 123,}
+\DoxyCodeLine{\ \ factory:\ createAppAuth,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily refresh}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily boolean}  }&
+
+Installation tokens expire after one hour. By default, tokens are cached and returned from cache until expired. To bypass and update a cached token for the given {\ttfamily installation\+Id}, set {\ttfamily refresh} to {\ttfamily true}.
+
+Defaults to {\ttfamily false}.
+
+\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5127}{}\doxysubsubsection{\texorpdfstring{User authentication (web flow)}{User authentication (web flow)}}\label{README.md_autotoc_md5127}
+Exchange code received from the web flow redirect described in \href{https://docs.github.com/en/developers/apps/authorizing-oauth-apps\#web-application-flow}{\texttt{ step 2 of Git\+Hub\textquotesingle{}s OAuth web flow}}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required}}. Must be {\ttfamily "{}oauth-\/user"{}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily factory}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily function}  }&
+
+The {\ttfamily auth(\{type\+: "{}oauth-\/user"{}, factory \})} call with resolve with whatever the factory function returns. The {\ttfamily factory} function will be called with all the strategy option that {\ttfamily auth} was created with, plus the additional options passed to {\ttfamily auth}, besides {\ttfamily type} and {\ttfamily factory}.
+
+For example, you can create a new {\ttfamily auth} instance for an installation which shares the internal state (especially the access token cache) with the calling {\ttfamily auth} instance\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createAppAuth,\ createOAuthUserAuth\ \}\ from\ "{}@octokit/auth-\/oauth-\/app"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ appAuth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ clientSecret:\ "{}1234567890abcdef1234567890abcdef12345678"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ userAuth\ =\ await\ appAuth(\{}
+\DoxyCodeLine{\ \ type:\ "{}oauth-\/user"{},}
+\DoxyCodeLine{\ \ code,}
+\DoxyCodeLine{\ \ factory:\ createOAuthUserAuth,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ will\ create\ token\ upon\ first\ call,\ then\ cache\ authentication\ for\ successive\ calls,}
+\DoxyCodeLine{//\ until\ token\ needs\ to\ be\ refreshed\ (if\ enabled\ for\ the\ GitHub\ App)}
+\DoxyCodeLine{const\ authentication\ =\ await\ userAuth();}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily code}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The authorization {\ttfamily code} which was passed as query parameter to the callback URL from the \href{https://docs.github.com/en/developers/apps/authorizing-oauth-apps\#2-users-are-redirected-back-to-your-site-by-github}{\texttt{ OAuth web application flow}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily redirect\+Url}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The URL in your application where users are sent after authorization. See \href{https://docs.github.com/en/developers/apps/authorizing-oauth-apps\#redirect-urls}{\texttt{ redirect urls}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily state}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The unguessable random string you provided in Step 1 of the \href{https://docs.github.com/en/developers/apps/authorizing-oauth-apps\#2-users-are-redirected-back-to-your-site-by-github}{\texttt{ OAuth web application flow}}.    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5128}{}\doxysubsubsection{\texorpdfstring{User authentication (device flow)}{User authentication (device flow)}}\label{README.md_autotoc_md5128}
+Create a token using \href{https://docs.github.com/en/developers/apps/authorizing-oauth-apps\#device-flow}{\texttt{ Git\+Hub\textquotesingle{}s device flow}}.
+
+The device flow does not require a client secret, but it is required as strategy option for {\ttfamily @octokit/auth-\/app}, even for the device flow. If you want to implement the device flow without requiring a client secret, use \href{https://github.com/octokit/auth-oauth-device.js\#readme}{\texttt{ {\ttfamily @octokit/auth-\/oauth-\/device}}}.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required}}. Must be {\ttfamily "{}oauth-\/user"{}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily on\+Verification}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily function}  }&
+
+{\bfseries{Required}}. A function that is called once the device and user codes were retrieved.
+
+The {\ttfamily on\+Verification()} callback can be used to pause until the user completes step 2, which might result in a better user experience.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ auth\ =\ auth(\{}
+\DoxyCodeLine{\ \ type:\ "{}oauth-\/user"{},}
+\DoxyCodeLine{\ \ onVerification(verification)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log("{}Open\ \%s"{},\ verification.verification\_uri);}
+\DoxyCodeLine{\ \ \ \ console.log("{}Enter\ code:\ \%s"{},\ verification.user\_code);}
+\DoxyCodeLine{\ \ \ \ await\ prompt("{}press\ enter\ when\ you\ are\ ready\ to\ continue"{});}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily factory}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily function}  }&
+
+The {\ttfamily auth(\{type\+: "{}oauth-\/user"{}, factory \})} call with resolve with whatever the factory function returns. The {\ttfamily factory} function will be called with all the strategy option that {\ttfamily auth} was created with, plus the additional options passed to {\ttfamily auth}, besides {\ttfamily type} and {\ttfamily factory}.
+
+For example, you can create a new {\ttfamily auth} instance for an installation which shares the internal state (especially the access token cache) with the calling {\ttfamily auth} instance\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createAppAuth,\ createOAuthUserAuth\ \}\ from\ "{}@octokit/auth-\/oauth-\/app"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ appAuth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ 1,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ clientSecret:\ "{}1234567890abcdef1234567890abcdef12345678"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ userAuth\ =\ await\ appAuth(\{}
+\DoxyCodeLine{\ \ type:\ "{}oauth-\/user"{},}
+\DoxyCodeLine{\ \ code,}
+\DoxyCodeLine{\ \ factory:\ createOAuthUserAuth,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ will\ create\ token\ upon\ first\ call,\ then\ cache\ authentication\ for\ successive\ calls,}
+\DoxyCodeLine{//\ until\ token\ needs\ to\ be\ refreshed\ (if\ enabled\ for\ the\ GitHub\ App)}
+\DoxyCodeLine{const\ authentication\ =\ await\ userAuth();}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5129}{}\doxysubsection{\texorpdfstring{Authentication object}{Authentication object}}\label{README.md_autotoc_md5129}
+Depending on on the {\ttfamily auth()} call, the resulting authentication object can be one of
+
+
+\begin{DoxyEnumerate}
+\item JSON Web Token (JWT) authentication
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item OAuth App authentication
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Installation access token authentication
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Git\+Hub APP user authentication token with expiring disabled
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Git\+Hub APP user authentication token with expiring enabled
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md5130}{}\doxysubsubsection{\texorpdfstring{JSON Web Token (JWT) authentication}{JSON Web Token (JWT) authentication}}\label{README.md_autotoc_md5130}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}app"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The JSON Web Token (JWT) to authenticate as the app.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily app\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily number}  }&Git\+Hub App database ID.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily expires\+At}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&Timestamp in UTC format, e.\+g. {\ttfamily "{}2018-\/07-\/07\+T00\+:09\+:30.\+000\+Z"{}}. A Date object can be created using {\ttfamily new Date(authentication.\+expires\+At)}.    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5131}{}\doxysubsubsection{\texorpdfstring{OAuth App authentication}{OAuth App authentication}}\label{README.md_autotoc_md5131}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}oauth-\/app"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}github-\/app"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The client ID as passed to the constructor.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Secret}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The client secret as passed to the constructor.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily headers}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily object}  }&{\ttfamily \{ authorization \}}.    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5132}{}\doxysubsubsection{\texorpdfstring{Installation access token authentication}{Installation access token authentication}}\label{README.md_autotoc_md5132}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}token"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The installation access token.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}installation"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily installation\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily number}  }&Installation database ID.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily created\+At}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&Timestamp in UTC format, e.\+g. {\ttfamily "{}2018-\/07-\/07\+T00\+:00\+:00.\+000\+Z"{}}. A Date object can be created using {\ttfamily new Date(authentication.\+expires\+At)}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily expires\+At}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&Timestamp in UTC format, e.\+g. {\ttfamily "{}2018-\/07-\/07\+T00\+:59\+:00.\+000\+Z"{}}. A Date object can be created using {\ttfamily new Date(authentication.\+expires\+At)}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily repository\+Ids}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily array of numbers}  }&Only present if {\ttfamily repository\+Ids} option passed to {\ttfamily auth(options)}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily repository\+Names}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily array of strings}  }&Only present if {\ttfamily repository\+Names} option passed to {\ttfamily auth(options)}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily permissions}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily object}  }&An object where keys are the permission name and the value is either {\ttfamily "{}read"{}} or {\ttfamily "{}write"{}}. See the list of all \href{https://docs.github.com/en/rest/reference/permissions-required-for-github-apps}{\texttt{ Git\+Hub App Permissions}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily single\+File\+Name}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&If the single file permission is enabled, the {\ttfamily single\+File\+Name} property is set to the path of the accessible file.    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5133}{}\doxysubsubsection{\texorpdfstring{Git\+Hub APP user authentication token with expiring disabled}{Git\+Hub APP user authentication token with expiring disabled}}\label{README.md_autotoc_md5133}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}token"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}oauth"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}github-\/app"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The app\textquotesingle{}s {\ttfamily Client ID}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Secret}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&One of the app\textquotesingle{}s client secrets   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The user access token    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5134}{}\doxysubsubsection{\texorpdfstring{Git\+Hub APP user authentication token with expiring enabled}{Git\+Hub APP user authentication token with expiring enabled}}\label{README.md_autotoc_md5134}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}token"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}oauth"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}github-\/app"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The app\textquotesingle{}s {\ttfamily Client ID}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Secret}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&One of the app\textquotesingle{}s client secrets   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The user access token   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily refresh\+Token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The refresh token   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily expires\+At}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&Date timestamp in \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString}{\texttt{ ISO 8601}} standard. Example\+: {\ttfamily 2022-\/01-\/01T08\+:00\+:0.\+000Z}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily refresh\+Token\+Expires\+At}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&Date timestamp in \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString}{\texttt{ ISO 8601}} standard. Example\+: {\ttfamily 2021-\/07-\/01T00\+:00\+:0.\+000Z}    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5135}{}\doxysubsection{\texorpdfstring{{\ttfamily auth.\+hook(request, route, parameters)} or {\ttfamily auth.\+hook(request, options)}}{{\ttfamily auth.\+hook(request, route, parameters)} or {\ttfamily auth.\+hook(request, options)}}}\label{README.md_autotoc_md5135}
+{\ttfamily auth.\+hook()} hooks directly into the request life cycle. It amends the request to authenticate either as app or as installation based on the request URL. Although the {\ttfamily "{}machine-\/man"{}} preview has graduated to the official API, \href{https://developer.github.com/changes/2020-08-20-graduate-machine-man-and-sailor-v-previews/}{\texttt{ https\+://developer.\+github.\+com/changes/2020-\/08-\/20-\/graduate-\/machine-\/man-\/and-\/sailor-\/v-\/previews/}}, it is still required in versions of Git\+Hub Enterprise up to 2.\+21 so it automatically sets the {\ttfamily "{}machine-\/man"{}} preview for all endpoints requiring JWT authentication.
+
+The {\ttfamily request} option is an instance of \href{https://github.com/octokit/request.js\#readme}{\texttt{ {\ttfamily @octokit/request}}}. The arguments are the same as for the \href{https://github.com/octokit/request.js\#request}{\texttt{ {\ttfamily request()} method}}.
+
+{\ttfamily auth.\+hook()} can be called directly to send an authenticated request
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data:\ installations\ \}\ =\ await\ auth.hook(}
+\DoxyCodeLine{\ \ request,}
+\DoxyCodeLine{\ \ "{}GET\ /app/installations"{},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+Or it can be passed as option to \href{https://github.com/octokit/request.js\#request}{\texttt{ {\ttfamily request()}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ requestWithAuth\ =\ request.defaults(\{}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ hook:\ auth.hook,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data:\ installations\ \}\ =\ await\ requestWithAuth("{}GET\ /app/installations"{});}
+
+\end{DoxyCode}
+
+
+Note that {\ttfamily auth.\+hook()} does not create and set an OAuth authentication token. But you can use \href{https://github.com/octokit/auth-oauth-app.js\#readme}{\texttt{ {\ttfamily @octokit/auth-\/oauth-\/app}}} for that functionality. And if you don\textquotesingle{}t plan on sending requests to routes that require authentication with {\ttfamily client\+\_\+id} and {\ttfamily client\+\_\+secret}, you can just retrieve the token and then create a new instance of \href{https://github.com/octokit/request.js\#request}{\texttt{ {\ttfamily request()}}} with the authentication header set\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ token\ \}\ =\ await\ auth(\{}
+\DoxyCodeLine{\ \ type:\ "{}oauth-\/user"{},}
+\DoxyCodeLine{\ \ code:\ "{}123456"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ requestWithAuth\ =\ request.defaults(\{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authentication:\ \`{}token\ \$\{token\}`,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5136}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{README.md_autotoc_md5136}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ //\ strategy\ options}
+\DoxyCodeLine{\ \ StrategyOptions,}
+\DoxyCodeLine{\ \ //\ auth\ options}
+\DoxyCodeLine{\ \ AuthOptions,}
+\DoxyCodeLine{\ \ AppAuthOptions,}
+\DoxyCodeLine{\ \ OAuthAppAuthOptions,}
+\DoxyCodeLine{\ \ InstallationAuthOptions,}
+\DoxyCodeLine{\ \ OAuthWebFlowAuthOptions,}
+\DoxyCodeLine{\ \ OAuthDeviceFlowAuthOptions,}
+\DoxyCodeLine{\ \ //\ authentication\ objects}
+\DoxyCodeLine{\ \ Authentication,}
+\DoxyCodeLine{\ \ AppAuthentication,}
+\DoxyCodeLine{\ \ OAuthAppAuthentication,}
+\DoxyCodeLine{\ \ InstallationAccessTokenAuthentication,}
+\DoxyCodeLine{\ \ GitHubAppUserAuthentication,}
+\DoxyCodeLine{\ \ GitHubAppUserAuthenticationWithExpiration,}
+\DoxyCodeLine{\}\ from\ "{}@octokit/auth-\/app"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5137}{}\doxysubsection{\texorpdfstring{Implementation details}{Implementation details}}\label{README.md_autotoc_md5137}
+When creating a JSON Web Token, it sets the "{}issued at time"{} (iat) to 30s in the past as we have seen people running situations where the Git\+Hub API claimed the iat would be in future. It turned out the clocks on the different machine were not in sync.
+
+Installation access tokens are valid for 60 minutes. This library invalidates them after 59 minutes to account for request delays.
+
+All OAuth features are implemented internally using \href{https://github.com/octokit/auth-oauth-app.js/\#readme}{\texttt{ @octokit/auth-\/oauth-\/app}}.\hypertarget{README.md_autotoc_md5138}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md5138}
+\mbox{[}MIT\mbox{]}(LICENSE) 

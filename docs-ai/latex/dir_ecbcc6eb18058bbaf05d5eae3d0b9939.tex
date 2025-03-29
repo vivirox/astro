@@ -1,0 +1,153 @@
+\doxysection{node\+\_\+modules/web-\/worker Directory Reference}
+\hypertarget{dir_ecbcc6eb18058bbaf05d5eae3d0b9939}{}\label{dir_ecbcc6eb18058bbaf05d5eae3d0b9939}\index{node\_modules/web-\/worker Directory Reference@{node\_modules/web-\/worker Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\doxysubsection*{web-\/worker \href{https://www.npmjs.org/package/web-worker}{\texttt{ }} }
+
+
+
+Native cross-\/platform Web Workers. Works in published npm modules. 
+
+
+
+ 
+
+{\bfseries{In Node}}, it\textquotesingle{}s a web-\/compatible Worker implementation atop Node\textquotesingle{}s \href{https://nodejs.org/api/worker_threads.html}{\texttt{ worker\+\_\+threads}}.
+
+{\bfseries{In the browser}} (and when bundled for the browser), it\textquotesingle{}s simply an alias of {\ttfamily Worker}.\hypertarget{README.md_autotoc_md35498}{}\doxysubsubsubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md35498}
+{\itshape Here\textquotesingle{}s how this is different from worker\+\_\+threads\+:}
+
+
+\begin{DoxyItemize}
+\item makes Worker code compatible across browser and Node
+\item supports Module Workers (`\{type\+:\textquotesingle{}module'\}{\ttfamily ) natively in Node 12.\+8+}
+\item {\ttfamily uses DOM-\/style events (}Event.\+data{\ttfamily ,}Event.\+type{\ttfamily , etc)}
+\item {\ttfamily supports event handler properties (}worker.\+onmessage=..{\ttfamily ) -\/}Worker()\`{} accepts a module URL, Blob URL or Data URL
+\item emulates browser-\/style \href{https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope}{\texttt{ Worker\+Global\+Scope}} within the worker
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md35499}{}\doxysubsubsubsection{\texorpdfstring{Usage Example}{Usage Example}}\label{README.md_autotoc_md35499}
+In its simplest form\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Worker\ from\ 'web-\/worker';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ worker\ =\ new\ Worker('data:,postMessage("{}hello"{})');}
+\DoxyCodeLine{worker.onmessage\ =\ e\ =>\ console.log(e.data);\ \ //\ "{}hello"{}}
+
+\end{DoxyCode}
+
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{main.\+js}}}&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{worker.\+js}} }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{main.\+js}}}&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{worker.\+js}} }\\\cline{1-2}
+\endhead
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Worker\ from\ 'web-\/worker';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ url\ =\ new\ URL('./worker.js',\ import.meta.url);}
+\DoxyCodeLine{const\ worker\ =\ new\ Worker(url);}
+\DoxyCodeLine{}
+\DoxyCodeLine{worker.addEventListener('message',\ e\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(e.data)\ \ //\ "{}hiya!"{}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{worker.postMessage('hello');}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{addEventListener('message',\ e\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (e.data\ ===\ 'hello')\ \{}
+\DoxyCodeLine{\ \ \ \ postMessage('hiya!');}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+👉 Notice how `new URL('./worker.js\textquotesingle{}, import.\+meta.\+url){\ttfamily is used above to load the worker relative to the current module instead of the application base URL. Without this, Worker URLs are relative to a document\textquotesingle{}s URL, which in Node.\+js is interpreted to be}process.\+cwd()\`{}.
+
+\begin{quote}
+{\itshape Support for this pattern in build tools and test frameworks is still limited. We are \href{https://github.com/developit/web-worker/issues/4}{\texttt{ working on growing this}}.} \end{quote}
+\hypertarget{README.md_autotoc_md35500}{}\doxysubsubsubsection{\texorpdfstring{Module Workers}{Module Workers}}\label{README.md_autotoc_md35500}
+Module Workers are supported in Node 12.\+8+ using this plugin, leveraging Node\textquotesingle{}s native ES Modules support. In the browser, they can be used natively in Chrome 80+, or in all browsers via \href{https://github.com/googlechromelabs/worker-plugin}{\texttt{ worker-\/plugin}} or \href{https://github.com/surma/rollup-plugin-off-main-thread}{\texttt{ rollup-\/plugin-\/off-\/main-\/thread}}. As with classic workers, there is no difference in usage between Node and the browser\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{main.\+mjs}}}&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{worker.\+mjs}} }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{main.\+mjs}}}&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{worker.\+mjs}} }\\\cline{1-2}
+\endhead
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Worker\ from\ 'web-\/worker';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ worker\ =\ new\ Worker(}
+\DoxyCodeLine{\ \ new\ URL('./worker.mjs',\ import.meta.url),}
+\DoxyCodeLine{\ \ \{\ type:\ 'module'\ \}}
+\DoxyCodeLine{);}
+\DoxyCodeLine{worker.addEventListener('message',\ e\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(e.data)\ \ //\ "{}200\ OK"{}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{worker.postMessage('https://httpstat.us/200');}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fetch\ from\ 'isomorphic-\/fetch';}
+\DoxyCodeLine{}
+\DoxyCodeLine{addEventListener('message',\ async\ e\ =>\ \{}
+\DoxyCodeLine{\ \ const\ url\ =\ e.data;}
+\DoxyCodeLine{\ \ const\ res\ =\ await\ fetch(url)}
+\DoxyCodeLine{\ \ const\ text\ =\ await\ res.text();}
+\DoxyCodeLine{\ \ postMessage(text);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md35501}{}\doxysubsubsubsection{\texorpdfstring{Data URLs}{Data URLs}}\label{README.md_autotoc_md35501}
+Instantiating Worker using a Data URL is supported in both module and classic workers\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Worker\ from\ 'web-\/worker';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ worker\ =\ new\ Worker(`data:application/javascript,postMessage(42)`);}
+\DoxyCodeLine{worker.addEventListener('message',\ e\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(e.data)\ \ //\ 42}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35502}{}\doxysubsubsubsection{\texorpdfstring{Special Thanks}{Special Thanks}}\label{README.md_autotoc_md35502}
+This module aims to provide a simple and forgettable piece of infrastructure, and as such it needed an obvious and descriptive name. \href{https://github.com/calvinmetcalf}{\texttt{ @calvinmetcalf}}, who you may recognize as the author of \href{https://github.com/calvinmetcalf/lie}{\texttt{ Lie}} and other fine modules, gratiously offered up the name from his {\ttfamily web-\/worker} package. Thanks Calvin! 

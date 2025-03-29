@@ -1,0 +1,173 @@
+\doxysection{src/lib/crypto Directory Reference}
+\hypertarget{dir_634339d83e36334e3d1481562425cbe1}{}\label{dir_634339d83e36334e3d1481562425cbe1}\index{src/lib/crypto Directory Reference@{src/lib/crypto Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This module provides a comprehensive encryption and key rotation system for HIPAA-\/compliant data protection. It includes utilities for encrypting sensitive data, managing encryption keys, and automatically rotating keys based on expiration policies.\hypertarget{README.md_autotoc_md37471}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md37471}
+
+\begin{DoxyItemize}
+\item {\bfseries{End-\/to-\/end encryption}} for sensitive data
+\item {\bfseries{Automatic key rotation}} based on configurable expiration policies
+\item {\bfseries{Key versioning}} to track key history and facilitate key rotation
+\item {\bfseries{Secure key storage}} with support for external key management systems
+\item {\bfseries{Scheduled key rotation}} to ensure keys are rotated regularly
+\item {\bfseries{HIPAA-\/compliant}} encryption and key management
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37472}{}\doxysubsection{\texorpdfstring{Components}{Components}}\label{README.md_autotoc_md37472}
+\hypertarget{README.md_autotoc_md37473}{}\doxysubsubsection{\texorpdfstring{Encryption}{Encryption}}\label{README.md_autotoc_md37473}
+The {\ttfamily Encryption} class provides methods for encrypting and decrypting data using AES encryption. It includes support for key versioning to facilitate key rotation.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Encryption\ \}\ from\ './lib/crypto'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Encrypt\ data}
+\DoxyCodeLine{const\ encrypted\ =\ Encryption.encrypt('sensitive\ data',\ 'encryption-\/key',\ 1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Decrypt\ data}
+\DoxyCodeLine{const\ decrypted\ =\ Encryption.decrypt(encrypted,\ 'encryption-\/key')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37474}{}\doxysubsubsection{\texorpdfstring{Key Rotation Manager}{Key Rotation Manager}}\label{README.md_autotoc_md37474}
+The {\ttfamily Key\+Rotation\+Manager} class manages encryption keys and their rotation. It tracks key versions, expiration dates, and active status.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ KeyRotationManager\ \}\ from\ './lib/crypto'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ key\ rotation\ manager\ with\ 90-\/day\ rotation\ interval}
+\DoxyCodeLine{const\ keyManager\ =\ new\ KeyRotationManager(90)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Add\ a\ key}
+\DoxyCodeLine{const\ metadata\ =\ keyManager.addKey('key-\/id',\ 'encryption-\/key')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Rotate\ a\ key}
+\DoxyCodeLine{const\ newMetadata\ =\ keyManager.rotateKey('key-\/id',\ 'new-\/encryption-\/key')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Check\ for\ keys\ that\ need\ rotation}
+\DoxyCodeLine{const\ keysToRotate\ =\ keyManager.checkForRotationNeeded()}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37475}{}\doxysubsubsection{\texorpdfstring{Key Storage}{Key Storage}}\label{README.md_autotoc_md37475}
+The {\ttfamily Key\+Storage} class provides secure storage for encryption keys. It supports in-\/memory storage for development and can be extended to use secure key vaults in production.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ KeyStorage\ \}\ from\ './lib/crypto'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ key\ storage\ instance}
+\DoxyCodeLine{const\ keyStorage\ =\ new\ KeyStorage(\{\ namespace:\ 'app'\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Generate\ a\ new\ key}
+\DoxyCodeLine{const\ \{\ keyId,\ keyData\ \}\ =\ await\ keyStorage.generateKey('patient-\/data')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Retrieve\ a\ key}
+\DoxyCodeLine{const\ key\ =\ await\ keyStorage.getKey(keyId)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Rotate\ a\ key}
+\DoxyCodeLine{const\ rotatedKey\ =\ await\ keyStorage.rotateKey(keyId)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ List\ keys\ by\ purpose}
+\DoxyCodeLine{const\ keys\ =\ await\ keyStorage.listKeys('patient-\/data')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37476}{}\doxysubsubsection{\texorpdfstring{Scheduled Key Rotation}{Scheduled Key Rotation}}\label{README.md_autotoc_md37476}
+The {\ttfamily Scheduled\+Key\+Rotation} class provides automatic key rotation based on expiration dates. It can be configured to check for expired keys at regular intervals.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ ScheduledKeyRotation\ \}\ from\ './lib/crypto'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ scheduled\ rotation\ service}
+\DoxyCodeLine{const\ scheduler\ =\ new\ ScheduledKeyRotation(\{}
+\DoxyCodeLine{\ \ namespace:\ 'app',}
+\DoxyCodeLine{\ \ checkIntervalMs:\ 60\ *\ 60\ *\ 1000,\ //\ Check\ every\ hour}
+\DoxyCodeLine{\ \ onRotation:\ (oldKeyId,\ newKeyId)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(`Key\ rotated:\ \$\{oldKeyId\}\ -\/>\ \$\{newKeyId\}`)}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Start\ the\ scheduler}
+\DoxyCodeLine{scheduler.start()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Stop\ the\ scheduler}
+\DoxyCodeLine{scheduler.stop()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Force\ rotate\ a\ specific\ key}
+\DoxyCodeLine{const\ newKeyId\ =\ await\ scheduler.forceRotateKey('key-\/id')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37477}{}\doxysubsubsection{\texorpdfstring{Complete Crypto System}{Complete Crypto System}}\label{README.md_autotoc_md37477}
+The {\ttfamily create\+Crypto\+System} function creates a complete crypto system with encryption, key storage, and rotation.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createCryptoSystem\ \}\ from\ './lib/crypto'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ crypto\ system}
+\DoxyCodeLine{const\ crypto\ =\ createCryptoSystem(\{}
+\DoxyCodeLine{\ \ namespace:\ 'app',}
+\DoxyCodeLine{\ \ keyRotationDays:\ 90,}
+\DoxyCodeLine{\ \ enableScheduledRotation:\ true,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Encrypt\ data\ with\ automatic\ key\ management}
+\DoxyCodeLine{const\ encrypted\ =\ await\ crypto.encrypt('sensitive\ data',\ 'patient-\/data')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Decrypt\ data}
+\DoxyCodeLine{const\ decrypted\ =\ await\ crypto.decrypt(encrypted)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Rotate\ expired\ keys}
+\DoxyCodeLine{const\ rotatedKeys\ =\ await\ crypto.rotateExpiredKeys()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Stop\ scheduled\ rotation}
+\DoxyCodeLine{crypto.stopScheduledRotation()}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37478}{}\doxysubsection{\texorpdfstring{Scheduled Key Rotation Script}{Scheduled Key Rotation Script}}\label{README.md_autotoc_md37478}
+A script is provided to run key rotation as a scheduled task. This can be used with cron or similar schedulers to ensure keys are rotated regularly.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Run\ automatic\ rotation\ based\ on\ expiration}
+\DoxyCodeLine{node\ rotateKeys.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Force\ rotation\ of\ all\ keys}
+\DoxyCodeLine{node\ rotateKeys.js\ -\/-\/force}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Only\ rotate\ keys\ with\ a\ specific\ purpose}
+\DoxyCodeLine{node\ rotateKeys.js\ -\/-\/purpose=patient-\/data}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37479}{}\doxysubsection{\texorpdfstring{HIPAA Compliance}{HIPAA Compliance}}\label{README.md_autotoc_md37479}
+This encryption and key rotation system is designed to meet HIPAA compliance requirements for protecting sensitive patient data\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Data Encryption}}\+: All sensitive data is encrypted using AES-\/256 encryption.
+\item {\bfseries{Key Management}}\+: Encryption keys are securely managed and rotated regularly.
+\item {\bfseries{Access Control}}\+: Keys are stored securely and access is controlled.
+\item {\bfseries{Audit Logging}}\+: Key rotation events are logged for audit purposes.
+\item {\bfseries{Key Rotation}}\+: Keys are automatically rotated based on expiration policies.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37480}{}\doxysubsection{\texorpdfstring{Best Practices}{Best Practices}}\label{README.md_autotoc_md37480}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Regular Key Rotation}}\+: Configure key rotation to occur at least every 90 days.
+\item {\bfseries{Secure Key Storage}}\+: In production, use a secure key vault (e.\+g., AWS KMS, Azure Key Vault) for key storage.
+\item {\bfseries{Backup Keys}}\+: Ensure encryption keys are backed up securely.
+\item {\bfseries{Monitor Key Rotation}}\+: Set up alerts for key rotation failures.
+\item {\bfseries{Test Recovery}}\+: Regularly test the ability to decrypt data with rotated keys.
+\item {\bfseries{Document Key Management}}\+: Maintain documentation of key management procedures.
+\item {\bfseries{Audit Key Access}}\+: Regularly audit access to encryption keys.
+\item {\bfseries{Limit Key Access}}\+: Restrict access to encryption keys to authorized personnel only.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37481}{}\doxysubsection{\texorpdfstring{Implementation Details}{Implementation Details}}\label{README.md_autotoc_md37481}
+\hypertarget{README.md_autotoc_md37482}{}\doxysubsubsection{\texorpdfstring{Key Versioning}{Key Versioning}}\label{README.md_autotoc_md37482}
+Each encryption key has a version number that is incremented when the key is rotated. This allows for tracking key history and facilitates key rotation.\hypertarget{README.md_autotoc_md37483}{}\doxysubsubsection{\texorpdfstring{Key Expiration}{Key Expiration}}\label{README.md_autotoc_md37483}
+Keys have an expiration date based on the configured rotation interval. When a key expires, it should be rotated to a new key.\hypertarget{README.md_autotoc_md37484}{}\doxysubsubsection{\texorpdfstring{Key Rotation Process}{Key Rotation Process}}\label{README.md_autotoc_md37484}
+
+\begin{DoxyEnumerate}
+\item A new key is generated with an incremented version number.
+\item The old key is marked as inactive.
+\item Data encrypted with the old key is re-\/encrypted with the new key as needed.
+\item The old key is securely stored for a retention period to allow for decryption of data that hasn\textquotesingle{}t been re-\/encrypted yet.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37485}{}\doxysubsubsection{\texorpdfstring{Secure Key Storage}{Secure Key Storage}}\label{README.md_autotoc_md37485}
+In production, encryption keys should be stored in a secure key vault such as AWS KMS, Azure Key Vault, or Hashi\+Corp Vault. The {\ttfamily Key\+Storage} class can be extended to use these services. 

@@ -1,0 +1,45 @@
+\doxysection{node\+\_\+modules/p-\/try Directory Reference}
+\hypertarget{dir_c8691579697951af815806e34790f80b}{}\label{dir_c8691579697951af815806e34790f80b}\index{node\_modules/p-\/try Directory Reference@{node\_modules/p-\/try Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Start a promise chain \end{quote}
+
+
+\href{http://cryto.net/~joepie91/blog/2016/05/11/what-is-promise-try-and-why-does-it-matter/}{\texttt{ How is it useful?}}\hypertarget{readme.md_autotoc_md25456}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md25456}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ p-\/try}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25457}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md25457}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ pTry\ =\ require('p-\/try');}
+\DoxyCodeLine{}
+\DoxyCodeLine{(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ const\ value\ =\ await\ pTry(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ return\ synchronousFunctionThatMightThrow();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(value);}
+\DoxyCodeLine{\ \ \ \ \}\ catch\ (error)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.error(error);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\})();}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25458}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md25458}
+\hypertarget{readme.md_autotoc_md25459}{}\doxysubsubsection{\texorpdfstring{p\+Try(fn, ...\+arguments)}{p\+Try(fn, ...\+arguments)}}\label{readme.md_autotoc_md25459}
+Returns a {\ttfamily Promise} resolved with the value of calling {\ttfamily fn(...\+arguments)}. If the function throws an error, the returned {\ttfamily Promise} will be rejected with that error.
+
+Support for passing arguments on to the {\ttfamily fn} is provided in order to be able to avoid creating unnecessary closures. You probably don\textquotesingle{}t need this optimization unless you\textquotesingle{}re pushing a {\itshape lot} of functions.\hypertarget{readme.md_autotoc_md25460}{}\doxysubsubsubsection{\texorpdfstring{fn}{fn}}\label{readme.md_autotoc_md25460}
+The function to run to start the promise chain.\hypertarget{readme.md_autotoc_md25461}{}\doxysubsubsubsection{\texorpdfstring{arguments}{arguments}}\label{readme.md_autotoc_md25461}
+Arguments to pass to {\ttfamily fn}.\hypertarget{readme.md_autotoc_md25462}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md25462}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/p-finally}{\texttt{ p-\/finally}} -\/ {\ttfamily Promise\#finally()} ponyfill -\/ Invoked when the promise is settled regardless of outcome
+\item \href{https://github.com/sindresorhus/promise-fun}{\texttt{ More…}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md25463}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md25463}
+MIT © \href{https://sindresorhus.com}{\texttt{ Sindre Sorhus}} 

@@ -1,0 +1,1204 @@
+\doxysection{node\+\_\+modules/lint-\/staged/node\+\_\+modules/commander Directory Reference}
+\hypertarget{dir_89ca38988dfc4fb2a22e1dca9580b66b}{}\label{dir_89ca38988dfc4fb2a22e1dca9580b66b}\index{node\_modules/lint-\/staged/node\_modules/commander Directory Reference@{node\_modules/lint-\/staged/node\_modules/commander Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/tj/commander.js/actions?query=workflow\%3A\%22build\%22}{\texttt{ }} \href{https://www.npmjs.org/package/commander}{\texttt{ }} \href{https://npmcharts.com/compare/commander?minimal=true}{\texttt{ }} \href{https://packagephobia.now.sh/result?p=commander}{\texttt{ }}
+
+The complete solution for \href{http://nodejs.org}{\texttt{ node.\+js}} command-\/line interfaces.
+
+Read this in other languages\+: English \texorpdfstring{$\vert$}{|} 简体中文
+
+
+\begin{DoxyItemize}
+\item Commander.js
+\begin{DoxyItemize}
+\item \doxylink{README.md_installation}{Installation}
+\item Quick Start
+\item Declaring \+\_\+program\+\_\+ variable
+\item \doxylink{README.md_options}{Options}
+\begin{DoxyItemize}
+\item Common option types, boolean and value
+\item Default option value
+\item Other option types, negatable boolean and boolean\texorpdfstring{$\vert$}{|}value
+\item Required option
+\item Variadic option
+\item Version option
+\item More configuration
+\item Custom option processing
+\end{DoxyItemize}
+\item Commands
+\begin{DoxyItemize}
+\item Command-\/arguments
+\begin{DoxyItemize}
+\item More configuration
+\item Custom argument processing
+\end{DoxyItemize}
+\item Action handler
+\item Stand-\/alone executable (sub)commands
+\item Life cycle hooks
+\end{DoxyItemize}
+\item Automated help
+\begin{DoxyItemize}
+\item Custom help
+\item Display help after errors
+\item Display help from code
+\item .name
+\item \doxylink{readme.md_usage}{.usage}
+\item .description and .summary
+\item .help\+Option(flags, description)
+\item .help\+Command()
+\item More configuration
+\end{DoxyItemize}
+\item Custom event listeners
+\item Bits and pieces
+\begin{DoxyItemize}
+\item .parse() and .parse\+Async()
+\item Parsing Configuration
+\item Legacy options as properties
+\item Type\+Script
+\item create\+Command()
+\item Node options such as \`{}-\/-\/harmony\`{}
+\item Debugging stand-\/alone executable subcommands
+\item npm run-\/script
+\item Display error
+\item Override exit and output handling
+\item Additional documentation
+\end{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_support}{Support}
+\begin{DoxyItemize}
+\item Commander for enterprise
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+For information about terms used in this document see\+: terminology\hypertarget{Readme.md_autotoc_md21613}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{Readme.md_autotoc_md21613}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ commander}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21614}{}\doxysubsection{\texorpdfstring{Quick Start}{Quick Start}}\label{Readme.md_autotoc_md21614}
+You write code to describe your command line interface. Commander looks after parsing the arguments into options and command-\/arguments, displays usage errors for problems, and implements a help system.
+
+Commander is strict and displays an error for unrecognised options. The two most used option types are a boolean option, and an option which takes its value from the following argument.
+
+Example file\+: \href{./examples/split.js}{\texttt{ split.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ program\ \}\ =\ require('commander');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/-\/first')}
+\DoxyCodeLine{\ \ .option('-\/s,\ -\/-\/separator\ <char>')}
+\DoxyCodeLine{\ \ .argument('<string>');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ program.opts();}
+\DoxyCodeLine{const\ limit\ =\ options.first\ ?\ 1\ :\ undefined;}
+\DoxyCodeLine{console.log(program.args[0].split(options.separator,\ limit));}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ split.js\ -\/s\ /\ -\/-\/fits\ a/b/c}
+\DoxyCodeLine{error:\ unknown\ option\ '-\/-\/fits'}
+\DoxyCodeLine{(Did\ you\ mean\ -\/-\/first?)}
+\DoxyCodeLine{\$\ node\ split.js\ -\/s\ /\ -\/-\/first\ a/b/c}
+\DoxyCodeLine{[\ 'a'\ ]}
+
+\end{DoxyCode}
+
+
+Here is a more complete program using a subcommand and with descriptions for the help. In a multi-\/command program, you have an action handler for each command (or stand-\/alone executables for the commands).
+
+Example file\+: \href{./examples/string-util.js}{\texttt{ string-\/util.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ Command\ \}\ =\ require('commander');}
+\DoxyCodeLine{const\ program\ =\ new\ Command();}
+\DoxyCodeLine{}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .name('string-\/util')}
+\DoxyCodeLine{\ \ .description('CLI\ to\ some\ JavaScript\ string\ utilities')}
+\DoxyCodeLine{\ \ .version('0.8.0');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.command('split')}
+\DoxyCodeLine{\ \ .description('Split\ a\ string\ into\ substrings\ and\ display\ as\ an\ array')}
+\DoxyCodeLine{\ \ .argument('<string>',\ 'string\ to\ split')}
+\DoxyCodeLine{\ \ .option('-\/-\/first',\ 'display\ just\ the\ first\ substring')}
+\DoxyCodeLine{\ \ .option('-\/s,\ -\/-\/separator\ <char>',\ 'separator\ character',\ ',')}
+\DoxyCodeLine{\ \ .action((str,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ limit\ =\ options.first\ ?\ 1\ :\ undefined;}
+\DoxyCodeLine{\ \ \ \ console.log(str.split(options.separator,\ limit));}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse();}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ string-\/util.js\ help\ split}
+\DoxyCodeLine{Usage:\ string-\/util\ split\ [options]\ <string>}
+\DoxyCodeLine{}
+\DoxyCodeLine{Split\ a\ string\ into\ substrings\ and\ display\ as\ an\ array.}
+\DoxyCodeLine{}
+\DoxyCodeLine{Arguments:}
+\DoxyCodeLine{\ \ string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ string\ to\ split}
+\DoxyCodeLine{}
+\DoxyCodeLine{Options:}
+\DoxyCodeLine{\ \ -\/-\/first\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ display\ just\ the\ first\ substring}
+\DoxyCodeLine{\ \ -\/s,\ -\/-\/separator\ <char>\ \ separator\ character\ (default:\ "{},"{})}
+\DoxyCodeLine{\ \ -\/h,\ -\/-\/help\ \ \ \ \ \ \ \ \ \ \ \ \ \ display\ help\ for\ command}
+\DoxyCodeLine{}
+\DoxyCodeLine{\$\ node\ string-\/util.js\ split\ -\/-\/separator=/\ a/b/c}
+\DoxyCodeLine{[\ 'a',\ 'b',\ 'c'\ ]}
+
+\end{DoxyCode}
+
+
+More samples can be found in the \href{https://github.com/tj/commander.js/tree/master/examples}{\texttt{ examples}} directory.\hypertarget{Readme.md_autotoc_md21615}{}\doxysubsection{\texorpdfstring{Declaring {\itshape program} variable}{Declaring {\itshape program} variable}}\label{Readme.md_autotoc_md21615}
+Commander exports a global object which is convenient for quick programs. This is used in the examples in this README for brevity.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ CommonJS\ (.cjs)}
+\DoxyCodeLine{const\ \{\ program\ \}\ =\ require('commander');}
+
+\end{DoxyCode}
+
+
+For larger programs which may use commander in multiple ways, including unit testing, it is better to create a local Command object to use.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ CommonJS\ (.cjs)}
+\DoxyCodeLine{const\ \{\ Command\ \}\ =\ require('commander');}
+\DoxyCodeLine{const\ program\ =\ new\ Command();}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ECMAScript\ (.mjs)}
+\DoxyCodeLine{import\ \{\ Command\ \}\ from\ 'commander';}
+\DoxyCodeLine{const\ program\ =\ new\ Command();}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ TypeScript\ (.ts)}
+\DoxyCodeLine{import\ \{\ Command\ \}\ from\ 'commander';}
+\DoxyCodeLine{const\ program\ =\ new\ Command();}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21616}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{Readme.md_autotoc_md21616}
+Options are defined with the {\ttfamily .option()} method, also serving as documentation for the options. Each option can have a short flag (single character) and a long name, separated by a comma or space or vertical bar (\textquotesingle{}\texorpdfstring{$\vert$}{|}\textquotesingle{}). To allow a wider range of short-\/ish flags than just single characters, you may also have two long options. Examples\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/p,\ -\/-\/port\ <number>',\ 'server\ port\ number')}
+\DoxyCodeLine{\ \ .option('-\/-\/trace',\ 'add\ extra\ debugging\ output')}
+\DoxyCodeLine{\ \ .option('-\/-\/ws,\ -\/-\/workspace\ <name>',\ 'use\ a\ custom\ workspace')}
+
+\end{DoxyCode}
+
+
+The parsed options can be accessed by calling {\ttfamily .opts()} on a {\ttfamily Command} object, and are passed to the action handler.
+
+Multi-\/word options such as "{}-\/-\/template-\/engine"{} are camel-\/cased, becoming {\ttfamily program.\+opts().template\+Engine} etc.
+
+An option and its option-\/argument can be separated by a space, or combined into the same argument. The option-\/argument can follow the short option directly or follow an {\ttfamily =} for a long option.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{serve\ -\/p\ 80}
+\DoxyCodeLine{serve\ -\/p80}
+\DoxyCodeLine{serve\ -\/-\/port\ 80}
+\DoxyCodeLine{serve\ -\/-\/port=80}
+
+\end{DoxyCode}
+
+
+You can use {\ttfamily -\/-\/} to indicate the end of the options, and any remaining arguments will be used without being interpreted.
+
+By default, options on the command line are not positional, and can be specified before or after other arguments.
+
+There are additional related routines for when {\ttfamily .opts()} is not enough\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily .opts\+With\+Globals()} returns merged local and global option values
+\item {\ttfamily .get\+Option\+Value()} and {\ttfamily .set\+Option\+Value()} work with a single option value
+\item {\ttfamily .get\+Option\+Value\+Source()} and {\ttfamily .set\+Option\+Value\+With\+Source()} include where the option value came from
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md21617}{}\doxysubsubsection{\texorpdfstring{Common option types, boolean and value}{Common option types, boolean and value}}\label{Readme.md_autotoc_md21617}
+The two most used option types are a boolean option, and an option which takes its value from the following argument (declared with angle brackets like {\ttfamily -\/-\/expect \texorpdfstring{$<$}{<}value\texorpdfstring{$>$}{>}}). Both are {\ttfamily undefined} unless specified on command line.
+
+Example file\+: \href{./examples/options-common.js}{\texttt{ options-\/common.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/d,\ -\/-\/debug',\ 'output\ extra\ debugging')}
+\DoxyCodeLine{\ \ .option('-\/s,\ -\/-\/small',\ 'small\ pizza\ size')}
+\DoxyCodeLine{\ \ .option('-\/p,\ -\/-\/pizza-\/type\ <type>',\ 'flavour\ of\ pizza');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse(process.argv);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ program.opts();}
+\DoxyCodeLine{if\ (options.debug)\ console.log(options);}
+\DoxyCodeLine{console.log('pizza\ details:');}
+\DoxyCodeLine{if\ (options.small)\ console.log('-\/\ small\ pizza\ size');}
+\DoxyCodeLine{if\ (options.pizzaType)\ console.log(`-\/\ \$\{options.pizzaType\}`);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/p}
+\DoxyCodeLine{error:\ option\ '-\/p,\ -\/-\/pizza-\/type\ <type>'\ argument\ missing}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/d\ -\/s\ -\/p\ vegetarian}
+\DoxyCodeLine{\{\ debug:\ true,\ small:\ true,\ pizzaType:\ 'vegetarian'\ \}}
+\DoxyCodeLine{pizza\ details:}
+\DoxyCodeLine{-\/\ small\ pizza\ size}
+\DoxyCodeLine{-\/\ vegetarian}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/-\/pizza-\/type=cheese}
+\DoxyCodeLine{pizza\ details:}
+\DoxyCodeLine{-\/\ cheese}
+
+\end{DoxyCode}
+
+
+Multiple boolean short options may be combined following the dash, and may be followed by a single short option taking a value. For example {\ttfamily -\/d -\/s -\/p cheese} may be written as {\ttfamily -\/ds -\/p cheese} or even {\ttfamily -\/dsp cheese}.
+
+Options with an expected option-\/argument are greedy and will consume the following argument whatever the value. So {\ttfamily -\/-\/id -\/xyz} reads {\ttfamily -\/xyz} as the option-\/argument.
+
+{\ttfamily program.\+parse(arguments)} processes the arguments, leaving any args not consumed by the program options in the {\ttfamily program.\+args} array. The parameter is optional and defaults to {\ttfamily process.\+argv}.\hypertarget{Readme.md_autotoc_md21618}{}\doxysubsubsection{\texorpdfstring{Default option value}{Default option value}}\label{Readme.md_autotoc_md21618}
+You can specify a default value for an option.
+
+Example file\+: \href{./examples/options-defaults.js}{\texttt{ options-\/defaults.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/c,\ -\/-\/cheese\ <type>',\ 'add\ the\ specified\ type\ of\ cheese',\ 'blue');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse();}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(`cheese:\ \$\{program.opts().cheese\}`);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pizza-\/options}
+\DoxyCodeLine{cheese:\ blue}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/-\/cheese\ stilton}
+\DoxyCodeLine{cheese:\ stilton}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21619}{}\doxysubsubsection{\texorpdfstring{Other option types, negatable boolean and boolean\texorpdfstring{$\vert$}{|}value}{Other option types, negatable boolean and boolean\texorpdfstring{$\vert$}{|}value}}\label{Readme.md_autotoc_md21619}
+You can define a boolean option long name with a leading {\ttfamily no-\/} to set the option value to false when used. Defined alone this also makes the option true by default.
+
+If you define {\ttfamily -\/-\/foo} first, adding {\ttfamily -\/-\/no-\/foo} does not change the default value from what it would otherwise be.
+
+Example file\+: \href{./examples/options-negatable.js}{\texttt{ options-\/negatable.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/-\/no-\/sauce',\ 'Remove\ sauce')}
+\DoxyCodeLine{\ \ .option('-\/-\/cheese\ <flavour>',\ 'cheese\ flavour',\ 'mozzarella')}
+\DoxyCodeLine{\ \ .option('-\/-\/no-\/cheese',\ 'plain\ with\ no\ cheese')}
+\DoxyCodeLine{\ \ .parse();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ program.opts();}
+\DoxyCodeLine{const\ sauceStr\ =\ options.sauce\ ?\ 'sauce'\ :\ 'no\ sauce';}
+\DoxyCodeLine{const\ cheeseStr\ =\ (options.cheese\ ===\ false)\ ?\ 'no\ cheese'\ :\ \`{}\$\{options.cheese\}\ cheese`;}
+\DoxyCodeLine{console.log(`You\ ordered\ a\ pizza\ with\ \$\{sauceStr\}\ and\ \$\{cheeseStr\}`);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pizza-\/options}
+\DoxyCodeLine{You\ ordered\ a\ pizza\ with\ sauce\ and\ mozzarella\ cheese}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/-\/sauce}
+\DoxyCodeLine{error:\ unknown\ option\ '-\/-\/sauce'}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/-\/cheese=blue}
+\DoxyCodeLine{You\ ordered\ a\ pizza\ with\ sauce\ and\ blue\ cheese}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/-\/no-\/sauce\ -\/-\/no-\/cheese}
+\DoxyCodeLine{You\ ordered\ a\ pizza\ with\ no\ sauce\ and\ no\ cheese}
+
+\end{DoxyCode}
+
+
+You can specify an option which may be used as a boolean option but may optionally take an option-\/argument (declared with square brackets like {\ttfamily -\/-\/optional \mbox{[}value\mbox{]}}).
+
+Example file\+: \href{./examples/options-boolean-or-value.js}{\texttt{ options-\/boolean-\/or-\/value.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/c,\ -\/-\/cheese\ [type]',\ 'Add\ cheese\ with\ optional\ type');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse(process.argv);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ program.opts();}
+\DoxyCodeLine{if\ (options.cheese\ ===\ undefined)\ console.log('no\ cheese');}
+\DoxyCodeLine{else\ if\ (options.cheese\ ===\ true)\ console.log('add\ cheese');}
+\DoxyCodeLine{else\ console.log(`add\ cheese\ type\ \$\{options.cheese\}`);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pizza-\/options}
+\DoxyCodeLine{no\ cheese}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/-\/cheese}
+\DoxyCodeLine{add\ cheese}
+\DoxyCodeLine{\$\ pizza-\/options\ -\/-\/cheese\ mozzarella}
+\DoxyCodeLine{add\ cheese\ type\ mozzarella}
+
+\end{DoxyCode}
+
+
+Options with an optional option-\/argument are not greedy and will ignore arguments starting with a dash. So {\ttfamily id} behaves as a boolean option for {\ttfamily -\/-\/id -\/5}, but you can use a combined form if needed like {\ttfamily -\/-\/id=-\/5}.
+
+For information about possible ambiguous cases, see options taking varying arguments.\hypertarget{Readme.md_autotoc_md21620}{}\doxysubsubsection{\texorpdfstring{Required option}{Required option}}\label{Readme.md_autotoc_md21620}
+You may specify a required (mandatory) option using {\ttfamily .required\+Option()}. The option must have a value after parsing, usually specified on the command line, or perhaps from a default value (say from environment). The method is otherwise the same as {\ttfamily .option()} in format, taking flags and description, and optional default value or custom processing.
+
+Example file\+: \href{./examples/options-required.js}{\texttt{ options-\/required.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .requiredOption('-\/c,\ -\/-\/cheese\ <type>',\ 'pizza\ must\ have\ cheese');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse();}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pizza}
+\DoxyCodeLine{error:\ required\ option\ '-\/c,\ -\/-\/cheese\ <type>'\ not\ specified}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21621}{}\doxysubsubsection{\texorpdfstring{Variadic option}{Variadic option}}\label{Readme.md_autotoc_md21621}
+You may make an option variadic by appending {\ttfamily ...} to the value placeholder when declaring the option. On the command line you can then specify multiple option-\/arguments, and the parsed option value will be an array. The extra arguments are read until the first argument starting with a dash. The special argument {\ttfamily -\/-\/} stops option processing entirely. If a value is specified in the same argument as the option then no further values are read.
+
+Example file\+: \href{./examples/options-variadic.js}{\texttt{ options-\/variadic.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/n,\ -\/-\/number\ <numbers...>',\ 'specify\ numbers')}
+\DoxyCodeLine{\ \ .option('-\/l,\ -\/-\/letter\ [letters...]',\ 'specify\ letters');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse();}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log('Options:\ ',\ program.opts());}
+\DoxyCodeLine{console.log('Remaining\ arguments:\ ',\ program.args);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ collect\ -\/n\ 1\ 2\ 3\ -\/-\/letter\ a\ b\ c}
+\DoxyCodeLine{Options:\ \ \{\ number:\ [\ '1',\ '2',\ '3'\ ],\ letter:\ [\ 'a',\ 'b',\ 'c'\ ]\ \}}
+\DoxyCodeLine{Remaining\ arguments:\ \ []}
+\DoxyCodeLine{\$\ collect\ -\/-\/letter=A\ -\/n80\ operand}
+\DoxyCodeLine{Options:\ \ \{\ number:\ [\ '80'\ ],\ letter:\ [\ 'A'\ ]\ \}}
+\DoxyCodeLine{Remaining\ arguments:\ \ [\ 'operand'\ ]}
+\DoxyCodeLine{\$\ collect\ -\/-\/letter\ -\/n\ 1\ -\/n\ 2\ 3\ -\/-\/\ operand}
+\DoxyCodeLine{Options:\ \ \{\ number:\ [\ '1',\ '2',\ '3'\ ],\ letter:\ true\ \}}
+\DoxyCodeLine{Remaining\ arguments:\ \ [\ 'operand'\ ]}
+
+\end{DoxyCode}
+
+
+For information about possible ambiguous cases, see options taking varying arguments.\hypertarget{Readme.md_autotoc_md21622}{}\doxysubsubsection{\texorpdfstring{Version option}{Version option}}\label{Readme.md_autotoc_md21622}
+The optional {\ttfamily version} method adds handling for displaying the command version. The default option flags are {\ttfamily -\/V} and {\ttfamily -\/-\/version}, and when present the command prints the version number and exits.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.version('0.0.1');}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ ./examples/pizza\ -\/V}
+\DoxyCodeLine{0.0.1}
+
+\end{DoxyCode}
+
+
+You may change the flags and description by passing additional parameters to the {\ttfamily version} method, using the same syntax for flags as the {\ttfamily option} method.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.version('0.0.1',\ '-\/v,\ -\/-\/vers',\ 'output\ the\ current\ version');}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21623}{}\doxysubsubsection{\texorpdfstring{More configuration}{More configuration}}\label{Readme.md_autotoc_md21623}
+You can add most options using the {\ttfamily .option()} method, but there are some additional features available by constructing an {\ttfamily Option} explicitly for less common cases.
+
+Example files\+: \href{./examples/options-extra.js}{\texttt{ options-\/extra.\+js}}, \href{./examples/options-env.js}{\texttt{ options-\/env.\+js}}, \href{./examples/options-conflicts.js}{\texttt{ options-\/conflicts.\+js}}, \href{./examples/options-implies.js}{\texttt{ options-\/implies.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .addOption(new\ Option('-\/s,\ -\/-\/secret').hideHelp())}
+\DoxyCodeLine{\ \ .addOption(new\ Option('-\/t,\ -\/-\/timeout\ <delay>',\ 'timeout\ in\ seconds').default(60,\ 'one\ minute'))}
+\DoxyCodeLine{\ \ .addOption(new\ Option('-\/d,\ -\/-\/drink\ <size>',\ 'drink\ size').choices(['small',\ 'medium',\ 'large']))}
+\DoxyCodeLine{\ \ .addOption(new\ Option('-\/p,\ -\/-\/port\ <number>',\ 'port\ number').env('PORT'))}
+\DoxyCodeLine{\ \ .addOption(new\ Option('-\/-\/donate\ [amount]',\ 'optional\ donation\ in\ dollars').preset('20').argParser(parseFloat))}
+\DoxyCodeLine{\ \ .addOption(new\ Option('-\/-\/disable-\/server',\ 'disables\ the\ server').conflicts('port'))}
+\DoxyCodeLine{\ \ .addOption(new\ Option('-\/-\/free-\/drink',\ 'small\ drink\ included\ free\ ').implies(\{\ drink:\ 'small'\ \}));}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ extra\ -\/-\/help}
+\DoxyCodeLine{Usage:\ help\ [options]}
+\DoxyCodeLine{}
+\DoxyCodeLine{Options:}
+\DoxyCodeLine{\ \ -\/t,\ -\/-\/timeout\ <delay>\ \ timeout\ in\ seconds\ (default:\ one\ minute)}
+\DoxyCodeLine{\ \ -\/d,\ -\/-\/drink\ <size>\ \ \ \ \ drink\ cup\ size\ (choices:\ "{}small"{},\ "{}medium"{},\ "{}large"{})}
+\DoxyCodeLine{\ \ -\/p,\ -\/-\/port\ <number>\ \ \ \ port\ number\ (env:\ PORT)}
+\DoxyCodeLine{\ \ -\/-\/donate\ [amount]\ \ \ \ \ \ optional\ donation\ in\ dollars\ (preset:\ "{}20"{})}
+\DoxyCodeLine{\ \ -\/-\/disable-\/server\ \ \ \ \ \ \ disables\ the\ server}
+\DoxyCodeLine{\ \ -\/-\/free-\/drink\ \ \ \ \ \ \ \ \ \ \ small\ drink\ included\ free}
+\DoxyCodeLine{\ \ -\/h,\ -\/-\/help\ \ \ \ \ \ \ \ \ \ \ \ \ display\ help\ for\ command}
+\DoxyCodeLine{}
+\DoxyCodeLine{\$\ extra\ -\/-\/drink\ huge}
+\DoxyCodeLine{error:\ option\ '-\/d,\ -\/-\/drink\ <size>'\ argument\ 'huge'\ is\ invalid.\ Allowed\ choices\ are\ small,\ medium,\ large.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\$\ PORT=80\ extra\ -\/-\/donate\ -\/-\/free-\/drink}
+\DoxyCodeLine{Options:\ \ \{\ timeout:\ 60,\ donate:\ 20,\ port:\ '80',\ freeDrink:\ true,\ drink:\ 'small'\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\$\ extra\ -\/-\/disable-\/server\ -\/-\/port\ 8000}
+\DoxyCodeLine{error:\ option\ '-\/-\/disable-\/server'\ cannot\ be\ used\ with\ option\ '-\/p,\ -\/-\/port\ <number>'}
+
+\end{DoxyCode}
+
+
+Specify a required (mandatory) option using the {\ttfamily Option} method {\ttfamily .make\+Option\+Mandatory()}. This matches the {\ttfamily Command} method .required\+Option().\hypertarget{Readme.md_autotoc_md21624}{}\doxysubsubsection{\texorpdfstring{Custom option processing}{Custom option processing}}\label{Readme.md_autotoc_md21624}
+You may specify a function to do custom processing of option-\/arguments. The callback function receives two parameters, the user specified option-\/argument and the previous value for the option. It returns the new value for the option.
+
+This allows you to coerce the option-\/argument to the desired type, or accumulate values, or do entirely custom processing.
+
+You can optionally specify the default/starting value for the option after the function parameter.
+
+Example file\+: \href{./examples/options-custom-processing.js}{\texttt{ options-\/custom-\/processing.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ myParseInt(value,\ dummyPrevious)\ \{}
+\DoxyCodeLine{\ \ //\ parseInt\ takes\ a\ string\ and\ a\ radix}
+\DoxyCodeLine{\ \ const\ parsedValue\ =\ parseInt(value,\ 10);}
+\DoxyCodeLine{\ \ if\ (isNaN(parsedValue))\ \{}
+\DoxyCodeLine{\ \ \ \ throw\ new\ commander.InvalidArgumentError('Not\ a\ number.');}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ parsedValue;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ increaseVerbosity(dummyValue,\ previous)\ \{}
+\DoxyCodeLine{\ \ return\ previous\ +\ 1;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ collect(value,\ previous)\ \{}
+\DoxyCodeLine{\ \ return\ previous.concat([value]);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ commaSeparatedList(value,\ dummyPrevious)\ \{}
+\DoxyCodeLine{\ \ return\ value.split(',');}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/f,\ -\/-\/float\ <number>',\ 'float\ argument',\ parseFloat)}
+\DoxyCodeLine{\ \ .option('-\/i,\ -\/-\/integer\ <number>',\ 'integer\ argument',\ myParseInt)}
+\DoxyCodeLine{\ \ .option('-\/v,\ -\/-\/verbose',\ 'verbosity\ that\ can\ be\ increased',\ increaseVerbosity,\ 0)}
+\DoxyCodeLine{\ \ .option('-\/c,\ -\/-\/collect\ <value>',\ 'repeatable\ value',\ collect,\ [])}
+\DoxyCodeLine{\ \ .option('-\/l,\ -\/-\/list\ <items>',\ 'comma\ separated\ list',\ commaSeparatedList)}
+\DoxyCodeLine{;}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ program.opts();}
+\DoxyCodeLine{if\ (options.float\ !==\ undefined)\ console.log(`float:\ \$\{options.float\}`);}
+\DoxyCodeLine{if\ (options.integer\ !==\ undefined)\ console.log(`integer:\ \$\{options.integer\}`);}
+\DoxyCodeLine{if\ (options.verbose\ >\ 0)\ console.log(`verbosity:\ \$\{options.verbose\}`);}
+\DoxyCodeLine{if\ (options.collect.length\ >\ 0)\ console.log(options.collect);}
+\DoxyCodeLine{if\ (options.list\ !==\ undefined)\ console.log(options.list);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ custom\ -\/f\ 1e2}
+\DoxyCodeLine{float:\ 100}
+\DoxyCodeLine{\$\ custom\ -\/-\/integer\ 2}
+\DoxyCodeLine{integer:\ 2}
+\DoxyCodeLine{\$\ custom\ -\/v\ -\/v\ -\/v}
+\DoxyCodeLine{verbose:\ 3}
+\DoxyCodeLine{\$\ custom\ -\/c\ a\ -\/c\ b\ -\/c\ c}
+\DoxyCodeLine{[\ 'a',\ 'b',\ 'c'\ ]}
+\DoxyCodeLine{\$\ custom\ -\/-\/list\ x,y,z}
+\DoxyCodeLine{[\ 'x',\ 'y',\ 'z'\ ]}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21625}{}\doxysubsection{\texorpdfstring{Commands}{Commands}}\label{Readme.md_autotoc_md21625}
+You can specify (sub)commands using {\ttfamily .command()} or {\ttfamily .add\+Command()}. There are two ways these can be implemented\+: using an action handler attached to the command, or as a stand-\/alone executable file (described in more detail later). The subcommands may be nested (\href{./examples/nestedCommands.js}{\texttt{ example}}).
+
+In the first parameter to {\ttfamily .command()} you specify the command name. You may append the command-\/arguments after the command name, or specify them separately using {\ttfamily .argument()}. The arguments may be {\ttfamily \texorpdfstring{$<$}{<}required\texorpdfstring{$>$}{>}} or {\ttfamily \mbox{[}optional\mbox{]}}, and the last argument may also be {\ttfamily variadic...}.
+
+You can use {\ttfamily .add\+Command()} to add an already configured subcommand to the program.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Command\ implemented\ using\ action\ handler\ (description\ is\ supplied\ separately\ to\ \`{}.command`)}
+\DoxyCodeLine{//\ Returns\ new\ command\ for\ configuring.}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .command('clone\ <source>\ [destination]')}
+\DoxyCodeLine{\ \ .description('clone\ a\ repository\ into\ a\ newly\ created\ directory')}
+\DoxyCodeLine{\ \ .action((source,\ destination)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('clone\ command\ called');}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Command\ implemented\ using\ stand-\/alone\ executable\ file,\ indicated\ by\ adding\ description\ as\ second\ parameter\ to\ \`{}.command`.}
+\DoxyCodeLine{//\ Returns\ \`{}this`\ for\ adding\ more\ commands.}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .command('start\ <service>',\ 'start\ named\ service')}
+\DoxyCodeLine{\ \ .command('stop\ [service]',\ 'stop\ named\ service,\ or\ all\ if\ no\ name\ supplied');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Command\ prepared\ separately.}
+\DoxyCodeLine{//\ Returns\ \`{}this`\ for\ adding\ more\ commands.}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .addCommand(build.makeBuildCommand());}
+
+\end{DoxyCode}
+
+
+Configuration options can be passed with the call to {\ttfamily .command()} and {\ttfamily .add\+Command()}. Specifying {\ttfamily hidden\+: true} will remove the command from the generated help output. Specifying {\ttfamily is\+Default\+: true} will run the subcommand if no other subcommand is specified (\href{./examples/defaultCommand.js}{\texttt{ example}}).
+
+You can add alternative names for a command with {\ttfamily .alias()}. (\href{./examples/alias.js}{\texttt{ example}})
+
+{\ttfamily .command()} automatically copies the inherited settings from the parent command to the newly created subcommand. This is only done during creation, any later setting changes to the parent are not inherited.
+
+For safety, {\ttfamily .add\+Command()} does not automatically copy the inherited settings from the parent command. There is a helper routine {\ttfamily .copy\+Inherited\+Settings()} for copying the settings when they are wanted.\hypertarget{Readme.md_autotoc_md21626}{}\doxysubsubsection{\texorpdfstring{Command-\/arguments}{Command-\/arguments}}\label{Readme.md_autotoc_md21626}
+For subcommands, you can specify the argument syntax in the call to {\ttfamily .command()} (as shown above). This is the only method usable for subcommands implemented using a stand-\/alone executable, but for other subcommands you can instead use the following method.
+
+To configure a command, you can use {\ttfamily .argument()} to specify each expected command-\/argument. You supply the argument name and an optional description. The argument may be {\ttfamily \texorpdfstring{$<$}{<}required\texorpdfstring{$>$}{>}} or {\ttfamily \mbox{[}optional\mbox{]}}. You can specify a default value for an optional command-\/argument.
+
+Example file\+: \href{./examples/argument.js}{\texttt{ argument.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .version('0.1.0')}
+\DoxyCodeLine{\ \ .argument('<username>',\ 'user\ to\ login')}
+\DoxyCodeLine{\ \ .argument('[password]',\ 'password\ for\ user,\ if\ required',\ 'no\ password\ given')}
+\DoxyCodeLine{\ \ .action((username,\ password)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('username:',\ username);}
+\DoxyCodeLine{\ \ \ \ console.log('password:',\ password);}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+The last argument of a command can be variadic, and only the last argument. To make an argument variadic you append {\ttfamily ...} to the argument name. A variadic argument is passed to the action handler as an array. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .version('0.1.0')}
+\DoxyCodeLine{\ \ .command('rmdir')}
+\DoxyCodeLine{\ \ .argument('<dirs...>')}
+\DoxyCodeLine{\ \ .action(function\ (dirs)\ \{}
+\DoxyCodeLine{\ \ \ \ dirs.forEach((dir)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ console.log('rmdir\ \%s',\ dir);}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+There is a convenience method to add multiple arguments at once, but without descriptions\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .arguments('<username>\ <password>');}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21627}{}\doxysubsubsubsection{\texorpdfstring{More configuration}{More configuration}}\label{Readme.md_autotoc_md21627}
+There are some additional features available by constructing an {\ttfamily Argument} explicitly for less common cases.
+
+Example file\+: \href{./examples/arguments-extra.js}{\texttt{ arguments-\/extra.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .addArgument(new\ commander.Argument('<drink-\/size>',\ 'drink\ cup\ size').choices(['small',\ 'medium',\ 'large']))}
+\DoxyCodeLine{\ \ .addArgument(new\ commander.Argument('[timeout]',\ 'timeout\ in\ seconds').default(60,\ 'one\ minute'))}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21628}{}\doxysubsubsubsection{\texorpdfstring{Custom argument processing}{Custom argument processing}}\label{Readme.md_autotoc_md21628}
+You may specify a function to do custom processing of command-\/arguments (like for option-\/arguments). The callback function receives two parameters, the user specified command-\/argument and the previous value for the argument. It returns the new value for the argument.
+
+The processed argument values are passed to the action handler, and saved as {\ttfamily .processed\+Args}.
+
+You can optionally specify the default/starting value for the argument after the function parameter.
+
+Example file\+: \href{./examples/arguments-custom-processing.js}{\texttt{ arguments-\/custom-\/processing.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .command('add')}
+\DoxyCodeLine{\ \ .argument('<first>',\ 'integer\ argument',\ myParseInt)}
+\DoxyCodeLine{\ \ .argument('[second]',\ 'integer\ argument',\ myParseInt,\ 1000)}
+\DoxyCodeLine{\ \ .action((first,\ second)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(`\$\{first\}\ +\ \$\{second\}\ =\ \$\{first\ +\ second\}`);}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{;}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21629}{}\doxysubsubsection{\texorpdfstring{Action handler}{Action handler}}\label{Readme.md_autotoc_md21629}
+The action handler gets passed a parameter for each command-\/argument you declared, and two additional parameters which are the parsed options and the command object itself.
+
+Example file\+: \href{./examples/thank.js}{\texttt{ thank.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .argument('<name>')}
+\DoxyCodeLine{\ \ .option('-\/t,\ -\/-\/title\ <honorific>',\ 'title\ to\ use\ before\ name')}
+\DoxyCodeLine{\ \ .option('-\/d,\ -\/-\/debug',\ 'display\ some\ debugging')}
+\DoxyCodeLine{\ \ .action((name,\ options,\ command)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (options.debug)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ console.error('Called\ \%s\ with\ options\ \%o',\ command.name(),\ options);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ const\ title\ =\ options.title\ ?\ \`{}\$\{options.title\}\ \`{}\ :\ '';}
+\DoxyCodeLine{\ \ \ \ console.log(`Thank-\/you\ \$\{title\}\$\{name\}`);}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+If you prefer, you can work with the command directly and skip declaring the parameters for the action handler. The {\ttfamily this} keyword is set to the running command and can be used from a function expression (but not from an arrow function).
+
+Example file\+: \href{./examples/action-this.js}{\texttt{ action-\/this.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .command('serve')}
+\DoxyCodeLine{\ \ .argument('<script>')}
+\DoxyCodeLine{\ \ .option('-\/p,\ -\/-\/port\ <number>',\ 'port\ number',\ 80)}
+\DoxyCodeLine{\ \ .action(function()\ \{}
+\DoxyCodeLine{\ \ \ \ console.error('Run\ script\ \%s\ on\ port\ \%s',\ this.args[0],\ this.opts().port);}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+You may supply an {\ttfamily async} action handler, in which case you call {\ttfamily .parse\+Async} rather than {\ttfamily .parse}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{async\ function\ run()\ \{\ /*\ code\ goes\ here\ */\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ main()\ \{}
+\DoxyCodeLine{\ \ program}
+\DoxyCodeLine{\ \ \ \ .command('run')}
+\DoxyCodeLine{\ \ \ \ .action(run);}
+\DoxyCodeLine{\ \ await\ program.parseAsync(process.argv);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+A command\textquotesingle{}s options and arguments on the command line are validated when the command is used. Any unknown options or missing arguments or excess arguments will be reported as an error. You can suppress the unknown option check with {\ttfamily .allow\+Unknown\+Option()}. You can suppress the excess arguments check with {\ttfamily .allow\+Excess\+Arguments()}.\hypertarget{Readme.md_autotoc_md21630}{}\doxysubsubsection{\texorpdfstring{Stand-\/alone executable (sub)commands}{Stand-\/alone executable (sub)commands}}\label{Readme.md_autotoc_md21630}
+When {\ttfamily .command()} is invoked with a description argument, this tells Commander that you\textquotesingle{}re going to use stand-\/alone executables for subcommands. Commander will search the files in the directory of the entry script for a file with the name combination {\ttfamily command-\/subcommand}, like {\ttfamily pm-\/install} or {\ttfamily pm-\/search} in the example below. The search includes trying common file extensions, like {\ttfamily .js}. You may specify a custom name (and path) with the {\ttfamily executable\+File} configuration option. You may specify a custom search directory for subcommands with {\ttfamily .executable\+Dir()}.
+
+You handle the options for an executable (sub)command in the executable, and don\textquotesingle{}t declare them at the top-\/level.
+
+Example file\+: \href{./examples/pm}{\texttt{ pm}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .name('pm')}
+\DoxyCodeLine{\ \ .version('0.1.0')}
+\DoxyCodeLine{\ \ .command('install\ [package-\/names...]',\ 'install\ one\ or\ more\ packages')}
+\DoxyCodeLine{\ \ .command('search\ [query]',\ 'search\ with\ optional\ query')}
+\DoxyCodeLine{\ \ .command('update',\ 'update\ installed\ packages',\ \{\ executableFile:\ 'myUpdateSubCommand'\ \})}
+\DoxyCodeLine{\ \ .command('list',\ 'list\ packages\ installed',\ \{\ isDefault:\ true\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.parse(process.argv);}
+
+\end{DoxyCode}
+
+
+If the program is designed to be installed globally, make sure the executables have proper modes, like {\ttfamily 755}.\hypertarget{Readme.md_autotoc_md21631}{}\doxysubsubsection{\texorpdfstring{Life cycle hooks}{Life cycle hooks}}\label{Readme.md_autotoc_md21631}
+You can add callback hooks to a command for life cycle events.
+
+Example file\+: \href{./examples/hook.js}{\texttt{ hook.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/t,\ -\/-\/trace',\ 'display\ trace\ statements\ for\ commands')}
+\DoxyCodeLine{\ \ .hook('preAction',\ (thisCommand,\ actionCommand)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (thisCommand.opts().trace)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ console.log(`About\ to\ call\ action\ handler\ for\ subcommand:\ \$\{actionCommand.name()\}`);}
+\DoxyCodeLine{\ \ \ \ \ \ console.log('arguments:\ \%O',\ actionCommand.args);}
+\DoxyCodeLine{\ \ \ \ \ \ console.log('options:\ \%o',\ actionCommand.opts());}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+The callback hook can be {\ttfamily async}, in which case you call {\ttfamily .parse\+Async} rather than {\ttfamily .parse}. You can add multiple hooks per event.
+
+The supported events are\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ event name   }&\cellcolor{\tableheadbgcolor}\textbf{ when hook called   }&\cellcolor{\tableheadbgcolor}\textbf{ callback parameters    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ event name   }&\cellcolor{\tableheadbgcolor}\textbf{ when hook called   }&\cellcolor{\tableheadbgcolor}\textbf{ callback parameters    }\\\cline{1-3}
+\endhead
+{\ttfamily pre\+Action}, {\ttfamily post\+Action}   &before/after action handler for this command and its nested subcommands   &{\ttfamily (this\+Command, action\+Command)}    \\\cline{1-3}
+{\ttfamily pre\+Subcommand}   &before parsing direct subcommand   &{\ttfamily (this\+Command, subcommand)}   \\\cline{1-3}
+\end{longtabu}
+
+
+For an overview of the life cycle events see parsing life cycle and hooks.\hypertarget{Readme.md_autotoc_md21632}{}\doxysubsection{\texorpdfstring{Automated help}{Automated help}}\label{Readme.md_autotoc_md21632}
+The help information is auto-\/generated based on the information commander already knows about your program. The default help option is {\ttfamily -\/h,-\/-\/help}.
+
+Example file\+: \href{./examples/pizza}{\texttt{ pizza}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ ./examples/pizza\ -\/-\/help}
+\DoxyCodeLine{Usage:\ pizza\ [options]}
+\DoxyCodeLine{}
+\DoxyCodeLine{An\ application\ for\ pizza\ ordering}
+\DoxyCodeLine{}
+\DoxyCodeLine{Options:}
+\DoxyCodeLine{\ \ -\/p,\ -\/-\/peppers\ \ \ \ \ \ \ \ Add\ peppers}
+\DoxyCodeLine{\ \ -\/c,\ -\/-\/cheese\ <type>\ \ Add\ the\ specified\ type\ of\ cheese\ (default:\ "{}marble"{})}
+\DoxyCodeLine{\ \ -\/C,\ -\/-\/no-\/cheese\ \ \ \ \ \ You\ do\ not\ want\ any\ cheese}
+\DoxyCodeLine{\ \ -\/h,\ -\/-\/help\ \ \ \ \ \ \ \ \ \ \ display\ help\ for\ command}
+
+\end{DoxyCode}
+
+
+A {\ttfamily help} command is added by default if your command has subcommands. It can be used alone, or with a subcommand name to show further help for the subcommand. These are effectively the same if the {\ttfamily shell} program has implicit help\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{shell\ help}
+\DoxyCodeLine{shell\ -\/-\/help}
+\DoxyCodeLine{}
+\DoxyCodeLine{shell\ help\ spawn}
+\DoxyCodeLine{shell\ spawn\ -\/-\/help}
+
+\end{DoxyCode}
+
+
+Long descriptions are wrapped to fit the available width. (However, a description that includes a line-\/break followed by whitespace is assumed to be pre-\/formatted and not wrapped.)\hypertarget{Readme.md_autotoc_md21633}{}\doxysubsubsection{\texorpdfstring{Custom help}{Custom help}}\label{Readme.md_autotoc_md21633}
+You can add extra text to be displayed along with the built-\/in help.
+
+Example file\+: \href{./examples/custom-help}{\texttt{ custom-\/help}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .option('-\/f,\ -\/-\/foo',\ 'enable\ some\ foo');}
+\DoxyCodeLine{}
+\DoxyCodeLine{program.addHelpText('after',\ \`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{Example\ call:}
+\DoxyCodeLine{\ \ \$\ custom-\/help\ -\/-\/help`);}
+
+\end{DoxyCode}
+
+
+Yields the following help output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Usage:\ custom-\/help\ [options]}
+\DoxyCodeLine{}
+\DoxyCodeLine{Options:}
+\DoxyCodeLine{\ \ -\/f,\ -\/-\/foo\ \ \ enable\ some\ foo}
+\DoxyCodeLine{\ \ -\/h,\ -\/-\/help\ \ display\ help\ for\ command}
+\DoxyCodeLine{}
+\DoxyCodeLine{Example\ call:}
+\DoxyCodeLine{\ \ \$\ custom-\/help\ -\/-\/help}
+
+\end{DoxyCode}
+
+
+The positions in order displayed are\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily before\+All}\+: add to the program for a global banner or header
+\item {\ttfamily before}\+: display extra information before built-\/in help
+\item {\ttfamily after}\+: display extra information after built-\/in help
+\item {\ttfamily after\+All}\+: add to the program for a global footer (epilog)
+\end{DoxyItemize}
+
+The positions "{}before\+All"{} and "{}after\+All"{} apply to the command and all its subcommands.
+
+The second parameter can be a string, or a function returning a string. The function is passed a context object for your convenience. The properties are\+:
+
+
+\begin{DoxyItemize}
+\item error\+: a boolean for whether the help is being displayed due to a usage error
+\item command\+: the Command which is displaying the help
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md21634}{}\doxysubsubsection{\texorpdfstring{Display help after errors}{Display help after errors}}\label{Readme.md_autotoc_md21634}
+The default behaviour for usage errors is to just display a short error message. You can change the behaviour to show the full help or a custom help message after an error.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.showHelpAfterError();}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{program.showHelpAfterError('(add\ -\/-\/help\ for\ additional\ information)');}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pizza\ -\/-\/unknown}
+\DoxyCodeLine{error:\ unknown\ option\ '-\/-\/unknown'}
+\DoxyCodeLine{(add\ -\/-\/help\ for\ additional\ information)}
+
+\end{DoxyCode}
+
+
+The default behaviour is to suggest correct spelling after an error for an unknown command or option. You can disable this.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.showSuggestionAfterError(false);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pizza\ -\/-\/hepl}
+\DoxyCodeLine{error:\ unknown\ option\ '-\/-\/hepl'}
+\DoxyCodeLine{(Did\ you\ mean\ -\/-\/help?)}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21635}{}\doxysubsubsection{\texorpdfstring{Display help from code}{Display help from code}}\label{Readme.md_autotoc_md21635}
+{\ttfamily .help()}\+: display help information and exit immediately. You can optionally pass {\ttfamily \{ error\+: true \}} to display on stderr and exit with an error status.
+
+{\ttfamily .output\+Help()}\+: output help information without exiting. You can optionally pass {\ttfamily \{ error\+: true \}} to display on stderr.
+
+{\ttfamily .help\+Information()}\+: get the built-\/in command help information as a string for processing or displaying yourself.\hypertarget{Readme.md_autotoc_md21636}{}\doxysubsubsection{\texorpdfstring{.name}{.name}}\label{Readme.md_autotoc_md21636}
+The command name appears in the help, and is also used for locating stand-\/alone executable subcommands.
+
+You may specify the program name using {\ttfamily .name()} or in the Command constructor. For the program, Commander will fall back to using the script name from the full arguments passed into {\ttfamily .parse()}. However, the script name varies depending on how your program is launched, so you may wish to specify it explicitly.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.name('pizza');}
+\DoxyCodeLine{const\ pm\ =\ new\ Command('pm');}
+
+\end{DoxyCode}
+
+
+Subcommands get a name when specified using {\ttfamily .command()}. If you create the subcommand yourself to use with {\ttfamily .add\+Command()}, then set the name using {\ttfamily .name()} or in the Command constructor.\hypertarget{Readme.md_autotoc_md21637}{}\doxysubsubsection{\texorpdfstring{.usage}{.usage}}\label{Readme.md_autotoc_md21637}
+This allows you to customise the usage description in the first line of the help. Given\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .name("{}my-\/command"{})}
+\DoxyCodeLine{\ \ .usage("{}[global\ options]\ command"{})}
+
+\end{DoxyCode}
+
+
+The help will start with\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Usage:\ my-\/command\ [global\ options]\ command}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21638}{}\doxysubsubsection{\texorpdfstring{.description and .summary}{.description and .summary}}\label{Readme.md_autotoc_md21638}
+The description appears in the help for the command. You can optionally supply a shorter summary to use when listed as a subcommand of the program.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .command("{}duplicate"{})}
+\DoxyCodeLine{\ \ .summary("{}make\ a\ copy"{})}
+\DoxyCodeLine{\ \ .description(`Make\ a\ copy\ of\ the\ current\ project.}
+\DoxyCodeLine{This\ may\ require\ additional\ disk\ space.}
+\DoxyCodeLine{\ \ \`{});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21639}{}\doxysubsubsection{\texorpdfstring{.help\+Option(flags, description)}{.help\+Option(flags, description)}}\label{Readme.md_autotoc_md21639}
+By default, every command has a help option. You may change the default help flags and description. Pass false to disable the built-\/in help option.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .helpOption('-\/e,\ -\/-\/HELP',\ 'read\ more\ information');}
+
+\end{DoxyCode}
+
+
+(Or use {\ttfamily .add\+Help\+Option()} to add an option you construct yourself.)\hypertarget{Readme.md_autotoc_md21640}{}\doxysubsubsection{\texorpdfstring{.help\+Command()}{.help\+Command()}}\label{Readme.md_autotoc_md21640}
+A help command is added by default if your command has subcommands. You can explicitly turn on or off the implicit help command with {\ttfamily .help\+Command(true)} and {\ttfamily .help\+Command(false)}.
+
+You can both turn on and customise the help command by supplying the name and description\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.helpCommand('assist\ [command]',\ 'show\ assistance');}
+
+\end{DoxyCode}
+
+
+(Or use {\ttfamily .add\+Help\+Command()} to add a command you construct yourself.)\hypertarget{Readme.md_autotoc_md21641}{}\doxysubsubsection{\texorpdfstring{More configuration}{More configuration}}\label{Readme.md_autotoc_md21641}
+The built-\/in help is formatted using the Help class. You can configure the help by modifying data properties and methods using {\ttfamily .configure\+Help()}, or by subclassing Help using {\ttfamily .create\+Help()} .
+
+Simple properties include {\ttfamily sort\+Subcommands}, {\ttfamily sort\+Options}, and {\ttfamily show\+Global\+Options}. You can add color using the style methods like {\ttfamily style\+Title()}.
+
+For more detail and examples of changing the displayed text, color, and layout see (./docs/help-\/in-\/depth.md)\hypertarget{Readme.md_autotoc_md21642}{}\doxysubsection{\texorpdfstring{Custom event listeners}{Custom event listeners}}\label{Readme.md_autotoc_md21642}
+You can execute custom actions by listening to command and option events.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.on('option:verbose',\ function\ ()\ \{}
+\DoxyCodeLine{\ \ process.env.VERBOSE\ =\ this.opts().verbose;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21643}{}\doxysubsection{\texorpdfstring{Bits and pieces}{Bits and pieces}}\label{Readme.md_autotoc_md21643}
+\hypertarget{Readme.md_autotoc_md21644}{}\doxysubsubsection{\texorpdfstring{.parse() and .parse\+Async()}{.parse() and .parse\+Async()}}\label{Readme.md_autotoc_md21644}
+Call with no parameters to parse {\ttfamily process.\+argv}. Detects Electron and special node options like {\ttfamily node -\/-\/eval}. Easy mode!
+
+Or call with an array of strings to parse, and optionally where the user arguments start by specifying where the arguments are {\ttfamily from}\+:
+
+
+\begin{DoxyItemize}
+\item `\textquotesingle{}node'{\ttfamily \+: default,}argv\mbox{[}0\mbox{]}{\ttfamily is the application and}argv\mbox{[}1\mbox{]}{\ttfamily is the script being run, with user arguments after that -\/}\textquotesingle{}electron\textquotesingle{}{\ttfamily \+:}argv\mbox{[}0\mbox{]}{\ttfamily is the application and}argv\mbox{[}1\mbox{]}{\ttfamily varies depending on whether the electron application is packaged -\/}\textquotesingle{}user\textquotesingle{}\`{}\+: just user arguments
+\end{DoxyItemize}
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.parse();\ //\ parse\ process.argv\ and\ auto-\/detect\ electron\ and\ special\ node\ flags}
+\DoxyCodeLine{program.parse(process.argv);\ //\ assume\ argv[0]\ is\ app\ and\ argv[1]\ is\ script}
+\DoxyCodeLine{program.parse(['-\/-\/port',\ '80'],\ \{\ from:\ 'user'\ \});\ //\ just\ user\ supplied\ arguments,\ nothing\ special\ about\ argv[0]}
+
+\end{DoxyCode}
+
+
+Use parse\+Async instead of parse if any of your action handlers are async.\hypertarget{Readme.md_autotoc_md21645}{}\doxysubsubsection{\texorpdfstring{Parsing Configuration}{Parsing Configuration}}\label{Readme.md_autotoc_md21645}
+If the default parsing does not suit your needs, there are some behaviours to support other usage patterns.
+
+By default, program options are recognised before and after subcommands. To only look for program options before subcommands, use {\ttfamily .enable\+Positional\+Options()}. This lets you use an option for a different purpose in subcommands.
+
+Example file\+: \href{./examples/positional-options.js}{\texttt{ positional-\/options.\+js}}
+
+With positional options, the {\ttfamily -\/b} is a program option in the first line and a subcommand option in the second line\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program\ -\/b\ subcommand}
+\DoxyCodeLine{program\ subcommand\ -\/b}
+
+\end{DoxyCode}
+
+
+By default, options are recognised before and after command-\/arguments. To only process options that come before the command-\/arguments, use {\ttfamily .pass\+Through\+Options()}. This lets you pass the arguments and following options through to another program without needing to use {\ttfamily -\/-\/} to end the option processing. To use pass through options in a subcommand, the program needs to enable positional options.
+
+Example file\+: \href{./examples/pass-through-options.js}{\texttt{ pass-\/through-\/options.\+js}}
+
+With pass through options, the {\ttfamily -\/-\/port=80} is a program option in the first line and passed through as a command-\/argument in the second line\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program\ -\/-\/port=80\ arg}
+\DoxyCodeLine{program\ arg\ -\/-\/port=80}
+
+\end{DoxyCode}
+
+
+By default, the option processing shows an error for an unknown option. To have an unknown option treated as an ordinary command-\/argument and continue looking for options, use {\ttfamily .allow\+Unknown\+Option()}. This lets you mix known and unknown options.
+
+By default, the argument processing does not display an error for more command-\/arguments than expected. To display an error for excess arguments, use$<$tt$>$.\+allow\+Excess\+Arguments(false).\hypertarget{Readme.md_autotoc_md21646}{}\doxysubsubsection{\texorpdfstring{Legacy options as properties}{Legacy options as properties}}\label{Readme.md_autotoc_md21646}
+Before Commander 7, the option values were stored as properties on the command. This was convenient to code, but the downside was possible clashes with existing properties of {\ttfamily Command}. You can revert to the old behaviour to run unmodified legacy code by using {\ttfamily .store\+Options\+As\+Properties()}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .storeOptionsAsProperties()}
+\DoxyCodeLine{\ \ .option('-\/d,\ -\/-\/debug')}
+\DoxyCodeLine{\ \ .action((commandAndOptions)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (commandAndOptions.debug)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ console.error(`Called\ \$\{commandAndOptions.name()\}`);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21647}{}\doxysubsubsection{\texorpdfstring{Type\+Script}{Type\+Script}}\label{Readme.md_autotoc_md21647}
+extra-\/typings\+: There is an optional project to infer extra type information from the option and argument definitions. This adds strong typing to the options returned by {\ttfamily .opts()} and the parameters to {\ttfamily .action()}. See \href{https://github.com/commander-js/extra-typings}{\texttt{ commander-\/js/extra-\/typings}} for more.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Command\ \}\ from\ '@commander-\/js/extra-\/typings';}
+
+\end{DoxyCode}
+
+
+ts-\/node\+: If you use {\ttfamily ts-\/node} and stand-\/alone executable subcommands written as {\ttfamily .ts} files, you need to call your program through node to get the subcommands called correctly. e.\+g.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ -\/r\ ts-\/node/register\ pm.ts}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21648}{}\doxysubsubsection{\texorpdfstring{create\+Command()}{create\+Command()}}\label{Readme.md_autotoc_md21648}
+This factory function creates a new command. It is exported and may be used instead of using {\ttfamily new}, like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ createCommand\ \}\ =\ require('commander');}
+\DoxyCodeLine{const\ program\ =\ createCommand();}
+
+\end{DoxyCode}
+
+
+{\ttfamily create\+Command} is also a method of the Command object, and creates a new command rather than a subcommand. This gets used internally when creating subcommands using {\ttfamily .command()}, and you may override it to customise the new subcommand (example file \href{./examples/custom-command-class.js}{\texttt{ custom-\/command-\/class.\+js}}).\hypertarget{Readme.md_autotoc_md21649}{}\doxysubsubsection{\texorpdfstring{Node options such as {\ttfamily -\/-\/harmony}}{Node options such as {\ttfamily -\/-\/harmony}}}\label{Readme.md_autotoc_md21649}
+You can enable {\ttfamily -\/-\/harmony} option in two ways\+:
+
+
+\begin{DoxyItemize}
+\item Use {\ttfamily \#! /usr/bin/env node -\/-\/harmony} in the subcommands scripts. (Note Windows does not support this pattern.)
+\item Use the {\ttfamily -\/-\/harmony} option when call the command, like {\ttfamily node -\/-\/harmony examples/pm publish}. The {\ttfamily -\/-\/harmony} option will be preserved when spawning subcommand process.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md21650}{}\doxysubsubsection{\texorpdfstring{Debugging stand-\/alone executable subcommands}{Debugging stand-\/alone executable subcommands}}\label{Readme.md_autotoc_md21650}
+An executable subcommand is launched as a separate child process.
+
+If you are using the node inspector for \href{https://nodejs.org/en/docs/guides/debugging-getting-started/}{\texttt{ debugging}} executable subcommands using {\ttfamily node -\/-\/inspect} et al., the inspector port is incremented by 1 for the spawned subcommand.
+
+If you are using VSCode to debug executable subcommands you need to set the {\ttfamily "{}auto\+Attach\+Child\+Processes"{}\+: true} flag in your launch.\+json configuration.\hypertarget{Readme.md_autotoc_md21651}{}\doxysubsubsection{\texorpdfstring{npm run-\/script}{npm run-\/script}}\label{Readme.md_autotoc_md21651}
+By default, when you call your program using run-\/script, {\ttfamily npm} will parse any options on the command-\/line and they will not reach your program. Use {\ttfamily -\/-\/} to stop the npm option parsing and pass through all the arguments.
+
+The synopsis for \href{https://docs.npmjs.com/cli/v9/commands/npm-run-script}{\texttt{ npm run-\/script}} explicitly shows the {\ttfamily -\/-\/} for this reason\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ run-\/script\ <command>\ [-\/-\/\ <args>]}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21652}{}\doxysubsubsection{\texorpdfstring{Display error}{Display error}}\label{Readme.md_autotoc_md21652}
+This routine is available to invoke the Commander error handling for your own error conditions. (See also the next section about exit handling.)
+
+As well as the error message, you can optionally specify the {\ttfamily exit\+Code} (used with {\ttfamily process.\+exit}) and {\ttfamily code} (used with {\ttfamily Commander\+Error}).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.error('Password\ must\ be\ longer\ than\ four\ characters');}
+\DoxyCodeLine{program.error('Custom\ processing\ has\ failed',\ \{\ exitCode:\ 2,\ code:\ 'my.custom.error'\ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21653}{}\doxysubsubsection{\texorpdfstring{Override exit and output handling}{Override exit and output handling}}\label{Readme.md_autotoc_md21653}
+By default, Commander calls {\ttfamily process.\+exit} when it detects errors, or after displaying the help or version. You can override this behaviour and optionally supply a callback. The default override throws a {\ttfamily Commander\+Error}.
+
+The override callback is passed a {\ttfamily Commander\+Error} with properties {\ttfamily exit\+Code} number, {\ttfamily code} string, and {\ttfamily message}. Commander expects the callback to terminate the normal program flow, and will call {\ttfamily process.\+exit} if the callback returns. The normal display of error messages or version or help is not affected by the override which is called after the display.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{program.exitOverride();}
+\DoxyCodeLine{}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ program.parse(process.argv);}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ //\ custom\ processing...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+By default, Commander is configured for a command-\/line application and writes to stdout and stderr. You can modify this behaviour for custom applications. In addition, you can modify the display of error messages.
+
+Example file\+: \href{./examples/configure-output.js}{\texttt{ configure-\/output.\+js}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ errorColor(str)\ \{}
+\DoxyCodeLine{\ \ //\ Add\ ANSI\ escape\ codes\ to\ display\ text\ in\ red.}
+\DoxyCodeLine{\ \ return\ \`{}\(\backslash\)x1b[31m\$\{str\}\(\backslash\)x1b[0m`;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{program}
+\DoxyCodeLine{\ \ .configureOutput(\{}
+\DoxyCodeLine{\ \ \ \ //\ Visibly\ override\ write\ routines\ as\ example!}
+\DoxyCodeLine{\ \ \ \ writeOut:\ (str)\ =>\ process.stdout.write(`[OUT]\ \$\{str\}`),}
+\DoxyCodeLine{\ \ \ \ writeErr:\ (str)\ =>\ process.stdout.write(`[ERR]\ \$\{str\}`),}
+\DoxyCodeLine{\ \ \ \ //\ Highlight\ errors\ in\ color.}
+\DoxyCodeLine{\ \ \ \ outputError:\ (str,\ write)\ =>\ write(errorColor(str))}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md21654}{}\doxysubsubsection{\texorpdfstring{Additional documentation}{Additional documentation}}\label{Readme.md_autotoc_md21654}
+There is more information available about\+:
+
+
+\begin{DoxyItemize}
+\item deprecated features still supported for backwards compatibility
+\item options taking varying arguments
+\item parsing life cycle and hooks
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md21655}{}\doxysubsection{\texorpdfstring{Support}{Support}}\label{Readme.md_autotoc_md21655}
+The current version of Commander is fully supported on Long Term Support versions of Node.\+js, and requires at least v18. (For older versions of Node.\+js, use an older version of Commander.)
+
+The main forum for free and community support is the project \href{https://github.com/tj/commander.js/issues}{\texttt{ Issues}} on Git\+Hub.\hypertarget{Readme.md_autotoc_md21656}{}\doxysubsubsection{\texorpdfstring{Commander for enterprise}{Commander for enterprise}}\label{Readme.md_autotoc_md21656}
+Available as part of the Tidelift Subscription
+
+The maintainers of Commander and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. \href{https://tidelift.com/subscription/pkg/npm-commander?utm_source=npm-commander&utm_medium=referral&utm_campaign=enterprise&utm_term=repo}{\texttt{ Learn more.}} 

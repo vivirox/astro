@@ -1,0 +1,82 @@
+\chapter{Legacy environment support for circular equal comparators}
+\hypertarget{md_node__modules_2fast-equals_2recipes_2legacy-circular-equal-support}{}\label{md_node__modules_2fast-equals_2recipes_2legacy-circular-equal-support}\index{Legacy environment support for circular equal comparators@{Legacy environment support for circular equal comparators}}
+\label{md_node__modules_2fast-equals_2recipes_2legacy-circular-equal-support_autotoc_md15080}%
+\Hypertarget{md_node__modules_2fast-equals_2recipes_2legacy-circular-equal-support_autotoc_md15080}%
+
+
+Starting in {\ttfamily 4.\+x.\+x}, {\ttfamily Weak\+Map} is expected to be available in the environment. All modern browsers support this global object, however there may be situations where a legacy environmental support is required (example\+: IE11). If you need to support such an environment and polyfilling is not an option, creating a custom comparator that uses a custom cache implementation with the same contract is a simple solution.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createCustomEqual,\ sameValueZeroEqual\ \}\ from\ 'fast-\/equals';}
+\DoxyCodeLine{import\ type\ \{\ Cache\ \}\ from\ 'fast-\/equals';}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ getCache():\ Cache<any,\ any>\ \{}
+\DoxyCodeLine{\ \ const\ entries:\ Array<[object,\ any]>\ =\ [];}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ \{}
+\DoxyCodeLine{\ \ \ \ delete(key)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ for\ (let\ index\ =\ 0;\ index\ <\ entries.length;\ ++index)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (entries[index][0]\ ===\ key)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ entries.splice(index,\ 1);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ return\ true;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ false;}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ get(key)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ for\ (let\ index\ =\ 0;\ index\ <\ entries.length;\ ++index)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (entries[index][0]\ ===\ key)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ return\ entries[index][1];}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ set(key,\ value)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ for\ (let\ index\ =\ 0;\ index\ <\ entries.length;\ ++index)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (entries[index][0]\ ===\ key)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ entries[index][1]\ =\ value;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ return\ this;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ entries.push([key,\ value]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ this;}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ Meta\ \{}
+\DoxyCodeLine{\ \ customMethod():\ void;}
+\DoxyCodeLine{\ \ customValue:\ string;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ meta\ =\ \{}
+\DoxyCodeLine{\ \ customMethod()\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('hello!');}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ customValue:\ 'goodbye',}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ circularDeepEqual\ =\ createCustomEqual<Cache>(\{}
+\DoxyCodeLine{\ \ circular:\ true,}
+\DoxyCodeLine{\ \ createState:\ ()\ =>\ (\{}
+\DoxyCodeLine{\ \ \ \ cache:\ getCache(),}
+\DoxyCodeLine{\ \ \ \ meta,}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ circularShallowEqual\ =\ createCustomEqual<Cache>(\{}
+\DoxyCodeLine{\ \ circular:\ true,}
+\DoxyCodeLine{\ \ comparator:\ sameValueZeroEqual,}
+\DoxyCodeLine{\ \ createState:\ ()\ =>\ (\{}
+\DoxyCodeLine{\ \ \ \ cache:\ getCache(),}
+\DoxyCodeLine{\ \ \ \ meta,}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

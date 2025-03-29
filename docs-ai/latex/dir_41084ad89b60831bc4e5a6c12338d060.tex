@@ -1,0 +1,105 @@
+\doxysection{node\+\_\+modules/micromark-\/factory-\/whitespace Directory Reference}
+\hypertarget{dir_41084ad89b60831bc4e5a6c12338d060}{}\label{dir_41084ad89b60831bc4e5a6c12338d060}\index{node\_modules/micromark-\/factory-\/whitespace Directory Reference@{node\_modules/micromark-\/factory-\/whitespace Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-factory-whitespace}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-factory-whitespace}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} factory to parse \href{https://github.com/micromark/micromark/tree/main/packages/micromark-util-character\#markdownlineendingorspacecode}{\texttt{ markdown line endings or spaces}} (found in lots of places).\hypertarget{readme.md_autotoc_md23551}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23551}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}factory\+Whitespace(…)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23552}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23552}
+This package exposes states to parse whitespace.\hypertarget{readme.md_autotoc_md23553}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md23553}
+This package is useful when you are making your own micromark extensions.\hypertarget{readme.md_autotoc_md23554}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23554}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/factory-\/whitespace}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{factoryWhitespace\}\ from\ 'https://esm.sh/micromark-\/factory-\/whitespace@1'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{factoryWhitespace\}\ from\ 'https://esm.sh/micromark-\/factory-\/whitespace@1?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23555}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23555}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{factoryWhitespace\}\ from\ 'micromark-\/factory-\/whitespace'}
+\DoxyCodeLine{import\ \{codes,\ types\}\ from\ 'micromark-\/util-\/symbol'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ A\ micromark\ tokenizer\ that\ uses\ the\ factory:}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ @this\ \{TokenizeContext\}}
+\DoxyCodeLine{\ *\ \ \ Context.}
+\DoxyCodeLine{\ *\ @type\ \{Tokenizer\}}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{function\ tokenizeTitle(effects,\ ok,\ nok)\ \{}
+\DoxyCodeLine{\ \ return\ start}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ /**\ @type\ \{State\}\ */}
+\DoxyCodeLine{\ \ function\ start(code)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ markdownLineEndingOrSpace(code)}
+\DoxyCodeLine{\ \ \ \ \ \ ?\ factoryWhitespace(effects,\ before)(code)}
+\DoxyCodeLine{\ \ \ \ \ \ :\ nok(code)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ …}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23556}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23556}
+This module exports the identifier \`{}factory\+Whitespace\`{}. There is no default export.\hypertarget{readme.md_autotoc_md23557}{}\doxysubsubsection{\texorpdfstring{{\ttfamily factory\+Whitespace(…)}}{{\ttfamily factory\+Whitespace(…)}}}\label{readme.md_autotoc_md23557}
+Parse spaces and tabs.
+
+There is no {\ttfamily nok} parameter\+:
+
+
+\begin{DoxyItemize}
+\item line endings or spaces in markdown are often optional, in which case this factory can be used and {\ttfamily ok} will be switched to whether spaces were found or not
+\item one line ending or space can be detected with \href{https://github.com/micromark/micromark/tree/main/packages/micromark-util-character\#markdownlineendingorspacecode}{\texttt{ {\ttfamily markdown\+Line\+Ending\+Or\+Space(code)}}} right before using {\ttfamily factory\+Whitespace}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23558}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23558}
+
+\begin{DoxyItemize}
+\item {\ttfamily effects} ({\ttfamily Effects}) — context
+\item {\ttfamily ok} ({\ttfamily State}) — state switched to when successful
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23559}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23559}
+Start state ({\ttfamily State}).\hypertarget{readme.md_autotoc_md23560}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23560}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md23561}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23561}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/factory-\/whitespace@2}, compatible with Node.\+js 16. This package works with {\ttfamily micromark@3}.\hypertarget{readme.md_autotoc_md23562}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23562}
+This package is safe. See \href{https://github.com/micromark/.github/blob/main/security.md}{\texttt{ {\ttfamily security.\+md}}} in \href{https://github.com/micromark/.github}{\texttt{ {\ttfamily micromark/.github}}} for how to submit a security report.\hypertarget{readme.md_autotoc_md23563}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23563}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/micromark/.github}{\texttt{ {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organisation, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23564}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23564}
+\href{https://github.com/micromark/micromark/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

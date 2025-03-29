@@ -1,0 +1,74 @@
+\doxysection{node\+\_\+modules/@unocss/transformer-\/compile-\/class Directory Reference}
+\hypertarget{dir_57ecfd617b6c6d60e577f78e88394079}{}\label{dir_57ecfd617b6c6d60e577f78e88394079}\index{node\_modules/"@unocss/transformer-\/compile-\/class Directory Reference@{node\_modules/"@unocss/transformer-\/compile-\/class Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Compile group of classes into one class. Inspired by \href{https://windicss.org/posts/modes.html\#compilation-mode}{\texttt{ Windi\+CSS\textquotesingle{}s compilation mode}} and \href{https://github.com/unocss/unocss/issues/948}{\texttt{ \#948}} by \href{https://github.com/UltraCakeBakery}{\texttt{ @\+Ultra\+Cake\+Bakery}}.\hypertarget{README.md_autotoc_md7110}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md7110}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ -\/D\ @unocss/transformer-\/compile-\/class}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ transformerCompileClass\ from\ '@unocss/transformer-\/compile-\/class'}
+\DoxyCodeLine{//\ uno.config.ts}
+\DoxyCodeLine{import\ \{\ defineConfig\ \}\ from\ 'unocss'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ transformers:\ [}
+\DoxyCodeLine{\ \ \ \ transformerCompileClass(),}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7111}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md7111}
+At the begin of your class strings, {\bfseries{add {\ttfamily \+:uno\+:} at the begin of the strings}} to mark them for compilation. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ class="{}:uno:\ text-\/center\ sm:text-\/left"{}>}
+\DoxyCodeLine{\ \ <div\ class="{}:uno:\ text-\/sm\ font-\/bold\ hover:text-\/red"{}\ />}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+
+
+Will be compiled to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ class="{}uno-\/qlmcrp"{}>}
+\DoxyCodeLine{\ \ <div\ class="{}uno-\/0qw2gr"{}\ />}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.uno-\/qlmcrp\ \{}
+\DoxyCodeLine{\ \ text-\/align:\ center;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{.uno-\/0qw2gr\ \{}
+\DoxyCodeLine{\ \ font-\/size:\ 0.875rem;}
+\DoxyCodeLine{\ \ line-\/height:\ 1.25rem;}
+\DoxyCodeLine{\ \ font-\/weight:\ 700;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{.uno-\/0qw2gr:hover\ \{}
+\DoxyCodeLine{\ \ -\/-\/un-\/text-\/opacity:\ 1;}
+\DoxyCodeLine{\ \ color:\ rgb(248\ 113\ 113\ /\ var(-\/-\/un-\/text-\/opacity));}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{@media\ (min-\/width:\ 640px)\ \{}
+\DoxyCodeLine{\ \ .uno-\/qlmcrp\ \{}
+\DoxyCodeLine{\ \ \ \ text-\/align:\ left;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7112}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md7112}
+You can config the trigger string and prefix for compile class with the options. Refers to \href{https://github.com/unocss/unocss/blob/main/packages-presets/transformer-compile-class/src/index.ts\#L4}{\texttt{ the types}} for details.\hypertarget{README.md_autotoc_md7113}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md7113}
+MIT License \copyright{} 2021-\/PRESENT \href{https://github.com/antfu}{\texttt{ Anthony Fu}} 

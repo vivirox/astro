@@ -1,0 +1,58 @@
+\doxysection{node\+\_\+modules/which-\/boxed-\/primitive Directory Reference}
+\hypertarget{dir_04fc7f069a938767253118a61cab7694}{}\label{dir_04fc7f069a938767253118a61cab7694}\index{node\_modules/which-\/boxed-\/primitive Directory Reference@{node\_modules/which-\/boxed-\/primitive Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://david-dm.org/inspect-js/which-boxed-primitive}{\texttt{ }} \href{https://david-dm.org/inspect-js/which-boxed-primitive\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=which-boxed-primitive}{\texttt{ }}
+
+\href{https://npmjs.org/package/which-boxed-primitive}{\texttt{ }}
+
+Which kind of boxed JS primitive is this? This module works cross-\/realm/iframe, does not depend on {\ttfamily instanceof} or mutable properties, and works despite ES6 Symbol.\+to\+String\+Tag.\hypertarget{README.md_autotoc_md35546}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md35546}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ whichBoxedPrimitive\ =\ require('which-\/boxed-\/primitive');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ unboxed\ primitives\ return\ \`{}null`}
+\DoxyCodeLine{//\ boxed\ primitives\ return\ the\ builtin\ constructor\ name}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(undefined),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(null),\ null);}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(false),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(true),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ Boolean(false)),\ 'Boolean');}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ Boolean(true)),\ 'Boolean');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(42),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(NaN),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(Infinity),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ Number(42)),\ 'Number');}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ Number(NaN)),\ 'Number');}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ Number(Infinity)),\ 'Number');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(''),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive('foo'),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ String('')),\ 'String');}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ String('foo')),\ 'String');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(Symbol()),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(Object(Symbol()),\ 'Symbol');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(42n),\ null);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(Object(42n),\ 'BigInt');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ non-\/boxed-\/primitive\ objects\ return\ \`{}undefined`}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive([]),\ undefined);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(\{\}),\ undefined);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(/a/g),\ undefined);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ RegExp('a',\ 'g')),\ undefined);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(new\ Date()),\ undefined);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(function\ ()\ \{\}),\ undefined);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(function*\ ()\ \{\}),\ undefined);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive(x\ =>\ x\ *\ x),\ undefined);}
+\DoxyCodeLine{assert.equal(whichBoxedPrimitive([]),\ undefined);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md35547}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md35547}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

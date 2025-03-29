@@ -1,0 +1,35 @@
+\doxysection{node\+\_\+modules/safe-\/array-\/concat Directory Reference}
+\hypertarget{dir_e05b2f64135dc8776cbe4e79b9bb9511}{}\label{dir_e05b2f64135dc8776cbe4e79b9bb9511}\index{node\_modules/safe-\/array-\/concat Directory Reference@{node\_modules/safe-\/array-\/concat Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/ljharb/safe-array-concat/actions}{\texttt{ }} \href{https://app.codecov.io/gh/ljharb/safe-array-concat/}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=safe-array-concat}{\texttt{ }}
+
+\href{https://npmjs.org/package/safe-array-concat}{\texttt{ }}
+
+{\ttfamily Array.\+prototype.\+concat}, but made safe by ignoring Symbol.\+is\+Concat\+Spreadable\hypertarget{README.md_autotoc_md30147}{}\doxysubsection{\texorpdfstring{Getting started}{Getting started}}\label{README.md_autotoc_md30147}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ safe-\/array-\/concat}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30148}{}\doxysubsection{\texorpdfstring{Usage/\+Examples}{Usage/\+Examples}}\label{README.md_autotoc_md30148}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ safeConcat\ =\ require('safe-\/array-\/concat');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual([].concat([1,\ 2],\ 3,\ [[4]]),\ [1,\ 2,\ 3,\ [4]],\ 'arrays\ spread\ as\ expected\ with\ normal\ concat');}
+\DoxyCodeLine{assert.deepEqual(safeConcat([1,\ 2],\ 3,\ [[4]]),\ [1,\ 2,\ 3,\ [4]],\ 'arrays\ spread\ as\ expected\ with\ safe\ concat');}
+\DoxyCodeLine{}
+\DoxyCodeLine{String.prototype[Symbol.isConcatSpreadable]\ =\ true;}
+\DoxyCodeLine{assert.deepEqual([].concat('foo',\ Object('bar')),\ ['foo',\ 'b',\ 'a',\ 'r'],\ 'spreadable\ String\ objects\ are\ spread\ with\ normal\ concat!!!');}
+\DoxyCodeLine{assert.deepEqual(safeConcat('foo',\ Object('bar')),\ ['foo',\ Object('bar')],\ 'spreadable\ String\ objects\ are\ not\ spread\ with\ safe\ concat');}
+\DoxyCodeLine{}
+\DoxyCodeLine{Array.prototype[Symbol.isConcatSpreadable]\ =\ false;}
+\DoxyCodeLine{assert.deepEqual([].concat([1,\ 2],\ 3,\ [[4]]),\ [[],\ [1,\ 2],\ 3,\ [[4]]],\ 'non-\/concat-\/spreadable\ arrays\ do\ not\ spread\ with\ normal\ concat!!!');}
+\DoxyCodeLine{assert.deepEqual(safeConcat([1,\ 2],\ 3,\ [[4]]),\ [1,\ 2,\ 3,\ [4]],\ 'non-\/concat-\/spreadable\ arrays\ still\ spread\ with\ safe\ concat');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30149}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md30149}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

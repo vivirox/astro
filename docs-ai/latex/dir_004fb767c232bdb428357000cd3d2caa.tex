@@ -1,0 +1,85 @@
+\doxysection{node\+\_\+modules/pluralize Directory Reference}
+\hypertarget{dir_004fb767c232bdb428357000cd3d2caa}{}\label{dir_004fb767c232bdb428357000cd3d2caa}\index{node\_modules/pluralize Directory Reference@{node\_modules/pluralize Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.org/package/pluralize}{\texttt{ }} \href{https://npmjs.org/package/pluralize}{\texttt{ }} \href{https://travis-ci.org/blakeembrey/pluralize}{\texttt{ }} \href{https://coveralls.io/r/blakeembrey/pluralize?branch=master}{\texttt{ }}  \href{https://cdnjs.com/libraries/pluralize}{\texttt{ }}
+
+\begin{quote}
+Pluralize and singularize any word. \end{quote}
+\hypertarget{Readme.md_autotoc_md26036}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{Readme.md_autotoc_md26036}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ pluralize\ -\/-\/save}
+\DoxyCodeLine{yarn\ add\ pluralize}
+\DoxyCodeLine{bower\ install\ pluralize\ -\/-\/save}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md26037}{}\doxysubsubsection{\texorpdfstring{Node}{Node}}\label{Readme.md_autotoc_md26037}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pluralize\ =\ require('pluralize')}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md26038}{}\doxysubsubsection{\texorpdfstring{AMD}{AMD}}\label{Readme.md_autotoc_md26038}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{define(function\ (require,\ exports,\ module)\ \{}
+\DoxyCodeLine{\ \ var\ pluralize\ =\ require('pluralize')}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md26039}{}\doxysubsubsection{\texorpdfstring{{\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} tag}{{\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} tag}}\label{Readme.md_autotoc_md26039}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}pluralize.js"{}></script>}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md26040}{}\doxysubsection{\texorpdfstring{Why?}{Why?}}\label{Readme.md_autotoc_md26040}
+This module uses a pre-\/defined list of rules, applied in order, to singularize or pluralize a given word. There are many cases where this is useful, such as any automation based on user input. For applications where the word(s) are known ahead of time, you can use a simple ternary (or function) which would be a much lighter alternative.\hypertarget{Readme.md_autotoc_md26041}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{Readme.md_autotoc_md26041}
+
+\begin{DoxyItemize}
+\item {\ttfamily word\+: string} The word to pluralize
+\item {\ttfamily count\+: number} How many of the word exist
+\item {\ttfamily inclusive\+: boolean} Whether to prefix with the number (e.\+g. 3 ducks)
+\end{DoxyItemize}
+
+Examples\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pluralize('test')\ //=>\ "{}tests"{}}
+\DoxyCodeLine{pluralize('test',\ 0)\ //=>\ "{}tests"{}}
+\DoxyCodeLine{pluralize('test',\ 1)\ //=>\ "{}test"{}}
+\DoxyCodeLine{pluralize('test',\ 5)\ //=>\ "{}tests"{}}
+\DoxyCodeLine{pluralize('test',\ 1,\ true)\ //=>\ "{}1\ test"{}}
+\DoxyCodeLine{pluralize('test',\ 5,\ true)\ //=>\ "{}5\ tests"{}}
+\DoxyCodeLine{pluralize('蘋果',\ 2,\ true)\ //=>\ "{}2\ 蘋果"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ of\ new\ plural\ rule:}
+\DoxyCodeLine{pluralize.plural('regex')\ //=>\ "{}regexes"{}}
+\DoxyCodeLine{pluralize.addPluralRule(/gex\$/i,\ 'gexii')}
+\DoxyCodeLine{pluralize.plural('regex')\ //=>\ "{}regexii"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ of\ new\ singular\ rule:}
+\DoxyCodeLine{pluralize.singular('singles')\ //=>\ "{}single"{}}
+\DoxyCodeLine{pluralize.addSingularRule(/singles\$/i,\ 'singular')}
+\DoxyCodeLine{pluralize.singular('singles')\ //=>\ "{}singular"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ of\ new\ irregular\ rule,\ e.g.\ "{}I"{}\ -\/>\ "{}we"{}:}
+\DoxyCodeLine{pluralize.plural('irregular')\ //=>\ "{}irregulars"{}}
+\DoxyCodeLine{pluralize.addIrregularRule('irregular',\ 'regular')}
+\DoxyCodeLine{pluralize.plural('irregular')\ //=>\ "{}regular"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ of\ uncountable\ rule\ (rules\ without\ singular/plural\ in\ context):}
+\DoxyCodeLine{pluralize.plural('paper')\ //=>\ "{}papers"{}}
+\DoxyCodeLine{pluralize.addUncountableRule('paper')}
+\DoxyCodeLine{pluralize.plural('paper')\ //=>\ "{}paper"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ of\ asking\ whether\ a\ word\ looks\ singular\ or\ plural:}
+\DoxyCodeLine{pluralize.isPlural('test')\ //=>\ false}
+\DoxyCodeLine{pluralize.isSingular('test')\ //=>\ true}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md26042}{}\doxysubsection{\texorpdfstring{License}{License}}\label{Readme.md_autotoc_md26042}
+MIT 

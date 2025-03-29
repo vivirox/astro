@@ -1,0 +1,291 @@
+\chapter{Moderation API}
+\hypertarget{md_node__modules_2_0datproto_2api_2docs_2moderation}{}\label{md_node__modules_2_0datproto_2api_2docs_2moderation}\index{Moderation API@{Moderation API}}
+\label{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1838}%
+\Hypertarget{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1838}%
+
+
+Applying the moderation system is a challenging task, but we\textquotesingle{}ve done our best to simplify it for you. The Moderation API helps handle a wide range of tasks, including\+:
+
+
+\begin{DoxyItemize}
+\item Moderator labeling
+\item User muting (including mutelists)
+\item User blocking
+\item Mutewords
+\item Hidden posts
+\end{DoxyItemize}\hypertarget{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1839}{}\doxysection{\texorpdfstring{Configuration}{Configuration}}\label{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1839}
+Every moderation function takes a set of options which look like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ //\ the\ logged-\/in\ user's\ DID}
+\DoxyCodeLine{\ \ userDid:\ 'did:plc:1234...',}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ moderationPrefs:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ is\ adult\ content\ allowed?}
+\DoxyCodeLine{\ \ \ \ adultContentEnabled:\ true,}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ the\ global\ label\ settings\ (used\ on\ self-\/labels)}
+\DoxyCodeLine{\ \ \ \ labels:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ porn:\ 'hide',}
+\DoxyCodeLine{\ \ \ \ \ \ sexual:\ 'warn',}
+\DoxyCodeLine{\ \ \ \ \ \ nudity:\ 'ignore',}
+\DoxyCodeLine{\ \ \ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ the\ subscribed\ labelers\ and\ their\ label\ settings}
+\DoxyCodeLine{\ \ \ \ labelers:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ did:\ 'did:plc:1234...',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ labels:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ porn:\ 'hide',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ sexual:\ 'warn',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ nudity:\ 'ignore',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ mutedWords:\ [/*\ ...\ */],}
+\DoxyCodeLine{\ \ \ \ hiddenPosts:\ [/*\ ...\ */]}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ custom\ label\ definitions}
+\DoxyCodeLine{\ \ labelDefs:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ labelerDid\ =>\ defs[]}
+\DoxyCodeLine{\ \ \ \ 'did:plc:1234...':\ [}
+\DoxyCodeLine{\ \ \ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+This should match the following interfaces\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ interface\ ModerationPrefsLabeler\ \{}
+\DoxyCodeLine{\ \ did:\ string}
+\DoxyCodeLine{\ \ labels:\ Record<string,\ LabelPreference>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ interface\ ModerationPrefs\ \{}
+\DoxyCodeLine{\ \ adultContentEnabled:\ boolean}
+\DoxyCodeLine{\ \ labels:\ Record<string,\ LabelPreference>}
+\DoxyCodeLine{\ \ labelers:\ ModerationPrefsLabeler[]}
+\DoxyCodeLine{\ \ mutedWords:\ AppBskyActorDefs.MutedWord[]}
+\DoxyCodeLine{\ \ hiddenPosts:\ string[]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ interface\ ModerationOpts\ \{}
+\DoxyCodeLine{\ \ userDid:\ string\ |\ undefined}
+\DoxyCodeLine{\ \ prefs:\ ModerationPrefs}
+\DoxyCodeLine{\ \ /**}
+\DoxyCodeLine{\ \ \ *\ Map\ of\ labeler\ did\ -\/>\ custom\ definitions}
+\DoxyCodeLine{\ \ \ */}
+\DoxyCodeLine{\ \ labelDefs?:\ Record<string,\ InterpretedLabelValueDefinition[]>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+You can quickly grab the {\ttfamily Moderation\+Prefs} using the {\ttfamily agent.\+get\+Preferences()} method\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ prefs\ =\ await\ agent.getPreferences()}
+\DoxyCodeLine{moderatePost(post,\ \{}
+\DoxyCodeLine{\ \ userDid:\ /*...*/,}
+\DoxyCodeLine{\ \ prefs:\ prefs.moderationPrefs,}
+\DoxyCodeLine{\ \ labelDefs:\ /*...*/}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+To gather the label definitions ({\ttfamily label\+Defs}) see the {\itshape Labelers} section below.\hypertarget{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1840}{}\doxysection{\texorpdfstring{Labelers}{Labelers}}\label{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1840}
+Labelers are services that provide moderation labels. Your application will typically have 1+ top-\/level labelers set with the ability to do "{}takedowns"{} on content. This is controlled via this static function, though the default is to use Bluesky\textquotesingle{}s moderation\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{BskyAgent.configure(\{}
+\DoxyCodeLine{\ \ appLabelers:\ ['did:web:my-\/labeler.com'],}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+Users may also add their own labelers. The active labelers are controlled via an HTTP header which is automatically set by the agent when {\ttfamily get\+Preferences} is called, or when the labeler preferences are changed.
+
+Labelers publish a {\ttfamily app.\+bsky.\+labeler.\+service} record that looks like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \$type:\ 'app.bsky.labeler.service',}
+\DoxyCodeLine{\ \ policies:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ the\ list\ of\ label\ values\ the\ labeler\ will\ publish}
+\DoxyCodeLine{\ \ \ \ labelValues:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ 'rude',}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ //\ any\ custom\ definitions\ the\ labeler\ will\ be\ using}
+\DoxyCodeLine{\ \ \ \ labelValueDefinitions:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ identifier:\ 'rude',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ blurs:\ 'content',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ severity:\ 'alert',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ defaultSetting:\ 'warn',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ adultOnly:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ locales:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ lang:\ 'en',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ name:\ 'Rude',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ description:\ 'Not\ keeping\ things\ civil.',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ createdAt:\ '2024-\/03-\/12T17:17:17.215Z'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The label value definition are custom labels which only apply to that labeler. Your client needs to sync those definitions in order to correctly interpret them. To do that, call {\ttfamily app.\+bsky.\+labeler.\+get\+Service()} (or the {\ttfamily get\+Services} batch variant) periodically to fetch their definitions. We recommend caching the response (at time our writing the official client uses a TTL of 6 hours).
+
+Here is how to do this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ AtpAgent\ \}\ from\ '@atproto/api'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ agent\ =\ new\ AtpAgent(\{\ service:\ 'https://example.com'\ \})}
+\DoxyCodeLine{//\ assume\ \`{}agent`\ is\ a\ signed\ in\ session}
+\DoxyCodeLine{const\ prefs\ =\ await\ agent.getPreferences()}
+\DoxyCodeLine{const\ labelDefs\ =\ await\ agent.getLabelDefinitions(prefs)}
+\DoxyCodeLine{}
+\DoxyCodeLine{moderatePost(post,\ \{}
+\DoxyCodeLine{\ \ userDid:\ agent.session.did,}
+\DoxyCodeLine{\ \ prefs:\ prefs.moderationPrefs,}
+\DoxyCodeLine{\ \ labelDefs,}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1841}{}\doxysection{\texorpdfstring{The {\ttfamily moderate\texorpdfstring{$\ast$}{*}()} APIs}{The {\ttfamily moderate\texorpdfstring{$\ast$}{*}()} APIs}}\label{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1841}
+The SDK exports methods to moderate the different kinds of content on the network.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ moderateProfile,}
+\DoxyCodeLine{\ \ moderatePost,}
+\DoxyCodeLine{\ \ moderateNotification,}
+\DoxyCodeLine{\ \ moderateFeedGen,}
+\DoxyCodeLine{\ \ moderateUserList,}
+\DoxyCodeLine{\ \ moderateLabeler,}
+\DoxyCodeLine{\}\ from\ '@atproto/api'}
+
+\end{DoxyCode}
+
+
+Each of these follows the same API signature\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ res\ =\ moderatePost(post,\ moderationOptions)}
+
+\end{DoxyCode}
+
+
+The response object provides an API for figuring out what your UI should do in different contexts.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{res.ui(context)\ /*\ =>}
+\DoxyCodeLine{}
+\DoxyCodeLine{ModerationUI\ \{}
+\DoxyCodeLine{\ \ filter:\ boolean\ //\ should\ the\ content\ be\ removed\ from\ the\ interface?}
+\DoxyCodeLine{\ \ blur:\ boolean\ //\ should\ the\ content\ be\ put\ behind\ a\ cover?}
+\DoxyCodeLine{\ \ alert:\ boolean\ //\ should\ an\ alert\ be\ put\ on\ the\ content?\ (negative)}
+\DoxyCodeLine{\ \ inform:\ boolean\ //\ should\ an\ informational\ notice\ be\ put\ on\ the\ content?\ (neutral)}
+\DoxyCodeLine{\ \ noOverride:\ boolean\ //\ if\ blur=true,\ should\ the\ UI\ disable\ opening\ the\ cover?}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ the\ reasons\ for\ each\ of\ the\ flags:}
+\DoxyCodeLine{\ \ filters:\ ModerationCause[]}
+\DoxyCodeLine{\ \ blurs:\ ModerationCause[]}
+\DoxyCodeLine{\ \ alerts:\ ModerationCause[]}
+\DoxyCodeLine{\ \ informs:\ ModerationCause[]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+
+
+There are multiple UI contexts available\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily profile\+List} A profile being listed, eg in search or a follower list
+\item {\ttfamily profile\+View} A profile being viewed directly
+\item {\ttfamily avatar} The user\textquotesingle{}s avatar in any context
+\item {\ttfamily banner} The user\textquotesingle{}s banner in any context
+\item {\ttfamily display\+Name} The user\textquotesingle{}s display name in any context
+\item {\ttfamily content\+List} Content being listed, eg posts in a feed, posts as replies, a user list list, a feed generator list, etc
+\item {\ttfamily content\+View} Content being viewed direct, eg an opened post, the user list page, the feedgen page, etc
+\item {\ttfamily content\+Media} Media inside the content, eg a picture embedded in a post
+\end{DoxyItemize}
+
+Here\textquotesingle{}s how a post in a feed would use these tools to make a decision\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ mod\ =\ moderatePost(post,\ moderationOptions)}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (mod.ui('contentList').filter)\ \{}
+\DoxyCodeLine{\ \ //\ dont\ show\ the\ post}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{if\ (mod.ui('contentList').blur)\ \{}
+\DoxyCodeLine{\ \ //\ cover\ the\ post\ with\ the\ explanation\ from\ mod.ui('contentList').blurs[0]}
+\DoxyCodeLine{\ \ if\ (mod.ui('contentList').noOverride)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ dont\ allow\ the\ cover\ to\ be\ removed}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{if\ (mod.ui('contentMedia').blur)\ \{}
+\DoxyCodeLine{\ \ //\ cover\ the\ post's\ embedded\ images\ with\ the\ explanation\ from\ mod.ui('contentMedia').blurs[0]}
+\DoxyCodeLine{\ \ if\ (mod.ui('contentMedia').noOverride)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ dont\ allow\ the\ cover\ to\ be\ removed}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{if\ (mod.ui('avatar').blur)\ \{}
+\DoxyCodeLine{\ \ //\ cover\ the\ avatar\ with\ the\ explanation\ from\ mod.ui('avatar').blurs[0]}
+\DoxyCodeLine{\ \ if\ (mod.ui('avatar').noOverride)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ dont\ allow\ the\ cover\ to\ be\ removed}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{for\ (const\ alert\ of\ mod.ui('contentList').alerts)\ \{}
+\DoxyCodeLine{\ \ //\ render\ this\ alert}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{for\ (const\ inform\ of\ mod.ui('contentList').informs)\ \{}
+\DoxyCodeLine{\ \ //\ render\ this\ inform}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1842}{}\doxysection{\texorpdfstring{Sending moderation reports}{Sending moderation reports}}\label{md_node__modules_2_0datproto_2api_2docs_2moderation_autotoc_md1842}
+Any Labeler is capable of receiving moderation reports. As a result, you need to specify which labeler should receive the report. You do this with the {\ttfamily Atproto-\/\+Proxy} header\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{agent}
+\DoxyCodeLine{\ \ .withProxy('atproto\_labeler',\ 'did:web:my-\/labeler.com')}
+\DoxyCodeLine{\ \ .createModerationReport(\{}
+\DoxyCodeLine{\ \ \ \ reasonType:\ 'com.atproto.moderation.defs\#reasonViolation',}
+\DoxyCodeLine{\ \ \ \ reason:\ 'They\ were\ being\ such\ a\ jerk\ to\ me!',}
+\DoxyCodeLine{\ \ \ \ subject:\ \{\ did:\ 'did:web:bob.com'\ \},}
+\DoxyCodeLine{\ \ \})}
+
+\end{DoxyCode}
+ 

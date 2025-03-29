@@ -1,0 +1,72 @@
+\doxysection{node\+\_\+modules/tough-\/cookie/node\+\_\+modules/universalify Directory Reference}
+\hypertarget{dir_e4ea9b2385804ba76d3bfdc1b46eb3fc}{}\label{dir_e4ea9b2385804ba76d3bfdc1b46eb3fc}\index{node\_modules/tough-\/cookie/node\_modules/universalify Directory Reference@{node\_modules/tough-\/cookie/node\_modules/universalify Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/RyanZim/universalify}{\texttt{ }}   
+
+Make a callback-\/ or promise-\/based function support both promises and callbacks.
+
+Uses the native promise implementation.\hypertarget{README.md_autotoc_md33099}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md33099}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ universalify}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33100}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md33100}
+\hypertarget{README.md_autotoc_md33101}{}\doxysubsubsection{\texorpdfstring{{\ttfamily universalify.\+from\+Callback(fn)}}{{\ttfamily universalify.\+from\+Callback(fn)}}}\label{README.md_autotoc_md33101}
+Takes a callback-\/based function to universalify, and returns the universalified function.
+
+Function must take a callback as the last parameter that will be called with the signature {\ttfamily (error, result)}. {\ttfamily universalify} does not support calling the callback with three or more arguments, and does not ensure that the callback is only called once.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ callbackFn\ (n,\ cb)\ \{}
+\DoxyCodeLine{\ \ setTimeout(()\ =>\ cb(null,\ n),\ 15)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ fn\ =\ universalify.fromCallback(callbackFn)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Works\ with\ Promises:}
+\DoxyCodeLine{fn('Hello\ World!')}
+\DoxyCodeLine{.then(result\ =>\ console.log(result))\ //\ -\/>\ Hello\ World!}
+\DoxyCodeLine{.catch(error\ =>\ console.error(error))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Works\ with\ Callbacks:}
+\DoxyCodeLine{fn('Hi!',\ (error,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (error)\ return\ console.error(error)}
+\DoxyCodeLine{\ \ console.log(result)}
+\DoxyCodeLine{\ \ //\ -\/>\ Hi!}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33102}{}\doxysubsubsection{\texorpdfstring{{\ttfamily universalify.\+from\+Promise(fn)}}{{\ttfamily universalify.\+from\+Promise(fn)}}}\label{README.md_autotoc_md33102}
+Takes a promise-\/based function to universalify, and returns the universalified function.
+
+Function must return a valid JS promise. {\ttfamily universalify} does not ensure that a valid promise is returned.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ promiseFn\ (n)\ \{}
+\DoxyCodeLine{\ \ return\ new\ Promise(resolve\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ setTimeout(()\ =>\ resolve(n),\ 15)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ fn\ =\ universalify.fromPromise(promiseFn)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Works\ with\ Promises:}
+\DoxyCodeLine{fn('Hello\ World!')}
+\DoxyCodeLine{.then(result\ =>\ console.log(result))\ //\ -\/>\ Hello\ World!}
+\DoxyCodeLine{.catch(error\ =>\ console.error(error))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Works\ with\ Callbacks:}
+\DoxyCodeLine{fn('Hi!',\ (error,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (error)\ return\ console.error(error)}
+\DoxyCodeLine{\ \ console.log(result)}
+\DoxyCodeLine{\ \ //\ -\/>\ Hi!}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33103}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md33103}
+MIT 

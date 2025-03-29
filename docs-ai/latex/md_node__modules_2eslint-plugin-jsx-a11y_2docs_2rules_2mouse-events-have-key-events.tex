@@ -1,0 +1,63 @@
+\chapter{jsx-\/a11y/mouse-\/events-\/have-\/key-\/events}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events}{}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events}\index{jsx-\/a11y/mouse-\/events-\/have-\/key-\/events@{jsx-\/a11y/mouse-\/events-\/have-\/key-\/events}}
+\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13867}%
+\Hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13867}%
+
+
+💼 This rule is enabled in the following configs\+: ☑️ {\ttfamily recommended}, 🔒 {\ttfamily strict}.
+
+Enforce onmouseover/onmouseout are accompanied by onfocus/onblur. Coding for the keyboard is important for users with physical disabilities who cannot use a mouse, AT compatibility, and screen reader users.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13868}{}\doxysection{\texorpdfstring{Rule options}{Rule options}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13868}
+By default, this rule checks that {\ttfamily onmouseover} is paired with {\ttfamily onfocus} and that {\ttfamily onmouseout} is paired with {\ttfamily onblur}. This rule takes an optional argument to specify other handlers to check for "{}hover in"{} and/or "{}hover out"{} events\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}jsx-\/a11y/mouse-\/events-\/have-\/key-\/events"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ "{}error"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}hoverInHandlers"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}onMouseOver"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}onMouseEnter"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}onPointerOver"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}onPointerEnter"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}hoverOutHandlers"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}onMouseOut"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}onMouseLeave"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}onPointerOut"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}onPointerLeave"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Note that while {\ttfamily onmouseover} and {\ttfamily onmouseout} are checked by default if no arguments are passed in, those are {\itshape not} included by default if you {\itshape do} provide an argument, so remember to explicitly include them if you want to check them.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13869}{}\doxysubsection{\texorpdfstring{Succeed}{Succeed}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13869}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ onMouseOver=\{\ ()\ =>\ void\ 0\ \}\ onFocus=\{\ ()\ =>\ void\ 0\ \}\ />}
+\DoxyCodeLine{<div\ onMouseOut=\{\ ()\ =>\ void\ 0\ \}\ onBlur=\{\ ()\ =>\ void\ 0\ \}\ />}
+\DoxyCodeLine{<div\ onMouseOver=\{\ ()\ =>\ void\ 0\ \}\ onFocus=\{\ ()\ =>\ void\ 0\ \}\ \{...otherProps\}\ />}
+\DoxyCodeLine{<div\ onMouseOut=\{\ ()\ =>\ void\ 0\ \}\ onBlur=\{\ ()\ =>\ void\ 0\ \}\ \{...otherProps\}\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13870}{}\doxysubsection{\texorpdfstring{Fail}{Fail}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13870}
+In example 3 and 4 below, even if other\+Props contains on\+Blur and/or on\+Focus, this rule will still fail. Props should be passed down explicitly for rule to pass.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ onMouseOver=\{\ ()\ =>\ void\ 0\ \}\ />}
+\DoxyCodeLine{<div\ onMouseOut=\{\ ()\ =>\ void\ 0\ \}\ />}
+\DoxyCodeLine{<div\ onMouseOver=\{\ ()\ =>\ void\ 0\ \}\ \{...otherProps\}\ />}
+\DoxyCodeLine{<div\ onMouseOut=\{\ ()\ =>\ void\ 0\ \}\ \{...otherProps\}\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13871}{}\doxysection{\texorpdfstring{Accessibility guidelines}{Accessibility guidelines}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events_autotoc_md13871}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/keyboard}{\texttt{ WCAG 2.\+1.\+1}} 
+\end{DoxyItemize}

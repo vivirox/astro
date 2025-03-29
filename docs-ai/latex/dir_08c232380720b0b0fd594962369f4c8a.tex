@@ -1,0 +1,105 @@
+\doxysection{node\+\_\+modules/unist-\/util-\/position-\/from-\/estree Directory Reference}
+\hypertarget{dir_08c232380720b0b0fd594962369f4c8a}{}\label{dir_08c232380720b0b0fd594962369f4c8a}\index{node\_modules/unist-\/util-\/position-\/from-\/estree Directory Reference@{node\_modules/unist-\/util-\/position-\/from-\/estree Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/unist-util-position-from-estree/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/unist-util-position-from-estree}{\texttt{ }} \href{https://www.npmjs.com/package/unist-util-position-from-estree}{\texttt{ }} \href{https://bundlejs.com/?q=unist-util-position-from-estree}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/unist}{\texttt{ unist}} utility to get a position from an \href{https://github.com/estree/estree}{\texttt{ estree}} node.\hypertarget{readme.md_autotoc_md34312}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md34312}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}position\+From\+Estree(node)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34313}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md34313}
+This package is a tiny utility that can create a proper unist position from an estree node\hypertarget{readme.md_autotoc_md34314}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md34314}
+You can use this package when you want to use other unist utilities with estree nodes.\hypertarget{readme.md_autotoc_md34315}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md34315}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ unist-\/util-\/position-\/from-\/estree}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{positionFromEstree\}\ from\ 'https://esm.sh/unist-\/util-\/position-\/from-\/estree@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{positionFromEstree\}\ from\ 'https://esm.sh/unist-\/util-\/position-\/from-\/estree@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34316}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md34316}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{parse\}\ from\ 'acorn'}
+\DoxyCodeLine{import\ \{positionFromEstree\}\ from\ 'unist-\/util-\/position-\/from-\/estree'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Make\ acorn\ support\ line/column.}
+\DoxyCodeLine{const\ node\ =\ parse('function\ x()\ \{\ console.log(1)\ \}',\ \{}
+\DoxyCodeLine{\ \ ecmaVersion:\ 2020,}
+\DoxyCodeLine{\ \ locations:\ true}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(positionFromEstree(node))\ //\ \`{}Program`}
+\DoxyCodeLine{console.log(positionFromEstree(node.body[0].id))\ //\ \`{}x`}
+\DoxyCodeLine{console.log(positionFromEstree(node.body[0].body.body[0].expression))\ //\ Call}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ start:\ \{line:\ 1,\ column:\ 1,\ offset:\ 0\},}
+\DoxyCodeLine{\ \ end:\ \{line:\ 1,\ column:\ 32,\ offset:\ 31\}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ start:\ \{line:\ 1,\ column:\ 10,\ offset:\ 9\},}
+\DoxyCodeLine{\ \ end:\ \{line:\ 1,\ column:\ 11,\ offset:\ 10\}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ start:\ \{line:\ 1,\ column:\ 16,\ offset:\ 15\},}
+\DoxyCodeLine{\ \ end:\ \{line:\ 1,\ column:\ 30,\ offset:\ 29\}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34317}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md34317}
+This package exports the identifier \`{}position\+From\+Estree\`{}. There is no default export.\hypertarget{readme.md_autotoc_md34318}{}\doxysubsubsection{\texorpdfstring{{\ttfamily position\+From\+Estree(node)}}{{\ttfamily position\+From\+Estree(node)}}}\label{readme.md_autotoc_md34318}
+Turn an estree {\ttfamily node} into a unist {\ttfamily position}.\hypertarget{readme.md_autotoc_md34319}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md34319}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/estree/estree/blob/master/es5.md\#node-objects}{\texttt{ {\ttfamily Node}}}) — estree node
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34320}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md34320}
+unist position, if valid (\href{https://github.com/syntax-tree/unist\#position}{\texttt{ {\ttfamily Position}}} or {\ttfamily undefined}).\hypertarget{readme.md_autotoc_md34321}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md34321}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md34322}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md34322}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily unist-\/util-\/position-\/from-\/estree@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md34323}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md34323}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md34324}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md34324}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

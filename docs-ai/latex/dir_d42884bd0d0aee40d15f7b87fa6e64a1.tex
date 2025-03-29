@@ -1,0 +1,179 @@
+\doxysection{node\+\_\+modules/nprogress Directory Reference}
+\hypertarget{dir_d42884bd0d0aee40d15f7b87fa6e64a1}{}\label{dir_d42884bd0d0aee40d15f7b87fa6e64a1}\index{node\_modules/nprogress Directory Reference@{node\_modules/nprogress Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Slim progress bars for Ajax\textquotesingle{}y applications. Inspired by Google, You\+Tube, and Medium.\hypertarget{Readme.md_autotoc_md24724}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{Readme.md_autotoc_md24724}
+Add \href{http://ricostacruz.com/nprogress/nprogress.js}{\texttt{ nprogress.\+js}} and \href{http://ricostacruz.com/nprogress/nprogress.css}{\texttt{ nprogress.\+css}} to your project.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src='nprogress.js'></script>}
+\DoxyCodeLine{<link\ rel='stylesheet'\ href='nprogress.css'/>}
+
+\end{DoxyCode}
+
+
+NProgress is available via \href{http://bower.io/search/?q=nprogress}{\texttt{ bower}} and \href{https://www.npmjs.org/package/nprogress}{\texttt{ npm}} and \href{http://spmjs.io/package/nprogress}{\texttt{ spm}}. \begin{DoxyVerb}$ bower install --save nprogress
+$ npm install --save nprogress
+\end{DoxyVerb}
+\hypertarget{Readme.md_autotoc_md24725}{}\doxysubsection{\texorpdfstring{Basic usage}{Basic usage}}\label{Readme.md_autotoc_md24725}
+Simply call {\ttfamily start()} and {\ttfamily done()} to control the progress bar.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.start();}
+\DoxyCodeLine{NProgress.done();}
+
+\end{DoxyCode}
+
+
+Using \href{https://github.com/rails/turbolinks}{\texttt{ Turbolinks}} or similar? Ensure you\textquotesingle{}re using Turbolinks 1.\+3.\+0+, and use this\+: (explained \href{https://github.com/rstacruz/nprogress/issues/8\#issuecomment-23010560}{\texttt{ here}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{\$(document).on('page:fetch',\ \ \ function()\ \{\ NProgress.start();\ \});}
+\DoxyCodeLine{\$(document).on('page:change',\ \ function()\ \{\ NProgress.done();\ \});}
+\DoxyCodeLine{\$(document).on('page:restore',\ function()\ \{\ NProgress.remove();\ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md24726}{}\doxysubsection{\texorpdfstring{Ideas}{Ideas}}\label{Readme.md_autotoc_md24726}
+
+\begin{DoxyItemize}
+\item Add progress to your Ajax calls! Bind it to the j\+Query {\ttfamily ajax\+Start} and {\ttfamily ajax\+Stop} events.
+\item Make a fancy loading bar even without Turbolinks/\+Pjax! Bind it to {\ttfamily \$(document).ready} and {\ttfamily \$(window).load}.
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md24727}{}\doxysubsection{\texorpdfstring{Advanced usage}{Advanced usage}}\label{Readme.md_autotoc_md24727}
+{\bfseries{Percentages\+:}} To set a progress percentage, call {\ttfamily .set(n)}, where {\itshape n} is a number between {\ttfamily 0..1}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.set(0.0);\ \ \ \ \ //\ Sorta\ same\ as\ .start()}
+\DoxyCodeLine{NProgress.set(0.4);}
+\DoxyCodeLine{NProgress.set(1.0);\ \ \ \ \ //\ Sorta\ same\ as\ .done()}
+
+\end{DoxyCode}
+
+
+{\bfseries{Incrementing\+:}} To increment the progress bar, just use {\ttfamily .inc()}. This increments it with a random amount. This will never get to 100\%\+: use it for every image load (or similar).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.inc();}
+
+\end{DoxyCode}
+
+
+If you want to increment by a specific value, you can pass that as a parameter\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.inc(0.2);\ \ \ \ //\ This\ will\ get\ the\ current\ status\ value\ and\ adds\ 0.2\ until\ status\ is\ 0.994}
+
+\end{DoxyCode}
+
+
+{\bfseries{Force-\/done\+:}} By passing {\ttfamily true} to {\ttfamily done()}, it will show the progress bar even if it\textquotesingle{}s not being shown. (The default behavior is that {\itshape .done()} will not do anything if {\itshape .start()} isn\textquotesingle{}t called)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.done(true);}
+
+\end{DoxyCode}
+
+
+{\bfseries{Get the status value\+:}} To get the status value, use {\ttfamily .status}\hypertarget{Readme.md_autotoc_md24728}{}\doxysubsection{\texorpdfstring{Configuration}{Configuration}}\label{Readme.md_autotoc_md24728}
+\hypertarget{Readme.md_autotoc_md24729}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily minimum}}{{\ttfamily minimum}}}\label{Readme.md_autotoc_md24729}
+Changes the minimum percentage used upon starting. (default\+: {\ttfamily 0.\+08})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.configure(\{\ minimum:\ 0.1\ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md24730}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily template}}{{\ttfamily template}}}\label{Readme.md_autotoc_md24730}
+You can change the markup using {\ttfamily template}. To keep the progress bar working, keep an element with `role=\textquotesingle{}bar'\`{} in there. See the \href{https://github.com/rstacruz/nprogress/blob/master/nprogress.js\#L31}{\texttt{ default template}} for reference.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.configure(\{}
+\DoxyCodeLine{\ \ template:\ "{}<div\ class='....'>...</div>"{}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md24731}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily easing} and {\ttfamily speed}}{{\ttfamily easing} and {\ttfamily speed}}}\label{Readme.md_autotoc_md24731}
+Adjust animation settings using {\itshape easing} (a CSS easing string) and {\itshape speed} (in ms). (default\+: {\ttfamily ease} and {\ttfamily 200})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.configure(\{\ easing:\ 'ease',\ speed:\ 500\ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md24732}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily trickle}}{{\ttfamily trickle}}}\label{Readme.md_autotoc_md24732}
+Turn off the automatic incrementing behavior by setting this to {\ttfamily false}. (default\+: {\ttfamily true})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.configure(\{\ trickle:\ false\ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md24733}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily trickle\+Rate} and {\ttfamily trickle\+Speed}}{{\ttfamily trickle\+Rate} and {\ttfamily trickle\+Speed}}}\label{Readme.md_autotoc_md24733}
+You can adjust the {\itshape trickle\+Rate} (how much to increase per trickle) and {\itshape trickle\+Speed} (how often to trickle, in ms).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.configure(\{\ trickleRate:\ 0.02,\ trickleSpeed:\ 800\ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md24734}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily show\+Spinner}}{{\ttfamily show\+Spinner}}}\label{Readme.md_autotoc_md24734}
+Turn off loading spinner by setting it to false. (default\+: {\ttfamily true})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.configure(\{\ showSpinner:\ false\ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md24735}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily parent}}{{\ttfamily parent}}}\label{Readme.md_autotoc_md24735}
+specify this to change the parent container. (default\+: {\ttfamily body})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{NProgress.configure(\{\ parent:\ '\#container'\ \});}
+
+\end{DoxyCode}
+\hypertarget{Readme.md_autotoc_md24736}{}\doxysubsection{\texorpdfstring{Customization}{Customization}}\label{Readme.md_autotoc_md24736}
+Just edit {\ttfamily nprogress.\+css} to your liking. Tip\+: you probably only want to find and replace occurrences of {\ttfamily \#29d}.
+
+The included CSS file is pretty minimal... in fact, feel free to scrap it and make your own!\hypertarget{Readme.md_autotoc_md24737}{}\doxysubsection{\texorpdfstring{Resources}{Resources}}\label{Readme.md_autotoc_md24737}
+
+\begin{DoxyItemize}
+\item \href{http://www.usabilitypost.com/2013/08/19/new-ui-pattern-website-loading-bars/}{\texttt{ New UI Pattern\+: Website Loading Bars}} (usabilitypost.\+com)
+\end{DoxyItemize}\hypertarget{Readme.md_autotoc_md24738}{}\doxysubsection{\texorpdfstring{Support}{Support}}\label{Readme.md_autotoc_md24738}
+{\bfseries{Bugs and requests}}\+: submit them through the project\textquotesingle{}s issues tracker.~\newline
+ \href{https://github.com/rstacruz/nprogress/issues}{\texttt{ }}
+
+{\bfseries{Questions}}\+: ask them at Stack\+Overflow with the tag {\itshape nprogress}.~\newline
+ \href{http://stackoverflow.com/questions/tagged/nprogress}{\texttt{ }}
+
+{\bfseries{Chat}}\+: join us at gitter.\+im.~\newline
+ \href{https://gitter.im/rstacruz/nprogress}{\texttt{ }}\hypertarget{Readme.md_autotoc_md24739}{}\doxysubsection{\texorpdfstring{Thanks}{Thanks}}\label{Readme.md_autotoc_md24739}
+{\bfseries{NProgress}} © 2013-\/2014, Rico Sta. Cruz. Released under the \href{http://mit-license.org/}{\texttt{ MIT License}}.~\newline
+ Authored and maintained by Rico Sta. Cruz with help from \href{http://github.com/rstacruz/nprogress/contributors}{\texttt{ contributors}}.
+
+\begin{quote}
+\href{http://ricostacruz.com}{\texttt{ ricostacruz.\+com}} ~\textperiodcentered{}~ Git\+Hub \href{https://github.com/rstacruz}{\texttt{ @rstacruz}} ~\textperiodcentered{}~ Twitter \href{https://twitter.com/rstacruz}{\texttt{ @rstacruz}} \end{quote}
+
+
+\href{http://travis-ci.org/rstacruz/nprogress}{\texttt{ }} \href{https://npmjs.org/package/nprogress}{\texttt{ }} \href{http://spmjs.io/package/nprogress}{\texttt{ }} 

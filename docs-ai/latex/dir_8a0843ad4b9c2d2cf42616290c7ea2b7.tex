@@ -1,0 +1,710 @@
+\doxysection{node\+\_\+modules/@testing-\/library/react Directory Reference}
+\hypertarget{dir_8a0843ad4b9c2d2cf42616290c7ea2b7}{}\label{dir_8a0843ad4b9c2d2cf42616290c7ea2b7}\index{node\_modules/"@testing-\/library/react Directory Reference@{node\_modules/"@testing-\/library/react Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+ \doxysubsection*{React Testing Library}
+
+
+
+\href{https://www.emojione.com/emoji/1f410}{\texttt{  }}
+
+
+
+Simple and complete React DOM testing utilities that encourage good testing practices.
+
+
+
+~\newline
+
+
+\href{https://testing-library.com/react}{\texttt{ {\bfseries{Read The Docs}}}} \texorpdfstring{$\vert$}{|} \href{https://github.com/testing-library/testing-library-docs}{\texttt{ Edit the docs}}
+
+~\newline
+ 
+
+\DoxyHorRuler{0}
+
+
+\href{https://github.com/testing-library/react-testing-library/actions?query=workflow\%3Avalidate}{\texttt{ }} \href{https://codecov.io/github/testing-library/react-testing-library}{\texttt{ }} \href{https://www.npmjs.com/package/@testing-library/react}{\texttt{ }} \href{http://www.npmtrends.com/@testing-library/react}{\texttt{ }} \href{https://github.com/testing-library/react-testing-library/blob/main/LICENSE}{\texttt{ }} \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_contributors}{!\mbox{[}All Contributors\mbox{]}\mbox{[}all-\/contributors-\/badge\mbox{]}} \href{http://makeapullrequest.com}{\texttt{ }} \href{https://github.com/testing-library/react-testing-library/blob/main/CODE_OF_CONDUCT.md}{\texttt{ }} \href{https://discord.gg/testing-library}{\texttt{ }}
+
+\href{https://github.com/testing-library/react-testing-library/watchers}{\texttt{ }} \href{https://github.com/testing-library/react-testing-library/stargazers}{\texttt{ }} \href{https://twitter.com/intent/tweet?text=Check\%20out\%20react-testing-library\%20by\%20\%40@TestingLib\%20https\%3A\%2F\%2Fgithub.com\%2Ftesting-library\%2Freact-testing-library\%20\%F0\%9F\%91\%8D}{\texttt{ }}
+
+ \href{https://testingjavascript.com}{\texttt{  }} \hypertarget{README.md_autotoc_md6398}{}\doxysubsubsection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{README.md_autotoc_md6398}
+
+\begin{DoxyItemize}
+\item The problem
+\item The solution
+\item \doxylink{README.md_installation}{Installation}
+\begin{DoxyItemize}
+\item Suppressing unnecessary warnings on React DOM 16.8
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Basic Example
+\item Complex Example
+\item More Examples
+\end{DoxyItemize}
+\item Hooks
+\item Guiding Principles
+\item \doxylink{README.md_docs}{Docs}
+\item \doxylink{README.md_issues}{Issues}
+\begin{DoxyItemize}
+\item 🐛 Bugs
+\item 💡 Feature Requests
+\item ❓ Questions
+\end{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_contributors}{Contributors}
+\item \doxylink{README.md_license}{LICENSE}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6399}{}\doxysubsubsection{\texorpdfstring{The problem}{The problem}}\label{README.md_autotoc_md6399}
+You want to write maintainable tests for your React components. As a part of this goal, you want your tests to avoid including implementation details of your components and rather focus on making your tests give you the confidence for which they are intended. As part of this, you want your testbase to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don\textquotesingle{}t break your tests and slow you and your team down.\hypertarget{README.md_autotoc_md6400}{}\doxysubsubsection{\texorpdfstring{The solution}{The solution}}\label{README.md_autotoc_md6400}
+The {\ttfamily React Testing Library} is a very lightweight solution for testing React components. It provides light utility functions on top of {\ttfamily react-\/dom} and {\ttfamily react-\/dom/test-\/utils}, in a way that encourages better testing practices. Its primary guiding principle is\+:
+
+\begin{quote}
+\href{https://twitter.com/kentcdodds/status/977018512689455106}{\texttt{ The more your tests resemble the way your software is used, the more confidence they can give you.}} \end{quote}
+\hypertarget{README.md_autotoc_md6401}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md6401}
+This module is distributed via \href{https://www.npmjs.com/}{\texttt{ npm}} which is bundled with \href{https://nodejs.org}{\texttt{ node}} and should be installed as one of your project\textquotesingle{}s {\ttfamily dev\+Dependencies}. ~\newline
+ Starting from RTL version 16, you\textquotesingle{}ll also need to install {\ttfamily @testing-\/library/dom}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ @testing-\/library/react\ @testing-\/library/dom}
+
+\end{DoxyCode}
+
+
+or
+
+for installation via \href{https://classic.yarnpkg.com}{\texttt{ yarn}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ -\/-\/dev\ @testing-\/library/react\ @testing-\/library/dom}
+
+\end{DoxyCode}
+
+
+This library has {\ttfamily peer\+Dependencies} listings for {\ttfamily react}, {\ttfamily react-\/dom} and starting from RTL version 16 also {\ttfamily @testing-\/library/dom}.
+
+{\itshape React Testing Library versions 13+ require React v18. If your project uses an older version of React, be sure to install version 12\+:}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ @testing-\/library/react@12}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{yarn\ add\ -\/-\/dev\ @testing-\/library/react@12}
+
+\end{DoxyCode}
+
+
+You may also be interested in installing {\ttfamily @testing-\/library/jest-\/dom} so you can use \href{https://github.com/testing-library/jest-dom}{\texttt{ the custom jest matchers}}.
+
+\begin{quote}
+\href{https://testing-library.com/react}{\texttt{ {\bfseries{Docs}}}} \end{quote}
+\hypertarget{README.md_autotoc_md6402}{}\doxysubsubsubsection{\texorpdfstring{Suppressing unnecessary warnings on React DOM 16.\+8}{Suppressing unnecessary warnings on React DOM 16.\+8}}\label{README.md_autotoc_md6402}
+There is a known compatibility issue with React DOM 16.\+8 where you will see the following warning\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Warning:\ An\ update\ to\ ComponentName\ inside\ a\ test\ was\ not\ wrapped\ in\ act(...).}
+
+\end{DoxyCode}
+
+
+If you cannot upgrade to React DOM 16.\+9, you may suppress the warnings by adding the following snippet to your test configuration (\href{https://github.com/testing-library/react-testing-library/issues/281}{\texttt{ learn more}})\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ this\ is\ just\ a\ little\ hack\ to\ silence\ a\ warning\ that\ we'll\ get\ until\ we}
+\DoxyCodeLine{//\ upgrade\ to\ 16.9.\ See\ also:\ https://github.com/facebook/react/pull/14853}
+\DoxyCodeLine{const\ originalError\ =\ console.error}
+\DoxyCodeLine{beforeAll(()\ =>\ \{}
+\DoxyCodeLine{\ \ console.error\ =\ (...args)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (/Warning.*not\ wrapped\ in\ act/.test(args[0]))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ originalError.call(console,\ ...args)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{afterAll(()\ =>\ \{}
+\DoxyCodeLine{\ \ console.error\ =\ originalError}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6403}{}\doxysubsubsection{\texorpdfstring{Examples}{Examples}}\label{README.md_autotoc_md6403}
+\hypertarget{README.md_autotoc_md6404}{}\doxysubsubsubsection{\texorpdfstring{Basic Example}{Basic Example}}\label{README.md_autotoc_md6404}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ hidden-\/message.js}
+\DoxyCodeLine{import\ *\ as\ React\ from\ 'react'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ NOTE:\ React\ Testing\ Library\ works\ well\ with\ React\ Hooks\ and\ classes.}
+\DoxyCodeLine{//\ Your\ tests\ will\ be\ the\ same\ regardless\ of\ how\ you\ write\ your\ components.}
+\DoxyCodeLine{function\ HiddenMessage(\{children\})\ \{}
+\DoxyCodeLine{\ \ const\ [showMessage,\ setShowMessage]\ =\ React.useState(false)}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ <label\ htmlFor="{}toggle"{}>Show\ Message</label>}
+\DoxyCodeLine{\ \ \ \ \ \ <input}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ id="{}toggle"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ type="{}checkbox"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ onChange=\{e\ =>\ setShowMessage(e.target.checked)\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ checked=\{showMessage\}}
+\DoxyCodeLine{\ \ \ \ \ \ />}
+\DoxyCodeLine{\ \ \ \ \ \ \{showMessage\ ?\ children\ :\ null\}}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ HiddenMessage}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ \_\_tests\_\_/hidden-\/message.js}
+\DoxyCodeLine{//\ these\ imports\ are\ something\ you'd\ normally\ configure\ Jest\ to\ import\ for\ you}
+\DoxyCodeLine{//\ automatically.\ Learn\ more\ in\ the\ setup\ docs:\ https://testing-\/library.com/docs/react-\/testing-\/library/setup\#cleanup}
+\DoxyCodeLine{import\ '@testing-\/library/jest-\/dom'}
+\DoxyCodeLine{//\ NOTE:\ jest-\/dom\ adds\ handy\ assertions\ to\ Jest\ and\ is\ recommended,\ but\ not\ required}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ *\ as\ React\ from\ 'react'}
+\DoxyCodeLine{import\ \{render,\ fireEvent,\ screen\}\ from\ '@testing-\/library/react'}
+\DoxyCodeLine{import\ HiddenMessage\ from\ '../hidden-\/message'}
+\DoxyCodeLine{}
+\DoxyCodeLine{test('shows\ the\ children\ when\ the\ checkbox\ is\ checked',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ const\ testMessage\ =\ 'Test\ Message'}
+\DoxyCodeLine{\ \ render(<HiddenMessage>\{testMessage\}</HiddenMessage>)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ query*\ functions\ will\ return\ the\ element\ or\ null\ if\ it\ cannot\ be\ found}
+\DoxyCodeLine{\ \ //\ get*\ functions\ will\ return\ the\ element\ or\ throw\ an\ error\ if\ it\ cannot\ be\ found}
+\DoxyCodeLine{\ \ expect(screen.queryByText(testMessage)).toBeNull()}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ the\ queries\ can\ accept\ a\ regex\ to\ make\ your\ selectors\ more\ resilient\ to\ content\ tweaks\ and\ changes.}
+\DoxyCodeLine{\ \ fireEvent.click(screen.getByLabelText(/show/i))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ .toBeInTheDocument()\ is\ an\ assertion\ that\ comes\ from\ jest-\/dom}
+\DoxyCodeLine{\ \ //\ otherwise\ you\ could\ use\ .toBeDefined()}
+\DoxyCodeLine{\ \ expect(screen.getByText(testMessage)).toBeInTheDocument()}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6405}{}\doxysubsubsubsection{\texorpdfstring{Complex Example}{Complex Example}}\label{README.md_autotoc_md6405}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ login.js}
+\DoxyCodeLine{import\ *\ as\ React\ from\ 'react'}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Login()\ \{}
+\DoxyCodeLine{\ \ const\ [state,\ setState]\ =\ React.useReducer((s,\ a)\ =>\ (\{...s,\ ...a\}),\ \{}
+\DoxyCodeLine{\ \ \ \ resolved:\ false,}
+\DoxyCodeLine{\ \ \ \ loading:\ false,}
+\DoxyCodeLine{\ \ \ \ error:\ null,}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ function\ handleSubmit(event)\ \{}
+\DoxyCodeLine{\ \ \ \ event.preventDefault()}
+\DoxyCodeLine{\ \ \ \ const\ \{usernameInput,\ passwordInput\}\ =\ event.target.elements}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ setState(\{loading:\ true,\ resolved:\ false,\ error:\ null\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ window}
+\DoxyCodeLine{\ \ \ \ \ \ .fetch('/api/login',\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ method:\ 'POST',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ headers:\ \{'Content-\/Type':\ 'application/json'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ body:\ JSON.stringify(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ username:\ usernameInput.value,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ password:\ passwordInput.value,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}),}
+\DoxyCodeLine{\ \ \ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ \ \ .then(r\ =>\ r.json().then(data\ =>\ (r.ok\ ?\ data\ :\ Promise.reject(data))))}
+\DoxyCodeLine{\ \ \ \ \ \ .then(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ user\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ setState(\{loading:\ false,\ resolved:\ true,\ error:\ null\})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ window.localStorage.setItem('token',\ user.token)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ error\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ setState(\{loading:\ false,\ resolved:\ false,\ error:\ error.message\})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ )}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ <form\ onSubmit=\{handleSubmit\}>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <label\ htmlFor="{}usernameInput"{}>Username</label>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <input\ id="{}usernameInput"{}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ </div>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <label\ htmlFor="{}passwordInput"{}>Password</label>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <input\ id="{}passwordInput"{}\ type="{}password"{}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ </div>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <button\ type="{}submit"{}>Submit\{state.loading\ ?\ '...'\ :\ null\}</button>}
+\DoxyCodeLine{\ \ \ \ \ \ </form>}
+\DoxyCodeLine{\ \ \ \ \ \ \{state.error\ ?\ <div\ role="{}alert"{}>\{state.error\}</div>\ :\ null\}}
+\DoxyCodeLine{\ \ \ \ \ \ \{state.resolved\ ?\ (}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <div\ role="{}alert"{}>Congrats!\ You're\ signed\ in!</div>}
+\DoxyCodeLine{\ \ \ \ \ \ )\ :\ null\}}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ Login}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ \_\_tests\_\_/login.js}
+\DoxyCodeLine{//\ again,\ these\ first\ two\ imports\ are\ something\ you'd\ normally\ handle\ in}
+\DoxyCodeLine{//\ your\ testing\ framework\ configuration\ rather\ than\ importing\ them\ in\ every\ file.}
+\DoxyCodeLine{import\ '@testing-\/library/jest-\/dom'}
+\DoxyCodeLine{import\ *\ as\ React\ from\ 'react'}
+\DoxyCodeLine{//\ import\ API\ mocking\ utilities\ from\ Mock\ Service\ Worker.}
+\DoxyCodeLine{import\ \{rest\}\ from\ 'msw'}
+\DoxyCodeLine{import\ \{setupServer\}\ from\ 'msw/node'}
+\DoxyCodeLine{//\ import\ testing\ utilities}
+\DoxyCodeLine{import\ \{render,\ fireEvent,\ screen\}\ from\ '@testing-\/library/react'}
+\DoxyCodeLine{import\ Login\ from\ '../login'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ fakeUserResponse\ =\ \{token:\ 'fake\_user\_token'\}}
+\DoxyCodeLine{const\ server\ =\ setupServer(}
+\DoxyCodeLine{\ \ rest.post('/api/login',\ (req,\ res,\ ctx)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ return\ res(ctx.json(fakeUserResponse))}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{beforeAll(()\ =>\ server.listen())}
+\DoxyCodeLine{afterEach(()\ =>\ \{}
+\DoxyCodeLine{\ \ server.resetHandlers()}
+\DoxyCodeLine{\ \ window.localStorage.removeItem('token')}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{afterAll(()\ =>\ server.close())}
+\DoxyCodeLine{}
+\DoxyCodeLine{test('allows\ the\ user\ to\ login\ successfully',\ async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ render(<Login\ />)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ fill\ out\ the\ form}
+\DoxyCodeLine{\ \ fireEvent.change(screen.getByLabelText(/username/i),\ \{}
+\DoxyCodeLine{\ \ \ \ target:\ \{value:\ 'chuck'\},}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ fireEvent.change(screen.getByLabelText(/password/i),\ \{}
+\DoxyCodeLine{\ \ \ \ target:\ \{value:\ 'norris'\},}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ fireEvent.click(screen.getByText(/submit/i))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ just\ like\ a\ manual\ tester,\ we'll\ instruct\ our\ test\ to\ wait\ for\ the\ alert}
+\DoxyCodeLine{\ \ //\ to\ show\ up\ before\ continuing\ with\ our\ assertions.}
+\DoxyCodeLine{\ \ const\ alert\ =\ await\ screen.findByRole('alert')}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ .toHaveTextContent()\ comes\ from\ jest-\/dom's\ assertions}
+\DoxyCodeLine{\ \ //\ otherwise\ you\ could\ use\ expect(alert.textContent).toMatch(/congrats/i)}
+\DoxyCodeLine{\ \ //\ but\ jest-\/dom\ will\ give\ you\ better\ error\ messages\ which\ is\ why\ it's\ recommended}
+\DoxyCodeLine{\ \ expect(alert).toHaveTextContent(/congrats/i)}
+\DoxyCodeLine{\ \ expect(window.localStorage.getItem('token')).toEqual(fakeUserResponse.token)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{test('handles\ server\ exceptions',\ async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ mock\ the\ server\ error\ response\ for\ this\ test\ suite\ only.}
+\DoxyCodeLine{\ \ server.use(}
+\DoxyCodeLine{\ \ \ \ rest.post('/api/login',\ (req,\ res,\ ctx)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ res(ctx.status(500),\ ctx.json(\{message:\ 'Internal\ server\ error'\}))}
+\DoxyCodeLine{\ \ \ \ \}),}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ render(<Login\ />)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ fill\ out\ the\ form}
+\DoxyCodeLine{\ \ fireEvent.change(screen.getByLabelText(/username/i),\ \{}
+\DoxyCodeLine{\ \ \ \ target:\ \{value:\ 'chuck'\},}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ fireEvent.change(screen.getByLabelText(/password/i),\ \{}
+\DoxyCodeLine{\ \ \ \ target:\ \{value:\ 'norris'\},}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ fireEvent.click(screen.getByText(/submit/i))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ wait\ for\ the\ error\ message}
+\DoxyCodeLine{\ \ const\ alert\ =\ await\ screen.findByRole('alert')}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ expect(alert).toHaveTextContent(/internal\ server\ error/i)}
+\DoxyCodeLine{\ \ expect(window.localStorage.getItem('token')).toBeNull()}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+We recommend using \href{https://github.com/mswjs/msw}{\texttt{ Mock Service Worker}} library to declaratively mock API communication in your tests instead of stubbing {\ttfamily window.\+fetch}, or relying on third-\/party adapters. \end{quote}
+\hypertarget{README.md_autotoc_md6406}{}\doxysubsubsubsection{\texorpdfstring{More Examples}{More Examples}}\label{README.md_autotoc_md6406}
+\begin{quote}
+We\textquotesingle{}re in the process of moving examples to the \href{https://testing-library.com/docs/example-codesandbox}{\texttt{ docs site}} \end{quote}
+
+
+You\textquotesingle{}ll find runnable examples of testing with different libraries in \href{https://codesandbox.io/s/github/kentcdodds/react-testing-library-examples}{\texttt{ the {\ttfamily react-\/testing-\/library-\/examples} codesandbox}}. Some included are\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://codesandbox.io/s/github/kentcdodds/react-testing-library-examples/tree/main/?fontsize=14&module=\%2Fsrc\%2F__tests__\%2Freact-redux.js&previewwindow=tests}{\texttt{ {\ttfamily react-\/redux}}}
+\item \href{https://codesandbox.io/s/github/kentcdodds/react-testing-library-examples/tree/main/?fontsize=14&module=\%2Fsrc\%2F__tests__\%2Freact-router.js&previewwindow=tests}{\texttt{ {\ttfamily react-\/router}}}
+\item \href{https://codesandbox.io/s/github/kentcdodds/react-testing-library-examples/tree/main/?fontsize=14&module=\%2Fsrc\%2F__tests__\%2Freact-context.js&previewwindow=tests}{\texttt{ {\ttfamily react-\/context}}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6407}{}\doxysubsubsection{\texorpdfstring{Hooks}{Hooks}}\label{README.md_autotoc_md6407}
+If you are interested in testing a custom hook, check out \href{https://github.com/testing-library/react-hooks-testing-library}{\texttt{ React Hooks Testing Library}}.
+
+\begin{quote}
+NOTE\+: it is not recommended to test single-\/use custom hooks in isolation from the components where it\textquotesingle{}s being used. It\textquotesingle{}s better to test the component that\textquotesingle{}s using the hook rather than the hook itself. The {\ttfamily React Hooks Testing Library} is intended to be used for reusable hooks/libraries. \end{quote}
+\hypertarget{README.md_autotoc_md6408}{}\doxysubsubsection{\texorpdfstring{Guiding Principles}{Guiding Principles}}\label{README.md_autotoc_md6408}
+\begin{quote}
+\href{https://twitter.com/kentcdodds/status/977018512689455106}{\texttt{ The more your tests resemble the way your software is used, the more confidence they can give you.}} \end{quote}
+
+
+We try to only expose methods and utilities that encourage you to write tests that closely resemble how your React components are used.
+
+Utilities are included in this project based on the following guiding principles\+:
+
+
+\begin{DoxyEnumerate}
+\item If it relates to rendering components, it deals with DOM nodes rather than component instances, nor should it encourage dealing with component instances.
+\item It should be generally useful for testing individual React components or full React applications. While this library is focused on {\ttfamily react-\/dom}, utilities could be included even if they don\textquotesingle{}t directly relate to {\ttfamily react-\/dom}.
+\item Utility implementations and APIs should be simple and flexible.
+\end{DoxyEnumerate}
+
+Most importantly, we want React Testing Library to be pretty light-\/weight, simple, and easy to understand.\hypertarget{README.md_autotoc_md6409}{}\doxysubsubsection{\texorpdfstring{Docs}{Docs}}\label{README.md_autotoc_md6409}
+\href{https://testing-library.com/react}{\texttt{ {\bfseries{Read The Docs}}}} \texorpdfstring{$\vert$}{|} \href{https://github.com/testing-library/testing-library-docs}{\texttt{ Edit the docs}}\hypertarget{README.md_autotoc_md6410}{}\doxysubsubsection{\texorpdfstring{Issues}{Issues}}\label{README.md_autotoc_md6410}
+Looking to contribute? Look for the \texorpdfstring{$<$}{<}a href="{}https\+://github.\+com/testing-\/library/react-\/testing-\/library/issues?utf8=✓\&q=is\%3\+Aissue+is\%3\+Aopen+sort\%3\+Areactions-\/\%2\+B1-\/desc+label\%3\+A"{}good+first+issue"{}+"{} \texorpdfstring{$>$}{>}Good First Issue label.\hypertarget{README.md_autotoc_md6411}{}\doxysubsubsubsection{\texorpdfstring{🐛 Bugs}{🐛 Bugs}}\label{README.md_autotoc_md6411}
+Please file an issue for bugs, missing documentation, or unexpected behavior.
+
+\href{https://github.com/testing-library/react-testing-library/issues?q=is\%3Aissue+is\%3Aopen+label\%3Abug+sort\%3Acreated-desc}{\texttt{ {\bfseries{See Bugs}}}}\hypertarget{README.md_autotoc_md6412}{}\doxysubsubsubsection{\texorpdfstring{💡 Feature Requests}{💡 Feature Requests}}\label{README.md_autotoc_md6412}
+Please file an issue to suggest new features. Vote on feature requests by adding a 👍. This helps maintainers prioritize what to work on.
+
+\href{https://github.com/testing-library/react-testing-library/issues?q=is\%3Aissue+sort\%3Areactions-\%2B1-desc+label\%3Aenhancement+is\%3Aopen}{\texttt{ {\bfseries{See Feature Requests}}}}\hypertarget{README.md_autotoc_md6413}{}\doxysubsubsubsection{\texorpdfstring{❓ Questions}{❓ Questions}}\label{README.md_autotoc_md6413}
+For questions related to using the library, please visit a support community instead of filing an issue on Git\+Hub.
+
+
+\begin{DoxyItemize}
+\item \href{https://discord.gg/testing-library}{\texttt{ Discord}}
+\item \href{https://stackoverflow.com/questions/tagged/react-testing-library}{\texttt{ Stack Overflow}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6414}{}\doxysubsubsection{\texorpdfstring{Contributors}{Contributors}}\label{README.md_autotoc_md6414}
+Thanks goes to these people (\href{https://github.com/all-contributors/all-contributors\#emoji-key}{\texttt{ emoji key}})\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{7}{|X[-1]}|}
+\hline
+\PBS\centering \href{https://kentcdodds.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Kent C. Dodds}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=kentcdodds}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=kentcdodds}{\texttt{ 📖}} \href{\#infra-kentcdodds}{\texttt{ 🚇}} \href{https://github.com/testing-library/react-testing-library/commits?author=kentcdodds}{\texttt{ ⚠️}} &\PBS\centering \href{http://audiolion.github.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ryan Castner}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=audiolion}{\texttt{ 📖}} &\PBS\centering \href{https://www.dnlsandiego.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Daniel Sandiego}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=dnlsandiego}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/Miklet}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Paweł Mikołajczyk}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=Miklet}{\texttt{ 💻}} &\PBS\centering \href{http://co.linkedin.com/in/alejandronanez/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alejandro Ñáñez Ortiz}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=alejandronanez}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/pbomb}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Matt Parrish}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Apbomb}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=pbomb}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=pbomb}{\texttt{ 📖}} \href{https://github.com/testing-library/react-testing-library/commits?author=pbomb}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/wKovacs64}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Justin Hall}}}}}~\newline
+\href{\#platform-wKovacs64}{\texttt{ 📦}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/antoaravinth}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Anto Aravinth}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=antoaravinth}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=antoaravinth}{\texttt{ ⚠️}} \href{https://github.com/testing-library/react-testing-library/commits?author=antoaravinth}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/JonahMoses}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jonah Moses}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=JonahMoses}{\texttt{ 📖}} &\PBS\centering \href{http://team.thebrain.pro}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Łukasz Gandecki}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=lgandecki}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=lgandecki}{\texttt{ ⚠️}} \href{https://github.com/testing-library/react-testing-library/commits?author=lgandecki}{\texttt{ 📖}} &\PBS\centering \href{https://sompylasar.github.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ivan Babak}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Asompylasar}{\texttt{ 🐛}} \href{\#ideas-sompylasar}{\texttt{ 🤔}} &\PBS\centering \href{https://github.com/jday3}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jesse Day}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=jday3}{\texttt{ 💻}} &\PBS\centering \href{http://gnapse.github.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ernesto García}}}}}~\newline
+\href{\#question-gnapse}{\texttt{ 💬}} \href{https://github.com/testing-library/react-testing-library/commits?author=gnapse}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=gnapse}{\texttt{ 📖}} &\PBS\centering \href{http://jomaxx.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Josef Maxx Blake}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=jomaxx}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=jomaxx}{\texttt{ 📖}} \href{https://github.com/testing-library/react-testing-library/commits?author=jomaxx}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{https://twitter.com/baranovskim}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michal Baranowski}}}}}~\newline
+\href{\#blog-mbaranovski}{\texttt{ 📝}} \href{\#tutorial-mbaranovski}{\texttt{ ✅}} &\PBS\centering \href{https://github.com/aputhin}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Arthur Puthin}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=aputhin}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/thchia}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Thomas Chia}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=thchia}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=thchia}{\texttt{ 📖}} &\PBS\centering \href{http://ilegra.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Thiago Galvani}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=thiagopaiva99}{\texttt{ 📖}} &\PBS\centering \href{http://Chriswcs.github.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Christian}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=ChrisWcs}{\texttt{ ⚠️}} &\PBS\centering \href{https://alexkrolick.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alex Krolick}}}}}~\newline
+\href{\#question-alexkrolick}{\texttt{ 💬}} \href{https://github.com/testing-library/react-testing-library/commits?author=alexkrolick}{\texttt{ 📖}} \href{\#example-alexkrolick}{\texttt{ 💡}} \href{\#ideas-alexkrolick}{\texttt{ 🤔}} &\PBS\centering \href{https://github.com/johann-sonntagbauer}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Johann Hubert Sonntagbauer}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=johann-sonntagbauer}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=johann-sonntagbauer}{\texttt{ 📖}} \href{https://github.com/testing-library/react-testing-library/commits?author=johann-sonntagbauer}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{http://www.maddijoyce.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Maddi Joyce}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=maddijoyce}{\texttt{ 💻}} &\PBS\centering \href{http://www.vicesoftware.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ryan Vice}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=RyanAtViceSoftware}{\texttt{ 📖}} &\PBS\centering \href{https://ianwilson.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ian Wilson}}}}}~\newline
+\href{\#blog-iwilsonq}{\texttt{ 📝}} \href{\#tutorial-iwilsonq}{\texttt{ ✅}} &\PBS\centering \href{https://github.com/InExtremaRes}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Daniel}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3AInExtremaRes}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=InExtremaRes}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/Gpx}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Giorgio Polvara}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3AGpx}{\texttt{ 🐛}} \href{\#ideas-Gpx}{\texttt{ 🤔}} &\PBS\centering \href{https://github.com/jgoz}{\texttt{ ~\newline
+\textsubscript{{\bfseries{John Gozde}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=jgoz}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/SavePointSam}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sam Horton}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=SavePointSam}{\texttt{ 📖}} \href{\#example-SavePointSam}{\texttt{ 💡}} \href{\#ideas-SavePointSam}{\texttt{ 🤔}}  \\\cline{1-7}
+\PBS\centering \href{http://www.richardkotze.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Richard Kotze (mobile)}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=rkotze}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/sotobuild}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Brahian E. Soto Mercedes}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=sotobuild}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/bdelaforest}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Benoit de La Forest}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=bdelaforest}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/thesalah}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Salah}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=thesalah}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=thesalah}{\texttt{ ⚠️}} &\PBS\centering \href{http://gordonizer.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Adam Gordon}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Aicfantv}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=icfantv}{\texttt{ 💻}} &\PBS\centering \href{https://silvenon.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Matija Marohnić}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=silvenon}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/Dajust}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Justice Mba}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=Dajust}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{https://markpollmann.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Mark Pollmann}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=MarkPollmann}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/ehteshamkafeel}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ehtesham Kafeel}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=ehteshamkafeel}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=ehteshamkafeel}{\texttt{ 📖}} &\PBS\centering \href{http://jpavon.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Julio Pavón}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=jpavon}{\texttt{ 💻}} &\PBS\centering \href{http://www.duncanleung.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Duncan L}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=duncanleung}{\texttt{ 📖}} \href{\#example-duncanleung}{\texttt{ 💡}} &\PBS\centering \href{https://www.linkedin.com/in/tyagow/?locale=en_US}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tiago Almeida}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=tyagow}{\texttt{ 📖}} &\PBS\centering \href{http://rbrtsmith.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Robert Smith}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Arbrtsmith}{\texttt{ 🐛}} &\PBS\centering \href{https://offbyone.tech}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Zach Green}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=zgreen}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/dadamssg}{\texttt{ ~\newline
+\textsubscript{{\bfseries{dadamssg}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=dadamssg}{\texttt{ 📖}} &\PBS\centering \href{https://www.yaabed.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Yazan Aabed}}}}}~\newline
+\href{\#blog-YazanAabeed}{\texttt{ 📝}} &\PBS\centering \href{https://github.com/timbonicus}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tim}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Atimbonicus}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=timbonicus}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=timbonicus}{\texttt{ 📖}} \href{https://github.com/testing-library/react-testing-library/commits?author=timbonicus}{\texttt{ ⚠️}} &\PBS\centering \href{http://divyanshu.xyz}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Divyanshu Maithani}}}}}~\newline
+\href{\#tutorial-divyanshu013}{\texttt{ ✅}} \href{\#video-divyanshu013}{\texttt{ 📹}} &\PBS\centering \href{https://www.linkedin.com/in/metagrover}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Deepak Grover}}}}}~\newline
+\href{\#tutorial-metagrover}{\texttt{ ✅}} \href{\#video-metagrover}{\texttt{ 📹}} &\PBS\centering \href{https://github.com/eyalcohen4}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Eyal Cohen}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=eyalcohen4}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/petermakowski}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Peter Makowski}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=petermakowski}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/Michielnuyts}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michiel Nuyts}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=Michielnuyts}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/joeynimu}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Joe Ng\textquotesingle{}ethe}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=joeynimu}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=joeynimu}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/Enikol}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Kate}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=Enikol}{\texttt{ 📖}} &\PBS\centering \href{http://www.seanrparker.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sean}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=SeanRParker}{\texttt{ 📖}} &\PBS\centering \href{http://jlongster.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{James Long}}}}}~\newline
+\href{\#ideas-jlongster}{\texttt{ 🤔}} \href{\#platform-jlongster}{\texttt{ 📦}} &\PBS\centering \href{https://github.com/hhagely}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Herb Hagely}}}}}~\newline
+\href{\#example-hhagely}{\texttt{ 💡}} &\PBS\centering \href{http://www.wendtedesigns.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alex Wendte}}}}}~\newline
+\href{\#example-themostcolm}{\texttt{ 💡}}  \\\cline{1-7}
+\PBS\centering \href{http://www.aboutmonica.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Monica Powell}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=M0nica}{\texttt{ 📖}} &\PBS\centering \href{http://sivkoff.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Vitaly Sivkov}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=sivkoff}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/weyert}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Weyert de Boer}}}}}~\newline
+\href{\#ideas-weyert}{\texttt{ 🤔}} \href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Aweyert}{\texttt{ 👀}} \href{\#design-weyert}{\texttt{ 🎨}} &\PBS\centering \href{https://github.com/EstebanMarin}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Esteban\+Marin}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=EstebanMarin}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/vctormb}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Victor Martins}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=vctormb}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/RoystonS}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Royston Shufflebotham}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3ARoystonS}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=RoystonS}{\texttt{ 📖}} \href{\#example-RoystonS}{\texttt{ 💡}} &\PBS\centering \href{https://github.com/chrbala}{\texttt{ ~\newline
+\textsubscript{{\bfseries{chrbala}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=chrbala}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{http://donavon.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Donavon West}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=donavon}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=donavon}{\texttt{ 📖}} \href{\#ideas-donavon}{\texttt{ 🤔}} \href{https://github.com/testing-library/react-testing-library/commits?author=donavon}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/maisano}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Richard Maisano}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=maisano}{\texttt{ 💻}} &\PBS\centering \href{https://www.marcobiedermann.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Marco Biedermann}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=marcobiedermann}{\texttt{ 💻}} \href{\#maintenance-marcobiedermann}{\texttt{ 🚧}} \href{https://github.com/testing-library/react-testing-library/commits?author=marcobiedermann}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/alexzherdev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alex Zherdev}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Aalexzherdev}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=alexzherdev}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/Andrewmat}{\texttt{ ~\newline
+\textsubscript{{\bfseries{André Matulionis dos Santos}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=Andrewmat}{\texttt{ 💻}} \href{\#example-Andrewmat}{\texttt{ 💡}} \href{https://github.com/testing-library/react-testing-library/commits?author=Andrewmat}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/FredyC}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Daniel K.}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3AFredyC}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=FredyC}{\texttt{ 💻}} \href{\#ideas-FredyC}{\texttt{ 🤔}} \href{https://github.com/testing-library/react-testing-library/commits?author=FredyC}{\texttt{ ⚠️}} \href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3AFredyC}{\texttt{ 👀}} &\PBS\centering \href{https://github.com/mohamedmagdy17593}{\texttt{ ~\newline
+\textsubscript{{\bfseries{mohamedmagdy17593}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=mohamedmagdy17593}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{http://lorensr.me}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Loren ☺️}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=lorensr}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/MarkFalconbridge}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Mark\+Falconbridge}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3AMarkFalconbridge}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=MarkFalconbridge}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/viniciusavieira}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Vinicius}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=viniciusavieira}{\texttt{ 📖}} \href{\#example-viniciusavieira}{\texttt{ 💡}} &\PBS\centering \href{https://github.com/pschyma}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Peter Schyma}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=pschyma}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/ianschmitz}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ian Schmitz}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=ianschmitz}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/joual}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Joel Marcotte}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Ajoual}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=joual}{\texttt{ ⚠️}} \href{https://github.com/testing-library/react-testing-library/commits?author=joual}{\texttt{ 💻}} &\PBS\centering \href{http://aledustet.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alejandro Dustet}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Aaledustet}{\texttt{ 🐛}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/bcarroll22}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Brandon Carroll}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=bcarroll22}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/lucas0707}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Lucas Machado}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=lucas0707}{\texttt{ 📖}} &\PBS\centering \href{http://pascalduez.me}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Pascal Duez}}}}}~\newline
+\href{\#platform-pascalduez}{\texttt{ 📦}} &\PBS\centering \href{https://twitter.com/minh_ngvyen}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Minh Nguyen}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=NMinhNguyen}{\texttt{ 💻}} &\PBS\centering \href{http://iababy46.blogspot.tw/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Liao\+Jimmy}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=LiaoJimmy}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/threepointone}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sunil Pai}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=threepointone}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=threepointone}{\texttt{ ⚠️}} &\PBS\centering \href{http://twitter.com/dan_abramov}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dan Abramov}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Agaearon}{\texttt{ 👀}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/ChristianMurphy}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Christian Murphy}}}}}~\newline
+\href{\#infra-ChristianMurphy}{\texttt{ 🚇}} &\PBS\centering \href{https://jeetiss.github.io/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ivakhnenko Dmitry}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=jeetiss}{\texttt{ 💻}} &\PBS\centering \href{https://ghuser.io/jamesgeorge007}{\texttt{ ~\newline
+\textsubscript{{\bfseries{James George}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=jamesgeorge007}{\texttt{ 📖}} &\PBS\centering \href{https://joaofernandes.me/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{João Fernandes}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=JSFernandes}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/alejandroperea}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Alejandro Perea}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Aalejandroperea}{\texttt{ 👀}} &\PBS\centering \href{https://nickmccurdy.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Nick Mc\+Curdy}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Anickmccurdy}{\texttt{ 👀}} \href{\#question-nickmccurdy}{\texttt{ 💬}} \href{\#infra-nickmccurdy}{\texttt{ 🚇}} &\PBS\centering \href{https://twitter.com/sebsilbermann}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sebastian Silbermann}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Aeps1lon}{\texttt{ 👀}}  \\\cline{1-7}
+\PBS\centering \href{https://afontcu.dev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Adrià Fontcuberta}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Aafontcu}{\texttt{ 👀}} \href{https://github.com/testing-library/react-testing-library/commits?author=afontcu}{\texttt{ 📖}} &\PBS\centering \href{https://blog.johnnyreilly.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{John Reilly}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Ajohnnyreilly}{\texttt{ 👀}} &\PBS\centering \href{https://michaeldeboey.be}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michaël De Boey}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3AMichaelDeBoey}{\texttt{ 👀}} \href{https://github.com/testing-library/react-testing-library/commits?author=MichaelDeBoey}{\texttt{ 💻}} &\PBS\centering \href{https://cimbul.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Tim Yates}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Acimbul}{\texttt{ 👀}} &\PBS\centering \href{https://github.com/eventualbuddha}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Brian Donovan}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=eventualbuddha}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/JaysQubeXon}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Noam Gabriel Jacobson}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=JaysQubeXon}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/rvdkooy}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ronald van der Kooij}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=rvdkooy}{\texttt{ ⚠️}} \href{https://github.com/testing-library/react-testing-library/commits?author=rvdkooy}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/aayushrajvanshi}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Aayush Rajvanshi}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=aayushrajvanshi}{\texttt{ 📖}} &\PBS\centering \href{https://elyalamillo.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ely Alamillo}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=ely-alamillo}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=ely-alamillo}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/danieljcafonso}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Daniel Afonso}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=danieljcafonso}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=danieljcafonso}{\texttt{ ⚠️}} &\PBS\centering \href{http://www.laurensbosscher.nl}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Laurens Bosscher}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=LaurensBosscher}{\texttt{ 💻}} &\PBS\centering \href{https://twitter.com/__sakito__}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sakito Mukai}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=sakito21}{\texttt{ 📖}} &\PBS\centering \href{http://turkerteke.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Türker Teke}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=tteke}{\texttt{ 📖}} &\PBS\centering \href{http://linkedin.com/in/zachbrogan}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Zach Brogan}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=zbrogz}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=zbrogz}{\texttt{ ⚠️}}  \\\cline{1-7}
+\PBS\centering \href{https://ryota-murakami.github.io/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ryota Murakami}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=ryota-murakami}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/hottmanmichael}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michael Hottman}}}}}~\newline
+\href{\#ideas-hottmanmichael}{\texttt{ 🤔}} &\PBS\centering \href{https://github.com/stevenfitzpatrick}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Steven Fitzpatrick}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Astevenfitzpatrick}{\texttt{ 🐛}} &\PBS\centering \href{https://github.com/juangl}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Juan Je García}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=juangl}{\texttt{ 📖}} &\PBS\centering \href{https://ghuser.io/Ishaan28malik}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Championrunner}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=Ishaan28malik}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/samtsai}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sam Tsai}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=samtsai}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=samtsai}{\texttt{ ⚠️}} \href{https://github.com/testing-library/react-testing-library/commits?author=samtsai}{\texttt{ 📖}} &\PBS\centering \href{https://www.echooff.dev}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Christian Rackerseder}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=screendriver}{\texttt{ 💻}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/NiGhTTraX}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Andrei Picus}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3ANiGhTTraX}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3ANiGhTTraX}{\texttt{ 👀}} &\PBS\centering \href{https://redd.one}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Artem Zakharchenko}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=kettanaito}{\texttt{ 📖}} &\PBS\centering \href{http://michaelsiek.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Michael}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=michael-siek}{\texttt{ 📖}} &\PBS\centering \href{http://2dubbing.tistory.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Braden Lee}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=2dubbing}{\texttt{ 📖}} &\PBS\centering \href{http://kamranicus.com/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Kamran Ayub}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=kamranayub}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/commits?author=kamranayub}{\texttt{ ⚠️}} &\PBS\centering \href{https://twitter.com/matanbobi}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Matan Borenkraout}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=MatanBobi}{\texttt{ 💻}} &\PBS\centering \href{http://ryanbigg.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ryan Bigg}}}}}~\newline
+\href{\#maintenance-radar}{\texttt{ 🚧}}  \\\cline{1-7}
+\PBS\centering \href{https://antonhalim.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Anton Halim}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=antonhalim}{\texttt{ 📖}} &\PBS\centering \href{http://artmalko.ru}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Artem Malko}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=artem-malko}{\texttt{ 💻}} &\PBS\centering \href{http://gerritalex.de}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Gerrit Alex}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=ljosberinn}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/karthick3018}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Karthick Raja}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=karthick3018}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/theashraf}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Abdelrahman Ashraf}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=theashraf}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/lidoravitan}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Lidor Avitan}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=lidoravitan}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/ljharb}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jordan Harband}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/pulls?q=is\%3Apr+reviewed-by\%3Aljharb}{\texttt{ 👀}} \href{\#ideas-ljharb}{\texttt{ 🤔}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/marcosvega91}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Marco Moretti}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=marcosvega91}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/sanchit121}{\texttt{ ~\newline
+\textsubscript{{\bfseries{sanchit121}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Asanchit121}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=sanchit121}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/solufa}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Solufa}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Asolufa}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=solufa}{\texttt{ 💻}} &\PBS\centering \href{https://codepen.io/ariperkkio/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Ari Perkkiö}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=AriPerkkio}{\texttt{ ⚠️}} &\PBS\centering \href{https://github.com/jhnns}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Johannes Ewald}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=jhnns}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/anpaopao}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Angus J. Pope}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=anpaopao}{\texttt{ 📖}} &\PBS\centering \href{https://github.com/leschdom}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dominik Lesch}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=leschdom}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{https://github.com/ImADrafter}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Marcos Gómez}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=ImADrafter}{\texttt{ 📖}} &\PBS\centering \href{https://www.akashshyam.online/}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Akash Shyam}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Aakashshyamdev}{\texttt{ 🐛}} &\PBS\centering \href{https://hen.ne.ke}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Fabian Meumertzheim}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=fmeum}{\texttt{ 💻}} \href{https://github.com/testing-library/react-testing-library/issues?q=author\%3Afmeum}{\texttt{ 🐛}} &\PBS\centering \href{https://github.com/Nokel81}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Sebastian Malton}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/issues?q=author\%3ANokel81}{\texttt{ 🐛}} \href{https://github.com/testing-library/react-testing-library/commits?author=Nokel81}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/mboettcher}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Martin Böttcher}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=mboettcher}{\texttt{ 💻}} &\PBS\centering \href{http://tkdodo.eu}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dominik Dorfmeister}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=TkDodo}{\texttt{ 💻}} &\PBS\centering \href{https://stephensauceda.com}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Stephen Sauceda}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=stephensauceda}{\texttt{ 📖}}  \\\cline{1-7}
+\PBS\centering \href{http://cmdcolin.github.io}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Colin Diesh}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=cmdcolin}{\texttt{ 📖}} &\PBS\centering \href{http://yinm.info}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Yusuke Iinuma}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=yinm}{\texttt{ 💻}} &\PBS\centering \href{https://github.com/trappar}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Jeff Way}}}}}~\newline
+\href{https://github.com/testing-library/react-testing-library/commits?author=trappar}{\texttt{ 💻}}   \\\cline{1-7}
+\end{longtabu}
+
+
+This project follows the \href{https://github.com/all-contributors/all-contributors}{\texttt{ all-\/contributors}} specification. Contributions of any kind welcome!\hypertarget{README.md_autotoc_md6415}{}\doxysubsubsection{\texorpdfstring{LICENSE}{LICENSE}}\label{README.md_autotoc_md6415}
+\mbox{[}MIT\mbox{]}(LICENSE) 

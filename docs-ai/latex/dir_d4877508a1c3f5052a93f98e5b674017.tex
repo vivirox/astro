@@ -1,0 +1,135 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/mdx-\/md Directory Reference}
+\hypertarget{dir_d4877508a1c3f5052a93f98e5b674017}{}\label{dir_d4877508a1c3f5052a93f98e5b674017}\index{node\_modules/micromark-\/extension-\/mdx-\/md Directory Reference@{node\_modules/micromark-\/extension-\/mdx-\/md Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-mdx-md/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-mdx-md}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-mdx-md}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-mdx-md}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extension to turn some markdown features off for \href{https://mdxjs.com}{\texttt{ MDX}}.\hypertarget{readme.md_autotoc_md23410}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23410}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}mdx\+Md()\`{}
+\end{DoxyItemize}
+\item Authoring
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23411}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23411}
+This package contains an extension to turn off some markdown constructs when parsing.\hypertarget{readme.md_autotoc_md23412}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23412}
+This project is useful when you want to disable support for code (indented), autolinks, and HTML (flow and text) in markdown.
+
+You can use this extension when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. To support all MDX features, use \href{https://github.com/micromark/micromark-extension-mdxjs}{\texttt{ {\ttfamily micromark-\/extension-\/mdxjs}}} instead.
+
+All these packages are used in \href{https://mdxjs.com/packages/remark-mdx/}{\texttt{ {\ttfamily remark-\/mdx}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md23413}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23413}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/mdx-\/md}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{mdxMd\}\ from\ 'https://esm.sh/micromark-\/extension-\/mdx-\/md@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{mdxMd\}\ from\ 'https://esm.sh/micromark-\/extension-\/mdx-\/md@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23414}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23414}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{mdxMd\}\ from\ 'micromark-\/extension-\/mdx-\/md'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ micromark('\(\backslash\)ta',\ \{extensions:\ [mdxMd()]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>a</p>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23415}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23415}
+This package exports the identifier \`{}mdx\+Md\`{}. There is no default export.\hypertarget{readme.md_autotoc_md23416}{}\doxysubsubsection{\texorpdfstring{{\ttfamily mdx\+Md()}}{{\ttfamily mdx\+Md()}}}\label{readme.md_autotoc_md23416}
+Create an extension for {\ttfamily micromark} to disable some Common\+Mark syntax (code (indented), autolinks, and HTML (flow and text)) for MDX.\hypertarget{readme.md_autotoc_md23417}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23417}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions} to disable some Common\+Mark syntax for MDX (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23418}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23418}
+To improve authoring the new constructs MDX adds (ESM, expressions, and JSX), some markdown features are turned off by this extension. There are good alternatives.\hypertarget{readme.md_autotoc_md23419}{}\doxysubsubsubsubsubsection{\texorpdfstring{Code (indented)}{Code (indented)}}\label{readme.md_autotoc_md23419}
+Use fenced code instead. Change the following markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(1)}
+
+\end{DoxyCode}
+
+
+…into\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\`{}\`{}\`{}js}
+\DoxyCodeLine{console.log(1)}
+\DoxyCodeLine{\`{}\`{}\`{}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23420}{}\doxysubsubsubsubsubsection{\texorpdfstring{Autolinks}{Autolinks}}\label{readme.md_autotoc_md23420}
+Use links (with a resource or a reference) instead. Change the following markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<https://some-\/link-\/here.com>}
+
+\end{DoxyCode}
+
+
+…into\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[descriptive\ text](https://and-\/the-\/link-\/here.com)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23421}{}\doxysubsubsubsubsubsection{\texorpdfstring{HTML (flow and text)}{HTML (flow and text)}}\label{readme.md_autotoc_md23421}
+Use JSX instead\+: change {\ttfamily \texorpdfstring{$<$}{<}img\texorpdfstring{$>$}{>}} into {\ttfamily \texorpdfstring{$<$}{<}img /\texorpdfstring{$>$}{>}}. Not supporting HTML also means that HTML comments are not supported. Use a comment in an empty expression instead. Change {\ttfamily \texorpdfstring{$<$}{<}!-\/-\/ comment -\/-\/\texorpdfstring{$>$}{>}} into {\ttfamily \{/\texorpdfstring{$\ast$}{*} comment \texorpdfstring{$\ast$}{*}/\}}.\hypertarget{readme.md_autotoc_md23422}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23422}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md23423}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23423}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/extension-\/mdx-\/md@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16. This package works with {\ttfamily micromark@\texorpdfstring{$^\wedge$}{\string^}3}.\hypertarget{readme.md_autotoc_md23424}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23424}
+This package is safe.\hypertarget{readme.md_autotoc_md23425}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md23425}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/micromark/micromark-extension-mdxjs}{\texttt{ {\ttfamily micromark-\/extension-\/mdxjs}}} — support all of MDX
+\item \href{https://mdxjs.com/packages/remark-mdx/}{\texttt{ {\ttfamily remark-\/mdx}}} — support all of MDX in remark
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23426}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23426}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23427}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23427}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

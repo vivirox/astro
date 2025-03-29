@@ -1,0 +1,135 @@
+\doxysection{node\+\_\+modules/vfile-\/message Directory Reference}
+\hypertarget{dir_901360c768a4e0a5a40ef8ffe35e447a}{}\label{dir_901360c768a4e0a5a40ef8ffe35e447a}\index{node\_modules/vfile-\/message Directory Reference@{node\_modules/vfile-\/message Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/vfile/vfile-message/actions}{\texttt{ }} \href{https://codecov.io/github/vfile/vfile-message}{\texttt{ }} \href{https://www.npmjs.com/package/vfile-message}{\texttt{ }} \href{https://bundlejs.com/?q=vfile-message}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/vfile/vfile/discussions}{\texttt{ }}
+
+Create \href{https://github.com/vfile/vfile}{\texttt{ vfile}} messages.\hypertarget{readme.md_autotoc_md34817}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md34817}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}\+VFile\+Message(reason\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item Well-\/known
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34818}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md34818}
+This package provides a (lint) message format.\hypertarget{readme.md_autotoc_md34819}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md34819}
+In most cases, you can use {\ttfamily file.\+message} from {\ttfamily VFile} itself, but in some cases you might not have a file, and still want to emit warnings or errors, in which case this can be used directly.\hypertarget{readme.md_autotoc_md34820}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md34820}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ vfile-\/message}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{VFileMessage\}\ from\ 'https://esm.sh/vfile-\/message@4'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{VFileMessage\}\ from\ 'https://esm.sh/vfile-\/message@4?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34821}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md34821}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{VFileMessage\}\ from\ 'vfile-\/message'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ message\ =\ new\ VFileMessage(}
+\DoxyCodeLine{\ \ 'Unexpected\ unknown\ word\ \`{}braavo`,\ did\ you\ mean\ \`{}bravo`?',}
+\DoxyCodeLine{\ \ \{source:\ 'spell',\ ruleId:\ 'typo',\ place:\ \{line:\ 1,\ column:\ 8\}\}}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(message)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[1:8:\ Unexpected\ unknown\ word\ \`{}braavo\`{},\ did\ you\ mean\ \`{}bravo\`{}?]\ \{}
+\DoxyCodeLine{\ \ reason:\ \textcolor{stringliteral}{'Unexpected\ unknown\ word\ \`{}braavo`,\ did\ you\ mean\ \`{}bravo`?'},}
+\DoxyCodeLine{\ \ line:\ 1,}
+\DoxyCodeLine{\ \ column:\ 8,}
+\DoxyCodeLine{\ \ ancestors:\ undefined,}
+\DoxyCodeLine{\ \ cause:\ undefined,}
+\DoxyCodeLine{\ \ fatal:\ undefined,}
+\DoxyCodeLine{\ \ place:\ \{line:\ 1,\ column:\ 8\},}
+\DoxyCodeLine{\ \ ruleId:\ \textcolor{stringliteral}{'typo'},}
+\DoxyCodeLine{\ \ source:\ \textcolor{stringliteral}{'spell'}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34822}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md34822}
+This package exports the identifier \`{}\+VFile\+Message\`{}. There is no default export.\hypertarget{readme.md_autotoc_md34823}{}\doxysubsubsection{\texorpdfstring{{\ttfamily VFile\+Message(reason\mbox{[}, options\mbox{]})}}{{\ttfamily VFile\+Message(reason\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md34823}
+Create a message for {\ttfamily reason}.
+
+\begin{quote}
+🪦 {\bfseries{Note}}\+: also has obsolete signatures. \end{quote}
+\hypertarget{readme.md_autotoc_md34824}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md34824}
+
+\begin{DoxyItemize}
+\item {\ttfamily reason} ({\ttfamily string}) — reason for message (should use markdown)
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34825}{}\doxysubsubsubsubsubsection{\texorpdfstring{Extends}{Extends}}\label{readme.md_autotoc_md34825}
+\href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error}{\texttt{ {\ttfamily Error}}}.\hypertarget{readme.md_autotoc_md34826}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md34826}
+Instance of {\ttfamily VFile\+Message}.\hypertarget{readme.md_autotoc_md34827}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md34827}
+
+\begin{DoxyItemize}
+\item {\ttfamily ancestors} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Array\texorpdfstring{$<$}{<}Node\texorpdfstring{$>$}{>}}}} or {\ttfamily undefined}) — stack of (inclusive) ancestor nodes surrounding the message
+\item {\ttfamily cause} (\href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error}{\texttt{ {\ttfamily Error}}} or {\ttfamily undefined}) — original error cause of the message
+\item {\ttfamily column} ({\ttfamily number} or {\ttfamily undefined}) — starting column of message
+\item {\ttfamily fatal} ({\ttfamily boolean} or {\ttfamily undefined}) — state of problem; {\ttfamily true}\+: error, file not usable; {\ttfamily false}\+: warning, change may be needed; {\ttfamily undefined}\+: info, change likely not needed
+\item {\ttfamily line} ({\ttfamily number} or {\ttfamily undefined}) — starting line of message
+\item {\ttfamily place} (\href{https://github.com/syntax-tree/unist\#point}{\texttt{ {\ttfamily Point}}}, \href{https://github.com/syntax-tree/unist\#position}{\texttt{ {\ttfamily Position}}} or {\ttfamily undefined}) — place of message
+\item {\ttfamily reason} ({\ttfamily string}) — reason for message (should use markdown)
+\item {\ttfamily rule\+Id} ({\ttfamily string} or {\ttfamily undefined}, example\+: `\textquotesingle{}my-\/rule'{\ttfamily ) — category of message \texorpdfstring{$\ast$}{*}}source{\ttfamily (}string{\ttfamily or}undefined{\ttfamily , example\+:}\textquotesingle{}my-\/package\textquotesingle{}\`{}) — namespace of message
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34828}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md34828}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md34829}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md34829}
+
+\begin{DoxyItemize}
+\item {\ttfamily ancestors} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Array\texorpdfstring{$<$}{<}Node\texorpdfstring{$>$}{>}}}}, optional) — stack of (inclusive) ancestor nodes surrounding the message
+\item {\ttfamily cause} (\href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error}{\texttt{ {\ttfamily Error}}}, optional) — original error cause of the message
+\item {\ttfamily place} (\href{https://github.com/syntax-tree/unist\#point}{\texttt{ {\ttfamily Point}}} or \href{https://github.com/syntax-tree/unist\#position}{\texttt{ {\ttfamily Position}}}, optional) — place of message
+\item {\ttfamily rule\+Id} ({\ttfamily string}, optional, example\+: `\textquotesingle{}my-\/rule'{\ttfamily ) — category of message \texorpdfstring{$\ast$}{*}}source{\ttfamily (}string{\ttfamily , optional, , example\+:}\textquotesingle{}my-\/package\textquotesingle{}\`{}) — namespace of who sent the message
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34830}{}\doxysubsubsection{\texorpdfstring{Well-\/known}{Well-\/known}}\label{readme.md_autotoc_md34830}
+It’s OK to store custom data directly on the {\ttfamily VFile\+Message}, some of those are handled by \href{https://github.com/vfile/vfile\#utilities}{\texttt{ utilities}}. The following fields are documented and typed here.\hypertarget{readme.md_autotoc_md34831}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md34831}
+
+\begin{DoxyItemize}
+\item {\ttfamily actual} ({\ttfamily string}, optional) — specify the source value that’s being reported, which is deemed incorrect
+\item {\ttfamily expected} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, optional) — suggest acceptable values that can be used instead of {\ttfamily actual}
+\item {\ttfamily url} ({\ttfamily string}, optional) — link to docs for the message (this must be an absolute URL that can be passed as {\ttfamily x} to {\ttfamily new URL(x)})
+\item {\ttfamily note} ({\ttfamily string}, optional) — long form description of the message (you should use markdown)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34832}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md34832}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md34833}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md34833}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily vfile-\/message@\texorpdfstring{$^\wedge$}{\string^}4}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md34834}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md34834}
+See \href{https://github.com/vfile/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/vfile/.github}{\texttt{ {\ttfamily vfile/.github}}} for ways to get started. See \href{https://github.com/vfile/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/vfile/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md34835}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md34835}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

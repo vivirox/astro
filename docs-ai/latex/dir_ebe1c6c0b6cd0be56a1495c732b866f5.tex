@@ -1,0 +1,40 @@
+\doxysection{node\+\_\+modules/@jridgewell/set-\/array Directory Reference}
+\hypertarget{dir_ebe1c6c0b6cd0be56a1495c732b866f5}{}\label{dir_ebe1c6c0b6cd0be56a1495c732b866f5}\index{node\_modules/"@jridgewell/set-\/array Directory Reference@{node\_modules/"@jridgewell/set-\/array Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Like a Set, but provides the index of the {\ttfamily key} in the backing array \end{quote}
+
+
+This is designed to allow synchronizing a second array with the contents of the backing array, like how in a sourcemap {\ttfamily sources\+Content\mbox{[}i\mbox{]}} is the source content associated with {\ttfamily source\mbox{[}i\mbox{]}}, and there are never duplicates.\hypertarget{README.md_autotoc_md4667}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md4667}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @jridgewell/set-\/array}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4668}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md4668}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ SetArray,\ get,\ put,\ pop\ \}\ from\ '@jridgewell/set-\/array';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ sa\ =\ new\ SetArray();}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ index\ =\ put(sa,\ 'first');}
+\DoxyCodeLine{assert.strictEqual(index,\ 0);}
+\DoxyCodeLine{}
+\DoxyCodeLine{index\ =\ put(sa,\ 'second');}
+\DoxyCodeLine{assert.strictEqual(index,\ 1);}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(sa.array,\ [\ 'first',\ 'second'\ ]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{index\ =\ get(sa,\ 'first');}
+\DoxyCodeLine{assert.strictEqual(index,\ 0);}
+\DoxyCodeLine{}
+\DoxyCodeLine{pop(sa);}
+\DoxyCodeLine{index\ =\ get(sa,\ 'second');}
+\DoxyCodeLine{assert.strictEqual(index,\ undefined);}
+\DoxyCodeLine{assert.deepEqual(sa.array,\ [\ 'first'\ ]);}
+
+\end{DoxyCode}
+ 

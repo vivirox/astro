@@ -1,0 +1,252 @@
+var searchData = [
+  [
+    'element_20interactions_0',
+    [
+      'element interactions',
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-noninteractive-element-interactions.html',
+        1,
+        'jsx-a11y/no-noninteractive-element-interactions',
+      ],
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions.html',
+        1,
+        'jsx-a11y/no-static-element-interactions',
+      ],
+    ],
+  ],
+  [
+    'element_20to_20interactive_20role_1',
+    [
+      'jsx-a11y/no-noninteractive-element-to-interactive-role',
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-noninteractive-element-to-interactive-role.html',
+        1,
+        '',
+      ],
+    ],
+  ],
+  [
+    'element_20to_20noninteractive_20role_2',
+    [
+      'jsx-a11y/no-interactive-element-to-noninteractive-role',
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-interactive-element-to-noninteractive-role.html',
+        1,
+        '',
+      ],
+    ],
+  ],
+  [
+    'elements_3',
+    [
+      'elements',
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2aria-unsupported-elements.html',
+        1,
+        'jsx-a11y/aria-unsupported-elements',
+      ],
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements.html',
+        1,
+        'jsx-a11y/no-distracting-elements',
+      ],
+    ],
+  ],
+  [
+    'emoji_4',
+    [
+      'jsx-a11y/accessible-emoji',
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2accessible-emoji.html',
+        1,
+        '',
+      ],
+    ],
+  ],
+  [
+    'emotional_20intelligence_20in_20ai_20world_5',
+    [
+      'emotional-intelligence-in-ai-world',
+      [
+        '../md_src_2content_2blog_2emotional-intelligence-in-ai-world.html',
+        1,
+        '',
+      ],
+    ],
+  ],
+  [
+    'environment_20support_20for_20circular_20equal_20comparators_6',
+    [
+      'Legacy environment support for circular equal comparators',
+      [
+        '../md_node__modules_2fast-equals_2recipes_2legacy-circular-equal-support.html',
+        1,
+        '',
+      ],
+    ],
+  ],
+  [
+    'environment_20support_20for_20tt_20regexp_20tt_20comparators_7',
+    [
+      'Legacy environment support for &lt;tt&gt;RegExp&lt;/tt&gt; comparators',
+      [
+        '../md_node__modules_2fast-equals_2recipes_2legacy-regexp-support.html',
+        1,
+        '',
+      ],
+    ],
+  ],
+  [
+    'equal_20comparators_8',
+    [
+      'Legacy environment support for circular equal comparators',
+      [
+        '../md_node__modules_2fast-equals_2recipes_2legacy-circular-equal-support.html',
+        1,
+        '',
+      ],
+    ],
+  ],
+  [
+    'equals_20changelog_9',
+    [
+      'fast-equals CHANGELOG',
+      ['../md_node__modules_2fast-equals_2_c_h_a_n_g_e_l_o_g.html', 1, ''],
+    ],
+  ],
+  [
+    'error_20fixing_20guide_10',
+    [
+      'TypeScript Error Fixing Guide',
+      ['../md_src_2scripts_2ts-error-docs.html', 1, ''],
+    ],
+  ],
+  [
+    'es_11',
+    ['README-es', ['../md_node__modules_2dotenv_2_r_e_a_d_m_e-es.html', 1, '']],
+  ],
+  [
+    'es_20browserify_20resolve_20svg_20alt_20version_20badge_20a_20sup_12',
+    [
+      'es browserify resolve svg alt Version Badge a sup',
+      [
+        '../md_node__modules_2eslint-plugin-react_2node__modules_2resolve_2readme.html',
+        1,
+        'resolve &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/resolve&quot; &gt;&lt;img src=&quot;https://versionbadg.es/browserify/resolve.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',
+      ],
+      [
+        '../md_node__modules_2resolve_2readme.html',
+        1,
+        'resolve &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/resolve&quot; &gt;&lt;img src=&quot;https://versionbadg.es/browserify/resolve.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',
+      ],
+    ],
+  ],
+  [
+    'es_20inspect_20js_20object_20inspect_20svg_20alt_20version_20badge_20a_20sup_13',
+    [
+      'object-inspect &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/object-inspect&quot; &gt;&lt;img src=&quot;https://versionbadg.es/inspect-js/object-inspect.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;',
+      ['../md_node__modules_2object-inspect_2readme.html', 1, ''],
+    ],
+  ],
+  [
+    'es_20joy_20jsdoccomment_20tt_14',
+    [
+      'es joy jsdoccomment tt',
+      [
+        '../md_node__modules_2_0des-joy_2jsdoccomment_2_c_h_a_n_g_e_s.html',
+        1,
+        'CHANGES for &lt;tt&gt;\@es-joy/jsdoccomment&lt;/tt&gt;',
+      ],
+      [
+        '../md_node__modules_2eslint-plugin-command_2node__modules_2_0des-joy_2jsdoccomment_2_c_h_a_n_g_e_s.html',
+        1,
+        'CHANGES for &lt;tt&gt;\@es-joy/jsdoccomment&lt;/tt&gt;',
+      ],
+      [
+        '../md_node__modules_2eslint-plugin-jsdoc_2node__modules_2_0des-joy_2jsdoccomment_2_c_h_a_n_g_e_s.html',
+        1,
+        'CHANGES for &lt;tt&gt;\@es-joy/jsdoccomment&lt;/tt&gt;',
+      ],
+    ],
+  ],
+  [
+    'eval_15',
+    ['static-eval', ['../md_node__modules_2static-eval_2readme.html', 1, '']],
+  ],
+  [
+    'events_16',
+    [
+      'events',
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2click-events-have-key-events.html',
+        1,
+        'jsx-a11y/click-events-have-key-events',
+      ],
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events.html',
+        1,
+        'jsx-a11y/mouse-events-have-key-events',
+      ],
+    ],
+  ],
+  [
+    'events_20have_20key_20events_17',
+    [
+      'events have key events',
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2click-events-have-key-events.html',
+        1,
+        'jsx-a11y/click-events-have-key-events',
+      ],
+      [
+        '../md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2mouse-events-have-key-events.html',
+        1,
+        'jsx-a11y/mouse-events-have-key-events',
+      ],
+    ],
+  ],
+  [
+    'explicit_20property_20check_18',
+    [
+      'Explicit property check',
+      [
+        '../md_node__modules_2fast-equals_2recipes_2explicit-property-check.html',
+        1,
+        '',
+      ],
+    ],
+  ],
+  [
+    'extra_20parens_19',
+    [
+      'extra parens',
+      [
+        '../md_node__modules_2_0dtypescript-eslint_2eslint-plugin_2docs_2rules_2no-extra-parens.html',
+        1,
+        'no-extra-parens',
+      ],
+      [
+        '../md_tests_2security_2node__modules_2_8pnpm_2_0dtypescript-eslint_09eslint-plugin_0d8_826_81___0dt1a170db50858284399151c02b80919b4.html',
+        1,
+        'no-extra-parens',
+      ],
+    ],
+  ],
+  [
+    'extra_20semi_20',
+    [
+      'extra semi',
+      [
+        '../md_node__modules_2_0dtypescript-eslint_2eslint-plugin_2docs_2rules_2no-extra-semi.html',
+        1,
+        'no-extra-semi',
+      ],
+      [
+        '../md_tests_2security_2node__modules_2_8pnpm_2_0dtypescript-eslint_09eslint-plugin_0d8_826_81___0dt38170184672328c1e1d28482a3f2cc15.html',
+        1,
+        'no-extra-semi',
+      ],
+    ],
+  ],
+]

@@ -1,0 +1,81 @@
+\doxysection{node\+\_\+modules/@octokit/plugin-\/rest-\/endpoint-\/methods Directory Reference}
+\hypertarget{dir_69fc93fe3726d3d04736c2b49f3b08f0}{}\label{dir_69fc93fe3726d3d04736c2b49f3b08f0}\index{node\_modules/"@octokit/plugin-\/rest-\/endpoint-\/methods Directory Reference@{node\_modules/"@octokit/plugin-\/rest-\/endpoint-\/methods Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Octokit plugin adding one method for all of api.\+github.\+com REST API endpoints \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/plugin-rest-endpoint-methods}{\texttt{ }} \href{https://github.com/octokit/plugin-rest-endpoint-methods.js/actions?workflow=Test}{\texttt{ }}\hypertarget{README.md_autotoc_md5337}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5337}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers }&
+
+Load {\ttfamily @octokit/plugin-\/rest-\/endpoint-\/methods} and \href{https://github.com/octokit/core.js}{\texttt{ {\ttfamily @octokit/core}}} (or core-\/compatible module) directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ Octokit\ \}\ from\ "{}https://esm.sh/@octokit/core"{};}
+\DoxyCodeLine{\ \ import\ \{\ restEndpointMethods\ \}\ from\ "{}https://esm.sh/@octokit/plugin-\/rest-\/endpoint-\/methods"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node }&
+
+Install with {\ttfamily npm install @octokit/core @octokit/plugin-\/rest-\/endpoint-\/methods}. Optionally replace {\ttfamily @octokit/core} with a compatible module
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit\ \}\ from\ "{}@octokit/core"{};}
+\DoxyCodeLine{import\ \{\ restEndpointMethods\ \}\ from\ "{}@octokit/plugin-\/rest-\/endpoint-\/methods"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MyOctokit\ =\ Octokit.plugin(restEndpointMethods);}
+\DoxyCodeLine{const\ octokit\ =\ new\ MyOctokit(\{\ auth:\ "{}secret123"{}\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ https://developer.github.com/v3/users/\#get-\/the-\/authenticated-\/user}
+\DoxyCodeLine{octokit.rest.users.getAuthenticated();}
+
+\end{DoxyCode}
+
+
+There is one method for each REST API endpoint documented at \href{https://developer.github.com/v3}{\texttt{ https\+://developer.\+github.\+com/v3}}. All endpoint methods are documented in the \href{docs/}{\texttt{ docs/}} folder, e.\+g. docs/users/get\+Authenticated.md\hypertarget{README.md_autotoc_md5338}{}\doxysubsection{\texorpdfstring{Type\+Script}{Type\+Script}}\label{README.md_autotoc_md5338}
+\begin{DoxyImportant}{Important}
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json} by setting {\ttfamily "{}module\+Resolution"{}\+: "{}node16"{}, "{}module"{}\+: "{}node16"{}}. ~\newline
+~\newline
+ See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.~\newline
+ See this \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ helpful guide on transitioning to ESM}} from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}}
+\end{DoxyImportant}
+Parameter and response types for all endpoint methods exported as {\ttfamily \{ Rest\+Endpoint\+Method\+Types \}}.
+
+Example
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ RestEndpointMethodTypes\ \}\ from\ "{}@octokit/plugin-\/rest-\/endpoint-\/methods"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ UpdateLabelParameters\ =}
+\DoxyCodeLine{\ \ RestEndpointMethodTypes["{}issues"{}]["{}updateLabel"{}]["{}parameters"{}];}
+\DoxyCodeLine{type\ UpdateLabelResponse\ =}
+\DoxyCodeLine{\ \ RestEndpointMethodTypes["{}issues"{}]["{}updateLabel"{}]["{}response"{}];}
+
+\end{DoxyCode}
+
+
+In order to get types beyond parameters and responses, check out \href{https://github.com/octokit/openapi-types.ts/\#readme}{\texttt{ {\ttfamily @octokit/openapi-\/types}}}, which is a direct transpilation from Git\+Hub\textquotesingle{}s official Open\+API specification.\hypertarget{README.md_autotoc_md5339}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md5339}
+See \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{CONTRIBUTING.md}\hypertarget{README.md_autotoc_md5340}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md5340}
+\mbox{[}MIT\mbox{]}(LICENSE) 

@@ -1,0 +1,159 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/gfm-\/task-\/list-\/item Directory Reference}
+\hypertarget{dir_c31a821f88926e71fa3543a77442e3d6}{}\label{dir_c31a821f88926e71fa3543a77442e3d6}\index{node\_modules/micromark-\/extension-\/gfm-\/task-\/list-\/item Directory Reference@{node\_modules/micromark-\/extension-\/gfm-\/task-\/list-\/item Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-gfm-task-list-item/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-gfm-task-list-item}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-gfm-task-list-item}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-gfm-task-list-item}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extensions to support GFM \href{https://github.github.com/gfm/\#task-list-items-extension-}{\texttt{ task list items}}.\hypertarget{readme.md_autotoc_md23280}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23280}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}gfm\+Task\+List\+Item()\`{}
+\item \`{}gfm\+Task\+List\+Item\+Html()\`{}
+\end{DoxyItemize}
+\item Authoring
+\item HTML
+\item CSS
+\item Syntax
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23281}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23281}
+This package contains extensions that add support for task lists as enabled by GFM to \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. It matches how task list items work on {\ttfamily github.\+com}.\hypertarget{readme.md_autotoc_md23282}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23282}
+This project is useful when you want to support task lists in markdown.
+
+You can use these extensions when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. To support all GFM features, use \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}}.
+
+When you need a syntax tree, you can combine this package with \href{https://github.com/syntax-tree/mdast-util-gfm-task-list-item}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/task-\/list-\/item}}}.
+
+All these packages are used \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md23283}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23283}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/gfm-\/task-\/list-\/item}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{gfmTaskListItem,\ gfmTaskListItemHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/task-\/list-\/item@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{gfmTaskListItem,\ gfmTaskListItemHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/task-\/list-\/item@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23284}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23284}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ gfmTaskListItem,}
+\DoxyCodeLine{\ \ gfmTaskListItemHtml}
+\DoxyCodeLine{\}\ from\ 'micromark-\/extension-\/gfm-\/task-\/list-\/item'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ micromark('*\ [x]\ a\(\backslash\)n*\ [\ ]\ b',\ \{}
+\DoxyCodeLine{\ \ extensions:\ [gfmTaskListItem()],}
+\DoxyCodeLine{\ \ htmlExtensions:\ [gfmTaskListItemHtml()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<ul>}
+\DoxyCodeLine{<li><input\ type="{}checkbox"{}\ disabled="{}"{}\ checked="{}"{}\ />\ a</li>}
+\DoxyCodeLine{<li><input\ type="{}checkbox"{}\ disabled="{}"{}\ />\ b</li>}
+\DoxyCodeLine{</ul>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23285}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23285}
+This package exports the identifiers \`{}gfm\+Task\+List\+Item\`{} and \`{}gfm\+Task\+List\+Item\+Html\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development module.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md23286}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Task\+List\+Item()}}{{\ttfamily gfm\+Task\+List\+Item()}}}\label{readme.md_autotoc_md23286}
+Create an HTML extension for {\ttfamily micromark} to support GFM task list items syntax.\hypertarget{readme.md_autotoc_md23287}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23287}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions}, to enable GFM task list items syntax (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23288}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Task\+List\+Item\+Html()}}{{\ttfamily gfm\+Task\+List\+Item\+Html()}}}\label{readme.md_autotoc_md23288}
+Create an HTML extension for {\ttfamily micromark} to support GFM task list items when serializing to HTML.\hypertarget{readme.md_autotoc_md23289}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23289}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily html\+Extensions} to support GFM task list items when serializing to HTML (\href{https://github.com/micromark/micromark\#htmlextension}{\texttt{ {\ttfamily Html\+Extension}}}).\hypertarget{readme.md_autotoc_md23290}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23290}
+It is recommended to use lowercase {\ttfamily x} (instead of uppercase {\ttfamily X}), because in markdown, it is more common to use lowercase in places where casing does not matter. It is also recommended to use a space (instead of a tab), as there is no benefit of using tabs in this case.\hypertarget{readme.md_autotoc_md23291}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md23291}
+Checks relate to the {\ttfamily \texorpdfstring{$<$}{<}input\texorpdfstring{$>$}{>}} element, in the checkbox state ({\ttfamily type=checkbox}), in HTML. See \href{https://html.spec.whatwg.org/multipage/input.html\#checkbox-state-\\(type=checkbox\\)}{\texttt{ {\itshape § 4.\+10.\+5.\+1.\+15 Checkbox state ({\ttfamily type=checkbox})}}} in the HTML spec for more info.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!-\/-\/…-\/-\/>}
+\DoxyCodeLine{<li><input\ type="{}checkbox"{}\ disabled="{}"{}\ />\ foo</li>}
+\DoxyCodeLine{<li><input\ type="{}checkbox"{}\ disabled="{}"{}\ checked="{}"{}\ />\ bar</li>}
+\DoxyCodeLine{<!-\/-\/…-\/-\/>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23292}{}\doxysubsection{\texorpdfstring{CSS}{CSS}}\label{readme.md_autotoc_md23292}
+Git\+Hub itself uses slightly different markup for task list items than they define in their spec. When following the spec, as this extension does, only inputs are added. They can be styled with the following CSS\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{input[type="{}checkbox"{}]\ \{}
+\DoxyCodeLine{\ \ margin:\ 0\ .2em\ .25em\ -\/1.6em;}
+\DoxyCodeLine{\ \ vertical-\/align:\ middle;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{input[type="{}checkbox"{}]:dir(rtl)\ \{}
+\DoxyCodeLine{\ \ margin:\ 0\ -\/1.6em\ .25em\ .2em;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+For the complete actual CSS see \href{https://github.com/sindresorhus/github-markdown-css}{\texttt{ {\ttfamily sindresorhus/github-\/markdown-\/css}}}.\hypertarget{readme.md_autotoc_md23293}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md23293}
+Checks form with the following BNF\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{gfm\_task\_list\_item\_check\ ::=\ '['\ (0x09\ |\ '\ '\ |\ 'X'\ |\ 'x')\ ']'}
+
+\end{DoxyCode}
+
+
+The check is only allowed at the start of the first paragraph, optionally following zero or more definitions or a blank line, in a list item. The check must be followed by whitespace ({\ttfamily \mbox{[}\textbackslash{}t\textbackslash{}n\textbackslash{}r \mbox{]}\texorpdfstring{$\ast$}{*}}), which is in turn followed by non-\/whitespace.\hypertarget{readme.md_autotoc_md23294}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23294}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md23295}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23295}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/extension-\/gfm-\/task-\/list-\/item@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.
+
+This package works with {\ttfamily micromark} version {\ttfamily 3} and later.\hypertarget{readme.md_autotoc_md23296}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23296}
+This package is safe.\hypertarget{readme.md_autotoc_md23297}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md23297}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} — support all of GFM
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-task-list-item}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/task-\/list-\/item}}} — support all of GFM in mdast
+\item \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}} — support all of GFM in mdast
+\item \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} — support all of GFM in remark
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23298}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23298}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23299}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23299}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

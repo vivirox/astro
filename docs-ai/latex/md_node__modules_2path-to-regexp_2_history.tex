@@ -1,0 +1,178 @@
+\chapter{3.0.0 / 2019-\/01-\/13}
+\hypertarget{md_node__modules_2path-to-regexp_2_history}{}\label{md_node__modules_2path-to-regexp_2_history}\index{3.0.0 / 2019-\/01-\/13@{3.0.0 / 2019-\/01-\/13}}
+\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25789}%
+\Hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25789}%
+
+
+
+\begin{DoxyItemize}
+\item Always use prefix character as delimiter token, allowing any character to be a delimiter (e.\+g. {\ttfamily /\+:att1-\/\+:att2-\/\+:att3-\/\+:att4-\/\+:att5})
+\item Remove {\ttfamily partial} support, prefer escaping the prefix delimiter explicitly (e.\+g. {\ttfamily \textbackslash{}\textbackslash{}/(apple-\/)?icon-\/\+:res(\textbackslash{}\textbackslash{}d+).png})
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25790}{}\doxysection{\texorpdfstring{2.\+4.\+0 / 2018-\/08-\/26}{2.\+4.\+0 / 2018-\/08-\/26}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25790}
+
+\begin{DoxyItemize}
+\item Support {\ttfamily start} option to disable anchoring from beginning of the string
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25791}{}\doxysection{\texorpdfstring{2.\+3.\+0 / 2018-\/08-\/20}{2.\+3.\+0 / 2018-\/08-\/20}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25791}
+
+\begin{DoxyItemize}
+\item Use {\ttfamily delimiter} when processing repeated matching groups (e.\+g. {\ttfamily foo/bar} has no prefix, but has a delimiter)
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25792}{}\doxysection{\texorpdfstring{2.\+2.\+1 / 2018-\/04-\/24}{2.\+2.\+1 / 2018-\/04-\/24}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25792}
+
+\begin{DoxyItemize}
+\item Allow empty string with {\ttfamily end\+: false} to match both relative and absolute paths
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25793}{}\doxysection{\texorpdfstring{2.\+2.\+0 / 2018-\/03-\/06}{2.\+2.\+0 / 2018-\/03-\/06}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25793}
+
+\begin{DoxyItemize}
+\item Pass {\ttfamily token} as second argument to {\ttfamily encode} option (e.\+g. {\ttfamily encode(value, token)})
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25794}{}\doxysection{\texorpdfstring{2.\+1.\+0 / 2017-\/10-\/20}{2.\+1.\+0 / 2017-\/10-\/20}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25794}
+
+\begin{DoxyItemize}
+\item Handle non-\/ending paths where the final character is a delimiter
+\begin{DoxyItemize}
+\item E.\+g. {\ttfamily /foo/} before required either {\ttfamily /foo/} or {\ttfamily /foo//} to match in non-\/ending mode
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25795}{}\doxysection{\texorpdfstring{2.\+0.\+0 / 2017-\/08-\/23}{2.\+0.\+0 / 2017-\/08-\/23}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25795}
+
+\begin{DoxyItemize}
+\item New option! Ability to set {\ttfamily ends\+With} to match paths like {\ttfamily /test?query=string} up to the query string
+\item New option! Set {\ttfamily delimiters} for specific characters to be treated as parameter prefixes (e.\+g. {\ttfamily /\+:test})
+\item Remove {\ttfamily isarray} dependency
+\item Explicitly handle trailing delimiters instead of trimming them (e.\+g. {\ttfamily /test/} is now treated as {\ttfamily /test/} instead of {\ttfamily /test} when matching)
+\item Remove overloaded {\ttfamily keys} argument that accepted {\ttfamily options}
+\item Remove {\ttfamily keys} list attached to the {\ttfamily Reg\+Exp} output
+\item Remove asterisk functionality (it\textquotesingle{}s a real pain to properly encode)
+\item Change {\ttfamily tokens\+To\+Function} (e.\+g. {\ttfamily compile}) to accept an {\ttfamily encode} function for pretty encoding (e.\+g. pass your own implementation)
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25796}{}\doxysection{\texorpdfstring{1.\+7.\+0 / 2016-\/11-\/08}{1.\+7.\+0 / 2016-\/11-\/08}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25796}
+
+\begin{DoxyItemize}
+\item Allow a {\ttfamily delimiter} option to be passed in with {\ttfamily tokens\+To\+Reg\+Exp} which will be used for "{}non-\/ending"{} token match situations
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25797}{}\doxysection{\texorpdfstring{1.\+6.\+0 / 2016-\/10-\/03}{1.\+6.\+0 / 2016-\/10-\/03}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25797}
+
+\begin{DoxyItemize}
+\item Populate {\ttfamily Reg\+Exp.\+keys} when using the {\ttfamily tokens\+To\+Reg\+Exp} method (making it consistent with the main export)
+\item Allow a {\ttfamily delimiter} option to be passed in with {\ttfamily parse}
+\item Updated Type\+Script definition with {\ttfamily Keys} and {\ttfamily Options} updated
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25798}{}\doxysection{\texorpdfstring{1.\+5.\+3 / 2016-\/06-\/15}{1.\+5.\+3 / 2016-\/06-\/15}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25798}
+
+\begin{DoxyItemize}
+\item Add {\ttfamily \textbackslash{}\textbackslash{}} to the ignore character group to avoid backtracking on mismatched parens
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25799}{}\doxysection{\texorpdfstring{1.\+5.\+2 / 2016-\/06-\/15}{1.\+5.\+2 / 2016-\/06-\/15}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25799}
+
+\begin{DoxyItemize}
+\item Escape {\ttfamily \textbackslash{}\textbackslash{}} in string segments of regexp
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25800}{}\doxysection{\texorpdfstring{1.\+5.\+1 / 2016-\/06-\/08}{1.\+5.\+1 / 2016-\/06-\/08}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25800}
+
+\begin{DoxyItemize}
+\item Add {\ttfamily index.\+d.\+ts} to NPM package
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25801}{}\doxysection{\texorpdfstring{1.\+5.\+0 / 2016-\/05-\/20}{1.\+5.\+0 / 2016-\/05-\/20}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25801}
+
+\begin{DoxyItemize}
+\item Handle partial token segments (better)
+\item Allow compile to handle asterisk token segments
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25802}{}\doxysection{\texorpdfstring{1.\+4.\+0 / 2016-\/05-\/18}{1.\+4.\+0 / 2016-\/05-\/18}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25802}
+
+\begin{DoxyItemize}
+\item Handle Reg\+Exp unions in path matching groups
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25803}{}\doxysection{\texorpdfstring{1.\+3.\+0 / 2016-\/05-\/08}{1.\+3.\+0 / 2016-\/05-\/08}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25803}
+
+\begin{DoxyItemize}
+\item Clarify README language and named parameter token support
+\item Support advanced Closure Compiler with type annotations
+\item Add pretty paths options to compiled function output
+\item Add Type\+Script definition to project
+\item Improved prefix handling with non-\/complete segment parameters (E.\+g. {\ttfamily /\+:foo?-\/bar})
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25804}{}\doxysection{\texorpdfstring{1.\+2.\+1 / 2015-\/08-\/17}{1.\+2.\+1 / 2015-\/08-\/17}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25804}
+
+\begin{DoxyItemize}
+\item Encode values before validation with path compilation function
+\item More examples of using compilation in README
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25805}{}\doxysection{\texorpdfstring{1.\+2.\+0 / 2015-\/05-\/20}{1.\+2.\+0 / 2015-\/05-\/20}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25805}
+
+\begin{DoxyItemize}
+\item Add support for matching an asterisk ({\ttfamily \texorpdfstring{$\ast$}{*}}) as an unnamed match everything group ({\ttfamily (.\texorpdfstring{$\ast$}{*})})
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25806}{}\doxysection{\texorpdfstring{1.\+1.\+1 / 2015-\/05-\/11}{1.\+1.\+1 / 2015-\/05-\/11}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25806}
+
+\begin{DoxyItemize}
+\item Expose methods for working with path tokens
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25807}{}\doxysection{\texorpdfstring{1.\+1.\+0 / 2015-\/05-\/09}{1.\+1.\+0 / 2015-\/05-\/09}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25807}
+
+\begin{DoxyItemize}
+\item Expose the parser implementation to consumers
+\item Implement a compiler function to generate valid strings
+\item Huge refactor of tests to be more DRY and cover new parse and compile functions
+\item Use chai in tests
+\item Add .editorconfig
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25808}{}\doxysection{\texorpdfstring{1.\+0.\+3 / 2015-\/01-\/17}{1.\+0.\+3 / 2015-\/01-\/17}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25808}
+
+\begin{DoxyItemize}
+\item Optimised function runtime
+\item Added {\ttfamily files} to {\ttfamily package.\+json}
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25809}{}\doxysection{\texorpdfstring{1.\+0.\+2 / 2014-\/12-\/17}{1.\+0.\+2 / 2014-\/12-\/17}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25809}
+
+\begin{DoxyItemize}
+\item Use {\ttfamily Array.\+is\+Array} shim
+\item Remove ES5 incompatible code
+\item Fixed repository path
+\item Added new readme badges
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25810}{}\doxysection{\texorpdfstring{1.\+0.\+1 / 2014-\/08-\/27}{1.\+0.\+1 / 2014-\/08-\/27}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25810}
+
+\begin{DoxyItemize}
+\item Ensure installation works correctly on 0.\+8
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25811}{}\doxysection{\texorpdfstring{1.\+0.\+0 / 2014-\/08-\/17}{1.\+0.\+0 / 2014-\/08-\/17}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25811}
+
+\begin{DoxyItemize}
+\item No more API changes
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25812}{}\doxysection{\texorpdfstring{0.\+2.\+5 / 2014-\/08-\/07}{0.\+2.\+5 / 2014-\/08-\/07}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25812}
+
+\begin{DoxyItemize}
+\item Allow keys parameter to be omitted
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25813}{}\doxysection{\texorpdfstring{0.\+2.\+4 / 2014-\/08-\/02}{0.\+2.\+4 / 2014-\/08-\/02}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25813}
+
+\begin{DoxyItemize}
+\item Code coverage badge
+\item Updated readme
+\item Attach keys to the generated regexp
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25814}{}\doxysection{\texorpdfstring{0.\+2.\+3 / 2014-\/07-\/09}{0.\+2.\+3 / 2014-\/07-\/09}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25814}
+
+\begin{DoxyItemize}
+\item Add MIT license
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25815}{}\doxysection{\texorpdfstring{0.\+2.\+2 / 2014-\/07-\/06}{0.\+2.\+2 / 2014-\/07-\/06}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25815}
+
+\begin{DoxyItemize}
+\item A passed in trailing slash in non-\/strict mode will become optional
+\item In non-\/end mode, the optional trailing slash will only match at the end
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25816}{}\doxysection{\texorpdfstring{0.\+2.\+1 / 2014-\/06-\/11}{0.\+2.\+1 / 2014-\/06-\/11}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25816}
+
+\begin{DoxyItemize}
+\item Fixed a major capturing group regexp regression
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25817}{}\doxysection{\texorpdfstring{0.\+2.\+0 / 2014-\/06-\/09}{0.\+2.\+0 / 2014-\/06-\/09}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25817}
+
+\begin{DoxyItemize}
+\item Improved support for arrays
+\item Improved support for regexps
+\item Better support for non-\/ending strict mode matches with a trailing slash
+\item Travis CI support
+\item Block using regexp special characters in the path
+\item Removed support for the asterisk to match all
+\item New support for parameter suffixes -\/ {\ttfamily \texorpdfstring{$\ast$}{*}}, {\ttfamily +} and {\ttfamily ?}
+\item Updated readme
+\item Provide delimiter information with keys array
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25818}{}\doxysection{\texorpdfstring{0.\+1.\+2 / 2014-\/03-\/10}{0.\+1.\+2 / 2014-\/03-\/10}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25818}
+
+\begin{DoxyItemize}
+\item Move testing dependencies to {\ttfamily dev\+Dependencies}
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25819}{}\doxysection{\texorpdfstring{0.\+1.\+1 / 2014-\/03-\/10}{0.\+1.\+1 / 2014-\/03-\/10}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25819}
+
+\begin{DoxyItemize}
+\item Match entire substring with {\ttfamily options.\+end}
+\item Properly handle ending and non-\/ending matches
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25820}{}\doxysection{\texorpdfstring{0.\+1.\+0 / 2014-\/03-\/06}{0.\+1.\+0 / 2014-\/03-\/06}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25820}
+
+\begin{DoxyItemize}
+\item Add {\ttfamily options.\+end}
+\end{DoxyItemize}\hypertarget{md_node__modules_2path-to-regexp_2_history_autotoc_md25821}{}\doxysection{\texorpdfstring{0.\+0.\+2 / 2013-\/02-\/10}{0.\+0.\+2 / 2013-\/02-\/10}}\label{md_node__modules_2path-to-regexp_2_history_autotoc_md25821}
+
+\begin{DoxyItemize}
+\item Update to match current express
+\item Add .license property to component.\+json 
+\end{DoxyItemize}

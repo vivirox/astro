@@ -1,0 +1,184 @@
+\doxysection{node\+\_\+modules/@inquirer/select Directory Reference}
+\hypertarget{dir_46c4be039a078412a89de2b41dcf0f2b}{}\label{dir_46c4be039a078412a89de2b41dcf0f2b}\index{node\_modules/"@inquirer/select Directory Reference@{node\_modules/"@inquirer/select Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Simple interactive command line prompt to display a list of choices (single select.)
+
+\hypertarget{README.md_autotoc_md3818}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md3818}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ npm }&\cellcolor{\tableheadbgcolor}\textbf{ yarn  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ npm }&\cellcolor{\tableheadbgcolor}\textbf{ yarn  }\\\cline{1-2}
+\endhead
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @inquirer/prompts}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ @inquirer/prompts}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\multicolumn{2}{|c|}{\PBS\centering Or  }\\\cline{1-2}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @inquirer/select}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ @inquirer/select}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md3819}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3819}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ select,\ Separator\ \}\ from\ '@inquirer/prompts';}
+\DoxyCodeLine{//\ Or}
+\DoxyCodeLine{//\ import\ select,\ \{\ Separator\ \}\ from\ '@inquirer/select';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ answer\ =\ await\ select(\{}
+\DoxyCodeLine{\ \ message:\ 'Select\ a\ package\ manager',}
+\DoxyCodeLine{\ \ choices:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ 'npm',}
+\DoxyCodeLine{\ \ \ \ \ \ value:\ 'npm',}
+\DoxyCodeLine{\ \ \ \ \ \ description:\ 'npm\ is\ the\ most\ popular\ package\ manager',}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ 'yarn',}
+\DoxyCodeLine{\ \ \ \ \ \ value:\ 'yarn',}
+\DoxyCodeLine{\ \ \ \ \ \ description:\ 'yarn\ is\ an\ awesome\ package\ manager',}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ new\ Separator(),}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ 'jspm',}
+\DoxyCodeLine{\ \ \ \ \ \ value:\ 'jspm',}
+\DoxyCodeLine{\ \ \ \ \ \ disabled:\ true,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ 'pnpm',}
+\DoxyCodeLine{\ \ \ \ \ \ value:\ 'pnpm',}
+\DoxyCodeLine{\ \ \ \ \ \ disabled:\ '(pnpm\ is\ not\ available)',}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3820}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md3820}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Property   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Required   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Property   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Required   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endhead
+message   &{\ttfamily string}   &yes   &The question to ask    \\\cline{1-4}
+choices   &{\ttfamily Choice\mbox{[}\mbox{]}}   &yes   &List of the available choices.    \\\cline{1-4}
+default   &{\ttfamily string}   &no   &Defines in front of which item the cursor will initially appear. When omitted, the cursor will appear on the first selectable item.    \\\cline{1-4}
+page\+Size   &{\ttfamily number}   &no   &By default, lists of choice longer than 7 will be paginated. Use this option to control how many choices will appear on the screen at once.    \\\cline{1-4}
+loop   &{\ttfamily boolean}   &no   &Defaults to {\ttfamily true}. When set to {\ttfamily false}, the cursor will be constrained to the top and bottom of the choice list without looping.    \\\cline{1-4}
+theme   &See Theming   &no   &Customize look of the prompt.   \\\cline{1-4}
+\end{longtabu}
+
+
+{\ttfamily Separator} objects can be used in the {\ttfamily choices} array to render non-\/selectable lines in the choice list. By default it\textquotesingle{}ll render a line, but you can provide the text as argument (`new Separator('-- Dependencies --\textquotesingle{})\`{}). This option is often used to add labels to groups within long list of options.\hypertarget{README.md_autotoc_md3821}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Choice} object}{{\ttfamily Choice} object}}\label{README.md_autotoc_md3821}
+The {\ttfamily Choice} object is typed as
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Choice<Value>\ =\ \{}
+\DoxyCodeLine{\ \ value:\ Value;}
+\DoxyCodeLine{\ \ name?:\ string;}
+\DoxyCodeLine{\ \ description?:\ string;}
+\DoxyCodeLine{\ \ short?:\ string;}
+\DoxyCodeLine{\ \ disabled?:\ boolean\ |\ string;}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+Here\textquotesingle{}s each property\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily value}\+: The value is what will be returned by {\ttfamily await select()}.
+\item {\ttfamily name}\+: This is the string displayed in the choice list.
+\item {\ttfamily description}\+: Option for a longer description string that\textquotesingle{}ll appear under the list when the cursor highlight a given choice.
+\item {\ttfamily short}\+: Once the prompt is done (press enter), we\textquotesingle{}ll use {\ttfamily short} if defined to render next to the question. By default we\textquotesingle{}ll use {\ttfamily name}.
+\item {\ttfamily disabled}\+: Disallow the option from being selected. If {\ttfamily disabled} is a string, it\textquotesingle{}ll be used as a help tip explaining why the choice isn\textquotesingle{}t available.
+\end{DoxyItemize}
+
+{\ttfamily choices} can also be an array of string, in which case the string will be used both as the {\ttfamily value} and the {\ttfamily name}.\hypertarget{README.md_autotoc_md3822}{}\doxysubsubsection{\texorpdfstring{Theming}{Theming}}\label{README.md_autotoc_md3822}
+You can theme a prompt by passing a {\ttfamily theme} object option. The theme object only need to includes the keys you wish to modify, we\textquotesingle{}ll fallback on the defaults for the rest.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Theme\ =\ \{}
+\DoxyCodeLine{\ \ prefix:\ string\ |\ \{\ idle:\ string;\ done:\ string\ \};}
+\DoxyCodeLine{\ \ spinner:\ \{}
+\DoxyCodeLine{\ \ \ \ interval:\ number;}
+\DoxyCodeLine{\ \ \ \ frames:\ string[];}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\ \ style:\ \{}
+\DoxyCodeLine{\ \ \ \ answer:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ message:\ (text:\ string,\ status:\ 'idle'\ |\ 'done'\ |\ 'loading')\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ error:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ help:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ highlight:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ description:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ disabled:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\ \ icon:\ \{}
+\DoxyCodeLine{\ \ \ \ cursor:\ string;}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\ \ helpMode:\ 'always'\ |\ 'never'\ |\ 'auto';}
+\DoxyCodeLine{\ \ indexMode:\ 'hidden'\ |\ 'number';}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3823}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily theme.\+help\+Mode}}{{\ttfamily theme.\+help\+Mode}}}\label{README.md_autotoc_md3823}
+
+\begin{DoxyItemize}
+\item {\ttfamily auto} (default)\+: Hide the help tips after an interaction occurs.
+\item {\ttfamily always}\+: The help tips will always show and never hide.
+\item {\ttfamily never}\+: The help tips will never show.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md3824}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily theme.\+index\+Mode}}{{\ttfamily theme.\+index\+Mode}}}\label{README.md_autotoc_md3824}
+Controls how indices are displayed before each choice\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily hidden} (default)\+: No indices are shown
+\item {\ttfamily number}\+: Display a number before each choice (e.\+g. "{}1. Option A"{})
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md3825}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md3825}
+Copyright (c) 2023 Simon Boudrias (twitter\+: \href{https://twitter.com/Vaxilart}{\texttt{ @vaxilart}})~\newline
+ Licensed under the MIT license. 

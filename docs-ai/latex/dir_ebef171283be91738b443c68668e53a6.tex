@@ -1,0 +1,67 @@
+\doxysection{node\+\_\+modules/import-\/fresh Directory Reference}
+\hypertarget{dir_ebef171283be91738b443c68668e53a6}{}\label{dir_ebef171283be91738b443c68668e53a6}\index{node\_modules/import-\/fresh Directory Reference@{node\_modules/import-\/fresh Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_122e8ed1cd1e613664d6250849ba3771}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Import a module while bypassing the \href{https://nodejs.org/api/modules.html\#modules_caching}{\texttt{ cache}} \end{quote}
+
+
+Useful for testing purposes when you need to freshly import a module.\hypertarget{readme.md_autotoc_md18068}{}\doxysubsection{\texorpdfstring{ESM}{ESM}}\label{readme.md_autotoc_md18068}
+For ESM, you can use this snippet\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ importFresh\ =\ moduleName\ =>\ import(`\$\{moduleName\}?\$\{Date.now()\}`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{default:\ foo\}\ =\ await\ importFresh('foo');}
+
+\end{DoxyCode}
+
+
+{\bfseries{This snippet causes a memory leak, so only use it for short-\/lived tests.}}\hypertarget{readme.md_autotoc_md18069}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md18069}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ import-\/fresh}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md18070}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md18070}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ foo.js}
+\DoxyCodeLine{let\ i\ =\ 0;}
+\DoxyCodeLine{module.exports\ =\ ()\ =>\ ++i;}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ importFresh\ =\ require('import-\/fresh');}
+\DoxyCodeLine{}
+\DoxyCodeLine{require('./foo')();}
+\DoxyCodeLine{//=>\ 1}
+\DoxyCodeLine{}
+\DoxyCodeLine{require('./foo')();}
+\DoxyCodeLine{//=>\ 2}
+\DoxyCodeLine{}
+\DoxyCodeLine{importFresh('./foo')();}
+\DoxyCodeLine{//=>\ 1}
+\DoxyCodeLine{}
+\DoxyCodeLine{importFresh('./foo')();}
+\DoxyCodeLine{//=>\ 1}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md18071}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md18071}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/clear-module}{\texttt{ clear-\/module}} -\/ Clear a module from the import cache
+\item \href{https://github.com/sindresorhus/import-from}{\texttt{ import-\/from}} -\/ Import a module from a given path
+\item \href{https://github.com/sindresorhus/import-cwd}{\texttt{ import-\/cwd}} -\/ Import a module from the current working directory
+\item \href{https://github.com/sindresorhus/import-lazy}{\texttt{ import-\/lazy}} -\/ Import modules lazily 
+\end{DoxyItemize}

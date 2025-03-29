@@ -1,0 +1,68 @@
+\doxysection{node\+\_\+modules/merge-\/stream Directory Reference}
+\hypertarget{dir_e491710df3a5c5a83601d4075891b83d}{}\label{dir_e491710df3a5c5a83601d4075891b83d}\index{node\_modules/merge-\/stream Directory Reference@{node\_modules/merge-\/stream Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Merge (interleave) a bunch of streams.
+
+\href{http://travis-ci.org/grncdr/merge-stream}{\texttt{ }}\hypertarget{README.md_autotoc_md23088}{}\doxysubsection{\texorpdfstring{Synopsis}{Synopsis}}\label{README.md_autotoc_md23088}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ stream1\ =\ new\ Stream();}
+\DoxyCodeLine{var\ stream2\ =\ new\ Stream();}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ merged\ =\ mergeStream(stream1,\ stream2);}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ stream3\ =\ new\ Stream();}
+\DoxyCodeLine{merged.add(stream3);}
+\DoxyCodeLine{merged.isEmpty();}
+\DoxyCodeLine{//=>\ false}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md23089}{}\doxysubsection{\texorpdfstring{Description}{Description}}\label{README.md_autotoc_md23089}
+This is adapted from \href{https://github.com/dominictarr/event-stream}{\texttt{ event-\/stream}} separated into a new module, using Streams3.\hypertarget{README.md_autotoc_md23090}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md23090}
+\hypertarget{README.md_autotoc_md23091}{}\doxysubsubsection{\texorpdfstring{{\ttfamily merge\+Stream}}{{\ttfamily merge\+Stream}}}\label{README.md_autotoc_md23091}
+Type\+: {\ttfamily function}
+
+Merges an arbitrary number of streams. Returns a merged stream.\hypertarget{README.md_autotoc_md23092}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily merged.\+add}}{{\ttfamily merged.\+add}}}\label{README.md_autotoc_md23092}
+A method to dynamically add more sources to the stream. The argument supplied to {\ttfamily add} can be either a source or an array of sources.\hypertarget{README.md_autotoc_md23093}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily merged.\+is\+Empty}}{{\ttfamily merged.\+is\+Empty}}}\label{README.md_autotoc_md23093}
+A method that tells you if the merged stream is empty.
+
+When a stream is "{}empty"{} (aka. no sources were added), it could not be returned to a gulp task.
+
+So, we could do something like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{stream\ =\ require('merge-\/stream')();}
+\DoxyCodeLine{//\ Something\ like\ a\ loop\ to\ add\ some\ streams\ to\ the\ merge\ stream}
+\DoxyCodeLine{//\ stream.add(streamA);}
+\DoxyCodeLine{//\ stream.add(streamB);}
+\DoxyCodeLine{return\ stream.isEmpty()\ ?\ null\ :\ stream;}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md23094}{}\doxysubsection{\texorpdfstring{Gulp example}{Gulp example}}\label{README.md_autotoc_md23094}
+An example use case for {\bfseries{merge-\/stream}} is to combine parts of a task in a project\textquotesingle{}s {\bfseries{gulpfile.\+js}} like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ gulp\ =\ \ \ \ \ \ \ \ \ \ require('gulp');}
+\DoxyCodeLine{const\ htmlValidator\ =\ require('gulp-\/w3c-\/html-\/validator');}
+\DoxyCodeLine{const\ jsHint\ =\ \ \ \ \ \ \ \ require('gulp-\/jshint');}
+\DoxyCodeLine{const\ mergeStream\ =\ \ \ require('merge-\/stream');}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ lint()\ \{}
+\DoxyCodeLine{\ \ return\ mergeStream(}
+\DoxyCodeLine{\ \ \ \ gulp.src('src/*.html')}
+\DoxyCodeLine{\ \ \ \ \ \ .pipe(htmlValidator())}
+\DoxyCodeLine{\ \ \ \ \ \ .pipe(htmlValidator.reporter()),}
+\DoxyCodeLine{\ \ \ \ gulp.src('src/*.js')}
+\DoxyCodeLine{\ \ \ \ \ \ .pipe(jsHint())}
+\DoxyCodeLine{\ \ \ \ \ \ .pipe(jsHint.reporter())}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{gulp.task('lint',\ lint);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md23095}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md23095}
+MIT 

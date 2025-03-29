@@ -1,0 +1,82 @@
+\doxysection{node\+\_\+modules/jest-\/changed-\/files/node\+\_\+modules/onetime Directory Reference}
+\hypertarget{dir_9b51d776979c4bcd1cca2fa457917aa2}{}\label{dir_9b51d776979c4bcd1cca2fa457917aa2}\index{node\_modules/jest-\/changed-\/files/node\_modules/onetime Directory Reference@{node\_modules/jest-\/changed-\/files/node\_modules/onetime Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Ensure a function is only called once \end{quote}
+
+
+When called multiple times it will return the return value from the first call.
+
+{\itshape Unlike the module \href{https://github.com/isaacs/once}{\texttt{ once}}, this one isn\textquotesingle{}t naughty and extending {\ttfamily Function.\+prototype}.}\hypertarget{readme.md_autotoc_md19564}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md19564}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ onetime}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md19565}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md19565}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ onetime\ =\ require('onetime');}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ i\ =\ 0;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ foo\ =\ onetime(()\ =>\ ++i);}
+\DoxyCodeLine{}
+\DoxyCodeLine{foo();\ //=>\ 1}
+\DoxyCodeLine{foo();\ //=>\ 1}
+\DoxyCodeLine{foo();\ //=>\ 1}
+\DoxyCodeLine{}
+\DoxyCodeLine{onetime.callCount(foo);\ //=>\ 3}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ onetime\ =\ require('onetime');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ foo\ =\ onetime(()\ =>\ \{\},\ \{throw:\ true\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{foo();}
+\DoxyCodeLine{}
+\DoxyCodeLine{foo();}
+\DoxyCodeLine{//=>\ Error:\ Function\ \`{}foo`\ can\ only\ be\ called\ once}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md19566}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md19566}
+\hypertarget{readme.md_autotoc_md19567}{}\doxysubsubsection{\texorpdfstring{onetime(fn, options?)}{onetime(fn, options?)}}\label{readme.md_autotoc_md19567}
+Returns a function that only calls {\ttfamily fn} once.\hypertarget{readme.md_autotoc_md19568}{}\doxysubsubsubsection{\texorpdfstring{fn}{fn}}\label{readme.md_autotoc_md19568}
+Type\+: {\ttfamily Function}
+
+Function that should only be called once.\hypertarget{readme.md_autotoc_md19569}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md19569}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md19570}{}\doxysubsubsubsubsection{\texorpdfstring{throw}{throw}}\label{readme.md_autotoc_md19570}
+Type\+: {\ttfamily boolean}\textbackslash{} Default\+: {\ttfamily false}
+
+Throw an error when called more than once.\hypertarget{readme.md_autotoc_md19571}{}\doxysubsubsection{\texorpdfstring{onetime.\+call\+Count(fn)}{onetime.\+call\+Count(fn)}}\label{readme.md_autotoc_md19571}
+Returns a number representing how many times {\ttfamily fn} has been called.
+
+Note\+: It throws an error if you pass in a function that is not wrapped by {\ttfamily onetime}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ onetime\ =\ require('onetime');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ foo\ =\ onetime(()\ =>\ \{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{foo();}
+\DoxyCodeLine{foo();}
+\DoxyCodeLine{foo();}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(onetime.callCount(foo));}
+\DoxyCodeLine{//=>\ 3}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md19572}{}\doxysubsubsubsection{\texorpdfstring{fn}{fn}}\label{readme.md_autotoc_md19572}
+Type\+: {\ttfamily Function}
+
+Function to get call count from.\hypertarget{readme.md_autotoc_md19573}{}\doxysubsection{\texorpdfstring{onetime for enterprise}{onetime for enterprise}}\label{readme.md_autotoc_md19573}
+Available as part of the Tidelift Subscription.
+
+The maintainers of onetime and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. \href{https://tidelift.com/subscription/pkg/npm-onetime?utm_source=npm-onetime&utm_medium=referral&utm_campaign=enterprise&utm_term=repo}{\texttt{ Learn more.}} 

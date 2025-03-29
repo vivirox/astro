@@ -1,0 +1,73 @@
+\doxysection{node\+\_\+modules/to-\/vfile Directory Reference}
+\hypertarget{dir_60d100214e1b7b03814993f11edbfe6e}{}\label{dir_60d100214e1b7b03814993f11edbfe6e}\index{node\_modules/to-\/vfile Directory Reference@{node\_modules/to-\/vfile Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_31b97cff2e2a8b880d5acbb0608aa74f}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/vfile/to-vfile}{\texttt{ }} \href{https://codecov.io/github/vfile/to-vfile}{\texttt{ }} \href{https://www.npmjs.com/package/to-vfile}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://spectrum.chat/unified/vfile}{\texttt{ }}
+
+Create a \href{https://github.com/vfile/vfile}{\texttt{ {\ttfamily vfile}}} from a filepath. Optionally populates them from the file system as well. Can write virtual files to file system too.\hypertarget{readme.md_autotoc_md33013}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md33013}
+\href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ to-\/vfile}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+{\bfseries{Note}}\+: the file-\/system stuff is not available in the browser. \end{quote}
+\hypertarget{readme.md_autotoc_md33014}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md33014}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ vfile\ =\ require('to-\/vfile')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(vfile('readme.md'))}
+\DoxyCodeLine{console.log(vfile.readSync('.git/HEAD'))}
+\DoxyCodeLine{console.log(vfile.readSync('.git/HEAD',\ 'utf8'))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{VFile\ \{}
+\DoxyCodeLine{\ \ data:\ \{\},}
+\DoxyCodeLine{\ \ messages:\ [],}
+\DoxyCodeLine{\ \ history:\ ['readme.md'],}
+\DoxyCodeLine{\ \ cwd:\ '/Users/tilde/projects/oss/to-\/vfile'}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{VFile\ \{}
+\DoxyCodeLine{\ \ data:\ \{\},}
+\DoxyCodeLine{\ \ messages:\ [],}
+\DoxyCodeLine{\ \ history:\ ['.git/HEAD'],}
+\DoxyCodeLine{\ \ cwd:\ '/Users/tilde/projects/oss/to-\/vfile',}
+\DoxyCodeLine{\ \ contents:\ <Buffer\ 72\ 65\ 66\ 3a\ 20\ 72\ 65\ 66\ 73\ 2f\ 68\ 65\ 61\ 64\ 73\ 2f\ 6d\ 61\ 73\ 74\ 65\ 72\ 0a>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{VFile\ \{}
+\DoxyCodeLine{\ \ data:\ \{\},}
+\DoxyCodeLine{\ \ messages:\ [],}
+\DoxyCodeLine{\ \ history:\ ['.git/HEAD'],}
+\DoxyCodeLine{\ \ cwd:\ '/Users/tilde/projects/oss/to-\/vfile',}
+\DoxyCodeLine{\ \ contents:\ 'ref:\ refs/heads/master\(\backslash\)n'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md33015}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md33015}
+\hypertarget{readme.md_autotoc_md33016}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+VFile(options)}}{{\ttfamily to\+VFile(options)}}}\label{readme.md_autotoc_md33016}
+Create a virtual file. Works like the \href{https://github.com/vfile/vfile}{\texttt{ vfile}} constructor, except when {\ttfamily options} is {\ttfamily string} or {\ttfamily Buffer}, in which case it’s treated as {\ttfamily \{path\+: options\}} instead of {\ttfamily \{contents\+: options\}}.\hypertarget{readme.md_autotoc_md33017}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+VFile.\+read(options\mbox{[}, encoding\mbox{]}\mbox{[}, callback\mbox{]})}}{{\ttfamily to\+VFile.\+read(options\mbox{[}, encoding\mbox{]}\mbox{[}, callback\mbox{]})}}}\label{readme.md_autotoc_md33017}
+Creates a virtual file from options ({\ttfamily to\+VFile(options)}), reads the file from the file-\/system and populates {\ttfamily file.\+contents} with the result. If {\ttfamily encoding} is specified, it’s passed to {\ttfamily fs.\+read\+File}. If {\ttfamily callback} is given, invokes it with either an error or the populated virtual file. If {\ttfamily callback} is not given, returns a \href{https://developer.mozilla.org/Web/JavaScript/Reference/Global_Objects/Promise}{\texttt{ {\ttfamily Promise}}} that is rejected with an error or resolved with the populated virtual file.\hypertarget{readme.md_autotoc_md33018}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+VFile.\+read\+Sync(options\mbox{[}, encoding\mbox{]})}}{{\ttfamily to\+VFile.\+read\+Sync(options\mbox{[}, encoding\mbox{]})}}}\label{readme.md_autotoc_md33018}
+Like {\ttfamily to\+VFile.\+read} but synchronous. Either throws an error or returns a populated virtual file.\hypertarget{readme.md_autotoc_md33019}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+VFile.\+write(options\mbox{[}, fs\+Options\mbox{]}\mbox{[}, callback\mbox{]})}}{{\ttfamily to\+VFile.\+write(options\mbox{[}, fs\+Options\mbox{]}\mbox{[}, callback\mbox{]})}}}\label{readme.md_autotoc_md33019}
+Creates a virtual file from {\ttfamily options} ({\ttfamily to\+VFile(options)}), writes the file to the file-\/system. {\ttfamily fs\+Options} are passed to {\ttfamily fs.\+write\+File}. If {\ttfamily callback} is given, invokes it with an error, if any. If {\ttfamily callback} is not given, returns a \href{https://developer.mozilla.org/Web/JavaScript/Reference/Global_Objects/Promise}{\texttt{ {\ttfamily Promise}}} that is rejected with an error or resolved with the written virtual file.\hypertarget{readme.md_autotoc_md33020}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+VFile.\+write\+Sync(options\mbox{[}, fs\+Options\mbox{]})}}{{\ttfamily to\+VFile.\+write\+Sync(options\mbox{[}, fs\+Options\mbox{]})}}}\label{readme.md_autotoc_md33020}
+Like {\ttfamily to\+VFile.\+write} but synchronous. Either throws an error or returns a populated virtual file.\hypertarget{readme.md_autotoc_md33021}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md33021}
+See \href{https://github.com/vfile/.github/blob/master/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/vfile/.github}{\texttt{ {\ttfamily vfile/.github}}} for ways to get started. See \href{https://github.com/vfile/.github/blob/master/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/vfile/.github/blob/master/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md33022}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md33022}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

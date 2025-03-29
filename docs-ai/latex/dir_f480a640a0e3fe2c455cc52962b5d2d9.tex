@@ -1,0 +1,260 @@
+\doxysection{node\+\_\+modules/eslint-\/plugin-\/regexp Directory Reference}
+\hypertarget{dir_f480a640a0e3fe2c455cc52962b5d2d9}{}\label{dir_f480a640a0e3fe2c455cc52962b5d2d9}\index{node\_modules/eslint-\/plugin-\/regexp Directory Reference@{node\_modules/eslint-\/plugin-\/regexp Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/eslint-plugin-regexp}{\texttt{ eslint-\/plugin-\/regexp}} is ESLint plugin for finding Reg\+Exp mistakes and Reg\+Exp style guide violations.
+
+\href{https://www.npmjs.com/package/eslint-plugin-regexp}{\texttt{ }} \href{https://www.npmjs.com/package/eslint-plugin-regexp}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-regexp}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-regexp}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-regexp}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-regexp}{\texttt{ }} \href{http://www.npmtrends.com/eslint-plugin-regexp}{\texttt{ }} \href{https://github.com/ota-meshi/eslint-plugin-regexp/actions?query=workflow\%3ACI}{\texttt{ }} \href{https://coveralls.io/github/ota-meshi/eslint-plugin-regexp?branch=master}{\texttt{ }}\hypertarget{README.md_autotoc_md14170}{}\doxysubsection{\texorpdfstring{\+:name\+\_\+badge\+: Features}{\+:name\+\_\+badge\+: Features}}\label{README.md_autotoc_md14170}
+This ESLint plugin provides linting rules relate to better ways to help you avoid problems when using Reg\+Exp.
+
+
+\begin{DoxyItemize}
+\item Find the wrong usage of regular expressions, and their hints.
+\item Enforces a consistent style of regular expressions.
+\item Find hints for writing optimized regular expressions.
+\item 80 plugin rules for regular expression syntax and features.
+\end{DoxyItemize}
+
+You can check on the \href{https://ota-meshi.github.io/eslint-plugin-regexp/playground/}{\texttt{ Online DEMO}}.\hypertarget{README.md_autotoc_md14171}{}\doxysubsection{\texorpdfstring{\+:book\+: Documentation}{\+:book\+: Documentation}}\label{README.md_autotoc_md14171}
+See \href{https://ota-meshi.github.io/eslint-plugin-regexp/}{\texttt{ documents}}.\hypertarget{README.md_autotoc_md14172}{}\doxysubsection{\texorpdfstring{\+:cd\+: Installation}{\+:cd\+: Installation}}\label{README.md_autotoc_md14172}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ eslint\ eslint-\/plugin-\/regexp}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+{\bfseries{Requirements}}
+
+
+\begin{DoxyItemize}
+\item ESLint v8.\+44.\+0 and above
+\item Node.\+js v18.\+x, v20.\+x and above 
+\end{DoxyItemize}\end{quote}
+\hypertarget{README.md_autotoc_md14173}{}\doxysubsection{\texorpdfstring{\+:book\+: Usage}{\+:book\+: Usage}}\label{README.md_autotoc_md14173}
+Add {\ttfamily regexp} to the plugins section of your {\ttfamily eslint.\+config.\+js} or {\ttfamily .eslintrc} configuration file (you can omit the {\ttfamily eslint-\/plugin-\/} prefix) and either use one of the two configurations available ({\ttfamily recommended} or {\ttfamily all}) or configure the rules you want\+:\hypertarget{README.md_autotoc_md14174}{}\doxysubsubsection{\texorpdfstring{The recommended configuration (New Config)}{The recommended configuration (New Config)}}\label{README.md_autotoc_md14174}
+The {\ttfamily plugin.\+configs\mbox{[}"{}flat/recommended"{}\mbox{]}} config enables a subset of the rules that should be most useful to most users. {\itshape See \href{https://github.com/ota-meshi/eslint-plugin-regexp/blob/master/lib/configs/rules/recommended.ts}{\texttt{ lib/configs/rules/recommended.\+ts}} for more details.}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.js}
+\DoxyCodeLine{import\ *\ as\ regexpPlugin\ from\ "{}eslint-\/plugin-\/regexp"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ regexpPlugin.configs["{}flat/recommended"{}],}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14175}{}\doxysubsubsection{\texorpdfstring{The recommended configuration (Legacy Config)}{The recommended configuration (Legacy Config)}}\label{README.md_autotoc_md14175}
+The {\ttfamily plugin\+:regexp/recommended} config enables a subset of the rules that should be most useful to most users. {\itshape See \href{https://github.com/ota-meshi/eslint-plugin-regexp/blob/master/lib/configs/rules/recommended.ts}{\texttt{ lib/configs/rules/recommended.\+ts}} for more details.}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ .eslintrc.js}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ \ \ "{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}regexp"{}}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ "{}extends"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ //\ add\ more\ generic\ rulesets\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ //\ 'eslint:recommended',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}plugin:regexp/recommended"{}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14176}{}\doxysubsubsection{\texorpdfstring{Advanced Configuration}{Advanced Configuration}}\label{README.md_autotoc_md14176}
+Override/add specific rules configurations. {\itshape See also\+: \href{http://eslint.org/docs/user-guide/configuring}{\texttt{ http\+://eslint.\+org/docs/user-\/guide/configuring}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ eslint.config.js}
+\DoxyCodeLine{import\ *\ as\ regexpPlugin\ from\ "{}eslint-\/plugin-\/regexp"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ plugins:\ \{\ regexp:\ regexpPlugin\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ //\ Override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}regexp/rule-\/name"{}:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ .eslintrc.js}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ \ \ "{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}regexp"{}}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ "{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Override/add\ rules\ settings\ here,\ such\ as:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}regexp/rule-\/name"{}:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md14177}{}\doxysubsubsection{\texorpdfstring{Using the all configuration}{Using the all configuration}}\label{README.md_autotoc_md14177}
+The {\ttfamily plugin.\+configs\mbox{[}"{}flat/all"{}\mbox{]}} / {\ttfamily plugin\+:regexp/all} config enables all rules. It\textquotesingle{}s meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk. {\itshape See \href{https://github.com/ota-meshi/eslint-plugin-regexp/blob/master/lib/configs/rules/all.ts}{\texttt{ lib/configs/rules/all.\+ts}} for more details.}\hypertarget{README.md_autotoc_md14178}{}\doxysubsection{\texorpdfstring{\+:white\+\_\+check\+\_\+mark\+: Rules}{\+:white\+\_\+check\+\_\+mark\+: Rules}}\label{README.md_autotoc_md14178}
+💼 Configurations enabled in.\textbackslash{} ⚠️ Configurations set to warn in.\textbackslash{} 🟢 Set in the {\ttfamily flat/recommended} configuration.\textbackslash{} 🔵 Set in the {\ttfamily recommended} configuration.\textbackslash{} 🔧 Automatically fixable by the \href{https://eslint.org/docs/user-guide/command-line-interface\#--fix}{\texttt{ {\ttfamily -\/-\/fix} CLI option}}.\textbackslash{} 💡 Manually fixable by \href{https://eslint.org/docs/latest/use/core-concepts\#rule-suggestions}{\texttt{ editor suggestions}}.\hypertarget{README.md_autotoc_md14179}{}\doxysubsubsection{\texorpdfstring{Possible Errors}{Possible Errors}}\label{README.md_autotoc_md14179}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Name                                   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ 💼   }&\cellcolor{\tableheadbgcolor}\textbf{ ⚠️   }&\cellcolor{\tableheadbgcolor}\textbf{ 🔧   }&\cellcolor{\tableheadbgcolor}\textbf{ 💡    }\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Name                                   }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ 💼   }&\cellcolor{\tableheadbgcolor}\textbf{ ⚠️   }&\cellcolor{\tableheadbgcolor}\textbf{ 🔧   }&\cellcolor{\tableheadbgcolor}\textbf{ 💡    }\\\cline{1-6}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-contradiction-with-assertion.html}{\texttt{ no-\/contradiction-\/with-\/assertion}}   &disallow elements that contradict assertions   &🟢 🔵   &&&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-control-character.html}{\texttt{ no-\/control-\/character}}   &disallow control characters   &&&&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-dupe-disjunctions.html}{\texttt{ no-\/dupe-\/disjunctions}}   &disallow duplicate disjunctions   &🟢 🔵   &&&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-empty-alternative.html}{\texttt{ no-\/empty-\/alternative}}   &disallow alternatives without elements   &&🟢 🔵   &&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-empty-capturing-group.html}{\texttt{ no-\/empty-\/capturing-\/group}}   &disallow capturing group that captures empty.   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-empty-character-class.html}{\texttt{ no-\/empty-\/character-\/class}}   &disallow character classes that match no characters   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-empty-group.html}{\texttt{ no-\/empty-\/group}}   &disallow empty group   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-empty-lookarounds-assertion.html}{\texttt{ no-\/empty-\/lookarounds-\/assertion}}   &disallow empty lookahead assertion or empty lookbehind assertion   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-escape-backspace.html}{\texttt{ no-\/escape-\/backspace}}   &disallow escape backspace ({\ttfamily \mbox{[}\textbackslash{}b\mbox{]}})   &🟢 🔵   &&&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-invalid-regexp.html}{\texttt{ no-\/invalid-\/regexp}}   &disallow invalid regular expression strings in {\ttfamily Reg\+Exp} constructors   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-lazy-ends.html}{\texttt{ no-\/lazy-\/ends}}   &disallow lazy quantifiers at the end of an expression   &&🟢 🔵   &&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-misleading-capturing-group.html}{\texttt{ no-\/misleading-\/capturing-\/group}}   &disallow capturing groups that do not behave as one would expect   &🟢 🔵   &&&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-misleading-unicode-character.html}{\texttt{ no-\/misleading-\/unicode-\/character}}   &disallow multi-\/code-\/point characters in character classes and quantifiers   &🟢 🔵   &&🔧   &💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-missing-g-flag.html}{\texttt{ no-\/missing-\/g-\/flag}}   &disallow missing {\ttfamily g} flag in patterns used in {\ttfamily String\#match\+All} and {\ttfamily String\#replace\+All}   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-optional-assertion.html}{\texttt{ no-\/optional-\/assertion}}   &disallow optional assertions   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-potentially-useless-backreference.html}{\texttt{ no-\/potentially-\/useless-\/backreference}}   &disallow backreferences that reference a group that might not be matched   &&🟢 🔵   &&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-super-linear-backtracking.html}{\texttt{ no-\/super-\/linear-\/backtracking}}   &disallow exponential and polynomial backtracking   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-super-linear-move.html}{\texttt{ no-\/super-\/linear-\/move}}   &disallow quantifiers that cause quadratic moves   &&&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-assertions.html}{\texttt{ no-\/useless-\/assertions}}   &disallow assertions that are known to always accept (or reject)   &🟢 🔵   &&&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-backreference.html}{\texttt{ no-\/useless-\/backreference}}   &disallow useless backreferences in regular expressions   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-dollar-replacements.html}{\texttt{ no-\/useless-\/dollar-\/replacements}}   &disallow useless {\ttfamily \$} replacements in replacement string   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/strict.html}{\texttt{ strict}}   &disallow not strictly valid regular expressions   &🟢 🔵   &&🔧   &💡   \\\cline{1-6}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md14180}{}\doxysubsubsection{\texorpdfstring{Best Practices}{Best Practices}}\label{README.md_autotoc_md14180}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Name                                    }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ 💼   }&\cellcolor{\tableheadbgcolor}\textbf{ ⚠️   }&\cellcolor{\tableheadbgcolor}\textbf{ 🔧   }&\cellcolor{\tableheadbgcolor}\textbf{ 💡    }\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Name                                    }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ 💼   }&\cellcolor{\tableheadbgcolor}\textbf{ ⚠️   }&\cellcolor{\tableheadbgcolor}\textbf{ 🔧   }&\cellcolor{\tableheadbgcolor}\textbf{ 💡    }\\\cline{1-6}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/confusing-quantifier.html}{\texttt{ confusing-\/quantifier}}   &disallow confusing quantifiers   &&🟢 🔵   &&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/control-character-escape.html}{\texttt{ control-\/character-\/escape}}   &enforce consistent escaping of control characters   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/negation.html}{\texttt{ negation}}   &enforce use of escapes on negation   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-dupe-characters-character-class.html}{\texttt{ no-\/dupe-\/characters-\/character-\/class}}   &disallow duplicate characters in the Reg\+Exp character class   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-empty-string-literal.html}{\texttt{ no-\/empty-\/string-\/literal}}   &disallow empty string literals in character classes   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-extra-lookaround-assertions.html}{\texttt{ no-\/extra-\/lookaround-\/assertions}}   &disallow unnecessary nested lookaround assertions   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-invisible-character.html}{\texttt{ no-\/invisible-\/character}}   &disallow invisible raw character   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-legacy-features.html}{\texttt{ no-\/legacy-\/features}}   &disallow legacy Reg\+Exp features   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-non-standard-flag.html}{\texttt{ no-\/non-\/standard-\/flag}}   &disallow non-\/standard flags   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-obscure-range.html}{\texttt{ no-\/obscure-\/range}}   &disallow obscure character ranges   &🟢 🔵   &&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-octal.html}{\texttt{ no-\/octal}}   &disallow octal escape sequence   &&&&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-standalone-backslash.html}{\texttt{ no-\/standalone-\/backslash}}   &disallow standalone backslashes ({\ttfamily \textbackslash{}})   &&&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-trivially-nested-assertion.html}{\texttt{ no-\/trivially-\/nested-\/assertion}}   &disallow trivially nested assertions   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-trivially-nested-quantifier.html}{\texttt{ no-\/trivially-\/nested-\/quantifier}}   &disallow nested quantifiers that can be rewritten as one quantifier   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-unused-capturing-group.html}{\texttt{ no-\/unused-\/capturing-\/group}}   &disallow unused capturing group   &🟢 🔵   &&🔧   &💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-character-class.html}{\texttt{ no-\/useless-\/character-\/class}}   &disallow character class with one character   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-flag.html}{\texttt{ no-\/useless-\/flag}}   &disallow unnecessary regex flags   &&🟢 🔵   &🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-lazy.html}{\texttt{ no-\/useless-\/lazy}}   &disallow unnecessarily non-\/greedy quantifiers   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-quantifier.html}{\texttt{ no-\/useless-\/quantifier}}   &disallow quantifiers that can be removed   &🟢 🔵   &&🔧   &💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-range.html}{\texttt{ no-\/useless-\/range}}   &disallow unnecessary character ranges   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-set-operand.html}{\texttt{ no-\/useless-\/set-\/operand}}   &disallow unnecessary elements in expression character classes   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-string-literal.html}{\texttt{ no-\/useless-\/string-\/literal}}   &disallow string disjunction of single characters in {\ttfamily \textbackslash{}q\{...\}}   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-two-nums-quantifier.html}{\texttt{ no-\/useless-\/two-\/nums-\/quantifier}}   &disallow unnecessary {\ttfamily \{n,m\}} quantifier   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-zero-quantifier.html}{\texttt{ no-\/zero-\/quantifier}}   &disallow quantifiers with a maximum of zero   &🟢 🔵   &&&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/optimal-lookaround-quantifier.html}{\texttt{ optimal-\/lookaround-\/quantifier}}   &disallow the alternatives of lookarounds that end with a non-\/constant quantifier   &&🟢 🔵   &&💡    \\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/optimal-quantifier-concatenation.html}{\texttt{ optimal-\/quantifier-\/concatenation}}   &require optimal quantifiers for concatenated quantifiers   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-escape-replacement-dollar-char.html}{\texttt{ prefer-\/escape-\/replacement-\/dollar-\/char}}   &enforces escape of replacement {\ttfamily \$} character ({\ttfamily \$\$}).   &&&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-predefined-assertion.html}{\texttt{ prefer-\/predefined-\/assertion}}   &prefer predefined assertion over equivalent lookarounds   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-quantifier.html}{\texttt{ prefer-\/quantifier}}   &enforce using quantifier   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-range.html}{\texttt{ prefer-\/range}}   &enforce using character class range   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-regexp-exec.html}{\texttt{ prefer-\/regexp-\/exec}}   &enforce that {\ttfamily Reg\+Exp\#exec} is used instead of {\ttfamily String\#match} if no global flag is provided   &&&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-regexp-test.html}{\texttt{ prefer-\/regexp-\/test}}   &enforce that {\ttfamily Reg\+Exp\#test} is used instead of {\ttfamily String\#match} and {\ttfamily Reg\+Exp\#exec}   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-set-operation.html}{\texttt{ prefer-\/set-\/operation}}   &prefer character class set operations instead of lookarounds   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/require-unicode-regexp.html}{\texttt{ require-\/unicode-\/regexp}}   &enforce the use of the {\ttfamily u} flag   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/require-unicode-sets-regexp.html}{\texttt{ require-\/unicode-\/sets-\/regexp}}   &enforce the use of the {\ttfamily v} flag   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/simplify-set-operations.html}{\texttt{ simplify-\/set-\/operations}}   &require simplify set operations   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/sort-alternatives.html}{\texttt{ sort-\/alternatives}}   &sort alternatives if order doesn\textquotesingle{}t matter   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/use-ignore-case.html}{\texttt{ use-\/ignore-\/case}}   &use the {\ttfamily i} flag if it simplifies the pattern   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md14181}{}\doxysubsubsection{\texorpdfstring{Stylistic Issues}{Stylistic Issues}}\label{README.md_autotoc_md14181}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Name                               }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ 💼   }&\cellcolor{\tableheadbgcolor}\textbf{ ⚠️   }&\cellcolor{\tableheadbgcolor}\textbf{ 🔧   }&\cellcolor{\tableheadbgcolor}\textbf{ 💡    }\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Name                               }&\cellcolor{\tableheadbgcolor}\textbf{ Description   }&\cellcolor{\tableheadbgcolor}\textbf{ 💼   }&\cellcolor{\tableheadbgcolor}\textbf{ ⚠️   }&\cellcolor{\tableheadbgcolor}\textbf{ 🔧   }&\cellcolor{\tableheadbgcolor}\textbf{ 💡    }\\\cline{1-6}
+\endhead
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/grapheme-string-literal.html}{\texttt{ grapheme-\/string-\/literal}}   &enforce single grapheme in string literal   &&&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/hexadecimal-escape.html}{\texttt{ hexadecimal-\/escape}}   &enforce consistent usage of hexadecimal escape   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/letter-case.html}{\texttt{ letter-\/case}}   &enforce into your favorite case   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/match-any.html}{\texttt{ match-\/any}}   &enforce match any character style   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-escape.html}{\texttt{ no-\/useless-\/escape}}   &disallow unnecessary escape characters in Reg\+Exp   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-non-capturing-group.html}{\texttt{ no-\/useless-\/non-\/capturing-\/group}}   &disallow unnecessary non-\/capturing group   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-character-class.html}{\texttt{ prefer-\/character-\/class}}   &enforce using character class   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-d.html}{\texttt{ prefer-\/d}}   &enforce using {\ttfamily \textbackslash{}d}   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-lookaround.html}{\texttt{ prefer-\/lookaround}}   &prefer lookarounds over capturing group that do not replace   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-named-backreference.html}{\texttt{ prefer-\/named-\/backreference}}   &enforce using named backreferences   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-named-capture-group.html}{\texttt{ prefer-\/named-\/capture-\/group}}   &enforce using named capture groups   &&&&\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-named-replacement.html}{\texttt{ prefer-\/named-\/replacement}}   &enforce using named replacement   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-plus-quantifier.html}{\texttt{ prefer-\/plus-\/quantifier}}   &enforce using {\ttfamily +} quantifier   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-question-quantifier.html}{\texttt{ prefer-\/question-\/quantifier}}   &enforce using {\ttfamily ?} quantifier   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-result-array-groups.html}{\texttt{ prefer-\/result-\/array-\/groups}}   &enforce using result array {\ttfamily groups}   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-star-quantifier.html}{\texttt{ prefer-\/star-\/quantifier}}   &enforce using {\ttfamily \texorpdfstring{$\ast$}{*}} quantifier   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-unicode-codepoint-escapes.html}{\texttt{ prefer-\/unicode-\/codepoint-\/escapes}}   &enforce use of unicode codepoint escapes   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/prefer-w.html}{\texttt{ prefer-\/w}}   &enforce using {\ttfamily \textbackslash{}w}   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/sort-character-class-elements.html}{\texttt{ sort-\/character-\/class-\/elements}}   &enforces elements order in character class   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/sort-flags.html}{\texttt{ sort-\/flags}}   &require regex flags to be sorted   &🟢 🔵   &&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/unicode-escape.html}{\texttt{ unicode-\/escape}}   &enforce consistent usage of unicode escape or unicode codepoint escape   &&&🔧   &\\\cline{1-6}
+\href{https://ota-meshi.github.io/eslint-plugin-regexp/rules/unicode-property.html}{\texttt{ unicode-\/property}}   &enforce consistent naming of unicode properties   &&&🔧   &\\\cline{1-6}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md14182}{}\doxysubsubsection{\texorpdfstring{Removed}{Removed}}\label{README.md_autotoc_md14182}
+
+\begin{DoxyItemize}
+\item \+:no\+\_\+entry\+: These rules have been removed in a previous major release, after they have been deprecated for a while.
+\end{DoxyItemize}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Replaced by   }&\cellcolor{\tableheadbgcolor}\textbf{ Removed in version    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Rule ID   }&\cellcolor{\tableheadbgcolor}\textbf{ Replaced by   }&\cellcolor{\tableheadbgcolor}\textbf{ Removed in version    }\\\cline{1-3}
+\endhead
+\href{https://github.com/ota-meshi/eslint-plugin-regexp/blob/v1.15.0/docs/rules/no-assertion-capturing-group.md}{\texttt{ no-\/assertion-\/capturing-\/group}}   &regexp/no-\/empty-\/capturing-\/group   &v2.\+0.\+0    \\\cline{1-3}
+\href{https://github.com/ota-meshi/eslint-plugin-regexp/blob/v1.15.0/docs/rules/no-useless-exactly-quantifier.md}{\texttt{ no-\/useless-\/exactly-\/quantifier}}   &regexp/no-\/useless-\/quantifier, regexp/no-\/zero-\/quantifier   &v2.\+0.\+0    \\\cline{1-3}
+\href{https://github.com/ota-meshi/eslint-plugin-regexp/blob/v1.15.0/docs/rules/no-useless-non-greedy.md}{\texttt{ no-\/useless-\/non-\/greedy}}   &regexp/no-\/useless-\/lazy   &v2.\+0.\+0    \\\cline{1-3}
+\href{https://github.com/ota-meshi/eslint-plugin-regexp/blob/v1.15.0/docs/rules/order-in-character-class.md}{\texttt{ order-\/in-\/character-\/class}}   &regexp/sort-\/character-\/class-\/elements   &v2.\+0.\+0    \\\cline{1-3}
+\href{https://github.com/ota-meshi/eslint-plugin-regexp/blob/v1.15.0/docs/rules/prefer-t.md}{\texttt{ prefer-\/t}}   &regexp/control-\/character-\/escape   &v2.\+0.\+0   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md14183}{}\doxysubsection{\texorpdfstring{\+:gear\+: Settings}{\+:gear\+: Settings}}\label{README.md_autotoc_md14183}
+See \href{https://ota-meshi.github.io/eslint-plugin-regexp/settings/}{\texttt{ Settings}}.\hypertarget{README.md_autotoc_md14184}{}\doxysubsection{\texorpdfstring{\+:traffic\+\_\+light\+: Semantic Versioning Policy}{\+:traffic\+\_\+light\+: Semantic Versioning Policy}}\label{README.md_autotoc_md14184}
+{\bfseries{eslint-\/plugin-\/regexp}} follows \href{http://semver.org/}{\texttt{ Semantic Versioning}} and \href{https://github.com/eslint/eslint\#semantic-versioning-policy}{\texttt{ ESLint\textquotesingle{}s Semantic Versioning Policy}}.\hypertarget{README.md_autotoc_md14185}{}\doxysubsection{\texorpdfstring{\+:beers\+: Contributing}{\+:beers\+: Contributing}}\label{README.md_autotoc_md14185}
+Welcome contributing!
+
+Please use Git\+Hub\textquotesingle{}s Issues/\+PRs.
+
+See \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{CONTRIBUTING.md}.\hypertarget{README.md_autotoc_md14186}{}\doxysubsubsection{\texorpdfstring{Development Tools}{Development Tools}}\label{README.md_autotoc_md14186}
+
+\begin{DoxyItemize}
+\item {\ttfamily npm test} runs tests and measures coverage.
+\item {\ttfamily npm run update} runs in order to update readme and recommended configuration.
+\item {\ttfamily npm run new \mbox{[}new rule name\mbox{]}} runs to create the files needed for the new rule.
+\item {\ttfamily npm run docs\+:watch} starts the website locally.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md14187}{}\doxysubsection{\texorpdfstring{\+:lock\+: License}{\+:lock\+: License}}\label{README.md_autotoc_md14187}
+See the \mbox{[}LICENSE\mbox{]}(LICENSE) file for license rights and limitations (MIT). 

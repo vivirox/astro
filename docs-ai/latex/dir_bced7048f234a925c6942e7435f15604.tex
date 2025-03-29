@@ -1,0 +1,168 @@
+\doxysection{node\+\_\+modules/type-\/detect Directory Reference}
+\hypertarget{dir_bced7048f234a925c6942e7435f15604}{}\label{dir_bced7048f234a925c6942e7435f15604}\index{node\_modules/type-\/detect Directory Reference@{node\_modules/type-\/detect Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\doxysubsection*{\href{http://chaijs.com}{\texttt{  type-\/detect }} }
+
+~\newline
+ 
+
+Improved typeof detection for \href{http://nodejs.org}{\texttt{ node}} and the browser. 
+
+
+
+\href{./LICENSE}{\texttt{  }} \href{https://github.com/chaijs/type-detect/releases}{\texttt{  }} \href{https://travis-ci.org/chaijs/type-detect}{\texttt{  }} \href{https://coveralls.io/r/chaijs/type-detect}{\texttt{  }} \href{https://www.npmjs.com/packages/type-detect}{\texttt{  }} \href{https://www.npmjs.com/packages/type-detect}{\texttt{  }} \href{}{\texttt{  }} ~\newline
+ \tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\multicolumn{6}{|l|}{\cellcolor{\tableheadbgcolor}\textbf{ Supported Browsers }}\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\multicolumn{6}{|l|}{\cellcolor{\tableheadbgcolor}\textbf{ Supported Browsers }}\\\cline{1-6}
+\endhead
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{  Chrome }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{  Edge }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{  Firefox }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{  Safari }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{  IE }\\\cline{1-6}
+\PBS\centering ✅ &\PBS\centering ✅ &\PBS\centering ✅ &\PBS\centering ✅ &\PBS\centering 9, 10, 11  \\\cline{1-6}
+\end{longtabu}
+~\newline
+ \href{https://chai-slack.herokuapp.com/}{\texttt{  }} \href{https://gitter.im/chaijs/chai}{\texttt{  }} \hypertarget{README.md_autotoc_md33828}{}\doxysubsubsection{\texorpdfstring{What is Type-\/\+Detect?}{What is Type-\/\+Detect?}}\label{README.md_autotoc_md33828}
+Type Detect is a module which you can use to detect the type of a given object. It returns a string representation of the object\textquotesingle{}s type, either using \href{http://www.ecma-international.org/ecma-262/6.0/index.html\#sec-typeof-operator}{\texttt{ {\ttfamily typeof}}} or \href{http://www.ecma-international.org/ecma-262/6.0/index.html\#sec-symbol.tostringtag}{\texttt{ {\ttfamily @@to\+String\+Tag}}}. It also normalizes some object names for consistency among browsers.\hypertarget{README.md_autotoc_md33829}{}\doxysubsubsection{\texorpdfstring{Why?}{Why?}}\label{README.md_autotoc_md33829}
+The {\ttfamily typeof} operator will only specify primitive values; everything else is {\ttfamily "{}object"{}} (including {\ttfamily null}, arrays, regexps, etc). Many developers use {\ttfamily Object.\+prototype.\+to\+String()} -\/ which is a fine alternative and returns many more types (null returns {\ttfamily \mbox{[}object Null\mbox{]}}, Arrays as {\ttfamily \mbox{[}object Array\mbox{]}}, regexps as {\ttfamily \mbox{[}object Reg\+Exp\mbox{]}} etc).
+
+Sadly, {\ttfamily Object.\+prototype.\+to\+String} is slow, and buggy. By slow -\/ we mean it is slower than {\ttfamily typeof}. By buggy -\/ we mean that some values (like Promises, the global object, iterators, dataviews, a bunch of HTML elements) all report different things in different browsers.
+
+{\ttfamily type-\/detect} fixes all of the shortcomings with {\ttfamily Object.\+prototype.\+to\+String}. We have extra code to speed up checks of JS and DOM objects, as much as 20-\/30x faster for some values. {\ttfamily type-\/detect} also fixes any consistencies with these objects.\hypertarget{README.md_autotoc_md33830}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md33830}
+\hypertarget{README.md_autotoc_md33831}{}\doxysubsubsubsection{\texorpdfstring{Node.\+js}{Node.\+js}}\label{README.md_autotoc_md33831}
+{\ttfamily type-\/detect} is available on \href{http://npmjs.org}{\texttt{ npm}}. To install it, type\+: \begin{DoxyVerb}$ npm install type-detect
+\end{DoxyVerb}
+\hypertarget{README.md_autotoc_md33832}{}\doxysubsubsubsection{\texorpdfstring{Browsers}{Browsers}}\label{README.md_autotoc_md33832}
+You can also use it within the browser; install via npm and use the {\ttfamily type-\/detect.\+js} file found within the download. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}./node\_modules/type-\/detect/type-\/detect.js"{}></script>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33833}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md33833}
+The primary export of {\ttfamily type-\/detect} is function that can serve as a replacement for {\ttfamily typeof}. The results of this function will be more specific than that of native {\ttfamily typeof}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ type\ =\ require('type-\/detect');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33834}{}\doxysubsubsubsubsection{\texorpdfstring{array}{array}}\label{README.md_autotoc_md33834}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type([])\ ===\ 'Array');}
+\DoxyCodeLine{assert(type(new\ Array())\ ===\ 'Array');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33835}{}\doxysubsubsubsubsection{\texorpdfstring{regexp}{regexp}}\label{README.md_autotoc_md33835}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type(/a-\/z/gi)\ ===\ 'RegExp');}
+\DoxyCodeLine{assert(type(new\ RegExp('a-\/z'))\ ===\ 'RegExp');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33836}{}\doxysubsubsubsubsection{\texorpdfstring{function}{function}}\label{README.md_autotoc_md33836}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type(function\ ()\ \{\})\ ===\ 'function');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33837}{}\doxysubsubsubsubsection{\texorpdfstring{arguments}{arguments}}\label{README.md_autotoc_md33837}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(function\ ()\ \{}
+\DoxyCodeLine{\ \ assert(type(arguments)\ ===\ 'Arguments');}
+\DoxyCodeLine{\})();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33838}{}\doxysubsubsubsubsection{\texorpdfstring{date}{date}}\label{README.md_autotoc_md33838}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type(new\ Date)\ ===\ 'Date');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33839}{}\doxysubsubsubsubsection{\texorpdfstring{number}{number}}\label{README.md_autotoc_md33839}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type(1)\ ===\ 'number');}
+\DoxyCodeLine{assert(type(1.234)\ ===\ 'number');}
+\DoxyCodeLine{assert(type(-\/1)\ ===\ 'number');}
+\DoxyCodeLine{assert(type(-\/1.234)\ ===\ 'number');}
+\DoxyCodeLine{assert(type(Infinity)\ ===\ 'number');}
+\DoxyCodeLine{assert(type(NaN)\ ===\ 'number');}
+\DoxyCodeLine{assert(type(new\ Number(1))\ ===\ 'Number');\ //\ note\ -\/\ the\ object\ version\ has\ a\ capital\ N}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33840}{}\doxysubsubsubsubsection{\texorpdfstring{string}{string}}\label{README.md_autotoc_md33840}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type('hello\ world')\ ===\ 'string');}
+\DoxyCodeLine{assert(type(new\ String('hello'))\ ===\ 'String');\ //\ note\ -\/\ the\ object\ version\ has\ a\ capital\ S}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33841}{}\doxysubsubsubsubsection{\texorpdfstring{null}{null}}\label{README.md_autotoc_md33841}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type(null)\ ===\ 'null');}
+\DoxyCodeLine{assert(type(undefined)\ !==\ 'null');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33842}{}\doxysubsubsubsubsection{\texorpdfstring{undefined}{undefined}}\label{README.md_autotoc_md33842}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type(undefined)\ ===\ 'undefined');}
+\DoxyCodeLine{assert(type(null)\ !==\ 'undefined');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33843}{}\doxysubsubsubsubsection{\texorpdfstring{object}{object}}\label{README.md_autotoc_md33843}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ Noop\ =\ function\ ()\ \{\};}
+\DoxyCodeLine{assert(type(\{\})\ ===\ 'Object');}
+\DoxyCodeLine{assert(type(Noop)\ !==\ 'Object');}
+\DoxyCodeLine{assert(type(new\ Noop)\ ===\ 'Object');}
+\DoxyCodeLine{assert(type(new\ Object)\ ===\ 'Object');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33844}{}\doxysubsubsubsubsection{\texorpdfstring{ECMA6 Types}{ECMA6 Types}}\label{README.md_autotoc_md33844}
+All new ECMAScript 2015 objects are also supported, such as Promises and Symbols\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{assert(type(new\ Map()\ ===\ 'Map');}
+\DoxyCodeLine{assert(type(new\ WeakMap())\ ===\ 'WeakMap');}
+\DoxyCodeLine{assert(type(new\ Set())\ ===\ 'Set');}
+\DoxyCodeLine{assert(type(new\ WeakSet())\ ===\ 'WeakSet');}
+\DoxyCodeLine{assert(type(Symbol())\ ===\ 'symbol');}
+\DoxyCodeLine{assert(type(new\ Promise(callback)\ ===\ 'Promise');}
+\DoxyCodeLine{assert(type(new\ Int8Array())\ ===\ 'Int8Array');}
+\DoxyCodeLine{assert(type(new\ Uint8Array())\ ===\ 'Uint8Array');}
+\DoxyCodeLine{assert(type(new\ UInt8ClampedArray())\ ===\ 'Uint8ClampedArray');}
+\DoxyCodeLine{assert(type(new\ Int16Array())\ ===\ 'Int16Array');}
+\DoxyCodeLine{assert(type(new\ Uint16Array())\ ===\ 'Uint16Array');}
+\DoxyCodeLine{assert(type(new\ Int32Array())\ ===\ 'Int32Array');}
+\DoxyCodeLine{assert(type(new\ UInt32Array())\ ===\ 'Uint32Array');}
+\DoxyCodeLine{assert(type(new\ Float32Array())\ ===\ 'Float32Array');}
+\DoxyCodeLine{assert(type(new\ Float64Array())\ ===\ 'Float64Array');}
+\DoxyCodeLine{assert(type(new\ ArrayBuffer())\ ===\ 'ArrayBuffer');}
+\DoxyCodeLine{assert(type(new\ DataView(arrayBuffer))\ ===\ 'DataView');}
+
+\end{DoxyCode}
+
+
+Also, if you use {\ttfamily Symbol.\+to\+String\+Tag} to change an Objects return value of the {\ttfamily to\+String()} Method, {\ttfamily type()} will return this value, e.\+g\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ myObject\ =\ \{\};}
+\DoxyCodeLine{myObject[Symbol.toStringTag]\ =\ 'myCustomType';}
+\DoxyCodeLine{assert(type(myObject)\ ===\ 'myCustomType');}
+
+\end{DoxyCode}
+ 

@@ -1,0 +1,339 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/gfm-\/table Directory Reference}
+\hypertarget{dir_a3249756602a273a4246a99c4224eb5a}{}\label{dir_a3249756602a273a4246a99c4224eb5a}\index{node\_modules/micromark-\/extension-\/gfm-\/table Directory Reference@{node\_modules/micromark-\/extension-\/gfm-\/table Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-gfm-table/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-gfm-table}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-gfm-table}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-gfm-table}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extensions to support GFM \href{https://github.github.com/gfm/\#tables-extension-}{\texttt{ tables}}.\hypertarget{readme.md_autotoc_md23239}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23239}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}gfm\+Table()\`{}
+\item \`{}gfm\+Table\+Html()\`{}
+\end{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_bugs}{Bugs}
+\item Authoring
+\item HTML
+\item CSS
+\item Syntax
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23240}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23240}
+This package contains extensions that add support for the table syntax enabled by GFM to \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. These extensions match github.\+com.\hypertarget{readme.md_autotoc_md23241}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23241}
+This project is useful when you want to support tables in markdown.
+
+You can use these extensions when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. To support all GFM features, use \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} instead.
+
+When you need a syntax tree, combine this package with \href{https://github.com/syntax-tree/mdast-util-gfm-table}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/table}}}.
+
+All these packages are used in \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md23242}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23242}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/gfm-\/table}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{gfmTable,\ gfmTableHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/table@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{gfmTable,\ gfmTableHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/table@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23243}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23243}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{gfmTable,\ gfmTableHtml\}\ from\ 'micromark-\/extension-\/gfm-\/table'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ micromark('|\ a\ |\(\backslash\)n|\ -\/\ |',\ \{}
+\DoxyCodeLine{\ \ extensions:\ [gfmTable()],}
+\DoxyCodeLine{\ \ htmlExtensions:\ [gfmTableHtml()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<table>}
+\DoxyCodeLine{<thead>}
+\DoxyCodeLine{<tr>}
+\DoxyCodeLine{<th>a</th>}
+\DoxyCodeLine{</tr>}
+\DoxyCodeLine{</thead>}
+\DoxyCodeLine{</table>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23244}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23244}
+This package exports the identifiers \`{}gfm\+Table\`{} and \`{}gfm\+Table\+Html\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development module.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md23245}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Table()}}{{\ttfamily gfm\+Table()}}}\label{readme.md_autotoc_md23245}
+Create an HTML extension for {\ttfamily micromark} to support Git\+Hub tables syntax.\hypertarget{readme.md_autotoc_md23246}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23246}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions} to enable GFM table syntax (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23247}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Table\+Html()}}{{\ttfamily gfm\+Table\+Html()}}}\label{readme.md_autotoc_md23247}
+Create an HTML extension for {\ttfamily micromark} to support Git\+Hub tables when serializing to HTML.\hypertarget{readme.md_autotoc_md23248}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23248}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily html\+Extensions} to support GFM tables when serializing to HTML (\href{https://github.com/micromark/micromark\#htmlextension}{\texttt{ {\ttfamily Html\+Extension}}}).\hypertarget{readme.md_autotoc_md23249}{}\doxysubsection{\texorpdfstring{Bugs}{Bugs}}\label{readme.md_autotoc_md23249}
+Git\+Hub’s own algorithm to parse tables contains a bug. This bug is not present in this project. The issue relating to tables is\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/github/cmark-gfm/issues/277}{\texttt{ GFM tables\+: escaped escapes are incorrectly treated as escapes}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23250}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23250}
+When authoring markdown with GFM tables, it’s recommended to {\itshape always} put pipes around cells. Without them, it can be hard to infer whether the table will work, how many columns there are, and which column you are currently editing.
+
+It is recommended to not use many columns, as it results in very long lines, making it hard to infer which column you are currently editing.
+
+For larger tables, particularly when cells vary in size, it is recommended {\itshape not} to manually “pad” cell text. While it can look better, it results in a lot of time spent realigning everything when a new, longer cell is added or the longest cell removed, as every row then must be changed. Other than costing time, it also causes large diffs in Git.
+
+To illustrate, when authoring large tables, it is discouraged to pad cells like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ bravo\ charlie\ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ delta\ |}
+\DoxyCodeLine{|\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/:\ |}
+\DoxyCodeLine{|\ Echo\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ Foxtrot\ golf\ hotel\ |}
+
+\end{DoxyCode}
+
+
+Instead, use single spaces (and single filler dashes)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ bravo\ charlie\ |\ delta\ |}
+\DoxyCodeLine{|\ -\/\ |\ -\/:\ |}
+\DoxyCodeLine{|\ Echo\ |\ Foxtrot\ golf\ hotel\ |}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23251}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md23251}
+GFM tables relate to several HTML elements\+: {\ttfamily \texorpdfstring{$<$}{<}table\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}tbody\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}td\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}th\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}thead\texorpdfstring{$>$}{>}}, and {\ttfamily \texorpdfstring{$<$}{<}tr\texorpdfstring{$>$}{>}}. See \href{https://html.spec.whatwg.org/multipage/tables.html\#the-table-element}{\texttt{ {\itshape § 4.\+9.\+1 The {\ttfamily table} element}}}, \href{https://html.spec.whatwg.org/multipage/tables.html\#the-tbody-element}{\texttt{ {\itshape § 4.\+9.\+5 The {\ttfamily tbody} element}}}, \href{https://html.spec.whatwg.org/multipage/tables.html\#the-td-element}{\texttt{ {\itshape § 4.\+9.\+9 The {\ttfamily td} element}}}, \href{https://html.spec.whatwg.org/multipage/tables.html\#the-th-element}{\texttt{ {\itshape § 4.\+9.\+10 The {\ttfamily th} element}}}, \href{https://html.spec.whatwg.org/multipage/tables.html\#the-thead-element}{\texttt{ {\itshape § 4.\+9.\+6 The {\ttfamily thead} element}}}, and \href{https://html.spec.whatwg.org/multipage/tables.html\#the-tr-element}{\texttt{ {\itshape § 4.\+9.\+8 The {\ttfamily tr} element}}} in the HTML spec for more info.
+
+If the alignment of a column is left, right, or center, a deprecated {\ttfamily align} attribute is added to each {\ttfamily \texorpdfstring{$<$}{<}th\texorpdfstring{$>$}{>}} and {\ttfamily \texorpdfstring{$<$}{<}td\texorpdfstring{$>$}{>}} element belonging to that column. That attribute is interpreted by browsers as if a CSS {\ttfamily text-\/align} property was included, with its value set to that same keyword.\hypertarget{readme.md_autotoc_md23252}{}\doxysubsection{\texorpdfstring{CSS}{CSS}}\label{readme.md_autotoc_md23252}
+The following CSS is needed to make tables look a bit like Git\+Hub. For the complete actual CSS see \href{https://github.com/sindresorhus/github-markdown-css}{\texttt{ {\ttfamily sindresorhus/github-\/markdown-\/css}}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ Light\ theme.\ */}
+\DoxyCodeLine{:root\ \{}
+\DoxyCodeLine{\ \ -\/-\/color-\/canvas-\/default:\ \#ffffff;}
+\DoxyCodeLine{\ \ -\/-\/color-\/canvas-\/subtle:\ \#f6f8fa;}
+\DoxyCodeLine{\ \ -\/-\/color-\/border-\/default:\ \#d0d7de;}
+\DoxyCodeLine{\ \ -\/-\/color-\/border-\/muted:\ hsla(210,\ 18\%,\ 87\%,\ 1);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{/*\ Dark\ theme.\ */}
+\DoxyCodeLine{@media\ (prefers-\/color-\/scheme:\ dark)\ \{}
+\DoxyCodeLine{\ \ :root\ \{}
+\DoxyCodeLine{\ \ \ \ -\/-\/color-\/canvas-\/default:\ \#0d1117;}
+\DoxyCodeLine{\ \ \ \ -\/-\/color-\/canvas-\/subtle:\ \#161b22;}
+\DoxyCodeLine{\ \ \ \ -\/-\/color-\/border-\/default:\ \#30363d;}
+\DoxyCodeLine{\ \ \ \ -\/-\/color-\/border-\/muted:\ \#21262d;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{table\ \{}
+\DoxyCodeLine{\ \ border-\/spacing:\ 0;}
+\DoxyCodeLine{\ \ border-\/collapse:\ collapse;}
+\DoxyCodeLine{\ \ display:\ block;}
+\DoxyCodeLine{\ \ margin-\/top:\ 0;}
+\DoxyCodeLine{\ \ margin-\/bottom:\ 16px;}
+\DoxyCodeLine{\ \ width:\ max-\/content;}
+\DoxyCodeLine{\ \ max-\/width:\ 100\%;}
+\DoxyCodeLine{\ \ overflow:\ auto;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{tr\ \{}
+\DoxyCodeLine{\ \ background-\/color:\ var(-\/-\/color-\/canvas-\/default);}
+\DoxyCodeLine{\ \ border-\/top:\ 1px\ solid\ var(-\/-\/color-\/border-\/muted);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{tr:nth-\/child(2n)\ \{}
+\DoxyCodeLine{\ \ background-\/color:\ var(-\/-\/color-\/canvas-\/subtle);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{td,}
+\DoxyCodeLine{th\ \{}
+\DoxyCodeLine{\ \ padding:\ 6px\ 13px;}
+\DoxyCodeLine{\ \ border:\ 1px\ solid\ var(-\/-\/color-\/border-\/default);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{th\ \{}
+\DoxyCodeLine{\ \ font-\/weight:\ 600;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{table\ img\ \{}
+\DoxyCodeLine{\ \ background-\/color:\ transparent;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23253}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md23253}
+Tables form with the following BNF\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{gfmTable\ ::=\ gfmTableHead\ 0*(eol\ gfmTableBodyRow)}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Restriction:\ both\ rows\ must\ have\ the\ same\ number\ of\ cells.}
+\DoxyCodeLine{gfmTableHead\ ::=\ gfmTableRow\ eol\ gfmTableDelimiterRow}
+\DoxyCodeLine{}
+\DoxyCodeLine{gfmTableRow\ ::=\ ["{}|"{}]\ gfmTableCell\ 0*("{}|"{}\ gfmTableCell)\ ["{}|"{}]\ *spaceOrTab}
+\DoxyCodeLine{gfmTableCell\ ::=\ *spaceOrTab\ gfmTableText\ *spaceOrTab}
+\DoxyCodeLine{gfmTableText\ ::=\ 0*(line\ -\/\ "{}\(\backslash\)\(\backslash\)"{}\ -\/\ "{}|"{}\ /\ "{}\(\backslash\)\(\backslash\)"{}\ ["{}\(\backslash\)\(\backslash\)"{}\ /\ "{}|"{}])}
+\DoxyCodeLine{}
+\DoxyCodeLine{gfmTableDelimiterRow\ ::=\ ["{}|"{}]\ gfmTableDelimiterCell\ 0*("{}|"{}\ gfmTableDelimiterCell)\ ["{}|"{}]\ *spaceOrTab}
+\DoxyCodeLine{gfmTableDelimiterCell\ ::=\ *spaceOrTab\ gfmTableDelimiterValue\ *spaceOrTab}
+\DoxyCodeLine{gfmTableDelimiterValue\ ::=\ ["{}:"{}]\ 1*"{}-\/"{}\ ["{}:"{}]}
+
+\end{DoxyCode}
+
+
+As this construct occurs in flow, like all flow constructs, it must be followed by an eol (line ending) or eof (end of file).
+
+The above grammar shows that basically anything can be a cell or a row. The main thing that makes something a row, is that it occurs directly before or after a delimiter row, or after another row.
+
+It is not required for a table to have a body\+: it can end right after the delimiter row.
+
+Each column can be marked with an alignment. The alignment marker is a colon ({\ttfamily \+:}) used before and/or after delimiter row filler. To illustrate\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ none\ |\ left\ |\ right\ |\ center\ |}
+\DoxyCodeLine{|\ -\/-\/-\/-\/\ |\ :-\/-\/-\/\ |\ -\/-\/-\/-\/:\ |\ :-\/-\/-\/-\/:\ |}
+
+\end{DoxyCode}
+
+
+The number of cells in the delimiter row, is the number of columns of the table. Only the head row is required to have the same number of cells. Body rows are not required to have a certain number of cells. For body rows that have less cells than the number of columns of the table, empty cells are injected. When a row has more cells than the number of columns of the table, the superfluous cells are dropped. To illustrate\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ a\ |\ b\ |}
+\DoxyCodeLine{|\ -\/\ |\ -\/\ |}
+\DoxyCodeLine{|\ c\ |}
+\DoxyCodeLine{|\ d\ |\ e\ |\ f\ |}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<table>}
+\DoxyCodeLine{<thead>}
+\DoxyCodeLine{<tr>}
+\DoxyCodeLine{<th>a</th>}
+\DoxyCodeLine{<th>b</th>}
+\DoxyCodeLine{</tr>}
+\DoxyCodeLine{</thead>}
+\DoxyCodeLine{<tbody>}
+\DoxyCodeLine{<tr>}
+\DoxyCodeLine{<td>c</td>}
+\DoxyCodeLine{<td></td>}
+\DoxyCodeLine{</tr>}
+\DoxyCodeLine{<tr>}
+\DoxyCodeLine{<td>d</td>}
+\DoxyCodeLine{<td>e</td>}
+\DoxyCodeLine{</tr>}
+\DoxyCodeLine{</tbody>}
+\DoxyCodeLine{</table>}
+
+\end{DoxyCode}
+
+
+Each cell’s text is interpreted as the \href{https://github.com/micromark/micromark\#content-types}{\texttt{ text}} content type. That means that it can include constructs such as attention (emphasis, strong).
+
+The grammar for cells prohibits the use of {\ttfamily \texorpdfstring{$\vert$}{|}} in them. To use pipes in cells, encode them as a character reference or character escape\+: {\ttfamily \&vert;} (or {\ttfamily \&Vertical\+Line;}, {\ttfamily \&verbar;}, {\ttfamily \&\#124;}, {\ttfamily \&\#x7c;}) or {\ttfamily \textbackslash{}\texorpdfstring{$\vert$}{|}}.
+
+Escapes will typically work, but they are not supported in code (text) (and the math (text) extension). To work around this, Git\+Hub came up with a rather weird “trick”. When inside a table cell {\itshape and} inside code, escaped pipes {\itshape are} decoded. To illustrate\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Name\ |\ Character\ |}
+\DoxyCodeLine{|\ -\/\ |\ -\/\ |}
+\DoxyCodeLine{|\ Left\ curly\ brace\ |\ \`{}\{`\ |}
+\DoxyCodeLine{|\ Pipe\ |\ \`{}\(\backslash\)|`\ |}
+\DoxyCodeLine{|\ Right\ curly\ brace\ |\ \`{}\}`\ |}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<table>}
+\DoxyCodeLine{<thead>}
+\DoxyCodeLine{<tr>}
+\DoxyCodeLine{<th>Name</th>}
+\DoxyCodeLine{<th>Character</th>}
+\DoxyCodeLine{</tr>}
+\DoxyCodeLine{</thead>}
+\DoxyCodeLine{<tbody>}
+\DoxyCodeLine{<tr>}
+\DoxyCodeLine{<td>Left\ curly\ brace</td>}
+\DoxyCodeLine{<td><code>\{</code></td>}
+\DoxyCodeLine{</tr>}
+\DoxyCodeLine{<tr>}
+\DoxyCodeLine{<td>Pipe</td>}
+\DoxyCodeLine{<td><code>|</code></td>}
+\DoxyCodeLine{</tr>}
+\DoxyCodeLine{<tr>}
+\DoxyCodeLine{<td>Right\ curly\ brace</td>}
+\DoxyCodeLine{<td><code>\}</code></td>}
+\DoxyCodeLine{</tr>}
+\DoxyCodeLine{</tbody>}
+\DoxyCodeLine{</table>}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: no other character can be escaped like this. Escaping pipes in code does not work when not inside a table, either. \end{quote}
+\hypertarget{readme.md_autotoc_md23254}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23254}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md23255}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23255}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/extension-\/gfm-\/table@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.
+
+This package works with {\ttfamily micromark} version {\ttfamily 3} and later.\hypertarget{readme.md_autotoc_md23256}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23256}
+This package is safe.\hypertarget{readme.md_autotoc_md23257}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md23257}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} — support all of GFM
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-table}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/table}}} — support all of GFM in mdast
+\item \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}} — support all of GFM in mdast
+\item \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} — support all of GFM in remark
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23258}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23258}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23259}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23259}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

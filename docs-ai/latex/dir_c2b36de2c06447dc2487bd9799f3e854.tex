@@ -1,0 +1,574 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/to-\/jsx-\/runtime Directory Reference}
+\hypertarget{dir_c2b36de2c06447dc2487bd9799f3e854}{}\label{dir_c2b36de2c06447dc2487bd9799f3e854}\index{node\_modules/hast-\/util-\/to-\/jsx-\/runtime Directory Reference@{node\_modules/hast-\/util-\/to-\/jsx-\/runtime Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_a4f48de39e1279464fbf7646fdb154eb}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-to-jsx-runtime/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-to-jsx-runtime}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-to-jsx-runtime}{\texttt{ }} \href{https://bundlejs.com/?q=hast-util-to-jsx-runtime}{\texttt{ }}
+
+hast utility to transform a tree to preact, react, solid, svelte, vue, etcetera, with an automatic JSX runtime.\hypertarget{readme.md_autotoc_md17436}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md17436}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}to\+Jsx\+Runtime(tree, options)\`{}
+\item \`{}\+Components\`{}
+\item \`{}\+Create\+Evaluater\`{}
+\item \`{}\+Element\+Attribute\+Name\+Case\`{}
+\item \`{}\+Evaluate\+Expression\`{}
+\item \`{}\+Evaluate\+Program\`{}
+\item \`{}\+Evaluater\`{}
+\item \`{}\+Extra\+Props\`{}
+\item \`{}\+Fragment\`{}
+\item \`{}\+Jsx\`{}
+\item \`{}\+Jsx\+Dev\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Props\`{}
+\item \`{}\+Source\`{}
+\item \`{}\+Space\`{}
+\item \`{}\+Style\+Property\+Name\+Case\`{}
+\end{DoxyItemize}
+\item Errors
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Example\+: Preact
+\item Example\+: Solid
+\item Example\+: Svelte
+\item Example\+: Vue
+\end{DoxyItemize}
+\item Syntax
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17437}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md17437}
+This package is a utility that takes a \href{https://github.com/syntax-tree/hast}{\texttt{ hast}} tree and an \href{https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html}{\texttt{ automatic JSX runtime}} and turns the tree into anything you wish.\hypertarget{readme.md_autotoc_md17438}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md17438}
+You can use this package when you have a hast syntax tree and want to use it with whatever framework.
+
+This package uses an automatic JSX runtime, which is a sort of lingua franca for frameworks to support JSX.
+
+Notably, automatic runtimes have support for passing extra information in development, and have guaranteed support for fragments.\hypertarget{readme.md_autotoc_md17439}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md17439}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/to-\/jsx-\/runtime}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'https://esm.sh/hast-\/util-\/to-\/jsx-\/runtime@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{toJsxRuntime\}\ from\ 'https://esm.sh/hast-\/util-\/to-\/jsx-\/runtime@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17440}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md17440}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'hast-\/util-\/to-\/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{Fragment,\ jsxs,\ jsx\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{renderToStaticMarkup\}\ from\ 'react-\/dom/server'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ h('h1',\ 'Hello,\ world!')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ renderToStaticMarkup(toJsxRuntime(tree,\ \{Fragment,\ jsxs,\ jsx\}))}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(doc)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>Hello,\ world!</h1>}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+{\bfseries{Note}}\+: to add better type support, register a global JSX namespace\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{JSX\ as\ Jsx\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{declare\ global\ \{}
+\DoxyCodeLine{\ \ namespace\ JSX\ \{}
+\DoxyCodeLine{\ \ \ \ type\ ElementClass\ =\ Jsx.ElementClass}
+\DoxyCodeLine{\ \ \ \ type\ Element\ =\ Jsx.Element}
+\DoxyCodeLine{\ \ \ \ type\ IntrinsicElements\ =\ Jsx.IntrinsicElements}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ \end{quote}
+\hypertarget{readme.md_autotoc_md17441}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md17441}
+This package exports the identifier \`{}to\+Jsx\+Runtime\`{}. It exports the \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}} types \`{}\+Components\`{}, \`{}\+Create\+Evaluater\`{}, \`{}\+Element\+Attribute\+Name\+Case\`{}, \`{}\+Evaluate\+Expression\`{}, \`{}\+Evaluate\+Program\`{}, \`{}\+Evaluater\`{}, \`{}\+Extra\+Props\`{}, \`{}\+Fragment\`{}, \`{}\+Jsx\`{}, \`{}\+Jsx\+Dev\`{}, \doxylink{README.md_options}{\`{}\+Options\`{}}, \`{}\+Props\`{}, \`{}\+Source\`{}, \`{}\+Space\`{}, and \`{}\+Style\+Property\+Name\+Case\`{}. There is no default export.\hypertarget{readme.md_autotoc_md17442}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+Jsx\+Runtime(tree, options)}}{{\ttfamily to\+Jsx\+Runtime(tree, options)}}}\label{readme.md_autotoc_md17442}
+Transform a hast tree to preact, react, solid, svelte, vue, etcetera, with an automatic JSX runtime.\hypertarget{readme.md_autotoc_md17443}{}\doxysubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17443}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Node}}}) — tree to transform
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, required) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17444}{}\doxysubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17444}
+Result from your configured JSX runtime ({\ttfamily JSX.\+Element} if defined, otherwise {\ttfamily unknown} which you can cast yourself).\hypertarget{readme.md_autotoc_md17445}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Components}}{{\ttfamily Components}}}\label{readme.md_autotoc_md17445}
+Possible components to use (Type\+Script type).
+
+Each key is a tag name typed in {\ttfamily JSX.\+Intrinsic\+Elements}, if defined. Each value is either a different tag name or a component accepting the corresponding props (and an optional {\ttfamily node} prop if {\ttfamily pass\+Node} is on).
+
+You can access props at {\ttfamily JSX.\+Intrinsic\+Elements}. For example, to find props for {\ttfamily a}, use `JSX.\+Intrinsic\+Elements\mbox{[}\textquotesingle{}a'\mbox{]}\`{}.\hypertarget{readme.md_autotoc_md17446}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17446}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{Element\}\ from\ 'hast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ ExtraProps\ =\ \{node?:\ Element\ |\ undefined\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Components\ =\ \{}
+\DoxyCodeLine{\ \ [TagName\ in\ keyof\ JSX.IntrinsicElements]:}
+\DoxyCodeLine{\ \ \ \ |\ Component<JSX.IntrinsicElements[TagName]\ \&\ ExtraProps>}
+\DoxyCodeLine{\ \ \ \ |\ keyof\ JSX.IntrinsicElements}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Component<ComponentProps>\ =}
+\DoxyCodeLine{\ \ //\ Class\ component:}
+\DoxyCodeLine{\ \ |\ (new\ (props:\ ComponentProps)\ =>\ JSX.ElementClass)}
+\DoxyCodeLine{\ \ //\ Function\ component:}
+\DoxyCodeLine{\ \ |\ ((props:\ ComponentProps)\ =>\ JSX.Element\ |\ string\ |\ null\ |\ undefined)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17447}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Create\+Evaluater}}{{\ttfamily Create\+Evaluater}}}\label{readme.md_autotoc_md17447}
+Create an evaluator that turns ESTree ASTs from embedded MDX into values (Type\+Script type).\hypertarget{readme.md_autotoc_md17448}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17448}
+There are no parameters.\hypertarget{readme.md_autotoc_md17449}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17449}
+Evaluater (\`{}\+Evaluater\`{}).\hypertarget{readme.md_autotoc_md17450}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Element\+Attribute\+Name\+Case}}{{\ttfamily Element\+Attribute\+Name\+Case}}}\label{readme.md_autotoc_md17450}
+Casing to use for attribute names (Type\+Script type).
+
+HTML casing is for example {\ttfamily class}, {\ttfamily stroke-\/linecap}, {\ttfamily xml\+:lang}. React casing is for example {\ttfamily class\+Name}, {\ttfamily stroke\+Linecap}, {\ttfamily xml\+Lang}.\hypertarget{readme.md_autotoc_md17451}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17451}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ ElementAttributeNameCase\ =\ 'html'\ |\ 'react'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17452}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Evaluate\+Expression}}{{\ttfamily Evaluate\+Expression}}}\label{readme.md_autotoc_md17452}
+Turn an MDX expression into a value (Type\+Script type).\hypertarget{readme.md_autotoc_md17453}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17453}
+
+\begin{DoxyItemize}
+\item {\ttfamily expression} ({\ttfamily Expression} from {\ttfamily @types/estree}) — estree expression
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17454}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17454}
+Result of expression ({\ttfamily unknown}).\hypertarget{readme.md_autotoc_md17455}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Evaluate\+Program}}{{\ttfamily Evaluate\+Program}}}\label{readme.md_autotoc_md17455}
+Turn an MDX program (export/import statements) into a value (Type\+Script type).\hypertarget{readme.md_autotoc_md17456}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17456}
+
+\begin{DoxyItemize}
+\item {\ttfamily program} ({\ttfamily Program} from {\ttfamily @types/estree}) — estree program
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17457}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17457}
+Result of program ({\ttfamily unknown}); should likely be {\ttfamily undefined} as ESM changes the scope but doesn’t yield something.\hypertarget{readme.md_autotoc_md17458}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Evaluater}}{{\ttfamily Evaluater}}}\label{readme.md_autotoc_md17458}
+Evaluator that turns ESTree ASTs from embedded MDX into values (Type\+Script type).\hypertarget{readme.md_autotoc_md17459}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md17459}
+
+\begin{DoxyItemize}
+\item {\ttfamily evaluate\+Expression} (\`{}\+Evaluate\+Expression\`{}) — evaluate an expression
+\item {\ttfamily evaluate\+Program} (\`{}\+Evaluate\+Program\`{}) — evaluate a program
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17460}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Extra\+Props}}{{\ttfamily Extra\+Props}}}\label{readme.md_autotoc_md17460}
+Extra fields we pass (Type\+Script type).\hypertarget{readme.md_autotoc_md17461}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17461}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ ExtraProps\ =\ \{node?:\ Element\ |\ undefined\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17462}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Fragment}}{{\ttfamily Fragment}}}\label{readme.md_autotoc_md17462}
+Represent the children, typically a symbol (Type\+Script type).\hypertarget{readme.md_autotoc_md17463}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17463}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Fragment\ =\ unknown}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17464}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Jsx}}{{\ttfamily Jsx}}}\label{readme.md_autotoc_md17464}
+Create a production element (Type\+Script type).\hypertarget{readme.md_autotoc_md17465}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17465}
+
+\begin{DoxyItemize}
+\item {\ttfamily type} ({\ttfamily unknown}) — element type\+: {\ttfamily Fragment} symbol, tag name ({\ttfamily string}), component
+\item {\ttfamily props} (\`{}\+Props\`{}) — element props, {\ttfamily children}, and maybe {\ttfamily node}
+\item {\ttfamily key} ({\ttfamily string} or {\ttfamily undefined}) — dynamicly generated key to use
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17466}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17466}
+Element from your framework ({\ttfamily JSX.\+Element} if defined, otherwise {\ttfamily unknown} which you can cast yourself).\hypertarget{readme.md_autotoc_md17467}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Jsx\+Dev}}{{\ttfamily Jsx\+Dev}}}\label{readme.md_autotoc_md17467}
+Create a development element (Type\+Script type).\hypertarget{readme.md_autotoc_md17468}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17468}
+
+\begin{DoxyItemize}
+\item {\ttfamily type} ({\ttfamily unknown}) — element type\+: {\ttfamily Fragment} symbol, tag name ({\ttfamily string}), component
+\item {\ttfamily props} (\`{}\+Props\`{}) — element props, {\ttfamily children}, and maybe {\ttfamily node}
+\item {\ttfamily key} ({\ttfamily string} or {\ttfamily undefined}) — dynamicly generated key to use
+\item {\ttfamily is\+Static\+Children} ({\ttfamily boolean}) — whether two or more children are passed (in an array), which is whether {\ttfamily jsxs} or {\ttfamily jsx} would be used
+\item {\ttfamily source} (\`{}\+Source\`{}) — info about source
+\item {\ttfamily self} ({\ttfamily undefined}) — nothing (this is used by frameworks that have components, we don’t)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17469}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17469}
+Element from your framework ({\ttfamily JSX.\+Element} if defined, otherwise {\ttfamily unknown} which you can cast yourself).\hypertarget{readme.md_autotoc_md17470}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md17470}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md17471}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md17471}
+
+\begin{DoxyItemize}
+\item {\ttfamily Fragment} (\`{}\+Fragment\`{}, required) — fragment
+\item {\ttfamily jsx\+DEV} (\`{}\+Jsx\+Dev\`{}, required in development) — development JSX
+\item {\ttfamily jsxs} (\`{}\+Jsx\`{}, required in production) — static JSX
+\item {\ttfamily jsx} (\`{}\+Jsx\`{}, required in production) — dynamic JSX
+\item {\ttfamily components} (\`{}\+Partial\texorpdfstring{$<$}{<}Components\texorpdfstring{$>$}{>}\`{}, optional) — components to use
+\item {\ttfamily create\+Evaluater} (\`{}\+Create\+Evaluater\`{}, optional) — create an evaluator that turns ESTree ASTs into values
+\item {\ttfamily development} ({\ttfamily boolean}, default\+: {\ttfamily false}) — whether to use {\ttfamily jsx\+DEV} when on or {\ttfamily jsx} and {\ttfamily jsxs} when off
+\item {\ttfamily element\+Attribute\+Name\+Case} (\`{}\+Element\+Attribute\+Name\+Case\`{}, default\+: `\textquotesingle{}react'{\ttfamily ) — specify casing to use for attribute names \texorpdfstring{$\ast$}{*}}file\+Path{\ttfamily (}string{\ttfamily , optional) — file path to the original source file, passed in source info to}jsx\+DEV{\ttfamily when using the automatic runtime with }development\+: true{\ttfamily  \texorpdfstring{$\ast$}{*}}pass\+Node{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — pass the hast element node to components \texorpdfstring{$\ast$}{*}}space{\ttfamily (\mbox{[}}Space{\ttfamily \mbox{]}\mbox{[}api-\/space\mbox{]}, default\+:}\textquotesingle{}html\textquotesingle{}{\ttfamily ) — whether}tree{\ttfamily is in the}\textquotesingle{}html\textquotesingle{}{\ttfamily or}\textquotesingle{}svg\textquotesingle{}{\ttfamily space, when an}$<$svg$>${\ttfamily  element is found in the HTML space, this package already automatically switches to and from the SVG space when entering and exiting it \texorpdfstring{$\ast$}{*}}style\+Property\+Name\+Case{\ttfamily  (\mbox{[}}Style\+Property\+Name\+Case{\ttfamily \mbox{]}\mbox{[}api-\/style-\/property-\/name-\/case\mbox{]}, default\+:}\textquotesingle{}dom\textquotesingle{}{\ttfamily ) — specify casing to use for property names in}style{\ttfamily objects \texorpdfstring{$\ast$}{*}}table\+Cell\+Align\+To\+Style{\ttfamily  (}boolean{\ttfamily , default\+:}true{\ttfamily ) — turn obsolete}align{\ttfamily props on}td{\ttfamily and}th{\ttfamily into CSS}style\`{} props
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17472}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Props}}{{\ttfamily Props}}}\label{readme.md_autotoc_md17472}
+Properties and children (Type\+Script type).\hypertarget{readme.md_autotoc_md17473}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17473}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{Element\}\ from\ 'hast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Props\ =\ \{}
+\DoxyCodeLine{\ \ [prop:\ string]:}
+\DoxyCodeLine{\ \ \ \ |\ Array<JSX.Element\ |\ string\ |\ null\ |\ undefined>\ //\ For\ \`{}children`.}
+\DoxyCodeLine{\ \ \ \ |\ Record<string,\ string>\ //\ For\ \`{}style`.}
+\DoxyCodeLine{\ \ \ \ |\ Element\ //\ For\ \`{}node`.}
+\DoxyCodeLine{\ \ \ \ |\ boolean}
+\DoxyCodeLine{\ \ \ \ |\ number}
+\DoxyCodeLine{\ \ \ \ |\ string}
+\DoxyCodeLine{\ \ \ \ |\ undefined}
+\DoxyCodeLine{\ \ children:\ Array<JSX.Element\ |\ string\ |\ null\ |\ undefined>\ |\ undefined}
+\DoxyCodeLine{\ \ node?:\ Element\ |\ undefined}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17474}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Source}}{{\ttfamily Source}}}\label{readme.md_autotoc_md17474}
+Info about source (Type\+Script type).\hypertarget{readme.md_autotoc_md17475}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md17475}
+
+\begin{DoxyItemize}
+\item {\ttfamily column\+Number} ({\ttfamily number} or {\ttfamily undefined}) — column where thing starts (0-\/indexed)
+\item {\ttfamily file\+Name} ({\ttfamily string} or {\ttfamily undefined}) — name of source file
+\item {\ttfamily line\+Number} ({\ttfamily number} or {\ttfamily undefined}) — line where thing starts (1-\/indexed)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17476}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Space}}{{\ttfamily Space}}}\label{readme.md_autotoc_md17476}
+Namespace (Type\+Script type).
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: hast is not XML; it supports SVG as embedded in HTML; it does not support the features available in XML; passing SVG might break but fragments of modern SVG should be fine; use {\ttfamily xast} if you need to support SVG as XML. \end{quote}
+\hypertarget{readme.md_autotoc_md17477}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17477}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Space\ =\ 'html'\ |\ 'svg'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17478}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Style\+Property\+Name\+Case}}{{\ttfamily Style\+Property\+Name\+Case}}}\label{readme.md_autotoc_md17478}
+Casing to use for property names in {\ttfamily style} objects (Type\+Script type).
+
+CSS casing is for example {\ttfamily background-\/color} and {\ttfamily -\/webkit-\/line-\/clamp}. DOM casing is for example {\ttfamily background\+Color} and {\ttfamily Webkit\+Line\+Clamp}.\hypertarget{readme.md_autotoc_md17479}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md17479}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ StylePropertyNameCase\ =\ 'css'\ |\ 'dom'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17480}{}\doxysubsection{\texorpdfstring{Errors}{Errors}}\label{readme.md_autotoc_md17480}
+The following errors are thrown\+:\hypertarget{readme.md_autotoc_md17481}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Expected \`{}\+Fragment\`{} in options}}{{\ttfamily Expected \`{}\+Fragment\`{} in options}}}\label{readme.md_autotoc_md17481}
+This error is thrown when either {\ttfamily options} is not passed at all or when {\ttfamily options.\+Fragment} is {\ttfamily undefined}.
+
+The automatic JSX runtime needs a symbol for a fragment to work.
+
+To solve the error, make sure you are passing the correct fragment symbol from your framework.\hypertarget{readme.md_autotoc_md17482}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Expected \`{}jsx\+DEV\`{} in options when \`{}development\+: true\`{}}}{{\ttfamily Expected \`{}jsx\+DEV\`{} in options when \`{}development\+: true\`{}}}}\label{readme.md_autotoc_md17482}
+This error is thrown when {\ttfamily options.\+development} is turned on ({\ttfamily true}), but when {\ttfamily options.\+jsx\+DEV} is not a function.
+
+The automatic JSX runtime, in development, needs this function.
+
+To solve the error, make sure you are importing the correct runtime functions (for example, `\textquotesingle{}react/jsx-\/dev-\/runtime'{\ttfamily ), and pass}jsx\+DEV\`{}.\hypertarget{readme.md_autotoc_md17483}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Expected \`{}jsx\`{} in production options}}{{\ttfamily Expected \`{}jsx\`{} in production options}}}\label{readme.md_autotoc_md17483}
+\hypertarget{readme.md_autotoc_md17484}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Expected \`{}jsxs\`{} in production options}}{{\ttfamily Expected \`{}jsxs\`{} in production options}}}\label{readme.md_autotoc_md17484}
+These errors are thrown when {\ttfamily options.\+development} is {\itshape not} turned on ({\ttfamily false} or not defined), and when {\ttfamily options.\+jsx} or {\ttfamily options.\+jsxs} are not functions.
+
+The automatic JSX runtime, in production, needs these functions.
+
+To solve the error, make sure you are importing the correct runtime functions (for example, `\textquotesingle{}react/jsx-\/runtime'{\ttfamily ), and pass}jsx{\ttfamily and}jsxs\`{}.\hypertarget{readme.md_autotoc_md17485}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Cannot handle MDX estrees without \`{}create\+Evaluater\`{}}}{{\ttfamily Cannot handle MDX estrees without \`{}create\+Evaluater\`{}}}}\label{readme.md_autotoc_md17485}
+This error is thrown when MDX nodes are passed that represent Java\+Script programs or expressions.
+
+Supporting Java\+Script can be unsafe and requires a different project. To support Java\+Script, pass a {\ttfamily create\+Evaluater} function in {\ttfamily options}.\hypertarget{readme.md_autotoc_md17486}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Cannot parse \`{}style\`{} attribute}}{{\ttfamily Cannot parse \`{}style\`{} attribute}}}\label{readme.md_autotoc_md17486}
+This error is thrown when a {\ttfamily style} attribute is found on an element, which cannot be parsed as CSS.
+
+Most frameworks don’t accept {\ttfamily style} as a string, so we need to parse it as CSS, and pass it as an object. But when broken CSS is used, such as {\ttfamily style="{}color\+:red; /\texorpdfstring{$\ast$}{*}"{}}, we crash.
+
+To solve the error, make sure authors write valid CSS. Alternatively, pass {\ttfamily options.\+ignore\+Invalid\+Style\+: true} to swallow these errors.\hypertarget{readme.md_autotoc_md17487}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md17487}
+\hypertarget{readme.md_autotoc_md17488}{}\doxysubsubsection{\texorpdfstring{Example\+: Preact}{Example\+: Preact}}\label{readme.md_autotoc_md17488}
+\begin{quote}
+👉 {\bfseries{Note}}\+: you must set `element\+Attribute\+Name\+Case\+: \textquotesingle{}html'\`{} for preact. \end{quote}
+
+
+In Node.\+js, do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'hast-\/util-\/to-\/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{Fragment,\ jsx,\ jsxs\}\ from\ 'preact/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{render\}\ from\ 'preact-\/render-\/to-\/string'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ render(}
+\DoxyCodeLine{\ \ toJsxRuntime(h('h1',\ 'hi!'),\ \{}
+\DoxyCodeLine{\ \ \ \ Fragment,}
+\DoxyCodeLine{\ \ \ \ jsx,}
+\DoxyCodeLine{\ \ \ \ jsxs,}
+\DoxyCodeLine{\ \ \ \ elementAttributeNameCase:\ 'html'}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>hi!</h1>}
+
+\end{DoxyCode}
+
+
+In a browser, do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'https://esm.sh/hastscript@9'}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'https://esm.sh/hast-\/util-\/to-\/jsx-\/runtime@2'}
+\DoxyCodeLine{import\ \{Fragment,\ jsx,\ jsxs\}\ from\ 'https://esm.sh/preact@10/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{render\}\ from\ 'https://esm.sh/preact@10'}
+\DoxyCodeLine{}
+\DoxyCodeLine{render(}
+\DoxyCodeLine{\ \ toJsxRuntime(h('h1',\ 'hi!'),\ \{}
+\DoxyCodeLine{\ \ \ \ Fragment,}
+\DoxyCodeLine{\ \ \ \ jsx,}
+\DoxyCodeLine{\ \ \ \ jsxs,}
+\DoxyCodeLine{\ \ \ \ elementAttributeNameCase:\ 'html'}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\ \ document.getElementById('root')}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+To add better type support, register a global JSX namespace\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{JSX\ as\ Jsx\}\ from\ 'preact/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{declare\ global\ \{}
+\DoxyCodeLine{\ \ namespace\ JSX\ \{}
+\DoxyCodeLine{\ \ \ \ type\ ElementClass\ =\ Jsx.ElementClass}
+\DoxyCodeLine{\ \ \ \ type\ Element\ =\ Jsx.Element}
+\DoxyCodeLine{\ \ \ \ type\ IntrinsicElements\ =\ Jsx.IntrinsicElements}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17489}{}\doxysubsubsection{\texorpdfstring{Example\+: Solid}{Example\+: Solid}}\label{readme.md_autotoc_md17489}
+\begin{quote}
+👉 {\bfseries{Note}}\+: you must set `element\+Attribute\+Name\+Case\+: \textquotesingle{}html'{\ttfamily and }style\+Property\+Name\+Case\+: \textquotesingle{}css\textquotesingle{}\`{} for Solid. \end{quote}
+
+
+In Node.\+js, do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'hast-\/util-\/to-\/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{Fragment,\ jsx,\ jsxs\}\ from\ 'solid-\/jsx/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ toJsxRuntime(h('h1',\ 'hi!'),\ \{}
+\DoxyCodeLine{\ \ \ \ Fragment,}
+\DoxyCodeLine{\ \ \ \ jsx,}
+\DoxyCodeLine{\ \ \ \ jsxs,}
+\DoxyCodeLine{\ \ \ \ elementAttributeNameCase:\ 'html',}
+\DoxyCodeLine{\ \ \ \ stylePropertyNameCase:\ 'css'}
+\DoxyCodeLine{\ \ \}).t}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1\ >hi!</h1>}
+
+\end{DoxyCode}
+
+
+In a browser, do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'https://esm.sh/hastscript@9'}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'https://esm.sh/hast-\/util-\/to-\/jsx-\/runtime@2'}
+\DoxyCodeLine{import\ \{Fragment,\ jsx,\ jsxs\}\ from\ 'https://esm.sh/solid-\/js@1/h/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{render\}\ from\ 'https://esm.sh/solid-\/js@1/web'}
+\DoxyCodeLine{}
+\DoxyCodeLine{render(Component,\ document.getElementById('root'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Component()\ \{}
+\DoxyCodeLine{\ \ return\ toJsxRuntime(h('h1',\ 'hi!'),\ \{}
+\DoxyCodeLine{\ \ \ \ Fragment,}
+\DoxyCodeLine{\ \ \ \ jsx,}
+\DoxyCodeLine{\ \ \ \ jsxs,}
+\DoxyCodeLine{\ \ \ \ elementAttributeNameCase:\ 'html',}
+\DoxyCodeLine{\ \ \ \ stylePropertyNameCase:\ 'css'}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+To add better type support, register a global JSX namespace\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{JSX\ as\ Jsx\}\ from\ 'solid-\/js/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{declare\ global\ \{}
+\DoxyCodeLine{\ \ namespace\ JSX\ \{}
+\DoxyCodeLine{\ \ \ \ type\ ElementClass\ =\ Jsx.ElementClass}
+\DoxyCodeLine{\ \ \ \ type\ Element\ =\ Jsx.Element}
+\DoxyCodeLine{\ \ \ \ type\ IntrinsicElements\ =\ Jsx.IntrinsicElements}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17490}{}\doxysubsubsection{\texorpdfstring{Example\+: Svelte}{Example\+: Svelte}}\label{readme.md_autotoc_md17490}
+I have no clue how to render a Svelte component in Node, but you can get that component with\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'hast-\/util-\/to-\/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{Fragment,\ jsx,\ jsxs\}\ from\ 'svelte-\/jsx'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ svelteComponent\ =\ toJsxRuntime(h('h1',\ 'hi!'),\ \{Fragment,\ jsx,\ jsxs\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(svelteComponent)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[class\ Component\ extends\ SvelteComponent]}
+
+\end{DoxyCode}
+
+
+Types for Svelte are broken. Raise it with Svelte.\hypertarget{readme.md_autotoc_md17491}{}\doxysubsubsection{\texorpdfstring{Example\+: Vue}{Example\+: Vue}}\label{readme.md_autotoc_md17491}
+\begin{quote}
+👉 {\bfseries{Note}}\+: you must set `element\+Attribute\+Name\+Case\+: \textquotesingle{}html'\`{} for Vue. \end{quote}
+
+
+In Node.\+js, do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ serverRenderer\ from\ '@vue/server-\/renderer'}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'hast-\/util-\/to-\/jsx-\/runtime'}
+\DoxyCodeLine{import\ \{Fragment,\ jsx,\ jsxs\}\ from\ 'vue/jsx-\/runtime'\ //\ Available\ since\ \`{}vue@3.3`.}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ await\ serverRenderer.renderToString(}
+\DoxyCodeLine{\ \ \ \ toJsxRuntime(h('h1',\ 'hi!'),\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ Fragment,}
+\DoxyCodeLine{\ \ \ \ \ \ jsx,}
+\DoxyCodeLine{\ \ \ \ \ \ jsxs,}
+\DoxyCodeLine{\ \ \ \ \ \ elementAttributeNameCase:\ 'html'}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>hi!</h1>}
+
+\end{DoxyCode}
+
+
+In a browser, do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'https://esm.sh/hastscript@9'}
+\DoxyCodeLine{import\ \{toJsxRuntime\}\ from\ 'https://esm.sh/hast-\/util-\/to-\/jsx-\/runtime@2'}
+\DoxyCodeLine{import\ \{createApp\}\ from\ 'https://esm.sh/vue@3'}
+\DoxyCodeLine{import\ \{Fragment,\ jsx,\ jsxs\}\ from\ 'https://esm.sh/vue@3/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{createApp(Component).mount('\#root')}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Component()\ \{}
+\DoxyCodeLine{\ \ return\ toJsxRuntime(h('h1',\ 'hi!'),\ \{}
+\DoxyCodeLine{\ \ \ \ Fragment,}
+\DoxyCodeLine{\ \ \ \ jsx,}
+\DoxyCodeLine{\ \ \ \ jsxs,}
+\DoxyCodeLine{\ \ \ \ elementAttributeNameCase:\ 'html'}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+To add better type support, register a global JSX namespace\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{JSX\ as\ Jsx\}\ from\ 'vue/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{declare\ global\ \{}
+\DoxyCodeLine{\ \ namespace\ JSX\ \{}
+\DoxyCodeLine{\ \ \ \ type\ ElementClass\ =\ Jsx.ElementClass}
+\DoxyCodeLine{\ \ \ \ type\ Element\ =\ Jsx.Element}
+\DoxyCodeLine{\ \ \ \ type\ IntrinsicElements\ =\ Jsx.IntrinsicElements}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17492}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md17492}
+HTML is parsed according to WHATWG HTML (the living standard), which is also followed by browsers such as Chrome, Firefox, and Safari.\hypertarget{readme.md_autotoc_md17493}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md17493}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily hast-\/util-\/to-\/jsx-\/runtime@2}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md17494}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md17494}
+Be careful with user input in your hast tree. Use \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/santize}}} to make hast trees safe.\hypertarget{readme.md_autotoc_md17495}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md17495}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/hastscript}{\texttt{ {\ttfamily hastscript}}} — build hast trees
+\item \href{https://github.com/syntax-tree/hast-util-to-html}{\texttt{ {\ttfamily hast-\/util-\/to-\/html}}} — serialize hast as HTML
+\item \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/sanitize}}} — sanitize hast
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17496}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md17496}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md17497}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md17497}
+\mbox{[}MIT\mbox{]}\mbox{[}file-\/license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

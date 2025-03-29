@@ -1,0 +1,43 @@
+\doxysection{node\+\_\+modules/satori-\/html Directory Reference}
+\hypertarget{dir_f67041c11b99e4cdba7aa3682375f90e}{}\label{dir_f67041c11b99e4cdba7aa3682375f90e}\index{node\_modules/satori-\/html Directory Reference@{node\_modules/satori-\/html Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Generate a \href{https://github.com/vercel/satori}{\texttt{ satori}}-\/friendly VDOM from a string of HTML.\hypertarget{README.md_autotoc_md30248}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{README.md_autotoc_md30248}
+\href{https://github.com/vercel/satori}{\texttt{ Satori}} is an amazing library for generating SVG strings from pure HTML and CSS.
+
+Unfortunately, it is built on top of React\textquotesingle{}s JSX and \href{https://github.com/vercel/satori\#use-without-jsx}{\texttt{ expects "{}\+React-\/elements-\/like objects"{}}}. This library ({\ttfamily satori-\/html}) bridges that gap, generating the necessary VDOM object from a string of HTML.
+
+\begin{quote}
+{\bfseries{Note}} Satori supports a limited subset of HTML and CSS features, due to its special use case. Please use inline styles rather than class-\/based styling! \end{quote}
+\hypertarget{README.md_autotoc_md30249}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md30249}
+\hypertarget{README.md_autotoc_md30250}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md30250}
+{\ttfamily satori-\/html} exports an {\ttfamily html} helper, which transforms HTML strings into an object that is compatible with {\ttfamily satori}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ satori\ from\ "{}satori"{};}
+\DoxyCodeLine{import\ \{\ html\ \}\ from\ "{}satori-\/html"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ markup\ =\ html`<div\ style="{}color:\ black;"{}>hello,\ world</div>`;}
+\DoxyCodeLine{//\ See\ https://github.com/vercel/satori\#documentation}
+\DoxyCodeLine{const\ svg\ =\ await\ satori(markup,\ \{}
+\DoxyCodeLine{\ \ width:\ 600,}
+\DoxyCodeLine{\ \ height:\ 400,}
+\DoxyCodeLine{\ \ fonts:\ [],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+The {\ttfamily html} utility can be used as a tagged template literal or as a function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Tagged\ Template\ Literal}
+\DoxyCodeLine{const\ tagged\ =\ html`<div\ style="{}color:\ \$\{color\};"{}>hello,\ world</div>`;}
+\DoxyCodeLine{//\ Function}
+\DoxyCodeLine{const\ fn\ =\ html('<div\ style="{}color:\ black;"{}>hello,\ world</div>');}
+
+\end{DoxyCode}
+ 

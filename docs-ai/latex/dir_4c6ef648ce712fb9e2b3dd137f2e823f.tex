@@ -1,0 +1,64 @@
+\doxysection{node\+\_\+modules/three Directory Reference}
+\hypertarget{dir_4c6ef648ce712fb9e2b3dd137f2e823f}{}\label{dir_4c6ef648ce712fb9e2b3dd137f2e823f}\index{node\_modules/three Directory Reference@{node\_modules/three Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_df367614dcf1695eca75181bf02696ec}{examples}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/three}{\texttt{ }} \href{https://bundlephobia.com/result?p=three}{\texttt{ }} \href{https://www.npmtrends.com/three}{\texttt{ }} \href{https://deepscan.io/dashboard\#view=project&tid=16600&pid=19901&bid=525701}{\texttt{ }} \href{https://discord.gg/56GBJwAnUS}{\texttt{ }}\hypertarget{README.md_autotoc_md32811}{}\doxysubsubsubsection{\texorpdfstring{Java\+Script 3D library}{Java\+Script 3D library}}\label{README.md_autotoc_md32811}
+The aim of the project is to create an easy-\/to-\/use, lightweight, cross-\/browser, general-\/purpose 3D library. The current builds only include a Web\+GL renderer but Web\+GPU (experimental), SVG and CSS3D renderers are also available as addons.
+
+\href{https://threejs.org/examples/}{\texttt{ Examples}} --- \href{https://threejs.org/docs/}{\texttt{ Docs}} --- \href{https://threejs.org/manual/}{\texttt{ Manual}} --- \href{https://github.com/mrdoob/three.js/wiki}{\texttt{ Wiki}} --- \href{https://github.com/mrdoob/three.js/wiki/Migration-Guide}{\texttt{ Migrating}} --- \href{https://stackoverflow.com/questions/tagged/three.js}{\texttt{ Questions}} --- \href{https://discourse.threejs.org/}{\texttt{ Forum}} --- \href{https://discord.gg/56GBJwAnUS}{\texttt{ Discord}}\hypertarget{README.md_autotoc_md32812}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md32812}
+This code creates a scene, a camera, and a geometric cube, and it adds the cube to the scene. It then creates a {\ttfamily Web\+GL} renderer for the scene and camera, and it adds that viewport to the {\ttfamily document.\+body} element. Finally, it animates the cube within the scene for the camera.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ THREE\ from\ 'three';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ width\ =\ window.innerWidth,\ height\ =\ window.innerHeight;}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ init}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ camera\ =\ new\ THREE.PerspectiveCamera(\ 70,\ width\ /\ height,\ 0.01,\ 10\ );}
+\DoxyCodeLine{camera.position.z\ =\ 1;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ scene\ =\ new\ THREE.Scene();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ geometry\ =\ new\ THREE.BoxGeometry(\ 0.2,\ 0.2,\ 0.2\ );}
+\DoxyCodeLine{const\ material\ =\ new\ THREE.MeshNormalMaterial();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ mesh\ =\ new\ THREE.Mesh(\ geometry,\ material\ );}
+\DoxyCodeLine{scene.add(\ mesh\ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ renderer\ =\ new\ THREE.WebGLRenderer(\ \{\ antialias:\ true\ \}\ );}
+\DoxyCodeLine{renderer.setSize(\ width,\ height\ );}
+\DoxyCodeLine{renderer.setAnimationLoop(\ animation\ );}
+\DoxyCodeLine{document.body.appendChild(\ renderer.domElement\ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ animation}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ animation(\ time\ )\ \{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ mesh.rotation.x\ =\ time\ /\ 2000;}
+\DoxyCodeLine{\ \ \ \ mesh.rotation.y\ =\ time\ /\ 1000;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ renderer.render(\ scene,\ camera\ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If everything goes well, you should see \href{https://jsfiddle.net/2nyxkmco/}{\texttt{ this}}.\hypertarget{README.md_autotoc_md32813}{}\doxysubsubsection{\texorpdfstring{Cloning this repository}{Cloning this repository}}\label{README.md_autotoc_md32813}
+Cloning the repo with all its history results in a \texorpdfstring{$\sim$}{\string~}2 GB download. If you don\textquotesingle{}t need the whole history you can use the {\ttfamily depth} parameter to significantly reduce download size.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ -\/-\/depth=1\ https://github.com/mrdoob/three.js.git}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md32814}{}\doxysubsubsection{\texorpdfstring{Change log}{Change log}}\label{README.md_autotoc_md32814}
+\href{https://github.com/mrdoob/three.js/releases}{\texttt{ Releases}} 

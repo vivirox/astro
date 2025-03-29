@@ -1,0 +1,42 @@
+\doxysection{node\+\_\+modules/stackback Directory Reference}
+\hypertarget{dir_5a26dc2094a51c1b87557b5a78091a41}{}\label{dir_5a26dc2094a51c1b87557b5a78091a41}\index{node\_modules/stackback Directory Reference@{node\_modules/stackback Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Returns an array of Call\+Site objects for a captured stacktrace. Useful if you want to access the frame for an error object.\hypertarget{README.md_autotoc_md31228}{}\doxysubsection{\texorpdfstring{use}{use}}\label{README.md_autotoc_md31228}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ stackback\ =\ require('stackback');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ error\ generated\ from\ somewhere}
+\DoxyCodeLine{var\ err\ =\ new\ Error('some\ sample\ error');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ stack\ is\ an\ array\ of\ CallSite\ objects}
+\DoxyCodeLine{var\ stack\ =\ stackback(err);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31229}{}\doxysubsection{\texorpdfstring{Call\+Site object}{Call\+Site object}}\label{README.md_autotoc_md31229}
+From the \href{https://code.google.com/p/v8/wiki/JavaScriptStackTraceApi}{\texttt{ V8 Stack\+Trace API}}
+
+The structured stack trace is an Array of Call\+Site objects, each of which represents a stack frame. A Call\+Site object defines the following methods
+
+get\+This\+: returns the value of this ~\newline
+ get\+Type\+Name\+: returns the type of this as a string. This is the name of the function stored in the constructor field of this, if available, otherwise the object\textquotesingle{}s \mbox{[}\mbox{[}Class\mbox{]}\mbox{]} internal property. ~\newline
+ get\+Function\+: returns the current function ~\newline
+ get\+Function\+Name\+: returns the name of the current function, typically its name property. If a name property is not available an attempt will be made to try to infer a name from the function\textquotesingle{}s context. ~\newline
+ get\+Method\+Name\+: returns the name of the property of this or one of its prototypes that holds the current function ~\newline
+ get\+File\+Name\+: if this function was defined in a script returns the name of the script ~\newline
+ get\+Line\+Number\+: if this function was defined in a script returns the current line number ~\newline
+ get\+Column\+Number\+: if this function was defined in a script returns the current column number ~\newline
+ get\+Eval\+Origin\+: if this function was created using a call to eval returns a Call\+Site object representing the location where eval was called ~\newline
+ is\+Toplevel\+: is this a toplevel invocation, that is, is this the global object? ~\newline
+ is\+Eval\+: does this call take place in code defined by a call to eval? ~\newline
+ is\+Native\+: is this call in native V8 code? ~\newline
+ is\+Constructor\+: is this a constructor call? ~\newline
+\hypertarget{README.md_autotoc_md31230}{}\doxysubsection{\texorpdfstring{install}{install}}\label{README.md_autotoc_md31230}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ stackback}
+
+\end{DoxyCode}
+ 

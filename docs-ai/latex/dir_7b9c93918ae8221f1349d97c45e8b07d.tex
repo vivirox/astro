@@ -1,0 +1,179 @@
+\doxysection{node\+\_\+modules/toml-\/eslint-\/parser Directory Reference}
+\hypertarget{dir_7b9c93918ae8221f1349d97c45e8b07d}{}\label{dir_7b9c93918ae8221f1349d97c45e8b07d}\index{node\_modules/toml-\/eslint-\/parser Directory Reference@{node\_modules/toml-\/eslint-\/parser Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_44ce1054459f60aad935018ae06d1754}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A TOML parser that produces output \href{https://eslint.org/docs/developer-guide/working-with-custom-parsers\#all-nodes}{\texttt{ compatible with ESLint}}.
+
+\href{https://www.npmjs.com/package/toml-eslint-parser}{\texttt{ }} \href{https://www.npmjs.com/package/toml-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/toml-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/toml-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/toml-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/toml-eslint-parser}{\texttt{ }} \href{http://www.npmtrends.com/toml-eslint-parser}{\texttt{ }} \href{https://github.com/ota-meshi/toml-eslint-parser/actions?query=workflow\%3ACI}{\texttt{ }}\hypertarget{README.md_autotoc_md33074}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md33074}
+
+\begin{DoxyItemize}
+\item Converts TOML text to AST.
+\item Support for \href{https://toml.io/en/v1.0.0}{\texttt{ TOML 1.\+0.\+0}}.
+\item Experimental support for TOML 1.\+1.\+0. (Specifications for November 2023)
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md33075}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md33075}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ toml-\/eslint-\/parser}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33076}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md33076}
+\hypertarget{README.md_autotoc_md33077}{}\doxysubsubsection{\texorpdfstring{Configuration}{Configuration}}\label{README.md_autotoc_md33077}
+Use {\ttfamily .eslintrc.\texorpdfstring{$\ast$}{*}} file to configure parser. See also\+: \href{https://eslint.org/docs/user-guide/configuring}{\texttt{ https\+://eslint.\+org/docs/user-\/guide/configuring}}.
+
+Example {\bfseries{.eslintrc.\+js}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ overrides:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}*.toml"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ "{}toml-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33078}{}\doxysubsubsection{\texorpdfstring{Advanced Configuration}{Advanced Configuration}}\label{README.md_autotoc_md33078}
+The following additional configuration options are available by specifying them in \href{https://eslint.org/docs/latest/user-guide/configuring/language-options\#specifying-parser-options}{\texttt{ parser\+Options}} in your ESLint configuration file.
+
+Example {\bfseries{.eslintrc.\+js}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ overrides:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ files:\ ["{}*.toml"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ parser:\ "{}toml-\/eslint-\/parser"{},}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Additional\ configuration\ options}
+\DoxyCodeLine{\ \ \ \ \ \ parserOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ tomlVersion:\ "{}1.0.0"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33079}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily parser\+Options.\+toml\+Version}}{{\ttfamily parser\+Options.\+toml\+Version}}}\label{README.md_autotoc_md33079}
+Select the TOML version by setting {\ttfamily "{}1.\+0.\+0"{}}, {\ttfamily "{}1.\+1.\+0"{}}, {\ttfamily "{}1.\+0"{}}, {\ttfamily "{}1.\+1"{}}, {\ttfamily "{}latest"{}}, or {\ttfamily "{}next"{}}. By default {\ttfamily "{}1.\+0.\+0"{}} is used.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily "{}1.\+0.\+0"{}} ... Parsed using \href{https://toml.io/en/v1.0.0}{\texttt{ TOML v1.\+0.\+0 specifications}}.
+\item {\ttfamily "{}1.\+0"{}} ... Alias for {\ttfamily "{}1.\+0.\+0"{}}.
+\item {\ttfamily "{}1.\+1.\+0"{}} ... Parsed using the TOML v1.\+1.\+0 specification, which is currently \href{https://github.com/toml-lang/toml/issues/928}{\texttt{ under development}}. TOML 1.\+1.\+0 has not been released yet, so {\ttfamily "{}1.\+1.\+0"{}} is still an experimental feature. Please note that this may be subject to breaking changes in minor version releases of this parser.
+\item {\ttfamily "{}1.\+1"{}} ... Alias for {\ttfamily "{}1.\+1.\+0"{}}.
+\item {\ttfamily "{}latest"{}} ... Currently an alias for {\ttfamily "{}1.\+0.\+0"{}}. When a new version of TOML is released, we plan to change to that version in a minor version release of this parser.
+\item {\ttfamily "{}next"{}} ... Currently an alias for {\ttfamily "{}1.\+1.\+0"{}}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md33080}{}\doxysubsection{\texorpdfstring{Usage for Custom Rules / Plugins}{Usage for Custom Rules / Plugins}}\label{README.md_autotoc_md33080}
+
+\begin{DoxyItemize}
+\item AST.md is AST specification.
+\item \href{https://github.com/ota-meshi/eslint-plugin-toml/blob/main/src/rules/keys-order.ts}{\texttt{ keys-\/order.\+ts}} is an example.
+\item You can see the AST on the \href{https://ota-meshi.github.io/toml-eslint-parser/}{\texttt{ Online DEMO}}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md33081}{}\doxysubsection{\texorpdfstring{Usage for Directly}{Usage for Directly}}\label{README.md_autotoc_md33081}
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ AST\ \}\ from\ "{}toml-\/eslint-\/parser"{};}
+\DoxyCodeLine{import\ \{\ parseTOML,\ getStaticTOMLValue\ \}\ from\ "{}toml-\/eslint-\/parser"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ code\ =\ \`{}}
+\DoxyCodeLine{\#\ This\ is\ a\ TOML\ document}
+\DoxyCodeLine{}
+\DoxyCodeLine{title\ =\ "{}TOML\ Example"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{[owner]}
+\DoxyCodeLine{name\ =\ "{}Tom\ Preston-\/Werner"{}}
+\DoxyCodeLine{dob\ =\ 1979-\/05-\/27T07:32:00-\/08:00}
+\DoxyCodeLine{}
+\DoxyCodeLine{[database]}
+\DoxyCodeLine{enabled\ =\ true}
+\DoxyCodeLine{ports\ =\ [\ 8001,\ 8001,\ 8002\ ]}
+\DoxyCodeLine{data\ =\ [\ ["{}delta"{},\ "{}phi"{}],\ [3.14]\ ]}
+\DoxyCodeLine{temp\_targets\ =\ \{\ cpu\ =\ 79.5,\ case\ =\ 72.0\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{[servers]}
+\DoxyCodeLine{}
+\DoxyCodeLine{[servers.alpha]}
+\DoxyCodeLine{ip\ =\ "{}10.0.0.1"{}}
+\DoxyCodeLine{role\ =\ "{}frontend"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{[servers.beta]}
+\DoxyCodeLine{ip\ =\ "{}10.0.0.2"{}}
+\DoxyCodeLine{role\ =\ "{}backend"{}}
+\DoxyCodeLine{\`{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ast:\ AST.TOMLProgram\ =\ parseTOML(code);}
+\DoxyCodeLine{console.log(ast);}
+\DoxyCodeLine{//\ \{}
+\DoxyCodeLine{//\ \ \ type:\ 'Program',}
+\DoxyCodeLine{//\ \ \ body:\ [}
+\DoxyCodeLine{//\ \ \ \ \ \{}
+\DoxyCodeLine{//\ \ \ \ \ \ \ type:\ 'TOMLTopLevelTable',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ body:\ [}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ type:\ 'TOMLKeyValue',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ key:\ \{\ /*\ ...\ */\ \},}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ value:\ \{\ /*\ ...\ */\ \},}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ type:\ 'TOMLTable',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ kind:\ 'standard',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ key:\ \{\ /*\ ...\ */\ \},}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ body:\ [\ /*\ ...\ */\ ],}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{//\ \ \ \ \ \ \ ]}
+\DoxyCodeLine{//\ \ \ \ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{//\ \ \ \ \ \}}
+\DoxyCodeLine{//\ \ \ ],}
+\DoxyCodeLine{//\ \ \ tokens:\ [\ /*\ ...\ */\ ],}
+\DoxyCodeLine{//\ \ \ comments:\ [}
+\DoxyCodeLine{//\ \ \ \ \ \{}
+\DoxyCodeLine{//\ \ \ \ \ \ \ type:\ 'Block',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ value:\ '\ This\ is\ a\ TOML\ document',}
+\DoxyCodeLine{//\ \ \ \ \ \ \ //\ ...}
+\DoxyCodeLine{//\ \ \ \ \ \}}
+\DoxyCodeLine{//\ \ \ ],}
+\DoxyCodeLine{//\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ value\ =\ getStaticTOMLValue(ast);}
+\DoxyCodeLine{console.log(value);}
+\DoxyCodeLine{//\ \{}
+\DoxyCodeLine{//\ \ \ title:\ 'TOML\ Example',}
+\DoxyCodeLine{//\ \ \ owner:\ \{\ name:\ 'Tom\ Preston-\/Werner',\ dob:\ 1979-\/05-\/27T15:32:00.000Z\ \},}
+\DoxyCodeLine{//\ \ \ database:\ \{}
+\DoxyCodeLine{//\ \ \ \ \ enabled:\ true,}
+\DoxyCodeLine{//\ \ \ \ \ ports:\ [\ 8001,\ 8001,\ 8002\ ],}
+\DoxyCodeLine{//\ \ \ \ \ data:\ [\ [\ /*\ ...\ */\ ],\ [\ /*\ ...\ */\ ]\ ],}
+\DoxyCodeLine{//\ \ \ \ \ temp\_targets:\ \{\ cpu:\ 79.5,\ case:\ 72\ \}}
+\DoxyCodeLine{//\ \ \ \},}
+\DoxyCodeLine{//\ \ \ servers:\ \{}
+\DoxyCodeLine{//\ \ \ \ \ alpha:\ \{\ ip:\ '10.0.0.1',\ role:\ 'frontend'\ \},}
+\DoxyCodeLine{//\ \ \ \ \ beta:\ \{\ ip:\ '10.0.0.2',\ role:\ 'backend'\ \}}
+\DoxyCodeLine{//\ \ \ \}}
+\DoxyCodeLine{//\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md33082}{}\doxysubsection{\texorpdfstring{Testing}{Testing}}\label{README.md_autotoc_md33082}
+This project uses files from \href{https://github.com/BurntSushi/toml-test}{\texttt{ Burnt\+Sushi/toml-\/test}} and \href{https://github.com/iarna/toml-spec-tests}{\texttt{ iarna/toml-\/spec-\/tests}} repositories for testing.\hypertarget{README.md_autotoc_md33083}{}\doxysubsection{\texorpdfstring{Related Packages}{Related Packages}}\label{README.md_autotoc_md33083}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/ota-meshi/eslint-plugin-jsonc}{\texttt{ eslint-\/plugin-\/jsonc}} ... ESLint plugin for JSON, JSON with comments (JSONC) and JSON5.
+\item \href{https://github.com/ota-meshi/eslint-plugin-yml}{\texttt{ eslint-\/plugin-\/yml}} ... ESLint plugin for YAML.
+\item \href{https://github.com/ota-meshi/eslint-plugin-toml}{\texttt{ eslint-\/plugin-\/toml}} ... ESLint plugin for TOML.
+\item \href{https://github.com/ota-meshi/eslint-plugin-json-schema-validator}{\texttt{ eslint-\/plugin-\/json-\/schema-\/validator}} ... ESLint plugin that validates data using JSON Schema Validator.
+\item \href{https://github.com/ota-meshi/jsonc-eslint-parser}{\texttt{ jsonc-\/eslint-\/parser}} ... JSON, JSONC and JSON5 parser for use with ESLint plugins.
+\item \href{https://github.com/ota-meshi/yaml-eslint-parser}{\texttt{ yaml-\/eslint-\/parser}} ... YAML parser for use with ESLint plugins. 
+\end{DoxyItemize}

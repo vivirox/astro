@@ -1,0 +1,262 @@
+\doxysection{node\+\_\+modules/@istanbuljs/load-\/nyc-\/config/node\+\_\+modules/js-\/yaml Directory Reference}
+\hypertarget{dir_c60cf48e49ee960bcc0760a5f90a06c7}{}\label{dir_c60cf48e49ee960bcc0760a5f90a06c7}\index{node\_modules/"@istanbuljs/load-\/nyc-\/config/node\_modules/js-\/yaml Directory Reference@{node\_modules/"@istanbuljs/load-\/nyc-\/config/node\_modules/js-\/yaml Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/nodeca/js-yaml}{\texttt{ }} \href{https://www.npmjs.org/package/js-yaml}{\texttt{ }}
+
+{\bfseries{\href{http://nodeca.github.com/js-yaml/}{\texttt{ Online Demo}}}}
+
+This is an implementation of \href{http://yaml.org/}{\texttt{ YAML}}, a human-\/friendly data serialization language. Started as \href{http://pyyaml.org/}{\texttt{ Py\+YAML}} port, it was completely rewritten from scratch. Now it\textquotesingle{}s very fast, and supports 1.\+2 spec.\hypertarget{README.md_autotoc_md4106}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md4106}
+\hypertarget{README.md_autotoc_md4107}{}\doxysubsubsection{\texorpdfstring{YAML module for node.\+js}{YAML module for node.\+js}}\label{README.md_autotoc_md4107}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ js-\/yaml}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4108}{}\doxysubsubsection{\texorpdfstring{CLI executable}{CLI executable}}\label{README.md_autotoc_md4108}
+If you want to inspect your YAML files from CLI, install js-\/yaml globally\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/g\ js-\/yaml}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4109}{}\doxysubsubsubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md4109}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{usage:\ js-\/yaml\ [-\/h]\ [-\/v]\ [-\/c]\ [-\/t]\ file}
+\DoxyCodeLine{}
+\DoxyCodeLine{Positional\ arguments:}
+\DoxyCodeLine{\ \ file\ \ \ \ \ \ \ \ \ \ \ File\ with\ YAML\ document(s)}
+\DoxyCodeLine{}
+\DoxyCodeLine{Optional\ arguments:}
+\DoxyCodeLine{\ \ -\/h,\ -\/-\/help\ \ \ \ \ Show\ this\ help\ message\ and\ exit.}
+\DoxyCodeLine{\ \ -\/v,\ -\/-\/version\ \ Show\ program's\ version\ number\ and\ exit.}
+\DoxyCodeLine{\ \ -\/c,\ -\/-\/compact\ \ Display\ errors\ in\ compact\ mode}
+\DoxyCodeLine{\ \ -\/t,\ -\/-\/trace\ \ \ \ Show\ stack\ trace\ on\ error}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4110}{}\doxysubsubsection{\texorpdfstring{Bundled YAML library for browsers}{Bundled YAML library for browsers}}\label{README.md_autotoc_md4110}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ html}
+\DoxyCodeLine{<!-\/-\/\ esprima\ required\ only\ for\ !!js/function\ -\/-\/>}
+\DoxyCodeLine{<script\ src="{}esprima.js"{}></script>}
+\DoxyCodeLine{<script\ src="{}js-\/yaml.min.js"{}></script>}
+\DoxyCodeLine{<script\ type="{}text/javascript"{}>}
+\DoxyCodeLine{var\ doc\ =\ jsyaml.load('greeting:\ hello\(\backslash\)nname:\ world');}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+Browser support was done mostly for the online demo. If you find any errors -\/ feel free to send pull requests with fixes. Also note, that IE and other old browsers needs \href{https://github.com/kriskowal/es5-shim}{\texttt{ es5-\/shims}} to operate.
+
+Notes\+:
+
+
+\begin{DoxyEnumerate}
+\item We have no resources to support browserified version. Don\textquotesingle{}t expect it to be well tested. Don\textquotesingle{}t expect fast fixes if something goes wrong there.
+\item {\ttfamily !!js/function} in browser bundle will not work by default. If you really need it -\/ load {\ttfamily esprima} parser first (via amd or directly).
+\item {\ttfamily !!bin} in browser will return {\ttfamily Array}, because browsers do not support node.\+js {\ttfamily Buffer} and adding Buffer shims is completely useless on practice.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md4111}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md4111}
+Here we cover the most \textquotesingle{}useful\textquotesingle{} methods. If you need advanced details (creating your own tags), see \href{https://github.com/nodeca/js-yaml/wiki}{\texttt{ wiki}} and \href{https://github.com/nodeca/js-yaml/tree/master/examples}{\texttt{ examples}} for more info.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ javascript}
+\DoxyCodeLine{const\ yaml\ =\ require('js-\/yaml');}
+\DoxyCodeLine{const\ fs\ \ \ =\ require('fs');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Get\ document,\ or\ throw\ exception\ on\ error}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ const\ doc\ =\ yaml.safeLoad(fs.readFileSync('/home/ixti/example.yml',\ 'utf8'));}
+\DoxyCodeLine{\ \ console.log(doc);}
+\DoxyCodeLine{\}\ catch\ (e)\ \{}
+\DoxyCodeLine{\ \ console.log(e);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4112}{}\doxysubsubsection{\texorpdfstring{safe\+Load (string \mbox{[} , options \mbox{]})}{safe\+Load (string \mbox{[} , options \mbox{]})}}\label{README.md_autotoc_md4112}
+{\bfseries{Recommended loading way.}} Parses {\ttfamily string} as single YAML document. Returns either a plain object, a string or {\ttfamily undefined}, or throws {\ttfamily YAMLException} on error. By default, does not support regexps, functions and undefined. This method is safe for untrusted data.
+
+options\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily filename} {\itshape (default\+: null)} -\/ string to be used as a file path in error/warning messages.
+\item {\ttfamily on\+Warning} {\itshape (default\+: null)} -\/ function to call on warning messages. Loader will call this function with an instance of {\ttfamily YAMLException} for each warning.
+\item {\ttfamily schema} {\itshape (default\+: {\ttfamily DEFAULT\+\_\+\+SAFE\+\_\+\+SCHEMA})} -\/ specifies a schema to use.
+\begin{DoxyItemize}
+\item {\ttfamily FAILSAFE\+\_\+\+SCHEMA} -\/ only strings, arrays and plain objects\+: \href{http://www.yaml.org/spec/1.2/spec.html\#id2802346}{\texttt{ http\+://www.\+yaml.\+org/spec/1.\+2/spec.\+html\#id2802346}}
+\item {\ttfamily JSON\+\_\+\+SCHEMA} -\/ all JSON-\/supported types\+: \href{http://www.yaml.org/spec/1.2/spec.html\#id2803231}{\texttt{ http\+://www.\+yaml.\+org/spec/1.\+2/spec.\+html\#id2803231}}
+\item {\ttfamily CORE\+\_\+\+SCHEMA} -\/ same as {\ttfamily JSON\+\_\+\+SCHEMA}\+: \href{http://www.yaml.org/spec/1.2/spec.html\#id2804923}{\texttt{ http\+://www.\+yaml.\+org/spec/1.\+2/spec.\+html\#id2804923}}
+\item {\ttfamily DEFAULT\+\_\+\+SAFE\+\_\+\+SCHEMA} -\/ all supported YAML types, without unsafe ones ({\ttfamily !!js/undefined}, {\ttfamily !!js/regexp} and {\ttfamily !!js/function})\+: \href{http://yaml.org/type/}{\texttt{ http\+://yaml.\+org/type/}}
+\item {\ttfamily DEFAULT\+\_\+\+FULL\+\_\+\+SCHEMA} -\/ all supported YAML types.
+\end{DoxyItemize}
+\item {\ttfamily json} {\itshape (default\+: false)} -\/ compatibility with JSON.\+parse behaviour. If true, then duplicate keys in a mapping will override values rather than throwing an error.
+\end{DoxyItemize}
+
+NOTE\+: This function {\bfseries{does not}} understand multi-\/document sources, it throws exception on those.
+
+NOTE\+: JS-\/\+YAML {\bfseries{does not}} support schema-\/specific tag resolution restrictions. So, the JSON schema is not as strictly defined in the YAML specification. It allows numbers in any notation, use {\ttfamily Null} and {\ttfamily NULL} as {\ttfamily null}, etc. The core schema also has no such restrictions. It allows binary notation for integers.\hypertarget{README.md_autotoc_md4113}{}\doxysubsubsection{\texorpdfstring{load (string \mbox{[} , options \mbox{]})}{load (string \mbox{[} , options \mbox{]})}}\label{README.md_autotoc_md4113}
+{\bfseries{Use with care with untrusted sources}}. The same as {\ttfamily safe\+Load()} but uses {\ttfamily DEFAULT\+\_\+\+FULL\+\_\+\+SCHEMA} by default -\/ adds some Java\+Script-\/specific types\+: {\ttfamily !!js/function}, {\ttfamily !!js/regexp} and {\ttfamily !!js/undefined}. For untrusted sources, you must additionally validate object structure to avoid injections\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ javascript}
+\DoxyCodeLine{const\ untrusted\_code\ =\ '"{}toString"{}:\ !<tag:yaml.org,2002:js/function>\ "{}function\ ()\{very\_evil\_thing();\}"{}';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ I'm\ just\ converting\ that\ string,\ what\ could\ possibly\ go\ wrong?}
+\DoxyCodeLine{require('js-\/yaml').load(untrusted\_code)\ +\ ''}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4114}{}\doxysubsubsection{\texorpdfstring{safe\+Load\+All (string \mbox{[}, iterator\mbox{]} \mbox{[}, options \mbox{]})}{safe\+Load\+All (string \mbox{[}, iterator\mbox{]} \mbox{[}, options \mbox{]})}}\label{README.md_autotoc_md4114}
+Same as {\ttfamily safe\+Load()}, but understands multi-\/document sources. Applies {\ttfamily iterator} to each document if specified, or returns array of documents.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ javascript}
+\DoxyCodeLine{const\ yaml\ =\ require('js-\/yaml');}
+\DoxyCodeLine{}
+\DoxyCodeLine{yaml.safeLoadAll(data,\ function\ (doc)\ \{}
+\DoxyCodeLine{\ \ console.log(doc);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4115}{}\doxysubsubsection{\texorpdfstring{load\+All (string \mbox{[}, iterator\mbox{]} \mbox{[} , options \mbox{]})}{load\+All (string \mbox{[}, iterator\mbox{]} \mbox{[} , options \mbox{]})}}\label{README.md_autotoc_md4115}
+Same as {\ttfamily safe\+Load\+All()} but uses {\ttfamily DEFAULT\+\_\+\+FULL\+\_\+\+SCHEMA} by default.\hypertarget{README.md_autotoc_md4116}{}\doxysubsubsection{\texorpdfstring{safe\+Dump (object \mbox{[} , options \mbox{]})}{safe\+Dump (object \mbox{[} , options \mbox{]})}}\label{README.md_autotoc_md4116}
+Serializes {\ttfamily object} as a YAML document. Uses {\ttfamily DEFAULT\+\_\+\+SAFE\+\_\+\+SCHEMA}, so it will throw an exception if you try to dump regexps or functions. However, you can disable exceptions by setting the {\ttfamily skip\+Invalid} option to {\ttfamily true}.
+
+options\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily indent} {\itshape (default\+: 2)} -\/ indentation width to use (in spaces).
+\item {\ttfamily no\+Array\+Indent} {\itshape (default\+: false)} -\/ when true, will not add an indentation level to array elements
+\item {\ttfamily skip\+Invalid} {\itshape (default\+: false)} -\/ do not throw on invalid types (like function in the safe schema) and skip pairs and single values with such types.
+\item {\ttfamily flow\+Level} (default\+: -\/1) -\/ specifies level of nesting, when to switch from block to flow style for collections. -\/1 means block style everwhere
+\item {\ttfamily styles} -\/ "{}tag"{} =\texorpdfstring{$>$}{>} "{}style"{} map. Each tag may have own set of styles.
+\item {\ttfamily schema} {\itshape (default\+: {\ttfamily DEFAULT\+\_\+\+SAFE\+\_\+\+SCHEMA})} specifies a schema to use.
+\item {\ttfamily sort\+Keys} {\itshape (default\+: {\ttfamily false})} -\/ if {\ttfamily true}, sort keys when dumping YAML. If a function, use the function to sort the keys.
+\item {\ttfamily line\+Width} {\itshape (default\+: {\ttfamily 80})} -\/ set max line width.
+\item {\ttfamily no\+Refs} {\itshape (default\+: {\ttfamily false})} -\/ if {\ttfamily true}, don\textquotesingle{}t convert duplicate objects into references
+\item {\ttfamily no\+Compat\+Mode} {\itshape (default\+: {\ttfamily false})} -\/ if {\ttfamily true} don\textquotesingle{}t try to be compatible with older yaml versions. Currently\+: don\textquotesingle{}t quote "{}yes"{}, "{}no"{} and so on, as required for YAML 1.\+1
+\item {\ttfamily condense\+Flow} {\itshape (default\+: {\ttfamily false})} -\/ if {\ttfamily true} flow sequences will be condensed, omitting the space between {\ttfamily a, b}. Eg. `'\mbox{[}a,b\mbox{]}\textquotesingle{}{\ttfamily , and omitting the space between}key\+: value{\ttfamily and quoting the key. Eg.}\textquotesingle{}\{"{}a"{}\+:b\}\textquotesingle{}\`{} Can be useful when using yaml for pretty URL query params as spaces are \%-\/encoded.
+\end{DoxyItemize}
+
+The following table show availlable styles (e.\+g. "{}canonical"{}, "{}binary"{}...) available for each tag (.e.\+g. !!null, !!int ...). Yaml output is shown on the right side after {\ttfamily =\texorpdfstring{$>$}{>}} (default setting) or {\ttfamily -\/\texorpdfstring{$>$}{>}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ none}
+\DoxyCodeLine{!!null}
+\DoxyCodeLine{\ \ "{}canonical"{}\ \ \ -\/>\ "{}\string~"{}}
+\DoxyCodeLine{\ \ "{}lowercase"{}\ \ \ =>\ "{}null"{}}
+\DoxyCodeLine{\ \ "{}uppercase"{}\ \ \ -\/>\ "{}NULL"{}}
+\DoxyCodeLine{\ \ "{}camelcase"{}\ \ \ -\/>\ "{}Null"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{!!int}
+\DoxyCodeLine{\ \ "{}binary"{}\ \ \ \ \ \ -\/>\ "{}0b1"{},\ "{}0b101010"{},\ "{}0b1110001111010"{}}
+\DoxyCodeLine{\ \ "{}octal"{}\ \ \ \ \ \ \ -\/>\ "{}01"{},\ "{}052"{},\ "{}016172"{}}
+\DoxyCodeLine{\ \ "{}decimal"{}\ \ \ \ \ =>\ "{}1"{},\ "{}42"{},\ "{}7290"{}}
+\DoxyCodeLine{\ \ "{}hexadecimal"{}\ -\/>\ "{}0x1"{},\ "{}0x2A"{},\ "{}0x1C7A"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{!!bool}
+\DoxyCodeLine{\ \ "{}lowercase"{}\ \ \ =>\ "{}true"{},\ "{}false"{}}
+\DoxyCodeLine{\ \ "{}uppercase"{}\ \ \ -\/>\ "{}TRUE"{},\ "{}FALSE"{}}
+\DoxyCodeLine{\ \ "{}camelcase"{}\ \ \ -\/>\ "{}True"{},\ "{}False"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{!!float}
+\DoxyCodeLine{\ \ "{}lowercase"{}\ \ \ =>\ "{}.nan"{},\ '.inf'}
+\DoxyCodeLine{\ \ "{}uppercase"{}\ \ \ -\/>\ "{}.NAN"{},\ '.INF'}
+\DoxyCodeLine{\ \ "{}camelcase"{}\ \ \ -\/>\ "{}.NaN"{},\ '.Inf'}
+
+\end{DoxyCode}
+
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ javascript}
+\DoxyCodeLine{safeDump\ (object,\ \{}
+\DoxyCodeLine{\ \ 'styles':\ \{}
+\DoxyCodeLine{\ \ \ \ '!!null':\ 'canonical'\ //\ dump\ null\ as\ \string~}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ 'sortKeys':\ true\ \ \ \ \ \ \ \ //\ sort\ object\ keys}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4117}{}\doxysubsubsection{\texorpdfstring{dump (object \mbox{[} , options \mbox{]})}{dump (object \mbox{[} , options \mbox{]})}}\label{README.md_autotoc_md4117}
+Same as {\ttfamily safe\+Dump()} but without limits (uses {\ttfamily DEFAULT\+\_\+\+FULL\+\_\+\+SCHEMA} by default).\hypertarget{README.md_autotoc_md4118}{}\doxysubsection{\texorpdfstring{Supported YAML types}{Supported YAML types}}\label{README.md_autotoc_md4118}
+The list of standard YAML tags and corresponding Java\+Scipt types. See also \href{http://pyyaml.org/wiki/YAMLTagDiscussion}{\texttt{ YAML tag discussion}} and \href{http://yaml.org/type/}{\texttt{ YAML types repository}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{!!null\ ''\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ null}
+\DoxyCodeLine{!!bool\ 'yes'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ bool}
+\DoxyCodeLine{!!int\ '3...'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ number}
+\DoxyCodeLine{!!float\ '3.14...'\ \ \ \ \ \ \ \ \ \ \ \#\ number}
+\DoxyCodeLine{!!binary\ '...base64...'\ \ \ \ \ \#\ buffer}
+\DoxyCodeLine{!!timestamp\ 'YYYY-\/...'\ \ \ \ \ \ \#\ date}
+\DoxyCodeLine{!!omap\ [\ ...\ ]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ array\ of\ key-\/value\ pairs}
+\DoxyCodeLine{!!pairs\ [\ ...\ ]\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ array\ or\ array\ pairs}
+\DoxyCodeLine{!!set\ \{\ ...\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ array\ of\ objects\ with\ given\ keys\ and\ null\ values}
+\DoxyCodeLine{!!str\ '...'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ string}
+\DoxyCodeLine{!!seq\ [\ ...\ ]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ array}
+\DoxyCodeLine{!!map\ \{\ ...\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ object}
+
+\end{DoxyCode}
+
+
+{\bfseries{Java\+Script-\/specific tags}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{!!js/regexp\ /pattern/gim\ \ \ \ \ \ \ \ \ \ \ \ \#\ RegExp}
+\DoxyCodeLine{!!js/undefined\ ''\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Undefined}
+\DoxyCodeLine{!!js/function\ 'function\ ()\ \{...\}'\ \ \ \#\ Function}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4119}{}\doxysubsection{\texorpdfstring{Caveats}{Caveats}}\label{README.md_autotoc_md4119}
+Note, that you use arrays or objects as key in JS-\/\+YAML. JS does not allow objects or arrays as keys, and stringifies (by calling {\ttfamily to\+String()} method) them at the moment of adding them.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ yaml}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{?\ [\ foo,\ bar\ ]}
+\DoxyCodeLine{:\ -\/\ baz}
+\DoxyCodeLine{?\ \{\ foo:\ bar\ \}}
+\DoxyCodeLine{:\ -\/\ baz}
+\DoxyCodeLine{\ \ -\/\ baz}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ javascript}
+\DoxyCodeLine{\{\ "{}foo,bar"{}:\ ["{}baz"{}],\ "{}[object\ Object]"{}:\ ["{}baz"{},\ "{}baz"{}]\ \}}
+
+\end{DoxyCode}
+
+
+Also, reading of properties on implicit block mapping keys is not supported yet. So, the following YAML document cannot be loaded.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ yaml}
+\DoxyCodeLine{\&anchor\ foo:}
+\DoxyCodeLine{\ \ foo:\ bar}
+\DoxyCodeLine{\ \ *anchor:\ duplicate\ key}
+\DoxyCodeLine{\ \ baz:\ bat}
+\DoxyCodeLine{\ \ *anchor:\ duplicate\ key}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4120}{}\doxysubsection{\texorpdfstring{js-\/yaml for enterprise}{js-\/yaml for enterprise}}\label{README.md_autotoc_md4120}
+Available as part of the Tidelift Subscription
+
+The maintainers of js-\/yaml and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. \href{https://tidelift.com/subscription/pkg/npm-js-yaml?utm_source=npm-js-yaml&utm_medium=referral&utm_campaign=enterprise&utm_term=repo}{\texttt{ Learn more.}} 

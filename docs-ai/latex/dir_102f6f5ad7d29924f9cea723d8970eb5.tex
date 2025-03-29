@@ -1,0 +1,491 @@
+\doxysection{node\+\_\+modules/mdast-\/util-\/mdx-\/jsx Directory Reference}
+\hypertarget{dir_102f6f5ad7d29924f9cea723d8970eb5}{}\label{dir_102f6f5ad7d29924f9cea723d8970eb5}\index{node\_modules/mdast-\/util-\/mdx-\/jsx Directory Reference@{node\_modules/mdast-\/util-\/mdx-\/jsx Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/mdast-util-mdx-jsx/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/mdast-util-mdx-jsx}{\texttt{ }} \href{https://www.npmjs.com/package/mdast-util-mdx-jsx}{\texttt{ }} \href{https://bundlejs.com/?q=mdast-util-mdx-jsx}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}} extensions to parse and serialize \href{https://mdxjs.com}{\texttt{ MDX}} JSX ({\ttfamily \texorpdfstring{$<$}{<}a /\texorpdfstring{$>$}{>}}).\hypertarget{readme.md_autotoc_md22593}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22593}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}mdx\+Jsx\+From\+Markdown()\`{}
+\item \`{}mdx\+Jsx\+To\+Markdown(options?)\`{}
+\item \`{}\+Mdx\+Jsx\+Attribute\`{}
+\item \`{}\+Mdx\+Jsx\+Attribute\+Value\+Expression\`{}
+\item \`{}\+Mdx\+Jsx\+Expression\+Attribute\`{}
+\item \`{}\+Mdx\+Jsx\+Flow\+Element\`{}
+\item \`{}\+Mdx\+Jsx\+Flow\+Element\+Hast\`{}
+\item \`{}\+Mdx\+Jsx\+Text\+Element\`{}
+\item \`{}\+Mdx\+Jsx\+Text\+Element\+Hast\`{}
+\item \`{}\+To\+Markdown\+Options\`{}
+\end{DoxyItemize}
+\item HTML
+\item Syntax
+\item Syntax tree
+\begin{DoxyItemize}
+\item Nodes
+\item Mixin
+\item Content model
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22594}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22594}
+This package contains two extensions that add support for MDX JSX syntax in markdown to \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}. These extensions plug into \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} (to support parsing JSX in markdown into a syntax tree) and \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} (to support serializing JSX in syntax trees to markdown).
+
+\href{https://facebook.github.io/jsx/}{\texttt{ JSX}} is an XML-\/like syntax extension to ECMAScript (Java\+Script), which MDX brings to markdown. For more info on MDX, see \href{https://mdxjs.com/docs/what-is-mdx/}{\texttt{ What is MDX?}}\hypertarget{readme.md_autotoc_md22595}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md22595}
+You can use these extensions when you are working with {\ttfamily mdast-\/util-\/from-\/markdown} and {\ttfamily mdast-\/util-\/to-\/markdown} already.
+
+When working with {\ttfamily mdast-\/util-\/from-\/markdown}, you must combine this package with \href{https://github.com/micromark/micromark-extension-mdx-jsx}{\texttt{ {\ttfamily micromark-\/extension-\/mdx-\/jsx}}}.
+
+When you are working with syntax trees and want all of MDX, use \href{https://github.com/syntax-tree/mdast-util-mdx}{\texttt{ {\ttfamily mdast-\/util-\/mdx}}} instead.
+
+All these packages are used in \href{https://mdxjs.com/packages/remark-mdx/}{\texttt{ {\ttfamily remark-\/mdx}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md22596}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22596}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mdast-\/util-\/mdx-\/jsx}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{mdxJsxFromMarkdown,\ mdxJsxToMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/mdx-\/jsx@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{mdxJsxFromMarkdown,\ mdxJsxToMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/mdx-\/jsx@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22597}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22597}
+Say our document {\ttfamily example.\+mdx} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<Box>}
+\DoxyCodeLine{\ \ -\/\ a\ list}
+\DoxyCodeLine{</Box>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<MyComponent\ \{...props\}\ />}
+\DoxyCodeLine{}
+\DoxyCodeLine{<abbr\ title="{}Hypertext\ Markup\ Language"{}>HTML</abbr>\ is\ a\ lovely\ language.}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ *\ as\ acorn\ from\ 'acorn'}
+\DoxyCodeLine{import\ \{mdxJsx\}\ from\ 'micromark-\/extension-\/mdx-\/jsx'}
+\DoxyCodeLine{import\ \{fromMarkdown\}\ from\ 'mdast-\/util-\/from-\/markdown'}
+\DoxyCodeLine{import\ \{mdxJsxFromMarkdown,\ mdxJsxToMarkdown\}\ from\ 'mdast-\/util-\/mdx-\/jsx'}
+\DoxyCodeLine{import\ \{toMarkdown\}\ from\ 'mdast-\/util-\/to-\/markdown'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ await\ fs.readFile('example.mdx')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromMarkdown(doc,\ \{}
+\DoxyCodeLine{\ \ extensions:\ [mdxJsx(\{acorn,\ addResult:\ true\})],}
+\DoxyCodeLine{\ \ mdastExtensions:\ [mdxJsxFromMarkdown()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(tree)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ out\ =\ toMarkdown(tree,\ \{extensions:\ [mdxJsxToMarkdown()]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(out)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields (positional info removed for brevity)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'mdxJsxFlowElement',}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ 'Box',}
+\DoxyCodeLine{\ \ \ \ \ \ attributes:\ [],}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'list',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ordered:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ start:\ null,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ spread:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'listItem',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ spread:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ checked:\ null,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'paragraph',\ children:\ [\{type:\ 'text',\ value:\ 'a\ list'\}]\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'mdxJsxFlowElement',}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ 'MyComponent',}
+\DoxyCodeLine{\ \ \ \ \ \ attributes:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'mdxJsxExpressionAttribute',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ value:\ '...props',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ data:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ estree:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'Program',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ body:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'ExpressionStatement',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ expression:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'ObjectExpression',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ properties:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'SpreadElement',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ argument:\ \{type:\ 'Identifier',\ name:\ 'props'\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ sourceType:\ 'module'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ []}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'mdxJsxTextElement',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ name:\ 'abbr',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ attributes:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'mdxJsxAttribute',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ name:\ 'title',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ value:\ 'Hypertext\ Markup\ Language'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'HTML'\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '\ is\ a\ lovely\ language.'\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<Box>}
+\DoxyCodeLine{\ \ *\ \ \ a\ list}
+\DoxyCodeLine{</Box>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<MyComponent\ \{...props\}\ />}
+\DoxyCodeLine{}
+\DoxyCodeLine{<abbr\ title="{}Hypertext\ Markup\ Language"{}>HTML</abbr>\ is\ a\ lovely\ language.}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22598}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22598}
+This package exports the identifiers \`{}mdx\+Jsx\+From\+Markdown\`{} and \`{}mdx\+Jsx\+To\+Markdown\`{}. There is no default export.\hypertarget{readme.md_autotoc_md22599}{}\doxysubsubsection{\texorpdfstring{{\ttfamily mdx\+Jsx\+From\+Markdown()}}{{\ttfamily mdx\+Jsx\+From\+Markdown()}}}\label{readme.md_autotoc_md22599}
+Create an extension for \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} to enable MDX JSX.\hypertarget{readme.md_autotoc_md22600}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22600}
+Extension for {\ttfamily mdast-\/util-\/from-\/markdown} to enable MDX JSX (\href{https://github.com/syntax-tree/mdast-util-from-markdown\#extension}{\texttt{ {\ttfamily From\+Markdown\+Extension}}}).
+
+When using the \href{https://github.com/micromark/micromark-extension-mdx-jsx}{\texttt{ micromark syntax extension}} with {\ttfamily add\+Result}, nodes will have a {\ttfamily data.\+estree} field set to an ESTree \href{https://github.com/estree/estree/blob/master/es2015.md\#programs}{\texttt{ {\ttfamily Program}}} node.\hypertarget{readme.md_autotoc_md22601}{}\doxysubsubsection{\texorpdfstring{{\ttfamily mdx\+Jsx\+To\+Markdown(options?)}}{{\ttfamily mdx\+Jsx\+To\+Markdown(options?)}}}\label{readme.md_autotoc_md22601}
+Create an extension for \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} to enable MDX JSX.
+
+This extension configures {\ttfamily mdast-\/util-\/to-\/markdown} with \href{https://github.com/syntax-tree/mdast-util-to-markdown\#optionsfences}{\texttt{ {\ttfamily options.\+fences\+: true}}} and \href{https://github.com/syntax-tree/mdast-util-to-markdown\#optionsresourcelink}{\texttt{ {\ttfamily options.\+resource\+Link\+: true}}} too, do not overwrite them!\hypertarget{readme.md_autotoc_md22602}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22602}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\`{}\+To\+Markdown\+Options\`{}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22603}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22603}
+Extension for {\ttfamily mdast-\/util-\/to-\/markdown} to enable MDX JSX (\href{https://github.com/syntax-tree/mdast-util-to-markdown\#options}{\texttt{ {\ttfamily From\+Markdown\+Extension}}}).\hypertarget{readme.md_autotoc_md22604}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Attribute}}{{\ttfamily Mdx\+Jsx\+Attribute}}}\label{readme.md_autotoc_md22604}
+MDX JSX attribute with a key (Type\+Script type).\hypertarget{readme.md_autotoc_md22605}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22605}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{Literal\}\ from\ 'mdast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ MdxJsxAttribute\ extends\ Literal\ \{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxAttribute'}
+\DoxyCodeLine{\ \ name:\ string}
+\DoxyCodeLine{\ \ value?:\ MdxJsxAttributeValueExpression\ |\ string\ |\ null\ |\ undefined}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22606}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Attribute\+Value\+Expression}}{{\ttfamily Mdx\+Jsx\+Attribute\+Value\+Expression}}}\label{readme.md_autotoc_md22606}
+MDX JSX attribute value set to an expression (Type\+Script type).\hypertarget{readme.md_autotoc_md22607}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22607}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{Program\}\ from\ 'estree-\/jsx'}
+\DoxyCodeLine{import\ type\ \{Literal\}\ from\ 'mdast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ MdxJsxAttributeValueExpression\ extends\ Literal\ \{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxAttributeValueExpression'}
+\DoxyCodeLine{\ \ data?:\ \{estree?:\ Program\ |\ null\ |\ undefined\}\ \&\ Literal['data']}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22608}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Expression\+Attribute}}{{\ttfamily Mdx\+Jsx\+Expression\+Attribute}}}\label{readme.md_autotoc_md22608}
+MDX JSX attribute as an expression (Type\+Script type).\hypertarget{readme.md_autotoc_md22609}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22609}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{Program\}\ from\ 'estree-\/jsx'}
+\DoxyCodeLine{import\ type\ \{Literal\}\ from\ 'mdast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ MdxJsxExpressionAttribute\ extends\ Literal\ \{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxExpressionAttribute'}
+\DoxyCodeLine{\ \ data?:\ \{estree?:\ Program\ |\ null\ |\ undefined\}\ \&\ Literal['data']}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22610}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Flow\+Element}}{{\ttfamily Mdx\+Jsx\+Flow\+Element}}}\label{readme.md_autotoc_md22610}
+MDX JSX element node, occurring in flow (block) (Type\+Script type).\hypertarget{readme.md_autotoc_md22611}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22611}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{BlockContent,\ DefinitionContent,\ Parent\}\ from\ 'mdast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ interface\ MdxJsxFlowElement\ extends\ Parent\ \{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxFlowElement'}
+\DoxyCodeLine{\ \ name:\ string\ |\ null}
+\DoxyCodeLine{\ \ attributes:\ Array<MdxJsxAttribute\ |\ MdxJsxExpressionAttribute>}
+\DoxyCodeLine{\ \ children:\ Array<BlockContent\ |\ DefinitionContent>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22612}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Flow\+Element\+Hast}}{{\ttfamily Mdx\+Jsx\+Flow\+Element\+Hast}}}\label{readme.md_autotoc_md22612}
+Same as \`{}\+Mdx\+Jsx\+Flow\+Element\`{}, but registered with {\ttfamily @types/hast} (Type\+Script type).\hypertarget{readme.md_autotoc_md22613}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22613}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{ElementContent,\ Parent\}\ from\ 'hast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ interface\ MdxJsxFlowElementHast\ extends\ Parent\ \{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxFlowElement'}
+\DoxyCodeLine{\ \ name:\ string\ |\ null}
+\DoxyCodeLine{\ \ attributes:\ Array<MdxJsxAttribute\ |\ MdxJsxExpressionAttribute>}
+\DoxyCodeLine{\ \ children:\ Array<ElementContent>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22614}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Text\+Element}}{{\ttfamily Mdx\+Jsx\+Text\+Element}}}\label{readme.md_autotoc_md22614}
+MDX JSX element node, occurring in text (phrasing) (Type\+Script type).\hypertarget{readme.md_autotoc_md22615}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22615}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{Parent,\ PhrasingContent\}\ from\ 'mdast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ interface\ MdxJsxTextElement\ extends\ Parent\ \{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxTextElement'}
+\DoxyCodeLine{\ \ name:\ string\ |\ null}
+\DoxyCodeLine{\ \ attributes:\ Array<MdxJsxAttribute\ |\ MdxJsxExpressionAttribute>}
+\DoxyCodeLine{\ \ children:\ Array<PhrasingContent>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22616}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Text\+Element\+Hast}}{{\ttfamily Mdx\+Jsx\+Text\+Element\+Hast}}}\label{readme.md_autotoc_md22616}
+Same as \`{}\+Mdx\+Jsx\+Text\+Element\`{}, but registered with {\ttfamily @types/hast} (Type\+Script type).\hypertarget{readme.md_autotoc_md22617}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22617}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{ElementContent,\ Parent\}\ from\ 'hast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ interface\ MdxJsxTextElementHast\ extends\ Parent\ \{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxTextElement'}
+\DoxyCodeLine{\ \ name:\ string\ |\ null}
+\DoxyCodeLine{\ \ attributes:\ Array<MdxJsxAttribute\ |\ MdxJsxExpressionAttribute>}
+\DoxyCodeLine{\ \ children:\ Array<ElementContent>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22618}{}\doxysubsubsection{\texorpdfstring{{\ttfamily To\+Markdown\+Options}}{{\ttfamily To\+Markdown\+Options}}}\label{readme.md_autotoc_md22618}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md22619}{}\doxysubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md22619}
+
+\begin{DoxyItemize}
+\item {\ttfamily quote} (`'"{}\textquotesingle{}\`{} or \`{}"{}\textquotesingle{}"{}\`{}, default\+: \`{}\textquotesingle{}"{}\textquotesingle{}{\ttfamily ) — preferred quote to use around attribute values \texorpdfstring{$\ast$}{*}}quote\+Smart{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — use the other quote if that results in less bytes \texorpdfstring{$\ast$}{*}}tight\+Self\+Closing{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — do not use an extra space when closing self-\/closing elements\+:}{\ttfamily  instead of}{\ttfamily  \texorpdfstring{$\ast$}{*}}print\+Width{\ttfamily (}number{\ttfamily , default\+:}Infinity{\ttfamily ) — try and wrap syntax at this width. When set to a finite number (say,}80\`{}), the formatter will print attributes on separate lines when a tag doesn’t fit on one line. The normal behavior is to print attributes with spaces between them instead of line endings
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22620}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md22620}
+MDX JSX has no representation in HTML. Though, when you are dealing with MDX, you will likely go {\itshape through} hast. You can enable passing MDX JSX through to hast by configuring \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}} with `pass\+Through\+: \mbox{[}\textquotesingle{}mdx\+Jsx\+Flow\+Element', \textquotesingle{}mdx\+Jsx\+Text\+Element\textquotesingle{}\mbox{]}\`{}.\hypertarget{readme.md_autotoc_md22621}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md22621}
+See \href{https://github.com/micromark/micromark-extension-mdx-jsx\#syntax}{\texttt{ Syntax in {\ttfamily micromark-\/extension-\/mdx-\/jsx}}}.\hypertarget{readme.md_autotoc_md22622}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md22622}
+The following interfaces are added to {\bfseries{\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}}} by this utility.\hypertarget{readme.md_autotoc_md22623}{}\doxysubsubsection{\texorpdfstring{Nodes}{Nodes}}\label{readme.md_autotoc_md22623}
+\hypertarget{readme.md_autotoc_md22624}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Flow\+Element}}{{\ttfamily Mdx\+Jsx\+Flow\+Element}}}\label{readme.md_autotoc_md22624}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }MdxJsxFlowElement\ <:\ Parent\ \{}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}:\ \textcolor{stringliteral}{'mdxJsxFlowElement'}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{MdxJsxFlowElement\ includes\ MdxJsxElement}
+
+\end{DoxyCode}
+
+
+{\bfseries{Mdx\+Jsx\+Flow\+Element}} ({\bfseries{\href{https://github.com/syntax-tree/mdast\#parent}{\texttt{ Parent}}}}) represents JSX in flow (block). It can be used where {\bfseries{flow}} content is expected. It includes the mixin {\bfseries{Mdx\+Jsx\+Element}}.
+
+For example, the following markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<w\ x="{}y"{}>}
+\DoxyCodeLine{\ \ z}
+\DoxyCodeLine{</w>}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxFlowElement',}
+\DoxyCodeLine{\ \ name:\ 'w',}
+\DoxyCodeLine{\ \ attributes:\ [\{type:\ 'mdxJsxAttribute',\ name:\ 'x',\ value:\ 'y'\}],}
+\DoxyCodeLine{\ \ children:\ [\{type:\ 'paragraph',\ children:\ [\{type:\ 'text',\ value:\ 'z'\}]\}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22625}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Text\+Element}}{{\ttfamily Mdx\+Jsx\+Text\+Element}}}\label{readme.md_autotoc_md22625}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }MdxJsxTextElement\ <:\ Parent\ \{}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}:\ \textcolor{stringliteral}{'mdxJsxTextElement'}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{MdxJsxTextElement\ includes\ MdxJsxElement}
+
+\end{DoxyCode}
+
+
+{\bfseries{Mdx\+Jsx\+Text\+Element}} ({\bfseries{\href{https://github.com/syntax-tree/mdast\#parent}{\texttt{ Parent}}}}) represents JSX in text (span, inline). It can be used where {\bfseries{phrasing}} content is expected. It includes the mixin {\bfseries{Mdx\+Jsx\+Element}}.
+
+For example, the following markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{a\ <b\ c>d</b>\ e.}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'mdxJsxTextElement',}
+\DoxyCodeLine{\ \ name:\ 'b',}
+\DoxyCodeLine{\ \ attributes:\ [\{type:\ 'mdxJsxAttribute',\ name:\ 'c',\ value:\ null\}],}
+\DoxyCodeLine{\ \ children:\ [\{type:\ 'text',\ value:\ 'd'\}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22626}{}\doxysubsubsection{\texorpdfstring{Mixin}{Mixin}}\label{readme.md_autotoc_md22626}
+\hypertarget{readme.md_autotoc_md22627}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Mdx\+Jsx\+Element}}{{\ttfamily Mdx\+Jsx\+Element}}}\label{readme.md_autotoc_md22627}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }mixin\ MdxJsxElement\ \{}
+\DoxyCodeLine{\ \ name:\ \textcolor{keywordtype}{string}?}
+\DoxyCodeLine{\ \ attributes:\ [MdxJsxExpressionAttribute\ |\ MdxJsxAttribute]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }MdxJsxExpressionAttribute\ <:\ Literal\ \{}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}:\ \textcolor{stringliteral}{'mdxJsxExpressionAttribute'}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }MdxJsxAttribute\ <:\ Node\ \{}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}:\ \textcolor{stringliteral}{'mdxJsxAttribute'}}
+\DoxyCodeLine{\ \ name:\ \textcolor{keywordtype}{string}}
+\DoxyCodeLine{\ \ value:\ MdxJsxAttributeValueExpression\ |\ \textcolor{keywordtype}{string}?}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }MdxJsxAttributeValueExpression\ <:\ Literal\ \{}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}:\ \textcolor{stringliteral}{'mdxJsxAttributeValueExpression'}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Mdx\+Jsx\+Element}} represents a JSX element.
+
+The {\ttfamily name} field can be present and represents an identifier. Without {\ttfamily name}, the element represents a fragment, in which case no attributes must be present.
+
+The {\ttfamily attributes} field represents information associated with the node. The value of the {\ttfamily attributes} field is a list of {\bfseries{Mdx\+Jsx\+Expression\+Attribute}} and {\bfseries{Mdx\+Jsx\+Attribute}} nodes.
+
+{\bfseries{Mdx\+Jsx\+Expression\+Attribute}} represents an expression (typically in a programming language) that when evaluated results in multiple attributes.
+
+{\bfseries{Mdx\+Jsx\+Attribute}} represents a single attribute. The {\ttfamily name} field must be present. The {\ttfamily value} field can be present, in which case it is either a string (a static value) or an expression (typically in a programming language) that when evaluated results in an attribute value.\hypertarget{readme.md_autotoc_md22628}{}\doxysubsubsection{\texorpdfstring{Content model}{Content model}}\label{readme.md_autotoc_md22628}
+\hypertarget{readme.md_autotoc_md22629}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Flow\+Content} (MDX JSX)}{{\ttfamily Flow\+Content} (MDX JSX)}}\label{readme.md_autotoc_md22629}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}\ MdxJsxFlowContent\ =\ MdxJsxFlowElement\ |\ FlowContent}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22630}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Phrasing\+Content} (MDX JSX)}{{\ttfamily Phrasing\+Content} (MDX JSX)}}\label{readme.md_autotoc_md22630}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{namespacescreenshot__utils_abcb4507a099984f52aec6adcfef39440}{type}}\ MdxJsxPhrasingContent\ =\ MdxJsxTextElement\ |\ PhrasingContent}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22631}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md22631}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Mdx\+Jsx\+Attribute\`{}, \`{}\+Mdx\+Jsx\+Attribute\+Value\+Expression\`{}, \`{}\+Mdx\+Jsx\+Expression\+Attribute\`{}, \`{}\+Mdx\+Jsx\+Flow\+Element\`{}, \`{}\+Mdx\+Jsx\+Flow\+Element\+Hast\`{}, \`{}\+Mdx\+Jsx\+Text\+Element\`{}, \`{}\+Mdx\+Jsx\+Text\+Element\+Hast\`{}, and \`{}\+To\+Markdown\+Options\`{}.
+
+It also registers the node types with {\ttfamily @types/mdast} and {\ttfamily @types/hast}. If you’re working with the syntax tree, make sure to import this utility somewhere in your types, as that registers the new node types in the tree.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ @import\ \{\}\ from\ 'mdast-\/util-\/mdx-\/jsx'}
+\DoxyCodeLine{\ *\ @import\ \{Root\}\ from\ 'mdast'}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{visit\}\ from\ 'unist-\/util-\/visit'}
+\DoxyCodeLine{}
+\DoxyCodeLine{/**\ @type\ \{Root\}\ */}
+\DoxyCodeLine{const\ tree\ =\ getMdastNodeSomeHow()}
+\DoxyCodeLine{}
+\DoxyCodeLine{visit(tree,\ function\ (node)\ \{}
+\DoxyCodeLine{\ \ //\ \`{}node`\ can\ now\ be\ one\ of\ the\ JSX\ nodes.}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22632}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md22632}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily mdast-\/util-\/mdx-\/jsx@3}, compatible with Node.\+js 16.
+
+This utility works with {\ttfamily mdast-\/util-\/from-\/markdown} version 2+ and {\ttfamily mdast-\/util-\/to-\/markdown} version 2+.\hypertarget{readme.md_autotoc_md22633}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md22633}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/micromark/micromark-extension-mdx-jsx}{\texttt{ {\ttfamily micromark/micromark-\/extension-\/mdx-\/jsx}}} — support MDX JSX in micromark
+\item \href{https://github.com/syntax-tree/mdast-util-mdx}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdx}}} — support MDX in mdast
+\item \href{https://mdxjs.com/packages/remark-mdx/}{\texttt{ {\ttfamily remarkjs/remark-\/mdx}}} — support MDX in remark
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22634}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md22634}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md22635}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md22635}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

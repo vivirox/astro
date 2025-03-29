@@ -1,0 +1,162 @@
+\doxysection{node\+\_\+modules/astro/node\+\_\+modules/clsx Directory Reference}
+\hypertarget{dir_d3904c43cc5b5dd3637bf9eea645aa14}{}\label{dir_d3904c43cc5b5dd3637bf9eea645aa14}\index{node\_modules/astro/node\_modules/clsx Directory Reference@{node\_modules/astro/node\_modules/clsx Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+A tiny (239B) utility for constructing {\ttfamily class\+Name} strings conditionally.~\newline
+Also serves as a \mbox{[}faster\mbox{]}(bench) \& smaller drop-\/in replacement for the {\ttfamily classnames} module. \end{quote}
+
+
+This module is available in three formats\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{ES Module}}\+: {\ttfamily dist/clsx.\+mjs}
+\item {\bfseries{Common\+JS}}\+: {\ttfamily dist/clsx.\+js}
+\item {\bfseries{UMD}}\+: {\ttfamily dist/clsx.\+min.\+js}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md8344}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md8344}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ clsx}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8345}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md8345}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ clsx\ from\ 'clsx';}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{import\ \{\ clsx\ \}\ from\ 'clsx';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Strings\ (variadic)}
+\DoxyCodeLine{clsx('foo',\ true\ \&\&\ 'bar',\ 'baz');}
+\DoxyCodeLine{//=>\ 'foo\ bar\ baz'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Objects}
+\DoxyCodeLine{clsx(\{\ foo:true,\ bar:false,\ baz:isTrue()\ \});}
+\DoxyCodeLine{//=>\ 'foo\ baz'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Objects\ (variadic)}
+\DoxyCodeLine{clsx(\{\ foo:true\ \},\ \{\ bar:false\ \},\ null,\ \{\ '-\/-\/foobar':'hello'\ \});}
+\DoxyCodeLine{//=>\ 'foo\ -\/-\/foobar'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Arrays}
+\DoxyCodeLine{clsx(['foo',\ 0,\ false,\ 'bar']);}
+\DoxyCodeLine{//=>\ 'foo\ bar'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Arrays\ (variadic)}
+\DoxyCodeLine{clsx(['foo'],\ ['',\ 0,\ false,\ 'bar'],\ [['baz',\ [['hello'],\ 'there']]]);}
+\DoxyCodeLine{//=>\ 'foo\ bar\ baz\ hello\ there'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Kitchen\ sink\ (with\ nesting)}
+\DoxyCodeLine{clsx('foo',\ [1\ \&\&\ 'bar',\ \{\ baz:false,\ bat:null\ \},\ ['hello',\ ['world']]],\ 'cya');}
+\DoxyCodeLine{//=>\ 'foo\ bar\ hello\ world\ cya'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8346}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md8346}
+\hypertarget{readme.md_autotoc_md8347}{}\doxysubsubsection{\texorpdfstring{clsx(...\+input)}{clsx(...\+input)}}\label{readme.md_autotoc_md8347}
+Returns\+: {\ttfamily String}\hypertarget{readme.md_autotoc_md8348}{}\doxysubsubsubsection{\texorpdfstring{input}{input}}\label{readme.md_autotoc_md8348}
+Type\+: {\ttfamily Mixed}
+
+The {\ttfamily clsx} function can take {\itshape {\bfseries{any}}} number of arguments, each of which can be an Object, Array, Boolean, or String.
+
+\begin{quote}
+{\bfseries{Important\+:}} {\itshape Any} falsey values are discarded!~\newline
+Standalone Boolean values are discarded as well. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{clsx(true,\ false,\ '',\ null,\ undefined,\ 0,\ NaN);}
+\DoxyCodeLine{//=>\ ''}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8349}{}\doxysubsection{\texorpdfstring{Modes}{Modes}}\label{readme.md_autotoc_md8349}
+There are multiple "{}versions"{} of {\ttfamily clsx} available, which allows you to bring only the functionality you need!\hypertarget{readme.md_autotoc_md8350}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily clsx}}{{\ttfamily clsx}}}\label{readme.md_autotoc_md8350}
+\begin{quote}
+{\bfseries{Size (gzip)\+:}} 239 bytes~\newline
+ {\bfseries{Availability\+:}} Common\+JS, ES Module, UMD \end{quote}
+
+
+The default {\ttfamily clsx} module; see API for info.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ clsx\ \}\ from\ 'clsx';}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{import\ clsx\ from\ 'clsx';}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8351}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily clsx/lite}}{{\ttfamily clsx/lite}}}\label{readme.md_autotoc_md8351}
+\begin{quote}
+{\bfseries{Size (gzip)\+:}} 140 bytes~\newline
+ {\bfseries{Availability\+:}} Common\+JS, ES Module~\newline
+ {\bfseries{CAUTION\+:}} Accepts {\bfseries{ONLY}} string arguments! \end{quote}
+
+
+Ideal for applications that {\itshape {\bfseries{only}}} use the string-\/builder pattern.
+
+Any non-\/string arguments are ignored!
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ clsx\ \}\ from\ 'clsx/lite';}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{import\ clsx\ from\ 'clsx/lite';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ string}
+\DoxyCodeLine{clsx('hello',\ true\ \&\&\ 'foo',\ false\ \&\&\ 'bar');}
+\DoxyCodeLine{//\ =>\ "{}hello\ foo"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ NOTE:\ Any\ non-\/string\ input(s)\ ignored}
+\DoxyCodeLine{clsx(\{\ foo:\ true\ \});}
+\DoxyCodeLine{//=>\ "{}"{}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8352}{}\doxysubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{readme.md_autotoc_md8352}
+For snapshots of cross-\/browser results, check out the \mbox{[}{\ttfamily bench}\mbox{]}(bench) directory\texorpdfstring{$\sim$}{\string~}!\hypertarget{readme.md_autotoc_md8353}{}\doxysubsection{\texorpdfstring{Support}{Support}}\label{readme.md_autotoc_md8353}
+All versions of Node.\+js are supported.
+
+All browsers that support \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray\#Browser_compatibility}{\texttt{ {\ttfamily Array.\+is\+Array}}} are supported (IE9+).
+
+\texorpdfstring{$>$}{>}{\bfseries{Note\+:}} For IE8 support and older, please install {\ttfamily clsx@1.\+0.\+x} and beware of \href{https://github.com/lukeed/clsx/issues/17}{\texttt{ \#17}}.\hypertarget{readme.md_autotoc_md8354}{}\doxysubsection{\texorpdfstring{Tailwind Support}{Tailwind Support}}\label{readme.md_autotoc_md8354}
+Here some additional (optional) steps to enable classes autocompletion using {\ttfamily clsx} with Tailwind CSS.
+
+
+
+{\bfseries{}}\begin{adjustwidth}{1em}{0em}
+Visual Studio Code 
+
+
+
+
+\begin{DoxyEnumerate}
+\item \href{https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss}{\texttt{ Install the "{}\+Tailwind CSS Intelli\+Sense"{} Visual Studio Code extension}}
+\item Add the following to your \href{https://code.visualstudio.com/docs/getstarted/settings}{\texttt{ {\ttfamily settings.\+json}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ "{}tailwindCSS.experimental.classRegex"{}:\ [}
+\DoxyCodeLine{\ \ \ ["{}clsx\(\backslash\)\(\backslash\)(([\string^)]*)\(\backslash\)\(\backslash\))"{},\ "{}(?:'|\(\backslash\)"{}|`)([\string^']*)(?:'|\(\backslash\)"{}|`)"{}]}
+\DoxyCodeLine{\ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 
+\end{DoxyEnumerate}\end{adjustwidth}
+
+
+You may find the \`{}clsx/lite\`{} module useful within Tailwind contexts. This is especially true if/when your application {\bfseries{only}} composes classes in this pattern\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{clsx('text-\/base',\ props.active\ \&\&\ 'text-\/primary',\ props.className);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md8355}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md8355}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/lukeed/obj-str}{\texttt{ obj-\/str}} -\/ A smaller (96B) and similiar utility that only works with Objects.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md8356}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md8356}
+MIT © \href{https://lukeed.com}{\texttt{ Luke Edwards}} 

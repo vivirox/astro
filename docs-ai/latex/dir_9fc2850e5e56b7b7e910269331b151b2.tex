@@ -1,0 +1,126 @@
+\doxysection{node\+\_\+modules/fast-\/json-\/stable-\/stringify Directory Reference}
+\hypertarget{dir_9fc2850e5e56b7b7e910269331b151b2}{}\label{dir_9fc2850e5e56b7b7e910269331b151b2}\index{node\_modules/fast-\/json-\/stable-\/stringify Directory Reference@{node\_modules/fast-\/json-\/stable-\/stringify Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Deterministic {\ttfamily JSON.\+stringify()} -\/ a faster version of \href{https://github.com/substack}{\texttt{ @substack}}\textquotesingle{}s json-\/stable-\/strigify without \href{https://github.com/substack/jsonify}{\texttt{ jsonify}}.
+
+You can also pass in a custom comparison function.
+
+\href{https://travis-ci.org/epoberezkin/fast-json-stable-stringify}{\texttt{ }} \href{https://coveralls.io/github/epoberezkin/fast-json-stable-stringify?branch=master}{\texttt{ }}\hypertarget{README.md_autotoc_md15182}{}\doxysubsection{\texorpdfstring{example}{example}}\label{README.md_autotoc_md15182}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ stringify\ =\ require('fast-\/json-\/stable-\/stringify');}
+\DoxyCodeLine{var\ obj\ =\ \{\ c:\ 8,\ b:\ [\{z:6,y:5,x:4\},7],\ a:\ 3\ \};}
+\DoxyCodeLine{console.log(stringify(obj));}
+
+\end{DoxyCode}
+
+
+output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{"{}a"{}:3,"{}b"{}:[\{"{}x"{}:4,"{}y"{}:5,"{}z"{}:6\},7],"{}c"{}:8\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15183}{}\doxysubsection{\texorpdfstring{methods}{methods}}\label{README.md_autotoc_md15183}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ stringify\ =\ require('fast-\/json-\/stable-\/stringify')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15184}{}\doxysubsubsection{\texorpdfstring{var str = stringify(obj, opts)}{var str = stringify(obj, opts)}}\label{README.md_autotoc_md15184}
+Return a deterministic stringified string {\ttfamily str} from the object {\ttfamily obj}.\hypertarget{README.md_autotoc_md15185}{}\doxysubsubsection{\texorpdfstring{options}{options}}\label{README.md_autotoc_md15185}
+\hypertarget{README.md_autotoc_md15186}{}\doxysubsubsubsection{\texorpdfstring{cmp}{cmp}}\label{README.md_autotoc_md15186}
+If {\ttfamily opts} is given, you can supply an {\ttfamily opts.\+cmp} to have a custom comparison function for object keys. Your function {\ttfamily opts.\+cmp} is called with these parameters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{opts.cmp(\{\ key:\ akey,\ value:\ avalue\ \},\ \{\ key:\ bkey,\ value:\ bvalue\ \})}
+
+\end{DoxyCode}
+
+
+For example, to sort on the object key names in reverse order you could write\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ stringify\ =\ require('fast-\/json-\/stable-\/stringify');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\ c:\ 8,\ b:\ [\{z:6,y:5,x:4\},7],\ a:\ 3\ \};}
+\DoxyCodeLine{var\ s\ =\ stringify(obj,\ function\ (a,\ b)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ a.key\ <\ b.key\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{console.log(s);}
+
+\end{DoxyCode}
+
+
+which results in the output string\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{"{}c"{}:8,"{}b"{}:[\{"{}z"{}:6,"{}y"{}:5,"{}x"{}:4\},7],"{}a"{}:3\}}
+
+\end{DoxyCode}
+
+
+Or if you wanted to sort on the object values in reverse order, you could write\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ stringify\ =\ require('fast-\/json-\/stable-\/stringify');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\ d:\ 6,\ c:\ 5,\ b:\ [\{z:3,y:2,x:1\},9],\ a:\ 10\ \};}
+\DoxyCodeLine{var\ s\ =\ stringify(obj,\ function\ (a,\ b)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ a.value\ <\ b.value\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{console.log(s);}
+
+\end{DoxyCode}
+
+
+which outputs\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{"{}d"{}:6,"{}c"{}:5,"{}b"{}:[\{"{}z"{}:3,"{}y"{}:2,"{}x"{}:1\},9],"{}a"{}:10\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15187}{}\doxysubsubsubsection{\texorpdfstring{cycles}{cycles}}\label{README.md_autotoc_md15187}
+Pass {\ttfamily true} in {\ttfamily opts.\+cycles} to stringify circular property as {\ttfamily \+\_\+\+\_\+cycle\+\_\+\+\_\+} -\/ the result will not be a valid JSON string in this case.
+
+Type\+Error will be thrown in case of circular object without this option.\hypertarget{README.md_autotoc_md15188}{}\doxysubsection{\texorpdfstring{install}{install}}\label{README.md_autotoc_md15188}
+With \href{https://npmjs.org}{\texttt{ npm}} do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ fast-\/json-\/stable-\/stringify}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15189}{}\doxysubsection{\texorpdfstring{benchmark}{benchmark}}\label{README.md_autotoc_md15189}
+To run benchmark (requires Node.\+js 6+)\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ benchmark}
+
+\end{DoxyCode}
+
+
+Results\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fast-\/json-\/stable-\/stringify\ x\ 17,189\ ops/sec\ ±1.43\%\ (83\ runs\ sampled)}
+\DoxyCodeLine{json-\/stable-\/stringify\ x\ 13,634\ ops/sec\ ±1.39\%\ (85\ runs\ sampled)}
+\DoxyCodeLine{fast-\/stable-\/stringify\ x\ 20,212\ ops/sec\ ±1.20\%\ (84\ runs\ sampled)}
+\DoxyCodeLine{faster-\/stable-\/stringify\ x\ 15,549\ ops/sec\ ±1.12\%\ (84\ runs\ sampled)}
+\DoxyCodeLine{The\ fastest\ is\ fast-\/stable-\/stringify}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15190}{}\doxysubsubsection{\texorpdfstring{Enterprise support}{Enterprise support}}\label{README.md_autotoc_md15190}
+fast-\/json-\/stable-\/stringify package is a part of \href{https://tidelift.com/subscription/pkg/npm-fast-json-stable-stringify?utm_source=npm-fast-json-stable-stringify&utm_medium=referral&utm_campaign=enterprise&utm_term=repo}{\texttt{ Tidelift enterprise subscription}} -\/ it provides a centralised commercial support to open-\/source software users, in addition to the support provided by software maintainers.\hypertarget{README.md_autotoc_md15191}{}\doxysubsubsection{\texorpdfstring{Security contact}{Security contact}}\label{README.md_autotoc_md15191}
+To report a security vulnerability, please use the \href{https://tidelift.com/security}{\texttt{ Tidelift security contact}}. Tidelift will coordinate the fix and disclosure. Please do NOT report security vulnerability via Git\+Hub issues.\hypertarget{README.md_autotoc_md15192}{}\doxysubsection{\texorpdfstring{license}{license}}\label{README.md_autotoc_md15192}
+\href{https://github.com/epoberezkin/fast-json-stable-stringify/blob/master/LICENSE}{\texttt{ MIT}} 

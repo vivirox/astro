@@ -1,0 +1,45 @@
+\doxysection{node\+\_\+modules/istanbul-\/lib-\/report Directory Reference}
+\hypertarget{dir_011778052d489f2528b308da75e607cf}{}\label{dir_011778052d489f2528b308da75e607cf}\index{node\_modules/istanbul-\/lib-\/report Directory Reference@{node\_modules/istanbul-\/lib-\/report Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://greenkeeper.io/}{\texttt{ }} \href{https://travis-ci.org/istanbuljs/istanbul-lib-report}{\texttt{ }}
+
+Core reporting utilities for istanbul.\hypertarget{README.md_autotoc_md19155}{}\doxysubsection{\texorpdfstring{Example usage}{Example usage}}\label{README.md_autotoc_md19155}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ libReport\ =\ require('istanbul-\/lib-\/report');}
+\DoxyCodeLine{const\ reports\ =\ require('istanbul-\/reports');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ coverageMap,\ for\ instance,\ obtained\ from\ istanbul-\/lib-\/coverage}
+\DoxyCodeLine{const\ coverageMap;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ configWatermarks\ =\ \{}
+\DoxyCodeLine{\ \ statements:\ [50,\ 80],}
+\DoxyCodeLine{\ \ functions:\ [50,\ 80],}
+\DoxyCodeLine{\ \ branches:\ [50,\ 80],}
+\DoxyCodeLine{\ \ lines:\ [50,\ 80]}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ a\ context\ for\ report\ generation}
+\DoxyCodeLine{const\ context\ =\ libReport.createContext(\{}
+\DoxyCodeLine{\ \ dir:\ 'report/output/dir',}
+\DoxyCodeLine{\ \ //\ The\ summarizer\ to\ default\ to\ (may\ be\ overridden\ by\ some\ reports)}
+\DoxyCodeLine{\ \ //\ values\ can\ be\ nested/flat/pkg.\ Defaults\ to\ 'pkg'}
+\DoxyCodeLine{\ \ defaultSummarizer:\ 'nested',}
+\DoxyCodeLine{\ \ watermarks:\ configWatermarks,}
+\DoxyCodeLine{\ \ coverageMap,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ an\ instance\ of\ the\ relevant\ report\ class,\ passing\ the}
+\DoxyCodeLine{//\ report\ name\ e.g.\ json/html/html-\/spa/text}
+\DoxyCodeLine{const\ report\ =\ reports.create('json',\ \{}
+\DoxyCodeLine{\ \ skipEmpty:\ configSkipEmpty,}
+\DoxyCodeLine{\ \ skipFull:\ configSkipFull}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ call\ execute\ to\ synchronously\ create\ and\ write\ the\ report\ to\ disk}
+\DoxyCodeLine{report.execute(context)}
+
+\end{DoxyCode}
+ 

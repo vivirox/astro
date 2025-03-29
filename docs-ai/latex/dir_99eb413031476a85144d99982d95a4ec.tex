@@ -1,0 +1,35 @@
+\doxysection{node\+\_\+modules/@csstools/css-\/color-\/parser Directory Reference}
+\hypertarget{dir_99eb413031476a85144d99982d95a4ec}{}\label{dir_99eb413031476a85144d99982d95a4ec}\index{node\_modules/"@csstools/css-\/color-\/parser Directory Reference@{node\_modules/"@csstools/css-\/color-\/parser Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/@csstools/css-color-parser}{\texttt{ }} \href{https://github.com/csstools/postcss-plugins/actions/workflows/test.yml?query=workflow/test}{\texttt{ }} \href{https://discord.gg/bUadyRwkJS}{\texttt{ }}\hypertarget{README.md_autotoc_md2903}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md2903}
+Add \href{https://github.com/csstools/postcss-plugins/tree/main/packages/css-color-parser}{\texttt{ CSS Color Parser}} to your project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @csstools/css-\/color-\/parser\ @csstools/css-\/parser-\/algorithms\ @csstools/css-\/tokenizer\ -\/-\/save-\/dev}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ color\ \}\ from\ '@csstools/css-\/color-\/parser';}
+\DoxyCodeLine{import\ \{\ isFunctionNode,\ parseComponentValue\ \}\ from\ '@csstools/css-\/parser-\/algorithms';}
+\DoxyCodeLine{import\ \{\ serializeRGB\ \}\ from\ '@csstools/css-\/color-\/parser';}
+\DoxyCodeLine{import\ \{\ tokenize\ \}\ from\ '@csstools/css-\/tokenizer';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ color()\ expects\ a\ parsed\ component\ value.}
+\DoxyCodeLine{const\ hwbComponentValue\ =\ parseComponentValue(tokenize(\{\ css:\ 'hwb(10deg\ 10\%\ 20\%)'\ \}));}
+\DoxyCodeLine{const\ colorData\ =\ color(hwbComponentValue);}
+\DoxyCodeLine{if\ (colorData)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(colorData);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ serializeRGB()\ returns\ a\ component\ value.}
+\DoxyCodeLine{\ \ \ \ const\ rgbComponentValue\ =\ serializeRGB(colorData);}
+\DoxyCodeLine{\ \ \ \ console.log(rgbComponentValue.toString());}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 

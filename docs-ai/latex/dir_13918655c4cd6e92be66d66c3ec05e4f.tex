@@ -1,0 +1,258 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/math Directory Reference}
+\hypertarget{dir_13918655c4cd6e92be66d66c3ec05e4f}{}\label{dir_13918655c4cd6e92be66d66c3ec05e4f}\index{node\_modules/micromark-\/extension-\/math Directory Reference@{node\_modules/micromark-\/extension-\/math Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-math/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-math}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-math}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-math}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extensions to support math ({\ttfamily \$C\+\_\+L\$}).\hypertarget{readme.md_autotoc_md23328}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23328}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}math(options?)\`{}
+\item \`{}math\+Html(options?)\`{}
+\item \`{}\+Html\+Options\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item Authoring
+\item HTML
+\item CSS
+\item Syntax
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23329}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23329}
+This package contains two extensions that add support for math syntax in markdown to \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}.
+
+As there is no spec for math in markdown, this extension follows how code (fenced and text) works in Commonmark, but uses dollars.\hypertarget{readme.md_autotoc_md23330}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23330}
+This project is useful when you want to support math in markdown. Extending markdown with a syntax extension makes the markdown less portable. La\+TeX equations are also quite hard. But this mechanism works well when you want authors, that have some La\+TeX experience, to be able to embed rich diagrams of math in scientific text.
+
+You can use these extensions when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}} already.
+
+When you need a syntax tree, you can combine this package with \href{https://github.com/syntax-tree/mdast-util-math}{\texttt{ {\ttfamily mdast-\/util-\/math}}}.
+
+All these packages are used \href{https://github.com/remarkjs/remark-math}{\texttt{ {\ttfamily remark-\/math}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md23331}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23331}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+\href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/math}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{math,\ mathHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/math@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{math,\ mathHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/math@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23332}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23332}
+Say our document {\ttfamily example.\+md} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Lift(\$L\$)\ can\ be\ determined\ by\ Lift\ Coefficient\ (\$C\_L\$)\ like\ the\ following\ equation.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\$\$}
+\DoxyCodeLine{L\ =\ \(\backslash\)frac\{1\}\{2\}\ \(\backslash\)rho\ v\string^2\ S\ C\_L}
+\DoxyCodeLine{\$\$}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{math,\ mathHtml\}\ from\ 'micromark-\/extension-\/math'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ micromark(await\ fs.readFile('example.md'),\ \{}
+\DoxyCodeLine{\ \ extensions:\ [math()],}
+\DoxyCodeLine{\ \ htmlExtensions:\ [mathHtml()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields (abbreviated)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>Lift(<span\ class="{}math\ math-\/inline"{}><span\ class="{}katex"{}>…</span></span>)\ can\ be\ determined\ by\ Lift\ Coefficient\ (<span\ class="{}math\ math-\/inline"{}><span\ class="{}katex"{}>…</span></span>)\ like\ the\ following\ equation.</p>}
+\DoxyCodeLine{<div\ class="{}math\ math-\/display"{}><span\ class="{}katex-\/display"{}><span\ class="{}katex"{}>…</span></span></div>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23333}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23333}
+This package exports the identifiers \`{}math\`{} and \`{}math\+Html\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development module.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md23334}{}\doxysubsubsection{\texorpdfstring{{\ttfamily math(options?)}}{{\ttfamily math(options?)}}}\label{readme.md_autotoc_md23334}
+Create an extension for {\ttfamily micromark} to enable math syntax.\hypertarget{readme.md_autotoc_md23335}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23335}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, default\+: {\ttfamily \{\}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23336}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23336}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions}, to enable math syntax (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23337}{}\doxysubsubsection{\texorpdfstring{{\ttfamily math\+Html(options?)}}{{\ttfamily math\+Html(options?)}}}\label{readme.md_autotoc_md23337}
+Create an extension for {\ttfamily micromark} to support math when serializing to HTML.
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: this uses Ka\+TeX to render math. \end{quote}
+\hypertarget{readme.md_autotoc_md23338}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23338}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\`{}\+Html\+Options\`{}, default\+: {\ttfamily \{\}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23339}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23339}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily html\+Extensions}, to support math when serializing to HTML (\href{https://github.com/micromark/micromark\#htmlextension}{\texttt{ {\ttfamily Html\+Extension}}}).\hypertarget{readme.md_autotoc_md23340}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Html\+Options}}{{\ttfamily Html\+Options}}}\label{readme.md_autotoc_md23340}
+Configuration for HTML output (optional).
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: passed to \href{https://katex.org/docs/options.html}{\texttt{ {\ttfamily katex.\+render\+To\+String}}}. {\ttfamily display\+Mode} is overwritten by this plugin, to {\ttfamily false} for math in text (inline), and {\ttfamily true} for math in flow (block). \end{quote}
+\hypertarget{readme.md_autotoc_md23341}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md23341}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Options\ =\ Omit<import('katex').KatexOptions,\ 'displayMode'>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23342}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md23342}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md23343}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md23343}
+
+\begin{DoxyItemize}
+\item {\ttfamily single\+Dollar\+Text\+Math} ({\ttfamily boolean}, default\+: {\ttfamily true}) — whether to support math (text, inline) with a single dollar. Single dollars work in Pandoc and many other places, but often interfere with “normal” dollars in text. If you turn this off, you use two or more dollars for text math.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23344}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23344}
+When authoring markdown with math, keep in mind that math doesn’t work in most places. Notably, Git\+Hub currently has a really weird crappy client-\/side regex-\/based thing. But on your own (math-\/heavy?) site it can be great! You can use code (fenced) with an info string of {\ttfamily math} to improve this, as that works in many places.\hypertarget{readme.md_autotoc_md23345}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md23345}
+Math (flow) does not relate to HTML elements. {\ttfamily Math\+ML}, which is sort of like SVG but for math, exists but it doesn’t work well and isn’t widely supported. Instead, this uses \href{https://katex.org}{\texttt{ Ka\+TeX}}, which generates Math\+ML as a fallback but also generates a bunch of divs and spans so math look pretty. The Ka\+TeX result is wrapped in {\ttfamily \texorpdfstring{$<$}{<}div\texorpdfstring{$>$}{>}} (for flow, block) and {\ttfamily \texorpdfstring{$<$}{<}span\texorpdfstring{$>$}{>}} (for text, inline) elements, with two classes\+: {\ttfamily math} and either {\ttfamily math-\/display} or {\ttfamily math-\/inline}.
+
+When turning markdown into HTML, each line ending in math (text) is turned into a space.\hypertarget{readme.md_autotoc_md23346}{}\doxysubsection{\texorpdfstring{CSS}{CSS}}\label{readme.md_autotoc_md23346}
+The HTML produced by Ka\+TeX requires CSS to render correctly. You should use {\ttfamily katex.\+css} somewhere on the page where the math is shown to style it properly. At the time of writing, the last version is\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<link\ rel="{}stylesheet"{}\ href="{}https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"{}>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23347}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md23347}
+Math forms with the following BNF\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{;\ Restriction:\ the\ number\ of\ markers\ in\ the\ closing\ sequence\ must\ be\ equal}
+\DoxyCodeLine{;\ to\ the\ number\ of\ markers\ in\ the\ opening\ sequence.}
+\DoxyCodeLine{math\_text\ ::=\ sequence\_text\ 1*byte\ sequence\_text}
+\DoxyCodeLine{math\_flow\ ::=\ fence\_open\ *(\ eol\ *line\ )\ [\ eol\ fence\_close\ ]}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Restriction:\ not\ preceded\ or\ followed\ by\ the\ marker.}
+\DoxyCodeLine{sequence\_text\ ::=\ 1*'\$'}
+\DoxyCodeLine{}
+\DoxyCodeLine{fence\_open\ ::=\ sequence\_flow\ meta}
+\DoxyCodeLine{;\ Restriction:\ the\ number\ of\ markers\ in\ the\ closing\ fence\ sequence\ must\ be}
+\DoxyCodeLine{;\ equal\ to\ or\ greater\ than\ the\ number\ of\ markers\ in\ the\ opening\ fence}
+\DoxyCodeLine{;\ sequence.}
+\DoxyCodeLine{fence\_close\ ::=\ sequence\_flow\ *space\_or\_tab}
+\DoxyCodeLine{sequence\_flow\ ::=\ 2*'\$'}
+\DoxyCodeLine{;\ Restriction:\ the\ marker\ cannot\ occur\ in\ \`{}meta`}
+\DoxyCodeLine{meta\ ::=\ 1*line}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Character\ groups\ for\ informational\ purposes.}
+\DoxyCodeLine{byte\ ::=\ 0x00..=0xFFFF}
+\DoxyCodeLine{eol\ ::=\ '\(\backslash\)n'\ |\ '\(\backslash\)r'\ |\ '\(\backslash\)r\(\backslash\)n'}
+\DoxyCodeLine{line\ ::=\ byte\ -\/\ eol}
+
+\end{DoxyCode}
+
+
+The above grammar shows that it is not possible to create empty math (text). It is possible to include the sequence marker (dollar) in math (text), by wrapping it in bigger or smaller sequences\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Include\ more:\ \$a\$\$b\$\ or\ include\ less:\ \$\$a\$b\$\$.}
+
+\end{DoxyCode}
+
+
+It is also possible to include just one marker\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Include\ just\ one:\ \$\$\ \$\ \$\$.}
+
+\end{DoxyCode}
+
+
+Sequences are “gready”, in that they cannot be preceded or followed by more markers. To illustrate\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Not\ math:\ \$\$x\$.}
+\DoxyCodeLine{}
+\DoxyCodeLine{Not\ math:\ \$x\$\$.}
+\DoxyCodeLine{}
+\DoxyCodeLine{Escapes\ work,\ this\ is\ math:\ \(\backslash\)\$\$x\$.}
+\DoxyCodeLine{}
+\DoxyCodeLine{Escapes\ work,\ this\ is\ math:\ \$x\$\(\backslash\)\$.}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>Not\ math:\ \$\$x\$.</p>}
+\DoxyCodeLine{<p>Not\ math:\ \$x\$\$.</p>}
+\DoxyCodeLine{<p>Escapes\ work,\ this\ is\ math:\ \$<span>…</span>.</p>}
+\DoxyCodeLine{<p>Escapes\ work,\ this\ is\ math:\ <span>…</span>\$.</p>}
+
+\end{DoxyCode}
+
+
+That is because, when turning markdown into HTML, the first and last space, if both exist and there is also a non-\/space in the math, are removed. Line endings, at that stage, are considered as spaces.
+
+As the math (flow) construct occurs in flow, like all flow constructs, it must be followed by an eol (line ending) or eof (end of file).
+
+The above grammar does not show how indentation of each line is handled. To parse math (flow), let {\ttfamily x} be the number of {\ttfamily space\+\_\+or\+\_\+tab} characters before the opening fence sequence, after interpreting tabs based on how many virtual spaces they represent. Each line of text is then allowed (not required) to be indented with up to {\ttfamily x} spaces or tabs, which are then ignored as an indent instead of being considered as part of the content. This indent does not affect the closing fence. It can be indented up to a separate 3 real or virtual spaces. A bigger indent makes it part of the content instead of a fence.
+
+The {\ttfamily meta} part is interpreted as the \href{https://github.com/micromark/micromark\#content-types}{\texttt{ string}} content type. That means that character escapes and character references are allowed.
+
+The optional {\ttfamily meta} part is ignored\+: it is not used when parsing or rendering.\hypertarget{readme.md_autotoc_md23348}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23348}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Html\+Options\`{} and \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md23349}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23349}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/extension-\/math@\texorpdfstring{$^\wedge$}{\string^}3}, compatible with Node.\+js 16.
+
+This package works with {\ttfamily micromark} version {\ttfamily 3} and later.\hypertarget{readme.md_autotoc_md23350}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23350}
+This package is safe assuming that you trust Ka\+TeX. Any vulnerability in it could open you to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack.\hypertarget{readme.md_autotoc_md23351}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md23351}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/remarkjs/remark-math}{\texttt{ {\ttfamily remark-\/math}}} — remark (and rehype) plugins to support math
+\item \href{https://github.com/syntax-tree/mdast-util-math}{\texttt{ {\ttfamily mdast-\/util-\/math}}} — mdast utility to support math
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23352}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23352}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23353}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23353}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

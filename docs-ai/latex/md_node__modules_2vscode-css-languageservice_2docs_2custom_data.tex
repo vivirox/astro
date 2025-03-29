@@ -1,0 +1,123 @@
+\chapter{Custom Data for CSS Language Service}
+\hypertarget{md_node__modules_2vscode-css-languageservice_2docs_2custom_data}{}\label{md_node__modules_2vscode-css-languageservice_2docs_2custom_data}\index{Custom Data for CSS Language Service@{Custom Data for CSS Language Service}}
+\label{md_node__modules_2vscode-css-languageservice_2docs_2custom_data_autotoc_md35273}%
+\Hypertarget{md_node__modules_2vscode-css-languageservice_2docs_2custom_data_autotoc_md35273}%
+
+
+In VS Code, there are two ways of loading custom CSS datasets\+:
+
+
+\begin{DoxyEnumerate}
+\item With setting {\ttfamily css.\+custom\+Data} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}css.customData"{}:\ [}
+\DoxyCodeLine{\ \ \ \ "{}./foo.css-\/data.json"{}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+\item With an extension that contributes {\ttfamily contributes.\+css.\+custom\+Data}
+\end{DoxyEnumerate}
+
+Both setting point to a list of JSON files. This document describes the shape of the JSON files.
+
+You can read more about custom data at\+: \href{https://github.com/microsoft/vscode-custom-data}{\texttt{ https\+://github.\+com/microsoft/vscode-\/custom-\/data}}.\hypertarget{md_node__modules_2vscode-css-languageservice_2docs_2custom_data_autotoc_md35274}{}\doxysection{\texorpdfstring{Custom Data Format}{Custom Data Format}}\label{md_node__modules_2vscode-css-languageservice_2docs_2custom_data_autotoc_md35274}
+\hypertarget{md_node__modules_2vscode-css-languageservice_2docs_2custom_data_autotoc_md35275}{}\doxysubsection{\texorpdfstring{Overview}{Overview}}\label{md_node__modules_2vscode-css-languageservice_2docs_2custom_data_autotoc_md35275}
+The JSON have one required property, {\ttfamily version}, and 4 other top level properties\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}version"{}:\ 1.1,}
+\DoxyCodeLine{\ \ "{}properties"{}:\ [],}
+\DoxyCodeLine{\ \ "{}atDirectives"{}:\ [],}
+\DoxyCodeLine{\ \ "{}pseudoClasses"{}:\ [],}
+\DoxyCodeLine{\ \ "{}pseudoElements"{}:\ []}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Version denotes the schema version you are using. The latest schema version is {\ttfamily V1.\+1}.
+
+You can find other properties\textquotesingle{} shapes at \href{../src/cssLanguageTypes.ts}{\texttt{ css\+Language\+Types.\+ts}} or the \href{./customData.schema.json}{\texttt{ JSON Schema}}.
+
+You should suffix your custom data file with {\ttfamily .css-\/data.\+json}, so VS Code will load the most recent schema for the JSON file to offer auto completion and error checking.\hypertarget{md_node__modules_2vscode-css-languageservice_2docs_2custom_data_autotoc_md35276}{}\doxysubsection{\texorpdfstring{Format}{Format}}\label{md_node__modules_2vscode-css-languageservice_2docs_2custom_data_autotoc_md35276}
+All top-\/level properties share two basic properties, {\ttfamily name} and {\ttfamily description}. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}version"{}:\ 1.1,}
+\DoxyCodeLine{\ \ "{}properties"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ "{}name"{}:\ "{}foo"{},\ "{}description"{}:\ "{}Foo\ property"{}\ \}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ "{}atDirectives"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ "{}name"{}:\ "{}@foo"{},\ "{}description"{}:\ "{}Foo\ at\ directive"{}\ \}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ "{}pseudoClasses"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ "{}name"{}:\ "{}:foo"{},\ "{}description"{}:\ "{}Foo\ pseudo\ class"{}\ \}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ "{}pseudoElements"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ "{}name"{}:\ "{}::foo"{},\ "{}description"{}:\ "{}Foo\ pseudo\ elements"{}\ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+You can also specify 4 additional properties for them\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}properties"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}name"{}:\ "{}foo"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}description"{}:\ "{}Foo\ property"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}browsers"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}E12"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}S10"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}C50"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}IE10"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}O37"{}}
+\DoxyCodeLine{\ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ "{}status"{}:\ "{}standard"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}references"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}name"{}:\ "{}My\ foo\ property\ reference"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}url"{}:\ "{}https://www.foo.com/property/foo"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ "{}relevance"{}:\ 25}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily browsers}\+: A list of supported browsers. The format is {\ttfamily browser\+Name + version}. For example\+: `\mbox{[}\textquotesingle{}E10', \textquotesingle{}C30\textquotesingle{}, \textquotesingle{}FF20\textquotesingle{}\mbox{]}`. Here are all browser names\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ let\ browserNames\ =\ \{}
+\DoxyCodeLine{\ \ E:\ 'Edge\&rsquo;,}
+\DoxyCodeLine{\ \ FF:\ 'Firefox',}
+\DoxyCodeLine{\ \ S:\ 'Safari',}
+\DoxyCodeLine{\ \ C:\ 'Chrome',}
+\DoxyCodeLine{\ \ IE:\ 'IE',}
+\DoxyCodeLine{\ \ O:\ 'Opera'}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+ The browser compatibility will be rendered at completion and hover. Items that is supported in only one browser are dropped from completion.
+\item {\ttfamily status}\+: The status of the item. The format is\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ type\ EntryStatus\ =\ 'standard'\ |\ 'experimental'\ |\ 'nonstandard'\ |\ 'obsolete';}
+
+\end{DoxyCode}
+ The status will be rendered at the top of completion and hover. For example, {\ttfamily nonstandard} items are prefixed with the message {\ttfamily 🚨️ Property is nonstandard. Avoid using it.}.
+\item {\ttfamily references}\+: A list of references. They will be displayed in Markdown form in completion and hover as {\ttfamily \mbox{[}Ref1 Name\mbox{]}(Ref1 URL) \texorpdfstring{$\vert$}{|} \mbox{[}Ref2 Name\mbox{]}(Ref2 URL) \texorpdfstring{$\vert$}{|} ...}.
+\item {\ttfamily relevance}\+: A number in the range \mbox{[}0, 100\mbox{]} used for sorting. Bigger number means more relevant and will be sorted first. Entries that do not specify a relevance will get 50 as default value. 
+\end{DoxyItemize}

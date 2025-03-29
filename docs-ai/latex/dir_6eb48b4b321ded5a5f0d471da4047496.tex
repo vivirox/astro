@@ -1,0 +1,122 @@
+\doxysection{node\+\_\+modules/globrex Directory Reference}
+\hypertarget{dir_6eb48b4b321ded5a5f0d471da4047496}{}\label{dir_6eb48b4b321ded5a5f0d471da4047496}\index{node\_modules/globrex Directory Reference@{node\_modules/globrex Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+  
+
+\doxysubsection*{globrex}
+
+ \href{https://npmjs.org/package/globrex}{\texttt{  }} \href{https://travis-ci.org/terkelg/globrex}{\texttt{  }} \href{https://ci.appveyor.com/project/terkelg/globrex}{\texttt{  }} \href{https://npmjs.org/package/globrex}{\texttt{  }} 
+
+Simple but powerful glob to regular expression compiler.
+
+~\newline
+\hypertarget{readme.md_autotoc_md16311}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md16311}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ globrex\ -\/-\/save}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16312}{}\doxysubsubsection{\texorpdfstring{Core Features}{Core Features}}\label{readme.md_autotoc_md16312}
+
+\begin{DoxyItemize}
+\item 💪 {\bfseries{extended globbing\+:}} transform advance {\ttfamily Ext\+Glob} features
+\item 📦 {\bfseries{simple}}\+: no dependencies
+\item 🛣️ {\bfseries{paths}}\+: split paths into multiple {\ttfamily Reg\+Exp} segments
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16313}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md16313}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ globrex\ =\ require('globrex');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ globrex('p*uck')}
+\DoxyCodeLine{//\ =>\ \{\ regex:\ /\string^p.*uck\$/,\ string:\ '\string^p.*uck\$',\ segments:\ [\ /\string^p.*uck\$/\ ]\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{result.regex.test('pluck');\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16314}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md16314}
+\hypertarget{readme.md_autotoc_md16315}{}\doxysubsubsubsection{\texorpdfstring{globrex(glob, options)}{globrex(glob, options)}}\label{readme.md_autotoc_md16315}
+Type\+: {\ttfamily function}~\newline
+ Returns\+: {\ttfamily Object}
+
+Transform globs intp regular expressions. Returns object with the following properties\+:\hypertarget{readme.md_autotoc_md16316}{}\doxysubsubsubsubsection{\texorpdfstring{regex}{regex}}\label{readme.md_autotoc_md16316}
+Type\+: {\ttfamily Reg\+Exp}
+
+Java\+Script {\ttfamily Reg\+Exp} instance.
+
+\begin{quote}
+{\bfseries{Note}}\+: Read more about how to use \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp}{\texttt{ Reg\+Exp}} on MDN. \end{quote}
+\hypertarget{readme.md_autotoc_md16317}{}\doxysubsubsubsubsection{\texorpdfstring{path}{path}}\label{readme.md_autotoc_md16317}
+This property only exists if the option {\ttfamily filepath} is true.
+
+\begin{quote}
+{\bfseries{Note\+:}} {\ttfamily filepath} is {\ttfamily false} by default \end{quote}
+\hypertarget{readme.md_autotoc_md16318}{}\doxysubsubsubsubsection{\texorpdfstring{path.\+segments}{path.\+segments}}\label{readme.md_autotoc_md16318}
+Type\+: {\ttfamily Array}
+
+Array of {\ttfamily Reg\+Exp} instances seperated by {\ttfamily /}. This can be usable when working with file paths or urls.
+
+Example array could be\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\ /\string^foo\$/,\ /\string^bar\$/,\ /\string^([\string^\(\backslash\)/]*)\$/,\ '\string^baz\(\backslash\)\(\backslash\).(md|js|txt)\$'\ ]}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16319}{}\doxysubsubsubsubsection{\texorpdfstring{path.\+regex}{path.\+regex}}\label{readme.md_autotoc_md16319}
+Type\+: {\ttfamily Reg\+Exp}
+
+Java\+Script {\ttfamily Reg\+Exp} instance build for testign against paths. The regex have different path seperators depending on host OS.\hypertarget{readme.md_autotoc_md16320}{}\doxysubsubsubsection{\texorpdfstring{glob}{glob}}\label{readme.md_autotoc_md16320}
+Type\+: {\ttfamily String}
+
+Glob string to transform.\hypertarget{readme.md_autotoc_md16321}{}\doxysubsubsubsection{\texorpdfstring{options.\+extended}{options.\+extended}}\label{readme.md_autotoc_md16321}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Enable all advanced features from {\ttfamily extglob}.
+
+Matching so called "{}extended"{} globs pattern like single character matching, matching ranges of characters, group matching, etc.
+
+\begin{quote}
+{\bfseries{Note}}\+: Interprets {\ttfamily \mbox{[}a-\/d\mbox{]}} as {\ttfamily \mbox{[}abcd\mbox{]}}. To match a literal {\ttfamily -\/}, include it as first or last character. \end{quote}
+\hypertarget{readme.md_autotoc_md16322}{}\doxysubsubsubsection{\texorpdfstring{options.\+globstar}{options.\+globstar}}\label{readme.md_autotoc_md16322}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+When globstar is {\ttfamily false} globs like `'/foo/\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily are transformed to the following }\textquotesingle{}\texorpdfstring{$^\wedge$}{\string^}\textbackslash{}/foo\textbackslash{}/.\texorpdfstring{$\ast$}{*}\$\textquotesingle{}{\ttfamily which will match any string beginning with}\textquotesingle{}/foo/\textquotesingle{}\`{}.
+
+When the globstar option is {\ttfamily true}, the same `'/foo/\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily glob is transformed to }\textquotesingle{}\texorpdfstring{$^\wedge$}{\string^}\textbackslash{}/foo\textbackslash{}/\mbox{[}\texorpdfstring{$^\wedge$}{\string^}/\mbox{]}\texorpdfstring{$\ast$}{*}\$\textquotesingle{}{\ttfamily which will match any string beginning with}\textquotesingle{}/foo/\textquotesingle{}{\ttfamily that \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}does not have\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} a}\textquotesingle{}/\textquotesingle{}{\ttfamily to the right of it.}\textquotesingle{}/foo/\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily will match\+:}\textquotesingle{}/foo/bar\textquotesingle{}{\ttfamily ,}\textquotesingle{}/foo/bar.txt\textquotesingle{}{\ttfamily but not}\textquotesingle{}/foo/bar/baz\textquotesingle{}{\ttfamily or}\textquotesingle{}/foo/bar/baz.txt\textquotesingle{}\`{}.
+
+\begin{quote}
+{\bfseries{Note}}\+: When globstar is {\ttfamily true}, `'/foo/\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily is equivelant to}\textquotesingle{}/foo/\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily when globstar is}false\`{}. \end{quote}
+\hypertarget{readme.md_autotoc_md16323}{}\doxysubsubsubsection{\texorpdfstring{options.\+strict}{options.\+strict}}\label{readme.md_autotoc_md16323}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Be forgiving about mutiple slashes, like {\ttfamily ///} and make everything after the first {\ttfamily /} optional. This is how bash glob works.\hypertarget{readme.md_autotoc_md16324}{}\doxysubsubsubsection{\texorpdfstring{options.\+flags}{options.\+flags}}\label{readme.md_autotoc_md16324}
+Type\+: {\ttfamily String}~\newline
+ Default\+: `'\textquotesingle{}\`{}
+
+Reg\+Exp flags (e.\+g. `\textquotesingle{}i'\`{} ) to pass to the Reg\+Exp constructor.\hypertarget{readme.md_autotoc_md16325}{}\doxysubsubsubsection{\texorpdfstring{options.\+filepath}{options.\+filepath}}\label{readme.md_autotoc_md16325}
+Type\+: {\ttfamily Boolean}~\newline
+ Default\+: {\ttfamily false}
+
+Parse input strings as it was a file path for special path related features. This feature only makes sense if the input is a POSIX path like {\ttfamily /foo/bar/hello.js} or URLs.
+
+When {\ttfamily true} the returned object will have an additional {\ttfamily path} object.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily segment}\+: Array containing a {\ttfamily Reg\+Exp} object for each path segment.
+\item {\ttfamily regex}\+: OS specific file path {\ttfamily Reg\+Exp}. Path seperator used is based on the operating system.
+\item {\ttfamily globstar}\+: Regex string used to test for globstars.
+\end{DoxyItemize}
+
+\begin{quote}
+{\bfseries{Note\+: Please only use forward-\/slashes in file path glob expressions}} Though windows uses either {\ttfamily /} or {\ttfamily \textbackslash{}} as its path separator, only {\ttfamily /} characters are used by this glob implementation. You must use forward-\/slashes {\bfseries{only}} in glob expressions. Back-\/slashes will always be interpreted as escape characters, not path separators. \end{quote}
+\hypertarget{readme.md_autotoc_md16326}{}\doxysubsubsection{\texorpdfstring{References}{References}}\label{readme.md_autotoc_md16326}
+Learn more about advanced globbing here
+\begin{DoxyItemize}
+\item \href{http://mywiki.wooledge.org/glob}{\texttt{ mywiki.\+wooledge.\+org/glob}}
+\item \href{http://www.linuxjournal.com/content/bash-extended-globbing}{\texttt{ linuxjournal}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16327}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md16327}
+MIT © \href{https://terkel.com}{\texttt{ Terkel Gjervig}} 

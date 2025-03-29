@@ -1,0 +1,320 @@
+\doxysection{node\+\_\+modules/astring Directory Reference}
+\hypertarget{dir_2bb0647cebbeaeb5ffaf776668fe3810}{}\label{dir_2bb0647cebbeaeb5ffaf776668fe3810}\index{node\_modules/astring Directory Reference@{node\_modules/astring Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.org/package/astring}{\texttt{ }} \href{https://codecov.io/gh/davidbonnet/astring}{\texttt{ }}
+
+🌳 Tiny and fast Java\+Script code generator from an \href{https://github.com/estree/estree}{\texttt{ ESTree}}-\/compliant AST.\hypertarget{README.md_autotoc_md8254}{}\doxysubsubsection{\texorpdfstring{Key features}{Key features}}\label{README.md_autotoc_md8254}
+
+\begin{DoxyItemize}
+\item Generates Java\+Script code up to \href{https://tc39.github.io/ecma262/}{\texttt{ version 15 (2024)}} and \href{https://github.com/tc39/proposals\#stage-3}{\texttt{ stage 3 proposals}}.
+\item Works on \href{https://github.com/estree/estree}{\texttt{ ESTree}}-\/compliant ASTs such as the ones produced by \href{https://github.com/meriyah/meriyah}{\texttt{ Meriyah}} or \href{https://github.com/acornjs/acorn}{\texttt{ Acorn}}.
+\item Extendable with custom AST node handlers.
+\item Considerably faster than \href{https://gitlab.com/Rich-Harris/buble}{\texttt{ Bublé}} (up to 5×), \href{https://github.com/estools/escodegen}{\texttt{ Escodegen}} (up to 10×), \href{https://github.com/babel/babel}{\texttt{ Babel}} (up to 50×), \href{https://github.com/mishoo/UglifyJS2}{\texttt{ Uglify\+JS}} (up to 125×), and \href{https://github.com/prettier/prettier}{\texttt{ Prettier}} (up to 380×).
+\item Supports source map generation with \href{https://github.com/mozilla/source-map\#sourcemapgenerator}{\texttt{ Source Map}}.
+\item Supports comment generation with \href{https://github.com/davidbonnet/astravel}{\texttt{ Astravel}}.
+\item No dependencies and small footprint (≈ 16 KB minified, ≈ 4 KB gziped).
+\item Runs on \href{https://deno.land/x/astring}{\texttt{ 🦕 Deno}}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md8255}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md8255}
+\begin{quote}
+\+:warning\+: Astring relies on {\ttfamily String.\+prototype.\+repeat(amount)} and {\ttfamily String.\+prototype.\+ends\+With(string)}. If the environment running Astring does not define these methods, use \href{https://www.npmjs.com/package/string.prototype.repeat}{\texttt{ {\ttfamily string.\+prototype.\+repeat}}}, \href{https://www.npmjs.com/package/string.prototype.endswith}{\texttt{ {\ttfamily string.\+prototype.\+ends\+With}}} or \href{https://www.npmjs.com/package/babel-polyfill}{\texttt{ {\ttfamily babel-\/polyfill}}}. \end{quote}
+
+
+Install with the \href{https://www.npmjs.com/package/astring}{\texttt{ Node Package Manager}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ astring}
+
+\end{DoxyCode}
+
+
+Or install with \href{https://jsr.io/@davidbonnet/astring}{\texttt{ JSR}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{deno\ add\ @davidbonnet/astring}
+
+\end{DoxyCode}
+
+
+Alternatively, checkout this repository and install the development dependencies to build the module file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/davidbonnet/astring.git}
+\DoxyCodeLine{cd\ astring}
+\DoxyCodeLine{npm\ install}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8256}{}\doxysubsection{\texorpdfstring{Import}{Import}}\label{README.md_autotoc_md8256}
+Import it from \href{https://deno.land/x/astring/src/astring.js}{\texttt{ Deno\textquotesingle{}s third party module repository}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ generate\ \}\ =\ await\ import('https://deno.land/x/astring/src/astring.js')}
+
+\end{DoxyCode}
+
+
+With Java\+Script 6 modules\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ generate\ \}\ from\ 'astring'}
+
+\end{DoxyCode}
+
+
+With Common\+JS\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ generate\ \}\ =\ require('astring')}
+
+\end{DoxyCode}
+
+
+A browser-\/ready minified bundle containing Astring is available at {\ttfamily dist/astring.\+min.\+js}. The module exposes a global variable {\ttfamily astring}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}astring.min.js"{}\ type="{}text/javascript"{}></script>}
+\DoxyCodeLine{<script\ type="{}text/javascript"{}>}
+\DoxyCodeLine{\ \ var\ generate\ =\ astring.generate}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8257}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md8257}
+The {\ttfamily astring} module exposes the following properties\+:\hypertarget{README.md_autotoc_md8258}{}\doxysubsubsection{\texorpdfstring{{\ttfamily generate(node\+: object, options\+: object)\+: string \texorpdfstring{$\vert$}{|} object}}{{\ttfamily generate(node\+: object, options\+: object)\+: string \texorpdfstring{$\vert$}{|} object}}}\label{README.md_autotoc_md8258}
+Returns a string representing the rendered code of the provided AST {\ttfamily node}. However, if an {\ttfamily output} stream is provided in the {\ttfamily options}, it writes to that stream and returns it.
+
+The {\ttfamily options} are\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily indent}\+: string to use for indentation (defaults to {\ttfamily "{}␣␣"{}})
+\item {\ttfamily line\+End}\+: string to use for line endings (defaults to {\ttfamily "{}\textbackslash{}n"{}})
+\item {\ttfamily starting\+Indent\+Level}\+: indent level to start from (defaults to {\ttfamily 0})
+\item {\ttfamily comments}\+: generate comments if {\ttfamily true} (defaults to {\ttfamily false})
+\item {\ttfamily output}\+: output stream to write the rendered code to (defaults to {\ttfamily null})
+\item {\ttfamily generator}\+: custom code generator (defaults to {\ttfamily GENERATOR})
+\item {\ttfamily source\+Map}\+: \href{https://github.com/mozilla/source-map\#sourcemapgenerator}{\texttt{ source map generator}} (defaults to {\ttfamily null})
+\item {\ttfamily expressions\+Precedence}\+: custom map of node types and their precedence level (defaults to {\ttfamily EXPRESSIONS\+\_\+\+PRECEDENCE})
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md8259}{}\doxysubsubsection{\texorpdfstring{{\ttfamily GENERATOR\+: object}}{{\ttfamily GENERATOR\+: object}}}\label{README.md_autotoc_md8259}
+Base generator that can be used to extend Astring.\hypertarget{README.md_autotoc_md8260}{}\doxysubsubsection{\texorpdfstring{{\ttfamily EXPRESSIONS\+\_\+\+PRECEDENCE\+: object}}{{\ttfamily EXPRESSIONS\+\_\+\+PRECEDENCE\+: object}}}\label{README.md_autotoc_md8260}
+Mapping of node types and their precedence level to let the generator know when to use parentheses.\hypertarget{README.md_autotoc_md8261}{}\doxysubsubsection{\texorpdfstring{{\ttfamily NEEDS\+\_\+\+PARENTHESES\+: number}}{{\ttfamily NEEDS\+\_\+\+PARENTHESES\+: number}}}\label{README.md_autotoc_md8261}
+Default precedence level that always triggers the use of parentheses.\hypertarget{README.md_autotoc_md8262}{}\doxysubsubsection{\texorpdfstring{{\ttfamily base\+Generator\+: object}}{{\ttfamily base\+Generator\+: object}}}\label{README.md_autotoc_md8262}
+\begin{quote}
+\+:warning\+: Deprecated, use {\ttfamily GENERATOR} instead. \end{quote}
+\hypertarget{README.md_autotoc_md8263}{}\doxysubsection{\texorpdfstring{Benchmark}{Benchmark}}\label{README.md_autotoc_md8263}
+\hypertarget{README.md_autotoc_md8264}{}\doxysubsubsection{\texorpdfstring{Generating code}{Generating code}}\label{README.md_autotoc_md8264}
+Operations per second for generating each sample code from a pre-\/parsed AST\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ code sample (length)   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ escodegen   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ astring   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ uglify   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ babel   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ prettier    }\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ code sample (length)   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ escodegen   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ astring   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ uglify   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ babel   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ prettier    }\\\cline{1-6}
+\endhead
+tiny code (11)   &\PBS\raggedleft 1,257,527   &\PBS\raggedleft 7,185,642   &\PBS\raggedleft 129,467   &\PBS\raggedleft 156,184   &\PBS\raggedleft 333    \\\cline{1-6}
+everything (8532)   &\PBS\raggedleft 1,366   &\PBS\raggedleft 8,008   &\PBS\raggedleft 0   &\PBS\raggedleft 346   &\PBS\raggedleft 64   \\\cline{1-6}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md8265}{}\doxysubsubsection{\texorpdfstring{Parsing and generating code}{Parsing and generating code}}\label{README.md_autotoc_md8265}
+Operations per second for parsing and generating each sample code\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{5}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ code sample (length)   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ acorn + astring   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ meriyah + astring   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ buble   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ sucrase    }\\\cline{1-5}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ code sample (length)   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ acorn + astring   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ meriyah + astring   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ buble   }&\PBS\raggedleft \cellcolor{\tableheadbgcolor}\textbf{ sucrase    }\\\cline{1-5}
+\endhead
+tiny code (11)   &\PBS\raggedleft 92,578   &\PBS\raggedleft 864,665   &\PBS\raggedleft 25,911   &\PBS\raggedleft 575,370    \\\cline{1-5}
+everything (8532)   &\PBS\raggedleft 706   &\PBS\raggedleft 1,425   &\PBS\raggedleft 132   &\PBS\raggedleft 1,403   \\\cline{1-5}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md8266}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{README.md_autotoc_md8266}
+The following examples are written in Java\+Script 5 with Astring imported {\itshape à la Common\+JS}.\hypertarget{README.md_autotoc_md8267}{}\doxysubsubsection{\texorpdfstring{Generating code}{Generating code}}\label{README.md_autotoc_md8267}
+This example uses \href{https://github.com/acornjs/acorn}{\texttt{ Acorn}}, a blazingly fast Java\+Script AST producer and therefore the perfect companion of Astring.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Make\ sure\ acorn\ and\ astring\ modules\ are\ imported}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Set\ example\ code}
+\DoxyCodeLine{var\ code\ =\ 'let\ answer\ =\ 4\ +\ 7\ *\ 5\ +\ 3;\(\backslash\)n'}
+\DoxyCodeLine{//\ Parse\ it\ into\ an\ AST}
+\DoxyCodeLine{var\ ast\ =\ acorn.parse(code,\ \{\ ecmaVersion:\ 6\ \})}
+\DoxyCodeLine{//\ Format\ it\ into\ a\ code\ string}
+\DoxyCodeLine{var\ formattedCode\ =\ astring.generate(ast)}
+\DoxyCodeLine{//\ Check\ it}
+\DoxyCodeLine{console.log(code\ ===\ formattedCode\ ?\ 'It\ works!'\ :\ 'Something\ went\ wrong…')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8268}{}\doxysubsubsection{\texorpdfstring{Generating source maps}{Generating source maps}}\label{README.md_autotoc_md8268}
+This example uses the source map generator from the \href{https://github.com/mozilla/source-map\#sourcemapgenerator}{\texttt{ Source Map}} module.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Make\ sure\ acorn,\ sourceMap\ and\ astring\ modules\ are\ imported}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ code\ =\ 'function\ add(a,\ b)\ \{\ return\ a\ +\ b;\ \}\(\backslash\)n'}
+\DoxyCodeLine{var\ ast\ =\ acorn.parse(code,\ \{}
+\DoxyCodeLine{\ \ ecmaVersion:\ 6,}
+\DoxyCodeLine{\ \ sourceType:\ 'module',}
+\DoxyCodeLine{\ \ //\ Locations\ are\ needed\ in\ order\ for\ the\ source\ map\ generator\ to\ work}
+\DoxyCodeLine{\ \ locations:\ true,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ Create\ empty\ source\ map\ generator}
+\DoxyCodeLine{var\ map\ =\ new\ sourceMap.SourceMapGenerator(\{}
+\DoxyCodeLine{\ \ //\ Source\ file\ name\ must\ be\ set\ and\ will\ be\ used\ for\ mappings}
+\DoxyCodeLine{\ \ file:\ 'script.js',}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{var\ formattedCode\ =\ generate(ast,\ \{}
+\DoxyCodeLine{\ \ //\ Enable\ source\ maps}
+\DoxyCodeLine{\ \ sourceMap:\ map,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ Display\ generated\ source\ map}
+\DoxyCodeLine{console.log(map.toString())}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8269}{}\doxysubsubsection{\texorpdfstring{Using writable streams}{Using writable streams}}\label{README.md_autotoc_md8269}
+This example for \href{http://nodejs.org}{\texttt{ Node}} shows how to use writable streams to get the rendered code.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Make\ sure\ acorn\ and\ astring\ modules\ are\ imported}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Set\ example\ code}
+\DoxyCodeLine{var\ code\ =\ 'let\ answer\ =\ 4\ +\ 7\ *\ 5\ +\ 3;\(\backslash\)n'}
+\DoxyCodeLine{//\ Parse\ it\ into\ an\ AST}
+\DoxyCodeLine{var\ ast\ =\ acorn.parse(code,\ \{\ ecmaVersion:\ 6\ \})}
+\DoxyCodeLine{//\ Format\ it\ and\ write\ the\ result\ to\ stdout}
+\DoxyCodeLine{var\ stream\ =\ astring.generate(ast,\ \{}
+\DoxyCodeLine{\ \ output:\ process.stdout,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ The\ returned\ value\ is\ the\ output\ stream}
+\DoxyCodeLine{console.log('Does\ stream\ equal\ process.stdout?',\ stream\ ===\ process.stdout)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8270}{}\doxysubsubsection{\texorpdfstring{Generating comments}{Generating comments}}\label{README.md_autotoc_md8270}
+Astring supports comment generation, provided they are stored on the AST nodes. To do so, this example uses \href{https://github.com/davidbonnet/astravel}{\texttt{ Astravel}}, a fast AST traveller and modifier.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Make\ sure\ acorn,\ astravel\ and\ astring\ modules\ are\ imported}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Set\ example\ code}
+\DoxyCodeLine{var\ code\ =}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ '//\ Compute\ the\ answer\ to\ everything',}
+\DoxyCodeLine{\ \ \ \ 'let\ answer\ =\ 4\ +\ 7\ *\ 5\ +\ 3;',}
+\DoxyCodeLine{\ \ \ \ '//\ Display\ it',}
+\DoxyCodeLine{\ \ \ \ 'console.log(answer);',}
+\DoxyCodeLine{\ \ ].join('\(\backslash\)n')\ +\ '\(\backslash\)n'}
+\DoxyCodeLine{//\ Parse\ it\ into\ an\ AST\ and\ retrieve\ the\ list\ of\ comments}
+\DoxyCodeLine{var\ comments\ =\ []}
+\DoxyCodeLine{var\ ast\ =\ acorn.parse(code,\ \{}
+\DoxyCodeLine{\ \ ecmaVersion:\ 6,}
+\DoxyCodeLine{\ \ locations:\ true,}
+\DoxyCodeLine{\ \ onComment:\ comments,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ Attach\ comments\ to\ AST\ nodes}
+\DoxyCodeLine{astravel.attachComments(ast,\ comments)}
+\DoxyCodeLine{//\ Format\ it\ into\ a\ code\ string}
+\DoxyCodeLine{var\ formattedCode\ =\ astring.generate(ast,\ \{}
+\DoxyCodeLine{\ \ comments:\ true,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ Check\ it}
+\DoxyCodeLine{console.log(code\ ===\ formattedCode\ ?\ 'It\ works!'\ :\ 'Something\ went\ wrong…')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8271}{}\doxysubsubsection{\texorpdfstring{Extending}{Extending}}\label{README.md_autotoc_md8271}
+Astring can easily be extended by updating or passing a custom code {\ttfamily generator}. A code {\ttfamily generator} consists of a mapping of node names and functions that take two arguments\+: {\ttfamily node} and {\ttfamily state}. The {\ttfamily node} points to the node from which to generate the code and the {\ttfamily state} exposes the {\ttfamily write} method that takes generated code strings.
+
+This example shows how to support the {\ttfamily await} keyword which is part of the \href{https://github.com/tc39/ecmascript-asyncawait}{\texttt{ asynchronous functions proposal}}. The corresponding {\ttfamily Await\+Expression} node is based on \href{https://github.com/estree/estree/blob/master/es2017.md}{\texttt{ this suggested definition}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Make\ sure\ the\ astring\ module\ is\ imported\ and\ that\ \`{}Object.assign`\ is\ defined}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ custom\ generator\ that\ inherits\ from\ Astring's\ base\ generator}
+\DoxyCodeLine{var\ customGenerator\ =\ Object.assign(\{\},\ astring.GENERATOR,\ \{}
+\DoxyCodeLine{\ \ AwaitExpression:\ function\ (node,\ state)\ \{}
+\DoxyCodeLine{\ \ \ \ state.write('await\ ')}
+\DoxyCodeLine{\ \ \ \ var\ argument\ =\ node.argument}
+\DoxyCodeLine{\ \ \ \ if\ (argument\ !=\ null)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ this[argument.type](argument,\ state)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ Obtain\ a\ custom\ AST\ somehow\ (note\ that\ this\ AST\ is\ not\ obtained\ from\ a\ valid\ code)}
+\DoxyCodeLine{var\ ast\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'AwaitExpression',}
+\DoxyCodeLine{\ \ argument:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'CallExpression',}
+\DoxyCodeLine{\ \ \ \ callee:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'Identifier',}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ 'callable',}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ arguments:\ [],}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{//\ Format\ it}
+\DoxyCodeLine{var\ code\ =\ astring.generate(ast,\ \{}
+\DoxyCodeLine{\ \ generator:\ customGenerator,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ Check\ it}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ code\ ===\ 'await\ callable();\(\backslash\)n'\ ?\ 'It\ works!'\ :\ 'Something\ went\ wrong…',}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8272}{}\doxysubsection{\texorpdfstring{Command line interface}{Command line interface}}\label{README.md_autotoc_md8272}
+The {\ttfamily bin/astring} utility can be used to convert a JSON-\/formatted ESTree compliant AST of a Java\+Script code. It accepts the following arguments\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily -\/i}, {\ttfamily -\/-\/indent}\+: string to use as indentation (defaults to {\ttfamily "{}␣␣"{}})
+\item {\ttfamily -\/l}, {\ttfamily -\/-\/line-\/end}\+: string to use for line endings (defaults to {\ttfamily "{}\textbackslash{}n"{}})
+\item {\ttfamily -\/s}, {\ttfamily -\/-\/starting-\/indent-\/level}\+: indent level to start from (defaults to {\ttfamily 0})
+\item {\ttfamily -\/h}, {\ttfamily -\/-\/help}\+: print a usage message and exit
+\item {\ttfamily -\/v}, {\ttfamily -\/-\/version}\+: print package version and exit
+\end{DoxyItemize}
+
+The utility reads the AST from a provided list of files or from {\ttfamily stdin} if none is supplied and prints the generated code.\hypertarget{README.md_autotoc_md8273}{}\doxysubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md8273}
+As in the previous example, these examples use \href{https://github.com/acornjs/acorn}{\texttt{ Acorn}} to get the JSON-\/formatted AST. This command pipes the AST output by Acorn from a {\ttfamily script.\+js} file to Astring and writes the formatted Java\+Script code into a {\ttfamily result.\+js} file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{acorn\ -\/-\/ecma6\ script.js\ |\ astring\ >\ result.js}
+
+\end{DoxyCode}
+
+
+This command does the same, but reads the AST from an intermediary file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{acorn\ -\/-\/ecma6\ script.js\ >\ ast.json}
+\DoxyCodeLine{astring\ ast.json\ >\ result.js}
+
+\end{DoxyCode}
+
+
+This command reads Java\+Script 6 code from {\ttfamily stdin} and outputs a prettified version\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cat\ |\ acorn\ -\/-\/ecma6\ |\ astring}
+
+\end{DoxyCode}
+ 

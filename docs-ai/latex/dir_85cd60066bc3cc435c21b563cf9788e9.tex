@@ -1,0 +1,382 @@
+\doxysection{node\+\_\+modules/bfj Directory Reference}
+\hypertarget{dir_85cd60066bc3cc435c21b563cf9788e9}{}\label{dir_85cd60066bc3cc435c21b563cf9788e9}\index{node\_modules/bfj Directory Reference@{node\_modules/bfj Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://gitlab.com/philbooth/bfj/pipelines}{\texttt{ }} \href{https://www.npmjs.com/package/bfj}{\texttt{ }} \href{https://www.npmjs.com/package/bfj}{\texttt{ }} \href{https://opensource.org/licenses/MIT}{\texttt{ }}
+
+Big-\/\+Friendly JSON. Asynchronous streaming functions for large JSON data sets.
+
+
+\begin{DoxyItemize}
+\item Why would I want those?
+\item Is it fast?
+\item What functions does it implement?
+\item How do I install it?
+\item How do I read a JSON file?
+\item How do I parse a stream of JSON?
+\item How do I selectively parse individual items from a JSON stream?
+\item How do I write a JSON file?
+\item How do I create a stream of JSON?
+\item How do I create a JSON string?
+\item What other methods are there?
+\begin{DoxyItemize}
+\item bfj.walk (stream, options)
+\item bfj.eventify (data, options)
+\end{DoxyItemize}
+\item What options can I specify?
+\begin{DoxyItemize}
+\item Options for parsing functions
+\item Options for serialisation functions
+\end{DoxyItemize}
+\item Is it possible to pause parsing or serialisation from calling code?
+\item Can it handle newline-\/delimited JSON (NDJSON)?
+\item Why does it default to bluebird promises?
+\item Can I specify a different promise implementation?
+\item Is there a change log?
+\item How do I set up the dev environment?
+\item What versions of Node.js does it support?
+\item What license is it released under?
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md9301}{}\doxysubsection{\texorpdfstring{Why would I want those?}{Why would I want those?}}\label{README.md_autotoc_md9301}
+If you need to parse huge JSON strings or stringify huge Java\+Script data sets, it monopolises the event loop and can lead to out-\/of-\/memory exceptions. BFJ implements asynchronous functions and uses pre-\/allocated fixed-\/length arrays to try and alleviate those issues.\hypertarget{README.md_autotoc_md9302}{}\doxysubsection{\texorpdfstring{Is it fast?}{Is it fast?}}\label{README.md_autotoc_md9302}
+No.
+
+BFJ yields frequently to avoid monopolising the event loop, interrupting its own execution to let other event handlers run. The frequency of those yields can be controlled with the \`{}yield\+Rate\`{} option, but fundamentally it is not designed for speed.
+
+Furthermore, when serialising data to a stream, BFJ uses a fixed-\/length buffer to avoid exhausting available memory. Whenever that buffer is full, serialisation is paused until the receiving stream processes some more data, regardless of the value of {\ttfamily yield\+Rate}. You can control the size of the buffer using the \`{}buffer\+Length\`{} option but really, if you need quick results, BFJ is not for you.\hypertarget{README.md_autotoc_md9303}{}\doxysubsection{\texorpdfstring{What functions does it implement?}{What functions does it implement?}}\label{README.md_autotoc_md9303}
+Nine functions are exported.
+
+Five are concerned with parsing, or turning JSON strings into Java\+Script data\+:
+
+
+\begin{DoxyItemize}
+\item \`{}read\`{} asynchronously parses a JSON file from disk.
+\item \`{}parse\`{} and \`{}unpipe\`{} are for asynchronously parsing streams of JSON.
+\item \`{}match\`{} selectively parses individual items from a JSON stream.
+\item \`{}walk\`{} asynchronously walks a stream, emitting events as it encounters JSON tokens. Analagous to a \href{http://en.wikipedia.org/wiki/Simple_API_for_XML}{\texttt{ SAX parser}}.
+\end{DoxyItemize}
+
+The other four functions handle the reverse transformations, serialising Java\+Script data to JSON\+:
+
+
+\begin{DoxyItemize}
+\item \`{}write\`{} asynchronously serialises data to a JSON file on disk.
+\item \`{}streamify\`{} asynchronously serialises data to a stream of JSON.
+\item \`{}stringify\`{} asynchronously serialises data to a JSON string.
+\item \`{}eventify\`{} asynchronously traverses a data structure depth-\/first, emitting events as it encounters items. By default it coerces promises, buffers and iterables to JSON-\/friendly values.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md9304}{}\doxysubsection{\texorpdfstring{How do I install it?}{How do I install it?}}\label{README.md_autotoc_md9304}
+If you\textquotesingle{}re using npm\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ bfj\ -\/-\/save}
+
+\end{DoxyCode}
+
+
+Or if you just want the git repo\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ git@gitlab.com:philbooth/bfj.git}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9305}{}\doxysubsection{\texorpdfstring{How do I read a JSON file?}{How do I read a JSON file?}}\label{README.md_autotoc_md9305}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{}
+\DoxyCodeLine{bfj.read(path,\ options)}
+\DoxyCodeLine{\ \ .then(data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .catch(error\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :(}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+{\ttfamily read} returns a \href{http://bluebirdjs.com/docs/api-reference.html}{\texttt{ bluebird promise}} and asynchronously parses a JSON file from disk.
+
+It takes two arguments; the path to the JSON file and an options object.
+
+If there are no syntax errors, the returned promise is resolved with the parsed data. If syntax errors occur, the promise is rejected with the first error.\hypertarget{README.md_autotoc_md9306}{}\doxysubsection{\texorpdfstring{How do I parse a stream of JSON?}{How do I parse a stream of JSON?}}\label{README.md_autotoc_md9306}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ By\ passing\ a\ readable\ stream\ to\ bfj.parse():}
+\DoxyCodeLine{bfj.parse(fs.createReadStream(path),\ options)}
+\DoxyCodeLine{\ \ .then(data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .catch(error\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :(}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ...or\ by\ passing\ the\ result\ from\ bfj.unpipe()\ to\ stream.pipe():}
+\DoxyCodeLine{request(\{\ url\ \}).pipe(bfj.unpipe((error,\ data)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (error)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :(}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}))}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily parse} returns a \href{http://bluebirdjs.com/docs/api-reference.html}{\texttt{ bluebird promise}} and asynchronously parses a stream of JSON data.
+
+It takes two arguments; a \href{https://nodejs.org/api/stream.html\#stream_readable_streams}{\texttt{ readable stream}} from which the JSON will be parsed and an options object.
+
+If there are no syntax errors, the returned promise is resolved with the parsed data. If syntax errors occur, the promise is rejected with the first error.
+\item {\ttfamily unpipe} returns a \href{https://nodejs.org/api/stream.html\#stream_writable_streams}{\texttt{ writable stream}} that can be passed to \href{https://nodejs.org/api/stream.html\#stream_readable_pipe_destination_options}{\texttt{ {\ttfamily stream.\+pipe}}}, then parses JSON data read from the stream.
+
+It takes two arguments; a callback function that will be called after parsing is complete and an options object.
+
+If there are no errors, the callback is invoked with the result as the second argument. If errors occur, the first error is passed the callback as the first argument.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md9307}{}\doxysubsection{\texorpdfstring{How do I selectively parse individual items from a JSON stream?}{How do I selectively parse individual items from a JSON stream?}}\label{README.md_autotoc_md9307}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Call\ match\ with\ your\ stream\ and\ a\ selector\ predicate/regex/JSONPath/string}
+\DoxyCodeLine{const\ dataStream\ =\ bfj.match(jsonStream,\ selector,\ options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Get\ data\ out\ of\ the\ returned\ stream\ with\ event\ handlers}
+\DoxyCodeLine{dataStream.on('data',\ item\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{dataStream.on('end',\ ()\ =>\ \{\ /*\ ...\ */);}
+\DoxyCodeLine{dataStream.on('error',\ ()\ =>\ \{\ /*\ ...\ */);}
+\DoxyCodeLine{dataStream.on('dataError',\ ()\ =>\ \{\ /*\ ...\ */);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ...or\ you\ can\ pipe\ it\ to\ another\ stream}
+\DoxyCodeLine{dataStream.pipe(someOtherStream);}
+
+\end{DoxyCode}
+
+
+{\ttfamily match} returns a readable, object-\/mode stream and asynchronously parses individual matching items from an input JSON stream.
+
+It takes three arguments\+: a \href{https://nodejs.org/api/stream.html\#stream_readable_streams}{\texttt{ readable stream}} from which the JSON will be parsed; a selector argument for determining matches, which may be a string, a regular expression, a JSONPath expression, or a predicate function; and an options object.
+
+If the selector is a string, it will be compared to property keys to determine whether each item in the data is a match. If it is a regular expression, the comparison will be made by calling the \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test}{\texttt{ Reg\+Exp {\ttfamily test} method}} with the property key. If it is a JSONPath expression, it must start with {\ttfamily \$.} to identify the root node and only use {\ttfamily child} scope expressions for subsequent nodes. Predicate functions will be called with three arguments\+: {\ttfamily key}, {\ttfamily value} and {\ttfamily depth}. If the result of the predicate is a truthy value then the item will be deemed a match.
+
+In addition to the regular options accepted by other parsing functions, you can also specify {\ttfamily min\+Depth} to only apply the selector to certain depths. This can improve performance and memory usage, if you know that you\textquotesingle{}re not interested in parsing top-\/level items.
+
+If there are any syntax errors in the JSON, a {\ttfamily data\+Error} event will be emitted. If any other errors occur, an {\ttfamily error} event will be emitted.\hypertarget{README.md_autotoc_md9308}{}\doxysubsection{\texorpdfstring{How do I write a JSON file?}{How do I write a JSON file?}}\label{README.md_autotoc_md9308}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{}
+\DoxyCodeLine{bfj.write(path,\ data,\ options)}
+\DoxyCodeLine{\ \ .then(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .catch(error\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :(}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+{\ttfamily write} returns a \href{http://bluebirdjs.com/docs/api-reference.html}{\texttt{ bluebird promise}} and asynchronously serialises a data structure to a JSON file on disk. The promise is resolved when the file has been written, or rejected with the error if writing failed.
+
+It takes three arguments; the path to the JSON file, the data structure to serialise and an options object.\hypertarget{README.md_autotoc_md9309}{}\doxysubsection{\texorpdfstring{How do I create a stream of JSON?}{How do I create a stream of JSON?}}\label{README.md_autotoc_md9309}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ bfj.streamify(data,\ options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Get\ data\ out\ of\ the\ stream\ with\ event\ handlers}
+\DoxyCodeLine{stream.on('data',\ chunk\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{stream.on('end',\ ()\ =>\ \{\ /*\ ...\ */);}
+\DoxyCodeLine{stream.on('error',\ ()\ =>\ \{\ /*\ ...\ */);}
+\DoxyCodeLine{stream.on('dataError',\ ()\ =>\ \{\ /*\ ...\ */);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ...or\ you\ can\ pipe\ it\ to\ another\ stream}
+\DoxyCodeLine{stream.pipe(someOtherStream);}
+
+\end{DoxyCode}
+
+
+{\ttfamily streamify} returns a \href{https://nodejs.org/api/stream.html\#stream_readable_streams}{\texttt{ readable stream}} and asynchronously serialises a data structure to JSON, pushing the result to the returned stream.
+
+It takes two arguments; the data structure to serialise and an options object.
+
+If there a circular reference is encountered in the data and {\ttfamily options.\+circular} is not set to `\textquotesingle{}ignore'{\ttfamily , a}data\+Error{\ttfamily event will be emitted. If any other errors occur, an}error\`{} event will be emitted.\hypertarget{README.md_autotoc_md9310}{}\doxysubsection{\texorpdfstring{How do I create a JSON string?}{How do I create a JSON string?}}\label{README.md_autotoc_md9310}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{}
+\DoxyCodeLine{bfj.stringify(data,\ options)}
+\DoxyCodeLine{\ \ .then(json\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .catch(error\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ :(}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+{\ttfamily stringify} returns a \href{http://bluebirdjs.com/docs/api-reference.html}{\texttt{ bluebird promise}} and asynchronously serialises a data structure to a JSON string. The promise is resolved to the JSON string when serialisation is complete.
+
+It takes two arguments; the data structure to serialise and an options object.\hypertarget{README.md_autotoc_md9311}{}\doxysubsection{\texorpdfstring{What other methods are there?}{What other methods are there?}}\label{README.md_autotoc_md9311}
+\hypertarget{README.md_autotoc_md9312}{}\doxysubsubsection{\texorpdfstring{bfj.\+walk (stream, options)}{bfj.\+walk (stream, options)}}\label{README.md_autotoc_md9312}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ bfj.walk(fs.createReadStream(path),\ options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on(bfj.events.array,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.object,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.property,\ name\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.string,\ value\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.number,\ value\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.literal,\ value\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.endArray,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.endObject,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.error,\ error\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.dataError,\ error\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.end,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+
+\end{DoxyCode}
+
+
+{\ttfamily walk} returns an \href{https://nodejs.org/api/events.html\#events_class_eventemitter}{\texttt{ event emitter}} and asynchronously walks a stream of JSON data, emitting events as it encounters tokens.
+
+It takes two arguments; a \href{https://nodejs.org/api/stream.html\#stream_readable_streams}{\texttt{ readable stream}} from which the JSON will be read and an options object.
+
+The emitted events are defined as public properties of an object, {\ttfamily bfj.\+events}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily bfj.\+events.\+array} indicates that an array context has been entered by encountering the {\ttfamily \mbox{[}} character.
+\item {\ttfamily bfj.\+events.\+end\+Array} indicates that an array context has been left by encountering the {\ttfamily \mbox{]}} character.
+\item {\ttfamily bfj.\+events.\+object} indicates that an object context has been entered by encountering the {\ttfamily \{} character.
+\item {\ttfamily bfj.\+events.\+end\+Object} indicates that an object context has been left by encountering the {\ttfamily \}} character.
+\item {\ttfamily bfj.\+events.\+property} indicates that a property has been encountered in an object. The listener will be passed the name of the property as its argument and the next event to be emitted will represent the property\textquotesingle{}s value.
+\item {\ttfamily bfj.\+events.\+string} indicates that a string has been encountered. The listener will be passed the value as its argument.
+\item {\ttfamily bfj.\+events.\+number} indicates that a number has been encountered. The listener will be passed the value as its argument.
+\item {\ttfamily bfj.\+events.\+literal} indicates that a JSON literal (either {\ttfamily true}, {\ttfamily false} or {\ttfamily null}) has been encountered. The listener will be passed the value as its argument.
+\item {\ttfamily bfj.\+events.\+error} indicates that an error was caught from one of the event handlers in user code. The listener will be passed the {\ttfamily Error} instance as its argument.
+\item {\ttfamily bfj.\+events.\+data\+Error} indicates that a syntax error was encountered in the incoming JSON stream. The listener will be passed an {\ttfamily Error} instance decorated with {\ttfamily actual}, {\ttfamily expected}, {\ttfamily line\+Number} and {\ttfamily column\+Number} properties as its argument.
+\item {\ttfamily bfj.\+events.\+end} indicates that the end of the input has been reached and the stream is closed.
+\item {\ttfamily bfj.\+events.\+end\+Line} indicates that a root-\/level newline character has been encountered in an NDJSON stream. Only emitted if the {\ttfamily ndjson} option is set.
+\end{DoxyItemize}
+
+If you are using {\ttfamily bfj.\+walk} to sequentially parse items in an array, you might also be interested in the \href{https://github.com/hash-bang/bfj-collections}{\texttt{ bfj-\/collections}} module.\hypertarget{README.md_autotoc_md9313}{}\doxysubsubsection{\texorpdfstring{bfj.\+eventify (data, options)}{bfj.\+eventify (data, options)}}\label{README.md_autotoc_md9313}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ emitter\ =\ bfj.eventify(data,\ options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{emitter.on(bfj.events.array,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.object,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.property,\ name\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.string,\ value\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.number,\ value\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.literal,\ value\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.endArray,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.endObject,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.error,\ error\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.dataError,\ error\ =>\ \{\ /*\ ...\ */\ \});}
+\DoxyCodeLine{emitter.on(bfj.events.end,\ ()\ =>\ \{\ /*\ ...\ */\ \});}
+
+\end{DoxyCode}
+
+
+{\ttfamily eventify} returns an \href{https://nodejs.org/api/events.html\#events_class_eventemitter}{\texttt{ event emitter}} and asynchronously traverses a data structure depth-\/first, emitting events as it encounters items. By default it coerces promises, buffers and iterables to JSON-\/friendly values.
+
+It takes two arguments; the data structure to traverse and an options object.
+
+The emitted events are defined as public properties of an object, {\ttfamily bfj.\+events}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily bfj.\+events.\+array} indicates that an array has been encountered.
+\item {\ttfamily bfj.\+events.\+end\+Array} indicates that the end of an array has been encountered.
+\item {\ttfamily bfj.\+events.\+object} indicates that an object has been encountered.
+\item {\ttfamily bfj.\+events.\+end\+Object} indicates that the end of an object has been encountered.
+\item {\ttfamily bfj.\+events.\+property} indicates that a property has been encountered in an object. The listener will be passed the name of the property as its argument and the next event to be emitted will represent the property\textquotesingle{}s value.
+\item {\ttfamily bfj.\+events.\+string} indicates that a string has been encountered. The listener will be passed the value as its argument.
+\item {\ttfamily bfj.\+events.\+number} indicates that a number has been encountered. The listener will be passed the value as its argument.
+\item {\ttfamily bfj.\+events.\+literal} indicates that a JSON literal (either {\ttfamily true}, {\ttfamily false} or {\ttfamily null}) has been encountered. The listener will be passed the value as its argument.
+\item {\ttfamily bfj.\+events.\+error} indicates that an error was caught from one of the event handlers in user code. The listener will be passed the {\ttfamily Error} instance as its argument.
+\item {\ttfamily bfj.\+events.\+data\+Error} indicates that a circular reference was encountered in the data and the {\ttfamily circular} option was not set to `\textquotesingle{}ignore'{\ttfamily . The listener will be passed an}Error\`{} instance as its argument.
+\item {\ttfamily bfj.\+events.\+end} indicates that the end of the data has been reached and no further events will be emitted.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md9314}{}\doxysubsection{\texorpdfstring{What options can I specify?}{What options can I specify?}}\label{README.md_autotoc_md9314}
+\hypertarget{README.md_autotoc_md9315}{}\doxysubsubsection{\texorpdfstring{Options for parsing functions}{Options for parsing functions}}\label{README.md_autotoc_md9315}
+
+\begin{DoxyItemize}
+\item {\ttfamily options.\+reviver}\+: Transformation function, invoked depth-\/first against the parsed data structure. This option is analagous to the \href{https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse\#Using_the_reviver_parameter}{\texttt{ reviver parameter for JSON.\+parse}}.
+\item {\ttfamily options.\+yield\+Rate}\+: The number of data items to process before yielding to the event loop. Smaller values yield to the event loop more frequently, meaning less time will be consumed by bfj per tick but the overall parsing time will be slower. Larger values yield to the event loop less often, meaning slower tick times but faster overall parsing time. The default value is {\ttfamily 16384}.
+\item {\ttfamily options.\+Promise}\+: Promise constructor that will be used for promises returned by all methods. If you set this option, please be aware that some promise implementations (including native promises) may cause your process to die with out-\/of-\/memory exceptions. Defaults to \href{http://bluebirdjs.com/docs/api-reference.html}{\texttt{ bluebird\textquotesingle{}s implementation}}, which does not have that problem.
+\item {\ttfamily options.\+ndjson}\+: If set to {\ttfamily true}, newline characters at the root level will be treated as delimiters between discrete chunks of JSON. See NDJSON for more information.
+\item {\ttfamily options.\+numbers}\+: For {\ttfamily bfj.\+match} only, set this to {\ttfamily true} if you wish to match against numbers with a string or regular expression {\ttfamily selector} argument.
+\item {\ttfamily options.\+buffer\+Length}\+: For {\ttfamily bfj.\+match} only, the length of the match buffer. Smaller values use less memory but may result in a slower parse time. The default value is {\ttfamily 1024}.
+\item {\ttfamily options.\+high\+Water\+Mark}\+: For {\ttfamily bfj.\+match} only, set this if you would like to pass a value for the {\ttfamily high\+Water\+Mark} option to the readable stream constructor.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md9316}{}\doxysubsubsection{\texorpdfstring{Options for serialisation functions}{Options for serialisation functions}}\label{README.md_autotoc_md9316}
+
+\begin{DoxyItemize}
+\item {\ttfamily options.\+space}\+: Indentation string or the number of spaces to indent each nested level by. This option is analagous to the \href{https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify\#The_space_argument}{\texttt{ space parameter for JSON.\+stringify}}.
+\item {\ttfamily options.\+promises}\+: By default, promises are coerced to their resolved value. Set this property to `\textquotesingle{}ignore'\`{} for improved performance if you don\textquotesingle{}t need to coerce promises.
+\item {\ttfamily options.\+buffers}\+: By default, buffers are coerced using their {\ttfamily to\+String} method. Set this property to `\textquotesingle{}ignore'\`{} for improved performance if you don\textquotesingle{}t need to coerce buffers.
+\item {\ttfamily options.\+maps}\+: By default, maps are coerced to plain objects. Set this property to `\textquotesingle{}ignore'\`{} for improved performance if you don\textquotesingle{}t need to coerce maps.
+\item {\ttfamily options.\+iterables}\+: By default, other iterables (i.\+e. not arrays, strings or maps) are coerced to arrays. Set this property to `\textquotesingle{}ignore'\`{} for improved performance if you don\textquotesingle{}t need to coerce iterables.
+\item {\ttfamily options.\+circular}\+: By default, circular references will cause the write to fail. Set this property to `\textquotesingle{}ignore'\`{} if you\textquotesingle{}d prefer to silently skip past circular references in the data.
+\item {\ttfamily options.\+buffer\+Length}\+: The length of the write buffer. Smaller values use less memory but may result in a slower serialisation time. The default value is {\ttfamily 1024}.
+\item {\ttfamily options.\+high\+Water\+Mark}\+: Set this if you would like to pass a value for the {\ttfamily high\+Water\+Mark} option to the readable stream constructor.
+\item {\ttfamily options.\+yield\+Rate}\+: The number of data items to process before yielding to the event loop. Smaller values yield to the event loop more frequently, meaning less time will be consumed by bfj per tick but the overall serialisation time will be slower. Larger values yield to the event loop less often, meaning slower tick times but faster overall serialisation time. The default value is {\ttfamily 16384}.
+\item {\ttfamily options.\+Promise}\+: Promise constructor that will be used for promises returned by all methods. If you set this option, please be aware that some promise implementations (including native promises) may cause your process to die with out-\/of-\/memory exceptions. Defaults to \href{http://bluebirdjs.com/docs/api-reference.html}{\texttt{ bluebird\textquotesingle{}s implementation}}, which does not have that problem.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md9317}{}\doxysubsection{\texorpdfstring{Is it possible to pause parsing or serialisation from calling code?}{Is it possible to pause parsing or serialisation from calling code?}}\label{README.md_autotoc_md9317}
+Yes it is! Both \`{}walk\`{} and \`{}eventify\`{} decorate their returned event emitters with a {\ttfamily pause} method that will prevent any further events being emitted. The {\ttfamily pause} method itself returns a {\ttfamily resume} function that you can call to indicate that processing should continue.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bfj\ =\ require('bfj');}
+\DoxyCodeLine{const\ emitter\ =\ bfj.walk(fs.createReadStream(path),\ options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Later,\ when\ you\ want\ to\ pause\ parsing:}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ resume\ =\ emitter.pause();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Then\ when\ you\ want\ to\ resume:}
+\DoxyCodeLine{}
+\DoxyCodeLine{resume();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9318}{}\doxysubsection{\texorpdfstring{Can it handle \href{http://ndjson.org/}{\texttt{ newline-\/delimited JSON (NDJSON)}}?}{Can it handle \href{http://ndjson.org/}{\texttt{ newline-\/delimited JSON (NDJSON)}}?}}\label{README.md_autotoc_md9318}
+Yes. If you pass the {\ttfamily ndjson} option to {\ttfamily bfj.\+walk}, {\ttfamily bfj.\+match} or {\ttfamily bfj.\+parse}, newline characters at the root level will act as delimiters between discrete JSON values\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily bfj.\+walk} will emit a {\ttfamily bfj.\+events.\+end\+Line} event each time it encounters a newline character.
+\item {\ttfamily bfj.\+match} will just ignore the newlines while it continues looking for matching items.
+\item {\ttfamily bfj.\+parse} will resolve with the first value and pause the underlying stream. If it\textquotesingle{}s called again with the same stream, it will resume processing and resolve with the second value. To parse the entire stream, calls should be made sequentially one-\/at-\/a-\/time until the returned promise resolves to {\ttfamily undefined} ({\ttfamily undefined} is not a valid JSON token).
+\end{DoxyItemize}
+
+{\ttfamily bfj.\+unpipe} and {\ttfamily bfj.\+read} will not parse NDJSON.\hypertarget{README.md_autotoc_md9319}{}\doxysubsection{\texorpdfstring{Why does it default to bluebird promises?}{Why does it default to bluebird promises?}}\label{README.md_autotoc_md9319}
+Until version {\ttfamily 4.\+2.\+4}, native promises were used. But they were found to cause out-\/of-\/memory errors when serialising large amounts of data to JSON, due to \href{https://alexn.org/blog/2017/10/11/javascript-promise-leaks-memory.html}{\texttt{ well-\/documented problems with the native promise implementation}}. So in version {\ttfamily 5.\+0.\+0}, bluebird promises were used instead. In version {\ttfamily 5.\+1.\+0}, an option was added that enables callers to specify the promise constructor to use. Use it at your own risk.\hypertarget{README.md_autotoc_md9320}{}\doxysubsection{\texorpdfstring{Can I specify a different promise implementation?}{Can I specify a different promise implementation?}}\label{README.md_autotoc_md9320}
+Yes. Just pass the {\ttfamily Promise} option to any method. If you get out-\/of-\/memory errors when using that option, consider changing your promise implementation.\hypertarget{README.md_autotoc_md9321}{}\doxysubsection{\texorpdfstring{Is there a change log?}{Is there a change log?}}\label{README.md_autotoc_md9321}
+\doxysectlink{md_node__modules_2bfj_2_h_i_s_t_o_r_y}{Yes}{0}.\hypertarget{README.md_autotoc_md9322}{}\doxysubsection{\texorpdfstring{How do I set up the dev environment?}{How do I set up the dev environment?}}\label{README.md_autotoc_md9322}
+The development environment relies on \href{https://nodejs.org/en/}{\texttt{ Node.\+js}}, \href{http://eslint.org/}{\texttt{ ESLint}}, \href{https://mochajs.org/}{\texttt{ Mocha}}, \href{http://chaijs.com/}{\texttt{ Chai}}, \href{https://github.com/thlorenz/proxyquire}{\texttt{ Proxyquire}} and \href{https://gitlab.com/philbooth/spooks.js}{\texttt{ Spooks}}. Assuming that you already have node and NPM set up, you just need to run {\ttfamily npm install} to install all of the dependencies as listed in {\ttfamily package.\+json}.
+
+You can lint the code with the command {\ttfamily npm run lint}.
+
+You can run the tests with the command {\ttfamily npm test}.\hypertarget{README.md_autotoc_md9323}{}\doxysubsection{\texorpdfstring{What versions of Node.\+js does it support?}{What versions of Node.\+js does it support?}}\label{README.md_autotoc_md9323}
+As of \href{HISTORY.md\#700}{\texttt{ version {\ttfamily 7.\+0.\+0}}}, only Node.\+js versions 8 or greater are supported.
+
+Between versions \href{HISTORY.md\#300}{\texttt{ {\ttfamily 3.\+0.\+0}}} and \href{HISTORY.md\#612}{\texttt{ {\ttfamily 6.\+1.\+2}}}, only Node.\+js versions 6 or greater were supported.
+
+Until \href{HISTORY.md\#212}{\texttt{ version {\ttfamily 2.\+1.\+2}}}, only Node.\+js versions 4 or greater were supported.\hypertarget{README.md_autotoc_md9324}{}\doxysubsection{\texorpdfstring{What license is it released under?}{What license is it released under?}}\label{README.md_autotoc_md9324}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]}. 

@@ -1,0 +1,274 @@
+\doxysection{node\+\_\+modules/lint-\/staged/node\+\_\+modules/get-\/stream Directory Reference}
+\hypertarget{dir_64c0f63ee171aa891d8cb62a3fd28b4f}{}\label{dir_64c0f63ee171aa891d8cb62a3fd28b4f}\index{node\_modules/lint-\/staged/node\_modules/get-\/stream Directory Reference@{node\_modules/lint-\/staged/node\_modules/get-\/stream Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Get a stream as a string, Buffer, Array\+Buffer or array \end{quote}
+\hypertarget{readme.md_autotoc_md21754}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{readme.md_autotoc_md21754}
+
+\begin{DoxyItemize}
+\item Works in any Java\+Script environment (Node.js, browsers, etc.).
+\item Supports text streams, binary streams and object streams.
+\item Supports async iterables.
+\item Can set a maximum stream size.
+\item Returns partially read data when the stream errors.
+\item Fast.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md21755}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md21755}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ get-\/stream}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21756}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md21756}
+\hypertarget{readme.md_autotoc_md21757}{}\doxysubsubsection{\texorpdfstring{Node.\+js streams}{Node.\+js streams}}\label{readme.md_autotoc_md21757}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs';}
+\DoxyCodeLine{import\ getStream\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ fs.createReadStream('unicorn.txt');}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(await\ getStream(stream));}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ ,,))))))));,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \_\_)))))))))))))),}
+\DoxyCodeLine{\(\backslash\)|/\ \ \ \ \ \ \ -\/\(\backslash\)(((((''''((((((((.}
+\DoxyCodeLine{-\/*-\/==//////((''\ \ .\ \ \ \ \ \`{})))))),}
+\DoxyCodeLine{/|\(\backslash\)\ \ \ \ \ \ ))|\ o\ \ \ \ ;-\/.\ \ \ \ '(((((\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ,(,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ (\ \`{}|\ \ \ \ /\ \ )\ \ \ \ ;))))'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ,\_))\string^;(\string~}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ |\ \ \ |\ \ \ ,))((((\_\ \ \ \ \ \_\_\_\_\_-\/-\/-\/-\/-\/-\/\string~\string~\string~-\/.\ \ \ \ \ \ \ \ \%,;(;(>';'\string~}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ o\_);\ \ \ ;\ \ \ \ )))(((`\ \string~-\/-\/-\/\string~\ \ \`{}::\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)\ \ \ \ \ \ \%\%\string~\string~)(v;(`('\string~}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ;\ \ \ \ ''''````\ \ \ \ \ \ \ \ \ \`{}:\ \ \ \ \ \ \ \`{}:::|\(\backslash\),\_\_,\%\%\ \ \ \ );`';\ \string~}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ \_\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )\ \ \ \ \ /\ \ \ \ \ \ \`{}:|`-\/-\/-\/-\/'\ \ \ \ \ \`{}-\/'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \_\_\_\_\_\_/\(\backslash\)/\string~\ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ /\ \ \ \ \ \ \ \ /}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ /\string~;;.\_\_\_\_/;;'\ \ /\ \ \ \ \ \ \ \ \ \ \_\_\_-\/-\/,-\/(\ \ \ \`{};;;/}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ /\ //\ \ \_;\_\_\_\_\_\_;'-\/-\/-\/-\/-\/-\/\string~\string~\string~\string~\string~\ \ \ \ /;;/\(\backslash\)\ \ \ \ /}
+\DoxyCodeLine{\ \ \ \ \ \ \ //\ \ |\ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ /\ ;\ \ \ \(\backslash\);;,\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ (<\_\ \ |\ ;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ /',/-\/-\/-\/-\/-\/'\ \ \_>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \(\backslash\)\_|\ ||\_\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\string~;\string~\string~\string~\string~\string~\string~\string~\string~\string~}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \`{}\(\backslash\)\_|\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (,\string~\string~}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)\string~\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \string~\string~}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21758}{}\doxysubsubsection{\texorpdfstring{Web streams}{Web streams}}\label{readme.md_autotoc_md21758}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ getStream\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{body:\ readableStream\}\ =\ await\ fetch('https://example.com');}
+\DoxyCodeLine{console.log(await\ getStream(readableStream));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21759}{}\doxysubsubsection{\texorpdfstring{Async iterables}{Async iterables}}\label{readme.md_autotoc_md21759}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{opendir\}\ from\ 'node:fs/promises';}
+\DoxyCodeLine{import\ \{getStreamAsArray\}\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ asyncIterable\ =\ await\ opendir(directory);}
+\DoxyCodeLine{console.log(await\ getStreamAsArray(asyncIterable));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21760}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md21760}
+The following methods read the stream\textquotesingle{}s contents and return it as a promise.\hypertarget{readme.md_autotoc_md21761}{}\doxysubsubsection{\texorpdfstring{get\+Stream(stream, options?)}{get\+Stream(stream, options?)}}\label{readme.md_autotoc_md21761}
+{\ttfamily stream}\+: \href{https://nodejs.org/api/stream.html\#class-streamreadable}{\texttt{ {\ttfamily stream.\+Readable}}}, \href{https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream}{\texttt{ {\ttfamily Readable\+Stream}}}, or \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols\#the_async_iterator_and_async_iterable_protocols}{\texttt{ {\ttfamily Async\+Iterable\texorpdfstring{$<$}{<}string \texorpdfstring{$\vert$}{|} Buffer \texorpdfstring{$\vert$}{|} Array\+Buffer \texorpdfstring{$\vert$}{|} Data\+View \texorpdfstring{$\vert$}{|} Typed\+Array\texorpdfstring{$>$}{>}}}}\textbackslash{} {\ttfamily options}\+: \doxylink{README.md_options}{\`{}\+Options\`{}}
+
+Get the given {\ttfamily stream} as a string.\hypertarget{readme.md_autotoc_md21762}{}\doxysubsubsection{\texorpdfstring{get\+Stream\+As\+Buffer(stream, options?)}{get\+Stream\+As\+Buffer(stream, options?)}}\label{readme.md_autotoc_md21762}
+Get the given {\ttfamily stream} as a Node.\+js \href{https://nodejs.org/api/buffer.html\#class-buffer}{\texttt{ {\ttfamily Buffer}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{getStreamAsBuffer\}\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ fs.createReadStream('unicorn.png');}
+\DoxyCodeLine{console.log(await\ getStreamAsBuffer(stream));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21763}{}\doxysubsubsection{\texorpdfstring{get\+Stream\+As\+Array\+Buffer(stream, options?)}{get\+Stream\+As\+Array\+Buffer(stream, options?)}}\label{readme.md_autotoc_md21763}
+Get the given {\ttfamily stream} as an \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer}{\texttt{ {\ttfamily Array\+Buffer}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{getStreamAsArrayBuffer\}\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{body:\ readableStream\}\ =\ await\ fetch('https://example.com');}
+\DoxyCodeLine{console.log(await\ getStreamAsArrayBuffer(readableStream));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21764}{}\doxysubsubsection{\texorpdfstring{get\+Stream\+As\+Array(stream, options?)}{get\+Stream\+As\+Array(stream, options?)}}\label{readme.md_autotoc_md21764}
+Get the given {\ttfamily stream} as an array. Unlike \doxylink{README.md_api}{other methods}, this supports \href{https://nodejs.org/api/stream.html\#object-mode}{\texttt{ streams of objects}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{getStreamAsArray\}\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{body:\ readableStream\}\ =\ await\ fetch('https://example.com');}
+\DoxyCodeLine{console.log(await\ getStreamAsArray(readableStream));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21765}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md21765}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md21766}{}\doxysubsubsubsubsection{\texorpdfstring{max\+Buffer}{max\+Buffer}}\label{readme.md_autotoc_md21766}
+Type\+: {\ttfamily number}\textbackslash{} Default\+: {\ttfamily Infinity}
+
+Maximum length of the stream. If exceeded, the promise will be rejected with a {\ttfamily Max\+Buffer\+Error}.
+
+Depending on the \doxylink{README.md_api}{method}, the length is measured with \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length}{\texttt{ {\ttfamily string.\+length}}}, \href{https://nodejs.org/api/buffer.html\#buflength}{\texttt{ {\ttfamily buffer.\+length}}}, \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer/byteLength}{\texttt{ {\ttfamily array\+Buffer.\+byte\+Length}}} or \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length}{\texttt{ {\ttfamily array.\+length}}}.\hypertarget{readme.md_autotoc_md21767}{}\doxysubsection{\texorpdfstring{Errors}{Errors}}\label{readme.md_autotoc_md21767}
+If the stream errors, the returned promise will be rejected with the {\ttfamily error}. Any contents already read from the stream will be set to {\ttfamily error.\+buffered\+Data}, which is a {\ttfamily string}, a {\ttfamily Buffer}, an {\ttfamily Array\+Buffer} or an array depending on the \doxylink{README.md_api}{method used}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ getStream\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ \ \ await\ getStream(streamThatErrorsAtTheEnd('unicorn'));}
+\DoxyCodeLine{\}\ catch\ (error)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(error.bufferedData);}
+\DoxyCodeLine{\ \ \ \ //=>\ 'unicorn'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21768}{}\doxysubsection{\texorpdfstring{Tips}{Tips}}\label{readme.md_autotoc_md21768}
+\hypertarget{readme.md_autotoc_md21769}{}\doxysubsubsection{\texorpdfstring{Alternatives}{Alternatives}}\label{readme.md_autotoc_md21769}
+If you do not need the \`{}max\+Buffer\`{} option, \`{}error.buffered\+Data\`{}, nor browser support, you can use the following methods instead of this package.\hypertarget{readme.md_autotoc_md21770}{}\doxysubsubsubsection{\texorpdfstring{\href{https://nodejs.org/api/webstreams.html\#streamconsumerstextstream}{\texttt{ {\ttfamily stream\+Consumers.\+text()}}}}{\href{https://nodejs.org/api/webstreams.html\#streamconsumerstextstream}{\texttt{ {\ttfamily stream\+Consumers.\+text()}}}}}\label{readme.md_autotoc_md21770}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs';}
+\DoxyCodeLine{import\ \{text\}\ from\ 'node:stream/consumers';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ fs.createReadStream('unicorn.txt',\ \{encoding:\ 'utf8'\});}
+\DoxyCodeLine{console.log(await\ text(stream))}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21771}{}\doxysubsubsubsection{\texorpdfstring{\href{https://nodejs.org/api/webstreams.html\#streamconsumersbufferstream}{\texttt{ {\ttfamily stream\+Consumers.\+buffer()}}}}{\href{https://nodejs.org/api/webstreams.html\#streamconsumersbufferstream}{\texttt{ {\ttfamily stream\+Consumers.\+buffer()}}}}}\label{readme.md_autotoc_md21771}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{buffer\}\ from\ 'node:stream/consumers';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(await\ buffer(stream))}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21772}{}\doxysubsubsubsection{\texorpdfstring{\href{https://nodejs.org/api/webstreams.html\#streamconsumersarraybufferstream}{\texttt{ {\ttfamily stream\+Consumers.\+array\+Buffer()}}}}{\href{https://nodejs.org/api/webstreams.html\#streamconsumersarraybufferstream}{\texttt{ {\ttfamily stream\+Consumers.\+array\+Buffer()}}}}}\label{readme.md_autotoc_md21772}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{arrayBuffer\}\ from\ 'node:stream/consumers';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(await\ arrayBuffer(stream))}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21773}{}\doxysubsubsubsection{\texorpdfstring{\href{https://nodejs.org/api/stream.html\#readabletoarrayoptions}{\texttt{ {\ttfamily readable.\+to\+Array()}}}}{\href{https://nodejs.org/api/stream.html\#readabletoarrayoptions}{\texttt{ {\ttfamily readable.\+to\+Array()}}}}}\label{readme.md_autotoc_md21773}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(await\ stream.toArray())}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21774}{}\doxysubsubsubsection{\texorpdfstring{\href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fromAsync}{\texttt{ {\ttfamily Array.\+from\+Async()}}}}{\href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fromAsync}{\texttt{ {\ttfamily Array.\+from\+Async()}}}}}\label{readme.md_autotoc_md21774}
+If your \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fromAsync\#browser_compatibility}{\texttt{ environment supports it}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(await\ Array.fromAsync(stream))}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21775}{}\doxysubsubsection{\texorpdfstring{Non-\/\+UTF-\/8 encoding}{Non-\/\+UTF-\/8 encoding}}\label{readme.md_autotoc_md21775}
+When all of the following conditions apply\+:
+\begin{DoxyItemize}
+\item \`{}get\+Stream()\`{} is used (as opposed to \`{}get\+Stream\+As\+Buffer()\`{} or \`{}get\+Stream\+As\+Array\+Buffer()\`{})
+\item The stream is binary (not text)
+\item The stream\textquotesingle{}s encoding is not UTF-\/8 (for example, it is UTF-\/16, hexadecimal, or Base64)
+\end{DoxyItemize}
+
+Then the stream must be decoded using a transform stream like \href{https://developer.mozilla.org/en-US/docs/Web/API/TextDecoderStream}{\texttt{ {\ttfamily Text\+Decoder\+Stream}}} or \href{https://github.com/hapijs/b64}{\texttt{ {\ttfamily b64}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ getStream\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ textDecoderStream\ =\ new\ TextDecoderStream('utf-\/16le');}
+\DoxyCodeLine{const\ \{body:\ readableStream\}\ =\ await\ fetch('https://example.com');}
+\DoxyCodeLine{console.log(await\ getStream(readableStream.pipeThrough(textDecoderStream)));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21776}{}\doxysubsubsection{\texorpdfstring{Blobs}{Blobs}}\label{readme.md_autotoc_md21776}
+\`{}get\+Stream\+As\+Array\+Buffer()\`{} can be used to create \href{https://developer.mozilla.org/en-US/docs/Web/API/Blob}{\texttt{ Blobs}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{getStreamAsArrayBuffer\}\ from\ 'get-\/stream';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ fs.createReadStream('unicorn.txt');}
+\DoxyCodeLine{console.log(new\ Blob([await\ getStreamAsArrayBuffer(stream)]));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21777}{}\doxysubsubsection{\texorpdfstring{JSON streaming}{JSON streaming}}\label{readme.md_autotoc_md21777}
+\`{}get\+Stream\+As\+Array()\`{} can be combined with JSON streaming utilities to parse JSON incrementally.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs';}
+\DoxyCodeLine{import\ \{compose\ as\ composeStreams\}\ from\ 'node:stream';}
+\DoxyCodeLine{import\ \{getStreamAsArray\}\ from\ 'get-\/stream';}
+\DoxyCodeLine{import\ streamJson\ from\ 'stream-\/json';}
+\DoxyCodeLine{import\ streamJsonArray\ from\ 'stream-\/json/streamers/StreamArray.js';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ fs.createReadStream('big-\/array-\/of-\/objects.json');}
+\DoxyCodeLine{console.log(await\ getStreamAsArray(}
+\DoxyCodeLine{\ \ \ \ composeStreams(stream,\ streamJson.parser(),\ streamJsonArray.streamArray()),}
+\DoxyCodeLine{));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21778}{}\doxysubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{readme.md_autotoc_md21778}
+\hypertarget{readme.md_autotoc_md21779}{}\doxysubsubsection{\texorpdfstring{Node.\+js stream (100 MB, binary)}{Node.\+js stream (100 MB, binary)}}\label{readme.md_autotoc_md21779}
+
+\begin{DoxyItemize}
+\item {\ttfamily get\+Stream()}\+: 142ms
+\item {\ttfamily text()}\+: 139ms
+\item {\ttfamily get\+Stream\+As\+Buffer()}\+: 106ms
+\item {\ttfamily buffer()}\+: 83ms
+\item {\ttfamily get\+Stream\+As\+Array\+Buffer()}\+: 105ms
+\item {\ttfamily array\+Buffer()}\+: 81ms
+\item {\ttfamily get\+Stream\+As\+Array()}\+: 24ms
+\item {\ttfamily stream.\+to\+Array()}\+: 21ms
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md21780}{}\doxysubsubsection{\texorpdfstring{Node.\+js stream (100 MB, text)}{Node.\+js stream (100 MB, text)}}\label{readme.md_autotoc_md21780}
+
+\begin{DoxyItemize}
+\item {\ttfamily get\+Stream()}\+: 90ms
+\item {\ttfamily text()}\+: 89ms
+\item {\ttfamily get\+Stream\+As\+Buffer()}\+: 127ms
+\item {\ttfamily buffer()}\+: 192ms
+\item {\ttfamily get\+Stream\+As\+Array\+Buffer()}\+: 129ms
+\item {\ttfamily array\+Buffer()}\+: 195ms
+\item {\ttfamily get\+Stream\+As\+Array()}\+: 89ms
+\item {\ttfamily stream.\+to\+Array()}\+: 90ms
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md21781}{}\doxysubsubsection{\texorpdfstring{Web Readable\+Stream (100 MB, binary)}{Web Readable\+Stream (100 MB, binary)}}\label{readme.md_autotoc_md21781}
+
+\begin{DoxyItemize}
+\item {\ttfamily get\+Stream()}\+: 223ms
+\item {\ttfamily text()}\+: 221ms
+\item {\ttfamily get\+Stream\+As\+Buffer()}\+: 182ms
+\item {\ttfamily buffer()}\+: 153ms
+\item {\ttfamily get\+Stream\+As\+Array\+Buffer()}\+: 171ms
+\item {\ttfamily array\+Buffer()}\+: 155ms
+\item {\ttfamily get\+Stream\+As\+Array()}\+: 83ms
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md21782}{}\doxysubsubsection{\texorpdfstring{Web Readable\+Stream (100 MB, text)}{Web Readable\+Stream (100 MB, text)}}\label{readme.md_autotoc_md21782}
+
+\begin{DoxyItemize}
+\item {\ttfamily get\+Stream()}\+: 141ms
+\item {\ttfamily text()}\+: 139ms
+\item {\ttfamily get\+Stream\+As\+Buffer()}\+: 91ms
+\item {\ttfamily buffer()}\+: 80ms
+\item {\ttfamily get\+Stream\+As\+Array\+Buffer()}\+: 89ms
+\item {\ttfamily array\+Buffer()}\+: 81ms
+\item {\ttfamily get\+Stream\+As\+Array()}\+: 21ms
+\end{DoxyItemize}
+
+\href{benchmarks/index.js}{\texttt{ Benchmarks\textquotesingle{} source file}}.\hypertarget{readme.md_autotoc_md21783}{}\doxysubsection{\texorpdfstring{FAQ}{FAQ}}\label{readme.md_autotoc_md21783}
+\hypertarget{readme.md_autotoc_md21784}{}\doxysubsubsection{\texorpdfstring{How is this different from \href{https://github.com/maxogden/concat-stream}{\texttt{ {\ttfamily concat-\/stream}}}?}{How is this different from \href{https://github.com/maxogden/concat-stream}{\texttt{ {\ttfamily concat-\/stream}}}?}}\label{readme.md_autotoc_md21784}
+This module accepts a stream instead of being one and returns a promise instead of using a callback. The API is simpler and it only supports returning a string, {\ttfamily Buffer}, an {\ttfamily Array\+Buffer} or an array. It doesn\textquotesingle{}t have a fragile type inference. You explicitly choose what you want. And it doesn\textquotesingle{}t depend on the huge {\ttfamily readable-\/stream} package.\hypertarget{readme.md_autotoc_md21785}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md21785}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/get-stdin}{\texttt{ get-\/stdin}} -\/ Get stdin as a string or buffer
+\item \href{https://github.com/sindresorhus/into-stream}{\texttt{ into-\/stream}} -\/ The opposite of this package 
+\end{DoxyItemize}

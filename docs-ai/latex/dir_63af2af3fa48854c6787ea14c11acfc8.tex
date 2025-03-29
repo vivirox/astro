@@ -1,0 +1,30 @@
+\doxysection{node\+\_\+modules/es-\/to-\/primitive Directory Reference}
+\hypertarget{dir_63af2af3fa48854c6787ea14c11acfc8}{}\label{dir_63af2af3fa48854c6787ea14c11acfc8}\index{node\_modules/es-\/to-\/primitive Directory Reference@{node\_modules/es-\/to-\/primitive Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/ljharb/es-to-primitive/actions}{\texttt{ }} \href{https://app.codecov.io/gh/ljharb/es-to-primitive/}{\texttt{ }} \href{https://david-dm.org/ljharb/es-to-primitive}{\texttt{ }} \href{https://david-dm.org/ljharb/es-to-primitive\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=es-to-primitive}{\texttt{ }}
+
+\href{https://npmjs.org/package/es-to-primitive}{\texttt{ }}
+
+ECMAScript “\+To\+Primitive” algorithm. Provides ES5 and ES2015 versions. When different versions of the spec conflict, the default export will be the latest version of the abstract operation. Alternative versions will also be available under an {\ttfamily es5}/{\ttfamily es2015} exported property if you require a specific version.\hypertarget{README.md_autotoc_md12730}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md12730}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ toPrimitive\ =\ require('es-\/to-\/primitive');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert(toPrimitive(function\ ()\ \{\})\ ===\ String(function\ ()\ \{\}));}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ date\ =\ new\ Date();}
+\DoxyCodeLine{assert(toPrimitive(date)\ ===\ String(date));}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert(toPrimitive(\{\ valueOf:\ function\ ()\ \{\ return\ 3;\ \}\ \})\ ===\ 3);}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert(toPrimitive(['a',\ 'b',\ 3])\ ===\ String(['a',\ 'b',\ 3]));}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ sym\ =\ Symbol();}
+\DoxyCodeLine{assert(toPrimitive(Object(sym))\ ===\ sym);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12731}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md12731}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

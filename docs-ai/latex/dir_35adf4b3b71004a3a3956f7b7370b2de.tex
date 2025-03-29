@@ -1,0 +1,74 @@
+\doxysection{node\+\_\+modules/whatwg-\/url Directory Reference}
+\hypertarget{dir_35adf4b3b71004a3a3956f7b7370b2de}{}\label{dir_35adf4b3b71004a3a3956f7b7370b2de}\index{node\_modules/whatwg-\/url Directory Reference@{node\_modules/whatwg-\/url Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_3d2deba9f16aef80998e7a8e3b4783af}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+whatwg-\/url is a full implementation of the WHATWG \href{https://url.spec.whatwg.org/}{\texttt{ URL Standard}}. It can be used standalone, but it also exposes a lot of the internal algorithms that are useful for integrating a URL parser into a project like \href{https://github.com/tmpvar/jsdom}{\texttt{ jsdom}}.\hypertarget{README.md_autotoc_md35530}{}\doxysubsection{\texorpdfstring{Current Status}{Current Status}}\label{README.md_autotoc_md35530}
+whatwg-\/url is currently up to date with the URL spec up to commit \href{https://github.com/whatwg/url/commit/a622235308342c9adc7fc2fd1659ff059f7d5e2a}{\texttt{ a62223}}.\hypertarget{README.md_autotoc_md35531}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md35531}
+\hypertarget{README.md_autotoc_md35532}{}\doxysubsubsection{\texorpdfstring{The {\ttfamily URL} Constructor}{The {\ttfamily URL} Constructor}}\label{README.md_autotoc_md35532}
+The main API is the \href{https://url.spec.whatwg.org/\#url}{\texttt{ {\ttfamily URL}}} export, which follows the spec\textquotesingle{}s behavior in all ways (including e.\+g. {\ttfamily USVString} conversion). Most consumers of this library will want to use this.\hypertarget{README.md_autotoc_md35533}{}\doxysubsubsection{\texorpdfstring{Low-\/level URL Standard API}{Low-\/level URL Standard API}}\label{README.md_autotoc_md35533}
+The following methods are exported for use by places like jsdom that need to implement things like \href{https://html.spec.whatwg.org/\#htmlhyperlinkelementutils}{\texttt{ {\ttfamily HTMLHyperlink\+Element\+Utils}}}. They operate on or return an "{}internal URL"{} or \href{https://url.spec.whatwg.org/\#concept-url}{\texttt{ "{}\+URL record"{}}} type.
+
+
+\begin{DoxyItemize}
+\item \href{https://url.spec.whatwg.org/\#concept-url-parser}{\texttt{ URL parser}}\+: {\ttfamily parse\+URL(input, \{ base\+URL, encoding\+Override \})}
+\item \href{https://url.spec.whatwg.org/\#concept-basic-url-parser}{\texttt{ Basic URL parser}}\+: {\ttfamily basic\+URLParse(input, \{ base\+URL, encoding\+Override, url, state\+Override \})}
+\item \href{https://url.spec.whatwg.org/\#concept-url-serializer}{\texttt{ URL serializer}}\+: {\ttfamily serialize\+URL(url\+Record, exclude\+Fragment)}
+\item \href{https://url.spec.whatwg.org/\#concept-host-serializer}{\texttt{ Host serializer}}\+: {\ttfamily serialize\+Host(host\+From\+URLRecord)}
+\item \href{https://url.spec.whatwg.org/\#serialize-an-integer}{\texttt{ Serialize an integer}}\+: {\ttfamily serialize\+Integer(number)}
+\item \href{https://url.spec.whatwg.org/\#concept-url-origin}{\texttt{ Origin}} \href{https://html.spec.whatwg.org/multipage/browsers.html\#serialization-of-an-origin}{\texttt{ serializer}}\+: {\ttfamily serialize\+URLOrigin(url\+Record)}
+\item \href{https://url.spec.whatwg.org/\#set-the-username}{\texttt{ Set the username}}\+: {\ttfamily set\+The\+Username(url\+Record, username\+String)}
+\item \href{https://url.spec.whatwg.org/\#set-the-password}{\texttt{ Set the password}}\+: {\ttfamily set\+The\+Password(url\+Record, password\+String)}
+\item \href{https://url.spec.whatwg.org/\#cannot-have-a-username-password-port}{\texttt{ Cannot have a username/password/port}}\+: {\ttfamily cannot\+Have\+AUsername\+Password\+Port(url\+Record)}
+\end{DoxyItemize}
+
+The {\ttfamily state\+Override} parameter is one of the following strings\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://url.spec.whatwg.org/\#scheme-start-state}{\texttt{ {\ttfamily "{}scheme start"{}}}}
+\item \href{https://url.spec.whatwg.org/\#scheme-state}{\texttt{ {\ttfamily "{}scheme"{}}}}
+\item \href{https://url.spec.whatwg.org/\#no-scheme-state}{\texttt{ {\ttfamily "{}no scheme"{}}}}
+\item \href{https://url.spec.whatwg.org/\#special-relative-or-authority-state}{\texttt{ {\ttfamily "{}special relative or authority"{}}}}
+\item \href{https://url.spec.whatwg.org/\#path-or-authority-state}{\texttt{ {\ttfamily "{}path or authority"{}}}}
+\item \href{https://url.spec.whatwg.org/\#relative-state}{\texttt{ {\ttfamily "{}relative"{}}}}
+\item \href{https://url.spec.whatwg.org/\#relative-slash-state}{\texttt{ {\ttfamily "{}relative slash"{}}}}
+\item \href{https://url.spec.whatwg.org/\#special-authority-slashes-state}{\texttt{ {\ttfamily "{}special authority slashes"{}}}}
+\item \href{https://url.spec.whatwg.org/\#special-authority-ignore-slashes-state}{\texttt{ {\ttfamily "{}special authority ignore slashes"{}}}}
+\item \href{https://url.spec.whatwg.org/\#authority-state}{\texttt{ {\ttfamily "{}authority"{}}}}
+\item \href{https://url.spec.whatwg.org/\#host-state}{\texttt{ {\ttfamily "{}host"{}}}}
+\item \href{https://url.spec.whatwg.org/\#hostname-state}{\texttt{ {\ttfamily "{}hostname"{}}}}
+\item \href{https://url.spec.whatwg.org/\#port-state}{\texttt{ {\ttfamily "{}port"{}}}}
+\item \href{https://url.spec.whatwg.org/\#file-state}{\texttt{ {\ttfamily "{}file"{}}}}
+\item \href{https://url.spec.whatwg.org/\#file-slash-state}{\texttt{ {\ttfamily "{}file slash"{}}}}
+\item \href{https://url.spec.whatwg.org/\#file-host-state}{\texttt{ {\ttfamily "{}file host"{}}}}
+\item \href{https://url.spec.whatwg.org/\#path-start-state}{\texttt{ {\ttfamily "{}path start"{}}}}
+\item \href{https://url.spec.whatwg.org/\#path-state}{\texttt{ {\ttfamily "{}path"{}}}}
+\item \href{https://url.spec.whatwg.org/\#cannot-be-a-base-url-path-state}{\texttt{ {\ttfamily "{}cannot-\/be-\/a-\/base-\/\+URL path"{}}}}
+\item \href{https://url.spec.whatwg.org/\#query-state}{\texttt{ {\ttfamily "{}query"{}}}}
+\item \href{https://url.spec.whatwg.org/\#fragment-state}{\texttt{ {\ttfamily "{}fragment"{}}}}
+\end{DoxyItemize}
+
+The URL record type has the following API\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://url.spec.whatwg.org/\#concept-url-scheme}{\texttt{ {\ttfamily scheme}}}
+\item \href{https://url.spec.whatwg.org/\#concept-url-username}{\texttt{ {\ttfamily username}}}
+\item \href{https://url.spec.whatwg.org/\#concept-url-password}{\texttt{ {\ttfamily password}}}
+\item \href{https://url.spec.whatwg.org/\#concept-url-host}{\texttt{ {\ttfamily host}}}
+\item \href{https://url.spec.whatwg.org/\#concept-url-port}{\texttt{ {\ttfamily port}}}
+\item \href{https://url.spec.whatwg.org/\#concept-url-path}{\texttt{ {\ttfamily path}}} (as an array)
+\item \href{https://url.spec.whatwg.org/\#concept-url-query}{\texttt{ {\ttfamily query}}}
+\item \href{https://url.spec.whatwg.org/\#concept-url-fragment}{\texttt{ {\ttfamily fragment}}}
+\item \href{https://url.spec.whatwg.org/\#url-cannot-be-a-base-url-flag}{\texttt{ {\ttfamily cannot\+Be\+ABase\+URL}}} (as a boolean)
+\end{DoxyItemize}
+
+These properties should be treated with care, as in general changing them will cause the URL record to be in an inconsistent state until the appropriate invocation of {\ttfamily basic\+URLParse} is used to fix it up. You can see examples of this in the URL Standard, where there are many step sequences like "{}4. Set context object’s url’s fragment to the empty string. 5. Basic URL parse \+\_\+input\+\_\+ with context object’s url as \+\_\+url\+\_\+ and fragment state as \+\_\+state override\+\_\+."{} In between those two steps, a URL record is in an unusable state.
+
+The return value of "{}failure"{} in the spec is represented by the string {\ttfamily "{}failure"{}}. That is, functions like {\ttfamily parse\+URL} and {\ttfamily basic\+URLParse} can return {\itshape either} a URL record {\itshape or} the string {\ttfamily "{}failure"{}}. 

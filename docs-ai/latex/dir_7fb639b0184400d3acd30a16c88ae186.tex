@@ -1,0 +1,417 @@
+\doxysection{node\+\_\+modules/ofetch Directory Reference}
+\hypertarget{dir_7fb639b0184400d3acd30a16c88ae186}{}\label{dir_7fb639b0184400d3acd30a16c88ae186}\index{node\_modules/ofetch Directory Reference@{node\_modules/ofetch Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/ofetch}{\texttt{ }} \href{https://npmjs.com/package/ofetch}{\texttt{ }} \href{https://bundlephobia.com/result?p=ofetch}{\texttt{ }} \href{https://codecov.io/gh/unjs/ofetch}{\texttt{ }} \href{https://github.com/unjs/ofetch/blob/main/LICENSE}{\texttt{ }} \href{https://www.jsdocs.io/package/ofetch}{\texttt{ }}
+
+A better fetch API. Works on node, browser, and workers.
+
+
+
+{\bfseries{Spoiler}}\begin{adjustwidth}{1em}{0em}
+ \end{adjustwidth}
+\hypertarget{README.md_autotoc_md25070}{}\doxysubsection{\texorpdfstring{🚀 Quick Start}{🚀 Quick Start}}\label{README.md_autotoc_md25070}
+Install\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ i\ ofetch}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ ofetch}
+
+\end{DoxyCode}
+
+
+Import\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ESM\ /\ Typescript}
+\DoxyCodeLine{import\ \{\ ofetch\ \}\ from\ "{}ofetch"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ ofetch\ \}\ =\ require("{}ofetch"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25071}{}\doxysubsection{\texorpdfstring{✔️ Works with Node.\+js}{✔️ Works with Node.\+js}}\label{README.md_autotoc_md25071}
+We use \href{https://nodejs.org/api/packages.html\#packages_conditional_exports}{\texttt{ conditional exports}} to detect Node.\+js and automatically use \href{https://github.com/unjs/node-fetch-native}{\texttt{ unjs/node-\/fetch-\/native}}. If {\ttfamily global\+This.\+fetch} is available, will be used instead. To leverage Node.\+js 17.\+5.\+0 experimental native fetch API use \href{https://nodejs.org/dist/latest-v17.x/docs/api/cli.html\#--experimental-fetch}{\texttt{ {\ttfamily -\/-\/experimental-\/fetch} flag}}.\hypertarget{README.md_autotoc_md25072}{}\doxysubsection{\texorpdfstring{✔️ Parsing Response}{✔️ Parsing Response}}\label{README.md_autotoc_md25072}
+{\ttfamily ofetch} will smartly parse JSON and native values using \href{https://github.com/unjs/destr}{\texttt{ destr}}, falling back to the text if it fails to parse.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ users\ \}\ =\ await\ ofetch("{}/api/users"{});}
+
+\end{DoxyCode}
+
+
+For binary content types, {\ttfamily ofetch} will instead return a {\ttfamily Blob} object.
+
+You can optionally provide a different parser than {\ttfamily destr}, or specify {\ttfamily blob}, {\ttfamily array\+Buffer}, or {\ttfamily text} to force parsing the body with the respective {\ttfamily Fetch\+Response} method.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Use\ JSON.parse}
+\DoxyCodeLine{await\ ofetch("{}/movie?lang=en"{},\ \{\ parseResponse:\ JSON.parse\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Return\ text\ as\ is}
+\DoxyCodeLine{await\ ofetch("{}/movie?lang=en"{},\ \{\ parseResponse:\ (txt)\ =>\ txt\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Get\ the\ blob\ version\ of\ the\ response}
+\DoxyCodeLine{await\ ofetch("{}/api/generate-\/image"{},\ \{\ responseType:\ "{}blob"{}\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25073}{}\doxysubsection{\texorpdfstring{✔️ JSON Body}{✔️ JSON Body}}\label{README.md_autotoc_md25073}
+If an object or a class with a {\ttfamily .to\+JSON()} method is passed to the {\ttfamily body} option, {\ttfamily ofetch} automatically stringifies it.
+
+{\ttfamily ofetch} utilizes {\ttfamily JSON.\+stringify()} to convert the passed object. Classes without a {\ttfamily .to\+JSON()} method have to be converted into a string value in advance before being passed to the {\ttfamily body} option.
+
+For {\ttfamily PUT}, {\ttfamily PATCH}, and {\ttfamily POST} request methods, when a string or object body is set, {\ttfamily ofetch} adds the default {\ttfamily content-\/type\+: "{}application/json"{}} and {\ttfamily accept\+: "{}application/json"{}} headers (which you can always override).
+
+Additionally, {\ttfamily ofetch} supports binary responses with {\ttfamily Buffer}, {\ttfamily Readable\+Stream}, {\ttfamily Stream}, and \href{https://developer.mozilla.org/en-US/docs/Web/API/fetch\#body}{\texttt{ compatible body types}}. ofetch will automatically set the {\ttfamily duplex\+: "{}half"{}} option for streaming support!
+
+{\bfseries{Example\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ users\ \}\ =\ await\ ofetch("{}/api/users"{},\ \{}
+\DoxyCodeLine{\ \ method:\ "{}POST"{},}
+\DoxyCodeLine{\ \ body:\ \{\ some:\ "{}json"{}\ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25074}{}\doxysubsection{\texorpdfstring{✔️ Handling Errors}{✔️ Handling Errors}}\label{README.md_autotoc_md25074}
+{\ttfamily ofetch} Automatically throws errors when {\ttfamily response.\+ok} is {\ttfamily false} with a friendly error message and compact stack (hiding internals).
+
+A parsed error body is available with {\ttfamily error.\+data}. You may also use {\ttfamily Fetch\+Error} type.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}https://google.com/404"{});}
+\DoxyCodeLine{//\ FetchError:\ [GET]\ "{}https://google/404"{}:\ 404\ Not\ Found}
+\DoxyCodeLine{//\ \ \ \ \ at\ async\ main\ (/project/playground.ts:4:3)}
+
+\end{DoxyCode}
+
+
+To catch error response\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/url"{}).catch((error)\ =>\ error.data);}
+
+\end{DoxyCode}
+
+
+To bypass status error catching you can set {\ttfamily ignore\+Response\+Error} option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/url"{},\ \{\ ignoreResponseError:\ true\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25075}{}\doxysubsection{\texorpdfstring{✔️ Auto Retry}{✔️ Auto Retry}}\label{README.md_autotoc_md25075}
+{\ttfamily ofetch} Automatically retries the request if an error happens and if the response status code is included in {\ttfamily retry\+Status\+Codes} list\+:
+
+{\bfseries{Retry status codes\+:}}
+
+
+\begin{DoxyItemize}
+\item {\ttfamily 408} -\/ Request Timeout
+\item {\ttfamily 409} -\/ Conflict
+\item {\ttfamily 425} -\/ Too Early (\href{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Early-Data}{\texttt{ Experimental}})
+\item {\ttfamily 429} -\/ Too Many Requests
+\item {\ttfamily 500} -\/ Internal Server Error
+\item {\ttfamily 502} -\/ Bad Gateway
+\item {\ttfamily 503} -\/ Service Unavailable
+\item {\ttfamily 504} -\/ Gateway Timeout
+\end{DoxyItemize}
+
+You can specify the amount of retry and delay between them using {\ttfamily retry} and {\ttfamily retry\+Delay} options and also pass a custom array of codes using {\ttfamily retry\+Status\+Codes} option.
+
+The default for {\ttfamily retry} is {\ttfamily 1} retry, except for {\ttfamily POST}, {\ttfamily PUT}, {\ttfamily PATCH}, and {\ttfamily DELETE} methods where {\ttfamily ofetch} does not retry by default to avoid introducing side effects. If you set a custom value for {\ttfamily retry} it will {\bfseries{always retry}} for all requests.
+
+The default for {\ttfamily retry\+Delay} is {\ttfamily 0} ms.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}http://google.com/404"{},\ \{}
+\DoxyCodeLine{\ \ retry:\ 3,}
+\DoxyCodeLine{\ \ retryDelay:\ 500,\ //\ ms}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25076}{}\doxysubsection{\texorpdfstring{✔️ Timeout}{✔️ Timeout}}\label{README.md_autotoc_md25076}
+You can specify {\ttfamily timeout} in milliseconds to automatically abort a request after a timeout (default is disabled).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}http://google.com/404"{},\ \{}
+\DoxyCodeLine{\ \ timeout:\ 3000,\ //\ Timeout\ after\ 3\ seconds}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25077}{}\doxysubsection{\texorpdfstring{✔️ Type Friendly}{✔️ Type Friendly}}\label{README.md_autotoc_md25077}
+The response can be type assisted\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ article\ =\ await\ ofetch<Article>(`/api/article/\$\{id\}`);}
+\DoxyCodeLine{//\ Auto\ complete\ working\ with\ article.id}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25078}{}\doxysubsection{\texorpdfstring{✔️ Adding {\ttfamily base\+URL}}{✔️ Adding {\ttfamily base\+URL}}}\label{README.md_autotoc_md25078}
+By using {\ttfamily base\+URL} option, {\ttfamily ofetch} prepends it for trailing/leading slashes and query search params for base\+URL using \href{https://github.com/unjs/ufo}{\texttt{ ufo}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/config"{},\ \{\ baseURL\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25079}{}\doxysubsection{\texorpdfstring{✔️ Adding Query Search Params}{✔️ Adding Query Search Params}}\label{README.md_autotoc_md25079}
+By using {\ttfamily query} option (or {\ttfamily params} as alias), {\ttfamily ofetch} adds query search params to the URL by preserving the query in the request itself using \href{https://github.com/unjs/ufo}{\texttt{ ufo}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/movie?lang=en"{},\ \{\ query:\ \{\ id:\ 123\ \}\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25080}{}\doxysubsection{\texorpdfstring{✔️ Interceptors}{✔️ Interceptors}}\label{README.md_autotoc_md25080}
+Providing async interceptors to hook into lifecycle events of {\ttfamily ofetch} call is possible.
+
+You might want to use {\ttfamily ofetch.\+create} to set shared interceptors.\hypertarget{README.md_autotoc_md25081}{}\doxysubsubsection{\texorpdfstring{{\ttfamily on\+Request(\{ request, options \})}}{{\ttfamily on\+Request(\{ request, options \})}}}\label{README.md_autotoc_md25081}
+{\ttfamily on\+Request} is called as soon as {\ttfamily ofetch} is called, allowing you to modify options or do simple logging.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/api"{},\ \{}
+\DoxyCodeLine{\ \ async\ onRequest(\{\ request,\ options\ \})\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Log\ request}
+\DoxyCodeLine{\ \ \ \ console.log("{}[fetch\ request]"{},\ request,\ options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Add\ \`{}?t=1640125211170`\ to\ query\ search\ params}
+\DoxyCodeLine{\ \ \ \ options.query\ =\ options.query\ ||\ \{\};}
+\DoxyCodeLine{\ \ \ \ options.query.t\ =\ new\ Date();}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25082}{}\doxysubsubsection{\texorpdfstring{{\ttfamily on\+Request\+Error(\{ request, options, error \})}}{{\ttfamily on\+Request\+Error(\{ request, options, error \})}}}\label{README.md_autotoc_md25082}
+{\ttfamily on\+Request\+Error} will be called when the fetch request fails.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/api"{},\ \{}
+\DoxyCodeLine{\ \ async\ onRequestError(\{\ request,\ options,\ error\ \})\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Log\ error}
+\DoxyCodeLine{\ \ \ \ console.log("{}[fetch\ request\ error]"{},\ request,\ error);}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25083}{}\doxysubsubsection{\texorpdfstring{{\ttfamily on\+Response(\{ request, options, response \})}}{{\ttfamily on\+Response(\{ request, options, response \})}}}\label{README.md_autotoc_md25083}
+{\ttfamily on\+Response} will be called after {\ttfamily fetch} call and parsing body.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/api"{},\ \{}
+\DoxyCodeLine{\ \ async\ onResponse(\{\ request,\ response,\ options\ \})\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Log\ response}
+\DoxyCodeLine{\ \ \ \ console.log("{}[fetch\ response]"{},\ request,\ response.status,\ response.body);}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25084}{}\doxysubsubsection{\texorpdfstring{{\ttfamily on\+Response\+Error(\{ request, options, response \})}}{{\ttfamily on\+Response\+Error(\{ request, options, response \})}}}\label{README.md_autotoc_md25084}
+{\ttfamily on\+Response\+Error} is the same as {\ttfamily on\+Response} but will be called when fetch happens but {\ttfamily response.\+ok} is not {\ttfamily true}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/api"{},\ \{}
+\DoxyCodeLine{\ \ async\ onResponseError(\{\ request,\ response,\ options\ \})\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Log\ error}
+\DoxyCodeLine{\ \ \ \ console.log(}
+\DoxyCodeLine{\ \ \ \ \ \ "{}[fetch\ response\ error]"{},}
+\DoxyCodeLine{\ \ \ \ \ \ request,}
+\DoxyCodeLine{\ \ \ \ \ \ response.status,}
+\DoxyCodeLine{\ \ \ \ \ \ response.body}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25085}{}\doxysubsubsection{\texorpdfstring{Passing array of interceptors}{Passing array of interceptors}}\label{README.md_autotoc_md25085}
+If necessary, it\textquotesingle{}s also possible to pass an array of function that will be called sequentially.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/api"{},\ \{}
+\DoxyCodeLine{\ \ onRequest:\ [}
+\DoxyCodeLine{\ \ \ \ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ /*\ Do\ something\ */}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ /*\ Do\ something\ else\ */}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25086}{}\doxysubsection{\texorpdfstring{✔️ Create fetch with default options}{✔️ Create fetch with default options}}\label{README.md_autotoc_md25086}
+This utility is useful if you need to use common options across several fetch calls.
+
+{\bfseries{Note\+:}} Defaults will be cloned at one level and inherited. Be careful about nested options like {\ttfamily headers}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ apiFetch\ =\ ofetch.create(\{\ baseURL:\ "{}/api"{}\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{apiFetch("{}/test"{});\ //\ Same\ as\ ofetch('/test',\ \{\ baseURL:\ '/api'\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25087}{}\doxysubsection{\texorpdfstring{💡 Adding headers}{💡 Adding headers}}\label{README.md_autotoc_md25087}
+By using {\ttfamily headers} option, {\ttfamily ofetch} adds extra headers in addition to the request default headers\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ ofetch("{}/movies"{},\ \{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ Accept:\ "{}application/json"{},}
+\DoxyCodeLine{\ \ \ \ "{}Cache-\/Control"{}:\ "{}no-\/cache"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25088}{}\doxysubsection{\texorpdfstring{🍣 Access to Raw Response}{🍣 Access to Raw Response}}\label{README.md_autotoc_md25088}
+If you need to access raw response (for headers, etc), can use {\ttfamily ofetch.\+raw}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ response\ =\ await\ ofetch.raw("{}/sushi"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ response.\_data}
+\DoxyCodeLine{//\ response.headers}
+\DoxyCodeLine{//\ ...}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25089}{}\doxysubsection{\texorpdfstring{🌿 Using Native Fetch}{🌿 Using Native Fetch}}\label{README.md_autotoc_md25089}
+As a shortcut, you can use {\ttfamily ofetch.\+native} that provides native {\ttfamily fetch} API
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ json\ =\ await\ ofetch.native("{}/sushi"{}).then((r)\ =>\ r.json());}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25090}{}\doxysubsection{\texorpdfstring{🕵️ Adding HTTP(\+S) Agent}{🕵️ Adding HTTP(\+S) Agent}}\label{README.md_autotoc_md25090}
+In Node.\+js (\texorpdfstring{$>$}{>}= 18) environments, you can provide a custom dispatcher to intercept requests and support features such as Proxy and self-\/signed certificates. This feature is enabled by \href{https://undici.nodejs.org/}{\texttt{ undici}} built-\/in Node.\+js. \href{https://undici.nodejs.org/\#/docs/api/Dispatcher}{\texttt{ read more}} about the Dispatcher API.
+
+Some available agents\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Proxy\+Agent}\+: A Proxy Agent class that implements the Agent API. It allows the connection through a proxy in a simple way. (\href{https://undici.nodejs.org/\#/docs/api/ProxyAgent}{\texttt{ docs}})
+\item {\ttfamily Mock\+Agent}\+: A mocked Agent class that implements the Agent API. It allows one to intercept HTTP requests made through undici and return mocked responses instead. (\href{https://undici.nodejs.org/\#/docs/api/MockAgent}{\texttt{ docs}})
+\item {\ttfamily Agent}\+: Agent allows dispatching requests against multiple different origins. (\href{https://undici.nodejs.org/\#/docs/api/Agent}{\texttt{ docs}})
+\end{DoxyItemize}
+
+{\bfseries{Example\+:}} Set a proxy agent for one request\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ ProxyAgent\ \}\ from\ "{}undici"{};}
+\DoxyCodeLine{import\ \{\ ofetch\ \}\ from\ "{}ofetch"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ proxyAgent\ =\ new\ ProxyAgent("{}http://localhost:3128"{});}
+\DoxyCodeLine{const\ data\ =\ await\ ofetch("{}https://icanhazip.com"{},\ \{\ dispatcher:\ proxyAgent\ \});}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} Create a custom fetch instance that has proxy enabled\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ ProxyAgent,\ setGlobalDispatcher\ \}\ from\ "{}undici"{};}
+\DoxyCodeLine{import\ \{\ ofetch\ \}\ from\ "{}ofetch"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ proxyAgent\ =\ new\ ProxyAgent("{}http://localhost:3128"{});}
+\DoxyCodeLine{const\ fetchWithProxy\ =\ ofetch.create(\{\ dispatcher:\ proxyAgent\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ data\ =\ await\ fetchWithProxy("{}https://icanhazip.com"{});}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} Set a proxy agent for all requests\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ ProxyAgent,\ setGlobalDispatcher\ \}\ from\ "{}undici"{};}
+\DoxyCodeLine{import\ \{\ ofetch\ \}\ from\ "{}ofetch"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ proxyAgent\ =\ new\ ProxyAgent("{}http://localhost:3128"{});}
+\DoxyCodeLine{setGlobalDispatcher(proxyAgent);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ data\ =\ await\ ofetch("{}https://icanhazip.com"{});}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example\+:}} Allow self-\/signed certificates (USE AT YOUR OWN RISK!)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Agent\ \}\ from\ "{}undici"{};}
+\DoxyCodeLine{import\ \{\ ofetch\ \}\ from\ "{}ofetch"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Note:\ This\ makes\ fetch\ unsecure\ against\ MITM\ attacks.\ USE\ AT\ YOUW\ OWN\ RISK!}
+\DoxyCodeLine{const\ unsecureAgent\ =\ new\ Agent(\{\ connect:\ \{\ rejectUnauthorized:\ false\ \}\ \});}
+\DoxyCodeLine{const\ unsecureFetch\ =\ ofetch.create(\{\ dispatcher:\ unsecureAgent\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ data\ =\ await\ unsecureFetch("{}https://www.squid-\/cache.org/"{});}
+
+\end{DoxyCode}
+
+
+On older Node.\+js version (\texorpdfstring{$<$}{<}18), you might also use use {\ttfamily agent}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ HttpsProxyAgent\ \}\ from\ "{}https-\/proxy-\/agent"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ ofetch("{}/api"{},\ \{}
+\DoxyCodeLine{\ \ agent:\ new\ HttpsProxyAgent("{}http://example.com"{}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25091}{}\doxysubsubsection{\texorpdfstring{{\ttfamily keep\+Alive} support (only works for Node \texorpdfstring{$<$}{<} 18)}{{\ttfamily keep\+Alive} support (only works for Node \texorpdfstring{$<$}{<} 18)}}\label{README.md_autotoc_md25091}
+By setting the {\ttfamily FETCH\+\_\+\+KEEP\+\_\+\+ALIVE} environment variable to {\ttfamily true}, an HTTP/\+HTTPS agent will be registered that keeps sockets around even when there are no outstanding requests, so they can be used for future requests without having to re-\/establish a TCP connection.
+
+{\bfseries{Note\+:}} This option can potentially introduce memory leaks. Please check \href{https://github.com/node-fetch/node-fetch/pull/1325}{\texttt{ node-\/fetch/node-\/fetch\#1325}}.\hypertarget{README.md_autotoc_md25092}{}\doxysubsection{\texorpdfstring{📦 Bundler Notes}{📦 Bundler Notes}}\label{README.md_autotoc_md25092}
+
+\begin{DoxyItemize}
+\item All targets are exported with Module and Common\+JS format and named exports
+\item No export is transpiled for the sake of modern syntax
+\begin{DoxyItemize}
+\item You probably need to transpile {\ttfamily ofetch}, {\ttfamily destr}, and {\ttfamily ufo} packages with Babel for ES5 support
+\end{DoxyItemize}
+\item You need to polyfill {\ttfamily fetch} global for supporting legacy browsers like using \href{https://github.com/developit/unfetch}{\texttt{ unfetch}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25093}{}\doxysubsection{\texorpdfstring{❓ FAQ}{❓ FAQ}}\label{README.md_autotoc_md25093}
+{\bfseries{Why export is called {\ttfamily ofetch} instead of {\ttfamily fetch}?}}
+
+Using the same name of {\ttfamily fetch} can be confusing since API is different but still, it is a fetch so using the closest possible alternative. You can, however, import {\ttfamily \{ fetch \}} from {\ttfamily ofetch} which is auto-\/polyfill for Node.\+js and using native otherwise.
+
+{\bfseries{Why not have default export?}}
+
+Default exports are always risky to be mixed with Common\+JS exports.
+
+This also guarantees we can introduce more utils without breaking the package and also encourage using {\ttfamily ofetch} name.
+
+{\bfseries{Why not transpiled?}}
+
+By transpiling libraries, we push the web backward with legacy code which is unneeded for most of the users.
+
+If you need to support legacy users, you can optionally transpile the library in your build pipeline.\hypertarget{README.md_autotoc_md25094}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md25094}
+MIT. Made with 💖 

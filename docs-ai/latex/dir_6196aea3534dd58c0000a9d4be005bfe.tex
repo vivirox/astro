@@ -1,0 +1,135 @@
+\doxysection{node\+\_\+modules/deterministic-\/object-\/hash Directory Reference}
+\hypertarget{dir_6196aea3534dd58c0000a9d4be005bfe}{}\label{dir_6196aea3534dd58c0000a9d4be005bfe}\index{node\_modules/deterministic-\/object-\/hash Directory Reference@{node\_modules/deterministic-\/object-\/hash Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+A deterministic object hashing algorithm for Node.\+js and web platform.\hypertarget{README.md_autotoc_md11864}{}\doxysubsection{\texorpdfstring{The Problem}{The Problem}}\label{README.md_autotoc_md11864}
+Using {\ttfamily JSON.\+stringify} on two objects that are deeply equal does not lead to the same output string. Instead the keys are ordered in the same order that they were added. This leads to two objects that are deeply equal being hashed to different values.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createHash\ \}\ from\ "{}crypto"{};}
+\DoxyCodeLine{import\ \{\ isEqual\ \}\ from\ "{}lodash"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ obj1:\ Record<string,\ string>\ =\ \{\};}
+\DoxyCodeLine{obj1['a']\ =\ 'x';}
+\DoxyCodeLine{obj1['b']\ =\ 'y';}
+\DoxyCodeLine{obj1['c']\ =\ 'z';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ obj2:\ Record<string,\ string>\ =\ \{\};}
+\DoxyCodeLine{obj2['c']\ =\ 'z';}
+\DoxyCodeLine{obj2['b']\ =\ 'y';}
+\DoxyCodeLine{obj2['a']\ =\ 'x';}
+\DoxyCodeLine{}
+\DoxyCodeLine{isEqual(obj1,\ obj2);}
+\DoxyCodeLine{//\ -\/>\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ string1\ =\ JSON.stringify(obj1);}
+\DoxyCodeLine{//\ -\/>\ \{"{}a"{}:"{}x"{},"{}b"{}:"{}y"{},"{}c"{}:"{}z"{}\}}
+\DoxyCodeLine{const\ string2\ =\ JSON.stringify(obj2);}
+\DoxyCodeLine{//\ -\/>\ \{"{}c"{}:"{}z"{},"{}b"{}:"{}y"{},"{}a"{}:"{}x"{}\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{createHash('sha1').update(string1).digest('hex');}
+\DoxyCodeLine{//\ -\/>\ ff75fe071d236ce309c15d5636ecaa86c0519ebc}
+\DoxyCodeLine{createHash('sha1').update(string2).digest('hex');}
+\DoxyCodeLine{//\ -\/>\ 2e53bac865f7be77c8e10cd86d737fbbf259ed37}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11865}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md11865}
+Pass a value and receive a deterministic hash of the value.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ deterministicHash\ from\ 'deterministic-\/object-\/hash';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ objA\ =\ \{\ a:\ 'x',\ arr:\ [1,2,3,4],\ b:\ 'y'\ \};}
+\DoxyCodeLine{const\ objB\ =\ \{\ b:\ 'y',\ a:\ 'x',\ arr:\ [1,2,3,4]\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ deterministicHash(\{}
+\DoxyCodeLine{\ \ \ \ c:\ [\ objA,\ objB\ ],}
+\DoxyCodeLine{\ \ \ \ b:\ objA,}
+\DoxyCodeLine{\ \ \ \ e:\ objB,}
+\DoxyCodeLine{\ \ \ \ f:\ ()=>\{\ Math.random();\ \},}
+\DoxyCodeLine{\ \ \ \ g:\ Symbol('Unique\ identity'),}
+\DoxyCodeLine{\ \ \ \ h:\ new\ Error('AHHH')}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ -\/>\ 4c57bcb76498dca7b98ef9747c8f1e7f10c30388}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ deterministicHash(\{}
+\DoxyCodeLine{\ \ \ \ h:\ new\ Error('AHHH'),}
+\DoxyCodeLine{\ \ \ \ e:\ objB,}
+\DoxyCodeLine{\ \ \ \ g:\ Symbol('Unique\ identity'),}
+\DoxyCodeLine{\ \ \ \ b:\ objA,}
+\DoxyCodeLine{\ \ \ \ f:\ ()=>\{\ Math.random();\ \},}
+\DoxyCodeLine{\ \ \ \ c:\ [\ objA,\ objB\ ]}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ -\/>\ 4c57bcb76498dca7b98ef9747c8f1e7f10c30388}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11866}{}\doxysubsection{\texorpdfstring{Settings}{Settings}}\label{README.md_autotoc_md11866}
+A hash algorithm can be passed as the second argument. This takes any value that is valid for {\ttfamily webcrypto.\+subtle.\+digest}. The default is {\ttfamily SHA-\/1}. \textbackslash{} A digest format can be passed as the third argument. This takes any value that is valid for {\ttfamily Hash.\+digest}. The default is {\ttfamily hex}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ deterministicHash('value',\ 'SHA-\/1');}
+\DoxyCodeLine{//\ -\/>\ efede6000ad4e1ff258a38866c71aa351d3c01f6}
+\DoxyCodeLine{await\ deterministicHash('value',\ 'SHA-\/256',\ 'hex');}
+\DoxyCodeLine{//\ -\/>\ a0b7821a11db531982044ca5ca2e788e2d749d6b696cd3aa4172342f584f2ee1}
+\DoxyCodeLine{await\ deterministicHash('value',\ 'SHA-\/512',\ 'base64');}
+\DoxyCodeLine{//\ -\/>\ 514CuHw/31qqUH2waqaqhKSMvLYH/YdZeRI4QqDBwhKbUk0/3mxhv4NUubXIl5Dm2k0VpU6ZZkmunEb10RngfQ==}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11867}{}\doxysubsection{\texorpdfstring{Supported Values}{Supported Values}}\label{README.md_autotoc_md11867}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-2}
+\endhead
+String   &Number    \\\cline{1-2}
+Boolean   &Function    \\\cline{1-2}
+Plain Objects   &Symbol    \\\cline{1-2}
+undefined   &null    \\\cline{1-2}
+Infinity   &NaN    \\\cline{1-2}
+Big\+Int   &Array    \\\cline{1-2}
+Classes/\+Inheritance   &Errors    \\\cline{1-2}
+Date   &Reg\+Exp    \\\cline{1-2}
+Map   &Set    \\\cline{1-2}
+Int8\+Array   &Uint8\+Array    \\\cline{1-2}
+Int16\+Array   &Uint16\+Array    \\\cline{1-2}
+Int32\+Array   &Uint32\+Array    \\\cline{1-2}
+Float32\+Array   &Float64\+Array    \\\cline{1-2}
+Big\+Int64\+Array   &Big\+Uint64\+Array    \\\cline{1-2}
+Uint8\+Clamped\+Array   &global\+This    \\\cline{1-2}
+Array\+Buffer   &Shared\+Array\+Buffer   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md11868}{}\doxysubsection{\texorpdfstring{Unsupported Values}{Unsupported Values}}\label{README.md_autotoc_md11868}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-2}
+\endhead
+Weak\+Map   &Weak\+Set    \\\cline{1-2}
+Atomics   &Data\+View    \\\cline{1-2}
+Promises   &Reflect    \\\cline{1-2}
+Proxy   &\\\cline{1-2}
+\end{longtabu}
+
+
+Due to their nature, \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet\#description}{\texttt{ Weak\+Set}} and \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap\#why_weakmap}{\texttt{ Weak\+Map}} are not enumerable. As a result there is no way to know what is in a Weak\+Set/\+Weak\+Map unless we are told.\hypertarget{README.md_autotoc_md11869}{}\doxysubsection{\texorpdfstring{Support}{Support}}\label{README.md_autotoc_md11869}
+Currently this has only been tested on Node.\+js {\ttfamily 18.\+x.\+x}. More tests are to come and this section will be updated as I test them.\hypertarget{README.md_autotoc_md11870}{}\doxysubsection{\texorpdfstring{Contributors}{Contributors}}\label{README.md_autotoc_md11870}
+Contributions are welcome. Feel free to create a PR and tag \href{https://github.com/zbauman3}{\texttt{ zbauman3}}.\hypertarget{README.md_autotoc_md11871}{}\doxysubsubsection{\texorpdfstring{Past contributors\+:}{Past contributors\+:}}\label{README.md_autotoc_md11871}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/zbauman3}{\texttt{ zbauman3}}
+\item \href{https://github.com/RodrigoTomeES}{\texttt{ Rodrigo\+Tome\+ES}} 
+\end{DoxyItemize}

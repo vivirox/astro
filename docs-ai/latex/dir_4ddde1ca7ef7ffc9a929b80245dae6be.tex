@@ -1,0 +1,97 @@
+\doxysection{node\+\_\+modules/foreground-\/child Directory Reference}
+\hypertarget{dir_4ddde1ca7ef7ffc9a929b80245dae6be}{}\label{dir_4ddde1ca7ef7ffc9a929b80245dae6be}\index{node\_modules/foreground-\/child Directory Reference@{node\_modules/foreground-\/child Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Run a child as if it\textquotesingle{}s the foreground process. Give it stdio. Exit when it exits.
+
+Mostly this module is here to support some use cases around wrapping child processes for test coverage and such. But it\textquotesingle{}s also generally useful any time you want one program to execute another as if it\textquotesingle{}s the "{}main"{} process, for example, if a program takes a {\ttfamily -\/-\/cmd} argument to execute in some way.\hypertarget{README.md_autotoc_md15765}{}\doxysubsection{\texorpdfstring{USAGE}{USAGE}}\label{README.md_autotoc_md15765}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ foregroundChild\ \}\ from\ 'foreground-\/child'}
+\DoxyCodeLine{//\ hybrid\ module,\ this\ also\ works:}
+\DoxyCodeLine{//\ const\ \{\ foregroundChild\ \}\ =\ require('foreground-\/child')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ cats\ out\ this\ file}
+\DoxyCodeLine{const\ child\ =\ foregroundChild('cat',\ [\_\_filename])}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ At\ this\ point,\ it's\ best\ to\ just\ do\ nothing\ else.}
+\DoxyCodeLine{//\ return\ or\ whatever.}
+\DoxyCodeLine{//\ If\ the\ child\ gets\ a\ signal,\ or\ just\ exits,\ then\ this}
+\DoxyCodeLine{//\ parent\ process\ will\ exit\ in\ the\ same\ way.}
+
+\end{DoxyCode}
+
+
+You can provide custom spawn options by passing an object after the program and arguments\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ child\ =\ foregroundChild(`cat\ \$\{\_\_filename\}`,\ \{\ shell:\ true\ \})}
+
+\end{DoxyCode}
+
+
+A callback can optionally be provided, if you want to perform an action before your foreground-\/child exits\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ child\ =\ foregroundChild('cat',\ [\_\_filename],\ spawnOptions,\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ doSomeActions()}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+The callback can return a Promise in order to perform asynchronous actions. If the callback does not return a promise, then it must complete its actions within a single Java\+Script tick.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ child\ =\ foregroundChild('cat',\ [\_\_filename],\ async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ await\ doSomeAsyncActions()}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+If the callback throws or rejects, then it will be unhandled, and node will exit in error.
+
+If the callback returns a string value, then that will be used as the signal to exit the parent process. If it returns a number, then that number will be used as the parent exit status code. If it returns boolean {\ttfamily false}, then the parent process will not be terminated. If it returns {\ttfamily undefined}, then it will exit with the same signal/code as the child process.\hypertarget{README.md_autotoc_md15766}{}\doxysubsection{\texorpdfstring{Caveats}{Caveats}}\label{README.md_autotoc_md15766}
+The "{}normal"{} standard IO file descriptors (0, 1, and 2 for stdin, stdout, and stderr respectively) are shared with the child process. Additionally, if there is an IPC channel set up in the parent, then messages are proxied to the child on file descriptor 3.
+
+In Node, it\textquotesingle{}s possible to also map arbitrary file descriptors into a child process. In these cases, foreground-\/child will not map the file descriptors into the child. If file descriptors 0, 1, or 2 are used for the IPC channel, then strange behavior may happen (like printing IPC messages to stderr, for example).
+
+Note that a SIGKILL will always kill the parent process, but will not proxy the signal to the child process, because SIGKILL cannot be caught. In order to address this, a special "{}watchdog"{} child process is spawned which will send a SIGKILL to the child process if it does not terminate within half a second after the watchdog receives a SIGHUP due to its parent terminating.
+
+On Windows, issuing a {\ttfamily process.\+kill(process.\+pid, signal)} with a fatal termination signal may cause the process to exit with a {\ttfamily 1} status code rather than reporting the signal properly. This module tries to do the right thing, but on Windows systems, you may see that incorrect result. There is as far as I\textquotesingle{}m aware no workaround for this.\hypertarget{README.md_autotoc_md15767}{}\doxysubsection{\texorpdfstring{util\+: {\ttfamily foreground-\/child/proxy-\/signals}}{util\+: {\ttfamily foreground-\/child/proxy-\/signals}}}\label{README.md_autotoc_md15767}
+If you just want to proxy the signals to a child process that the main process receives, you can use the {\ttfamily proxy-\/signals} export from this package.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ proxySignals\ \}\ from\ 'foreground-\/child/proxy-\/signals'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ childProcess\ =\ spawn('command',\ ['some',\ 'args'])}
+\DoxyCodeLine{proxySignals(childProcess)}
+
+\end{DoxyCode}
+
+
+Now, any fatal signal received by the current process will be proxied to the child process.
+
+It doesn\textquotesingle{}t go in the other direction; ie, signals sent to the child process will not affect the parent. For that, listen to the child {\ttfamily exit} or {\ttfamily close} events, and handle them appropriately.\hypertarget{README.md_autotoc_md15768}{}\doxysubsection{\texorpdfstring{util\+: {\ttfamily foreground-\/child/watchdog}}{util\+: {\ttfamily foreground-\/child/watchdog}}}\label{README.md_autotoc_md15768}
+If you are spawning a child process, and want to ensure that it isn\textquotesingle{}t left dangling if the parent process exits, you can use the watchdog utility exported by this module.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ watchdog\ \}\ from\ 'foreground-\/child/watchdog'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ childProcess\ =\ spawn('command',\ ['some',\ 'args'])}
+\DoxyCodeLine{const\ watchdogProcess\ =\ watchdog(childProcess)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ watchdogProcess\ is\ a\ reference\ to\ the\ process\ monitoring\ the}
+\DoxyCodeLine{//\ parent\ and\ child.\ There's\ usually\ no\ reason\ to\ do\ anything}
+\DoxyCodeLine{//\ with\ it,\ as\ it's\ silent\ and\ will\ terminate}
+\DoxyCodeLine{//\ automatically\ when\ it's\ no\ longer\ needed.}
+
+\end{DoxyCode}
+ 

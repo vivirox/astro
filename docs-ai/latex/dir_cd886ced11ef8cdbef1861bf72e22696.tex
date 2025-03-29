@@ -1,0 +1,467 @@
+\doxysection{node\+\_\+modules/zod-\/to-\/ts Directory Reference}
+\hypertarget{dir_cd886ced11ef8cdbef1861bf72e22696}{}\label{dir_cd886ced11ef8cdbef1861bf72e22696}\index{node\_modules/zod-\/to-\/ts Directory Reference@{node\_modules/zod-\/to-\/ts Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_e4ec913c407c67795413c8307591eee5}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+generate Type\+Script types from your \href{https://github.com/colinhacks/zod}{\texttt{ Zod}} schema\hypertarget{README.md_autotoc_md36575}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md36575}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ zod-\/to-\/ts\ zod\ typescript}
+
+\end{DoxyCode}
+
+
+You must be on zod@3 and typescript@4.\hypertarget{README.md_autotoc_md36576}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md36576}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ z\ \}\ from\ 'zod'}
+\DoxyCodeLine{import\ \{\ zodToTs\ \}\ from\ 'zod-\/to-\/ts'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ define\ your\ Zod\ schema}
+\DoxyCodeLine{const\ UserSchema\ =\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ username:\ z.string(),}
+\DoxyCodeLine{\ \ \ \ age:\ z.number(),}
+\DoxyCodeLine{\ \ \ \ inventory:\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ z.string(),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ itemId:\ z.number(),}
+\DoxyCodeLine{\ \ \ \ \}).array(),}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ pass\ schema\ and\ name\ of\ type/identifier}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(UserSchema,\ 'User')}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ username:\ string}
+\DoxyCodeLine{\ \ age:\ number}
+\DoxyCodeLine{\ \ inventory:\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ itemId:\ number}
+\DoxyCodeLine{\ \ \}[]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+You must pass in the identifier {\ttfamily User} or it will default to {\ttfamily Identifier}. This is necessary to handle cases like recursive types and native enums. {\ttfamily zod\+To\+Ts()} only returns the type value, not the actual type declaration. If you want to add an identifier to the type and create a type declaration, you can use the {\ttfamily create\+Type\+Alias()} utility\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createTypeAlias,\ zodToTs\ \}\ from\ 'zod-\/to-\/ts'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ identifier\ =\ 'User'}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(UserSchema,\ identifier)}
+\DoxyCodeLine{const\ typeAlias\ =\ createTypeAlias(}
+\DoxyCodeLine{\ \ \ \ node,}
+\DoxyCodeLine{\ \ \ \ identifier,}
+\DoxyCodeLine{\ \ \ \ //\ optionally\ pass\ a\ comment}
+\DoxyCodeLine{\ \ \ \ //\ comment:\ UserSchema.description}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ User\ =\ \{}
+\DoxyCodeLine{\ \ \ \ username:\ string}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\ttfamily zod\+To\+Ts()} and {\ttfamily create\+Type\+Alias()} return a TS AST nodes, so if you want to get the node as a string, you can use the {\ttfamily print\+Node()} utility.
+
+{\ttfamily zod\+To\+Ts()}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ printNode,\ zodToTs\ \}\ from\ 'zod-\/to-\/ts'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ identifier\ =\ 'User'}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(UserSchema,\ identifier)}
+\DoxyCodeLine{const\ nodeString\ =\ printNode(node)}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}\{}
+\DoxyCodeLine{\ \ username:\ string}
+\DoxyCodeLine{\ \ age:\ number}
+\DoxyCodeLine{\ \ inventory:\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ itemId:\ number}
+\DoxyCodeLine{\ \ \}[]}
+\DoxyCodeLine{\}"{}}
+
+\end{DoxyCode}
+
+
+{\ttfamily create\+Type\+Alias()}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createTypeAlias,\ printNode,\ zodToTs\ \}\ from\ 'zod-\/to-\/ts'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ identifier\ =\ 'User'}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(UserSchema,\ identifier)}
+\DoxyCodeLine{const\ typeAlias\ =\ createTypeAlias(node,\ identifier)}
+\DoxyCodeLine{const\ nodeString\ =\ printNode(typeAlias)}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}type\ User\ =\ \{}
+\DoxyCodeLine{\ \ username:\ string}
+\DoxyCodeLine{\ \ age:\ number}
+\DoxyCodeLine{\ \ inventory:\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ itemId:\ number}
+\DoxyCodeLine{\ \ \}[]}
+\DoxyCodeLine{\}"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md36577}{}\doxysubsection{\texorpdfstring{Overriding Types}{Overriding Types}}\label{README.md_autotoc_md36577}
+You can use {\ttfamily with\+Get\+Type} to override a type, which is useful when more information is needed to determine the actual type. Unfortunately, this means working with the TS AST\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ z\ \}\ from\ 'zod'}
+\DoxyCodeLine{import\ \{\ withGetType,\ zodToTs\ \}\ from\ 'zod-\/to-\/ts'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ DateSchema\ =\ withGetType(}
+\DoxyCodeLine{\ \ \ \ z.instanceof(Date),}
+\DoxyCodeLine{\ \ \ \ (ts)\ =>\ ts.factory.createIdentifier('Date'),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ItemSchema\ =\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ name:\ z.string(),}
+\DoxyCodeLine{\ \ \ \ date:\ DateSchema,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(ItemSchema,\ 'Item')}
+
+\end{DoxyCode}
+
+
+result without {\ttfamily with\+Get\+Type} override\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Item\ =\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ date:\ any}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+result with override\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Item\ =\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ date:\ Date}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\href{https://ts-ast-viewer.com/}{\texttt{ Type\+Script AST Viewer}} can help a lot with this if you are having trouble referencing something. It even provides copy-\/pastable code!\hypertarget{README.md_autotoc_md36578}{}\doxysubsubsection{\texorpdfstring{Special Cases}{Special Cases}}\label{README.md_autotoc_md36578}
+\hypertarget{README.md_autotoc_md36579}{}\doxysubsubsubsection{\texorpdfstring{\href{https://github.com/colinhacks/zod\#recursive-types}{\texttt{ z.\+lazy()}}}{\href{https://github.com/colinhacks/zod\#recursive-types}{\texttt{ z.\+lazy()}}}}\label{README.md_autotoc_md36579}
+Lazy types default to referencing the root type ({\ttfamily User} in the following example). It is impossible to determine what it is referencing otherwise.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Zod\ cannot\ infer\ types\ when\ you\ use\ the\ z.lazy}
+\DoxyCodeLine{//\ so\ you\ must\ define\ it}
+\DoxyCodeLine{import\ \{\ z\ \}\ from\ 'zod'}
+\DoxyCodeLine{type\ User\ =\ \{}
+\DoxyCodeLine{\ \ \ \ username:\ string}
+\DoxyCodeLine{\ \ \ \ friends:\ User[]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ UserSchema:\ z.ZodSchema<User>\ =\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ username:\ z.string(),}
+\DoxyCodeLine{\ \ \ \ friends:\ z.lazy(()\ =>\ UserSchema).array(),}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(UserSchema,\ 'User')}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ User\ =\ \{}
+\DoxyCodeLine{\ \ \ \ username:\ string}
+\DoxyCodeLine{\ \ \ \ friends:\ User[]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+But what happens when the schema looks like this?
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ User\ =\ \{}
+\DoxyCodeLine{\ \ \ \ username:\ string}
+\DoxyCodeLine{\ \ \ \ item:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ itemId:\ string}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ friends:\ User[]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ essentially\ when\ you\ are\ referencing\ a\ different\ field}
+\DoxyCodeLine{//\ and\ not\ the\ root\ type}
+\DoxyCodeLine{const\ friendItems\ =\ z.lazy(()\ =>\ UserSchema.item).array()}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ UserSchema:\ z.ZodSchema<User>\ =\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ username:\ z.string(),}
+\DoxyCodeLine{\ \ \ \ item:\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ z.string(),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ id:\ z.number(),}
+\DoxyCodeLine{\ \ \ \ \}),}
+\DoxyCodeLine{\ \ \ \ friendItems,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(UserSchema,\ 'User')}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ username:\ string}
+\DoxyCodeLine{\ \ item:\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ id:\ number}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ friendItems:\ User[]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\ttfamily friend\+Items} will still have the {\ttfamily User} type even though it is actually referencing {\ttfamily User\+Schema\mbox{[}"{}item"{}\mbox{]}}. You must provide the actual type using {\ttfamily with\+Get\+Type}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ z\ \}\ from\ 'zod'}
+\DoxyCodeLine{import\ \{\ withGetType\ \}\ from\ 'zod-\/to-\/ts'}
+\DoxyCodeLine{type\ User\ =\ \{}
+\DoxyCodeLine{\ \ \ \ username:\ string}
+\DoxyCodeLine{\ \ \ \ item:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ id:\ number}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ friends:\ User[]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ friendItems:\ z.Schema<User['item'][]>\ =\ withGetType(}
+\DoxyCodeLine{\ \ \ \ z.lazy(()\ =>\ UserSchema.item).array(),}
+\DoxyCodeLine{\ \ \ \ //\ return\ a\ TS\ AST\ node}
+\DoxyCodeLine{\ \ \ \ (ts,\ identifier)\ =>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ts.factory.createIndexedAccessTypeNode(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ts.factory.createTypeReferenceNode(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ts.factory.createIdentifier(identifier),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ undefined,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral('item')),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ UserSchema:\ z.ZodSchema<User>\ =\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ username:\ z.string(),}
+\DoxyCodeLine{\ \ \ \ item:\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ z.string(),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ id:\ z.number(),}
+\DoxyCodeLine{\ \ \ \ \}),}
+\DoxyCodeLine{\ \ \ \ friendItems,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(UserSchema,\ 'User')}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ username:\ string}
+\DoxyCodeLine{\ \ item:\ \{}
+\DoxyCodeLine{\ \ \ \ name:\ string}
+\DoxyCodeLine{\ \ \ \ id:\ number}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ friendItems:\ User['item'][]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md36580}{}\doxysubsubsubsection{\texorpdfstring{\href{https://github.com/colinhacks/zod\#native-enums}{\texttt{ z.\+native\+Enum()}}}{\href{https://github.com/colinhacks/zod\#native-enums}{\texttt{ z.\+native\+Enum()}}}}\label{README.md_autotoc_md36580}
+{\ttfamily z.\+enum()} is always preferred, but sometimes {\ttfamily z.\+native\+Enum()} is necessary. {\ttfamily z.\+native\+Enum()} works similarly to {\ttfamily z.\+lazy()} in that the identifier of the enum cannot be determined\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ z\ \}\ from\ 'zod'}
+\DoxyCodeLine{import\ \{\ withGetType\ \}\ from\ 'zod-\/to-\/ts'}
+\DoxyCodeLine{}
+\DoxyCodeLine{enum\ Fruit\ \{}
+\DoxyCodeLine{\ \ Apple\ =\ 'apple',}
+\DoxyCodeLine{\ \ Banana\ =\ 'banana',}
+\DoxyCodeLine{\ \ Cantaloupe\ =\ 'cantaloupe',}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ fruitNativeEnum:\ =\ z.nativeEnum(}
+\DoxyCodeLine{\ \ Fruit,}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ TreeSchema\ =\ z.object(\{}
+\DoxyCodeLine{\ \ fruit:\ fruitNativeEnum,}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ fruit:\ unknown}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+There are three ways to solve this\+: provide an identifier to it or resolve all the enums inside {\ttfamily zod\+To\+Ts()}.
+
+Option 1 -\/ providing an identifier using {\ttfamily with\+Get\+Type()}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ z\ \}\ from\ 'zod'}
+\DoxyCodeLine{import\ \{\ withGetType,\ zodToTs\ \}\ from\ 'zod-\/to-\/ts'}
+\DoxyCodeLine{}
+\DoxyCodeLine{enum\ Fruit\ \{}
+\DoxyCodeLine{\ \ \ \ Apple\ =\ 'apple',}
+\DoxyCodeLine{\ \ \ \ Banana\ =\ 'banana',}
+\DoxyCodeLine{\ \ \ \ Cantaloupe\ =\ 'cantaloupe',}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ fruitNativeEnum\ =\ withGetType(}
+\DoxyCodeLine{\ \ \ \ z.nativeEnum(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Fruit,}
+\DoxyCodeLine{\ \ \ \ ),}
+\DoxyCodeLine{\ \ \ \ //\ return\ an\ identifier\ that\ will\ be\ used\ on\ the\ enum\ type}
+\DoxyCodeLine{\ \ \ \ (ts)\ =>\ ts.factory.createIdentifier('Fruit'),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ TreeSchema\ =\ z.object(\{}
+\DoxyCodeLine{\ \ \ \ fruit:\ fruitNativeEnum,}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(TreeSchema)}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ fruit:\ Fruit}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Option 2 -\/ resolve enums. This is the same as before, but you just need to pass an option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ TreeTSType\ =\ zodToTs(TreeSchema,\ undefined,\ \{\ nativeEnums:\ 'resolve'\ \})}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ node:\ \{}
+\DoxyCodeLine{\ \ \ \ fruit:\ Fruit}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ store:\ \{}
+\DoxyCodeLine{\ \ \ \ nativeEnums:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ enum\ Fruit\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Apple\ =\ 'apple',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Banana\ =\ 'banana',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Cantaloupe\ =\ 'cantaloupe',}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Note\+: These are not the actual values, they are TS representation. The actual values are TS AST nodes.
+
+This option allows you to embed the enums before the schema without actually depending on an external enum type.
+
+Option 3 -\/ convert to union. This is the same as how Zod\+Enum created by z.\+enum(\mbox{[}...\mbox{]}) is handled, but need to pass an option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ node\ \}\ =\ zodToTs(TreeSchema,\ undefined,\ \{}
+\DoxyCodeLine{\ \ \ \ nativeEnums:\ 'union',}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+result\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ fruit:\ 'apple'\ |\ 'banana'\ |\ 'cantaloupe'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Note\+: These are not the actual values, they are TS representation. The actual values are TS AST nodes. 

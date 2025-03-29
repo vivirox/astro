@@ -1,0 +1,1529 @@
+\doxysection{node\+\_\+modules/@sinclair/typebox Directory Reference}
+\hypertarget{dir_85d1db721a37a996adcbe260fb41ef49}{}\label{dir_85d1db721a37a996adcbe260fb41ef49}\index{node\_modules/"@sinclair/typebox Directory Reference@{node\_modules/"@sinclair/typebox Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+
+
+\doxysubsection*{Type\+Box}
+
+
+
+
+
+JSON Schema Type Builder with Static Type Resolution for Type\+Script
+
+
+
+
+
+~\newline
+ ~\newline
+
+
+\href{https://badge.fury.io/js/\%40sinclair\%2Ftypebox}{\texttt{ }} \href{https://www.npmjs.com/package/\%40sinclair\%2Ftypebox}{\texttt{ }} \href{https://github.com/sinclairzx81/typebox/actions}{\texttt{ }}
+
+
+
+\label{readme.md_Install}%
+\Hypertarget{readme.md_Install}%
+\hypertarget{readme.md_autotoc_md5954}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md5954}
+\hypertarget{readme.md_autotoc_md5955}{}\doxysubsubsubsubsection{\texorpdfstring{Npm}{Npm}}\label{readme.md_autotoc_md5955}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ @sinclair/typebox\ -\/-\/save}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md5956}{}\doxysubsubsubsubsection{\texorpdfstring{Deno}{Deno}}\label{readme.md_autotoc_md5956}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Static,\ Type\ \}\ from\ 'npm:@sinclair/typebox'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md5957}{}\doxysubsubsubsubsection{\texorpdfstring{Esm}{Esm}}\label{readme.md_autotoc_md5957}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Static,\ Type\ \}\ from\ 'https://esm.sh/@sinclair/typebox'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md5958}{}\doxysubsubsection{\texorpdfstring{Example}{Example}}\label{readme.md_autotoc_md5958}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Static,\ Type\ \}\ from\ '@sinclair/typebox'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'object',}
+\DoxyCodeLine{\ \ y:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ required:\ ['x',\ 'y',\ 'z'],}
+\DoxyCodeLine{\ \ z:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ properties:\ \{}
+\DoxyCodeLine{\})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ x:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ y:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ z:\ \{\ type:\ 'number'\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ Static<typeof\ T>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ x:\ number,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ y:\ number,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ z:\ number}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_Overview}%
+\Hypertarget{readme.md_Overview}%
+\hypertarget{readme.md_autotoc_md5959}{}\doxysubsubsection{\texorpdfstring{Overview}{Overview}}\label{readme.md_autotoc_md5959}
+Type\+Box is a runtime type builder that creates in-\/memory JSON Schema objects that can be statically inferred as Type\+Script types. The schemas produced by this library are designed to match the static type assertion rules of the Type\+Script compiler. Type\+Box enables one to create a unified type that can be statically checked by Type\+Script and runtime asserted using standard JSON Schema validation.
+
+This library is designed to enable JSON schema to compose with the same flexibility as Type\+Script\textquotesingle{}s type system. It can be used as a simple tool to build up complex schemas or integrated into REST or RPC services to help validate data received over the wire.
+
+License MIT\hypertarget{readme.md_autotoc_md5960}{}\doxysubsubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md5960}
+
+\begin{DoxyItemize}
+\item Install
+\item \doxylink{md_node__modules_2safer-buffer_2_porting-_buffer_overview}{Overview}
+\item \doxylink{readme.md_usage}{Usage}
+\item \doxylink{readme.md_types}{Types}
+\begin{DoxyItemize}
+\item \doxylink{readme.md_types-standard}{Standard}
+\item \doxylink{readme.md_types-extended}{Extended}
+\item \doxylink{readme.md_types-modifiers}{Modifiers}
+\item \doxylink{readme.md_types-options}{Options}
+\item \doxylink{readme.md_types-generics}{Generics}
+\item \doxylink{readme.md_types-references}{References}
+\item \doxylink{readme.md_types-recursive}{Recursive}
+\item \doxylink{readme.md_types-conditional}{Conditional}
+\item \doxylink{readme.md_types-template-literal}{Template Literal}
+\item \doxylink{readme.md_types-guards}{Guards}
+\item \doxylink{readme.md_types-unsafe}{Unsafe}
+\item \doxylink{readme.md_types-strict}{Strict}
+\end{DoxyItemize}
+\item \doxylink{readme.md_values}{Values}
+\begin{DoxyItemize}
+\item \doxylink{readme.md_values-create}{Create}
+\item \doxylink{readme.md_values-clone}{Clone}
+\item \doxylink{readme.md_values-check}{Check}
+\item \doxylink{readme.md_values-convert}{Convert}
+\item \doxylink{readme.md_values-cast}{Cast}
+\item \doxylink{readme.md_values-equal}{Equal}
+\item \doxylink{readme.md_values-hash}{Hash}
+\item \doxylink{readme.md_values-diff}{Diff}
+\item \doxylink{readme.md_values-patch}{Patch}
+\item \doxylink{readme.md_values-errors}{Errors}
+\item \doxylink{readme.md_values-mutate}{Mutate}
+\item \doxylink{readme.md_values-pointer}{Pointer}
+\end{DoxyItemize}
+\item \doxylink{readme.md_typecheck}{Type\+Check}
+\begin{DoxyItemize}
+\item \doxylink{readme.md_typecheck-ajv}{Ajv}
+\item \doxylink{readme.md_typecheck-typecompiler}{Type\+Compiler}
+\end{DoxyItemize}
+\item \doxylink{readme.md_typesystem}{Type\+System}
+\begin{DoxyItemize}
+\item \doxylink{readme.md_typesystem-types}{Types}
+\item \doxylink{readme.md_typesystem-formats}{Formats}
+\item \doxylink{readme.md_typesystem-policies}{Policies}
+\end{DoxyItemize}
+\item \doxylink{readme.md_benchmark}{Benchmark}
+\begin{DoxyItemize}
+\item \doxylink{readme.md_benchmark-compile}{Compile}
+\item \doxylink{readme.md_benchmark-validate}{Validate}
+\item \doxylink{readme.md_benchmark-compression}{Compression}
+\end{DoxyItemize}
+\item \doxylink{readme.md_contribute}{Contribute}
+\end{DoxyItemize}
+
+\label{readme.md_usage}%
+\Hypertarget{readme.md_usage}%
+\hypertarget{readme.md_autotoc_md5961}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md5961}
+The following shows general usage.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Static,\ Type\ \}\ from\ '@sinclair/typebox'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ Let's\ say\ you\ have\ the\ following\ type\ ...}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ \{}
+\DoxyCodeLine{\ \ id:\ string,}
+\DoxyCodeLine{\ \ name:\ string,}
+\DoxyCodeLine{\ \ timestamp:\ number}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ ...\ you\ can\ express\ this\ type\ in\ the\ following\ way.}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ id:\ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'object',}
+\DoxyCodeLine{\ \ name:\ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ properties:\ \{\ }
+\DoxyCodeLine{\ \ timestamp:\ Type.Integer()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ id:\ \{\ }
+\DoxyCodeLine{\})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'string'\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ name:\ \{\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'string'\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ timestamp:\ \{\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'integer'\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \},\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ required:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ 'id',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ 'name',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ 'timestamp'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}\ }
+\DoxyCodeLine{}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ ...\ then\ infer\ back\ to\ the\ original\ static\ type\ this\ way.}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ Static<typeof\ T>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ id:\ string,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ name:\ string,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ timestamp:\ number}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ ...\ then\ use\ the\ type\ both\ as\ JSON\ schema\ and\ as\ a\ TypeScript\ type.}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{\ Value\ \}\ from\ '@sinclair/typebox/value'}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ receive(value:\ T)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ ...\ as\ a\ Static\ Type}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ if(Value.Check(T,\ value))\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ ...\ as\ a\ JSON\ Schema}
+\DoxyCodeLine{\ \ }
+\DoxyCodeLine{\ \ \ \ //\ ok...}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types}%
+\Hypertarget{readme.md_types}%
+\hypertarget{readme.md_autotoc_md5962}{}\doxysubsubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md5962}
+Type\+Box types are JSON schema fragments that can be composed into more complex types. Each fragment is structured such that a JSON schema compliant validator can runtime assert a value the same way Type\+Script will statically assert a type. Type\+Box provides a set of Standard types which are used create JSON schema compliant schematics as well as an Extended type set used to create schematics for constructs native to Java\+Script.
+
+\label{readme.md_types-standard}%
+\Hypertarget{readme.md_types-standard}%
+\hypertarget{readme.md_autotoc_md5963}{}\doxysubsubsubsection{\texorpdfstring{Standard Types}{Standard Types}}\label{readme.md_autotoc_md5963}
+The following table lists the Standard Type\+Box types. These types are fully compatible with the JSON Schema Draft 6 specification.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┌────────────────────────────────┬─────────────────────────────┬────────────────────────────────┐}
+\DoxyCodeLine{│\ TypeBox\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ TypeScript\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ JSON\ Schema\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Any()\ \ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ any\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Unknown()\ \ \ \ \ \ \ │\ type\ T\ =\ unknown\ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.String()\ \ \ \ \ \ \ \ │\ type\ T\ =\ string\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Number()\ \ \ \ \ \ \ \ │\ type\ T\ =\ number\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Integer()\ \ \ \ \ \ \ │\ type\ T\ =\ number\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'integer'\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Boolean()\ \ \ \ \ \ \ │\ type\ T\ =\ boolean\ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'boolean'\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Null()\ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ null\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'null'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Literal(42)\ \ \ \ \ │\ type\ T\ =\ 42\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ const:\ 42,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Array(\ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ number[]\ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'array',\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ items:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Object(\{\ \ \ \ \ \ \ \ │\ type\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ x:\ number,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ y:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ y:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ required:\ ['x',\ 'y'],\ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ x:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Tuple([\ \ \ \ \ \ \ \ \ │\ type\ T\ =\ [number,\ number]\ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'array',\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ items:\ [\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ ])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}],\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ additionalItems:\ false,\ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ minItems:\ 2,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ maxItems:\ 2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ enum\ Foo\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ enum\ Foo\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ A,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ A,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ anyOf:\ [\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ B\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ B\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'number',\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ const:\ 0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Enum(Foo)\ \ \ \ \ \ \ │\ type\ T\ =\ Foo\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'number',\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ const:\ 1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.KeyOf(\ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ keyof\ \{\ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ x:\ number,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ anyOf:\ [\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ │\ \ \ y:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'string',\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ y:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ const:\ 'x'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'string',\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ const:\ 'y'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Union([\ \ \ \ \ \ \ \ \ │\ type\ T\ =\ string\ |\ number\ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ anyOf:\ [\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ ])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Intersect([\ \ \ \ \ │\ type\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ x:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ allOf:\ [\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ x:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ │\ \}\ \&\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \}),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ y:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ required:\ ['x'],\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ y:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ x:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ ])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ ])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ required:\ ['y'],\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ y:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Composite([\ \ \ \ \ │\ type\ I\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ x:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ x:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ │\ \}\ \&\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ required:\ ['x',\ 'y'],\ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \}),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ y:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ x:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ y:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ ])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ [K\ in\ keyof\ I]:\ I[K]\ \ \ \ \ \ │\ \ \ \ \ y:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Never()\ \ \ \ \ \ \ \ \ │\ type\ T\ =\ never\ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ not:\ \{\}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Not(\ \ \ \ \ \ \ \ \ \ \ \ |\ type\ T\ =\ string\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{|\ \ \ Type.Union([\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ allOf:\ [\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.Literal('x'),\ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ not:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.Literal('y'),\ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ anyOf:\ [\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.Literal('z')\ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \{\ const:\ 'x'\ \},\ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ ]),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \{\ const:\ 'y'\ \},\ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.String()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \{\ const:\ 'z'\ \}\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ ]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Extends(\ \ \ \ \ \ \ \ │\ type\ T\ =\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ string\ extends\ number\ \ \ \ \ \ │\ \ \ const:\ false,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ true\ :\ false\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'boolean'\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Literal(true),\ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Literal(false)\ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Extract(\ \ \ \ \ \ \ \ │\ type\ T\ =\ Extract<\ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Union([\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ string\ |\ number,\ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ │\ >\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ ]),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.String()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Exclude(\ \ \ \ \ \ \ \ │\ type\ T\ =\ Exclude<\ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Union([\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ string\ |\ number,\ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ │\ >\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ ]),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.String()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ U\ =\ Type.Union([\ \ \ \ \ \ \ \ \ │\ type\ U\ =\ 'open'\ |\ 'close'\ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Literal('open'),\ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'string',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Literal('close')\ \ \ \ \ \ \ \ │\ type\ T\ =\ \`{}on\$\{U\}`\ \ \ \ \ \ \ \ \ \ \ │\ \ \ pattern:\ '\string^on(open|close)\$'\ \ │}
+\DoxyCodeLine{│\ ])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ const\ T\ =\ Type\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ .TemplateLiteral([\ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ Type.Literal('on'),\ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ U\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ ])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Record(\ \ \ \ \ \ \ \ \ │\ type\ T\ =\ Record<\ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ string,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ patternProperties:\ \{\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ >\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ '\string^.*\$':\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Partial(\ \ \ \ \ \ \ \ │\ type\ T\ =\ Partial<\{\ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ x:\ number,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ │\ \ \ y:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ y:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ |\ \}>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ x:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ y:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Required(\ \ \ \ \ \ \ │\ type\ T\ =\ Required<\{\ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ x?:\ number,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ x:\ Type.Optional(\ \ \ \ \ \ \ \ \ \ │\ \ \ y?:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ required:\ ['x',\ 'y'],\ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ |\ \}>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ x:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ y:\ Type.Optional(\ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ y:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Pick(\ \ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ Pick<\{\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ x:\ number,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ │\ \ \ y:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ required:\ ['x'],\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ y:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ │\ \},\ 'x'>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \}),\ ['x']\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ x:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Omit(\ \ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ Omit<\{\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ x:\ number,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ │\ \ \ y:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ required:\ ['y'],\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ y:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ │\ \},\ 'x'>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \}),\ ['x']\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ y:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Object(\{\ \ \ \ \ \ \ \ │\ type\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ R\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ │\ \ \ x:\ number,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \$ref:\ 'T'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ y:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ y:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \},\ \{\ \$id:\ 'T'\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ const\ R\ =\ Type.Ref(T)\ \ \ \ \ \ \ \ \ \ │\ type\ R\ =\ T\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{└────────────────────────────────┴─────────────────────────────┴────────────────────────────────┘}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-extended}%
+\Hypertarget{readme.md_types-extended}%
+\hypertarget{readme.md_autotoc_md5964}{}\doxysubsubsubsection{\texorpdfstring{Extended Types}{Extended Types}}\label{readme.md_autotoc_md5964}
+Type\+Box provides several extended types that can be used to produce schematics for common Java\+Script constructs. These types can not be used with standard JSON schema validators; but are useful to help frame schematics for RPC interfaces that may receive JSON validated data. Extended types are prefixed with the {\ttfamily \mbox{[}Extended\mbox{]}} doc comment for convenience. The following table lists the supported types.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┌────────────────────────────────┬─────────────────────────────┬────────────────────────────────┐}
+\DoxyCodeLine{│\ TypeBox\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ TypeScript\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ Extended\ Schema\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Constructor([\ \ \ │\ type\ T\ =\ new\ (\ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ arg0:\ string,\ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ arg1:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ instanceOf:\ 'Constructor',\ \ \ │}
+\DoxyCodeLine{│\ ],\ Type.Boolean())\ \ \ \ \ \ \ \ \ \ \ \ \ │\ )\ =>\ boolean\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ parameters:\ [\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}],\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ return:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'boolean'\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Function([\ \ \ \ \ \ │\ type\ T\ =\ (\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{|\ \ \ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ arg0:\ string,\ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type\ :\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ arg1:\ number\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ instanceOf:\ 'Function',\ \ \ \ \ \ │}
+\DoxyCodeLine{│\ ],\ Type.Boolean())\ \ \ \ \ \ \ \ \ \ \ \ \ │\ )\ =>\ boolean\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ parameters:\ [\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'number'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}],\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ return:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'boolean'\ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Promise(\ \ \ \ \ \ \ \ │\ type\ T\ =\ Promise<string>\ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ Type.String()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ instanceOf:\ 'Promise',\ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ item:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Uint8Array()\ \ \ \ │\ type\ T\ =\ Uint8Array\ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ instanceOf:\ 'Uint8Array'\ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Date()\ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ Date\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ instanceOf:\ 'Date'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Undefined()\ \ \ \ \ │\ type\ T\ =\ undefined\ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'null',\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ typeOf:\ 'Undefined'\ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.RegEx(/foo/)\ \ \ \ │\ type\ T\ =\ string\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ type:\ 'string',\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ pattern:\ 'foo'\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Symbol()\ \ \ \ \ \ \ \ │\ type\ T\ =\ symbol\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'null',\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ typeOf:\ 'Symbol'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.BigInt()\ \ \ \ \ \ \ \ │\ type\ T\ =\ bigint\ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'null',\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ typeOf:\ 'BigInt'\ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Void()\ \ \ \ \ \ \ \ \ \ │\ type\ T\ =\ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'null'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ typeOf:\ 'Void'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{└────────────────────────────────┴─────────────────────────────┴────────────────────────────────┘}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-modifiers}%
+\Hypertarget{readme.md_types-modifiers}%
+\hypertarget{readme.md_autotoc_md5965}{}\doxysubsubsubsection{\texorpdfstring{Modifiers}{Modifiers}}\label{readme.md_autotoc_md5965}
+Type\+Box provides modifiers that allow schema properties to be statically inferred as {\ttfamily readonly} or {\ttfamily optional}. The following table shows the supported modifiers and how they map between Type\+Script and JSON Schema.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┌────────────────────────────────┬─────────────────────────────┬────────────────────────────────┐}
+\DoxyCodeLine{│\ TypeBox\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ TypeScript\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ JSON\ Schema\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Object(\{\ \ \ \ \ \ \ \ │\ type\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ name:\ Type.Optional(\ \ \ \ \ \ \ \ \ │\ \ \ name?:\ string\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.String()\ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ name:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Object(\{\ \ \ \ \ \ \ \ │\ type\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ name:\ Type.Readonly(\ \ \ \ \ \ \ \ \ │\ \ \ readonly\ name:\ string\ \ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.String()\ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ name:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ required:\ ['name']\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{├────────────────────────────────┼─────────────────────────────┼────────────────────────────────┤}
+\DoxyCodeLine{│\ const\ T\ =\ Type.Object(\{\ \ \ \ \ \ \ \ │\ type\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ const\ T\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ name:\ Type.ReadonlyOptional(\ │\ \ \ readonly\ name?:\ string\ \ \ \ │\ \ \ type:\ 'object',\ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ Type.String()\ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ properties:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ name:\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ type:\ 'string'\ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{└────────────────────────────────┴─────────────────────────────┴────────────────────────────────┘}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-options}%
+\Hypertarget{readme.md_types-options}%
+\hypertarget{readme.md_autotoc_md5966}{}\doxysubsubsubsection{\texorpdfstring{Options}{Options}}\label{readme.md_autotoc_md5966}
+You can pass JSON Schema options on the last argument of any type. Option hints specific to each type are provided for convenience.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ String\ must\ be\ an\ email}
+\DoxyCodeLine{const\ T\ =\ Type.String(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{\ }
+\DoxyCodeLine{\ \ format:\ 'email'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'string',}
+\DoxyCodeLine{\})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ format:\ 'email'\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Mumber\ must\ be\ a\ multiple\ of\ 2}
+\DoxyCodeLine{const\ T\ =\ Type.Number(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{\ }
+\DoxyCodeLine{\ \ multipleOf:\ 2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ type:\ 'number',\ }
+\DoxyCodeLine{\})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ multipleOf:\ 2\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Array\ must\ have\ at\ least\ 5\ integer\ values}
+\DoxyCodeLine{const\ T\ =\ Type.Array(Type.Integer(),\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{\ }
+\DoxyCodeLine{\ \ minItems:\ 5\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'array',}
+\DoxyCodeLine{\})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ minItems:\ 5,\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ items:\ \{\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ type:\ 'integer'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-generics}%
+\Hypertarget{readme.md_types-generics}%
+\hypertarget{readme.md_autotoc_md5967}{}\doxysubsubsubsection{\texorpdfstring{Generic Types}{Generic Types}}\label{readme.md_autotoc_md5967}
+Generic types can be created with generic functions constrained to type {\ttfamily TSchema}. The following creates a generic {\ttfamily Vector\texorpdfstring{$<$}{<}T\texorpdfstring{$>$}{>}} type.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Type,\ Static,\ TSchema\ \}\ from\ '@sinclair/typebox'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Vector\ =\ <T\ extends\ TSchema>(t:\ T)\ =>\ Type.Object(\{\ x:\ t,\ y:\ t,\ z:\ t\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ NumberVector\ =\ Vector(Type.Number())\ \ \ \ \ \ \ \ \ \ \ //\ const\ NumberVector\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'object',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ required:\ ['x',\ 'y',\ 'z'],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ properties:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ x:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ y:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ z:\ \{\ type:\ 'number'\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ NumberVector\ =\ Static<typeof\ NumberVector>\ \ \ \ \ \ //\ type\ NumberVector\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ x:\ number,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ y:\ number,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ z:\ number}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ BooleanVector\ =\ Vector(Type.Boolean())\ \ \ \ \ \ \ \ \ //\ const\ BooleanVector\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'object',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ required:\ ['x',\ 'y',\ 'z'],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ properties:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ x:\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ y:\ \{\ type:\ 'boolean'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ z:\ \{\ type:\ 'boolean'\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ BooleanVector\ =\ Static<typeof\ BooleanVector>\ \ \ \ //\ type\ BooleanVector\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ x:\ boolean,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ y:\ boolean,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ z:\ boolean}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+
+\end{DoxyCode}
+
+
+The following creates a generic {\ttfamily Nullable\texorpdfstring{$<$}{<}T\texorpdfstring{$>$}{>}} type.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Nullable\ =\ <T\ extends\ TSchema>(schema:\ T)\ =>\ Type.Union([schema,\ Type.Null()])}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ Nullable(Type.String())\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ anyOf:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \{\ type:\ 'string'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \{\ type:\ 'null'\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ Static<typeof\ T>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ string\ |\ null}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-references}%
+\Hypertarget{readme.md_types-references}%
+\hypertarget{readme.md_autotoc_md5968}{}\doxysubsubsubsection{\texorpdfstring{Reference Types}{Reference Types}}\label{readme.md_autotoc_md5968}
+Reference types are supported with {\ttfamily Type.\+Ref}. The target type must specify a valid {\ttfamily \$id}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ T\ =\ Type.String(\{\ \$id:\ 'T'\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \$id:\ 'T',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ type:\ 'string'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{const\ R\ =\ Type.Ref(T)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \$ref:\ 'T'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-recursive}%
+\Hypertarget{readme.md_types-recursive}%
+\hypertarget{readme.md_autotoc_md5969}{}\doxysubsubsubsection{\texorpdfstring{Recursive Types}{Recursive Types}}\label{readme.md_autotoc_md5969}
+Recursive types are supported with {\ttfamily Type.\+Recursive}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Node\ =\ Type.Recursive(Node\ =>\ Type.Object(\{\ \ \ \ //\ const\ Node\ =\ \{}
+\DoxyCodeLine{\ \ id:\ Type.String(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \$id:\ 'Node',}
+\DoxyCodeLine{\ \ nodes:\ Type.Array(Node)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'object',}
+\DoxyCodeLine{\}),\ \{\ \$id:\ 'Node'\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ properties:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ id:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'string'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ nodes:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'array',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ items:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ \ \ \$ref:\ 'Node'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ required:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ 'id',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ 'nodes'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Node\ =\ Static<typeof\ Node>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ Node\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ id:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ nodes:\ Node[]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ test(node:\ Node)\ \{}
+\DoxyCodeLine{\ \ const\ id\ =\ node.nodes[0].nodes[0].id\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ id\ is\ string}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-conditional}%
+\Hypertarget{readme.md_types-conditional}%
+\hypertarget{readme.md_autotoc_md5970}{}\doxysubsubsubsection{\texorpdfstring{Conditional Types}{Conditional Types}}\label{readme.md_autotoc_md5970}
+Conditional types are supported with {\ttfamily Type.\+Extends}, {\ttfamily Type.\+Exclude} and {\ttfamily Type.\+Extract}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ TypeScript}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T0\ =\ string\ extends\ number\ ?\ true\ :\ false\ \ \ \ \ \ \ //\ type\ T0\ =\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T1\ =\ Extract<string\ |\ number,\ number>\ \ \ \ \ \ \ \ \ \ \ //\ type\ T1\ =\ number}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T2\ =\ Exclude<string\ |\ number,\ number>\ \ \ \ \ \ \ \ \ \ \ //\ type\ T2\ =\ string}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ TypeBox}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T0\ =\ Type.Extends(Type.String(),\ Type.Number(),\ Type.Literal(true),\ Type.Literal(false))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T1\ =\ Type.Extract(Type.Union([Type.String(),\ Type.Number()]),\ Type.Number())}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T2\ =\ Type.Exclude(Type.Union([Type.String(),\ Type.Number()]),\ Type.Number())}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T0\ =\ Static<typeof\ T0>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T0\ =\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T1\ =\ Static<typeof\ T1>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T1\ =\ number}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T2\ =\ Static<typeof\ T2>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T2\ =\ string\ }
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-template-literal}%
+\Hypertarget{readme.md_types-template-literal}%
+\hypertarget{readme.md_autotoc_md5971}{}\doxysubsubsubsection{\texorpdfstring{Template Literal Types}{Template Literal Types}}\label{readme.md_autotoc_md5971}
+Template Literal types are supported with {\ttfamily Type.\+Template\+Literal}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ TypeScript}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ \`{}option\$\{'A'|'B'\}`\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ 'optionA'\ |\ 'optionB'}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ R\ =\ Record<T,\ string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ R\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ optionA:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ optionB:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ TypeBox}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ Type.TemplateLiteral([\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ Type.Literal('option'),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ pattern:\ '\string^option(A|B)\$',}
+\DoxyCodeLine{\ \ Type.Union([\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'string'}
+\DoxyCodeLine{\ \ \ \ Type.Literal('A'),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{\ \ \ \ Type.Literal('B')}
+\DoxyCodeLine{\ \ ])}
+\DoxyCodeLine{])}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R\ =\ Type.Record(T,\ Type.String())\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'object',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ required:\ ['optionA',\ 'optionB'],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ properties:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ optionA:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'string'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ optionB:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'string'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ Static<typeof\ T>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ 'optionA'\ |\ 'optionB'}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ R\ =\ Static<typeof\ R>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ R\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ optionA:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ optionB:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-unsafe}%
+\Hypertarget{readme.md_types-unsafe}%
+\hypertarget{readme.md_autotoc_md5972}{}\doxysubsubsubsection{\texorpdfstring{Unsafe}{Unsafe}}\label{readme.md_autotoc_md5972}
+Use {\ttfamily Type.\+Unsafe} to create custom schematics with user defined inference rules.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ T\ =\ Type.Unsafe<string>(\{\ type:\ 'number'\ \})\ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'number'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ Static<typeof\ T>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ string}
+
+\end{DoxyCode}
+
+
+The {\ttfamily Type.\+Unsafe} type can be useful to express specific Open\+API schema representations.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Type,\ Static,\ TSchema\ \}\ from\ '@sinclair/typebox'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Nullable<T>}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Nullable<T\ extends\ TSchema>(schema:\ T)\ \{}
+\DoxyCodeLine{\ \ return\ Type.Unsafe<Static<T>\ |\ null>(\{\ ...schema,\ nullable:\ true\ \})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ Nullable(Type.String())\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'string',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ nullable:\ true}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ Static<typeof\ T>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ string\ |\ null}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ StringEnum<string[]>}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ StringEnum<T\ extends\ string[]>(values:\ [...T])\ \{}
+\DoxyCodeLine{\ \ return\ Type.Unsafe<T[number]>(\{\ type:\ 'string',\ enum:\ values\ \})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ StringEnum(['A',\ 'B',\ 'C'])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ enum:\ ['A',\ 'B',\ 'C']}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ Static<typeof\ T>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ 'A'\ |\ 'B'\ |\ 'C'}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-guards}%
+\Hypertarget{readme.md_types-guards}%
+\hypertarget{readme.md_autotoc_md5973}{}\doxysubsubsubsection{\texorpdfstring{Guards}{Guards}}\label{readme.md_autotoc_md5973}
+Type\+Box provides a {\ttfamily Type\+Guard} module that can be used for reflection and asserting values as types.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Type,\ TypeGuard\ \}\ from\ '@sinclair/typebox'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ Type.String()}
+\DoxyCodeLine{}
+\DoxyCodeLine{if(TypeGuard.TString(T))\ \{}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ //\ T\ is\ TString}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_types-strict}%
+\Hypertarget{readme.md_types-strict}%
+\hypertarget{readme.md_autotoc_md5974}{}\doxysubsubsubsection{\texorpdfstring{Strict}{Strict}}\label{readme.md_autotoc_md5974}
+Type\+Box schemas contain the {\ttfamily Kind} and {\ttfamily Modifier} symbol properties. These properties are used for type composition and reflection. These properties are not strictly valid JSON schema; so in some cases it may be desirable to omit them. Type\+Box provides a {\ttfamily Type.\+Strict} function that will omit these properties if necessary.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ T\ =\ Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ T\ =\ \{}
+\DoxyCodeLine{\ \ name:\ Type.Optional(Type.String())\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ [Kind]:\ 'Object',}
+\DoxyCodeLine{\})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'object',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ properties:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ name:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ [Kind]:\ 'String',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'string',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ [Modifier]:\ 'Optional'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ U\ =\ Type.Strict(T)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ U\ =\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ type:\ 'object',\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ properties:\ \{\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ name:\ \{\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \ \ type:\ 'string'\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ \}\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \}\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values}%
+\Hypertarget{readme.md_values}%
+\hypertarget{readme.md_autotoc_md5975}{}\doxysubsubsection{\texorpdfstring{Values}{Values}}\label{readme.md_autotoc_md5975}
+Type\+Box provides an optional utility module that can be used to perform common operations on Java\+Script values. This module includes functionality to create, check and cast values from types as well as check equality, clone, diff and patch Java\+Script values. This module is provided via optional import.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Value\ \}\ from\ '@sinclair/typebox/value'}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-create}%
+\Hypertarget{readme.md_values-create}%
+\hypertarget{readme.md_autotoc_md5976}{}\doxysubsubsubsection{\texorpdfstring{Create}{Create}}\label{readme.md_autotoc_md5976}
+Use the Create function to create a value from a type. Type\+Box will use default values if specified.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ T\ =\ Type.Object(\{\ x:\ Type.Number(),\ y:\ Type.Number(\{\ default:\ 42\ \})\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ A\ =\ Value.Create(T)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ A\ =\ \{\ x:\ 0,\ y:\ 42\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-clone}%
+\Hypertarget{readme.md_values-clone}%
+\hypertarget{readme.md_autotoc_md5977}{}\doxysubsubsubsection{\texorpdfstring{Clone}{Clone}}\label{readme.md_autotoc_md5977}
+Use the Clone function to deeply clone a value
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ A\ =\ Value.Clone(\{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \})\ \ \ \ \ \ \ \ \ \ //\ const\ A\ =\ \{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-check}%
+\Hypertarget{readme.md_values-check}%
+\hypertarget{readme.md_autotoc_md5978}{}\doxysubsubsubsection{\texorpdfstring{Check}{Check}}\label{readme.md_autotoc_md5978}
+Use the Check function to type check a value
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ T\ =\ Type.Object(\{\ x:\ Type.Number()\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R\ =\ Value.Check(T,\ \{\ x:\ 1\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R\ =\ true}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-convert}%
+\Hypertarget{readme.md_values-convert}%
+\hypertarget{readme.md_autotoc_md5979}{}\doxysubsubsubsection{\texorpdfstring{Convert}{Convert}}\label{readme.md_autotoc_md5979}
+Use the Convert function to convert a value into its target type if a reasonable conversion is possible.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ T\ =\ Type.Object(\{\ x:\ Type.Number()\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R1\ =\ Value.Convert(T,\ \{\ x:\ '3.14'\ \})\ \ \ \ \ \ \ \ \ \ //\ const\ R1\ =\ \{\ x:\ 3.14\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R2\ =\ Value.Convert(T,\ \{\ x:\ 'not\ a\ number'\ \})\ \ //\ const\ R2\ =\ \{\ x:\ 'not\ a\ number'\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-cast}%
+\Hypertarget{readme.md_values-cast}%
+\hypertarget{readme.md_autotoc_md5980}{}\doxysubsubsubsection{\texorpdfstring{Cast}{Cast}}\label{readme.md_autotoc_md5980}
+Use the Cast function to cast a value into a type. The cast function will retain as much information as possible from the original value.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ T\ =\ Type.Object(\{\ x:\ Type.Number(),\ y:\ Type.Number()\ \},\ \{\ additionalProperties:\ false\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ X\ =\ Value.Cast(T,\ null)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ X\ =\ \{\ x:\ 0,\ y:\ 0\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Y\ =\ Value.Cast(T,\ \{\ x:\ 1\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ Y\ =\ \{\ x:\ 1,\ y:\ 0\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Z\ =\ Value.Cast(T,\ \{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \})\ \ \ \ \ \ \ \ //\ const\ Z\ =\ \{\ x:\ 1,\ y:\ 2\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-equal}%
+\Hypertarget{readme.md_values-equal}%
+\hypertarget{readme.md_autotoc_md5981}{}\doxysubsubsubsection{\texorpdfstring{Equal}{Equal}}\label{readme.md_autotoc_md5981}
+Use the Equal function to deeply check for value equality.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ R\ =\ Value.Equal(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R\ =\ true}
+\DoxyCodeLine{\ \ \{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \},}
+\DoxyCodeLine{\ \ \{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \}}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-hash}%
+\Hypertarget{readme.md_values-hash}%
+\hypertarget{readme.md_autotoc_md5982}{}\doxysubsubsubsection{\texorpdfstring{Hash}{Hash}}\label{readme.md_autotoc_md5982}
+Use the Hash function to create a \href{https://en.wikipedia.org/wiki/Fowler\%E2\%80\%93Noll\%E2\%80\%93Vo_hash_function}{\texttt{ FNV1\+A-\/64}} non cryptographic hash of a value.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ A\ =\ Value.Hash(\{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \})\ \ \ \ \ \ \ \ \ \ //\ const\ A\ =\ 2910466848807138541n}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ B\ =\ Value.Hash(\{\ x:\ 1,\ y:\ 4,\ z:\ 3\ \})\ \ \ \ \ \ \ \ \ \ //\ const\ B\ =\ 1418369778807423581n}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-diff}%
+\Hypertarget{readme.md_values-diff}%
+\hypertarget{readme.md_autotoc_md5983}{}\doxysubsubsubsection{\texorpdfstring{Diff}{Diff}}\label{readme.md_autotoc_md5983}
+Use the Diff function to produce a sequence of edits to transform one value into another.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ E\ =\ Value.Diff(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ E\ =\ [}
+\DoxyCodeLine{\ \ \{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \{\ type:\ 'update',\ path:\ '/y',\ value:\ 4\ \},}
+\DoxyCodeLine{\ \ \{\ y:\ 4,\ z:\ 5,\ w:\ 6\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \{\ type:\ 'update',\ path:\ '/z',\ value:\ 5\ \},}
+\DoxyCodeLine{)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \{\ type:\ 'insert',\ path:\ '/w',\ value:\ 6\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \{\ type:\ 'delete',\ path:\ '/x'\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ ]}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-patch}%
+\Hypertarget{readme.md_values-patch}%
+\hypertarget{readme.md_autotoc_md5984}{}\doxysubsubsubsection{\texorpdfstring{Patch}{Patch}}\label{readme.md_autotoc_md5984}
+Use the Patch function to apply edits
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ A\ =\ \{\ x:\ 1,\ y:\ 2\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ B\ =\ \{\ x:\ 3\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ E\ =\ Value.Diff(A,\ B)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ E\ =\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \{\ type:\ 'update',\ path:\ '/x',\ value:\ 3\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \{\ type:\ 'delete',\ path:\ '/y'\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ ]}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ C\ =\ Value.Patch<typeof\ B>(A,\ E)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ C\ =\ \{\ x:\ 3\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-errors}%
+\Hypertarget{readme.md_values-errors}%
+\hypertarget{readme.md_autotoc_md5985}{}\doxysubsubsubsection{\texorpdfstring{Errors}{Errors}}\label{readme.md_autotoc_md5985}
+Use the Errors function enumerate validation errors.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ T\ =\ Type.Object(\{\ x:\ Type.Number(),\ y:\ Type.Number()\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R\ =\ [...Value.Errors(T,\ \{\ x:\ '42'\ \})]\ \ \ \ \ \ \ \ \ \ //\ const\ R\ =\ [\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ schema:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ path:\ '/x',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ value:\ '42',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ message:\ 'Expected\ number'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ schema:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ path:\ '/y',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ value:\ undefined,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ message:\ 'Expected\ number'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}]}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-mutate}%
+\Hypertarget{readme.md_values-mutate}%
+\hypertarget{readme.md_autotoc_md5986}{}\doxysubsubsubsection{\texorpdfstring{Mutate}{Mutate}}\label{readme.md_autotoc_md5986}
+Use the Mutate function to perform a deep mutable value assignment while retaining internal references.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Y\ =\ \{\ z:\ 1\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ Y\ =\ \{\ z:\ 1\ \}\ }
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ X\ =\ \{\ y:\ Y\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ X\ =\ \{\ y:\ \{\ z:\ 1\ \}\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ A\ =\ \{\ x:\ X\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ A\ =\ \{\ x:\ \{\ y:\ \{\ z:\ 1\ \}\ \}\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{Value.Mutate(A,\ \{\ x:\ \{\ y:\ \{\ z:\ 2\ \}\ \}\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ A'\ =\ \{\ x:\ \{\ y:\ \{\ z:\ 2\ \}\ \}\ \}\ \ \ }
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R0\ =\ A.x.y.z\ ===\ 2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R0\ =\ 2}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R1\ =\ A.x.y\ ===\ Y\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R1\ =\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R2\ =\ A.x\ ===\ X\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R2\ =\ true}
+
+\end{DoxyCode}
+
+
+\label{readme.md_values-pointer}%
+\Hypertarget{readme.md_values-pointer}%
+\hypertarget{readme.md_autotoc_md5987}{}\doxysubsubsubsection{\texorpdfstring{Pointer}{Pointer}}\label{readme.md_autotoc_md5987}
+Use Value\+Pointer to perform mutable updates on existing values using \href{https://www.rfc-editor.org/rfc/rfc6901}{\texttt{ RFC6901}} JSON Pointers.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ ValuePointer\ \}\ from\ '@sinclair/typebox/value'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ A\ =\ \{\ x:\ 0,\ y:\ 0,\ z:\ 0\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{ValuePointer.Set(A,\ '/x',\ 1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ A'\ =\ \{\ x:\ 1,\ y:\ 0,\ z:\ 0\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{ValuePointer.Set(A,\ '/y',\ 1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ A'\ =\ \{\ x:\ 1,\ y:\ 1,\ z:\ 0\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{ValuePointer.Set(A,\ '/z',\ 1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ A'\ =\ \{\ x:\ 1,\ y:\ 1,\ z:\ 1\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_typecheck}%
+\Hypertarget{readme.md_typecheck}%
+\hypertarget{readme.md_autotoc_md5988}{}\doxysubsubsection{\texorpdfstring{Type\+Check}{Type\+Check}}\label{readme.md_autotoc_md5988}
+Type\+Box types target JSON Schema draft 6 so are compatible with any validator that supports this specification. Type\+Box also provides a built in type checking compiler designed specifically for high performance compilation and value assertion.
+
+The following sections detail using Ajv and Type\+Box\textquotesingle{}s compiler infrastructure.
+
+\label{readme.md_typecheck-ajv}%
+\Hypertarget{readme.md_typecheck-ajv}%
+\hypertarget{readme.md_autotoc_md5989}{}\doxysubsubsection{\texorpdfstring{Ajv}{Ajv}}\label{readme.md_autotoc_md5989}
+The following shows the recommended setup for Ajv.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ ajv\ ajv-\/formats\ -\/-\/save}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Type\ \}\ \ \ from\ '@sinclair/typebox'}
+\DoxyCodeLine{import\ addFormats\ from\ 'ajv-\/formats'}
+\DoxyCodeLine{import\ Ajv\ \ \ \ \ \ \ \ from\ 'ajv'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ ajv\ =\ addFormats(new\ Ajv(\{\}),\ [}
+\DoxyCodeLine{\ \ 'date-\/time',\ }
+\DoxyCodeLine{\ \ 'time',\ }
+\DoxyCodeLine{\ \ 'date',\ }
+\DoxyCodeLine{\ \ 'email',\ \ }
+\DoxyCodeLine{\ \ 'hostname',\ }
+\DoxyCodeLine{\ \ 'ipv4',\ }
+\DoxyCodeLine{\ \ 'ipv6',\ }
+\DoxyCodeLine{\ \ 'uri',\ }
+\DoxyCodeLine{\ \ 'uri-\/reference',\ }
+\DoxyCodeLine{\ \ 'uuid',}
+\DoxyCodeLine{\ \ 'uri-\/template',\ }
+\DoxyCodeLine{\ \ 'json-\/pointer',\ }
+\DoxyCodeLine{\ \ 'relative-\/json-\/pointer',\ }
+\DoxyCodeLine{\ \ 'regex'}
+\DoxyCodeLine{])}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ C\ =\ ajv.compile(Type.Object(\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ x:\ Type.Number(),}
+\DoxyCodeLine{\ \ y:\ Type.Number(),}
+\DoxyCodeLine{\ \ z:\ Type.Number()}
+\DoxyCodeLine{\}))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R\ =\ C(\{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R\ =\ true\ }
+
+\end{DoxyCode}
+
+
+\label{readme.md_typecheck-typecompiler}%
+\Hypertarget{readme.md_typecheck-typecompiler}%
+\hypertarget{readme.md_autotoc_md5990}{}\doxysubsubsubsection{\texorpdfstring{Type\+Compiler}{Type\+Compiler}}\label{readme.md_autotoc_md5990}
+The Type\+Box Type\+Compiler is a high performance JIT compiler that transforms Type\+Box types into optimized Java\+Script validation routines. The compiler is tuned for fast compilation as well as fast value assertion. It is designed to serve as a validation backend that can be integrated into larger applications; but can also be used as a general purpose validator.
+
+The Type\+Compiler is provided as an optional import.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ TypeCompiler\ \}\ from\ '@sinclair/typebox/compiler'}
+
+\end{DoxyCode}
+
+
+Use the {\ttfamily Compile(...)} function to compile a type.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ C\ =\ TypeCompiler.Compile(Type.Object(\{\ \ \ \ \ \ \ \ \ //\ const\ C:\ TypeCheck<TObject<\{}
+\DoxyCodeLine{\ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ x:\ TNumber;}
+\DoxyCodeLine{\ \ y:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ y:\ TNumber;}
+\DoxyCodeLine{\ \ z:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ z:\ TNumber;}
+\DoxyCodeLine{\}))\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}>>}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R\ =\ C.Check(\{\ x:\ 1,\ y:\ 2,\ z:\ 3\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R\ =\ true}
+
+\end{DoxyCode}
+
+
+Use the {\ttfamily Errors(...)} function to produce diagnostic errors for a value. The {\ttfamily Errors(...)} function will return an iterator that if enumerated; will perform an exhaustive check across the entire value and yield any error found. For performance, this function should only be called after failed {\ttfamily Check(...)}. Applications may also choose to yield only the first value to avoid exhaustive error generation.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ C\ =\ TypeCompiler.Compile(Type.Object(\{\ \ \ \ \ \ \ \ \ //\ const\ C:\ TypeCheck<TObject<\{}
+\DoxyCodeLine{\ \ x:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ x:\ TNumber;}
+\DoxyCodeLine{\ \ y:\ Type.Number(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ y:\ TNumber;}
+\DoxyCodeLine{\ \ z:\ Type.Number()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ z:\ TNumber;}
+\DoxyCodeLine{\}))\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}>>}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ value\ =\ \{\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ errors\ =\ [...C.Errors(value)]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ errors\ =\ [\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ schema:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ path:\ '/x',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ value:\ undefined,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ message:\ 'Expected\ number'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ schema:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ path:\ '/y',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ value:\ undefined,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ message:\ 'Expected\ number'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ schema:\ \{\ type:\ 'number'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ path:\ '/z',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ value:\ undefined,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ message:\ 'Expected\ number'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}]}
+
+\end{DoxyCode}
+
+
+Compiled routines can be inspected with the {\ttfamily .Code()} function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ C\ =\ TypeCompiler.Compile(Type.String())\ \ \ \ \ \ \ \ //\ const\ C:\ TypeCheck<TString>}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(C.Code())\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ return\ function\ check(value)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ return\ (}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ \ \ (typeof\ value\ ===\ 'string')}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \ \ )}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \}}
+
+\end{DoxyCode}
+
+
+\label{readme.md_typesystem}%
+\Hypertarget{readme.md_typesystem}%
+\hypertarget{readme.md_autotoc_md5991}{}\doxysubsubsection{\texorpdfstring{Type\+System}{Type\+System}}\label{readme.md_autotoc_md5991}
+The Type\+Box Type\+System module provides functionality to define types above and beyond the Standard and Extended type sets as well as control various assertion polices. Configurations made to the Type\+System module are observed by both {\ttfamily Type\+Compiler} and {\ttfamily Value} modules.
+
+The Type\+System module is provided as an optional import.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ TypeSystem\ \}\ from\ '@sinclair/typebox/system'}
+
+\end{DoxyCode}
+
+
+\label{readme.md_typesystem-types}%
+\Hypertarget{readme.md_typesystem-types}%
+\hypertarget{readme.md_autotoc_md5992}{}\doxysubsubsubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md5992}
+Use the {\ttfamily Type(...)} function to create a custom type. This function will return a type factory function that can be used to construct the type. The following creates a Point type.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ PointOptions\ =\ \{\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ The\ Type\ Options}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ PointType\ =\ \{\ x:\ number,\ y:\ number\ \}\ \ \ \ \ \ \ \ \ \ \ \ //\ The\ Static<T>\ Type}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Point\ =\ TypeSystem.Type<PointType,\ PointOptions>('Point',\ (options,\ value)\ =>\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ typeof\ value\ ===\ 'object'\ \&\&\ value\ !==\ null\ \&\&}
+\DoxyCodeLine{\ \ \ \ typeof\ value.x\ ===\ 'number'\ \&\&\ }
+\DoxyCodeLine{\ \ \ \ typeof\ value.y\ ===\ 'number'}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ Point()}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ T\ =\ Static<typeof\ T>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ type\ T\ =\ \{\ x:\ number,\ y:\ number\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ R\ =\ Value.Check(T,\ \{\ x:\ 1,\ y:\ 2\ \})\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ R\ =\ true}
+
+\end{DoxyCode}
+
+
+\label{readme.md_typesystem-formats}%
+\Hypertarget{readme.md_typesystem-formats}%
+\hypertarget{readme.md_autotoc_md5993}{}\doxysubsubsubsection{\texorpdfstring{Formats}{Formats}}\label{readme.md_autotoc_md5993}
+Use the {\ttfamily Format(...)} function to create a custom string format. The following creates a format that checks for lowercase strings.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{TypeSystem.Format('lowercase',\ value\ =>\ value\ ===\ value.toLowerCase())\ //\ format\ should\ be\ lowercase}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ T\ =\ Type.String(\{\ format:\ 'lowercase'\ \})\ \ \ \ \ \ \ }
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ A\ =\ Value.Check(T,\ 'Hello')\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ A\ =\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ B\ =\ Value.Check(T,\ 'hello')\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ const\ B\ =\ true}
+
+\end{DoxyCode}
+
+
+\label{readme.md_typesystem-policies}%
+\Hypertarget{readme.md_typesystem-policies}%
+\hypertarget{readme.md_autotoc_md5994}{}\doxysubsubsubsection{\texorpdfstring{Policies}{Policies}}\label{readme.md_autotoc_md5994}
+Type\+Box validates using JSON Schema assertion policies by default. It is possible to override these policies and have Type\+Box assert using Type\+Script policies. The following overrides are available.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Allow\ arrays\ to\ validate\ as\ object\ types\ (default\ is\ false)}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ const\ A:\ \{\}\ =\ []\ -\/\ allowed\ in\ TS}
+\DoxyCodeLine{}
+\DoxyCodeLine{TypeSystem.AllowArrayObjects\ =\ true\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Allow\ numeric\ values\ to\ be\ NaN\ or\ +\ or\ -\/\ Infinity\ (default\ is\ false)}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ const\ A:\ number\ =\ NaN\ -\/\ allowed\ in\ TS}
+\DoxyCodeLine{}
+\DoxyCodeLine{TypeSystem.AllowNaN\ =\ true\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+
+\end{DoxyCode}
+
+
+\label{readme.md_benchmark}%
+\Hypertarget{readme.md_benchmark}%
+\hypertarget{readme.md_autotoc_md5995}{}\doxysubsubsection{\texorpdfstring{Benchmark}{Benchmark}}\label{readme.md_autotoc_md5995}
+This project maintains a set of benchmarks that measure Ajv, Value and Type\+Compiler compilation and validation performance. These benchmarks can be run locally by cloning this repository and running {\ttfamily npm run benchmark}. The results below show for Ajv version 8.\+12.\+0.
+
+For additional comparative benchmarks, please refer to \href{https://moltar.github.io/typescript-runtime-type-benchmarks/}{\texttt{ typescript-\/runtime-\/type-\/benchmarks}}.
+
+\label{readme.md_benchmark-compile}%
+\Hypertarget{readme.md_benchmark-compile}%
+\hypertarget{readme.md_autotoc_md5996}{}\doxysubsubsubsection{\texorpdfstring{Compile}{Compile}}\label{readme.md_autotoc_md5996}
+This benchmark measures compilation performance for varying types. You can review this benchmark \href{https://github.com/sinclairzx81/typebox/blob/master/benchmark/measurement/module/compile.ts}{\texttt{ here}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┌────────────────────────────┬────────────┬──────────────┬──────────────┬──────────────┐}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ (index)\ \ \ \ \ \ \ \ \ \ \ │\ Iterations\ │\ \ \ \ \ Ajv\ \ \ \ \ \ │\ TypeCompiler\ │\ Performance\ \ │}
+\DoxyCodeLine{├────────────────────────────┼────────────┼──────────────┼──────────────┼──────────────┤}
+\DoxyCodeLine{│\ Literal\_String\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 257\ ms'\ │\ '\ \ \ \ \ \ 8\ ms'\ │\ '\ \ \ 32.13\ x'\ │}
+\DoxyCodeLine{│\ Literal\_Number\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 203\ ms'\ │\ '\ \ \ \ \ \ 4\ ms'\ │\ '\ \ \ 50.75\ x'\ │}
+\DoxyCodeLine{│\ Literal\_Boolean\ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 183\ ms'\ │\ '\ \ \ \ \ \ 4\ ms'\ │\ '\ \ \ 45.75\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_Number\ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 174\ ms'\ │\ '\ \ \ \ \ \ 8\ ms'\ │\ '\ \ \ 21.75\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_String\ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 158\ ms'\ │\ '\ \ \ \ \ \ 9\ ms'\ │\ '\ \ \ 17.56\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_String\_Pattern\ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 213\ ms'\ │\ '\ \ \ \ \ 13\ ms'\ │\ '\ \ \ 16.38\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_Boolean\ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 136\ ms'\ │\ '\ \ \ \ \ \ 6\ ms'\ │\ '\ \ \ 22.67\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_Null\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 144\ ms'\ │\ '\ \ \ \ \ \ 6\ ms'\ │\ '\ \ \ 24.00\ x'\ │}
+\DoxyCodeLine{│\ Object\_Unconstrained\ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ 1176\ ms'\ │\ '\ \ \ \ \ 38\ ms'\ │\ '\ \ \ 30.95\ x'\ │}
+\DoxyCodeLine{│\ Object\_Constrained\ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ 1181\ ms'\ │\ '\ \ \ \ \ 31\ ms'\ │\ '\ \ \ 38.10\ x'\ │}
+\DoxyCodeLine{│\ Object\_Vector3\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 387\ ms'\ │\ '\ \ \ \ \ \ 8\ ms'\ │\ '\ \ \ 48.38\ x'\ │}
+\DoxyCodeLine{│\ Object\_Box3D\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ 1693\ ms'\ │\ '\ \ \ \ \ 25\ ms'\ │\ '\ \ \ 67.72\ x'\ │}
+\DoxyCodeLine{│\ Tuple\_Primitive\ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 470\ ms'\ │\ '\ \ \ \ \ 15\ ms'\ │\ '\ \ \ 31.33\ x'\ │}
+\DoxyCodeLine{│\ Tuple\_Object\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ 1206\ ms'\ │\ '\ \ \ \ \ 17\ ms'\ │\ '\ \ \ 70.94\ x'\ │}
+\DoxyCodeLine{│\ Composite\_Intersect\ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 567\ ms'\ │\ '\ \ \ \ \ 20\ ms'\ │\ '\ \ \ 28.35\ x'\ │}
+\DoxyCodeLine{│\ Composite\_Union\ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 515\ ms'\ │\ '\ \ \ \ \ 21\ ms'\ │\ '\ \ \ 24.52\ x'\ │}
+\DoxyCodeLine{│\ Math\_Vector4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 787\ ms'\ │\ '\ \ \ \ \ 10\ ms'\ │\ '\ \ \ 78.70\ x'\ │}
+\DoxyCodeLine{│\ Math\_Matrix4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 386\ ms'\ │\ '\ \ \ \ \ \ 8\ ms'\ │\ '\ \ \ 48.25\ x'\ │}
+\DoxyCodeLine{│\ Array\_Primitive\_Number\ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 349\ ms'\ │\ '\ \ \ \ \ \ 7\ ms'\ │\ '\ \ \ 49.86\ x'\ │}
+\DoxyCodeLine{│\ Array\_Primitive\_String\ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 336\ ms'\ │\ '\ \ \ \ \ \ 4\ ms'\ │\ '\ \ \ 84.00\ x'\ │}
+\DoxyCodeLine{│\ Array\_Primitive\_Boolean\ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 284\ ms'\ │\ '\ \ \ \ \ \ 3\ ms'\ │\ '\ \ \ 94.67\ x'\ │}
+\DoxyCodeLine{│\ Array\_Object\_Unconstrained\ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ 1704\ ms'\ │\ '\ \ \ \ \ 19\ ms'\ │\ '\ \ \ 89.68\ x'\ │}
+\DoxyCodeLine{│\ Array\_Object\_Constrained\ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ 1456\ ms'\ │\ '\ \ \ \ \ 18\ ms'\ │\ '\ \ \ 80.89\ x'\ │}
+\DoxyCodeLine{│\ Array\_Tuple\_Primitive\ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 792\ ms'\ │\ '\ \ \ \ \ 15\ ms'\ │\ '\ \ \ 52.80\ x'\ │}
+\DoxyCodeLine{│\ Array\_Tuple\_Object\ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ 1552\ ms'\ │\ '\ \ \ \ \ 17\ ms'\ │\ '\ \ \ 91.29\ x'\ │}
+\DoxyCodeLine{│\ Array\_Composite\_Intersect\ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 744\ ms'\ │\ '\ \ \ \ \ 18\ ms'\ │\ '\ \ \ 41.33\ x'\ │}
+\DoxyCodeLine{│\ Array\_Composite\_Union\ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 783\ ms'\ │\ '\ \ \ \ \ 15\ ms'\ │\ '\ \ \ 52.20\ x'\ │}
+\DoxyCodeLine{│\ Array\_Math\_Vector4\ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ 1093\ ms'\ │\ '\ \ \ \ \ 14\ ms'\ │\ '\ \ \ 78.07\ x'\ │}
+\DoxyCodeLine{│\ Array\_Math\_Matrix4\ \ \ \ \ \ \ \ \ │\ \ \ \ 1000\ \ \ \ │\ '\ \ \ \ 684\ ms'\ │\ '\ \ \ \ \ \ 6\ ms'\ │\ '\ \ 114.00\ x'\ │}
+\DoxyCodeLine{└────────────────────────────┴────────────┴──────────────┴──────────────┴──────────────┘}
+
+\end{DoxyCode}
+
+
+\label{readme.md_benchmark-validate}%
+\Hypertarget{readme.md_benchmark-validate}%
+\hypertarget{readme.md_autotoc_md5997}{}\doxysubsubsubsection{\texorpdfstring{Validate}{Validate}}\label{readme.md_autotoc_md5997}
+This benchmark measures validation performance for varying types. You can review this benchmark \href{https://github.com/sinclairzx81/typebox/blob/master/benchmark/measurement/module/check.ts}{\texttt{ here}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┌────────────────────────────┬────────────┬──────────────┬──────────────┬──────────────┬──────────────┐}
+\DoxyCodeLine{│\ \ \ \ \ \ \ \ \ \ (index)\ \ \ \ \ \ \ \ \ \ \ │\ Iterations\ │\ \ ValueCheck\ \ │\ \ \ \ \ Ajv\ \ \ \ \ \ │\ TypeCompiler\ │\ Performance\ \ │}
+\DoxyCodeLine{├────────────────────────────┼────────────┼──────────────┼──────────────┼──────────────┼──────────────┤}
+\DoxyCodeLine{│\ Literal\_String\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ \ 27\ ms'\ │\ '\ \ \ \ \ \ 6\ ms'\ │\ '\ \ \ \ \ \ 5\ ms'\ │\ '\ \ \ \ 1.20\ x'\ │}
+\DoxyCodeLine{│\ Literal\_Number\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ \ 23\ ms'\ │\ '\ \ \ \ \ 21\ ms'\ │\ '\ \ \ \ \ 11\ ms'\ │\ '\ \ \ \ 1.91\ x'\ │}
+\DoxyCodeLine{│\ Literal\_Boolean\ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ \ 21\ ms'\ │\ '\ \ \ \ \ 20\ ms'\ │\ '\ \ \ \ \ 10\ ms'\ │\ '\ \ \ \ 2.00\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_Number\ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ \ 26\ ms'\ │\ '\ \ \ \ \ 19\ ms'\ │\ '\ \ \ \ \ 11\ ms'\ │\ '\ \ \ \ 1.73\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_String\ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ \ 25\ ms'\ │\ '\ \ \ \ \ 19\ ms'\ │\ '\ \ \ \ \ 10\ ms'\ │\ '\ \ \ \ 1.90\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_String\_Pattern\ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 155\ ms'\ │\ '\ \ \ \ \ 49\ ms'\ │\ '\ \ \ \ \ 43\ ms'\ │\ '\ \ \ \ 1.14\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_Boolean\ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ \ 23\ ms'\ │\ '\ \ \ \ \ 19\ ms'\ │\ '\ \ \ \ \ 10\ ms'\ │\ '\ \ \ \ 1.90\ x'\ │}
+\DoxyCodeLine{│\ Primitive\_Null\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ \ 24\ ms'\ │\ '\ \ \ \ \ 19\ ms'\ │\ '\ \ \ \ \ 10\ ms'\ │\ '\ \ \ \ 1.90\ x'\ │}
+\DoxyCodeLine{│\ Object\_Unconstrained\ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 804\ ms'\ │\ '\ \ \ \ \ 35\ ms'\ │\ '\ \ \ \ \ 28\ ms'\ │\ '\ \ \ \ 1.25\ x'\ │}
+\DoxyCodeLine{│\ Object\_Constrained\ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 1041\ ms'\ │\ '\ \ \ \ \ 55\ ms'\ │\ '\ \ \ \ \ 41\ ms'\ │\ '\ \ \ \ 1.34\ x'\ │}
+\DoxyCodeLine{│\ Object\_Vector3\ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 380\ ms'\ │\ '\ \ \ \ \ 26\ ms'\ │\ '\ \ \ \ \ 20\ ms'\ │\ '\ \ \ \ 1.30\ x'\ │}
+\DoxyCodeLine{│\ Object\_Box3D\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 1785\ ms'\ │\ '\ \ \ \ \ 65\ ms'\ │\ '\ \ \ \ \ 52\ ms'\ │\ '\ \ \ \ 1.25\ x'\ │}
+\DoxyCodeLine{│\ Object\_Recursive\ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 4984\ ms'\ │\ '\ \ \ \ 396\ ms'\ │\ '\ \ \ \ 114\ ms'\ │\ '\ \ \ \ 3.47\ x'\ │}
+\DoxyCodeLine{│\ Tuple\_Primitive\ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 168\ ms'\ │\ '\ \ \ \ \ 24\ ms'\ │\ '\ \ \ \ \ 16\ ms'\ │\ '\ \ \ \ 1.50\ x'\ │}
+\DoxyCodeLine{│\ Tuple\_Object\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 673\ ms'\ │\ '\ \ \ \ \ 30\ ms'\ │\ '\ \ \ \ \ 26\ ms'\ │\ '\ \ \ \ 1.15\ x'\ │}
+\DoxyCodeLine{│\ Composite\_Intersect\ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 751\ ms'\ │\ '\ \ \ \ \ 28\ ms'\ │\ '\ \ \ \ \ 20\ ms'\ │\ '\ \ \ \ 1.40\ x'\ │}
+\DoxyCodeLine{│\ Composite\_Union\ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 489\ ms'\ │\ '\ \ \ \ \ 24\ ms'\ │\ '\ \ \ \ \ 16\ ms'\ │\ '\ \ \ \ 1.50\ x'\ │}
+\DoxyCodeLine{│\ Math\_Vector4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 259\ ms'\ │\ '\ \ \ \ \ 23\ ms'\ │\ '\ \ \ \ \ 13\ ms'\ │\ '\ \ \ \ 1.77\ x'\ │}
+\DoxyCodeLine{│\ Math\_Matrix4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 1002\ ms'\ │\ '\ \ \ \ \ 40\ ms'\ │\ '\ \ \ \ \ 30\ ms'\ │\ '\ \ \ \ 1.33\ x'\ │}
+\DoxyCodeLine{│\ Array\_Primitive\_Number\ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 252\ ms'\ │\ '\ \ \ \ \ 22\ ms'\ │\ '\ \ \ \ \ 15\ ms'\ │\ '\ \ \ \ 1.47\ x'\ │}
+\DoxyCodeLine{│\ Array\_Primitive\_String\ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 227\ ms'\ │\ '\ \ \ \ \ 22\ ms'\ │\ '\ \ \ \ \ 18\ ms'\ │\ '\ \ \ \ 1.22\ x'\ │}
+\DoxyCodeLine{│\ Array\_Primitive\_Boolean\ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 150\ ms'\ │\ '\ \ \ \ \ 23\ ms'\ │\ '\ \ \ \ \ 22\ ms'\ │\ '\ \ \ \ 1.05\ x'\ │}
+\DoxyCodeLine{│\ Array\_Object\_Unconstrained\ │\ \ 1000000\ \ \ │\ '\ \ \ 4754\ ms'\ │\ '\ \ \ \ \ 71\ ms'\ │\ '\ \ \ \ \ 64\ ms'\ │\ '\ \ \ \ 1.11\ x'\ │}
+\DoxyCodeLine{│\ Array\_Object\_Constrained\ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 4787\ ms'\ │\ '\ \ \ \ 142\ ms'\ │\ '\ \ \ \ 123\ ms'\ │\ '\ \ \ \ 1.15\ x'\ │}
+\DoxyCodeLine{│\ Array\_Object\_Recursive\ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ 19088\ ms'\ │\ '\ \ \ 1735\ ms'\ │\ '\ \ \ \ 314\ ms'\ │\ '\ \ \ \ 5.53\ x'\ │}
+\DoxyCodeLine{│\ Array\_Tuple\_Primitive\ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ \ 650\ ms'\ │\ '\ \ \ \ \ 41\ ms'\ │\ '\ \ \ \ \ 31\ ms'\ │\ '\ \ \ \ 1.32\ x'\ │}
+\DoxyCodeLine{│\ Array\_Tuple\_Object\ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 2770\ ms'\ │\ '\ \ \ \ \ 67\ ms'\ │\ '\ \ \ \ \ 55\ ms'\ │\ '\ \ \ \ 1.22\ x'\ │}
+\DoxyCodeLine{│\ Array\_Composite\_Intersect\ \ │\ \ 1000000\ \ \ │\ '\ \ \ 2693\ ms'\ │\ '\ \ \ \ \ 50\ ms'\ │\ '\ \ \ \ \ 39\ ms'\ │\ '\ \ \ \ 1.28\ x'\ │}
+\DoxyCodeLine{│\ Array\_Composite\_Union\ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 1982\ ms'\ │\ '\ \ \ \ \ 72\ ms'\ │\ '\ \ \ \ \ 33\ ms'\ │\ '\ \ \ \ 2.18\ x'\ │}
+\DoxyCodeLine{│\ Array\_Math\_Vector4\ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 1068\ ms'\ │\ '\ \ \ \ \ 40\ ms'\ │\ '\ \ \ \ \ 26\ ms'\ │\ '\ \ \ \ 1.54\ x'\ │}
+\DoxyCodeLine{│\ Array\_Math\_Matrix4\ \ \ \ \ \ \ \ \ │\ \ 1000000\ \ \ │\ '\ \ \ 4609\ ms'\ │\ '\ \ \ \ 115\ ms'\ │\ '\ \ \ \ \ 88\ ms'\ │\ '\ \ \ \ 1.31\ x'\ │}
+\DoxyCodeLine{└────────────────────────────┴────────────┴──────────────┴──────────────┴──────────────┴──────────────┘}
+
+\end{DoxyCode}
+
+
+\label{readme.md_benchmark-compression}%
+\Hypertarget{readme.md_benchmark-compression}%
+\hypertarget{readme.md_autotoc_md5998}{}\doxysubsubsubsection{\texorpdfstring{Compression}{Compression}}\label{readme.md_autotoc_md5998}
+The following table lists esbuild compiled and minified sizes for each Type\+Box module.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┌──────────────────────┬────────────┬────────────┬─────────────┐}
+\DoxyCodeLine{│\ \ \ \ \ \ \ (index)\ \ \ \ \ \ \ \ │\ \ Compiled\ \ │\ \ Minified\ \ │\ Compression\ │}
+\DoxyCodeLine{├──────────────────────┼────────────┼────────────┼─────────────┤}
+\DoxyCodeLine{│\ typebox/compiler\ \ \ \ \ │\ '124.3\ kb'\ │\ '\ 55.7\ kb'\ │\ \ '2.23\ x'\ \ \ │}
+\DoxyCodeLine{│\ typebox/errors\ \ \ \ \ \ \ │\ '107.8\ kb'\ │\ '\ 47.9\ kb'\ │\ \ '2.25\ x'\ \ \ │}
+\DoxyCodeLine{│\ typebox/system\ \ \ \ \ \ \ │\ '\ 73.3\ kb'\ │\ '\ 30.2\ kb'\ │\ \ '2.43\ x'\ \ \ │}
+\DoxyCodeLine{│\ typebox/value\ \ \ \ \ \ \ \ │\ '170.7\ kb'\ │\ '\ 74.2\ kb'\ │\ \ '2.30\ x'\ \ \ │}
+\DoxyCodeLine{│\ typebox\ \ \ \ \ \ \ \ \ \ \ \ \ \ │\ '\ 72.0\ kb'\ │\ '\ 29.7\ kb'\ │\ \ '2.43\ x'\ \ \ │}
+\DoxyCodeLine{└──────────────────────┴────────────┴────────────┴─────────────┘}
+
+\end{DoxyCode}
+
+
+\label{readme.md_contribute}%
+\Hypertarget{readme.md_contribute}%
+\hypertarget{readme.md_autotoc_md5999}{}\doxysubsubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md5999}
+Type\+Box is open to community contribution. Please ensure you submit an open issue before submitting your pull request. The Type\+Box project preferences open community discussion prior to accepting new features. 

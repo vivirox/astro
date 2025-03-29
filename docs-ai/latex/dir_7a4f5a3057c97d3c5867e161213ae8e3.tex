@@ -1,0 +1,173 @@
+\doxysection{node\+\_\+modules/ansi-\/styles Directory Reference}
+\hypertarget{dir_7a4f5a3057c97d3c5867e161213ae8e3}{}\label{dir_7a4f5a3057c97d3c5867e161213ae8e3}\index{node\_modules/ansi-\/styles Directory Reference@{node\_modules/ansi-\/styles Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+\href{https://en.wikipedia.org/wiki/ANSI_escape_code\#Colors_and_Styles}{\texttt{ ANSI escape codes}} for styling strings in the terminal \end{quote}
+
+
+You probably want the higher-\/level \href{https://github.com/chalk/chalk}{\texttt{ chalk}} module for styling your strings.
+
+\hypertarget{readme.md_autotoc_md7852}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md7852}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ ansi-\/styles}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7853}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md7853}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ styles\ from\ 'ansi-\/styles';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(`\$\{styles.green.open\}Hello\ world!\$\{styles.green.close\}`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Color\ conversion\ between\ 256/truecolor}
+\DoxyCodeLine{//\ NOTE:\ When\ converting\ from\ truecolor\ to\ 256\ colors,\ the\ original\ color}
+\DoxyCodeLine{//\ \ \ \ \ \ \ may\ be\ degraded\ to\ fit\ the\ new\ color\ palette.\ This\ means\ terminals}
+\DoxyCodeLine{//\ \ \ \ \ \ \ that\ do\ not\ support\ 16\ million\ colors\ will\ best-\/match\ the}
+\DoxyCodeLine{//\ \ \ \ \ \ \ original\ color.}
+\DoxyCodeLine{console.log(`\$\{styles.color.ansi(styles.rgbToAnsi(199,\ 20,\ 250))\}Hello\ World\$\{styles.color.close\}`)}
+\DoxyCodeLine{console.log(`\$\{styles.color.ansi256(styles.rgbToAnsi256(199,\ 20,\ 250))\}Hello\ World\$\{styles.color.close\}`)}
+\DoxyCodeLine{console.log(`\$\{styles.color.ansi16m(...styles.hexToRgb('\#abcdef'))\}Hello\ World\$\{styles.color.close\}`)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7854}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md7854}
+\hypertarget{readme.md_autotoc_md7855}{}\doxysubsubsection{\texorpdfstring{{\ttfamily open} and {\ttfamily close}}{{\ttfamily open} and {\ttfamily close}}}\label{readme.md_autotoc_md7855}
+Each style has an {\ttfamily open} and {\ttfamily close} property.\hypertarget{readme.md_autotoc_md7856}{}\doxysubsubsection{\texorpdfstring{{\ttfamily modifier\+Names}, {\ttfamily foreground\+Color\+Names}, {\ttfamily background\+Color\+Names}, and {\ttfamily color\+Names}}{{\ttfamily modifier\+Names}, {\ttfamily foreground\+Color\+Names}, {\ttfamily background\+Color\+Names}, and {\ttfamily color\+Names}}}\label{readme.md_autotoc_md7856}
+All supported style strings are exposed as an array of strings for convenience. {\ttfamily color\+Names} is the combination of {\ttfamily foreground\+Color\+Names} and {\ttfamily background\+Color\+Names}.
+
+This can be useful if you need to validate input\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{modifierNames,\ foregroundColorNames\}\ from\ 'ansi-\/styles';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(modifierNames.includes('bold'));}
+\DoxyCodeLine{//=>\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(foregroundColorNames.includes('pink'));}
+\DoxyCodeLine{//=>\ false}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7857}{}\doxysubsection{\texorpdfstring{Styles}{Styles}}\label{readme.md_autotoc_md7857}
+\hypertarget{readme.md_autotoc_md7858}{}\doxysubsubsection{\texorpdfstring{Modifiers}{Modifiers}}\label{readme.md_autotoc_md7858}
+
+\begin{DoxyItemize}
+\item {\ttfamily reset}
+\item {\ttfamily bold}
+\item {\ttfamily dim}
+\item {\ttfamily italic} {\itshape (Not widely supported)}
+\item {\ttfamily underline}
+\item {\ttfamily overline} {\itshape Supported on VTE-\/based terminals, the GNOME terminal, mintty, and Git Bash.}
+\item {\ttfamily inverse}
+\item {\ttfamily hidden}
+\item {\ttfamily strikethrough} {\itshape (Not widely supported)}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md7859}{}\doxysubsubsection{\texorpdfstring{Colors}{Colors}}\label{readme.md_autotoc_md7859}
+
+\begin{DoxyItemize}
+\item {\ttfamily black}
+\item {\ttfamily red}
+\item {\ttfamily green}
+\item {\ttfamily yellow}
+\item {\ttfamily blue}
+\item {\ttfamily magenta}
+\item {\ttfamily cyan}
+\item {\ttfamily white}
+\item {\ttfamily black\+Bright} (alias\+: {\ttfamily gray}, {\ttfamily grey})
+\item {\ttfamily red\+Bright}
+\item {\ttfamily green\+Bright}
+\item {\ttfamily yellow\+Bright}
+\item {\ttfamily blue\+Bright}
+\item {\ttfamily magenta\+Bright}
+\item {\ttfamily cyan\+Bright}
+\item {\ttfamily white\+Bright}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md7860}{}\doxysubsubsection{\texorpdfstring{Background colors}{Background colors}}\label{readme.md_autotoc_md7860}
+
+\begin{DoxyItemize}
+\item {\ttfamily bg\+Black}
+\item {\ttfamily bg\+Red}
+\item {\ttfamily bg\+Green}
+\item {\ttfamily bg\+Yellow}
+\item {\ttfamily bg\+Blue}
+\item {\ttfamily bg\+Magenta}
+\item {\ttfamily bg\+Cyan}
+\item {\ttfamily bg\+White}
+\item {\ttfamily bg\+Black\+Bright} (alias\+: {\ttfamily bg\+Gray}, {\ttfamily bg\+Grey})
+\item {\ttfamily bg\+Red\+Bright}
+\item {\ttfamily bg\+Green\+Bright}
+\item {\ttfamily bg\+Yellow\+Bright}
+\item {\ttfamily bg\+Blue\+Bright}
+\item {\ttfamily bg\+Magenta\+Bright}
+\item {\ttfamily bg\+Cyan\+Bright}
+\item {\ttfamily bg\+White\+Bright}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md7861}{}\doxysubsection{\texorpdfstring{Advanced usage}{Advanced usage}}\label{readme.md_autotoc_md7861}
+By default, you get a map of styles, but the styles are also available as groups. They are non-\/enumerable so they don\textquotesingle{}t show up unless you access them explicitly. This makes it easier to expose only a subset in a higher-\/level module.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily styles.\+modifier}
+\item {\ttfamily styles.\+color}
+\item {\ttfamily styles.\+bg\+Color}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md7862}{}\doxysubsubsubsubsubsection{\texorpdfstring{Example}{Example}}\label{readme.md_autotoc_md7862}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ styles\ from\ 'ansi-\/styles';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(styles.color.green.open);}
+
+\end{DoxyCode}
+
+
+Raw escape codes (i.\+e. without the CSI escape prefix {\ttfamily \textbackslash{}u001B\mbox{[}} and render mode postfix {\ttfamily m}) are available under {\ttfamily styles.\+codes}, which returns a {\ttfamily Map} with the open codes as keys and close codes as values.\hypertarget{readme.md_autotoc_md7863}{}\doxysubsubsubsubsubsection{\texorpdfstring{Example}{Example}}\label{readme.md_autotoc_md7863}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ styles\ from\ 'ansi-\/styles';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(styles.codes.get(36));}
+\DoxyCodeLine{//=>\ 39}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7864}{}\doxysubsection{\texorpdfstring{16 / 256 / 16 million (True\+Color) support}{16 / 256 / 16 million (True\+Color) support}}\label{readme.md_autotoc_md7864}
+{\ttfamily ansi-\/styles} allows converting between various color formats and ANSI escapes, with support for 16, 256 and \href{https://gist.github.com/XVilka/8346728}{\texttt{ 16 million colors}}.
+
+The following color spaces are supported\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily rgb}
+\item {\ttfamily hex}
+\item {\ttfamily ansi256}
+\item {\ttfamily ansi}
+\end{DoxyItemize}
+
+To use these, call the associated conversion function with the intended output, for example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ styles\ from\ 'ansi-\/styles';}
+\DoxyCodeLine{}
+\DoxyCodeLine{styles.color.ansi(styles.rgbToAnsi(100,\ 200,\ 15));\ //\ RGB\ to\ 16\ color\ ansi\ foreground\ code}
+\DoxyCodeLine{styles.bgColor.ansi(styles.hexToAnsi('\#C0FFEE'));\ //\ HEX\ to\ 16\ color\ ansi\ foreground\ code}
+\DoxyCodeLine{}
+\DoxyCodeLine{styles.color.ansi256(styles.rgbToAnsi256(100,\ 200,\ 15));\ //\ RGB\ to\ 256\ color\ ansi\ foreground\ code}
+\DoxyCodeLine{styles.bgColor.ansi256(styles.hexToAnsi256('\#C0FFEE'));\ //\ HEX\ to\ 256\ color\ ansi\ foreground\ code}
+\DoxyCodeLine{}
+\DoxyCodeLine{styles.color.ansi16m(100,\ 200,\ 15);\ //\ RGB\ to\ 16\ million\ color\ foreground\ code}
+\DoxyCodeLine{styles.bgColor.ansi16m(...styles.hexToRgb('\#C0FFEE'));\ //\ Hex\ (RGB)\ to\ 16\ million\ color\ foreground\ code}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7865}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md7865}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/ansi-escapes}{\texttt{ ansi-\/escapes}} -\/ ANSI escape codes for manipulating the terminal
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md7866}{}\doxysubsection{\texorpdfstring{Maintainers}{Maintainers}}\label{readme.md_autotoc_md7866}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus}{\texttt{ Sindre Sorhus}}
+\item \href{https://github.com/qix-}{\texttt{ Josh Junon}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md7867}{}\doxysubsection{\texorpdfstring{For enterprise}{For enterprise}}\label{readme.md_autotoc_md7867}
+Available as part of the Tidelift Subscription.
+
+The maintainers of {\ttfamily ansi-\/styles} and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. \href{https://tidelift.com/subscription/pkg/npm-ansi-styles?utm_source=npm-ansi-styles&utm_medium=referral&utm_campaign=enterprise&utm_term=repo}{\texttt{ Learn more.}} 

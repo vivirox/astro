@@ -1,0 +1,292 @@
+\doxysection{node\+\_\+modules/fastq Directory Reference}
+\hypertarget{dir_cd10501aa4183039f0ec208a49d3c597}{}\label{dir_cd10501aa4183039f0ec208a49d3c597}\index{node\_modules/fastq Directory Reference@{node\_modules/fastq Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+ \href{https://badge.fury.io/js/fastq}{\texttt{ }}
+
+Fast, in memory work queue.
+
+Benchmarks (1 million tasks)\+:
+
+
+\begin{DoxyItemize}
+\item set\+Immediate\+: 812ms
+\item fastq\+: 854ms
+\item async.\+queue\+: 1298ms
+\item neo\+Async.\+queue\+: 1249ms
+\end{DoxyItemize}
+
+Obtained on node 12.\+16.\+1, on a dedicated server.
+
+If you need zero-\/overhead series function call, check out \href{http://npm.im/fastseries}{\texttt{ fastseries}}. For zero-\/overhead parallel function call, check out \href{http://npm.im/fastparallel}{\texttt{ fastparallel}}.
+
+\href{https://github.com/feross/standard}{\texttt{ }}
+
+
+\begin{DoxyItemize}
+\item \href{\#install}{\texttt{ Installation}}
+\item \href{\#usage}{\texttt{ Usage}}
+\item \href{\#api}{\texttt{ API}}
+\item \href{\#license}{\texttt{ Licence \& copyright}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md15237}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md15237}
+{\ttfamily npm i fastq -\/-\/save}\hypertarget{README.md_autotoc_md15238}{}\doxysubsection{\texorpdfstring{Usage (callback API)}{Usage (callback API)}}\label{README.md_autotoc_md15238}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ queue\ =\ require('fastq')(worker,\ 1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{queue.push(42,\ function\ (err,\ result)\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ \{\ throw\ err\ \}}
+\DoxyCodeLine{\ \ console.log('the\ result\ is',\ result)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ worker\ (arg,\ cb)\ \{}
+\DoxyCodeLine{\ \ cb(null,\ arg\ *\ 2)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15239}{}\doxysubsection{\texorpdfstring{Usage (promise API)}{Usage (promise API)}}\label{README.md_autotoc_md15239}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ queue\ =\ require('fastq').promise(worker,\ 1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ worker\ (arg)\ \{}
+\DoxyCodeLine{\ \ return\ arg\ *\ 2}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ run\ ()\ \{}
+\DoxyCodeLine{\ \ const\ result\ =\ await\ queue.push(42)}
+\DoxyCodeLine{\ \ console.log('the\ result\ is',\ result)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{run()}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15240}{}\doxysubsubsection{\texorpdfstring{Setting "{}this"{}}{Setting "{}this"{}}}\label{README.md_autotoc_md15240}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ that\ =\ \{\ hello:\ 'world'\ \}}
+\DoxyCodeLine{const\ queue\ =\ require('fastq')(that,\ worker,\ 1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{queue.push(42,\ function\ (err,\ result)\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ \{\ throw\ err\ \}}
+\DoxyCodeLine{\ \ console.log(this)}
+\DoxyCodeLine{\ \ console.log('the\ result\ is',\ result)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ worker\ (arg,\ cb)\ \{}
+\DoxyCodeLine{\ \ console.log(this)}
+\DoxyCodeLine{\ \ cb(null,\ arg\ *\ 2)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15241}{}\doxysubsubsection{\texorpdfstring{Using with Type\+Script (callback API)}{Using with Type\+Script (callback API)}}\label{README.md_autotoc_md15241}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict'}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ *\ as\ fastq\ from\ "{}fastq"{};}
+\DoxyCodeLine{import\ type\ \{\ queue,\ done\ \}\ from\ "{}fastq"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Task\ =\ \{}
+\DoxyCodeLine{\ \ id:\ number}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ q:\ queue<Task>\ =\ fastq(worker,\ 1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{q.push(\{\ id:\ 42\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ worker\ (arg:\ Task,\ cb:\ done)\ \{}
+\DoxyCodeLine{\ \ console.log(arg.id)}
+\DoxyCodeLine{\ \ cb(null)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15242}{}\doxysubsubsection{\texorpdfstring{Using with Type\+Script (promise API)}{Using with Type\+Script (promise API)}}\label{README.md_autotoc_md15242}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict'}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ *\ as\ fastq\ from\ "{}fastq"{};}
+\DoxyCodeLine{import\ type\ \{\ queueAsPromised\ \}\ from\ "{}fastq"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Task\ =\ \{}
+\DoxyCodeLine{\ \ id:\ number}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ q:\ queueAsPromised<Task>\ =\ fastq.promise(asyncWorker,\ 1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{q.push(\{\ id:\ 42\}).catch((err)\ =>\ console.error(err))}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ asyncWorker\ (arg:\ Task):\ Promise<void>\ \{}
+\DoxyCodeLine{\ \ //\ No\ need\ for\ a\ try-\/catch\ block,\ fastq\ handles\ errors\ automatically}
+\DoxyCodeLine{\ \ console.log(arg.id)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md15243}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md15243}
+
+\begin{DoxyItemize}
+\item \href{\#fastqueue}{\texttt{ {\ttfamily fastqueue()}}}
+\item \href{\#push}{\texttt{ {\ttfamily queue\#{\bfseries{push()}}}}}
+\item \href{\#unshift}{\texttt{ {\ttfamily queue\#{\bfseries{unshift()}}}}}
+\item \href{\#pause}{\texttt{ {\ttfamily queue\#{\bfseries{pause()}}}}}
+\item \href{\#resume}{\texttt{ {\ttfamily queue\#{\bfseries{resume()}}}}}
+\item \href{\#idle}{\texttt{ {\ttfamily queue\#{\bfseries{idle()}}}}}
+\item \href{\#length}{\texttt{ {\ttfamily queue\#{\bfseries{length()}}}}}
+\item \href{\#getQueue}{\texttt{ {\ttfamily queue\#{\bfseries{get\+Queue()}}}}}
+\item \href{\#kill}{\texttt{ {\ttfamily queue\#{\bfseries{kill()}}}}}
+\item \href{\#killAndDrain}{\texttt{ {\ttfamily queue\#{\bfseries{kill\+And\+Drain()}}}}}
+\item \href{\#error}{\texttt{ {\ttfamily queue\#{\bfseries{error()}}}}}
+\item \href{\#concurrency}{\texttt{ {\ttfamily queue\#{\bfseries{concurrency}}}}}
+\item \href{\#drain}{\texttt{ {\ttfamily queue\#{\bfseries{drain}}}}}
+\item \href{\#empty}{\texttt{ {\ttfamily queue\#{\bfseries{empty}}}}}
+\item \href{\#saturated}{\texttt{ {\ttfamily queue\#{\bfseries{saturated}}}}}
+\item \href{\#promise}{\texttt{ {\ttfamily fastqueue.\+promise()}}}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+ \label{README.md_fastqueue}%
+\Hypertarget{README.md_fastqueue}%
+ \hypertarget{README.md_autotoc_md15245}{}\doxysubsubsection{\texorpdfstring{fastqueue(\mbox{[}that\mbox{]}, worker, concurrency)}{fastqueue(\mbox{[}that\mbox{]}, worker, concurrency)}}\label{README.md_autotoc_md15245}
+Creates a new queue.
+
+Arguments\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily that}, optional context of the {\ttfamily worker} function.
+\item {\ttfamily worker}, worker function, it would be called with {\ttfamily that} as {\ttfamily this}, if that is specified.
+\item {\ttfamily concurrency}, number of concurrent tasks that could be executed in parallel.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+ \label{README.md_push}%
+\Hypertarget{README.md_push}%
+ \hypertarget{README.md_autotoc_md15247}{}\doxysubsubsection{\texorpdfstring{queue.\+push(task, done)}{queue.\+push(task, done)}}\label{README.md_autotoc_md15247}
+Add a task at the end of the queue. {\ttfamily done(err, result)} will be called when the task was processed.
+
+\DoxyHorRuler{0}
+ \label{README.md_unshift}%
+\Hypertarget{README.md_unshift}%
+ \hypertarget{README.md_autotoc_md15249}{}\doxysubsubsection{\texorpdfstring{queue.\+unshift(task, done)}{queue.\+unshift(task, done)}}\label{README.md_autotoc_md15249}
+Add a task at the beginning of the queue. {\ttfamily done(err, result)} will be called when the task was processed.
+
+\DoxyHorRuler{0}
+ \label{README.md_pause}%
+\Hypertarget{README.md_pause}%
+ \hypertarget{README.md_autotoc_md15251}{}\doxysubsubsection{\texorpdfstring{queue.\+pause()}{queue.\+pause()}}\label{README.md_autotoc_md15251}
+Pause the processing of tasks. Currently worked tasks are not stopped.
+
+\DoxyHorRuler{0}
+ \label{README.md_resume}%
+\Hypertarget{README.md_resume}%
+ \hypertarget{README.md_autotoc_md15253}{}\doxysubsubsection{\texorpdfstring{queue.\+resume()}{queue.\+resume()}}\label{README.md_autotoc_md15253}
+Resume the processing of tasks.
+
+\DoxyHorRuler{0}
+ \label{README.md_idle}%
+\Hypertarget{README.md_idle}%
+ \hypertarget{README.md_autotoc_md15255}{}\doxysubsubsection{\texorpdfstring{queue.\+idle()}{queue.\+idle()}}\label{README.md_autotoc_md15255}
+Returns {\ttfamily false} if there are tasks being processed or waiting to be processed. {\ttfamily true} otherwise.
+
+\DoxyHorRuler{0}
+ \label{README.md_length}%
+\Hypertarget{README.md_length}%
+ \hypertarget{README.md_autotoc_md15257}{}\doxysubsubsection{\texorpdfstring{queue.\+length()}{queue.\+length()}}\label{README.md_autotoc_md15257}
+Returns the number of tasks waiting to be processed (in the queue).
+
+\DoxyHorRuler{0}
+ \label{README.md_getQueue}%
+\Hypertarget{README.md_getQueue}%
+ \hypertarget{README.md_autotoc_md15259}{}\doxysubsubsection{\texorpdfstring{queue.\+get\+Queue()}{queue.\+get\+Queue()}}\label{README.md_autotoc_md15259}
+Returns all the tasks be processed (in the queue). Returns empty array when there are no tasks
+
+\DoxyHorRuler{0}
+ \label{README.md_kill}%
+\Hypertarget{README.md_kill}%
+ \hypertarget{README.md_autotoc_md15261}{}\doxysubsubsection{\texorpdfstring{queue.\+kill()}{queue.\+kill()}}\label{README.md_autotoc_md15261}
+Removes all tasks waiting to be processed, and reset {\ttfamily drain} to an empty function.
+
+\DoxyHorRuler{0}
+ \label{README.md_killAndDrain}%
+\Hypertarget{README.md_killAndDrain}%
+ \hypertarget{README.md_autotoc_md15263}{}\doxysubsubsection{\texorpdfstring{queue.\+kill\+And\+Drain()}{queue.\+kill\+And\+Drain()}}\label{README.md_autotoc_md15263}
+Same than {\ttfamily kill} but the {\ttfamily drain} function will be called before reset to empty.
+
+\DoxyHorRuler{0}
+ \label{README.md_error}%
+\Hypertarget{README.md_error}%
+ \hypertarget{README.md_autotoc_md15265}{}\doxysubsubsection{\texorpdfstring{queue.\+error(handler)}{queue.\+error(handler)}}\label{README.md_autotoc_md15265}
+Set a global error handler. {\ttfamily handler(err, task)} will be called each time a task is completed, {\ttfamily err} will be not null if the task has thrown an error.
+
+\DoxyHorRuler{0}
+ \label{README.md_concurrency}%
+\Hypertarget{README.md_concurrency}%
+ \hypertarget{README.md_autotoc_md15267}{}\doxysubsubsection{\texorpdfstring{queue.\+concurrency}{queue.\+concurrency}}\label{README.md_autotoc_md15267}
+Property that returns the number of concurrent tasks that could be executed in parallel. It can be altered at runtime.
+
+\DoxyHorRuler{0}
+ \label{README.md_paused}%
+\Hypertarget{README.md_paused}%
+ \hypertarget{README.md_autotoc_md15269}{}\doxysubsubsection{\texorpdfstring{queue.\+paused}{queue.\+paused}}\label{README.md_autotoc_md15269}
+Property (Read-\/\+Only) that returns {\ttfamily true} when the queue is in a paused state.
+
+\DoxyHorRuler{0}
+ \label{README.md_drain}%
+\Hypertarget{README.md_drain}%
+ \hypertarget{README.md_autotoc_md15271}{}\doxysubsubsection{\texorpdfstring{queue.\+drain}{queue.\+drain}}\label{README.md_autotoc_md15271}
+Function that will be called when the last item from the queue has been processed by a worker. It can be altered at runtime.
+
+\DoxyHorRuler{0}
+ \label{README.md_empty}%
+\Hypertarget{README.md_empty}%
+ \hypertarget{README.md_autotoc_md15273}{}\doxysubsubsection{\texorpdfstring{queue.\+empty}{queue.\+empty}}\label{README.md_autotoc_md15273}
+Function that will be called when the last item from the queue has been assigned to a worker. It can be altered at runtime.
+
+\DoxyHorRuler{0}
+ \label{README.md_saturated}%
+\Hypertarget{README.md_saturated}%
+ \hypertarget{README.md_autotoc_md15275}{}\doxysubsubsection{\texorpdfstring{queue.\+saturated}{queue.\+saturated}}\label{README.md_autotoc_md15275}
+Function that will be called when the queue hits the concurrency limit. It can be altered at runtime.
+
+\DoxyHorRuler{0}
+ \label{README.md_promise}%
+\Hypertarget{README.md_promise}%
+ \hypertarget{README.md_autotoc_md15277}{}\doxysubsubsection{\texorpdfstring{fastqueue.\+promise(\mbox{[}that\mbox{]}, worker(arg), concurrency)}{fastqueue.\+promise(\mbox{[}that\mbox{]}, worker(arg), concurrency)}}\label{README.md_autotoc_md15277}
+Creates a new queue with {\ttfamily Promise} apis. It also offers all the methods and properties of the object returned by \doxylink{README.md_fastqueue}{\`{}fastqueue\`{}} with the modified \doxylink{README.md_pushPromise}{\`{}push\`{}} and \doxylink{README.md_unshiftPromise}{\`{}unshift\`{}} methods.
+
+Node v10+ is required to use the promisified version.
+
+Arguments\+:
+\begin{DoxyItemize}
+\item {\ttfamily that}, optional context of the {\ttfamily worker} function.
+\item {\ttfamily worker}, worker function, it would be called with {\ttfamily that} as {\ttfamily this}, if that is specified. It MUST return a {\ttfamily Promise}.
+\item {\ttfamily concurrency}, number of concurrent tasks that could be executed in parallel.
+\end{DoxyItemize}
+
+\label{README.md_pushPromise}%
+\Hypertarget{README.md_pushPromise}%
+ \hypertarget{README.md_autotoc_md15278}{}\doxysubsubsubsection{\texorpdfstring{queue.\+push(task) =\texorpdfstring{$>$}{>} Promise}{queue.\+push(task) =\texorpdfstring{$>$}{>} Promise}}\label{README.md_autotoc_md15278}
+Add a task at the end of the queue. The returned {\ttfamily Promise} will be fulfilled (rejected) when the task is completed successfully (unsuccessfully).
+
+This promise could be ignored as it will not lead to a `\textquotesingle{}unhandled\+Rejection'\`{}.
+
+\label{README.md_unshiftPromise}%
+\Hypertarget{README.md_unshiftPromise}%
+ \hypertarget{README.md_autotoc_md15279}{}\doxysubsubsubsection{\texorpdfstring{queue.\+unshift(task) =\texorpdfstring{$>$}{>} Promise}{queue.\+unshift(task) =\texorpdfstring{$>$}{>} Promise}}\label{README.md_autotoc_md15279}
+Add a task at the beginning of the queue. The returned {\ttfamily Promise} will be fulfilled (rejected) when the task is completed successfully (unsuccessfully).
+
+This promise could be ignored as it will not lead to a `\textquotesingle{}unhandled\+Rejection'\`{}.
+
+\label{README.md_drained}%
+\Hypertarget{README.md_drained}%
+ \hypertarget{README.md_autotoc_md15280}{}\doxysubsubsubsection{\texorpdfstring{queue.\+drained() =\texorpdfstring{$>$}{>} Promise}{queue.\+drained() =\texorpdfstring{$>$}{>} Promise}}\label{README.md_autotoc_md15280}
+Wait for the queue to be drained. The returned {\ttfamily Promise} will be resolved when all tasks in the queue have been processed by a worker.
+
+This promise could be ignored as it will not lead to a `\textquotesingle{}unhandled\+Rejection'\`{}.\hypertarget{README.md_autotoc_md15281}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md15281}
+ISC 

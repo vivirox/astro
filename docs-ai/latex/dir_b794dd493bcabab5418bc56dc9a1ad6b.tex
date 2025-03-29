@@ -1,0 +1,216 @@
+\doxysection{node\+\_\+modules/rehype-\/stringify Directory Reference}
+\hypertarget{dir_b794dd493bcabab5418bc56dc9a1ad6b}{}\label{dir_b794dd493bcabab5418bc56dc9a1ad6b}\index{node\_modules/rehype-\/stringify Directory Reference@{node\_modules/rehype-\/stringify Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/rehypejs/rehype/actions}{\texttt{ }} \href{https://codecov.io/github/rehypejs/rehype}{\texttt{ }} \href{https://www.npmjs.com/package/rehype-stringify}{\texttt{ }} \href{https://bundlejs.com/?q=rehype-stringify}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/rehypejs/rehype/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}}} plugin to add support for serializing to HTML.\hypertarget{readme.md_autotoc_md28949}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md28949}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}unified().use(rehype\+Stringify\mbox{[}, options\mbox{]})\`{}
+\item \`{}\+Character\+References\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item Syntax
+\item Syntax tree
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item Sponsor
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28950}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md28950}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} (\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}) plugin that defines how to take a syntax tree as input and turn it into serialized HTML. When it’s used, HTML is serialized as the final result.
+
+See \href{https://github.com/rehypejs/rehype}{\texttt{ the monorepo readme}} for info on what the rehype ecosystem is.\hypertarget{readme.md_autotoc_md28951}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md28951}
+This plugin adds support to unified for serializing HTML. If you also need to parse HTML, you can alternatively use \href{../rehype/}{\texttt{ {\ttfamily rehype}}}, which combines unified, \href{../rehype-parse/}{\texttt{ {\ttfamily rehype-\/parse}}}, and this plugin.
+
+When you are in a browser, trust your content, don’t need formatting options, and value a smaller bundle size, you can use \href{https://github.com/rehypejs/rehype-dom/tree/main/packages/rehype-dom-stringify}{\texttt{ {\ttfamily rehype-\/dom-\/stringify}}} instead.
+
+If you don’t use plugins and have access to a syntax tree, you can directly use \href{https://github.com/syntax-tree/hast-util-to-html}{\texttt{ {\ttfamily hast-\/util-\/to-\/html}}}, which is used inside this plugin. rehype focusses on making it easier to transform content by abstracting such internals away.
+
+A different plugin, \href{https://github.com/rehypejs/rehype-format}{\texttt{ {\ttfamily rehype-\/format}}}, improves the readability of HTML source code as it adds insignificant but pretty whitespace between elements. There is also the preset \href{https://github.com/rehypejs/rehype-minify}{\texttt{ {\ttfamily rehype-\/minify}}} for when you want the inverse\+: minified and mangled HTML.\hypertarget{readme.md_autotoc_md28952}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md28952}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ rehype-\/stringify}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'https://esm.sh/rehype-\/stringify@10'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ rehypeStringify\ from\ 'https://esm.sh/rehype-\/stringify@10?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28953}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md28953}
+Say we have the following module {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ remarkRehype\ from\ 'remark-\/rehype'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ remarkGfm\ from\ 'remark-\/gfm'}
+\DoxyCodeLine{import\ remarkParse\ from\ 'remark-\/parse'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(remarkParse)}
+\DoxyCodeLine{\ \ .use(remarkGfm)}
+\DoxyCodeLine{\ \ .use(remarkRehype)}
+\DoxyCodeLine{\ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ .process('\#\ Hi\(\backslash\)n\(\backslash\)n*Hello*,\ world!')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+…running that with {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>Hi</h1>}
+\DoxyCodeLine{<p><em>Hello</em>,\ world!</p>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28954}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md28954}
+This package exports no identifiers. The default export is \`{}rehype\+Stringify\`{}.\hypertarget{readme.md_autotoc_md28955}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unified().use(rehype\+Stringify\mbox{[}, options\mbox{]})}}{{\ttfamily unified().use(rehype\+Stringify\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md28955}
+Plugin to add support for serializing to HTML.\hypertarget{readme.md_autotoc_md28956}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md28956}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28957}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md28957}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md28958}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Character\+References}}{{\ttfamily Character\+References}}}\label{readme.md_autotoc_md28958}
+How to serialize character references (Type\+Script type).
+
+\begin{quote}
+⚠️ {\bfseries{Note}}\+: {\ttfamily omit\+Optional\+Semicolons} creates what HTML calls “parse errors” but is otherwise still valid HTML — don’t use this except when building a minifier. Omitting semicolons is possible for certain named and numeric references in some cases. \end{quote}
+
+
+\begin{quote}
+⚠️ {\bfseries{Note}}\+: {\ttfamily use\+Named\+References} can be omitted when using {\ttfamily use\+Shortest\+References}. \end{quote}
+\hypertarget{readme.md_autotoc_md28959}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md28959}
+
+\begin{DoxyItemize}
+\item {\ttfamily use\+Named\+References} ({\ttfamily boolean}, default\+: {\ttfamily false}) — prefer named character references ({\ttfamily \&amp;}) where possible
+\item {\ttfamily omit\+Optional\+Semicolons} ({\ttfamily boolean}, default\+: {\ttfamily false}) — whether to omit semicolons when possible
+\item {\ttfamily use\+Shortest\+References} ({\ttfamily boolean}, default\+: {\ttfamily false}) — prefer the shortest possible reference, if that results in less bytes
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28960}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md28960}
+Configuration (Type\+Script type).
+
+\begin{quote}
+⚠️ {\bfseries{Danger}}\+: only set {\ttfamily allow\+Dangerous\+Characters} and {\ttfamily allow\+Dangerous\+Html} if you completely trust the content. \end{quote}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: {\ttfamily allow\+Parse\+Errors}, {\ttfamily bogus\+Comments}, {\ttfamily tight\+Attributes}, and {\ttfamily tight\+Doctype} intentionally create parse errors in markup (how parse errors are handled is well defined, so this works but isn’t pretty). \end{quote}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: this is not an XML serializer. It supports SVG as embedded in HTML. It does not support the features available in XML. Use \href{https://github.com/syntax-tree/xast-util-to-xml}{\texttt{ {\ttfamily xast-\/util-\/to-\/xml}}} to serialize XML. \end{quote}
+\hypertarget{readme.md_autotoc_md28961}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md28961}
+
+\begin{DoxyItemize}
+\item {\ttfamily allow\+Dangerous\+Characters} ({\ttfamily boolean}, default\+: {\ttfamily false}) — do not encode some characters which cause XSS vulnerabilities in older browsers
+\item {\ttfamily allow\+Dangerous\+Html} ({\ttfamily boolean}, default\+: {\ttfamily false}) — allow \href{https://github.com/syntax-tree/mdast-util-to-hast?tab=readme-ov-file\#raw}{\texttt{ {\ttfamily Raw}}} nodes and insert them as raw HTML; when {\ttfamily false}, {\ttfamily Raw} nodes are encoded
+\item {\ttfamily allow\+Parse\+Errors} ({\ttfamily boolean}, default\+: {\ttfamily false}) — do not encode characters which cause parse errors (even though they work), to save bytes; not used in the SVG space.
+\item {\ttfamily bogus\+Comments} ({\ttfamily boolean}, default\+: {\ttfamily false}) — use “bogus comments” instead of comments to save byes\+: {\ttfamily \texorpdfstring{$<$}{<}?charlie\texorpdfstring{$>$}{>}} instead of {\ttfamily \texorpdfstring{$<$}{<}!-\/-\/charlie-\/-\/\texorpdfstring{$>$}{>}}
+\item {\ttfamily character\+References} (\`{}\+Character\+References\`{}, optional) — configure how to serialize character references
+\item {\ttfamily close\+Empty\+Elements} ({\ttfamily boolean}, default\+: {\ttfamily false}) — close SVG elements without any content with slash ({\ttfamily /}) on the opening tag instead of an end tag\+: {\ttfamily \texorpdfstring{$<$}{<}circle /\texorpdfstring{$>$}{>}} instead of {\ttfamily \texorpdfstring{$<$}{<}circle\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/circle\texorpdfstring{$>$}{>}}; see {\ttfamily tight\+Self\+Closing} to control whether a space is used before the slash; not used in the HTML space
+\item {\ttfamily close\+Self\+Closing} ({\ttfamily boolean}, default\+: {\ttfamily false}) — close self-\/closing nodes with an extra slash ({\ttfamily /})\+: {\ttfamily \texorpdfstring{$<$}{<}img /\texorpdfstring{$>$}{>}} instead of {\ttfamily \texorpdfstring{$<$}{<}img\texorpdfstring{$>$}{>}}; see {\ttfamily tight\+Self\+Closing} to control whether a space is used before the slash; not used in the SVG space.
+\item {\ttfamily collapse\+Empty\+Attributes} ({\ttfamily boolean}, default\+: {\ttfamily false}) — collapse empty attributes\+: get {\ttfamily class} instead of {\ttfamily class="{}"{}}; not used in the SVG space; boolean attributes (such as {\ttfamily hidden}) are always collapsed
+\item {\ttfamily omit\+Optional\+Tags} ({\ttfamily boolean}, default\+: {\ttfamily false}) — omit optional opening and closing tags; to illustrate, in {\ttfamily \texorpdfstring{$<$}{<}ol\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}li\texorpdfstring{$>$}{>}one\texorpdfstring{$<$}{<}/li\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}li\texorpdfstring{$>$}{>}two\texorpdfstring{$<$}{<}/li\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/ol\texorpdfstring{$>$}{>}}, both {\ttfamily \texorpdfstring{$<$}{<}/li\texorpdfstring{$>$}{>}} closing tags can be omitted, the first because it’s followed by another {\ttfamily li}, the last because it’s followed by nothing; not used in the SVG space
+\item {\ttfamily prefer\+Unquoted} ({\ttfamily boolean}, default\+: {\ttfamily false}) — leave attributes unquoted if that results in less bytes; not used in the SVG space
+\item {\ttfamily quote} (`'"{}\textquotesingle{}\`{} or \`{}"{}\textquotesingle{}"{}\`{}, default\+: \`{}\textquotesingle{}"{}\textquotesingle{}{\ttfamily ) — preferred quote to use \texorpdfstring{$\ast$}{*}}quote\+Smart{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — use the other quote if that results in less bytes \texorpdfstring{$\ast$}{*}}space{\ttfamily (}\textquotesingle{}html\textquotesingle{}{\ttfamily or}\textquotesingle{}svg\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}html\textquotesingle{}{\ttfamily ) — which space the document is in; when an}$<$svg$>${\ttfamily element is found in the HTML space, this package already automatically switches to and from the SVG \texorpdfstring{$\ast$}{*}}tight\+Attributes{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — join attributes together, without whitespace, if possible\+: get }class="{}a b"{}title="{}c d"{}{\ttfamily instead of}class="{}a b"{} title="{}c d"{}{\ttfamily to save bytes; not used in the SVG space \texorpdfstring{$\ast$}{*}}tight\+Comma\+Separated\+Lists{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — join known comma-\/separated attribute values with just a comma (},{\ttfamily ), instead of padding them on the right as well (},␠{\ttfamily , where}␠{\ttfamily represents a space) \texorpdfstring{$\ast$}{*}}tight\+Doctype{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — drop unneeded spaces in doctypes\+:}\texorpdfstring{$<$}{<}!doctypehtml\texorpdfstring{$>$}{>}{\ttfamily instead of }\texorpdfstring{$<$}{<}!doctype html\texorpdfstring{$>$}{>}{\ttfamily to save bytes \texorpdfstring{$\ast$}{*}}tight\+Self\+Closing{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ). — do not use an extra space when closing self-\/closing elements\+:}{\ttfamily  instead of}{\ttfamily ; only used if}close\+Self\+Closing\+: true{\ttfamily or }close\+Empty\+Elements\+: true{\ttfamily  \texorpdfstring{$\ast$}{*}}upper\+Doctype{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ). — use a}\texorpdfstring{$<$}{<}!\+DOCTYPE…{\ttfamily instead of}\texorpdfstring{$<$}{<}!doctype…{\ttfamily ; useless except for XHTML \texorpdfstring{$\ast$}{*}}voids{\ttfamily (}Array$<$string$>${\ttfamily , default\+: \mbox{[}}html-\/void-\/elements\`{}\mbox{]}\href{https://github.com/wooorm/html-void-elements}{\texttt{ html-\/void-\/elements}}) — tag names of elements to serialize without closing tag; not used in the SVG space
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28962}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md28962}
+HTML is serialized according to WHATWG HTML (the living standard), which is also followed by all browsers.\hypertarget{readme.md_autotoc_md28963}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md28963}
+The syntax tree format used in rehype is \href{https://github.com/syntax-tree/hast}{\texttt{ hast}}.\hypertarget{readme.md_autotoc_md28964}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md28964}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Character\+References\`{} and \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md28965}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md28965}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily rehype-\/stringify@\texorpdfstring{$^\wedge$}{\string^}10}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md28966}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md28966}
+As {\bfseries{rehype}} works on HTML, and improper use of HTML can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack, use of rehype can also be unsafe. Use \href{https://github.com/rehypejs/rehype-sanitize}{\texttt{ {\ttfamily rehype-\/sanitize}}} to make the tree safe.
+
+Use of rehype plugins could also open you up to other attacks. Carefully assess each plugin and the risks involved in using them.
+
+For info on how to submit a report, see our \href{https://github.com/rehypejs/.github/blob/main/security.md}{\texttt{ security policy}}.\hypertarget{readme.md_autotoc_md28967}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md28967}
+See \href{https://github.com/rehypejs/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/rehypejs/.github}{\texttt{ {\ttfamily rehypejs/.github}}} for ways to get started. See \href{https://github.com/rehypejs/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/rehypejs/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md28968}{}\doxysubsection{\texorpdfstring{Sponsor}{Sponsor}}\label{readme.md_autotoc_md28968}
+Support this effort and give back by sponsoring on \href{https://opencollective.com/unified}{\texttt{ Open\+Collective}}!
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{10}{|X[-1]}|}
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}{\PBS\centering \href{https://vercel.com}{\texttt{ Vercel}}~\newline
+~\newline
+ \href{https://vercel.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://motif.land}{\texttt{ Motif}}~\newline
+~\newline
+ \href{https://motif.land}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.hashicorp.com}{\texttt{ Hashi\+Corp}}~\newline
+~\newline
+ \href{https://www.hashicorp.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gitbook.com}{\texttt{ Git\+Book}}~\newline
+~\newline
+ \href{https://www.gitbook.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gatsbyjs.org}{\texttt{ Gatsby}}~\newline
+~\newline
+ \href{https://www.gatsbyjs.org}{\texttt{ }}   }}\\
+&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}\\\cline{1-10}
+\end{longtabu}
+
+
+\href{https://www.netlify.com}{\texttt{ Netlify}}~\newline
+~\newline
+
+
+\href{https://www.netlify.com}{\texttt{ }}  
+
+\href{https://www.coinbase.com}{\texttt{ Coinbase}}~\newline
+~\newline
+ \href{https://www.coinbase.com}{\texttt{ }}  
+
+\href{https://themeisle.com}{\texttt{ Theme\+Isle}}~\newline
+~\newline
+ \href{https://themeisle.com}{\texttt{ }}  
+
+\href{https://expo.io}{\texttt{ Expo}}~\newline
+~\newline
+ \href{https://expo.io}{\texttt{ }}  
+
+\href{https://boostnote.io}{\texttt{ Boost Note}}~\newline
+~\newline
+ \href{https://boostnote.io}{\texttt{ }}  
+
+\href{https://markdown.space}{\texttt{ Markdown Space}}~\newline
+~\newline
+ \href{https://markdown.space}{\texttt{ }}  
+
+\href{https://www.holloway.com}{\texttt{ Holloway}}~\newline
+~\newline
+ \href{https://www.holloway.com}{\texttt{ }}  
+
+~\newline
+ \href{https://opencollective.com/unified}{\texttt{ {\bfseries{You?}}}} ~\newline
+~\newline
+   \hypertarget{readme.md_autotoc_md28969}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md28969}
+\href{https://github.com/rehypejs/rehype/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

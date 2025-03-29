@@ -1,0 +1,178 @@
+\chapter{Browser Compatibility Testing Guide}
+\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing}{}\label{md_src_2docs_2testing_2browser-compatibility-testing}\index{Browser Compatibility Testing Guide@{Browser Compatibility Testing Guide}}
+\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37369}%
+\Hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37369}%
+
+
+This guide outlines the process for testing our AI components across different browsers to ensure consistent functionality and accessibility.\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37370}{}\doxysection{\texorpdfstring{Testing Goals}{Testing Goals}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37370}
+
+\begin{DoxyEnumerate}
+\item Verify that all AI components work correctly across major browsers
+\item Ensure accessibility features are supported in all browsers
+\item Identify and document any browser-\/specific issues
+\item Verify graceful degradation for unsupported features
+\item Ensure consistent visual appearance across browsers
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37371}{}\doxysection{\texorpdfstring{Supported Browsers}{Supported Browsers}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37371}
+We aim to support the following browsers\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Browser   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Minimum Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Priority    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Browser   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Minimum Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Priority    }\\\cline{1-3}
+\endhead
+Chrome   &90+   &High    \\\cline{1-3}
+Firefox   &90+   &High    \\\cline{1-3}
+Safari   &14+   &High    \\\cline{1-3}
+Edge   &90+   &High    \\\cline{1-3}
+i\+OS Safari   &14+   &Medium    \\\cline{1-3}
+Android Chrome   &90+   &Medium    \\\cline{1-3}
+Samsung Internet   &14+   &Low   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37372}{}\doxysection{\texorpdfstring{Testing Process}{Testing Process}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37372}
+\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37373}{}\doxysubsection{\texorpdfstring{1. Setup Testing Environment}{1. Setup Testing Environment}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37373}
+
+\begin{DoxyEnumerate}
+\item Access the browser compatibility testing page at {\ttfamily /dev/browser-\/compatibility-\/test}
+\item Use real devices when possible, especially for mobile testing
+\item For desktop browsers, test with both mouse and keyboard navigation
+\item Test with screen readers enabled when testing accessibility features
+\item Test with different user preferences (dark mode, reduced motion, high contrast)
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37374}{}\doxysubsection{\texorpdfstring{2. Component Testing}{2. Component Testing}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37374}
+For each component, follow the specific testing instructions on the test page. In general\+:\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37375}{}\doxysubsubsection{\texorpdfstring{AI Chat Component}{AI Chat Component}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37375}
+
+\begin{DoxyItemize}
+\item Verify that the chat interface loads correctly
+\item Test keyboard navigation (Tab, Enter, Arrow keys)
+\item Test screen reader compatibility
+\item Verify that messages display correctly
+\item Test sending and receiving messages
+\item Verify loading states and animations
+\item Test with reduced motion preference if available
+\item Test with high contrast mode if available
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37376}{}\doxysubsubsection{\texorpdfstring{Loading Indicators}{Loading Indicators}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37376}
+
+\begin{DoxyItemize}
+\item Verify that loading indicators display correctly
+\item Test with screen readers to verify announcements
+\item Test with reduced motion preference if available
+\item Verify that animations work correctly
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37377}{}\doxysubsection{\texorpdfstring{3. Accessibility Testing}{3. Accessibility Testing}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37377}
+For each component, verify\+:
+
+
+\begin{DoxyItemize}
+\item Keyboard navigation works correctly
+\item Focus indicators are visible
+\item ARIA attributes are properly supported
+\item Screen readers announce content correctly
+\item Color contrast meets WCAG 2.\+1 AA standards
+\item Reduced motion preferences are respected
+\item High contrast mode is supported
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37378}{}\doxysubsection{\texorpdfstring{4. Reporting Issues}{4. Reporting Issues}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37378}
+When you encounter an issue\+:
+
+
+\begin{DoxyEnumerate}
+\item Use the "{}\+Compatibility Issues Log"{} section on the test page
+\item Provide detailed information about the browser and issue
+\item Include steps to reproduce the issue
+\item Specify the severity of the issue
+\item Take screenshots if possible and attach them to the issue in our issue tracking system
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37379}{}\doxysubsection{\texorpdfstring{5. Issue Severity Levels}{5. Issue Severity Levels}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37379}
+
+\begin{DoxyItemize}
+\item {\bfseries{Critical}}\+: Blocking functionality, component doesn\textquotesingle{}t work at all
+\item {\bfseries{Major}}\+: Significant impact on usability, but workarounds exist
+\item {\bfseries{Minor}}\+: Cosmetic issues, minor visual inconsistencies
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37380}{}\doxysection{\texorpdfstring{Common Browser-\/\+Specific Issues}{Common Browser-\/\+Specific Issues}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37380}
+\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37381}{}\doxysubsection{\texorpdfstring{Safari}{Safari}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37381}
+
+\begin{DoxyItemize}
+\item WebP image format support (use fallbacks)
+\item Shadow DOM limitations
+\item CSS Grid implementation differences
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37382}{}\doxysubsection{\texorpdfstring{Firefox}{Firefox}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37382}
+
+\begin{DoxyItemize}
+\item CSS Grid implementation differences
+\item Some CSS variable scope differences
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37383}{}\doxysubsection{\texorpdfstring{Edge}{Edge}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37383}
+
+\begin{DoxyItemize}
+\item Generally good compatibility with Chrome-\/based features
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37384}{}\doxysubsection{\texorpdfstring{Mobile Browsers}{Mobile Browsers}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37384}
+
+\begin{DoxyItemize}
+\item Touch event handling differences
+\item Viewport size handling
+\item Fixed position elements behavior
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37385}{}\doxysection{\texorpdfstring{Testing Checklist}{Testing Checklist}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37385}
+Use this checklist for each browser\+:
+
+
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] AI Chat component loads correctly
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Messages can be sent and received
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Loading indicators display correctly
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Keyboard navigation works properly
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Screen reader announces content correctly
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Focus indicators are visible
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Color contrast is sufficient
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Reduced motion preference is respected
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] High contrast mode is supported
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Touch interactions work correctly (mobile)
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Responsive layout adapts correctly
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] No console errors or warnings
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37386}{}\doxysection{\texorpdfstring{Automated Testing}{Automated Testing}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37386}
+While manual testing is essential, we also use automated testing tools\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Playwright}} for cross-\/browser automated testing
+\item {\bfseries{Axe}} for accessibility testing
+\item {\bfseries{Lighthouse}} for performance and best practices
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37387}{}\doxysection{\texorpdfstring{Continuous Integration}{Continuous Integration}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37387}
+Our CI pipeline includes\+:
+
+
+\begin{DoxyEnumerate}
+\item Automated tests for Chrome, Firefox, and Safari
+\item Accessibility checks
+\item Visual regression tests
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37388}{}\doxysection{\texorpdfstring{Resources}{Resources}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37388}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/TR/WCAG21/}{\texttt{ WCAG 2.\+1 Guidelines}}
+\item \href{https://caniuse.com/}{\texttt{ Browser Feature Support (Can I Use)}}
+\item \href{https://webaim.org/projects/screenreadersurvey9/}{\texttt{ Screen Reader User Survey}}
+\item \href{https://www.deque.com/axe/}{\texttt{ Axe Accessibility Testing Tool}}
+\item \href{https://playwright.dev/}{\texttt{ Playwright Testing Library}}
+\end{DoxyItemize}\hypertarget{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37389}{}\doxysection{\texorpdfstring{Contact}{Contact}}\label{md_src_2docs_2testing_2browser-compatibility-testing_autotoc_md37389}
+For questions about browser compatibility testing, contact the accessibility team at \href{mailto:accessibility@example.com}{\texttt{ accessibility@example.\+com}}. 

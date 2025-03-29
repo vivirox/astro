@@ -134,7 +134,7 @@ export const generateConsentForm = (): {
  * Generates content for the consent form with appropriate language
  * for healthcare professionals
  */
-export function generateConsentForm() {
+export function generateHealthcareConsentForm() {
   return {
     consentText:
       'I understand that anonymous metrics about my practice sessions may be stored locally in my browser. These metrics contain no personal information, session content, or identifiable data. They are used solely to show my progress over time.',

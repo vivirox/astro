@@ -1,0 +1,140 @@
+\doxysection{node\+\_\+modules/@vercel/postgres Directory Reference}
+\hypertarget{dir_7db2bba20c1bd7f289a92d8dbf271cb2}{}\label{dir_7db2bba20c1bd7f289a92d8dbf271cb2}\index{node\_modules/"@vercel/postgres Directory Reference@{node\_modules/"@vercel/postgres Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+A client that works with Vercel Postgres.\hypertarget{README.md_autotoc_md7199}{}\doxysubsection{\texorpdfstring{Quick Start}{Quick Start}}\label{README.md_autotoc_md7199}
+{\bfseries{Note\+:}} If you want to use an ORM instead of writing your own queries, see \href{https://npmjs.org/package/@vercel/postgres-kysely}{\texttt{ @vercel/postgres-\/kysely}}.\hypertarget{README.md_autotoc_md7200}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md7200}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ install\ @vercel/postgres}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7201}{}\doxysubsubsection{\texorpdfstring{Importing}{Importing}}\label{README.md_autotoc_md7201}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Don't\ need\ any\ custom\ config?:}
+\DoxyCodeLine{import\ \{\ sql\ \}\ from\ '@vercel/postgres';}
+\DoxyCodeLine{//\ \`{}sql`\ is\ already\ set\ up\ and\ ready\ to\ go;\ no\ further\ action\ needed}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Need\ to\ customize\ your\ config?:}
+\DoxyCodeLine{import\ \{\ createPool\ \}\ from\ '@vercel/postgres';}
+\DoxyCodeLine{const\ pool\ =\ createPool(\{}
+\DoxyCodeLine{\ \ /*\ config\ */}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Need\ a\ single\ client?:}
+\DoxyCodeLine{import\ \{\ createClient\ \}\ from\ '@vercel/postgres';}
+\DoxyCodeLine{const\ client\ =\ createClient(\{}
+\DoxyCodeLine{\ \ /*\ config\ */}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7202}{}\doxysubsubsection{\texorpdfstring{Querying}{Querying}}\label{README.md_autotoc_md7202}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ no-\/config}
+\DoxyCodeLine{import\ \{\ sql\ \}\ from\ '@vercel/postgres';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ id\ =\ 100;}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ A\ one-\/shot\ query}
+\DoxyCodeLine{const\ \{\ rows\ \}\ =\ await\ sql`SELECT\ *\ FROM\ users\ WHERE\ id\ =\ \$\{userId\};`;}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Multiple\ queries\ on\ the\ same\ connection\ (improves\ performance)}
+\DoxyCodeLine{//\ warning:\ Do\ not\ share\ clients\ across\ requests\ and\ be\ sure\ to\ release\ them!}
+\DoxyCodeLine{const\ client\ =\ await\ sql.connect();}
+\DoxyCodeLine{const\ \{\ rows\ \}\ =\ await\ client.sql`SELECT\ *\ FROM\ users\ WHERE\ id\ =\ \$\{userId\};`;}
+\DoxyCodeLine{await\ client.sql`UPDATE\ users\ SET\ status\ =\ 'satisfied'\ WHERE\ id\ =\ \$\{userId\};`;}
+\DoxyCodeLine{client.release();}
+
+\end{DoxyCode}
+
+
+The {\ttfamily sql} import in the query above is just a modified {\ttfamily Pool} object (that\textquotesingle{}s why you can call it). If you\textquotesingle{}re running a custom config with {\ttfamily create\+Pool}, the same functionality is available as {\ttfamily pool.\+sql}.
+
+To specify a connection string\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createPool\ \}\ from\ '@vercel/postgres';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pool\ =\ createPool(\{}
+\DoxyCodeLine{\ \ connectionString:\ process.env.SOME\_POSTGRES\_CONNECTION\_STRING,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ likes\ =\ 100;}
+\DoxyCodeLine{const\ \{\ rows,\ fields\ \}\ =}
+\DoxyCodeLine{\ \ await\ pool.sql`SELECT\ *\ FROM\ posts\ WHERE\ likes\ >\ \$\{likes\};`;}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7203}{}\doxysubsubsection{\texorpdfstring{A note on edge environments}{A note on edge environments}}\label{README.md_autotoc_md7203}
+In edge environments, IO connections cannot be reused between requests. To allow your {\ttfamily Pool}s to continue to function, we set {\ttfamily max\+Uses} to 1 when running on the edge (otherwise the {\ttfamily Pool} might hold on to a {\ttfamily Client} used in one request and try to use it again in another). Unfortunately, this means the {\ttfamily Pool} {\itshape also} can\textquotesingle{}t reuse the connection {\itshape within} the request. For this reason, if you\textquotesingle{}re firing more than one database query to serve a single request in your app, we recommend obtaining a {\ttfamily Client} from {\ttfamily Pool.\+connect}, using that {\ttfamily Client} to query the database, and then releasing it.\hypertarget{README.md_autotoc_md7204}{}\doxysubsubsection{\texorpdfstring{Get the connection url}{Get the connection url}}\label{README.md_autotoc_md7204}
+If you just want the connection URL, you can call `postgres\+Connection\+String(type\+: \textquotesingle{}pool' \texorpdfstring{$\vert$}{|} \textquotesingle{}direct\textquotesingle{})\+: string;{\ttfamily . This will read from your environment variables. For the}pool{\ttfamily type, it will look for the}POSTGRES\+\_\+\+URL{\ttfamily environment variables. For the}direct{\ttfamily type, it will look for the}POSTGRES\+\_\+\+URL\+\_\+\+NON\+\_\+\+POOLING\`{} environment variables.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ postgresConnectionString\ \}\ from\ '@vercel/postgres';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pooledConnectionString\ =\ postgresConnectionString('pool');}
+\DoxyCodeLine{const\ directConnectionString\ =\ postgresConnectionString('direct');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md7205}{}\doxysubsubsection{\texorpdfstring{Connection Config}{Connection Config}}\label{README.md_autotoc_md7205}
+When using the {\ttfamily create\+Client} or {\ttfamily create\+Pool} functions, you can pass in additional options alongside the connection string that conforms to {\ttfamily Vercel\+Postgres\+Client\+Config} or {\ttfamily Vercel\+Postgres\+Pool\+Config}.\hypertarget{README.md_autotoc_md7206}{}\doxysubsubsection{\texorpdfstring{Documentation}{Documentation}}\label{README.md_autotoc_md7206}
+The {\ttfamily @vercel/postgres} package uses the {\ttfamily pg} package. For more detailed documentation, checkout \href{https://node-postgres.com/}{\texttt{ node-\/postgres}}.\hypertarget{README.md_autotoc_md7207}{}\doxysubsubsection{\texorpdfstring{A note for Vite users}{A note for Vite users}}\label{README.md_autotoc_md7207}
+{\ttfamily @vercel/postgres} reads database credentials from the environment variables on {\ttfamily process.\+env}. In general, {\ttfamily process.\+env} is automatically populated from your {\ttfamily .env} file during development, which is created when you run {\ttfamily vc env pull}. However, Vite does not expose the {\ttfamily .env} variables on {\ttfamily process.\+env.}
+
+You can fix this in {\bfseries{one}} of following two ways\+:
+
+
+\begin{DoxyEnumerate}
+\item You can populate {\ttfamily process.\+env} yourself using something like {\ttfamily dotenv-\/expand}\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ install\ -\/-\/save-\/dev\ dotenv\ dotenv-\/expand}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ vite.config.js}
+\DoxyCodeLine{import\ dotenvExpand\ from\ 'dotenv-\/expand';}
+\DoxyCodeLine{import\ \{\ loadEnv,\ defineConfig\ \}\ from\ 'vite';}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig((\{\ mode\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ //\ This\ check\ is\ important!}
+\DoxyCodeLine{\ \ if\ (mode\ ===\ 'development')\ \{}
+\DoxyCodeLine{\ \ \ \ const\ env\ =\ loadEnv(mode,\ process.cwd(),\ '');}
+\DoxyCodeLine{\ \ \ \ dotenvExpand.expand(\{\ parsed:\ env\ \});}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ \{}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item You can provide the credentials explicitly, instead of relying on a zero-\/config setup. For example, this is how you could create a client in Svelte\+Kit, which makes private environment variables available via {\ttfamily \$env/static/private}\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createPool\ \}\ from\ '@vercel/postgres';}
+\DoxyCodeLine{+\ import\ \{\ POSTGRES\_URL\ \}\ from\ '\$env/static/private';}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{\ createPool\ \}\ from\ '@vercel/postgres';}
+\DoxyCodeLine{const\ pool\ =\ createPool(\{}
+\DoxyCodeLine{-\/\ \ /*\ config\ */}
+\DoxyCodeLine{+\ \ connectionString:\ POSTGRES\_URL}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

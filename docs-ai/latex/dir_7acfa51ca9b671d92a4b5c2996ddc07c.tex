@@ -1,0 +1,335 @@
+\doxysection{node\+\_\+modules/mdast-\/util-\/gfm Directory Reference}
+\hypertarget{dir_7acfa51ca9b671d92a4b5c2996ddc07c}{}\label{dir_7acfa51ca9b671d92a4b5c2996ddc07c}\index{node\_modules/mdast-\/util-\/gfm Directory Reference@{node\_modules/mdast-\/util-\/gfm Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/mdast-util-gfm/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/mdast-util-gfm}{\texttt{ }} \href{https://www.npmjs.com/package/mdast-util-gfm}{\texttt{ }} \href{https://bundlejs.com/?q=mdast-util-gfm}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}} extensions to parse and serialize \href{https://github.github.com/gfm/}{\texttt{ GFM}} (autolink literals, footnotes, strikethrough, tables, tasklists).\hypertarget{readme.md_autotoc_md22506}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22506}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}gfm\+From\+Markdown()\`{}
+\item \`{}gfm\+To\+Markdown(options?)\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item HTML
+\item Syntax
+\item Syntax tree
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22507}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22507}
+This package contains two extensions that add support for GFM syntax in markdown to \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}\+: autolink literals ({\ttfamily www.\+x.\+com}), footnotes ({\ttfamily \mbox{[}\texorpdfstring{$^\wedge$}{\string^}1\mbox{]}}), strikethrough ({\ttfamily \texorpdfstring{$\sim$}{\string~}\texorpdfstring{$\sim$}{\string~}stuff\texorpdfstring{$\sim$}{\string~}\texorpdfstring{$\sim$}{\string~}}), tables ({\ttfamily \texorpdfstring{$\vert$}{|} cell \texorpdfstring{$\vert$}{|}…}), and tasklists ({\ttfamily \texorpdfstring{$\ast$}{*} \mbox{[}x\mbox{]}}). These extensions plug into \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} (to support parsing GFM in markdown into a syntax tree) and \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} (to support serializing GFM in syntax trees to markdown).\hypertarget{readme.md_autotoc_md22508}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md22508}
+This project is useful when you want to support the same features that Git\+Hub does in files in a repo, Gists, and several other places. Users frequently believe that some of these extensions, specifically autolink literals and tables, are part of normal markdown, so using {\ttfamily mdast-\/util-\/gfm} will help match your implementation to their understanding of markdown. There are several edge cases where Git\+Hub’s implementation works in unexpected ways or even different than described in their spec, so {\itshape writing} in GFM is not always the best choice.
+
+You can use these extensions when you are working with {\ttfamily mdast-\/util-\/from-\/markdown} and {\ttfamily mdast-\/util-\/to-\/markdown} already.
+
+When working with {\ttfamily mdast-\/util-\/from-\/markdown}, you must combine this package with \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}}.
+
+Instead of this package, you can also use the extensions separately\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-autolink-literal}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/autolink-\/literal}}} — support GFM autolink literals
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-footnote}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/footnote}}} — support GFM footnotes
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-strikethrough}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/strikethrough}}} — support GFM strikethrough
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-table}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/table}}} — support GFM tables
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-task-list-item}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/task-\/list-\/item}}} — support GFM tasklists
+\end{DoxyItemize}
+
+A different utility, \href{https://github.com/syntax-tree/mdast-util-frontmatter}{\texttt{ {\ttfamily mdast-\/util-\/frontmatter}}}, adds support for frontmatter. Git\+Hub supports YAML frontmatter for files in repos and Gists but they don’t treat it as part of GFM.
+
+All these packages are used in \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which focusses on making it easier to transform content by abstracting these internals away.
+
+This utility does not handle how markdown is turned to HTML. That’s done by \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}}. If your content is not in English, you should configure that utility.\hypertarget{readme.md_autotoc_md22509}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22509}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mdast-\/util-\/gfm}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{gfmFromMarkdown,\ gfmToMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/gfm@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{gfmFromMarkdown,\ gfmToMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/gfm@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22510}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22510}
+Say our document {\ttfamily example.\+md} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ GFM}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Autolink\ literals}
+\DoxyCodeLine{}
+\DoxyCodeLine{www.example.com,\ https://example.com,\ and\ contact@example.com.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Footnote}
+\DoxyCodeLine{}
+\DoxyCodeLine{A\ note[\string^1]}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^1]:\ Big\ note.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Strikethrough}
+\DoxyCodeLine{}
+\DoxyCodeLine{\string~one\string~\ or\ \string~\string~two\string~\string~\ tildes.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Table}
+\DoxyCodeLine{}
+\DoxyCodeLine{|\ a\ |\ b\ \ |\ \ c\ |\ \ d\ \ |}
+\DoxyCodeLine{|\ -\/\ |\ :-\/\ |\ -\/:\ |\ :-\/:\ |}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Tasklist}
+\DoxyCodeLine{}
+\DoxyCodeLine{*\ [\ ]\ to\ do}
+\DoxyCodeLine{*\ [x]\ done}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{fromMarkdown\}\ from\ 'mdast-\/util-\/from-\/markdown'}
+\DoxyCodeLine{import\ \{gfmFromMarkdown,\ gfmToMarkdown\}\ from\ 'mdast-\/util-\/gfm'}
+\DoxyCodeLine{import\ \{toMarkdown\}\ from\ 'mdast-\/util-\/to-\/markdown'}
+\DoxyCodeLine{import\ \{gfm\}\ from\ 'micromark-\/extension-\/gfm'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ value\ =\ await\ fs.readFile('example.md',\ 'utf8')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromMarkdown(value,\ \{}
+\DoxyCodeLine{\ \ extensions:\ [gfm()],}
+\DoxyCodeLine{\ \ mdastExtensions:\ [gfmFromMarkdown()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(tree)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ toMarkdown(tree,\ \{extensions:\ [gfmToMarkdown()]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields (positional info removed for brevity)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'heading',\ depth:\ 1,\ children:\ [\{type:\ 'text',\ value:\ 'GFM'\}]\},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'heading',}
+\DoxyCodeLine{\ \ \ \ \ \ depth:\ 2,}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'Autolink\ literals'\}]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'link',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ title:\ null,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ url:\ 'http://www.example.com',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'www.example.com'\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ ',\ '\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'link',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ title:\ null,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ url:\ 'https://example.com',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'https://example.com'\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ ',\ and\ '\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'link',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ title:\ null,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ url:\ 'mailto:contact@example.com',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'contact@example.com'\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '.'\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'heading',\ depth:\ 2,\ children:\ [\{type:\ 'text',\ value:\ 'Footnote'\}]\},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ 'A\ note'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'footnoteReference',\ identifier:\ '1',\ label:\ '1'\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'footnoteDefinition',}
+\DoxyCodeLine{\ \ \ \ \ \ identifier:\ '1',}
+\DoxyCodeLine{\ \ \ \ \ \ label:\ '1',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'paragraph',\ children:\ [\{type:\ 'text',\ value:\ 'Big\ note.'\}]\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'heading',}
+\DoxyCodeLine{\ \ \ \ \ \ depth:\ 2,}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'Strikethrough'\}]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'delete',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'one'\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '\ or\ '\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'delete',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'two'\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '\ tildes.'\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'heading',\ depth:\ 2,\ children:\ [\{type:\ 'text',\ value:\ 'Table'\}]\},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'table',}
+\DoxyCodeLine{\ \ \ \ \ \ align:\ [null,\ 'left',\ 'right',\ 'center'],}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'tableRow',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'tableCell',\ children:\ [\{type:\ 'text',\ value:\ 'a'\}]\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'tableCell',\ children:\ [\{type:\ 'text',\ value:\ 'b'\}]\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'tableCell',\ children:\ [\{type:\ 'text',\ value:\ 'c'\}]\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'tableCell',\ children:\ [\{type:\ 'text',\ value:\ 'd'\}]\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'heading',\ depth:\ 2,\ children:\ [\{type:\ 'text',\ value:\ 'Tasklist'\}]\},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'list',}
+\DoxyCodeLine{\ \ \ \ \ \ ordered:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ start:\ null,}
+\DoxyCodeLine{\ \ \ \ \ \ spread:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'listItem',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ spread:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ checked:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'paragraph',\ children:\ [\{type:\ 'text',\ value:\ 'to\ do'\}]\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'listItem',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ spread:\ false,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ checked:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'paragraph',\ children:\ [\{type:\ 'text',\ value:\ 'done'\}]\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ GFM}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Autolink\ literals}
+\DoxyCodeLine{}
+\DoxyCodeLine{[www.example.com](http://www.example.com),\ <https://example.com>,\ and\ <contact@example.com>.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Footnote}
+\DoxyCodeLine{}
+\DoxyCodeLine{A\ note[\string^1]}
+\DoxyCodeLine{}
+\DoxyCodeLine{[\string^1]:\ Big\ note.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Strikethrough}
+\DoxyCodeLine{}
+\DoxyCodeLine{\string~\string~one\string~\string~\ or\ \string~\string~two\string~\string~\ tildes.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Table}
+\DoxyCodeLine{}
+\DoxyCodeLine{|\ a\ |\ b\ \ |\ \ c\ |\ \ d\ \ |}
+\DoxyCodeLine{|\ -\/\ |\ :-\/\ |\ -\/:\ |\ :-\/:\ |}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Tasklist}
+\DoxyCodeLine{}
+\DoxyCodeLine{*\ \ \ [\ ]\ to\ do}
+\DoxyCodeLine{*\ \ \ [x]\ done}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22511}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22511}
+This package exports the identifiers \`{}gfm\+From\+Markdown\`{} and \`{}gfm\+To\+Markdown\`{}. There is no default export.\hypertarget{readme.md_autotoc_md22512}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+From\+Markdown()}}{{\ttfamily gfm\+From\+Markdown()}}}\label{readme.md_autotoc_md22512}
+Create an extension for \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} to enable GFM (autolink literals, footnotes, strikethrough, tables, tasklists).\hypertarget{readme.md_autotoc_md22513}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22513}
+Extension for {\ttfamily mdast-\/util-\/from-\/markdown} to enable GFM (\href{https://github.com/syntax-tree/mdast-util-from-markdown\#extension}{\texttt{ {\ttfamily Array\texorpdfstring{$<$}{<}From\+Markdown\+Extension\texorpdfstring{$>$}{>}}}}).\hypertarget{readme.md_autotoc_md22514}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+To\+Markdown(options?)}}{{\ttfamily gfm\+To\+Markdown(options?)}}}\label{readme.md_autotoc_md22514}
+Create an extension for \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} to enable GFM (autolink literals, footnotes, strikethrough, tables, tasklists).\hypertarget{readme.md_autotoc_md22515}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22515}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22516}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22516}
+Extension for {\ttfamily mdast-\/util-\/to-\/markdown} to enable GFM (\href{https://github.com/syntax-tree/mdast-util-to-markdown\#options}{\texttt{ {\ttfamily Array\texorpdfstring{$<$}{<}To\+Markdown\+Extension\texorpdfstring{$>$}{>}}}}).\hypertarget{readme.md_autotoc_md22517}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md22517}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md22518}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md22518}
+
+\begin{DoxyItemize}
+\item {\ttfamily first\+Line\+Blank} ({\ttfamily boolean}, default\+: {\ttfamily false}) — use a blank line for the first line of footnote definitions
+\item {\ttfamily string\+Length} ({\ttfamily ((value\+: string) =\texorpdfstring{$>$}{>} number)}, default\+: {\ttfamily s =\texorpdfstring{$>$}{>} s.\+length}) — function to detect the length of table cell content, used when aligning the delimiters between cells
+\item {\ttfamily table\+Cell\+Padding} ({\ttfamily boolean}, default\+: {\ttfamily true}) — whether to add a space of padding between delimiters and cells
+\item {\ttfamily table\+Pipe\+Align} ({\ttfamily boolean}, default\+: {\ttfamily true}) — whether to align the delimiters
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22519}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md22519}
+This utility does not handle how markdown is turned to HTML. That’s done by \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}}.\hypertarget{readme.md_autotoc_md22520}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md22520}
+See \href{https://github.com/micromark/micromark-extension-gfm\#syntax}{\texttt{ Syntax in {\ttfamily micromark-\/extension-\/gfm}}}.\hypertarget{readme.md_autotoc_md22521}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md22521}
+This utility combines several mdast utilities. See their readmes for the node types supported in the tree\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-autolink-literal\#syntax-tree}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/autolink-\/literal}}} — GFM autolink literals
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-footnote\#syntax-tree}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/footnote}}} — GFM footnotes
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-strikethrough\#syntax-tree}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/strikethrough}}} — GFM strikethrough
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-table\#syntax-tree}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/table}}} — GFM tables
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-task-list-item\#syntax-tree}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/task-\/list-\/item}}} — GFM tasklists
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22522}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md22522}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.
+
+The {\ttfamily Delete}, {\ttfamily Footnote\+Definition}, {\ttfamily Footnote\+Reference}, {\ttfamily Table}, {\ttfamily Table\+Row}, and {\ttfamily Table\+Cell} types of the mdast nodes are exposed from {\ttfamily @types/mdast}.\hypertarget{readme.md_autotoc_md22523}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md22523}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily mdast-\/util-\/gfm@\texorpdfstring{$^\wedge$}{\string^}3}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md22524}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md22524}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} — remark plugin to support GFM
+\item \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} — micromark extension to parse GFM
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22525}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md22525}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md22526}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md22526}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

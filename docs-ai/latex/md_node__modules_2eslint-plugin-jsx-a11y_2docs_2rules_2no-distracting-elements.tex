@@ -1,0 +1,47 @@
+\chapter{jsx-\/a11y/no-\/distracting-\/elements}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements}{}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements}\index{jsx-\/a11y/no-\/distracting-\/elements@{jsx-\/a11y/no-\/distracting-\/elements}}
+\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13891}%
+\Hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13891}%
+
+
+💼 This rule is enabled in the following configs\+: ☑️ {\ttfamily recommended}, 🔒 {\ttfamily strict}.
+
+Enforces that no distracting elements are used. Elements that can be visually distracting can cause accessibility issues with visually impaired users. Such elements are most likely deprecated, and should be avoided. By default, the following elements are visually distracting\+: {\ttfamily \texorpdfstring{$<$}{<}marquee\texorpdfstring{$>$}{>}} and {\ttfamily \texorpdfstring{$<$}{<}blink\texorpdfstring{$>$}{>}}.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13892}{}\doxysection{\texorpdfstring{Rule options}{Rule options}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13892}
+This rule takes one optional object argument of type object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}jsx-\/a11y/no-\/distracting-\/elements"{}:\ [\ 2,\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}elements"{}:\ [\ "{}marquee"{},\ "{}blink"{}\ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}],}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+For the {\ttfamily elements} option, these strings determine which JSX elements should be checked for usage. This shouldn\textquotesingle{}t need to be configured unless you have a seriously compelling use case for these elements. You cannot add any additional elements than what is offered, as the schema is only valid with the provided enumerated list. If you have another element that you think may cause a11y issues due to visual impairment, please feel free to file an issue or send a PR!\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13893}{}\doxysubsection{\texorpdfstring{Succeed}{Succeed}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13893}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13894}{}\doxysubsection{\texorpdfstring{Fail}{Fail}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13894}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<marquee\ />}
+\DoxyCodeLine{<blink\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13895}{}\doxysection{\texorpdfstring{Accessibility guidelines}{Accessibility guidelines}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13895}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/pause-stop-hide}{\texttt{ WCAG 2.\+2.\+2}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13896}{}\doxysubsection{\texorpdfstring{Resources}{Resources}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-distracting-elements_autotoc_md13896}
+
+\begin{DoxyItemize}
+\item \href{https://dequeuniversity.com/rules/axe/3.2/marquee}{\texttt{ axe-\/core, marquee}}
+\item \href{https://dequeuniversity.com/rules/axe/3.2/blink}{\texttt{ axe-\/core, blink}} 
+\end{DoxyItemize}

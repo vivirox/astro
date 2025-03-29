@@ -1,0 +1,876 @@
+\doxysection{node\+\_\+modules/circomlib/circuits Directory Reference}
+\hypertarget{dir_14b66bb49f943150d0e20ab67052a448}{}\label{dir_14b66bb49f943150d0e20ab67052a448}\index{node\_modules/circomlib/circuits Directory Reference@{node\_modules/circomlib/circuits Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{README.md_autotoc_md10319}{}\doxysubsection{\texorpdfstring{Description}{Description}}\label{README.md_autotoc_md10319}
+
+\begin{DoxyItemize}
+\item This folder contains circuit templates for standard operations and many cryptographic primitives.
+\item Below you can find specifications of each function. In the representation of elements, there are three tyes\+:
+\begin{DoxyItemize}
+\item Binary
+\item String
+\item Field element (the field is specified in each case. We consider 2 possible fields\+: Fp and Fr, where p... and r... .)
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10320}{}\doxysubsection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{README.md_autotoc_md10320}
+\hypertarget{README.md_autotoc_md10321}{}\doxysubsection{\texorpdfstring{Jordi}{Jordi}}\label{README.md_autotoc_md10321}
+
+\begin{DoxyItemize}
+\item compconstant -\/ Returns 1 if {\ttfamily in} (expanded to binary array) \texorpdfstring{$>$}{>} {\ttfamily ct}
+\item aliascheck -\/ check if {\ttfamily in} (expanded to binary array) oveflowed its 254 bits (\texorpdfstring{$<$}{<}= -\/1)
+\item babyjub -\/ twisted Edwards curve 168700.\+x\texorpdfstring{$^\wedge$}{\string^}2 + y\texorpdfstring{$^\wedge$}{\string^}2 = 1 + 168696.\+x\texorpdfstring{$^\wedge$}{\string^}2.y\texorpdfstring{$^\wedge$}{\string^}2
+\begin{DoxyItemize}
+\item Baby\+Add -\/ ({\ttfamily xout},{\ttfamily yout}) = ({\ttfamily x1},{\ttfamily y1}) + ({\ttfamily x2},{\ttfamily y2})
+\item Baby\+Dbl -\/ ({\ttfamily xout},{\ttfamily yout}) = 2\texorpdfstring{$\ast$}{*}({\ttfamily x},{\ttfamily y})
+\item Baby\+Check -\/ check that ({\ttfamily x},{\ttfamily y}) is on the curve
+\end{DoxyItemize}
+\item binsub -\/ binary subtraction
+\item gates -\/ logical gates
+\item mimc -\/ SNARK-\/friendly hash Minimal Multiplicative Complexity.
+\begin{DoxyItemize}
+\item \href{https://eprint.iacr.org/2016/492.pdf}{\texttt{ https\+://eprint.\+iacr.\+org/2016/492.\+pdf}}
+\item zcash/zcash\#2233
+\end{DoxyItemize}
+\item smt -\/ Sparse Merkle Tree
+\begin{DoxyItemize}
+\item \href{https://ethresear.ch/t/optimizing-sparse-merkle-trees/3751}{\texttt{ https\+://ethresear.\+ch/t/optimizing-\/sparse-\/merkle-\/trees/3751}}
+\end{DoxyItemize}
+\item montgomery \href{https://en.wikipedia.org/wiki/Montgomery_curve}{\texttt{ https\+://en.\+wikipedia.\+org/wiki/\+Montgomery\+\_\+curve}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10322}{}\doxysubsection{\texorpdfstring{Circuits}{Circuits}}\label{README.md_autotoc_md10322}
+\hypertarget{README.md_autotoc_md10323}{}\doxysubsubsection{\texorpdfstring{sha256}{sha256}}\label{README.md_autotoc_md10323}
+Folder containing the implementation of sha256 hash circuit.\hypertarget{README.md_autotoc_md10324}{}\doxysubsubsection{\texorpdfstring{smt}{smt}}\label{README.md_autotoc_md10324}
+Folder containing the circuit implementation of Sparse Merkle Trees.\hypertarget{README.md_autotoc_md10325}{}\doxysubsubsection{\texorpdfstring{aliascheck}{aliascheck}}\label{README.md_autotoc_md10325}
+
+\begin{DoxyItemize}
+\item {\ttfamily Alias\+Check()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10326}{}\doxysubsubsection{\texorpdfstring{babyjub}{babyjub}}\label{README.md_autotoc_md10326}
+Arithmetic on \href{https://github.com/barryWhiteHat/baby_jubjub}{\texttt{ Baby Jubjub elliptic curve}} in twisted Edwards form. (TODO\+: Expose here the characteristics of the curve?)
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Baby\+Add()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+
+It adds two points on the Baby Jubjub curve. More specifically, given two points P1 = ({\ttfamily x1}, {\ttfamily y1}) and P2 = ({\ttfamily x2}, {\ttfamily y2}) it returns a point P3 = ({\ttfamily xout}, {\ttfamily yout}) such that
+
+({\ttfamily xout}, {\ttfamily yout}) = ({\ttfamily x1},{\ttfamily y1}) + ({\ttfamily x2},{\ttfamily y2}) = (({\ttfamily x1y2}+{\ttfamily y1x2})/(1+{\ttfamily dx1x2y1y2})),({\ttfamily y1y2}-\/{\ttfamily ax1x2})/(1-\/{\ttfamily dx1x2y1y2}))
+\item SCHEMA {\ttfamily  var a var d \texorpdfstring{$\vert$}{|} \texorpdfstring{$\vert$}{|} \texorpdfstring{$\vert$}{|} \texorpdfstring{$\vert$}{|} \+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+v\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+v\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+ input x1 -\/-\/-\/-\/\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|} \texorpdfstring{$\vert$}{|} input y1 -\/-\/-\/-\/\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|} Baby\+Add() \texorpdfstring{$\vert$}{|} -\/-\/-\/-\/\texorpdfstring{$>$}{>} output xout input x2 -\/-\/-\/-\/\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|} \texorpdfstring{$\vert$}{|} -\/-\/-\/-\/\texorpdfstring{$>$}{>} output yout input y2 -\/-\/-\/-\/\texorpdfstring{$>$}{>} \texorpdfstring{$\vert$}{|}\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\+\_\+\texorpdfstring{$\vert$}{|} }
+\item INPUTS
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Input   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Representation   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Input   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Representation   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-4}
+\endhead
+{\ttfamily x1}   &Bigint   &Field element of Fp   &First coordinate of a point (x1, y1) on E.    \\\cline{1-4}
+{\ttfamily y1}   &Bigint   &Field element of Fp   &Second coordinate of a point (x1, y1) on E.    \\\cline{1-4}
+{\ttfamily x2}   &Bigint   &Field element of Fp   &First coordinate of a point (x2, y2) on E.    \\\cline{1-4}
+{\ttfamily y2}   &Bigint   &Field element of Fp   &Second coordinate of a point (x2, y2) on E.   \\\cline{1-4}
+\end{longtabu}
+
+
+Requirement\+: at least {\ttfamily x1}!={\ttfamily x2} or {\ttfamily y1}!={\ttfamily y2}.
+
+
+\begin{DoxyItemize}
+\item OUTPUT
+\end{DoxyItemize}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Input   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Representation   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Input   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Representation   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }\\\cline{1-4}
+\endhead
+{\ttfamily xout}   &Bigint   &Field element of Fp   &First coordinate of the addition point (xout, yout) = (x1, y1) + (x2, y2).    \\\cline{1-4}
+{\ttfamily yout}   &Bigint   &Field element of Fp   &Second coordinate of the addition point (xout, yout) = (x1, y1) + (x2, y2).   \\\cline{1-4}
+\end{longtabu}
+
+
+
+\begin{DoxyItemize}
+\item BENCHMARKS (constraints)
+\item EXAMPLE
+\end{DoxyItemize}
+
+{\ttfamily Baby\+Dbl()}
+\begin{DoxyItemize}
+\item DESCRIPTION \+: doubles a point ({\ttfamily xout},{\ttfamily yout}) = 2\texorpdfstring{$\ast$}{*}({\ttfamily x},{\ttfamily y}).
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+
+{\ttfamily Baby\+Check()}
+
+
+\begin{DoxyItemize}
+\item DESCRIPTION \+: checks if a given point is in the curve.
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+
+{\ttfamily Baby\+Pbk()}
+
+
+\begin{DoxyItemize}
+\item DESCRIPTION\+: \+: given a private key, it returns the associated public key.
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10327}{}\doxysubsubsection{\texorpdfstring{binsub}{binsub}}\label{README.md_autotoc_md10327}
+
+\begin{DoxyItemize}
+\item {\ttfamily Bin\+Sub(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION\+: binary substraction.
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10328}{}\doxysubsubsection{\texorpdfstring{binsum}{binsum}}\label{README.md_autotoc_md10328}
+
+\begin{DoxyItemize}
+\item {\ttfamily nbits(a)}
+\begin{DoxyItemize}
+\item DESCRIPTION \+: binary sum.
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Bin\+Sum(n, ops)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10329}{}\doxysubsubsection{\texorpdfstring{bitify}{bitify}}\label{README.md_autotoc_md10329}
+
+\begin{DoxyItemize}
+\item {\ttfamily Num2\+Bits()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Num2\+Bits\+\_\+strict()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Bits2\+Num()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Bits2\+Num\+\_\+strict()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Num2\+Bits\+Neg()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10330}{}\doxysubsubsection{\texorpdfstring{comparators}{comparators}}\label{README.md_autotoc_md10330}
+
+\begin{DoxyItemize}
+\item {\ttfamily Is\+Zero()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Is\+Equal()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Force\+Equal\+If\+Enabled()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Less\+Than()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Greater\+Than()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Greater\+Eq\+Than()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10331}{}\doxysubsubsection{\texorpdfstring{compconstant}{compconstant}}\label{README.md_autotoc_md10331}
+
+\begin{DoxyItemize}
+\item {\ttfamily Comp\+Constant(ct)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10332}{}\doxysubsubsection{\texorpdfstring{eddsa}{eddsa}}\label{README.md_autotoc_md10332}
+Edwards Digital Signature Algorithm in Baby Jubjbub (link a eddsa)
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Ed\+DSAVerifier(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10333}{}\doxysubsubsection{\texorpdfstring{eddsamimc}{eddsamimc}}\label{README.md_autotoc_md10333}
+
+\begin{DoxyItemize}
+\item {\ttfamily Ed\+DSAMi\+MCVerifier()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10334}{}\doxysubsubsection{\texorpdfstring{eddsamimcsponge}{eddsamimcsponge}}\label{README.md_autotoc_md10334}
+
+\begin{DoxyItemize}
+\item {\ttfamily Ed\+DSAMi\+MCSponge\+Verifier()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10335}{}\doxysubsubsection{\texorpdfstring{eddsaposeidon}{eddsaposeidon}}\label{README.md_autotoc_md10335}
+
+\begin{DoxyItemize}
+\item {\ttfamily Ed\+DSAPoseidon\+Verifier()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10336}{}\doxysubsubsection{\texorpdfstring{escalarmul}{escalarmul}}\label{README.md_autotoc_md10336}
+
+\begin{DoxyItemize}
+\item {\ttfamily Escalar\+Mul\+Window(base, k)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Escalar\+Mul(n, base)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10337}{}\doxysubsubsection{\texorpdfstring{escalarmulany}{escalarmulany}}\label{README.md_autotoc_md10337}
+
+\begin{DoxyItemize}
+\item {\ttfamily Multiplexor2()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Bit\+Element\+Mul\+Any()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Segment\+Mul\+Any(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Escalar\+Mul\+Any(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10338}{}\doxysubsubsection{\texorpdfstring{escalarmulfix}{escalarmulfix}}\label{README.md_autotoc_md10338}
+
+\begin{DoxyItemize}
+\item {\ttfamily Window\+Mul\+Fix()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Segment\+Mul\+Fix(n\+Windows)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Escalar\+Mul\+Fix(n, BASE)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10339}{}\doxysubsubsection{\texorpdfstring{escalarmulw4table}{escalarmulw4table}}\label{README.md_autotoc_md10339}
+
+\begin{DoxyItemize}
+\item {\ttfamily point\+Add}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Escalar\+Mul\+W4\+Table}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10340}{}\doxysubsubsection{\texorpdfstring{gates}{gates}}\label{README.md_autotoc_md10340}
+
+\begin{DoxyItemize}
+\item {\ttfamily XOR}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily AND}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily OR}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily NOT}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily NAND}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily NOR}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Multi\+AND}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10341}{}\doxysubsubsection{\texorpdfstring{mimc}{mimc}}\label{README.md_autotoc_md10341}
+Implementation of Mi\+MC-\/7 hash in Fp being... (link to description of the hash)
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Mi\+MC7(nrounds)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Multi\+Mi\+MC7(n\+Inputs, n\+Rounds)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10342}{}\doxysubsubsection{\texorpdfstring{mimcsponge}{mimcsponge}}\label{README.md_autotoc_md10342}
+
+\begin{DoxyItemize}
+\item {\ttfamily Mi\+MCSponge(n\+Inputs, n\+Rounds, n\+Outputs)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Mi\+MCFeistel(nrounds)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10343}{}\doxysubsubsection{\texorpdfstring{montgomery}{montgomery}}\label{README.md_autotoc_md10343}
+
+\begin{DoxyItemize}
+\item {\ttfamily Edwards2\+Montgomery()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Montgomery2\+Edwards()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Montgomery\+Add()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Montgomery\+Double()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10344}{}\doxysubsubsection{\texorpdfstring{multiplexer}{multiplexer}}\label{README.md_autotoc_md10344}
+
+\begin{DoxyItemize}
+\item {\ttfamily log2(a)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Escalar\+Product(w)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Decoder(w)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Multiplexer(w\+In, n\+In)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10345}{}\doxysubsubsection{\texorpdfstring{mux1}{mux1}}\label{README.md_autotoc_md10345}
+
+\begin{DoxyItemize}
+\item {\ttfamily Multi\+Mux1(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Mux1()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10346}{}\doxysubsubsection{\texorpdfstring{mux2}{mux2}}\label{README.md_autotoc_md10346}
+
+\begin{DoxyItemize}
+\item {\ttfamily Multi\+Mux2(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Mux2()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10347}{}\doxysubsubsection{\texorpdfstring{mux3}{mux3}}\label{README.md_autotoc_md10347}
+
+\begin{DoxyItemize}
+\item {\ttfamily Multi\+Mux3(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Mux3()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10348}{}\doxysubsubsection{\texorpdfstring{mux4}{mux4}}\label{README.md_autotoc_md10348}
+
+\begin{DoxyItemize}
+\item {\ttfamily Multi\+Mux4(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Mux4()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10349}{}\doxysubsubsection{\texorpdfstring{pedersen\+\_\+old}{pedersen\+\_\+old}}\label{README.md_autotoc_md10349}
+Old version of the Pedersen hash (do not use any more?).\hypertarget{README.md_autotoc_md10350}{}\doxysubsubsection{\texorpdfstring{pedersen}{pedersen}}\label{README.md_autotoc_md10350}
+
+\begin{DoxyItemize}
+\item {\ttfamily Window4()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Segment(n\+Windows)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Pedersen(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10351}{}\doxysubsubsection{\texorpdfstring{pointbits}{pointbits}}\label{README.md_autotoc_md10351}
+
+\begin{DoxyItemize}
+\item {\ttfamily sqrt(n)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Bits2\+Point()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Bits2\+Point\+\_\+\+Strict()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Point2\+Bits}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Point2\+Bits\+\_\+\+Strict}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10352}{}\doxysubsubsection{\texorpdfstring{poseidon}{poseidon}}\label{README.md_autotoc_md10352}
+Implementation of Poseidon hash function (LINK)
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Sigma()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Ark(t, C, r)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Mix(t, M)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\item {\ttfamily Poseidon(n\+Inputs)}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10353}{}\doxysubsubsection{\texorpdfstring{sign}{sign}}\label{README.md_autotoc_md10353}
+
+\begin{DoxyItemize}
+\item {\ttfamily Sign()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md10354}{}\doxysubsubsection{\texorpdfstring{switcher}{switcher}}\label{README.md_autotoc_md10354}
+
+\begin{DoxyItemize}
+\item {\ttfamily Switcher()}
+\begin{DoxyItemize}
+\item DESCRIPTION
+\item SCHEMA
+\item INPUT
+\item OUTPUT
+\item BENCHMARKS
+\item EXAMPLE 
+\end{DoxyItemize}
+\end{DoxyItemize}

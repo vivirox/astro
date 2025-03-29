@@ -1,0 +1,67 @@
+\doxysection{node\+\_\+modules/reading-\/time Directory Reference}
+\hypertarget{dir_c03957bed148a7113bd219c41ee80797}{}\label{dir_c03957bed148a7113bd219c41ee80797}\index{node\_modules/reading-\/time Directory Reference@{node\_modules/reading-\/time Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.org/package/reading-time}{\texttt{ }} \href{https://travis-ci.org/ngryman/reading-time}{\texttt{ }}
+
+~\newline
+
+
+\href{https://medium.com}{\texttt{ Medium}}\textquotesingle{}s like reading time estimation.
+
+{\ttfamily reading-\/time} helps you estimate how long an article will take to read. It works perfectly with plain text, but also with {\ttfamily markdown} or {\ttfamily html}.
+
+Note that it\textquotesingle{}s focused on performance and simplicity, so the number of words it will extract from other formats than plain text can vary a little. But this is an estimation right?\hypertarget{README.md_autotoc_md27392}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md27392}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ reading-\/time\ -\/-\/production}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md27393}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md27393}
+\hypertarget{README.md_autotoc_md27394}{}\doxysubsubsection{\texorpdfstring{Classic}{Classic}}\label{README.md_autotoc_md27394}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ readingTime\ =\ require('reading-\/time');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stats\ =\ readingTime(text);}
+\DoxyCodeLine{//\ -\/>}
+\DoxyCodeLine{//\ stats:\ \{}
+\DoxyCodeLine{//\ \ \ text:\ '1\ min\ read',}
+\DoxyCodeLine{//\ \ \ minutes:\ 1,}
+\DoxyCodeLine{//\ \ \ time:\ 60000,}
+\DoxyCodeLine{//\ \ \ words:\ 200}
+\DoxyCodeLine{//\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md27395}{}\doxysubsubsection{\texorpdfstring{Stream}{Stream}}\label{README.md_autotoc_md27395}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{readingTimeStream\}\ =\ require('reading-\/time');}
+\DoxyCodeLine{}
+\DoxyCodeLine{fs.createReadStream('foo')}
+\DoxyCodeLine{\ \ .pipe(readingTimeStream)}
+\DoxyCodeLine{\ \ .on('data',\ stats\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md27396}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md27396}
+{\ttfamily reading\+Time(text, options?)}
+
+
+\begin{DoxyItemize}
+\item {\ttfamily text}\+: the text to analyze
+\item options (optional)
+\begin{DoxyItemize}
+\item {\ttfamily options.\+words\+Per\+Minute}\+: (optional) the words per minute an average reader can read (default\+: 200)
+\item {\ttfamily options.\+word\+Bound}\+: (optional) a function that returns a boolean value depending on if a character is considered as a word bound (default\+: spaces, new lines and tabulations)
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md27397}{}\doxysubsection{\texorpdfstring{Help wanted!}{Help wanted!}}\label{README.md_autotoc_md27397}
+This library has been optimized for alphabetical languages and CJK languages, but may not behave correctly for other languages that don\textquotesingle{}t use spaces for work bounds. If you find the behavior of this library to deviate significantly from your expectation, issues or contributions are welcomed!\hypertarget{README.md_autotoc_md27398}{}\doxysubsection{\texorpdfstring{Other projects}{Other projects}}\label{README.md_autotoc_md27398}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/ngryman/fauda}{\texttt{ Fauda}}\+: configuration made simple.
+\item \href{https://github.com/ngryman/badge-size}{\texttt{ Badge Size}}\+: Displays the size of a given file in your repository.
+\item \href{https://github.com/ngryman/cz-emoji}{\texttt{ Commitizen Emoji}}\+: Commitizen adapter formatting commit messages using emojis. 
+\end{DoxyItemize}

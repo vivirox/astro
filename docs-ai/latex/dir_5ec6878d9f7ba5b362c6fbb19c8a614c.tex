@@ -1,0 +1,51 @@
+\doxysection{node\+\_\+modules/signal-\/exit Directory Reference}
+\hypertarget{dir_5ec6878d9f7ba5b362c6fbb19c8a614c}{}\label{dir_5ec6878d9f7ba5b362c6fbb19c8a614c}\index{node\_modules/signal-\/exit Directory Reference@{node\_modules/signal-\/exit Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+When you want to fire an event no matter how a process exits\+:
+
+
+\begin{DoxyItemize}
+\item reaching the end of execution.
+\item explicitly having {\ttfamily process.\+exit(code)} called.
+\item having {\ttfamily process.\+kill(pid, sig)} called.
+\item receiving a fatal signal from outside the process
+\end{DoxyItemize}
+
+Use {\ttfamily signal-\/exit}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Hybrid\ module,\ either\ works}
+\DoxyCodeLine{import\ \{\ onExit\ \}\ from\ 'signal-\/exit'}
+\DoxyCodeLine{//\ or:}
+\DoxyCodeLine{//\ const\ \{\ onExit\ \}\ =\ require('signal-\/exit')}
+\DoxyCodeLine{}
+\DoxyCodeLine{onExit((code,\ signal)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('process\ exited!',\ code,\ signal)}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30722}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md30722}
+{\ttfamily remove = on\+Exit((code, signal) =\texorpdfstring{$>$}{>} \{\}, options)}
+
+The return value of the function is a function that will remove the handler.
+
+Note that the function {\itshape only} fires for signals if the signal would cause the process to exit. That is, there are no other listeners, and it is a fatal signal.
+
+If the global {\ttfamily process} object is not suitable for this purpose (ie, it\textquotesingle{}s unset, or doesn\textquotesingle{}t have an {\ttfamily emit} method, etc.) then the {\ttfamily on\+Exit} function is a no-\/op that returns a no-\/op {\ttfamily remove} method.\hypertarget{README.md_autotoc_md30723}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md30723}
+
+\begin{DoxyItemize}
+\item {\ttfamily always\+Last}\+: Run this handler after any other signal or exit handlers. This causes {\ttfamily process.\+emit} to be monkeypatched.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md30724}{}\doxysubsubsection{\texorpdfstring{Capturing Signal Exits}{Capturing Signal Exits}}\label{README.md_autotoc_md30724}
+If the handler returns an exact boolean {\ttfamily true}, and the exit is a due to signal, then the signal will be considered handled, and will {\itshape not} trigger a synthetic {\ttfamily process.\+kill(process.\+pid, signal)} after firing the {\ttfamily on\+Exit} handlers.
+
+In this case, it your responsibility as the caller to exit with a signal (for example, by calling {\ttfamily process.\+kill()}) if you wish to preserve the same exit status that would otherwise have occurred. If you do not, then the process will likely exit gracefully with status 0 at some point, assuming that no other terminating signal or other exit trigger occurs.
+
+Prior to calling handlers, the {\ttfamily on\+Exit} machinery is unloaded, so any subsequent exits or signals will not be handled, even if the signal is captured and the exit is thus prevented.
+
+Note that numeric code exits may indicate that the process is already committed to exiting, for example due to a fatal exception or unhandled promise rejection, and so there is no way to prevent it safely.\hypertarget{README.md_autotoc_md30725}{}\doxysubsubsection{\texorpdfstring{Browser Fallback}{Browser Fallback}}\label{README.md_autotoc_md30725}
+The `\textquotesingle{}signal-\/exit/browser'\`{} module is the same fallback shim that just doesn\textquotesingle{}t do anything, but presents the same function interface.
+
+Patches welcome to add something that hooks onto {\ttfamily window.\+onbeforeunload} or similar, but it might just not be a thing that makes sense there. 

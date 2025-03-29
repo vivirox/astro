@@ -1,0 +1,1027 @@
+\doxysection{node\+\_\+modules/@mdx-\/js/mdx Directory Reference}
+\hypertarget{dir_84f9a9ac4a085a9467b17216146d11d8}{}\label{dir_84f9a9ac4a085a9467b17216146d11d8}\index{node\_modules/"@mdx-\/js/mdx Directory Reference@{node\_modules/"@mdx-\/js/mdx Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_fe65bd4b35466ab2af90816853dc2568}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/mdx-js/mdx/actions}{\texttt{ }} \href{https://codecov.io/github/mdx-js/mdx}{\texttt{ }} \href{https://www.npmjs.com/package/@mdx-js/mdx}{\texttt{ }} \href{https://bundlejs.com/?q=@mdx-js/mdx}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/mdx-js/mdx/discussions}{\texttt{ }}
+
+MDX compiler.\hypertarget{readme.md_autotoc_md4923}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md4923}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}compile(file, options?)\`{}
+\item \`{}compile\+Sync(file, options?)\`{}
+\item \`{}create\+Processor(options?)\`{}
+\item \`{}evaluate(file, options)\`{}
+\item \`{}evaluate\+Sync(file, options)\`{}
+\item \`{}node\+Types\`{}
+\item \`{}run(code, options)\`{}
+\item \`{}run\+Sync(code, options)\`{}
+\item \`{}\+Compile\+Options\`{}
+\item \`{}\+Evaluate\+Options\`{}
+\item \`{}\+Fragment\`{}
+\item \`{}\+Jsx\`{}
+\item \`{}\+Jsx\+Dev\`{}
+\item \`{}\+Processor\+Options\`{}
+\item \`{}\+Run\+Options\`{}
+\item \`{}\+Use\+Mdx\+Components\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Architecture
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4924}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md4924}
+This package is a compiler that turns MDX into Java\+Script. It can also evaluate MDX code.\hypertarget{readme.md_autotoc_md4925}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md4925}
+This is the core compiler for turning MDX into Java\+Script which gives you the most control. If you’re using a bundler (Rollup, esbuild, webpack), a site builder (Next.\+js), or build system (Vite) which comes with a bundler, you’re better off using an integration\+: see \href{https://mdxjs.com/getting-started/\#integrations}{\texttt{ § Integrations}}.\hypertarget{readme.md_autotoc_md4926}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md4926}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @mdx-\/js/mdx}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{compile\}\ from\ 'https://esm.sh/@mdx-\/js/mdx@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{compile\}\ from\ 'https://esm.sh/@mdx-\/js/mdx@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4927}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md4927}
+Say we have an MDX document, {\ttfamily example.\+mdx}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ function\ Thing()\ \{}
+\DoxyCodeLine{\ \ return\ <>World!</>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Hello,\ <Thing\ />}
+
+\end{DoxyCode}
+
+
+…and some code in {\ttfamily example.\+js} to compile {\ttfamily example.\+mdx} to Java\+Script\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{compile\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ compiled\ =\ await\ compile(await\ fs.readFile('example.mdx'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(compiled))}
+
+\end{DoxyCode}
+
+
+Yields roughly\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{Fragment\ as\ \_Fragment,\ jsx\ as\ \_jsx,\ jsxs\ as\ \_jsxs\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ Thing()\ \{}
+\DoxyCodeLine{\ \ return\ \_jsx(\_Fragment,\ \{children:\ 'World!'\})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ \_createMdxContent(props)\ \{}
+\DoxyCodeLine{\ \ const\ \_components\ =\ \{h1:\ 'h1',\ ...props.components\}}
+\DoxyCodeLine{\ \ return\ \_jsxs(\_components.h1,\ \{children:\ ['Hello,\ ',\ \_jsx(Thing,\ \{\})]\})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ function\ MDXContent(props\ =\ \{\})\ \{}
+\DoxyCodeLine{\ \ const\ \{wrapper:\ MDXLayout\}\ =\ props.components\ ||\ \{\}}
+\DoxyCodeLine{\ \ return\ MDXLayout}
+\DoxyCodeLine{\ \ \ \ ?\ \_jsx(MDXLayout,\ \{...props,\ children:\ \_jsx(\_createMdxContent,\ \{...props\})\})}
+\DoxyCodeLine{\ \ \ \ :\ \_createMdxContent(props)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+See \href{https://mdxjs.com/docs/using-mdx/}{\texttt{ § Using MDX}} for more on how MDX work and how to use the result.\hypertarget{readme.md_autotoc_md4928}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md4928}
+This package exports the following identifiers\+: \`{}compile\`{}, \`{}compile\+Sync\`{}, \`{}create\+Processor\`{}, \`{}evaluate\`{}, \`{}evaluate\+Sync\`{}, \`{}node\+Types\`{}, \`{}run\`{}, and \`{}run\+Sync\`{}. There is no default export.\hypertarget{readme.md_autotoc_md4929}{}\doxysubsubsection{\texorpdfstring{{\ttfamily compile(file, options?)}}{{\ttfamily compile(file, options?)}}}\label{readme.md_autotoc_md4929}
+Compile MDX to JS.\hypertarget{readme.md_autotoc_md4930}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4930}
+
+\begin{DoxyItemize}
+\item {\ttfamily file} (\href{https://github.com/vfile/vfile\#compatible}{\texttt{ {\ttfamily Compatible} from {\ttfamily vfile}}}) — MDX document to parse
+\item {\ttfamily options} (\`{}\+Compile\+Options\`{}, optional) — compile configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4931}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4931}
+Promise to compiled file (\href{https://github.com/vfile/vfile}{\texttt{ {\ttfamily Promise\texorpdfstring{$<$}{<}VFile\texorpdfstring{$>$}{>}}}}).\hypertarget{readme.md_autotoc_md4932}{}\doxysubsubsubsubsubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md4932}
+The input value for {\ttfamily file} can be many different things. You can pass a {\ttfamily string}, {\ttfamily Uint8\+Array} in UTF-\/8, \href{https://github.com/vfile/vfile}{\texttt{ {\ttfamily VFile}}}, or anything that can be given to {\ttfamily new VFile}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{compile\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{import\ \{VFile\}\ from\ 'vfile'}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ compile(':)')}
+\DoxyCodeLine{await\ compile(Buffer.from(':-\/)'))}
+\DoxyCodeLine{await\ compile(\{path:\ 'path/to/file.mdx',\ value:\ '🥳'\})}
+\DoxyCodeLine{await\ compile(new\ VFile(\{path:\ 'path/to/file.mdx',\ value:\ '🤭'\}))}
+
+\end{DoxyCode}
+
+
+The output {\ttfamily VFile} can be used to access more than the generated code\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{compile\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{import\ remarkPresetLintConsistent\ from\ 'remark-\/preset-\/lint-\/consistent'\ //\ Lint\ rules\ to\ check\ for\ consistent\ markdown.}
+\DoxyCodeLine{import\ \{reporter\}\ from\ 'vfile-\/reporter'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ compile('*like\ this*\ or\ \_like\ this\_?',\ \{remarkPlugins:\ [remarkPresetLintConsistent]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.error(reporter(file))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ 1:16-\/1:27\ \ warning\ \ Emphasis\ should\ use\ \`{}*\`{}\ as\ a\ marker\ \ emphasis-\/marker\ \ remark-\/lint}
+\DoxyCodeLine{}
+\DoxyCodeLine{⚠\ 1\ warning}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4933}{}\doxysubsubsection{\texorpdfstring{{\ttfamily compile\+Sync(file, options?)}}{{\ttfamily compile\+Sync(file, options?)}}}\label{readme.md_autotoc_md4933}
+Synchronously compile MDX to JS.
+
+When possible please use the async \`{}compile\`{}.\hypertarget{readme.md_autotoc_md4934}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4934}
+
+\begin{DoxyItemize}
+\item {\ttfamily file} (\href{https://github.com/vfile/vfile\#compatible}{\texttt{ {\ttfamily Compatible} from {\ttfamily vfile}}}) — MDX document to parse
+\item {\ttfamily options} (\`{}\+Compile\+Options\`{}, optional) — compile configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4935}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4935}
+Compiled file (\href{https://github.com/vfile/vfile}{\texttt{ {\ttfamily VFile}}}).\hypertarget{readme.md_autotoc_md4936}{}\doxysubsubsection{\texorpdfstring{{\ttfamily create\+Processor(options?)}}{{\ttfamily create\+Processor(options?)}}}\label{readme.md_autotoc_md4936}
+Create a processor to compile markdown or MDX to Java\+Script.
+
+\begin{quote}
+{\bfseries{Note}}\+: `format\+: \textquotesingle{}detect'{\ttfamily is not allowed in}Processor\+Options\`{}. \end{quote}
+\hypertarget{readme.md_autotoc_md4937}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4937}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\`{}\+Processor\+Options\`{}, optional) — process configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4938}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4938}
+Processor (\href{https://github.com/unifiedjs/unified\#processor}{\texttt{ {\ttfamily Processor} from {\ttfamily unified}}}).\hypertarget{readme.md_autotoc_md4939}{}\doxysubsubsection{\texorpdfstring{{\ttfamily evaluate(file, options)}}{{\ttfamily evaluate(file, options)}}}\label{readme.md_autotoc_md4939}
+Compile and run MDX.
+
+When you trust your content, {\ttfamily evaluate} can work. When possible, use \`{}compile\`{}, write to a file, and then run with Node or use one of the \href{https://mdxjs.com/getting-started/\#integrations}{\texttt{ § Integrations}}.
+
+\begin{quote}
+☢️ {\bfseries{Danger}}\+: it’s called {\bfseries{evaluate}} because it {\ttfamily eval}s Java\+Script. \end{quote}
+\hypertarget{readme.md_autotoc_md4940}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4940}
+
+\begin{DoxyItemize}
+\item {\ttfamily file} (\href{https://github.com/vfile/vfile\#compatible}{\texttt{ {\ttfamily Compatible} from {\ttfamily vfile}}}) — MDX document to parse
+\item {\ttfamily options} (\`{}\+Evaluate\+Options\`{}, {\bfseries{required}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4941}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4941}
+Promise to a module (\href{https://github.com/DefinitelyTyped/DefinitelyTyped/blob/HEAD/types/mdx/types.d.ts\#L101}{\texttt{ {\ttfamily Promise\texorpdfstring{$<$}{<}MDXModule\texorpdfstring{$>$}{>}} from {\ttfamily mdx/types.\+js}}}).
+
+The result is an object with a {\ttfamily default} field set to the component; anything else that was exported is available too. For example, assuming the contents of {\ttfamily example.\+mdx} from § Use was in {\ttfamily file}, then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{evaluate\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{import\ *\ as\ runtime\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(await\ evaluate(file,\ runtime))}
+
+\end{DoxyCode}
+
+
+…yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{Thing:\ [Function:\ Thing],\ default:\ [Function:\ MDXContent]\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4942}{}\doxysubsubsubsubsubsection{\texorpdfstring{Notes}{Notes}}\label{readme.md_autotoc_md4942}
+Compiling (and running) MDX takes time.
+
+If you are live-\/rendering a string of MDX that often changes using a virtual DOM based framework (such as React), one performance improvement is to call the {\ttfamily MDXContent} component yourself. The reason is that the {\ttfamily evaluate} creates a new function each time, which cannot be diffed\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ const\ \{default:\ MDXContent\}\ =\ await\ evaluate('…')}
+\DoxyCodeLine{}
+\DoxyCodeLine{-\/<MDXContent\ \{...props\}\ />}
+\DoxyCodeLine{+MDXContent(props)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4943}{}\doxysubsubsection{\texorpdfstring{{\ttfamily evaluate\+Sync(file, options)}}{{\ttfamily evaluate\+Sync(file, options)}}}\label{readme.md_autotoc_md4943}
+Compile and run MDX, synchronously.
+
+When possible please use the async \`{}evaluate\`{}.
+
+\begin{quote}
+☢️ {\bfseries{Danger}}\+: it’s called {\bfseries{evaluate}} because it {\ttfamily eval}s Java\+Script. \end{quote}
+\hypertarget{readme.md_autotoc_md4944}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4944}
+
+\begin{DoxyItemize}
+\item {\ttfamily file} (\href{https://github.com/vfile/vfile\#compatible}{\texttt{ {\ttfamily Compatible} from {\ttfamily vfile}}}) — MDX document to parse
+\item {\ttfamily options} (\`{}\+Evaluate\+Options\`{}, {\bfseries{required}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4945}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4945}
+Module (\href{https://github.com/DefinitelyTyped/DefinitelyTyped/blob/HEAD/types/mdx/types.d.ts\#L101}{\texttt{ {\ttfamily MDXModule} from {\ttfamily mdx/types.\+js}}}).\hypertarget{readme.md_autotoc_md4946}{}\doxysubsubsection{\texorpdfstring{{\ttfamily node\+Types}}{{\ttfamily node\+Types}}}\label{readme.md_autotoc_md4946}
+List of node types made by {\ttfamily mdast-\/util-\/mdx}, which have to be passed through untouched from the mdast tree to the hast tree ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}).\hypertarget{readme.md_autotoc_md4947}{}\doxysubsubsection{\texorpdfstring{{\ttfamily run(code, options)}}{{\ttfamily run(code, options)}}}\label{readme.md_autotoc_md4947}
+Run code compiled with `output\+Format\+: \textquotesingle{}function-\/body'\`{}.
+
+\begin{quote}
+☢️ {\bfseries{Danger}}\+: this {\ttfamily eval}s Java\+Script. \end{quote}
+\hypertarget{readme.md_autotoc_md4948}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4948}
+
+\begin{DoxyItemize}
+\item {\ttfamily code} (\href{https://github.com/vfile/vfile}{\texttt{ {\ttfamily VFile}}} or {\ttfamily string}) — Java\+Script function body to run
+\item {\ttfamily options} (\`{}\+Run\+Options\`{}, {\bfseries{required}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4949}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4949}
+Promise to a module (\href{https://github.com/DefinitelyTyped/DefinitelyTyped/blob/HEAD/types/mdx/types.d.ts\#L101}{\texttt{ {\ttfamily Promise\texorpdfstring{$<$}{<}MDXModule\texorpdfstring{$>$}{>}} from {\ttfamily mdx/types.\+js}}}); the result is an object with a {\ttfamily default} field set to the component; anything else that was exported is available too.\hypertarget{readme.md_autotoc_md4950}{}\doxysubsubsubsubsubsection{\texorpdfstring{Example}{Example}}\label{readme.md_autotoc_md4950}
+On the server\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{compile\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ code\ =\ String(await\ compile('\#\ hi',\ \{outputFormat:\ 'function-\/body'\}))}
+\DoxyCodeLine{//\ To\ do:\ send\ \`{}code`\ to\ the\ client\ somehow.}
+
+\end{DoxyCode}
+
+
+On the client\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{run\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{import\ *\ as\ runtime\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ code\ =\ ''\ //\ To\ do:\ get\ \`{}code`\ from\ server\ somehow.}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{default:\ Content\}\ =\ await\ run(code,\ \{...runtime,\ baseUrl:\ import.meta.url\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(Content)}
+
+\end{DoxyCode}
+
+
+…yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[Function:\ MDXContent]}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4951}{}\doxysubsubsection{\texorpdfstring{{\ttfamily run\+Sync(code, options)}}{{\ttfamily run\+Sync(code, options)}}}\label{readme.md_autotoc_md4951}
+Run code, synchronously.
+
+When possible please use the async \`{}run\`{}.
+
+\begin{quote}
+☢️ {\bfseries{Danger}}\+: this {\ttfamily eval}s Java\+Script. \end{quote}
+\hypertarget{readme.md_autotoc_md4952}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4952}
+
+\begin{DoxyItemize}
+\item {\ttfamily code} (\href{https://github.com/vfile/vfile}{\texttt{ {\ttfamily VFile}}} or {\ttfamily string}) — Java\+Script function body to run
+\item {\ttfamily options} (\`{}\+Run\+Options\`{}, {\bfseries{required}}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4953}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4953}
+Module (\href{https://github.com/DefinitelyTyped/DefinitelyTyped/blob/HEAD/types/mdx/types.d.ts\#L101}{\texttt{ {\ttfamily MDXModule} from {\ttfamily mdx/types.\+js}}}).\hypertarget{readme.md_autotoc_md4954}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Compile\+Options}}{{\ttfamily Compile\+Options}}}\label{readme.md_autotoc_md4954}
+Configuration for {\ttfamily compile} (Type\+Script type).
+
+{\ttfamily Compile\+Options} is the same as \`{}\+Processor\+Options\`{} with the exception that the {\ttfamily format} option supports a `\textquotesingle{}detect'{\ttfamily value, which is the default. The}\textquotesingle{}detect\textquotesingle{}{\ttfamily format means to use}\textquotesingle{}md\textquotesingle{}{\ttfamily for files with an extension in }md\+Extensions{\ttfamily and}\textquotesingle{}mdx\textquotesingle{}\`{} otherwise.\hypertarget{readme.md_autotoc_md4955}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md4955}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Configuration\ for\ \`{}compile`}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{type\ CompileOptions\ =\ Omit<ProcessorOptions,\ 'format'>\ \&\ \{}
+\DoxyCodeLine{\ \ /**}
+\DoxyCodeLine{\ \ \ *\ Format\ of\ \`{}file`\ (default:\ \`{}'detect'`).}
+\DoxyCodeLine{\ \ \ */}
+\DoxyCodeLine{\ \ format?:\ 'detect'\ |\ 'md'\ |\ 'mdx'\ |\ null\ |\ undefined}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4956}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Evaluate\+Options}}{{\ttfamily Evaluate\+Options}}}\label{readme.md_autotoc_md4956}
+Configuration for {\ttfamily evaluate} (Type\+Script type).
+
+{\ttfamily Evaluate\+Options} is the same as \`{}\+Compile\+Options\`{}, except that the options {\ttfamily base\+Url}, {\ttfamily jsx}, {\ttfamily jsx\+Import\+Source}, {\ttfamily jsx\+Runtime}, {\ttfamily output\+Format}, {\ttfamily pragma}, {\ttfamily pragma\+Frag}, {\ttfamily pragma\+Import\+Source}, and {\ttfamily provider\+Import\+Source} are not allowed, and that \`{}\+Run\+Options\`{} are also used.\hypertarget{readme.md_autotoc_md4957}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md4957}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Configuration\ for\ \`{}evaluate`.}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{type\ EvaluateOptions\ =\ Omit<}
+\DoxyCodeLine{\ \ CompileOptions,}
+\DoxyCodeLine{\ \ |\ 'baseUrl'\ //\ Note\ that\ this\ is\ also\ in\ \`{}RunOptions`.}
+\DoxyCodeLine{\ \ |\ 'jsx'}
+\DoxyCodeLine{\ \ |\ 'jsxImportSource'}
+\DoxyCodeLine{\ \ |\ 'jsxRuntime'}
+\DoxyCodeLine{\ \ |\ 'outputFormat'}
+\DoxyCodeLine{\ \ |\ 'pragma'}
+\DoxyCodeLine{\ \ |\ 'pragmaFrag'}
+\DoxyCodeLine{\ \ |\ 'pragmaImportSource'}
+\DoxyCodeLine{\ \ |\ 'providerImportSource'}
+\DoxyCodeLine{>\ \&}
+\DoxyCodeLine{\ \ RunOptions}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4958}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Fragment}}{{\ttfamily Fragment}}}\label{readme.md_autotoc_md4958}
+Represent the children, typically a symbol (Type\+Script type).\hypertarget{readme.md_autotoc_md4959}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md4959}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Fragment\ =\ unknown}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4960}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Jsx}}{{\ttfamily Jsx}}}\label{readme.md_autotoc_md4960}
+Create a production element (Type\+Script type).\hypertarget{readme.md_autotoc_md4961}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4961}
+
+\begin{DoxyItemize}
+\item {\ttfamily type} ({\ttfamily unknown}) — element type\+: {\ttfamily Fragment} symbol, tag name ({\ttfamily string}), component
+\item {\ttfamily properties} ({\ttfamily Properties}) — element properties and {\ttfamily children}
+\item {\ttfamily key} ({\ttfamily string} or {\ttfamily undefined}) — key to use
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4962}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4962}
+Element from your framework ({\ttfamily JSX.\+Element}).\hypertarget{readme.md_autotoc_md4963}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Jsx\+Dev}}{{\ttfamily Jsx\+Dev}}}\label{readme.md_autotoc_md4963}
+Create a development element (Type\+Script type).\hypertarget{readme.md_autotoc_md4964}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4964}
+
+\begin{DoxyItemize}
+\item {\ttfamily type} ({\ttfamily unknown}) — element type\+: {\ttfamily Fragment} symbol, tag name ({\ttfamily string}), component
+\item {\ttfamily properties} ({\ttfamily Properties}) — element properties and {\ttfamily children}
+\item {\ttfamily key} ({\ttfamily string} or {\ttfamily undefined}) — key to use
+\item {\ttfamily is\+Static\+Children} ({\ttfamily boolean}) — whether two or more children are passed (in an array), which is whether {\ttfamily jsxs} or {\ttfamily jsx} would be used
+\item {\ttfamily source} ({\ttfamily Source}) — info about source
+\item {\ttfamily self} ({\ttfamily unknown}) — context object ({\ttfamily this})
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4965}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Processor\+Options}}{{\ttfamily Processor\+Options}}}\label{readme.md_autotoc_md4965}
+Configuration for {\ttfamily create\+Processor} (Type\+Script type).\hypertarget{readme.md_autotoc_md4966}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md4966}
+
+\begin{DoxyItemize}
+\item {\ttfamily Source\+Map\+Generator} ({\ttfamily Source\+Map\+Generator} from \href{https://github.com/mozilla/source-map}{\texttt{ {\ttfamily source-\/map}}}, optional) — add a source map (object form) as the {\ttfamily map} field on the resulting file
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+Assuming {\ttfamily example.\+mdx} from § Use exists, then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{compile\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{import\ \{SourceMapGenerator\}\ from\ 'source-\/map'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ compile(}
+\DoxyCodeLine{\ \ \{path:\ 'example.mdx',\ value:\ await\ fs.readFile('example.mdx')\},}
+\DoxyCodeLine{\ \ \{SourceMapGenerator\}}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(file.map)}
+
+\end{DoxyCode}
+
+
+…yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ file:\ 'example.mdx',}
+\DoxyCodeLine{\ \ mappings:\ ';;aAAaA,QAAQ;YAAQ;;;;;;;;iBAE3B',}
+\DoxyCodeLine{\ \ names:\ ['Thing'],}
+\DoxyCodeLine{\ \ sources:\ ['example.mdx'],}
+\DoxyCodeLine{\ \ version:\ 3}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily base\+Url} ({\ttfamily URL} or {\ttfamily string}, optional, example\+: {\ttfamily import.\+meta.\+url}) — use this URL as {\ttfamily import.\+meta.\+url} and resolve {\ttfamily import} and {\ttfamily export … from} relative to it
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+Say we have a module {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{compile\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ code\ =\ 'export\ \{number\}\ from\ "{}./data.js"{}\(\backslash\)n\(\backslash\)n\#\ hi'}
+\DoxyCodeLine{const\ baseUrl\ =\ 'https://a.full/url'\ //\ Typically\ \`{}import.meta.url`}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(await\ compile(code,\ \{baseUrl\})))}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{jsx\ as\ \_jsx\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{export\ \{number\}\ from\ 'https://a.full/data.js'}
+\DoxyCodeLine{function\ \_createMdxContent(props)\ \{\ /*\ …\ */\ \}}
+\DoxyCodeLine{export\ default\ function\ MDXContent(props\ =\ \{\})\ \{\ /*\ …\ */\ \}}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily development} ({\ttfamily boolean}, default\+: {\ttfamily false}) — whether to add extra info to error messages in generated code and use the development automatic JSX runtime ({\ttfamily Fragment} and {\ttfamily jsx\+DEV} from {\ttfamily /jsx-\/dev-\/runtime}); when using the webpack loader ({\ttfamily @mdx-\/js/loader}) or the Rollup integration ({\ttfamily @mdx-\/js/rollup}) through Vite, this is automatically inferred from how you configure those tools
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+Say we had some MDX that references a component that can be passed or provided at runtime\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{**Note**<NoteIcon\ />:\ some\ stuff.}
+
+\end{DoxyCode}
+
+
+And a module to evaluate that\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{evaluate\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{import\ *\ as\ runtime\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ path\ =\ 'example.mdx'}
+\DoxyCodeLine{const\ value\ =\ await\ fs.readFile(path)}
+\DoxyCodeLine{const\ MDXContent\ =\ (await\ evaluate(\{path,\ value\},\ \{...runtime,\ baseUrl:\ import.meta.url\})).default}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(MDXContent(\{\}))}
+
+\end{DoxyCode}
+
+
+…running that would normally (production) yield\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Error:\ Expected\ component\ \`{}NoteIcon\`{}\ to\ be\ defined:\ you\ likely\ forgot\ to\ \textcolor{keyword}{import},\ pass,\ or\ provide\ it.}
+\DoxyCodeLine{\ \ \ \ at\ \_missingMdxReference\ (eval\ at\ run\ (…/@mdx-\/js/mdx/lib/run.js:18:10),\ <anonymous>:27:9)}
+\DoxyCodeLine{\ \ \ \ at\ \_createMdxContent\ (eval\ at\ run\ (…/@mdx-\/js/mdx/lib/run.js:18:10),\ <anonymous>:15:20)}
+\DoxyCodeLine{\ \ \ \ at\ MDXContent\ (eval\ at\ run\ (…/@mdx-\/js/mdx/lib/run.js:18:10),\ <anonymous>:9:9)}
+\DoxyCodeLine{\ \ \ \ at\ \mbox{\hyperlink{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}}\ (…/example.js:11:15)}
+
+\end{DoxyCode}
+
+
+…but if we add {\ttfamily development\+: true} to our example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{@@\ -\/7,6\ +7,6\ @@}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{-\/import\ *\ as\ runtime\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{+import\ *\ as\ runtime\ from\ 'react/jsx-\/dev-\/runtime'}
+\DoxyCodeLine{import\ \{evaluate\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ path\ =\ 'example.mdx'}
+\DoxyCodeLine{const\ value\ =\ await\ fs.readFile(path)}
+\DoxyCodeLine{-\/const\ MDXContent\ =\ (await\ evaluate(\{path,\ value\},\ \{...runtime,\ baseUrl:\ import.meta.url\})).default}
+\DoxyCodeLine{+const\ MDXContent\ =\ (await\ evaluate(\{path,\ value\},\ \{development:\ true,\ ...runtime,\ baseUrl:\ import.meta.url\})).default}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(MDXContent(\{\}))}
+
+\end{DoxyCode}
+
+
+…and we’d run it again, we’d get\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Error:\ Expected\ component\ \`{}NoteIcon\`{}\ to\ be\ defined:\ you\ likely\ forgot\ to\ \textcolor{keyword}{import},\ pass,\ or\ provide\ it.}
+\DoxyCodeLine{It’s\ referenced\ in\ your\ code\ at\ \`{}1:9-\/1:21\`{}\ in\ \`{}example.mdx\`{}}
+\DoxyCodeLine{provide\ it.}
+\DoxyCodeLine{\ \ \ \ at\ \_missingMdxReference\ (eval\ at\ run\ (…/@mdx-\/js/mdx/lib/run.js:18:10),\ <anonymous>:27:9)}
+\DoxyCodeLine{\ \ \ \ at\ \_createMdxContent\ (eval\ at\ run\ (…/@mdx-\/js/mdx/lib/run.js:18:10),\ <anonymous>:15:20)}
+\DoxyCodeLine{\ \ \ \ at\ MDXContent\ (eval\ at\ run\ (…/@mdx-\/js/mdx/lib/run.js:18:10),\ <anonymous>:9:9)}
+\DoxyCodeLine{\ \ \ \ at\ \mbox{\hyperlink{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}}\ (…/example.js:11:15)}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily element\+Attribute\+Name\+Case} (`\textquotesingle{}html'{\ttfamily or}\textquotesingle{}react{\ttfamily , default\+:}\textquotesingle{}react\textquotesingle{}{\ttfamily ) — casing to use for attribute names; HTML casing is for example}class{\ttfamily ,}stroke-\/linecap{\ttfamily ,}xml\+:lang{\ttfamily ; React casing is for example}class\+Name{\ttfamily ,}stroke\+Linecap{\ttfamily ,}xml\+Lang\`{}; for JSX components written in MDX, the author has to be aware of which framework they use and write code accordingly; for AST nodes generated by this project, this option configures it
+\item {\ttfamily format} (`\textquotesingle{}md'{\ttfamily or}\textquotesingle{}mdx\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}mdx\textquotesingle{}{\ttfamily ) — format of the file; }\textquotesingle{}md\textquotesingle{}{\ttfamily means treat as markdown and}\textquotesingle{}mdx\textquotesingle{}\`{} means treat as \href{https://mdxjs.com/docs/what-is-mdx/\#mdx-syntax}{\texttt{ MDX}}
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{compile('…')\ //\ Seen\ as\ MDX.}
+\DoxyCodeLine{compile('…',\ \{format:\ 'mdx'\})\ //\ Seen\ as\ MDX.}
+\DoxyCodeLine{compile('…',\ \{format:\ 'md'\})\ //\ Seen\ as\ markdown.}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily jsx} ({\ttfamily boolean}, default\+: {\ttfamily false}) — whether to keep JSX; the default is to compile JSX away so that the resulting file is immediately runnable.
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+If {\ttfamily file} is the contents of {\ttfamily example.\+mdx} from § Use, then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{compile(file,\ \{jsx:\ true\})}
+
+\end{DoxyCode}
+
+
+…yields this difference\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/import\ \{Fragment\ as\ \_Fragment,\ jsx\ as\ \_jsx,\ jsxs\ as\ \_jsxs\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{+/*@jsxRuntime\ automatic*/}
+\DoxyCodeLine{+/*@jsxImportSource\ react*/}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ Thing()\ \{}
+\DoxyCodeLine{-\/\ \ return\ \_jsx(\_Fragment,\ \{children:\ 'World'\})}
+\DoxyCodeLine{+\ \ return\ <>World!</>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ \_createMdxContent(props)\ \{}
+\DoxyCodeLine{\ \ const\ \_components\ =\ \{}
+\DoxyCodeLine{\ \ \ \ h1:\ 'h1',}
+\DoxyCodeLine{\ \ \ \ ...props.components}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{-\/\ \ return\ \_jsxs(\_components.h1,\ \{children:\ ['Hello\ ',\ \_jsx(Thing,\ \{\})]\})}
+\DoxyCodeLine{+\ \ return\ <\_components.h1>\{"{}Hello\ "{}\}<Thing\ /></\_components.h1>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ function\ MDXContent(props\ =\ \{\})\ \{}
+\DoxyCodeLine{\ \ const\ \{wrapper:\ MDXLayout\}\ =\ props.components\ ||\ \{\}}
+\DoxyCodeLine{\ \ return\ MDXLayout}
+\DoxyCodeLine{-\/\ \ \ \ ?\ \_jsx(MDXLayout,\ \{}
+\DoxyCodeLine{-\/\ \ \ \ \ \ \ \ ...props,}
+\DoxyCodeLine{-\/\ \ \ \ \ \ \ \ children:\ \_jsx(\_createMdxContent,\ props)}
+\DoxyCodeLine{-\/\ \ \ \ \ \ \})}
+\DoxyCodeLine{+\ \ \ \ ?\ <MDXLayout\ \{...props\}><\_createMdxContent\ \{...props\}\ /></MDXLayout>}
+\DoxyCodeLine{\ \ \ \ :\ \_createMdxContent(props)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily jsx\+Import\+Source} ({\ttfamily string}, default\+: `\textquotesingle{}react'{\ttfamily ) — place to import automatic JSX runtimes from; when in the}automatic{\ttfamily runtime, this is used to define an import for }Fragment{\ttfamily ,}jsx{\ttfamily ,}jsx\+DEV{\ttfamily , and}jsxs\`{}
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+If {\ttfamily file} is the contents of {\ttfamily example.\+mdx} from § Use, then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{compile(file,\ \{jsxImportSource:\ 'preact'\})}
+
+\end{DoxyCode}
+
+
+…yields this difference\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/import\ \{Fragment\ as\ \_Fragment,\ jsx\ as\ \_jsx,\ jsxs\ as\ \_jsxs\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{+import\ \{Fragment\ as\ \_Fragment,\ jsx\ as\ \_jsx,\ jsxs\ as\ \_jsxs\ \}\ from\ 'preact/jsx-\/runtime'}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily jsx\+Runtime} (`\textquotesingle{}automatic'{\ttfamily or}\textquotesingle{}classic\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}automatic\textquotesingle{}{\ttfamily ) — JSX runtime to use; the automatic runtime compiles to}import \+\_\+jsx from \textquotesingle{}\$import\+Source/jsx-\/runtime\textquotesingle{}\textbackslash{}n\+\_\+jsx(\textquotesingle{}p\textquotesingle{}){\ttfamily ; the classic runtime compiles to calls such as}h(\textquotesingle{}p\textquotesingle{})\`{}
+\end{DoxyItemize}
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: support for the classic runtime is deprecated and will likely be removed in the next major version. \end{quote}
+
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+If {\ttfamily file} is the contents of {\ttfamily example.\+mdx} from § Use, then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{compile(file,\ \{jsxRuntime:\ 'classic'\})}
+
+\end{DoxyCode}
+
+
+…yields this difference\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/import\ \{Fragment\ as\ \_Fragment,\ jsx\ as\ \_jsx,\ jsxs\ as\ \_jsxs\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{+import\ React\ from\ 'react'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ Thing()\ \{}
+\DoxyCodeLine{-\/\ \ return\ \_jsx(\_Fragment,\ \{children:\ 'World'\})}
+\DoxyCodeLine{+\ \ return\ React.createElement(React.Fragment,\ null,\ 'World!')}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{…}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily output\+Format} (`\textquotesingle{}function-\/body'{\ttfamily or}\textquotesingle{}program\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}program\textquotesingle{}{\ttfamily ) — output format to generate; in most cases}\textquotesingle{}program\textquotesingle{}{\ttfamily should be used, it results in a whole program; internally \mbox{[}}evaluate{\ttfamily \mbox{]}\mbox{[}api-\/evaluate\mbox{]} uses}\textquotesingle{}function-\/body\textquotesingle{}{\ttfamily to compile to code that can be passed to \mbox{[}}run{\ttfamily \mbox{]}\mbox{[}api-\/run\mbox{]}; in some cases, you might want what}evaluate\`{} does in separate steps, such as when compiling on the server and running on the client.
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+With a module {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{compile\}\ from\ '@mdx-\/js/mdx'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ code\ =\ 'export\ const\ no\ =\ 3.14\(\backslash\)n\(\backslash\)n\#\ hi\ \{no\}'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(await\ compile(code,\ \{outputFormat:\ 'program'\})))\ //\ Default.}
+\DoxyCodeLine{console.log(String(await\ compile(code,\ \{outputFormat:\ 'function-\/body'\})))}
+
+\end{DoxyCode}
+
+
+…yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{jsx\ as\ \_jsx,\ jsxs\ as\ \_jsxs\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{export\ const\ no\ =\ 3.14}
+\DoxyCodeLine{function\ \_createMdxContent(props)\ \{\ /*\ …\ */\ \}}
+\DoxyCodeLine{export\ default\ function\ MDXContent(props\ =\ \{\})\ \{\ /*\ …\ */\ \}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict'}
+\DoxyCodeLine{const\ \{Fragment:\ \_Fragment,\ jsx:\ \_jsx\}\ =\ arguments[0]}
+\DoxyCodeLine{const\ no\ =\ 3.14}
+\DoxyCodeLine{function\ \_createMdxContent(props)\ \{\ /*\ …\ */\ \}}
+\DoxyCodeLine{function\ MDXContent(props\ =\ \{\})\ \{\ /*\ …\ */\ \}}
+\DoxyCodeLine{return\ \{no,\ default:\ MDXContent\}}
+
+\end{DoxyCode}
+
+
+The `\textquotesingle{}program'{\ttfamily format will use import statements to import the runtime (and optionally provider) and use an export statement to yield the}MDXContent\`{} component.
+
+The `\textquotesingle{}function-\/body'{\ttfamily format will get the runtime (and optionally provider) from}arguments\mbox{[}0\mbox{]}\`{}, rewrite export statements, and use a return statement to yield what was exported.
+
+\end{adjustwidth}
+
+\item {\ttfamily md\+Extensions} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, default\+: `\mbox{[}'.md\textquotesingle{}, \textquotesingle{}.markdown\textquotesingle{}, \textquotesingle{}.mdown\textquotesingle{}, \textquotesingle{}.mkdn\textquotesingle{}, \textquotesingle{}.mkd\textquotesingle{}, \textquotesingle{}.mdwn\textquotesingle{}, \textquotesingle{}.mkdown\textquotesingle{}, \textquotesingle{}.ron\textquotesingle{}\mbox{]}\`{}) — list of markdown extensions, with dot affects \href{https://mdxjs.com/getting-started/\#integrations}{\texttt{ § Integrations}}
+\item {\ttfamily mdx\+Extensions} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, default\+: `\mbox{[}'.mdx\textquotesingle{}\mbox{]}\`{}) — list of MDX extensions, with dot; affects \href{https://mdxjs.com/getting-started/\#integrations}{\texttt{ § Integrations}}
+\item {\ttfamily pragma} ({\ttfamily string}, default\+: `\textquotesingle{}React.\+create\+Element'{\ttfamily ) — pragma for JSX, used in the classic runtime as an identifier for function calls\+:}$<$x $>${\ttfamily to}React.\+create\+Element(\textquotesingle{}x\textquotesingle{}){\ttfamily ; when changing this, you should also define}pragma\+Frag{\ttfamily and }pragma\+Import\+Source\`{} too
+\end{DoxyItemize}
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: support for the classic runtime is deprecated and will likely be removed in the next major version. \end{quote}
+
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+If {\ttfamily file} is the contents of {\ttfamily example.\+mdx} from § Use, then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{compile(file,\ \{}
+\DoxyCodeLine{\ \ jsxRuntime:\ 'classic',}
+\DoxyCodeLine{\ \ pragma:\ 'preact.createElement',}
+\DoxyCodeLine{\ \ pragmaFrag:\ 'preact.Fragment',}
+\DoxyCodeLine{\ \ pragmaImportSource:\ 'preact/compat'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+…yields this difference\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/import\ React\ from\ 'react'}
+\DoxyCodeLine{+import\ preact\ from\ 'preact/compat'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ Thing()\ \{}
+\DoxyCodeLine{-\/\ \ return\ React.createElement(React.Fragment,\ null,\ 'World!')}
+\DoxyCodeLine{+\ \ return\ preact.createElement(preact.Fragment,\ null,\ 'World!')}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{…}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily pragma\+Frag} ({\ttfamily string}, default\+: `\textquotesingle{}React.\+Fragment'{\ttfamily ) — pragma for fragment symbol, used in the classic runtime as an identifier for unnamed calls\+:}\texorpdfstring{$<$}{<}\texorpdfstring{$>$}{>}{\ttfamily to}React.\+create\+Element(React.\+Fragment){\ttfamily ; when changing this, you should also define}pragma{\ttfamily and}pragma\+Import\+Source\`{} too
+\end{DoxyItemize}
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: support for the classic runtime is deprecated and will likely be removed in the next major version. \end{quote}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily pragma\+Import\+Source} ({\ttfamily string}, default\+: `\textquotesingle{}react'{\ttfamily ) — where to import the identifier of}pragma{\ttfamily from, used in the classic runtime; to illustrate, when}pragma{\ttfamily is}\textquotesingle{}a.\+b\textquotesingle{}{\ttfamily and}pragma\+Import\+Source{\ttfamily is}\textquotesingle{}c\textquotesingle{}{\ttfamily  the following will be generated\+:}import a from \textquotesingle{}c\textquotesingle{}{\ttfamily and things such as }a.\+b(\textquotesingle{}h1\textquotesingle{}, \{\}){\ttfamily ; when changing this, you should also define}pragma{\ttfamily and}pragma\+Frag\`{} too
+\end{DoxyItemize}
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: support for the classic runtime is deprecated and will likely be removed in the next major version. \end{quote}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily provider\+Import\+Source} ({\ttfamily string}, optional, example\+: `'@mdx-\/js/react\textquotesingle{}{\ttfamily ) — place to import a provider from; normally it’s used for runtimes that support context (React, Preact), but it can be used to inject components into the compiled code; the module must export and identifier}use\+MDXComponents{\ttfamily which is called without arguments to get an object of components (see \mbox{[}}Use\+Mdx\+Components\`{}\mbox{]}api-\/use-\/mdx-\/components)
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+If {\ttfamily file} is the contents of {\ttfamily example.\+mdx} from § Use, then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{compile(file,\ \{providerImportSource:\ '@mdx-\/js/react'\})}
+
+\end{DoxyCode}
+
+
+…yields this difference\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{Fragment\ as\ \_Fragment,\ jsx\ as\ \_jsx,\ jsxs\ as\ \_jsxs\}\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{+import\ \{useMDXComponents\ as\ \_provideComponents\}\ from\ '@mdx-\/js/react'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ Thing()\ \{}
+\DoxyCodeLine{\ \ return\ \_jsx(\_Fragment,\ \{children:\ 'World'\})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ \_createMdxContent(props)\ \{}
+\DoxyCodeLine{\ \ const\ \_components\ =\ \{}
+\DoxyCodeLine{\ \ \ \ h1:\ 'h1',}
+\DoxyCodeLine{+\ \ \ \ ...\_provideComponents(),}
+\DoxyCodeLine{\ \ \ \ ...props.components}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ \_jsxs(\_components.h1,\ \{children:\ ['Hello\ ',\ \_jsx(Thing,\ \{\})]\})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ function\ MDXContent(props\ =\ \{\})\ \{}
+\DoxyCodeLine{-\/\ \ const\ \{wrapper:\ MDXLayout\}\ =\ props.components\ ||\ \{\}}
+\DoxyCodeLine{+\ \ const\ \{wrapper:\ MDXLayout\}\ =\ \{}
+\DoxyCodeLine{+\ \ \ \ ...\_provideComponents(),}
+\DoxyCodeLine{+\ \ \ \ ...props.components}
+\DoxyCodeLine{+\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ MDXLayout}
+\DoxyCodeLine{\ \ \ \ ?\ \_jsx(MDXLayout,\ \{...props,\ children:\ \_jsx(\_createMdxContent,\ \{\})\})}
+\DoxyCodeLine{\ \ \ \ :\ \_createMdxContent()}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily recma\+Plugins} (\href{https://github.com/unifiedjs/unified\#pluggablelist}{\texttt{ {\ttfamily Pluggable\+List} from {\ttfamily unified}}}, optional) — list of recma plugins; this is a new ecosystem, currently in beta, to transform \href{https://github.com/syntax-tree/esast}{\texttt{ esast}} trees (Java\+Script)
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ recmaMdxIsMdxComponent\ from\ 'recma-\/mdx-\/is-\/mdx-\/component'}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ compile(file,\ \{recmaPlugins:\ [recmaMdxIsMdxComponent]\})}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily rehype\+Plugins} (\href{https://github.com/unifiedjs/unified\#pluggablelist}{\texttt{ {\ttfamily Pluggable\+List} from {\ttfamily unified}}}, optional) — list of \href{https://github.com/rehypejs/rehype/blob/main/doc/plugins.md\#list-of-plugins}{\texttt{ rehype plugins}}
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeKatex\ from\ 'rehype-\/katex'\ //\ Render\ math\ with\ KaTeX.}
+\DoxyCodeLine{import\ remarkMath\ from\ 'remark-\/math'\ //\ Support\ math\ like\ \`{}\$so\$`.}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ compile(file,\ \{rehypePlugins:\ [rehypeKatex],\ remarkPlugins:\ [remarkMath]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ compile(file,\ \{}
+\DoxyCodeLine{\ \ //\ A\ plugin\ with\ options:}
+\DoxyCodeLine{\ \ rehypePlugins:\ [[rehypeKatex,\ \{strict:\ true,\ throwOnError:\ true\}]],}
+\DoxyCodeLine{\ \ remarkPlugins:\ [remarkMath]}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily remark\+Plugins} (\href{https://github.com/unifiedjs/unified\#pluggablelist}{\texttt{ {\ttfamily Pluggable\+List} from {\ttfamily unified}}}, optional) — list of \href{https://github.com/remarkjs/remark/blob/main/doc/plugins.md\#list-of-plugins}{\texttt{ remark plugins}}
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ remarkFrontmatter\ from\ 'remark-\/frontmatter'\ //\ YAML\ and\ such.}
+\DoxyCodeLine{import\ remarkGfm\ from\ 'remark-\/gfm'\ //\ Tables,\ footnotes,\ strikethrough,\ task\ lists,\ literal\ URLs.}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ compile(file,\ \{remarkPlugins:\ [remarkGfm]\})\ //\ One\ plugin.}
+\DoxyCodeLine{await\ compile(file,\ \{remarkPlugins:\ [[remarkFrontmatter,\ 'toml']]\})\ //\ A\ plugin\ with\ options.}
+\DoxyCodeLine{await\ compile(file,\ \{remarkPlugins:\ [remarkGfm,\ remarkFrontmatter]\})\ //\ Two\ plugins.}
+\DoxyCodeLine{await\ compile(file,\ \{remarkPlugins:\ [[remarkGfm,\ \{singleTilde:\ false\}],\ remarkFrontmatter]\})\ //\ Two\ plugins,\ first\ w/\ options.}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily remark\+Rehype\+Options} (\href{https://github.com/remarkjs/remark-rehype\#options}{\texttt{ {\ttfamily Options} from {\ttfamily remark-\/rehype}}}, optional) — options to pass through to {\ttfamily remark-\/rehype}; the option {\ttfamily allow\+Dangerous\+Html} will always be set to {\ttfamily true} and the MDX nodes (see \`{}node\+Types\`{}) are passed through; In particular, you might want to pass configuration for footnotes if your content is not in English
+
+
+
+{\bfseries{Expand example}}\begin{adjustwidth}{1em}{0em}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{compile(\{value:\ '…'\},\ \{remarkRehypeOptions:\ \{clobberPrefix:\ 'comment-\/1'\}\})}
+
+\end{DoxyCode}
+
+
+\end{adjustwidth}
+
+\item {\ttfamily style\+Property\+Name\+Case} (`\textquotesingle{}css'{\ttfamily or}\textquotesingle{}dom{\ttfamily , default\+:}\textquotesingle{}dom\textquotesingle{}{\ttfamily ) — casing to use for property names in}style{\ttfamily objects; CSS casing is for example}background-\/color{\ttfamily and}-\/webkit-\/line-\/clamp{\ttfamily ; DOM casing is for example}background\+Color{\ttfamily and}Webkit\+Line\+Clamp\`{}; for JSX components written in MDX, the author has to be aware of which framework they use and write code accordingly; for AST nodes generated by this project, this option configures it
+\item {\ttfamily table\+Cell\+Align\+To\+Style} ({\ttfamily boolean}, default\+: {\ttfamily true}) — turn obsolete {\ttfamily align} properties on {\ttfamily td} and {\ttfamily th} into CSS {\ttfamily style} properties
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4967}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Run\+Options}}{{\ttfamily Run\+Options}}}\label{readme.md_autotoc_md4967}
+Configuration to run compiled code (Type\+Script type).
+
+{\ttfamily Fragment}, {\ttfamily jsx}, and {\ttfamily jsxs} are used when the code is compiled in production mode ({\ttfamily development\+: false}). {\ttfamily Fragment} and {\ttfamily jsx\+DEV} are used when compiled in development mode ({\ttfamily development\+: true}). {\ttfamily use\+MDXComponents} is used when the code is compiled with `provider\+Import\+Source\+: '\#\textquotesingle{}\`{} (the exact value of this compile option doesn’t matter).\hypertarget{readme.md_autotoc_md4968}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md4968}
+
+\begin{DoxyItemize}
+\item {\ttfamily Fragment} (\`{}\+Fragment\`{}, {\bfseries{required}}) — symbol to use for fragments
+\item {\ttfamily base\+Url} ({\ttfamily URL} or {\ttfamily string}, optional, example\+: {\ttfamily import.\+meta.\+url}) — use this URL as {\ttfamily import.\+meta.\+url} and resolve {\ttfamily import} and {\ttfamily export … from} relative to it; this option can also be given at compile time in {\ttfamily Compile\+Options}; you should pass this (likely at runtime), as you might get runtime errors when using {\ttfamily import.\+meta.\+url} / {\ttfamily import} / {\ttfamily export … from} otherwise
+\item {\ttfamily jsx} (\`{}\+Jsx\`{}, optional) — function to generate an element with static children in production mode
+\item {\ttfamily jsx\+DEV} (\`{}\+Jsx\+Dev\`{}, optional) — function to generate an element in development mode
+\item {\ttfamily jsxs} (\`{}\+Jsx\`{}, optional) — function to generate an element with dynamic children in production mode
+\item {\ttfamily use\+MDXComponents} (\`{}\+Use\+Mdx\+Components\`{}, optional) — function to get components to use
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md4969}{}\doxysubsubsubsubsubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md4969}
+A {\ttfamily /jsx-\/runtime} module will expose {\ttfamily Fragment}, {\ttfamily jsx}, and {\ttfamily jsxs}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ runtime\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{default:\ Content\}\ =\ await\ evaluate('\#\ hi',\ \{...runtime,\ baseUrl:\ import.meta.url,\ ...otherOptions\})}
+
+\end{DoxyCode}
+
+
+A {\ttfamily /jsx-\/dev-\/runtime} module will expose {\ttfamily Fragment} and {\ttfamily jsx\+DEV}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ runtime\ from\ 'react/jsx-\/dev-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{default:\ Content\}\ =\ await\ evaluate('\#\ hi',\ \{development:\ true,\ baseUrl:\ import.meta.url,\ ...runtime,\ ...otherOptions\})}
+
+\end{DoxyCode}
+
+
+Our providers will expose {\ttfamily use\+MDXComponents}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ provider\ from\ '@mdx-\/js/react'}
+\DoxyCodeLine{import\ *\ as\ runtime\ from\ 'react/jsx-\/runtime'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{default:\ Content\}\ =\ await\ evaluate('\#\ hi',\ \{...provider,\ ...runtime,\ baseUrl:\ import.meta.url,\ ...otherOptions\})}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md4970}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Use\+Mdx\+Components}}{{\ttfamily Use\+Mdx\+Components}}}\label{readme.md_autotoc_md4970}
+Get components (Type\+Script type).\hypertarget{readme.md_autotoc_md4971}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md4971}
+There are no parameters.\hypertarget{readme.md_autotoc_md4972}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md4972}
+Components (\href{https://github.com/DefinitelyTyped/DefinitelyTyped/blob/HEAD/types/mdx/types.d.ts\#L65}{\texttt{ {\ttfamily MDXComponents} from {\ttfamily mdx/types.\+js}}}).\hypertarget{readme.md_autotoc_md4973}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md4973}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Compile\+Options\`{}, \`{}\+Evaluate\+Options\`{}, \`{}\+Fragment\`{}, \`{}\+Jsx\`{}, \`{}\+Jsx\+Dev\`{}, \`{}\+Processor\+Options\`{}, \`{}\+Run\+Options\`{}, and \`{}\+Use\+Mdx\+Components\`{}.
+
+For types of evaluated MDX to work, make sure the Type\+Script {\ttfamily JSX} namespace is typed. This is done by installing and using the types of your framework, such as \href{https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/react}{\texttt{ {\ttfamily @types/react}}}. See \href{https://mdxjs.com/getting-started/\#types}{\texttt{ § Types}} on our website for information.\hypertarget{readme.md_autotoc_md4974}{}\doxysubsection{\texorpdfstring{Architecture}{Architecture}}\label{readme.md_autotoc_md4974}
+To understand what this project does, it’s very important to first understand what unified does\+: please read through the \href{https://github.com/unifiedjs/unified}{\texttt{ {\ttfamily unifiedjs/unified}}} readme (the part until you hit the API section is required reading).
+
+{\ttfamily @mdx-\/js/mdx} is a unified pipeline — wrapped so that most folks don’t need to know about unified. The processor goes through these steps\+:
+
+
+\begin{DoxyEnumerate}
+\item parse MDX (serialized markdown with embedded JSX, ESM, and expressions) to mdast (markdown syntax tree)
+\item transform through remark (markdown ecosystem)
+\item transform mdast to hast (HTML syntax tree)
+\item transform through rehype (HTML ecosystem)
+\item transform hast to esast (JS syntax tree)
+\item do the work needed to get a component
+\item transform through recma (JS ecosystem)
+\item serialize esast as Java\+Script
+\end{DoxyEnumerate}
+
+The {\itshape input} is MDX (serialized markdown with embedded JSX, ESM, and expressions). The markdown is parsed with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark/micromark}}} and the embedded JS with one of its extensions \href{https://github.com/micromark/micromark-extension-mdxjs}{\texttt{ {\ttfamily micromark/micromark-\/extension-\/mdxjs}}} (which in turn uses \href{https://github.com/acornjs/acorn}{\texttt{ acorn}}). Then \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/from-\/markdown}}} and its extension \href{https://github.com/syntax-tree/mdast-util-mdx}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdx}}} are used to turn the results from the parser into a syntax tree\+: \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}.
+
+Markdown is closest to the source format. This is where \href{https://github.com/remarkjs/remark/blob/main/doc/plugins.md\#list-of-plugins}{\texttt{ remark plugins}} come in. Typically, there shouldn’t be much going on here. But perhaps you want to support GFM (tables and such) or frontmatter? Then you can add a plugin here\+: {\ttfamily remark-\/gfm} or {\ttfamily remark-\/frontmatter}, respectively.
+
+After markdown, we go to \href{https://github.com/syntax-tree/hast}{\texttt{ hast}} (HTML). This transformation is done by \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/to-\/hast}}}. Wait, why, what is HTML needed? Part of the reason is that we care about HTML semantics\+: we want to know that something is an {\ttfamily \texorpdfstring{$<$}{<}a\texorpdfstring{$>$}{>}}, not whether it’s a link with a resource ({\ttfamily \mbox{[}text\mbox{]}(url)}) or a reference to a defined link definition ({\ttfamily \mbox{[}text\mbox{]}\mbox{[}id\mbox{]}\textbackslash{}n\textbackslash{}n\mbox{[}id\mbox{]}\+: url}). So an HTML AST is {\itshape closer} to where we want to go. Another reason is that there are many things folks need when they go MDX -\/\texorpdfstring{$>$}{>} JS, markdown -\/\texorpdfstring{$>$}{>} HTML, or even folks who only process their HTML -\/\texorpdfstring{$>$}{>} HTML\+: use cases other than MDX. By having a single AST in these cases and writing a plugin that works on that AST, that plugin can supports {\itshape all} these use cases (for example, \href{https://github.com/rehypejs/rehype-highlight}{\texttt{ {\ttfamily rehypejs/rehype-\/highlight}}} for syntax highlighting or \href{https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex}{\texttt{ {\ttfamily rehypejs/rehype-\/katex}}} for math). So, this is where \href{https://github.com/rehypejs/rehype/blob/main/doc/plugins.md\#list-of-plugins}{\texttt{ rehype plugins}} come in\+: most of the plugins, probably.
+
+Then we go to Java\+Script\+: \href{https://github.com/syntax-tree/esast}{\texttt{ esast}} (JS; an AST which is compatible with estree but looks a bit more like other unist ASTs). This transformation is done by \href{https://github.com/mdx-js/recma/tree/main/packages/rehype-recma}{\texttt{ {\ttfamily rehype-\/recma}}}. This is a new ecosystem that does not have utilities or plugins yet. But it’s where {\ttfamily @mdx-\/js/mdx} does its thing\+: where it adds imports/exports, where it compiles JSX away into {\ttfamily \+\_\+jsx()} calls, and where it does the other cool things that it provides.
+
+Finally, The output is serialized Java\+Script. That final step is done by \href{https://github.com/davidbonnet/astring}{\texttt{ astring}}, a small and fast JS generator.\hypertarget{readme.md_autotoc_md4975}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md4975}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily @mdx-\/js/mdx@\texorpdfstring{$^\wedge$}{\string^}3}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md4976}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md4976}
+See \href{https://mdxjs.com/getting-started/\#security}{\texttt{ § Security}} on our website for information.\hypertarget{readme.md_autotoc_md4977}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md4977}
+See \href{https://mdxjs.com/community/contribute/}{\texttt{ § Contribute}} on our website for ways to get started. See \href{https://mdxjs.com/community/support/}{\texttt{ § Support}} for ways to get help.
+
+This project has a \href{https://github.com/mdx-js/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md4978}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md4978}
+\href{https://github.com/mdx-js/mdx/blob/main/packages/mdx/license}{\texttt{ MIT}} © Compositor and \href{https://vercel.com}{\texttt{ Vercel}} 

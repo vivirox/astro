@@ -1,0 +1,107 @@
+\doxysection{node\+\_\+modules/@ascorbic/feed-\/loader Directory Reference}
+\hypertarget{dir_e9e49c0db6fffd5fe8f5aafddefa10e1}{}\label{dir_e9e49c0db6fffd5fe8f5aafddefa10e1}\index{node\_modules/"@ascorbic/feed-\/loader Directory Reference@{node\_modules/"@ascorbic/feed-\/loader Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package provides a feed loader for Astro. It allows you to load and parse RSS, RDF Atom feeds, and use the data in your Astro site.\hypertarget{README.md_autotoc_md181}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md181}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @ascorbic/feed-\/loader}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md182}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md182}
+This package requires Astro 4.\+14.\+0 or later. You must enable the experimental content layer in Astro unless you are using version 5.\+0.\+0-\/beta or later. You can do this by adding the following to your {\ttfamily astro.\+config.\+mjs}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\ \ experimental:\ \{}
+\DoxyCodeLine{\ \ \ \ contentLayer:\ true,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+You can then use the feed loader in your content configuration\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ src/content/config.ts}
+\DoxyCodeLine{import\ \{\ defineCollection\ \}\ from\ "{}astro:content"{};}
+\DoxyCodeLine{import\ \{\ feedLoader\ \}\ from\ "{}@ascorbic/feed-\/loader"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ releases\ =\ defineCollection(\{}
+\DoxyCodeLine{\ \ loader:\ feedLoader(\{}
+\DoxyCodeLine{\ \ \ \ url:\ "{}https://github.com/withastro/astro/releases.atom"{},}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ podcasts\ =\ defineCollection(\{}
+\DoxyCodeLine{\ \ loader:\ feedLoader(\{}
+\DoxyCodeLine{\ \ \ \ url:\ "{}https://feeds.99percentinvisible.org/99percentinvisible"{},}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ const\ collections\ =\ \{\ releases,\ podcasts\ \};}
+
+\end{DoxyCode}
+
+
+You can then use these like any other collection in Astro\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{import\ \{\ getCollection\ \}\ from\ "{}astro:content"{};}
+\DoxyCodeLine{import\ Layout\ from\ "{}../layouts/Layout.astro"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ episodes\ =\ await\ getCollection("{}podcasts"{});}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{<Layout\ title="{}Episodes"{}>}
+\DoxyCodeLine{\ \ <h2>Episodes</h2>}
+\DoxyCodeLine{\ \ <ul>}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ episodes.map((episode)\ =>\ (}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <li>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <a\ href=\{`/episodes/\$\{episode.id.replace(/\(\backslash\)W/g,\ "{}-\/"{})\}`\}>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{episode.data.title\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ </a>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ </li>}
+\DoxyCodeLine{\ \ \ \ \ \ ))}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ </ul>}
+\DoxyCodeLine{</Layout>}
+
+\end{DoxyCode}
+
+
+You can render the episode description using the {\ttfamily render()} function\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{import\ \{\ render,\ getEntry\ \}\ from\ "{}astro:content"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ episode\ =\ getEntry("{}podcasts"{},\ Astro.params.id);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ Content\ \}\ =\ await\ render(episode);}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{<h1>\{episode.data.title\}</h1>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<Content\ />}
+\DoxyCodeLine{}
+\DoxyCodeLine{<p>}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ episode.data.enclosures.map((enclosure)\ =>\ (}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ <audio\ controls>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <source\ src=\{enclosure.url\}\ type=\{enclosure.type\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ </audio>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ))}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{</p>}
+
+\end{DoxyCode}
+ 

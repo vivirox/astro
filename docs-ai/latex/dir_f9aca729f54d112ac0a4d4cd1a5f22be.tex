@@ -1,0 +1,109 @@
+\doxysection{node\+\_\+modules/@csstools/css-\/tokenizer Directory Reference}
+\hypertarget{dir_f9aca729f54d112ac0a4d4cd1a5f22be}{}\label{dir_f9aca729f54d112ac0a4d4cd1a5f22be}\index{node\_modules/"@csstools/css-\/tokenizer Directory Reference@{node\_modules/"@csstools/css-\/tokenizer Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/@csstools/css-tokenizer}{\texttt{ }} \href{https://github.com/csstools/postcss-plugins/actions/workflows/test.yml?query=workflow/test}{\texttt{ }} \href{https://discord.gg/bUadyRwkJS}{\texttt{ }}
+
+Implemented from \+: \href{https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/}{\texttt{ https\+://www.\+w3.\+org/\+TR/2021/\+CRD-\/css-\/syntax-\/3-\/20211224/}}\hypertarget{README.md_autotoc_md2918}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md2918}
+Read the API docs\hypertarget{README.md_autotoc_md2919}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md2919}
+Add \href{https://github.com/csstools/postcss-plugins/tree/main/packages/css-tokenizer}{\texttt{ CSS Tokenizer}} to your project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @csstools/css-\/tokenizer\ -\/-\/save-\/dev}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ tokenizer,\ TokenType\ \}\ from\ '@csstools/css-\/tokenizer';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myCSS\ =\ \`{}@media\ only\ screen\ and\ (min-\/width:\ 768rem)\ \{}
+\DoxyCodeLine{\ \ \ \ .foo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ content:\ 'Some\ content!'\ !important;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\`{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ t\ =\ tokenizer(\{}
+\DoxyCodeLine{\ \ \ \ css:\ myCSS,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{while\ (true)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ token\ =\ t.nextToken();}
+\DoxyCodeLine{\ \ \ \ if\ (token[0]\ ===\ TokenType.EOF)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ break;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log(token);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Or use the {\ttfamily tokenize} helper function\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ tokenize\ \}\ from\ '@csstools/css-\/tokenizer';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myCSS\ =\ \ \`{}@media\ only\ screen\ and\ (min-\/width:\ 768rem)\ \{}
+\DoxyCodeLine{\ \ \ \ .foo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ content:\ 'Some\ content!'\ !important;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\`{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tokens\ =\ tokenize(\{}
+\DoxyCodeLine{\ \ \ \ css:\ myCSS,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(tokens);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2920}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md2920}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ onParseError?:\ (error:\ ParseError)\ =>\ void}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2921}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily on\+Parse\+Error}}{{\ttfamily on\+Parse\+Error}}}\label{README.md_autotoc_md2921}
+The tokenizer is forgiving and won\textquotesingle{}t stop when a parse error is encountered.
+
+To receive parsing error information you can set a callback.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ tokenizer,\ TokenType\ \}\ from\ '@csstools/css-\/tokenizer';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ t\ =\ tokenizer(\{}
+\DoxyCodeLine{\ \ \ \ css:\ '\(\backslash\)\(\backslash\)',}
+\DoxyCodeLine{\},\ \{\ onParseError:\ (err)\ =>\ console.warn(err)\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{while\ (true)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ token\ =\ t.nextToken();}
+\DoxyCodeLine{\ \ \ \ if\ (token[0]\ ===\ TokenType.EOF)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ break;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Parser errors will try to inform you where in the tokenizer logic the error happened. This tells you what kind of error occurred.\hypertarget{README.md_autotoc_md2922}{}\doxysubsection{\texorpdfstring{Goals and non-\/goals}{Goals and non-\/goals}}\label{README.md_autotoc_md2922}
+Things this package aims to be\+:
+\begin{DoxyItemize}
+\item specification compliant CSS tokenizer
+\item a reliable low level package to be used in CSS parsers
+\end{DoxyItemize}
+
+What it is not\+:
+\begin{DoxyItemize}
+\item opinionated
+\item fast
+\item small 
+\end{DoxyItemize}

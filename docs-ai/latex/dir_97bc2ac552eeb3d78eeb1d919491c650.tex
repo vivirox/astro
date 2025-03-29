@@ -1,0 +1,690 @@
+\doxysection{node\+\_\+modules/@ctrl/tinycolor Directory Reference}
+\hypertarget{dir_97bc2ac552eeb3d78eeb1d919491c650}{}\label{dir_97bc2ac552eeb3d78eeb1d919491c650}\index{node\_modules/"@ctrl/tinycolor Directory Reference@{node\_modules/"@ctrl/tinycolor Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/@ctrl/tinycolor}{\texttt{ }} \href{https://codecov.io/gh/scttcper/tinycolor}{\texttt{ }} \href{https://bundlephobia.com/result?p=@ctrl/tinycolor}{\texttt{ }}
+
+\begin{quote}
+Tiny\+Color is a small library for color manipulation and conversion \end{quote}
+
+
+A fork of \href{https://github.com/bgrins/TinyColor}{\texttt{ tinycolor2}} by \href{https://github.com/bgrins}{\texttt{ Brian Grinstead}}
+
+{\bfseries{DEMO}}\+: \href{https://tinycolor.vercel.app}{\texttt{ https\+://tinycolor.\+vercel.\+app}} ~\newline
+\hypertarget{README.md_autotoc_md2924}{}\doxysubsubsection{\texorpdfstring{Changes from tinycolor2}{Changes from tinycolor2}}\label{README.md_autotoc_md2924}
+
+\begin{DoxyItemize}
+\item reformatted into Type\+Script / es2015 and requires node \texorpdfstring{$>$}{>}= 8
+\begin{DoxyItemize}
+\item tree shakeable "{}module"{} export and no package {\ttfamily side\+Effects}
+\end{DoxyItemize}
+\item {\ttfamily tinycolor} is now exported as a class called {\ttfamily Tiny\+Color}
+\item default export removed, use `import \{ Tiny\+Color \} from '@ctrl/tinycolor\textquotesingle{}{\ttfamily }
+\item {\ttfamily new}random{\ttfamily , an implementation of \mbox{[}random\+Color\mbox{]}(\href{https://github.com/davidmerfield/randomColor/}{\texttt{ https\+://github.\+com/davidmerfield/random\+Color/}}) by David Merfield that returns a Tiny\+Color object}
+\item {\ttfamily several functions moved out of the tinycolor class and are no longer}Tiny\+Color.$<$function$>${\ttfamily  \texorpdfstring{$\ast$}{*}}readability{\ttfamily ,}from\+Ratio{\ttfamily moved out \texorpdfstring{$\ast$}{*}}random{\ttfamily moved out and renamed to}legacy\+Random{\ttfamily  \texorpdfstring{$\ast$}{*}}to\+Filter{\ttfamily has been moved out and renamed to}to\+Ms\+Filter{\ttfamily  \texorpdfstring{$\ast$}{*}}mix{\ttfamily ,}equals{\ttfamily use the current Tiny\+Color object as the first parameter}
+\item {\ttfamily added polyad colors tinycolor PR \mbox{[}126\mbox{]}(\href{https://github.com/bgrins/TinyColor/pull/126}{\texttt{ https\+://github.\+com/bgrins/\+Tiny\+Color/pull/126}})}
+\item {\ttfamily color wheel values (360) are allowed to over or under-\/spin and still return valid colors tinycolor PR \mbox{[}108\mbox{]}(\href{https://github.com/bgrins/TinyColor/pull/108}{\texttt{ https\+://github.\+com/bgrins/\+Tiny\+Color/pull/108}})}
+\item {\ttfamily added}tint(){\ttfamily and}shade(){\ttfamily tinycolor PR \mbox{[}159\mbox{]}(\href{https://github.com/bgrins/TinyColor/pull/159}{\texttt{ https\+://github.\+com/bgrins/\+Tiny\+Color/pull/159}}) \texorpdfstring{$\ast$}{*}}is\+Valid{\ttfamily ,}format\`{} are now propertys instead of a function
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md2925}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md2925}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @ctrl/tinycolor}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2926}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{README.md_autotoc_md2926}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ TinyColor\ \}\ from\ '@ctrl/tinycolor';}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red').toHexString();\ //\ '\#ff0000'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2927}{}\doxysubsection{\texorpdfstring{Accepted String Input}{Accepted String Input}}\label{README.md_autotoc_md2927}
+The string parsing is very permissive. It is meant to make typing a color as input as easy as possible. All commas, percentages, parenthesis are optional, and most input allow either 0-\/1, 0\%-\/100\%, or 0-\/n (where n is either 100, 255, or 360 depending on the value).
+
+HSL and HSV both require either 0\%-\/100\% or 0-\/1 for the {\ttfamily S}/{\ttfamily L}/{\ttfamily V} properties. The {\ttfamily H} (hue) can have values between 0\%-\/100\% or 0-\/360.
+
+RGB input requires either 0-\/255 or 0\%-\/100\%.
+
+If you call {\ttfamily tinycolor.\+from\+Ratio}, RGB and Hue input can also accept 0-\/1.
+
+Here are some examples of string input\+:\hypertarget{README.md_autotoc_md2928}{}\doxysubsubsection{\texorpdfstring{Hex, 8-\/digit (RGBA) Hex}{Hex, 8-\/digit (RGBA) Hex}}\label{README.md_autotoc_md2928}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#000');}
+\DoxyCodeLine{new\ TinyColor('000');}
+\DoxyCodeLine{new\ TinyColor('\#369C');}
+\DoxyCodeLine{new\ TinyColor('369C');}
+\DoxyCodeLine{new\ TinyColor('\#f0f0f6');}
+\DoxyCodeLine{new\ TinyColor('f0f0f6');}
+\DoxyCodeLine{new\ TinyColor('\#f0f0f688');}
+\DoxyCodeLine{new\ TinyColor('f0f0f688');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2929}{}\doxysubsubsection{\texorpdfstring{RGB, RGBA}{RGB, RGBA}}\label{README.md_autotoc_md2929}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('rgb\ (255,\ 0,\ 0)');}
+\DoxyCodeLine{new\ TinyColor('rgb\ 255\ 0\ 0');}
+\DoxyCodeLine{new\ TinyColor('rgba\ (255,\ 0,\ 0,\ .5)');}
+\DoxyCodeLine{new\ TinyColor(\{\ r:\ 255,\ g:\ 0,\ b:\ 0\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{\ fromRatio\ \}\ from\ '@ctrl/tinycolor';}
+\DoxyCodeLine{fromRatio(\{\ r:\ 1,\ g:\ 0,\ b:\ 0\ \});}
+\DoxyCodeLine{fromRatio(\{\ r:\ 0.5,\ g:\ 0.5,\ b:\ 0.5\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2930}{}\doxysubsubsection{\texorpdfstring{HSL, HSLA}{HSL, HSLA}}\label{README.md_autotoc_md2930}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('hsl(0,\ 100\%,\ 50\%)');}
+\DoxyCodeLine{new\ TinyColor('hsla(0,\ 100\%,\ 50\%,\ .5)');}
+\DoxyCodeLine{new\ TinyColor('hsl(0,\ 100\%,\ 50\%)');}
+\DoxyCodeLine{new\ TinyColor('hsl\ 0\ 1.0\ 0.5');}
+\DoxyCodeLine{new\ TinyColor(\{\ h:\ 0,\ s:\ 1,\ l:\ 0.5\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2931}{}\doxysubsubsection{\texorpdfstring{HSV, HSVA}{HSV, HSVA}}\label{README.md_autotoc_md2931}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('hsv(0,\ 100\%,\ 100\%)');}
+\DoxyCodeLine{new\ TinyColor('hsva(0,\ 100\%,\ 100\%,\ .5)');}
+\DoxyCodeLine{new\ TinyColor('hsv\ (0\ 100\%\ 100\%)');}
+\DoxyCodeLine{new\ TinyColor('hsv\ 0\ 1\ 1');}
+\DoxyCodeLine{new\ TinyColor(\{\ h:\ 0,\ s:\ 100,\ v:\ 100\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2932}{}\doxysubsubsection{\texorpdfstring{CMYK}{CMYK}}\label{README.md_autotoc_md2932}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('cmyk(0,\ 25,\ 20,\ 0)');}
+\DoxyCodeLine{new\ TinyColor('cmyk(0,\ 100,\ 100,\ 0)');}
+\DoxyCodeLine{new\ TinyColor('cmyk\ 100\ 0\ 100\ 0)');}
+\DoxyCodeLine{new\ TinyColor(\{c:\ 0,\ m:\ 25,\ y:\ 25,\ k:\ 0\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2933}{}\doxysubsubsection{\texorpdfstring{Named}{Named}}\label{README.md_autotoc_md2933}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('RED');}
+\DoxyCodeLine{new\ TinyColor('blanchedalmond');}
+\DoxyCodeLine{new\ TinyColor('darkblue');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2934}{}\doxysubsubsection{\texorpdfstring{Number}{Number}}\label{README.md_autotoc_md2934}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor(0x0);}
+\DoxyCodeLine{new\ TinyColor(0xaabbcc);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2935}{}\doxysubsubsection{\texorpdfstring{Accepted Object Input}{Accepted Object Input}}\label{README.md_autotoc_md2935}
+If you are calling this from code, you may want to use object input. Here are some examples of the different types of accepted object inputs\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ r:\ 255,\ g:\ 0,\ b:\ 0\ \}}
+\DoxyCodeLine{\{\ r:\ 255,\ g:\ 0,\ b:\ 0,\ a:\ .5\ \}}
+\DoxyCodeLine{\{\ h:\ 0,\ s:\ 100,\ l:\ 50\ \}}
+\DoxyCodeLine{\{\ h:\ 0,\ s:\ 100,\ v:\ 100\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2936}{}\doxysubsection{\texorpdfstring{Properties}{Properties}}\label{README.md_autotoc_md2936}
+\hypertarget{README.md_autotoc_md2937}{}\doxysubsubsection{\texorpdfstring{original\+Input}{original\+Input}}\label{README.md_autotoc_md2937}
+The original input passed into the constructer used to create the tinycolor instance
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.originalInput;\ //\ "{}red"{}}
+\DoxyCodeLine{color\ =\ new\ TinyColor(\{\ r:\ 255,\ g:\ 255,\ b:\ 255\ \});}
+\DoxyCodeLine{color.originalInput;\ //\ "{}\{r:\ 255,\ g:\ 255,\ b:\ 255\}"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2938}{}\doxysubsubsection{\texorpdfstring{format}{format}}\label{README.md_autotoc_md2938}
+Returns the format used to create the tinycolor instance
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.format;\ //\ "{}name"{}}
+\DoxyCodeLine{color\ =\ new\ TinyColor(\{\ r:\ 255,\ g:\ 255,\ b:\ 255\ \});}
+\DoxyCodeLine{color.format;\ //\ "{}rgb"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2939}{}\doxysubsubsection{\texorpdfstring{is\+Valid}{is\+Valid}}\label{README.md_autotoc_md2939}
+A boolean indicating whether the color was successfully parsed. Note\+: if the color is not valid then it will act like {\ttfamily black} when being used with other methods.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color1.isValid;\ //\ true}
+\DoxyCodeLine{color1.toHexString();\ //\ "{}\#ff0000"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color2\ =\ new\ TinyColor('not\ a\ color');}
+\DoxyCodeLine{color2.isValid;\ //\ false}
+\DoxyCodeLine{color2.toString();\ //\ "{}\#000000"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2940}{}\doxysubsection{\texorpdfstring{Methods}{Methods}}\label{README.md_autotoc_md2940}
+\hypertarget{README.md_autotoc_md2941}{}\doxysubsubsection{\texorpdfstring{get\+Brightness}{get\+Brightness}}\label{README.md_autotoc_md2941}
+Returns the perceived brightness of a color, from {\ttfamily 0-\/255}, as defined by \href{http://www.w3.org/TR/AERT\#color-contrast}{\texttt{ Web Content Accessibility Guidelines (Version 1.\+0)}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('\#fff');}
+\DoxyCodeLine{color1.getBrightness();\ //\ 255}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color2\ =\ new\ TinyColor('\#000');}
+\DoxyCodeLine{color2.getBrightness();\ //\ 0}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2942}{}\doxysubsubsection{\texorpdfstring{is\+Light}{is\+Light}}\label{README.md_autotoc_md2942}
+Return a boolean indicating whether the color\textquotesingle{}s perceived brightness is light.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('\#fff');}
+\DoxyCodeLine{color1.isLight();\ //\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color2\ =\ new\ TinyColor('\#000');}
+\DoxyCodeLine{color2.isLight();\ //\ false}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2943}{}\doxysubsubsection{\texorpdfstring{is\+Dark}{is\+Dark}}\label{README.md_autotoc_md2943}
+Return a boolean indicating whether the color\textquotesingle{}s perceived brightness is dark.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('\#fff');}
+\DoxyCodeLine{color1.isDark();\ //\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color2\ =\ new\ TinyColor('\#000');}
+\DoxyCodeLine{color2.isDark();\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2944}{}\doxysubsubsection{\texorpdfstring{get\+Luminance}{get\+Luminance}}\label{README.md_autotoc_md2944}
+Returns the perceived luminance of a color, from {\ttfamily 0-\/1} as defined by \href{http://www.w3.org/TR/2008/REC-WCAG20-20081211/\#contrast-ratiodef}{\texttt{ Web Content Accessibility Guidelines (Version 2.\+0).}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('\#fff');}
+\DoxyCodeLine{color1.getLuminance();\ //\ 1}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color2\ =\ new\ TinyColor('\#000');}
+\DoxyCodeLine{color2.getLuminance();\ //\ 0}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2945}{}\doxysubsubsection{\texorpdfstring{get\+Alpha}{get\+Alpha}}\label{README.md_autotoc_md2945}
+Returns the alpha value of a color, from {\ttfamily 0-\/1}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('rgba(255,\ 0,\ 0,\ .5)');}
+\DoxyCodeLine{color1.getAlpha();\ //\ 0.5}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color2\ =\ new\ TinyColor('rgb(255,\ 0,\ 0)');}
+\DoxyCodeLine{color2.getAlpha();\ //\ 1}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color3\ =\ new\ TinyColor('transparent');}
+\DoxyCodeLine{color3.getAlpha();\ //\ 0}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2946}{}\doxysubsubsection{\texorpdfstring{set\+Alpha}{set\+Alpha}}\label{README.md_autotoc_md2946}
+Sets the alpha value on a current color. Accepted range is in between {\ttfamily 0-\/1}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.getAlpha();\ //\ 1}
+\DoxyCodeLine{color.setAlpha(0.5);}
+\DoxyCodeLine{color.getAlpha();\ //\ .5}
+\DoxyCodeLine{color.toRgbString();\ //\ "{}rgba(255,\ 0,\ 0,\ .5)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2947}{}\doxysubsubsection{\texorpdfstring{on\+Background}{on\+Background}}\label{README.md_autotoc_md2947}
+Compute how the color would appear on a background. When the color is fully transparent (i.\+e. {\ttfamily get\+Alpha() == 0}), the result will be the background color. When the color is not transparent at all (i.\+e. {\ttfamily get\+Alpha() == 1}), the result will be the color itself. Otherwise you will get a computed result.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('rgba(255,\ 0,\ 0,\ .5)');}
+\DoxyCodeLine{const\ computedColor\ =\ color.onBackground('rgb(0,\ 0,\ 255)');}
+\DoxyCodeLine{computedColor.toRgbString();\ //\ "{}rgb(128,\ 0,\ 128)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2948}{}\doxysubsubsection{\texorpdfstring{String Representations}{String Representations}}\label{README.md_autotoc_md2948}
+The following methods will return a property for the {\ttfamily alpha} value, which can be ignored\+: {\ttfamily to\+Hsv}, {\ttfamily to\+Hsl}, {\ttfamily to\+Rgb}\hypertarget{README.md_autotoc_md2949}{}\doxysubsubsection{\texorpdfstring{to\+Hsv}{to\+Hsv}}\label{README.md_autotoc_md2949}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toHsv();\ //\ \{\ h:\ 0,\ s:\ 1,\ v:\ 1,\ a:\ 1\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2950}{}\doxysubsubsection{\texorpdfstring{to\+Hsv\+String}{to\+Hsv\+String}}\label{README.md_autotoc_md2950}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toHsvString();\ //\ "{}hsv(0,\ 100\%,\ 100\%)"{}}
+\DoxyCodeLine{color.setAlpha(0.5);}
+\DoxyCodeLine{color.toHsvString();\ //\ "{}hsva(0,\ 100\%,\ 100\%,\ 0.5)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2951}{}\doxysubsubsection{\texorpdfstring{to\+Hsl}{to\+Hsl}}\label{README.md_autotoc_md2951}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toHsl();\ //\ \{\ h:\ 0,\ s:\ 1,\ l:\ 0.5,\ a:\ 1\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2952}{}\doxysubsubsection{\texorpdfstring{to\+Hsl\+String}{to\+Hsl\+String}}\label{README.md_autotoc_md2952}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toHslString();\ //\ "{}hsl(0,\ 100\%,\ 50\%)"{}}
+\DoxyCodeLine{color.setAlpha(0.5);}
+\DoxyCodeLine{color.toHslString();\ //\ "{}hsla(0,\ 100\%,\ 50\%,\ 0.5)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2953}{}\doxysubsubsection{\texorpdfstring{to\+Cmyk\+String}{to\+Cmyk\+String}}\label{README.md_autotoc_md2953}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toCmykString();\ //\ "{}cmyk(0,\ 100,\ 100,\ 0)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2954}{}\doxysubsubsection{\texorpdfstring{to\+Number}{to\+Number}}\label{README.md_autotoc_md2954}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#aabbcc').toNumber()\ ===\ 0xaabbcc\ //\ true}
+\DoxyCodeLine{new\ TinyColor('rgb(1,\ 1,\ 1)').toNumber()\ ===\ (1\ <<\ 16)\ +\ (1\ <<\ 8)\ +\ 1\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2955}{}\doxysubsubsection{\texorpdfstring{to\+Hex}{to\+Hex}}\label{README.md_autotoc_md2955}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toHex();\ //\ "{}ff0000"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2956}{}\doxysubsubsection{\texorpdfstring{to\+Hex\+String}{to\+Hex\+String}}\label{README.md_autotoc_md2956}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toHexString();\ //\ "{}\#ff0000"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2957}{}\doxysubsubsection{\texorpdfstring{to\+Hex8}{to\+Hex8}}\label{README.md_autotoc_md2957}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toHex8();\ //\ "{}ff0000ff"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2958}{}\doxysubsubsection{\texorpdfstring{to\+Hex8\+String}{to\+Hex8\+String}}\label{README.md_autotoc_md2958}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toHex8String();\ //\ "{}\#ff0000ff"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2959}{}\doxysubsubsection{\texorpdfstring{to\+Hex\+Short\+String}{to\+Hex\+Short\+String}}\label{README.md_autotoc_md2959}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('\#ff000000');}
+\DoxyCodeLine{color1.toHexShortString();\ //\ "{}\#ff000000"{}}
+\DoxyCodeLine{color1.toHexShortString(true);\ //\ "{}\#f000"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color2\ =\ new\ TinyColor('\#ff0000ff');}
+\DoxyCodeLine{color2.toHexShortString();\ //\ "{}\#ff0000"{}}
+\DoxyCodeLine{color2.toHexShortString(true);\ //\ "{}\#f00"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2960}{}\doxysubsubsection{\texorpdfstring{to\+Rgb}{to\+Rgb}}\label{README.md_autotoc_md2960}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toRgb();\ //\ \{\ r:\ 255,\ g:\ 0,\ b:\ 0,\ a:\ 1\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2961}{}\doxysubsubsection{\texorpdfstring{to\+Rgb\+String}{to\+Rgb\+String}}\label{README.md_autotoc_md2961}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toRgbString();\ //\ "{}rgb(255,\ 0,\ 0)"{}}
+\DoxyCodeLine{color.setAlpha(0.5);}
+\DoxyCodeLine{color.toRgbString();\ //\ "{}rgba(255,\ 0,\ 0,\ 0.5)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2962}{}\doxysubsubsection{\texorpdfstring{to\+Percentage\+Rgb}{to\+Percentage\+Rgb}}\label{README.md_autotoc_md2962}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toPercentageRgb();\ //\ \{\ r:\ "{}100\%"{},\ g:\ "{}0\%"{},\ b:\ "{}0\%"{},\ a:\ 1\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2963}{}\doxysubsubsection{\texorpdfstring{to\+Percentage\+Rgb\+String}{to\+Percentage\+Rgb\+String}}\label{README.md_autotoc_md2963}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toPercentageRgbString();\ //\ "{}rgb(100\%,\ 0\%,\ 0\%)"{}}
+\DoxyCodeLine{color.setAlpha(0.5);}
+\DoxyCodeLine{color.toPercentageRgbString();\ //\ "{}rgba(100\%,\ 0\%,\ 0\%,\ 0.5)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2964}{}\doxysubsubsection{\texorpdfstring{to\+Name}{to\+Name}}\label{README.md_autotoc_md2964}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color.toName();\ //\ "{}red"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2965}{}\doxysubsubsection{\texorpdfstring{to\+Filter}{to\+Filter}}\label{README.md_autotoc_md2965}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ toMsFilter\ \}\ from\ '@ctrl/tinycolor';}
+\DoxyCodeLine{toMsFilter('red',\ 'blue');\ //\ 'progid:DXImageTransform.Microsoft.gradient(startColorstr=\#ffff0000,endColorstr=\#ff0000ff)'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2966}{}\doxysubsubsection{\texorpdfstring{to\+String}{to\+String}}\label{README.md_autotoc_md2966}
+Print to a string, depending on the input format. You can also override this by passing one of {\ttfamily "{}rgb"{}, "{}prgb"{}, "{}hex6"{}, "{}hex3"{}, "{}hex8"{}, "{}name"{}, "{}hsl"{}, "{}hsv"{}} into the function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{color1.toString();\ //\ "{}red"{}}
+\DoxyCodeLine{color1.toString('hsv');\ //\ "{}hsv(0,\ 100\%,\ 100\%)"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ color2\ =\ new\ TinyColor('rgb(255,\ 0,\ 0)');}
+\DoxyCodeLine{color2.toString();\ //\ "{}rgb(255,\ 0,\ 0)"{}}
+\DoxyCodeLine{color2.setAlpha(0.5);}
+\DoxyCodeLine{color2.toString();\ //\ "{}rgba(255,\ 0,\ 0,\ 0.5)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2967}{}\doxysubsubsection{\texorpdfstring{Color Modification}{Color Modification}}\label{README.md_autotoc_md2967}
+These methods manipulate the current color, and return it for chaining. For instance\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('red')}
+\DoxyCodeLine{\ \ .lighten()}
+\DoxyCodeLine{\ \ .desaturate()}
+\DoxyCodeLine{\ \ .toHexString();\ //\ '\#f53d3d'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2968}{}\doxysubsubsection{\texorpdfstring{lighten}{lighten}}\label{README.md_autotoc_md2968}
+{\ttfamily lighten\+: function(amount = 10) -\/\texorpdfstring{$>$}{>} Tiny\+Color}. Lighten the color a given amount, from 0 to 100. Providing 100 will always return white.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').lighten().toString();\ //\ '\#ff3333'}
+\DoxyCodeLine{new\ TinyColor('\#f00').lighten(100).toString();\ //\ '\#ffffff'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2969}{}\doxysubsubsection{\texorpdfstring{brighten}{brighten}}\label{README.md_autotoc_md2969}
+{\ttfamily brighten\+: function(amount = 10) -\/\texorpdfstring{$>$}{>} Tiny\+Color}. Brighten the color a given amount, from 0 to 100.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').brighten().toString();\ //\ '\#ff1919'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2970}{}\doxysubsubsection{\texorpdfstring{darken}{darken}}\label{README.md_autotoc_md2970}
+{\ttfamily darken\+: function(amount = 10) -\/\texorpdfstring{$>$}{>} Tiny\+Color}. Darken the color a given amount, from 0 to 100. Providing 100 will always return black.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').darken().toString();\ //\ '\#cc0000'}
+\DoxyCodeLine{new\ TinyColor('\#f00').darken(100).toString();\ //\ '\#000000'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2971}{}\doxysubsubsection{\texorpdfstring{tint}{tint}}\label{README.md_autotoc_md2971}
+Mix the color with pure white, from 0 to 100. Providing 0 will do nothing, providing 100 will always return white.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').tint().toString();\ //\ "{}\#ff1a1a"{}}
+\DoxyCodeLine{new\ TinyColor('\#f00').tint(100).toString();\ //\ "{}\#ffffff"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2972}{}\doxysubsubsection{\texorpdfstring{shade}{shade}}\label{README.md_autotoc_md2972}
+Mix the color with pure black, from 0 to 100. Providing 0 will do nothing, providing 100 will always return black.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').shade().toString();\ //\ "{}\#e60000"{}}
+\DoxyCodeLine{new\ TinyColor('\#f00').shade(100).toString();\ //\ "{}\#000000"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2973}{}\doxysubsubsection{\texorpdfstring{desaturate}{desaturate}}\label{README.md_autotoc_md2973}
+{\ttfamily desaturate\+: function(amount = 10) -\/\texorpdfstring{$>$}{>} Tiny\+Color}. Desaturate the color a given amount, from 0 to 100. Providing 100 will is the same as calling {\ttfamily greyscale}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').desaturate().toString();\ //\ "{}\#f20d0d"{}}
+\DoxyCodeLine{new\ TinyColor('\#f00').desaturate(100).toString();\ //\ "{}\#808080"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2974}{}\doxysubsubsection{\texorpdfstring{saturate}{saturate}}\label{README.md_autotoc_md2974}
+{\ttfamily saturate\+: function(amount = 10) -\/\texorpdfstring{$>$}{>} Tiny\+Color}. Saturate the color a given amount, from 0 to 100.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('hsl(0,\ 10\%,\ 50\%)').saturate().toString();\ //\ "{}hsl(0,\ 20\%,\ 50\%)"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2975}{}\doxysubsubsection{\texorpdfstring{greyscale}{greyscale}}\label{README.md_autotoc_md2975}
+{\ttfamily greyscale\+: function() -\/\texorpdfstring{$>$}{>} Tiny\+Color}. Completely desaturates a color into greyscale. Same as calling {\ttfamily desaturate(100)}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').greyscale().toString();\ //\ "{}\#808080"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2976}{}\doxysubsubsection{\texorpdfstring{spin}{spin}}\label{README.md_autotoc_md2976}
+{\ttfamily spin\+: function(amount = 0) -\/\texorpdfstring{$>$}{>} Tiny\+Color}. Spin the hue a given amount, from -\/360 to 360. Calling with 0, 360, or -\/360 will do nothing (since it sets the hue back to what it was before).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').spin(180).toString();\ //\ "{}\#00ffff"{}}
+\DoxyCodeLine{new\ TinyColor('\#f00').spin(-\/90).toString();\ //\ "{}\#7f00ff"{}}
+\DoxyCodeLine{new\ TinyColor('\#f00').spin(90).toString();\ //\ "{}\#80ff00"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ spin(0)\ and\ spin(360)\ do\ nothing}
+\DoxyCodeLine{new\ TinyColor('\#f00').spin(0).toString();\ //\ "{}\#ff0000"{}}
+\DoxyCodeLine{new\ TinyColor('\#f00').spin(360).toString();\ //\ "{}\#ff0000"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2977}{}\doxysubsubsection{\texorpdfstring{mix}{mix}}\label{README.md_autotoc_md2977}
+{\ttfamily mix\+: function(amount = 50) =\texorpdfstring{$>$}{>} Tiny\+Color}. Mix the current color a given amount with another color, from 0 to 100. 0 means no mixing (return current color).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ color1\ =\ new\ TinyColor('\#f0f');}
+\DoxyCodeLine{let\ color2\ =\ new\ TinyColor('\#0f0');}
+\DoxyCodeLine{}
+\DoxyCodeLine{color1.mix(color2).toHexString();\ //\ \#808080}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2978}{}\doxysubsubsection{\texorpdfstring{Color Combinations}{Color Combinations}}\label{README.md_autotoc_md2978}
+Combination functions return an array of Tiny\+Color objects unless otherwise noted.\hypertarget{README.md_autotoc_md2979}{}\doxysubsubsection{\texorpdfstring{analogous}{analogous}}\label{README.md_autotoc_md2979}
+{\ttfamily analogous\+: function(results = 6, slices = 30) -\/\texorpdfstring{$>$}{>} array\texorpdfstring{$<$}{<}Tiny\+Color\texorpdfstring{$>$}{>}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ colors\ =\ new\ TinyColor('\#f00').analogous();}
+\DoxyCodeLine{colors.map(t\ =>\ t.toHexString());\ //\ [\ "{}\#ff0000"{},\ "{}\#ff0066"{},\ "{}\#ff0033"{},\ "{}\#ff0000"{},\ "{}\#ff3300"{},\ "{}\#ff6600"{}\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2980}{}\doxysubsubsection{\texorpdfstring{monochromatic}{monochromatic}}\label{README.md_autotoc_md2980}
+{\ttfamily monochromatic\+: function(, results = 6) -\/\texorpdfstring{$>$}{>} array\texorpdfstring{$<$}{<}Tiny\+Color\texorpdfstring{$>$}{>}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ colors\ =\ new\ TinyColor('\#f00').monochromatic();}
+\DoxyCodeLine{colors.map(t\ =>\ t.toHexString());\ //\ [\ "{}\#ff0000"{},\ "{}\#2a0000"{},\ "{}\#550000"{},\ "{}\#800000"{},\ "{}\#aa0000"{},\ "{}\#d40000"{}\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2981}{}\doxysubsubsection{\texorpdfstring{splitcomplement}{splitcomplement}}\label{README.md_autotoc_md2981}
+{\ttfamily splitcomplement\+: function() -\/\texorpdfstring{$>$}{>} array\texorpdfstring{$<$}{<}Tiny\+Color\texorpdfstring{$>$}{>}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ colors\ =\ new\ TinyColor('\#f00').splitcomplement();}
+\DoxyCodeLine{colors.map(t\ =>\ t.toHexString());\ //\ [\ "{}\#ff0000"{},\ "{}\#ccff00"{},\ "{}\#0066ff"{}\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2982}{}\doxysubsubsection{\texorpdfstring{triad}{triad}}\label{README.md_autotoc_md2982}
+{\ttfamily triad\+: function() -\/\texorpdfstring{$>$}{>} array\texorpdfstring{$<$}{<}Tiny\+Color\texorpdfstring{$>$}{>}}. Alias for {\ttfamily polyad(3)}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ colors\ =\ new\ TinyColor('\#f00').triad();}
+\DoxyCodeLine{colors.map(t\ =>\ t.toHexString());\ //\ [\ "{}\#ff0000"{},\ "{}\#00ff00"{},\ "{}\#0000ff"{}\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2983}{}\doxysubsubsection{\texorpdfstring{tetrad}{tetrad}}\label{README.md_autotoc_md2983}
+{\ttfamily tetrad\+: function() -\/\texorpdfstring{$>$}{>} array\texorpdfstring{$<$}{<}Tiny\+Color\texorpdfstring{$>$}{>}}. Alias for {\ttfamily polyad(4)}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ colors\ =\ new\ TinyColor('\#f00').tetrad();}
+\DoxyCodeLine{colors.map(t\ =>\ t.toHexString());\ //\ [\ "{}\#ff0000"{},\ "{}\#80ff00"{},\ "{}\#00ffff"{},\ "{}\#7f00ff"{}\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2984}{}\doxysubsubsection{\texorpdfstring{polyad}{polyad}}\label{README.md_autotoc_md2984}
+{\ttfamily polyad\+: function(number) -\/\texorpdfstring{$>$}{>} array\texorpdfstring{$<$}{<}Tiny\+Color\texorpdfstring{$>$}{>}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ colors\ =\ new\ TinyColor('\#f00').polyad(4);}
+\DoxyCodeLine{colors.map(t\ =>\ t.toHexString());\ //\ [\ "{}\#ff0000"{},\ "{}\#80ff00"{},\ "{}\#00ffff"{},\ "{}\#7f00ff"{}\ ]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2985}{}\doxysubsubsection{\texorpdfstring{complement}{complement}}\label{README.md_autotoc_md2985}
+{\ttfamily complement\+: function() -\/\texorpdfstring{$>$}{>} Tiny\+Color}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ TinyColor('\#f00').complement().toHexString();\ //\ "{}\#00ffff"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2986}{}\doxysubsection{\texorpdfstring{Color Utilities}{Color Utilities}}\label{README.md_autotoc_md2986}
+\hypertarget{README.md_autotoc_md2987}{}\doxysubsubsection{\texorpdfstring{equals}{equals}}\label{README.md_autotoc_md2987}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ color1\ =\ new\ TinyColor('red');}
+\DoxyCodeLine{let\ color2\ =\ new\ TinyColor('\#f00');}
+\DoxyCodeLine{}
+\DoxyCodeLine{color1.equals(color2);\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2988}{}\doxysubsubsection{\texorpdfstring{random}{random}}\label{README.md_autotoc_md2988}
+Returns a random Tiny\+Color object. This is an implementation of \href{https://github.com/davidmerfield/randomColor/}{\texttt{ random\+Color}} by David Merfield. The difference input parsing and output formatting are handled by Tiny\+Color.
+
+You can pass an options object to influence the type of color it produces. The options object accepts the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily hue} – Controls the hue of the generated color. You can pass a string representing a color name\+: {\ttfamily red}, {\ttfamily orange}, {\ttfamily yellow}, {\ttfamily green}, {\ttfamily blue}, {\ttfamily purple}, {\ttfamily pink} and {\ttfamily monochrome} are currently supported. If you pass a hexidecimal color string such as \#00FFFF, its hue value will be extracted and used to generate colors.
+\item {\ttfamily luminosity} – Controls the luminosity of the generated color. You can specify a string containing bright, light or dark.
+\item {\ttfamily count} – An integer which specifies the number of colors to generate.
+\item {\ttfamily seed} – An integer which when passed will cause random\+Color to return the same color each time.
+\item {\ttfamily alpha} – A decimal between 0 and 1. Only relevant when using a format with an alpha channel (rgba and hsla). Defaults to a random value.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ random\ \}\ from\ '@ctrl/tinycolor';}
+\DoxyCodeLine{//\ Returns\ a\ TinyColor\ for\ an\ attractive\ color}
+\DoxyCodeLine{random();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Returns\ an\ array\ of\ ten\ green\ colors}
+\DoxyCodeLine{random(\{}
+\DoxyCodeLine{\ \ count:\ 10,}
+\DoxyCodeLine{\ \ hue:\ 'green',}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Returns\ a\ TinyColor\ object\ in\ a\ light\ blue}
+\DoxyCodeLine{random(\{}
+\DoxyCodeLine{\ \ luminosity:\ 'light',}
+\DoxyCodeLine{\ \ hue:\ 'blue',}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Returns\ a\ TinyColor\ object\ in\ a\ 'truly\ random'\ color}
+\DoxyCodeLine{random(\{}
+\DoxyCodeLine{\ \ luminosity:\ 'random',}
+\DoxyCodeLine{\ \ hue:\ 'random',}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Returns\ a\ dark\ RGB\ color\ with\ specified\ alpha}
+\DoxyCodeLine{random(\{}
+\DoxyCodeLine{\ \ luminosity:\ 'dark',}
+\DoxyCodeLine{\ \ alpha:\ 0.5,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2989}{}\doxysubsubsection{\texorpdfstring{Readability}{Readability}}\label{README.md_autotoc_md2989}
+Tiny\+Color assesses readability based on the \href{http://www.w3.org/TR/2008/REC-WCAG20-20081211/\#contrast-ratiodef}{\texttt{ Web Content Accessibility Guidelines (Version 2.\+0)}}.\hypertarget{README.md_autotoc_md2990}{}\doxysubsubsubsection{\texorpdfstring{readability}{readability}}\label{README.md_autotoc_md2990}
+{\ttfamily readability\+: function(\+Tiny\+Color, Tiny\+Color) -\/\texorpdfstring{$>$}{>} number}. Returns the contrast ratio between two colors.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ readability\ \}\ from\ '@ctrl/tinycolor';}
+\DoxyCodeLine{readability('\#000',\ '\#000');\ //\ 1}
+\DoxyCodeLine{readability('\#000',\ '\#111');\ //\ 1.1121078324840545}
+\DoxyCodeLine{readability('\#000',\ '\#fff');\ //\ 21}
+
+\end{DoxyCode}
+
+
+Use the values in your own calculations, or use one of the convenience functions below.\hypertarget{README.md_autotoc_md2991}{}\doxysubsubsubsection{\texorpdfstring{is\+Readable}{is\+Readable}}\label{README.md_autotoc_md2991}
+{\ttfamily is\+Readable\+: function(\+Tiny\+Color, Tiny\+Color, Object) -\/\texorpdfstring{$>$}{>} Boolean}. Ensure that foreground and background color combinations meet WCAG guidelines. {\ttfamily Object} is optional, defaulting to {\ttfamily \{level\+: "{}\+AA"{},size\+: "{}small"{}\}}. {\ttfamily level} can be {\ttfamily "{}\+AA"{}} or "{}\+AAA"{} and {\ttfamily size} can be {\ttfamily "{}small"{}} or {\ttfamily "{}large"{}}.
+
+Here are links to read more about the \href{http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html}{\texttt{ AA}} and \href{http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast7.html}{\texttt{ AAA}} requirements.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ isReadable\ \}\ from\ '@ctrl/tinycolor';}
+\DoxyCodeLine{isReadable("{}\#000"{},\ "{}\#111"{});\ //\ false}
+\DoxyCodeLine{isReadable("{}\#ff0088"{},\ "{}\#5c1a72"{},\ \{\ level:\ "{}AA"{},\ size:\ "{}small"{}\ \});\ //\ false}
+\DoxyCodeLine{isReadable("{}\#ff0088"{},\ "{}\#5c1a72"{},\ \{\ level:\ "{}AA"{},\ size:\ "{}large"{}\ \}),\ //\ true}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2992}{}\doxysubsubsubsection{\texorpdfstring{most\+Readable}{most\+Readable}}\label{README.md_autotoc_md2992}
+{\ttfamily most\+Readable\+: function(\+Tiny\+Color, \mbox{[}\+Tiny\+Color, Tiny\+Color ...\mbox{]}, Object) -\/\texorpdfstring{$>$}{>} Boolean}. Given a base color and a list of possible foreground or background colors for that base, returns the most readable color. If none of the colors in the list is readable, {\ttfamily most\+Readable} will return the better of black or white if {\ttfamily include\+Fallback\+Colors\+:true}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ mostReadable\ \}\ from\ '@ctrl/tinycolor';}
+\DoxyCodeLine{mostReadable('\#000',\ ['\#f00',\ '\#0f0',\ '\#00f']).toHexString();\ //\ "{}\#00ff00"{}}
+\DoxyCodeLine{mostReadable('\#123',\ ['\#124',\ '\#125'],\ \{\ includeFallbackColors:\ false\ \}).toHexString();\ //\ "{}\#112255"{}}
+\DoxyCodeLine{mostReadable('\#123',\ ['\#124',\ '\#125'],\ \{\ includeFallbackColors:\ true\ \}).toHexString();\ //\ "{}\#ffffff"{}}
+\DoxyCodeLine{mostReadable('\#ff0088',\ ['\#2e0c3a'],\ \{}
+\DoxyCodeLine{\ \ includeFallbackColors:\ true,}
+\DoxyCodeLine{\ \ level:\ 'AAA',}
+\DoxyCodeLine{\ \ size:\ 'large',}
+\DoxyCodeLine{\}).toHexString();\ //\ "{}\#2e0c3a"{},}
+\DoxyCodeLine{mostReadable('\#ff0088',\ ['\#2e0c3a'],\ \{}
+\DoxyCodeLine{\ \ includeFallbackColors:\ true,}
+\DoxyCodeLine{\ \ level:\ 'AAA',}
+\DoxyCodeLine{\ \ size:\ 'small',}
+\DoxyCodeLine{\}).toHexString();\ //\ "{}\#000000"{},}
+
+\end{DoxyCode}
+
+
+See \href{https://github.com/bgrins/TinyColor/blob/master/index.html}{\texttt{ index.\+html}} in the project for a demo.\hypertarget{README.md_autotoc_md2993}{}\doxysubsection{\texorpdfstring{Common operations}{Common operations}}\label{README.md_autotoc_md2993}
+\hypertarget{README.md_autotoc_md2994}{}\doxysubsubsection{\texorpdfstring{clone}{clone}}\label{README.md_autotoc_md2994}
+{\ttfamily clone\+: function() -\/\texorpdfstring{$>$}{>} Tiny\+Color}. Instantiate a new Tiny\+Color object with the same color. Any changes to the new one won\textquotesingle{}t affect the old one.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ color1\ =\ new\ TinyColor('\#F00');}
+\DoxyCodeLine{const\ color2\ =\ color1.clone();}
+\DoxyCodeLine{color2.setAlpha(0.5);}
+\DoxyCodeLine{}
+\DoxyCodeLine{color1.toString();\ //\ "{}\#ff0000"{}}
+\DoxyCodeLine{color2.toString();\ //\ "{}rgba(255,\ 0,\ 0,\ 0.5)"{}}
+
+\end{DoxyCode}
+ 

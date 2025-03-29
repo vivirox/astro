@@ -1,0 +1,111 @@
+\doxysection{src/lib/ai/mental-\/arena Directory Reference}
+\hypertarget{dir_4736f6c5f583938e3d84c034d4281ac5}{}\label{dir_4736f6c5f583938e3d84c034d4281ac5}\index{src/lib/ai/mental-\/arena Directory Reference@{src/lib/ai/mental-\/arena Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This directory contains an integration with \href{https://github.com/Scarelette/MentalArena}{\texttt{ Mental\+Arena}}, a self-\/play framework for training language models for diagnosis and treatment of mental health disorders.\hypertarget{README.md_autotoc_md37396}{}\doxysubsection{\texorpdfstring{Overview}{Overview}}\label{README.md_autotoc_md37396}
+Mental\+Arena enhances our Emotion\+LLa\+MA implementation by providing\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Self-\/play training}} -\/ Generates domain-\/specific personalized data through simulated patient-\/therapist interactions
+\item {\bfseries{Symptom Encoder}} -\/ Simulates realistic patients from cognitive and behavioral perspectives
+\item {\bfseries{Symptom Decoder}} -\/ Compares diagnosed symptoms with encoded symptoms to improve treatment accuracy
+\item {\bfseries{Synthetic Data Generation}} -\/ Creates high-\/quality therapeutic conversations to improve model training
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37397}{}\doxysubsection{\texorpdfstring{Integration Components}{Integration Components}}\label{README.md_autotoc_md37397}
+
+\begin{DoxyItemize}
+\item {\ttfamily Mental\+Arena\+Adapter} -\/ Type\+Script adapter for Mental\+Arena functionality
+\item {\ttfamily Mental\+Arena\+Factory} -\/ Factory for creating Mental\+Arena adapters
+\item {\ttfamily Mental\+Arena\+Python\+Bridge} -\/ Bridge to execute original Mental\+Arena Python code
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37398}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md37398}
+\hypertarget{README.md_autotoc_md37399}{}\doxysubsubsection{\texorpdfstring{Type\+Script Implementation}{Type\+Script Implementation}}\label{README.md_autotoc_md37399}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ MentalArenaFactory\ \}\ from\ '../lib/ai/mental-\/arena'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ adapter\ from\ environment\ variables}
+\DoxyCodeLine{const\ adapter\ =\ await\ MentalArenaFactory.createFromEnv()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Generate\ synthetic\ therapeutic\ conversations}
+\DoxyCodeLine{const\ syntheticData\ =\ await\ adapter.generateSyntheticData(\{}
+\DoxyCodeLine{\ \ numSessions:\ 10,}
+\DoxyCodeLine{\ \ maxTurns:\ 5,}
+\DoxyCodeLine{\ \ disorders:\ ['anxiety',\ 'depression',\ 'ptsd']}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Fine-\/tune\ model\ using\ generated\ data}
+\DoxyCodeLine{await\ adapter.fineTuneModel(syntheticData)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37400}{}\doxysubsubsection{\texorpdfstring{Python Bridge}{Python Bridge}}\label{README.md_autotoc_md37400}
+For more advanced features, you can use the Python bridge to interact with the original Mental\+Arena codebase\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ MentalArenaPythonBridge\ \}\ from\ '../lib/ai/mental-\/arena'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Initialize\ the\ bridge}
+\DoxyCodeLine{const\ bridge\ =\ new\ MentalArenaPythonBridge('/path/to/mental-\/arena')}
+\DoxyCodeLine{await\ bridge.initialize()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Generate\ data}
+\DoxyCodeLine{await\ bridge.generateData(\{}
+\DoxyCodeLine{\ \ baseModel:\ 'meta-\/llama/Meta-\/Llama-\/3-\/8B',}
+\DoxyCodeLine{\ \ outputFile:\ './data/synthetic.jsonl',}
+\DoxyCodeLine{\ \ numSessions:\ 10}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Process\ data\ for\ fine-\/tuning}
+\DoxyCodeLine{await\ bridge.processData(\{}
+\DoxyCodeLine{\ \ inputFile:\ './data/synthetic.jsonl',}
+\DoxyCodeLine{\ \ finetuneFile:\ './data/finetune.jsonl',}
+\DoxyCodeLine{\ \ baseModel:\ 'meta-\/llama/Meta-\/Llama-\/3-\/8B'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37401}{}\doxysubsection{\texorpdfstring{Command Line Tool}{Command Line Tool}}\label{README.md_autotoc_md37401}
+A command-\/line tool is available for generating synthetic data\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Generate\ 10\ synthetic\ sessions\ using\ TypeScript\ implementation}
+\DoxyCodeLine{ts-\/node\ src/scripts/mental-\/arena-\/generate.ts\ -\/-\/num-\/sessions\ 10\ -\/-\/output-\/path\ ./data/synthetic.jsonl}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Generate\ data\ using\ Python\ bridge}
+\DoxyCodeLine{ts-\/node\ src/scripts/mental-\/arena-\/generate.ts\ -\/-\/use-\/python-\/bridge\ -\/-\/model\ meta-\/llama/Meta-\/Llama-\/3-\/8B}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37402}{}\doxysubsection{\texorpdfstring{Environment Variables}{Environment Variables}}\label{README.md_autotoc_md37402}
+The following environment variables are required\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily EMOTION\+\_\+\+LLAMA\+\_\+\+API\+\_\+\+URL} -\/ URL for the Emotion\+LLa\+MA API
+\item {\ttfamily EMOTION\+\_\+\+LLAMA\+\_\+\+API\+\_\+\+KEY} -\/ API key for Emotion\+LLa\+MA
+\item {\ttfamily FHE\+\_\+\+KEY\+\_\+\+PATH} -\/ Path to FHE key file
+\item {\ttfamily FHE\+\_\+\+CERT\+\_\+\+PATH} -\/ Path to FHE certificate file
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md37403}{}\doxysubsection{\texorpdfstring{Integration with Together\+AI}{Integration with Together\+AI}}\label{README.md_autotoc_md37403}
+To use the Mental\+Arena integration with Together\+AI\+:
+
+
+\begin{DoxyEnumerate}
+\item Generate synthetic data using Mental\+Arena
+\item Process the data for fine-\/tuning
+\item Upload the processed data to Together\+AI
+\item Fine-\/tune a model using Together\+AI\textquotesingle{}s fine-\/tuning API
+\item Deploy the fine-\/tuned model using Together\+AI\textquotesingle{}s inference API
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37404}{}\doxysubsection{\texorpdfstring{Next Steps}{Next Steps}}\label{README.md_autotoc_md37404}
+
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Implement more advanced Symptom Encoder and Decoder
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Add evaluation using mental health benchmarks
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Integrate with Together\+AI fine-\/tuning API
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] Create UI for visualizing patient-\/therapist interactions 
+\end{DoxyItemize}

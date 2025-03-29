@@ -1,0 +1,408 @@
+\doxysection{node\+\_\+modules/rehype-\/parse Directory Reference}
+\hypertarget{dir_25b13cbc0f7c9579357649089408a03c}{}\label{dir_25b13cbc0f7c9579357649089408a03c}\index{node\_modules/rehype-\/parse Directory Reference@{node\_modules/rehype-\/parse Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/rehypejs/rehype/actions}{\texttt{ }} \href{https://codecov.io/github/rehypejs/rehype}{\texttt{ }} \href{https://www.npmjs.com/package/rehype-parse}{\texttt{ }} \href{https://bundlejs.com/?q=rehype-parse}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/rehypejs/rehype/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}}} plugin to add support for parsing from HTML.\hypertarget{readme.md_autotoc_md28828}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md28828}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}unified().use(rehype\+Parse\mbox{[}, options\mbox{]})\`{}
+\item \`{}\+Error\+Code\`{}
+\item \`{}\+Error\+Severity\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Example\+: fragment versus document
+\item Example\+: whitespace around and inside \`{}\texorpdfstring{$<$}{<}html\texorpdfstring{$>$}{>}\`{}
+\item Example\+: parse errors
+\end{DoxyItemize}
+\item Syntax
+\item Syntax tree
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item Sponsor
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28829}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md28829}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} (\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}) plugin that defines how to take HTML as input and turn it into a syntax tree. When it’s used, HTML can be parsed and other rehype plugins can be used after it.
+
+See \href{https://github.com/rehypejs/rehype}{\texttt{ the monorepo readme}} for info on what the rehype ecosystem is.\hypertarget{readme.md_autotoc_md28830}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md28830}
+This plugin adds support to unified for parsing HTML. If you also need to serialize HTML, you can alternatively use \href{../rehype/}{\texttt{ {\ttfamily rehype}}}, which combines unified, this plugin, and \href{../rehype-stringify/}{\texttt{ {\ttfamily rehype-\/stringify}}}.
+
+When you are in a browser, trust your content, don’t need positional info, and value a smaller bundle size, you can use \href{https://github.com/rehypejs/rehype-dom/tree/main/packages/rehype-dom-parse}{\texttt{ {\ttfamily rehype-\/dom-\/parse}}} instead.
+
+If you don’t use plugins and want to access the syntax tree, you can directly use \href{https://github.com/syntax-tree/hast-util-from-html}{\texttt{ {\ttfamily hast-\/util-\/from-\/html}}}, which is used inside this plugin. rehype focusses on making it easier to transform content by abstracting such internals away.\hypertarget{readme.md_autotoc_md28831}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md28831}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ rehype-\/parse}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'https://esm.sh/rehype-\/parse@9'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ rehypeParse\ from\ 'https://esm.sh/rehype-\/parse@9?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28832}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md28832}
+Say we have the following module {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeRemark\ from\ 'rehype-\/remark'}
+\DoxyCodeLine{import\ remarkStringify\ from\ 'remark-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(rehypeParse)}
+\DoxyCodeLine{\ \ .use(rehypeRemark)}
+\DoxyCodeLine{\ \ .use(remarkStringify)}
+\DoxyCodeLine{\ \ .process('<h1>Hello,\ world!</h1>')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+…running that with {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Hello,\ world!}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28833}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md28833}
+This package exports no identifiers. The default export is \`{}rehype\+Parse\`{}.\hypertarget{readme.md_autotoc_md28834}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unified().use(rehype\+Parse\mbox{[}, options\mbox{]})}}{{\ttfamily unified().use(rehype\+Parse\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md28834}
+Plugin to add support for parsing from HTML.\hypertarget{readme.md_autotoc_md28835}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md28835}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28836}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md28836}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md28837}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Error\+Code}}{{\ttfamily Error\+Code}}}\label{readme.md_autotoc_md28837}
+Known names of \href{https://html.spec.whatwg.org/multipage/parsing.html\#parse-errors}{\texttt{ parse errors}} (Type\+Script type).
+
+For a bit more info on each error, see \href{https://github.com/syntax-tree/hast-util-from-html\#optionskey-in-errorcode}{\texttt{ {\ttfamily hast-\/util-\/from-\/html}}}.\hypertarget{readme.md_autotoc_md28838}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md28838}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ ErrorCode\ =}
+\DoxyCodeLine{\ \ |\ 'abandonedHeadElementChild'}
+\DoxyCodeLine{\ \ |\ 'abruptClosingOfEmptyComment'}
+\DoxyCodeLine{\ \ |\ 'abruptDoctypePublicIdentifier'}
+\DoxyCodeLine{\ \ |\ 'abruptDoctypeSystemIdentifier'}
+\DoxyCodeLine{\ \ |\ 'absenceOfDigitsInNumericCharacterReference'}
+\DoxyCodeLine{\ \ |\ 'cdataInHtmlContent'}
+\DoxyCodeLine{\ \ |\ 'characterReferenceOutsideUnicodeRange'}
+\DoxyCodeLine{\ \ |\ 'closingOfElementWithOpenChildElements'}
+\DoxyCodeLine{\ \ |\ 'controlCharacterInInputStream'}
+\DoxyCodeLine{\ \ |\ 'controlCharacterReference'}
+\DoxyCodeLine{\ \ |\ 'disallowedContentInNoscriptInHead'}
+\DoxyCodeLine{\ \ |\ 'duplicateAttribute'}
+\DoxyCodeLine{\ \ |\ 'endTagWithAttributes'}
+\DoxyCodeLine{\ \ |\ 'endTagWithTrailingSolidus'}
+\DoxyCodeLine{\ \ |\ 'endTagWithoutMatchingOpenElement'}
+\DoxyCodeLine{\ \ |\ 'eofBeforeTagName'}
+\DoxyCodeLine{\ \ |\ 'eofInCdata'}
+\DoxyCodeLine{\ \ |\ 'eofInComment'}
+\DoxyCodeLine{\ \ |\ 'eofInDoctype'}
+\DoxyCodeLine{\ \ |\ 'eofInElementThatCanContainOnlyText'}
+\DoxyCodeLine{\ \ |\ 'eofInScriptHtmlCommentLikeText'}
+\DoxyCodeLine{\ \ |\ 'eofInTag'}
+\DoxyCodeLine{\ \ |\ 'incorrectlyClosedComment'}
+\DoxyCodeLine{\ \ |\ 'incorrectlyOpenedComment'}
+\DoxyCodeLine{\ \ |\ 'invalidCharacterSequenceAfterDoctypeName'}
+\DoxyCodeLine{\ \ |\ 'invalidFirstCharacterOfTagName'}
+\DoxyCodeLine{\ \ |\ 'misplacedDoctype'}
+\DoxyCodeLine{\ \ |\ 'misplacedStartTagForHeadElement'}
+\DoxyCodeLine{\ \ |\ 'missingAttributeValue'}
+\DoxyCodeLine{\ \ |\ 'missingDoctype'}
+\DoxyCodeLine{\ \ |\ 'missingDoctypeName'}
+\DoxyCodeLine{\ \ |\ 'missingDoctypePublicIdentifier'}
+\DoxyCodeLine{\ \ |\ 'missingDoctypeSystemIdentifier'}
+\DoxyCodeLine{\ \ |\ 'missingEndTagName'}
+\DoxyCodeLine{\ \ |\ 'missingQuoteBeforeDoctypePublicIdentifier'}
+\DoxyCodeLine{\ \ |\ 'missingQuoteBeforeDoctypeSystemIdentifier'}
+\DoxyCodeLine{\ \ |\ 'missingSemicolonAfterCharacterReference'}
+\DoxyCodeLine{\ \ |\ 'missingWhitespaceAfterDoctypePublicKeyword'}
+\DoxyCodeLine{\ \ |\ 'missingWhitespaceAfterDoctypeSystemKeyword'}
+\DoxyCodeLine{\ \ |\ 'missingWhitespaceBeforeDoctypeName'}
+\DoxyCodeLine{\ \ |\ 'missingWhitespaceBetweenAttributes'}
+\DoxyCodeLine{\ \ |\ 'missingWhitespaceBetweenDoctypePublicAndSystemIdentifiers'}
+\DoxyCodeLine{\ \ |\ 'nestedComment'}
+\DoxyCodeLine{\ \ |\ 'nestedNoscriptInHead'}
+\DoxyCodeLine{\ \ |\ 'nonConformingDoctype'}
+\DoxyCodeLine{\ \ |\ 'nonVoidHtmlElementStartTagWithTrailingSolidus'}
+\DoxyCodeLine{\ \ |\ 'noncharacterCharacterReference'}
+\DoxyCodeLine{\ \ |\ 'noncharacterInInputStream'}
+\DoxyCodeLine{\ \ |\ 'nullCharacterReference'}
+\DoxyCodeLine{\ \ |\ 'openElementsLeftAfterEof'}
+\DoxyCodeLine{\ \ |\ 'surrogateCharacterReference'}
+\DoxyCodeLine{\ \ |\ 'surrogateInInputStream'}
+\DoxyCodeLine{\ \ |\ 'unexpectedCharacterAfterDoctypeSystemIdentifier'}
+\DoxyCodeLine{\ \ |\ 'unexpectedCharacterInAttributeName'}
+\DoxyCodeLine{\ \ |\ 'unexpectedCharacterInUnquotedAttributeValue'}
+\DoxyCodeLine{\ \ |\ 'unexpectedEqualsSignBeforeAttributeName'}
+\DoxyCodeLine{\ \ |\ 'unexpectedNullCharacter'}
+\DoxyCodeLine{\ \ |\ 'unexpectedQuestionMarkInsteadOfTagName'}
+\DoxyCodeLine{\ \ |\ 'unexpectedSolidusInTag'}
+\DoxyCodeLine{\ \ |\ 'unknownNamedCharacterReference'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28839}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Error\+Severity}}{{\ttfamily Error\+Severity}}}\label{readme.md_autotoc_md28839}
+Error severity (Type\+Script type).
+
+
+\begin{DoxyItemize}
+\item {\ttfamily 0} or {\ttfamily false} — turn the parse error off
+\item {\ttfamily 1} or {\ttfamily true} — turn the parse error into a warning
+\item {\ttfamily 2} — turn the parse error into an actual error\+: processing stops
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28840}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md28840}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ ErrorSeverity\ =\ boolean\ |\ 0\ |\ 1\ |\ 2}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28841}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md28841}
+Configuration (Type\+Script type).
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: this is not an XML parser. It supports SVG as embedded in HTML. It does not support the features available in XML. Passing SVG files might break but fragments of modern SVG should be fine. Use \href{https://github.com/syntax-tree/xast-util-from-xml}{\texttt{ {\ttfamily xast-\/util-\/from-\/xml}}} to parse XML. \end{quote}
+\hypertarget{readme.md_autotoc_md28842}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md28842}
+
+\begin{DoxyItemize}
+\item {\ttfamily fragment} ({\ttfamily boolean}, default\+: {\ttfamily false}) — whether to parse as a fragment; by default unopened {\ttfamily html}, {\ttfamily head}, and {\ttfamily body} elements are opened
+\item {\ttfamily emit\+Parse\+Errors} ({\ttfamily boolean}, default\+: {\ttfamily false}) — whether to emit \href{https://html.spec.whatwg.org/multipage/parsing.html\#parse-errors}{\texttt{ parse errors}} while parsing
+\item {\ttfamily space} (`\textquotesingle{}html'{\ttfamily or}\textquotesingle{}svg\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}html\textquotesingle{}{\ttfamily ) — which space the document is in \texorpdfstring{$\ast$}{*}}verbose{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — add extra positional info about attributes, start tags, and end tags}
+\item {\ttfamily \mbox{[}}\mbox{[}key in Error\+Code\mbox{]}{\ttfamily \mbox{]}\mbox{[}api-\/error-\/code\mbox{]} (\mbox{[}}Error\+Severity{\ttfamily \mbox{]}\mbox{[}api-\/error-\/severity\mbox{]}, default\+:}1{\ttfamily if }options.\+emit\+Parse\+Errors{\ttfamily , otherwise}0\`{}) — configure specific \href{https://html.spec.whatwg.org/multipage/parsing.html\#parse-errors}{\texttt{ parse errors}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28843}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md28843}
+\hypertarget{readme.md_autotoc_md28844}{}\doxysubsubsection{\texorpdfstring{Example\+: fragment versus document}{Example\+: fragment versus document}}\label{readme.md_autotoc_md28844}
+The following example shows the difference between parsing as a document and parsing as a fragment\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ '<title>Hi!</title><h1>Hello!</h1>'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ String(}
+\DoxyCodeLine{\ \ \ \ await\ unified()}
+\DoxyCodeLine{\ \ \ \ \ \ .use(rehypeParse,\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ \ \ \ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ \ \ \ \ .process(doc)}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ String(}
+\DoxyCodeLine{\ \ \ \ await\ unified()}
+\DoxyCodeLine{\ \ \ \ \ \ .use(rehypeParse,\ \{fragment:\ false\})}
+\DoxyCodeLine{\ \ \ \ \ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ \ \ \ \ .process(doc)}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+…yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<title>Hi!</title><h1>Hello!</h1>}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<html><head><title>Hi!</title></head><body><h1>Hello!</h1></body></html>}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: observe that when a whole document is expected (second example), missing elements are opened and closed. \end{quote}
+\hypertarget{readme.md_autotoc_md28845}{}\doxysubsubsection{\texorpdfstring{Example\+: whitespace around and inside {\ttfamily \texorpdfstring{$<$}{<}html\texorpdfstring{$>$}{>}}}{Example\+: whitespace around and inside {\ttfamily \texorpdfstring{$<$}{<}html\texorpdfstring{$>$}{>}}}}\label{readme.md_autotoc_md28845}
+The following example shows how whitespace is handled when around and directly inside the {\ttfamily \texorpdfstring{$<$}{<}html\texorpdfstring{$>$}{>}} element\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ \`{}<!doctype\ html>}
+\DoxyCodeLine{<html\ lang=en>}
+\DoxyCodeLine{\ \ <head>}
+\DoxyCodeLine{\ \ \ \ <title>Hi!</title>}
+\DoxyCodeLine{\ \ </head>}
+\DoxyCodeLine{\ \ <body>}
+\DoxyCodeLine{\ \ \ \ <h1>Hello!</h1>}
+\DoxyCodeLine{\ \ </body>}
+\DoxyCodeLine{</html>`}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(}
+\DoxyCodeLine{\ \ String(await\ unified().use(rehypeParse).use(rehypeStringify).process(doc))}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+…yields (where {\ttfamily ␠} represents a space character)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!doctype\ html><html\ lang="{}en"{}><head>}
+\DoxyCodeLine{\ \ \ \ <title>Hi!</title>}
+\DoxyCodeLine{\ \ </head>}
+\DoxyCodeLine{\ \ <body>}
+\DoxyCodeLine{\ \ \ \ <h1>Hello!</h1>}
+\DoxyCodeLine{␠␠}
+\DoxyCodeLine{</body></html>}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: observe that the line ending before {\ttfamily \texorpdfstring{$<$}{<}html\texorpdfstring{$>$}{>}} is ignored, the line ending and two spaces before {\ttfamily \texorpdfstring{$<$}{<}head\texorpdfstring{$>$}{>}} is moved inside it, and the line ending after {\ttfamily \texorpdfstring{$<$}{<}/body\texorpdfstring{$>$}{>}} is moved before it. \end{quote}
+
+
+This behavior is described by the HTML standard (see the section 13.\+2.\+6.\+4.\+1 “\+The ‘initial’ insertion mode” and adjacent states) which rehype follows.
+
+The changes to this meaningless whitespace should not matter, except when formatting markup, in which case \href{https://github.com/rehypejs/rehype-format}{\texttt{ {\ttfamily rehype-\/format}}} can be used to improve the source code.\hypertarget{readme.md_autotoc_md28846}{}\doxysubsubsection{\texorpdfstring{Example\+: parse errors}{Example\+: parse errors}}\label{readme.md_autotoc_md28846}
+The following example shows how HTML parse errors can be enabled and configured\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{import\ \{reporter\}\ from\ 'vfile-\/reporter'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(rehypeParse,\ \{}
+\DoxyCodeLine{\ \ \ \ emitParseErrors:\ true,\ //\ Emit\ all.}
+\DoxyCodeLine{\ \ \ \ missingWhitespaceBeforeDoctypeName:\ 2,\ //\ Mark\ one\ as\ a\ fatal\ error.}
+\DoxyCodeLine{\ \ \ \ nonVoidHtmlElementStartTagWithTrailingSolidus:\ false\ //\ Ignore\ one.}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .use(rehypeStringify).process(`<!doctypehtml>}
+\DoxyCodeLine{<title\ class="{}a"{}\ class="{}b"{}>Hello…</title>}
+\DoxyCodeLine{<h1/>World!</h1>`)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(reporter(file))}
+
+\end{DoxyCode}
+
+
+…yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1:10-\/1:10\ error\ \ \ Missing\ whitespace\ before\ doctype\ name\ missing-\/whitespace-\/before-\/doctype-\/name\ hast-\/util-\/from-\/html}
+\DoxyCodeLine{2:23-\/2:23\ warning\ Unexpected\ duplicate\ attribute\ \ \ \ \ \ \ \ \ duplicate-\/attribute\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hast-\/util-\/from-\/html}
+\DoxyCodeLine{}
+\DoxyCodeLine{2\ messages\ (✖\ 1\ error,\ ⚠\ 1\ warning)}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+🧑‍🏫 {\bfseries{Info}}\+: messages in unified are warnings instead of errors. Other linters (such as ESLint) almost always use errors. Why? Those tools {\itshape only} check code style. They don’t generate, transform, and format code, which is what rehype and unified focus on, too. Errors in unified mean the same as an exception in your Java\+Script code\+: a crash. That’s why we use warnings instead, because we continue checking more HTML and continue running more plugins. \end{quote}
+\hypertarget{readme.md_autotoc_md28847}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md28847}
+HTML is parsed according to WHATWG HTML (the living standard), which is also followed by all browsers.\hypertarget{readme.md_autotoc_md28848}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md28848}
+The syntax tree format used in rehype is \href{https://github.com/syntax-tree/hast}{\texttt{ hast}}.\hypertarget{readme.md_autotoc_md28849}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md28849}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Error\+Code\`{}, \`{}\+Error\+Severity\`{}, and \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md28850}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md28850}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily rehype-\/parse@\texorpdfstring{$^\wedge$}{\string^}9}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md28851}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md28851}
+As {\bfseries{rehype}} works on HTML and improper use of HTML can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack, use of rehype can also be unsafe. Use \href{https://github.com/rehypejs/rehype-sanitize}{\texttt{ {\ttfamily rehype-\/sanitize}}} to make the tree safe.
+
+Use of rehype plugins could also open you up to other attacks. Carefully assess each plugin and the risks involved in using them.
+
+For info on how to submit a report, see our \href{https://github.com/rehypejs/.github/blob/main/security.md}{\texttt{ security policy}}.\hypertarget{readme.md_autotoc_md28852}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md28852}
+See \href{https://github.com/rehypejs/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/rehypejs/.github}{\texttt{ {\ttfamily rehypejs/.github}}} for ways to get started. See \href{https://github.com/rehypejs/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/rehypejs/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md28853}{}\doxysubsection{\texorpdfstring{Sponsor}{Sponsor}}\label{readme.md_autotoc_md28853}
+Support this effort and give back by sponsoring on \href{https://opencollective.com/unified}{\texttt{ Open\+Collective}}!
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{10}{|X[-1]}|}
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}{\PBS\centering \href{https://vercel.com}{\texttt{ Vercel}}~\newline
+~\newline
+ \href{https://vercel.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://motif.land}{\texttt{ Motif}}~\newline
+~\newline
+ \href{https://motif.land}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.hashicorp.com}{\texttt{ Hashi\+Corp}}~\newline
+~\newline
+ \href{https://www.hashicorp.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gitbook.com}{\texttt{ Git\+Book}}~\newline
+~\newline
+ \href{https://www.gitbook.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gatsbyjs.org}{\texttt{ Gatsby}}~\newline
+~\newline
+ \href{https://www.gatsbyjs.org}{\texttt{ }}   }}\\
+&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}\\\cline{1-10}
+\end{longtabu}
+
+
+\href{https://www.netlify.com}{\texttt{ Netlify}}~\newline
+~\newline
+
+
+\href{https://www.netlify.com}{\texttt{ }}  
+
+\href{https://www.coinbase.com}{\texttt{ Coinbase}}~\newline
+~\newline
+ \href{https://www.coinbase.com}{\texttt{ }}  
+
+\href{https://themeisle.com}{\texttt{ Theme\+Isle}}~\newline
+~\newline
+ \href{https://themeisle.com}{\texttt{ }}  
+
+\href{https://expo.io}{\texttt{ Expo}}~\newline
+~\newline
+ \href{https://expo.io}{\texttt{ }}  
+
+\href{https://boostnote.io}{\texttt{ Boost Note}}~\newline
+~\newline
+ \href{https://boostnote.io}{\texttt{ }}  
+
+\href{https://markdown.space}{\texttt{ Markdown Space}}~\newline
+~\newline
+ \href{https://markdown.space}{\texttt{ }}  
+
+\href{https://www.holloway.com}{\texttt{ Holloway}}~\newline
+~\newline
+ \href{https://www.holloway.com}{\texttt{ }}  
+
+~\newline
+ \href{https://opencollective.com/unified}{\texttt{ {\bfseries{You?}}}} ~\newline
+~\newline
+   \hypertarget{readme.md_autotoc_md28854}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md28854}
+\href{https://github.com/rehypejs/rehype/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

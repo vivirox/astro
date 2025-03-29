@@ -1,0 +1,24 @@
+var searchData = [
+  [
+    'xmp_0',
+    [
+      'xmp',
+      [
+        '../struct_metadata_baton.html#a7e87eb41252d408d0a0903ffa73de13f',
+        1,
+        'MetadataBaton',
+      ],
+    ],
+  ],
+  [
+    'xmplength_1',
+    [
+      'xmpLength',
+      [
+        '../struct_metadata_baton.html#a145629be53547e8355e7e73ca0fc6ef5',
+        1,
+        'MetadataBaton',
+      ],
+    ],
+  ],
+]

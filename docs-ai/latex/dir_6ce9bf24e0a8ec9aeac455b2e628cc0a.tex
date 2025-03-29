@@ -1,0 +1,379 @@
+\doxysection{node\+\_\+modules/generic-\/pool Directory Reference}
+\hypertarget{dir_6ce9bf24e0a8ec9aeac455b2e628cc0a}{}\label{dir_6ce9bf24e0a8ec9aeac455b2e628cc0a}\index{node\_modules/generic-\/pool Directory Reference@{node\_modules/generic-\/pool Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}build status\mbox{]}(\href{https://secure.travis-ci.org/coopernurse/node-pool.png}{\texttt{ https\+://secure.\+travis-\/ci.\+org/coopernurse/node-\/pool.\+png}})\mbox{]}(\href{http://travis-ci.org/coopernurse/node-pool}{\texttt{ http\+://travis-\/ci.\+org/coopernurse/node-\/pool}})\hypertarget{README.md_autotoc_md16008}{}\doxysubsection{\texorpdfstring{Generic Pool}{Generic Pool}}\label{README.md_autotoc_md16008}
+\hypertarget{README.md_autotoc_md16009}{}\doxysubsubsection{\texorpdfstring{About}{About}}\label{README.md_autotoc_md16009}
+Generic resource pool with Promise based API. Can be used to reuse or throttle usage of expensive resources such as database connections.
+
+{\bfseries{V3 upgrade warning}}
+
+Version 3 contains many breaking changes. The differences are mostly minor and I hope easy to accommodate. There is a very rough and basic \href{https://gist.github.com/sandfox/5ca20648b60a0cb959638c0cd6fcd02d}{\texttt{ upgrade guide}} I\textquotesingle{}ve written, improvements and other attempts most welcome.
+
+If you are after the older version 2 of this library you should look at the \href{https://github.com/coopernurse/node-pool/tree/v2.5}{\texttt{ current github branch}} for it.\hypertarget{README.md_autotoc_md16010}{}\doxysubsubsection{\texorpdfstring{History}{History}}\label{README.md_autotoc_md16010}
+The history has been moved to the \doxylink{tests_2security_2node__modules_2_8pnpm_2axios_0d1_88_83_2node__modules_2axios_2_c_h_a_n_g_e_l_o_g_8md}{CHANGELOG}\hypertarget{README.md_autotoc_md16011}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md16011}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ generic-\/pool\ [-\/-\/save]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16012}{}\doxysubsubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md16012}
+Here is an example using a fictional generic database driver that doesn\textquotesingle{}t implement any pooling whatsoever itself.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ genericPool\ =\ require("{}generic-\/pool"{});}
+\DoxyCodeLine{const\ DbDriver\ =\ require("{}some-\/db-\/driver"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Step\ 1\ -\/\ Create\ pool\ using\ a\ factory\ object}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{const\ factory\ =\ \{}
+\DoxyCodeLine{\ \ create:\ function()\ \{}
+\DoxyCodeLine{\ \ \ \ return\ DbDriver.createClient();}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ destroy:\ function(client)\ \{}
+\DoxyCodeLine{\ \ \ \ client.disconnect();}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ opts\ =\ \{}
+\DoxyCodeLine{\ \ max:\ 10,\ //\ maximum\ size\ of\ the\ pool}
+\DoxyCodeLine{\ \ min:\ 2\ //\ minimum\ size\ of\ the\ pool}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myPool\ =\ genericPool.createPool(factory,\ opts);}
+\DoxyCodeLine{}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Step\ 2\ -\/\ Use\ pool\ in\ your\ code\ to\ acquire/release\ resources}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ acquire\ connection\ -\/\ Promise\ is\ resolved}
+\DoxyCodeLine{//\ once\ a\ resource\ becomes\ available}
+\DoxyCodeLine{const\ resourcePromise\ =\ myPool.acquire();}
+\DoxyCodeLine{}
+\DoxyCodeLine{resourcePromise}
+\DoxyCodeLine{\ \ .then(function(client)\ \{}
+\DoxyCodeLine{\ \ \ \ client.query("{}select\ *\ from\ foo"{},\ [],\ function()\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ return\ object\ back\ to\ pool}
+\DoxyCodeLine{\ \ \ \ \ \ myPool.release(client);}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .catch(function(err)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ handle\ error\ -\/\ this\ is\ generally\ a\ timeout\ or\ maxWaitingClients}
+\DoxyCodeLine{\ \ \ \ //\ error}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ Step\ 3\ -\/\ Drain\ pool\ during\ shutdown\ (optional)}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{//\ Only\ call\ this\ once\ in\ your\ application\ -\/-\/\ at\ the\ point\ you\ want}
+\DoxyCodeLine{//\ to\ shutdown\ and\ stop\ using\ this\ pool.}
+\DoxyCodeLine{myPool.drain().then(function()\ \{}
+\DoxyCodeLine{\ \ myPool.clear();}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16013}{}\doxysubsubsection{\texorpdfstring{Documentation}{Documentation}}\label{README.md_autotoc_md16013}
+\hypertarget{README.md_autotoc_md16014}{}\doxysubsubsubsection{\texorpdfstring{Creating a pool}{Creating a pool}}\label{README.md_autotoc_md16014}
+Whilst it is possible to directly instantiate the Pool class directly, it is recommended to use the {\ttfamily create\+Pool} function exported by module as the constructor method signature may change in the future.\hypertarget{README.md_autotoc_md16015}{}\doxysubsubsubsection{\texorpdfstring{create\+Pool}{create\+Pool}}\label{README.md_autotoc_md16015}
+The create\+Pool function takes two arguments\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily factory} \+: an object containing functions to create/destroy/test resources for the {\ttfamily Pool}
+\item {\ttfamily opts} \+: an optional object/dictonary to allow configuring/altering behaviour of the {\ttfamily Pool}
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ genericPool\ =\ require('generic-\/pool')}
+\DoxyCodeLine{const\ pool\ =\ genericPool.createPool(factory,\ opts)}
+
+\end{DoxyCode}
+
+
+{\bfseries{factory}}
+
+Can be any object/instance but must have the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily create} \+: a function that the pool will call when it wants a new resource. It should return a Promise that either resolves to a {\ttfamily resource} or rejects to an {\ttfamily Error} if it is unable to create a resource for whatever reason.
+\item {\ttfamily destroy}\+: a function that the pool will call when it wants to destroy a resource. It should accept one argument {\ttfamily resource} where {\ttfamily resource} is whatever {\ttfamily factory.\+create} made. The {\ttfamily destroy} function should return a {\ttfamily Promise} that resolves once it has destroyed the resource.
+\end{DoxyItemize}
+
+optionally it can also have the following property\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily validate}\+: a function that the pool will call if it wants to validate a resource. It should accept one argument {\ttfamily resource} where {\ttfamily resource} is whatever {\ttfamily factory.\+create} made. Should return a {\ttfamily Promise} that resolves a {\ttfamily boolean} where {\ttfamily true} indicates the resource is still valid or {\ttfamily false} if the resource is invalid.
+\end{DoxyItemize}
+
+{\itshape Note\+: The values returned from {\ttfamily create}, {\ttfamily destroy}, and {\ttfamily validate} are all wrapped in a {\ttfamily Promise.\+resolve} by the pool before being used internally.}
+
+{\bfseries{opts}}
+
+An optional object/dictionary with the any of the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily max}\+: maximum number of resources to create at any given time. (default=1)
+\item {\ttfamily min}\+: minimum number of resources to keep in pool at any given time. If this is set \texorpdfstring{$>$}{>}= max, the pool will silently set the min to equal {\ttfamily max}. (default=0)
+\item {\ttfamily max\+Waiting\+Clients}\+: maximum number of queued requests allowed, additional {\ttfamily acquire} calls will be callback with an {\ttfamily err} in a future cycle of the event loop.
+\item {\ttfamily test\+On\+Borrow}\+: {\ttfamily boolean}\+: should the pool validate resources before giving them to clients. Requires that {\ttfamily factory.\+validate} is specified.
+\item {\ttfamily acquire\+Timeout\+Millis}\+: max milliseconds an {\ttfamily acquire} call will wait for a resource before timing out. (default no limit), if supplied should non-\/zero positive integer.
+\item {\ttfamily destroy\+Timeout\+Millis}\+: max milliseconds a {\ttfamily destroy} call will wait for a resource before timing out. (default no limit), if supplied should non-\/zero positive integer.
+\item {\ttfamily fifo} \+: if true the oldest resources will be first to be allocated. If false the most recently released resources will be the first to be allocated. This in effect turns the pool\textquotesingle{}s behaviour from a queue into a stack. {\ttfamily boolean}, (default true)
+\item {\ttfamily priority\+Range}\+: int between 1 and x -\/ if set, borrowers can specify their relative priority in the queue if no resources are available. see example. (default 1)
+\item {\ttfamily autostart}\+: boolean, should the pool start creating resources, initialize the evictor, etc once the constructor is called. If false, the pool can be started by calling {\ttfamily pool.\+start}, otherwise the first call to {\ttfamily acquire} will start the pool. (default true)
+\item {\ttfamily eviction\+Run\+Interval\+Millis}\+: How often to run eviction checks. Default\+: 0 (does not run).
+\item {\ttfamily num\+Tests\+Per\+Eviction\+Run}\+: Number of resources to check each eviction run. Default\+: 3.
+\item {\ttfamily soft\+Idle\+Timeout\+Millis}\+: amount of time an object may sit idle in the pool before it is eligible for eviction by the idle object evictor (if any), with the extra condition that at least "{}min idle"{} object instances remain in the pool. Default -\/1 (nothing can get evicted)
+\item {\ttfamily idle\+Timeout\+Millis}\+: the minimum amount of time that an object may sit idle in the pool before it is eligible for eviction due to idle time. Supercedes {\ttfamily soft\+Idle\+Timeout\+Millis} Default\+: 30000
+\item {\ttfamily Promise}\+: Promise lib, a Promises/\+A+ implementation that the pool should use. Defaults to whatever {\ttfamily global.\+Promise} is (usually native promises).
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md16016}{}\doxysubsubsubsection{\texorpdfstring{pool.\+acquire}{pool.\+acquire}}\label{README.md_autotoc_md16016}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ onfulfilled\ =\ function(resource)\{}
+\DoxyCodeLine{\ \ \ \ resource.doStuff()}
+\DoxyCodeLine{\ \ \ \ //\ release/destroy/etc}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{pool.acquire().then(onfulfilled)}
+\DoxyCodeLine{//or}
+\DoxyCodeLine{const\ priority\ =\ 2}
+\DoxyCodeLine{pool.acquire(priority).then(onfulfilled)}
+
+\end{DoxyCode}
+
+
+This function is for when you want to "{}borrow"{} a resource from the pool.
+
+{\ttfamily acquire} takes one optional argument\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily priority}\+: optional, number, see {\bfseries{Priority Queueing}} below.
+\end{DoxyItemize}
+
+and returns a {\ttfamily Promise} Once a resource in the pool is available, the promise will be resolved with a {\ttfamily resource} (whatever {\ttfamily factory.\+create} makes for you). If the Pool is unable to give a resource (e.\+g timeout) then the promise will be rejected with an {\ttfamily Error}\hypertarget{README.md_autotoc_md16017}{}\doxysubsubsubsection{\texorpdfstring{pool.\+release}{pool.\+release}}\label{README.md_autotoc_md16017}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pool.release(resource)}
+
+\end{DoxyCode}
+
+
+This function is for when you want to return a resource to the pool.
+
+{\ttfamily release} takes one required argument\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily resource}\+: a previously borrowed resource
+\end{DoxyItemize}
+
+and returns a {\ttfamily Promise}. This promise will resolve once the {\ttfamily resource} is accepted by the pool, or reject if the pool is unable to accept the {\ttfamily resource} for any reason (e.\+g {\ttfamily resource} is not a resource or object that came from the pool). If you do not care the outcome it is safe to ignore this promise.\hypertarget{README.md_autotoc_md16018}{}\doxysubsubsubsection{\texorpdfstring{pool.\+is\+Borrowed\+Resource}{pool.\+is\+Borrowed\+Resource}}\label{README.md_autotoc_md16018}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pool.isBorrowedResource(resource)}
+
+\end{DoxyCode}
+
+
+This function is for when you need to check if a resource has been acquired from the pool and not yet released/destroyed.
+
+{\ttfamily is\+Borrowed\+Resource} takes one required argument\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily resource}\+: any object which you need to test
+\end{DoxyItemize}
+
+and returns true (primitive, not Promise) if resource is currently borrowed from the pool, false otherwise.\hypertarget{README.md_autotoc_md16019}{}\doxysubsubsubsection{\texorpdfstring{pool.\+destroy}{pool.\+destroy}}\label{README.md_autotoc_md16019}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pool.destroy(resource)}
+
+\end{DoxyCode}
+
+
+This function is for when you want to return a resource to the pool but want it destroyed rather than being made available to other resources. E.\+g you may know the resource has timed out or crashed.
+
+{\ttfamily destroy} takes one required argument\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily resource}\+: a previously borrowed resource
+\end{DoxyItemize}
+
+and returns a {\ttfamily Promise}. This promise will resolve once the {\ttfamily resource} is accepted by the pool, or reject if the pool is unable to accept the {\ttfamily resource} for any reason (e.\+g {\ttfamily resource} is not a resource or object that came from the pool). If you do not care the outcome it is safe to ignore this promise.\hypertarget{README.md_autotoc_md16020}{}\doxysubsubsubsection{\texorpdfstring{pool.\+on}{pool.\+on}}\label{README.md_autotoc_md16020}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pool.on('factoryCreateError',\ function(err)\{}
+\DoxyCodeLine{\ \ //log\ stuff\ maybe}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{pool.on('factoryDestroyError',\ function(err)\{}
+\DoxyCodeLine{\ \ //log\ stuff\ maybe}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+The pool is an event emitter. Below are the events it emits and any args for those events
+
+
+\begin{DoxyItemize}
+\item {\ttfamily factory\+Create\+Error} \+: emitted when a promise returned by {\ttfamily factory.\+create} is rejected. If this event has no listeners then the {\ttfamily error} will be silently discarded
+\begin{DoxyItemize}
+\item {\ttfamily error}\+: whatever {\ttfamily reason} the promise was rejected with.
+\end{DoxyItemize}
+\item {\ttfamily factory\+Destroy\+Error} \+: emitted when a promise returned by {\ttfamily factory.\+destroy} is rejected. If this event has no listeners then the {\ttfamily error} will be silently discarded
+\begin{DoxyItemize}
+\item {\ttfamily error}\+: whatever {\ttfamily reason} the promise was rejected with.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md16021}{}\doxysubsubsubsection{\texorpdfstring{pool.\+start}{pool.\+start}}\label{README.md_autotoc_md16021}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pool.start()}
+
+\end{DoxyCode}
+
+
+If {\ttfamily autostart} is {\ttfamily false} then this method can be used to start the pool and therefore begin creation of resources, start the evictor, and any other internal logic.\hypertarget{README.md_autotoc_md16022}{}\doxysubsubsubsection{\texorpdfstring{pool.\+ready}{pool.\+ready}}\label{README.md_autotoc_md16022}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pool.ready()}
+
+\end{DoxyCode}
+
+
+Waits for the pool to fully start.\hypertarget{README.md_autotoc_md16023}{}\doxysubsubsubsection{\texorpdfstring{pool.\+use}{pool.\+use}}\label{README.md_autotoc_md16023}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ myTask\ =\ dbClient\ =>\ \{}
+\DoxyCodeLine{\ \ return\ new\ Promise(\ (resolve,\ reject)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ do\ something\ with\ the\ client\ and\ resolve/reject}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{pool.use(myTask).then(/*\ a\ promise\ that\ will\ run\ after\ myTask\ resolves\ */)}
+
+\end{DoxyCode}
+
+
+This method handles acquiring a {\ttfamily resource} from the pool, handing it to your function and then calling {\ttfamily pool.\+release} or {\ttfamily pool.\+destroy} with resource after your function has finished.
+
+{\ttfamily use} takes one required argument\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily fn}\+: a function that accepts a {\ttfamily resource} and returns a {\ttfamily Promise}. Once that promise {\ttfamily resolve}s the {\ttfamily resource} is returned to the pool, else if it {\ttfamily reject}s then the resource is destroyed.
+\item {\ttfamily priority}\+: Optionally, you can specify the priority as number. See Priority Queueing section.
+\end{DoxyItemize}
+
+and returns a {\ttfamily Promise} that either {\ttfamily resolve}s with the value from the user supplied {\ttfamily fn} or {\ttfamily reject}s with an error.\hypertarget{README.md_autotoc_md16024}{}\doxysubsubsection{\texorpdfstring{Idle Object Eviction}{Idle Object Eviction}}\label{README.md_autotoc_md16024}
+The pool has an evictor (off by default) which will inspect idle items in the pool and {\ttfamily destroy} them if they are too old.
+
+By default the evictor does not run, to enable it you must set the {\ttfamily eviction\+Run\+Interval\+Millis} option to a non-\/zero value. Once enable the evictor will check at most {\ttfamily num\+Tests\+Per\+Eviction\+Run} each time, this is to stop it blocking your application if you have lots of resources in the pool.\hypertarget{README.md_autotoc_md16025}{}\doxysubsubsection{\texorpdfstring{Priority Queueing}{Priority Queueing}}\label{README.md_autotoc_md16025}
+The pool supports optional priority queueing. This becomes relevant when no resources are available and the caller has to wait. {\ttfamily acquire()} accepts an optional priority int which specifies the caller\textquotesingle{}s relative position in the queue. Each priority slot has it\textquotesingle{}s own internal queue created for it. When a resource is available for borrowing, the first request in the highest priority queue will be given it.
+
+Specifying a {\ttfamily priority} to {\ttfamily acquire} that is outside the {\ttfamily priority\+Range} set at {\ttfamily Pool} creation time will result in the {\ttfamily priority} being converted the lowest possible {\ttfamily priority}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ create\ pool\ with\ priorityRange\ of\ 3}
+\DoxyCodeLine{//\ borrowers\ can\ specify\ a\ priority\ 0\ to\ 2}
+\DoxyCodeLine{const\ opts\ =\ \{}
+\DoxyCodeLine{\ \ priorityRange\ :\ 3}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{const\ pool\ =\ genericPool.createPool(someFactory,opts);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ acquire\ connection\ -\/\ no\ priority\ specified\ -\/\ will\ go\ onto\ lowest\ priority\ queue}
+\DoxyCodeLine{pool.acquire().then(function(client)\ \{}
+\DoxyCodeLine{\ \ \ \ pool.release(client);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ acquire\ connection\ -\/\ high\ priority\ -\/\ will\ go\ into\ highest\ priority\ queue}
+\DoxyCodeLine{pool.acquire(0).then(function(client)\ \{}
+\DoxyCodeLine{\ \ \ \ pool.release(client);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ acquire\ connection\ -\/\ medium\ priority\ -\/\ will\ go\ into\ 'mid'\ priority\ queue}
+\DoxyCodeLine{pool.acquire(1).then(function(client)\ \{}
+\DoxyCodeLine{\ \ \ \ pool.release(client);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ etc..}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16026}{}\doxysubsubsection{\texorpdfstring{Draining}{Draining}}\label{README.md_autotoc_md16026}
+If you are shutting down a long-\/lived process, you may notice that node fails to exit for 30 seconds or so. This is a side effect of the idle\+Timeout\+Millis behavior -- the pool has a set\+Timeout() call registered that is in the event loop queue, so node won\textquotesingle{}t terminate until all resources have timed out, and the pool stops trying to manage them.
+
+This behavior will be more problematic when you set factory.\+min \texorpdfstring{$>$}{>} 0, as the pool will never become empty, and the set\+Timeout calls will never end.
+
+In these cases, use the pool.\+drain() function. This sets the pool into a "{}draining"{} state which will gracefully wait until all idle resources have timed out. For example, you can call\+:
+
+If you do this, your node process will exit gracefully.
+
+If you know you would like to terminate all the available resources in your pool before any timeouts they might have are reached, you can use {\ttfamily clear()} in conjunction with {\ttfamily drain()}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ p\ =\ pool.drain()}
+\DoxyCodeLine{.then(function()\ \{}
+\DoxyCodeLine{\ \ \ \ return\ pool.clear();}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ The {\ttfamily promise} returned will resolve once all waiting clients have acquired and return resources, and any available resources have been destroyed
+
+One side-\/effect of calling {\ttfamily drain()} is that subsequent calls to {\ttfamily acquire()} will throw an Error.\hypertarget{README.md_autotoc_md16027}{}\doxysubsubsection{\texorpdfstring{Pooled function decoration}{Pooled function decoration}}\label{README.md_autotoc_md16027}
+This has now been extracted out it\textquotesingle{}s own module \href{https://github.com/sandfox/generic-pool-decorator}{\texttt{ generic-\/pool-\/decorator}}\hypertarget{README.md_autotoc_md16028}{}\doxysubsubsection{\texorpdfstring{Pool info}{Pool info}}\label{README.md_autotoc_md16028}
+The following properties will let you get information about the pool\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ How\ many\ many\ more\ resources\ can\ the\ pool\ manage/create}
+\DoxyCodeLine{pool.spareResourceCapacity}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ number\ of\ resources\ in\ the\ pool\ regardless\ of}
+\DoxyCodeLine{//\ whether\ they\ are\ free\ or\ in\ use}
+\DoxyCodeLine{pool.size}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ number\ of\ unused\ resources\ in\ the\ pool}
+\DoxyCodeLine{pool.available}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ number\ of\ resources\ that\ are\ currently\ acquired\ by\ userland\ code}
+\DoxyCodeLine{pool.borrowed}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ number\ of\ callers\ waiting\ to\ acquire\ a\ resource}
+\DoxyCodeLine{pool.pending}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ number\ of\ maxixmum\ number\ of\ resources\ allowed\ by\ pool}
+\DoxyCodeLine{pool.max}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ returns\ number\ of\ minimum\ number\ of\ resources\ allowed\ by\ pool}
+\DoxyCodeLine{pool.min}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16029}{}\doxysubsubsection{\texorpdfstring{Run Tests}{Run Tests}}\label{README.md_autotoc_md16029}
+\begin{DoxyVerb}$ npm install
+$ npm test
+\end{DoxyVerb}
+
+
+The tests are run/written using Tap. Most are ports from the old espresso tests and are not in great condition. Most cases are inside {\ttfamily test/generic-\/pool-\/test.\+js} with newer cases in their own files (legacy reasons).\hypertarget{README.md_autotoc_md16030}{}\doxysubsubsection{\texorpdfstring{Linting}{Linting}}\label{README.md_autotoc_md16030}
+We use eslint combined with prettier\hypertarget{README.md_autotoc_md16031}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md16031}
+(The MIT License)
+
+Copyright (c) 2010-\/2016 James Cooper \texorpdfstring{$<$}{<}\href{mailto:james@bitmechanic.com}{\texttt{ james@bitmechanic.\+com}}\texorpdfstring{$>$}{>}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \textquotesingle{}Software\textquotesingle{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \textquotesingle{}AS IS\textquotesingle{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 

@@ -1,0 +1,435 @@
+\doxysection{node\+\_\+modules/rehype-\/sanitize Directory Reference}
+\hypertarget{dir_f55cd8e5e7cb30762380a31ebfdc197b}{}\label{dir_f55cd8e5e7cb30762380a31ebfdc197b}\index{node\_modules/rehype-\/sanitize Directory Reference@{node\_modules/rehype-\/sanitize Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/rehypejs/rehype-sanitize/actions}{\texttt{ }} \href{https://codecov.io/github/rehypejs/rehype-sanitize}{\texttt{ }} \href{https://www.npmjs.com/package/rehype-sanitize}{\texttt{ }} \href{https://bundlejs.com/?q=rehype-sanitize}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/rehypejs/rehype/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}}} plugin to sanitize HTML.\hypertarget{readme.md_autotoc_md28927}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md28927}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}default\+Schema\`{}
+\item \`{}unified().use(rehype\+Sanitize\mbox{[}, schema\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item Example
+\begin{DoxyItemize}
+\item Example\+: headings (DOM clobbering)
+\item Example\+: math
+\item Example\+: syntax highlighting
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28928}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md28928}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} (\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}) plugin to make sure HTML is safe. It drops anything that isn’t explicitly allowed by a schema (defaulting to how {\ttfamily github.\+com} works).
+
+{\bfseries{unified}} is a project that transforms content with abstract syntax trees (ASTs). {\bfseries{rehype}} adds support for HTML to unified. {\bfseries{hast}} is the HTML AST that rehype uses. This is a rehype plugin that transforms hast.\hypertarget{readme.md_autotoc_md28929}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md28929}
+It’s recommended to sanitize your HTML any time you do not completely trust authors or the plugins being used.
+
+This plugin is built on \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/sanitize}}}, which cleans \href{https://github.com/syntax-tree/hast}{\texttt{ hast}} syntax trees. rehype focusses on making it easier to transform content by abstracting such internals away.\hypertarget{readme.md_autotoc_md28930}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md28930}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ rehype-\/sanitize}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeSanitize\ from\ 'https://esm.sh/rehype-\/sanitize@6'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ rehypeSanitize\ from\ 'https://esm.sh/rehype-\/sanitize@6?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28931}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md28931}
+Say we have the following file {\ttfamily index.\+html}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ onmouseover="{}alert('alpha')"{}>}
+\DoxyCodeLine{\ \ <a\ href="{}jAva\ script:alert('bravo')"{}>delta</a>}
+\DoxyCodeLine{\ \ <img\ src="{}x"{}\ onerror="{}alert('charlie')"{}>}
+\DoxyCodeLine{\ \ <iframe\ src="{}javascript:alert('delta')"{}></iframe>}
+\DoxyCodeLine{\ \ <math>}
+\DoxyCodeLine{\ \ \ \ <mi\ xlink:href="{}data:x,<script>alert('echo')</script>"{}></mi>}
+\DoxyCodeLine{\ \ </math>}
+\DoxyCodeLine{</div>}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{require('child\_process').spawn('echo',\ ['hack!']);}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeSanitize\ from\ 'rehype-\/sanitize'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ \{read\}\ from\ 'to-\/vfile'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(rehypeParse,\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ .use(rehypeSanitize)}
+\DoxyCodeLine{\ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ .process(await\ read('index.html'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+Now running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div>}
+\DoxyCodeLine{\ \ <a>delta</a>}
+\DoxyCodeLine{\ \ <img\ src="{}x"{}>}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28932}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md28932}
+This package exports the identifier \`{}default\+Schema\`{}. The default export is \`{}rehype\+Sanitize\`{}.\hypertarget{readme.md_autotoc_md28933}{}\doxysubsubsection{\texorpdfstring{{\ttfamily default\+Schema}}{{\ttfamily default\+Schema}}}\label{readme.md_autotoc_md28933}
+Default schema (\doxylink{README.md_options}{\`{}\+Options\`{}}).
+
+Follows Git\+Hub style sanitation.\hypertarget{readme.md_autotoc_md28934}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unified().use(rehype\+Sanitize\mbox{[}, schema\mbox{]})}}{{\ttfamily unified().use(rehype\+Sanitize\mbox{[}, schema\mbox{]})}}}\label{readme.md_autotoc_md28934}
+Sanitize HTML.\hypertarget{readme.md_autotoc_md28935}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md28935}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28936}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md28936}
+Transform (\href{https://github.com/unifiedjs/unified?tab=readme-ov-file\#transformer}{\texttt{ {\ttfamily Transformer}}}).\hypertarget{readme.md_autotoc_md28937}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md28937}
+Schema that defines what nodes and properties are allowed (Type\+Script type).
+
+This option is a bit advanced as it requires knowledge of syntax trees, so see the docs for \href{https://github.com/syntax-tree/hast-util-sanitize\#schema}{\texttt{ {\ttfamily Schema} in {\ttfamily hast-\/util-\/sanitize}}}.\hypertarget{readme.md_autotoc_md28938}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{readme.md_autotoc_md28938}
+\hypertarget{readme.md_autotoc_md28939}{}\doxysubsubsection{\texorpdfstring{Example\+: headings (DOM clobbering)}{Example\+: headings (DOM clobbering)}}\label{readme.md_autotoc_md28939}
+DOM clobbering is an attack in which malicious HTML confuses an application by naming elements, through {\ttfamily id} or {\ttfamily name} attributes, such that they overshadow presumed properties in {\ttfamily window} (the global scope in browsers). DOM clobbering often occurs when user content is used to generate heading IDs. To illustrate, say we have this {\ttfamily browser.\+js} file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(current)}
+
+\end{DoxyCode}
+
+
+And our module {\ttfamily example.\+js} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ @typedef\ \{import('hast').Root\}\ Root}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ browser\ =\ String(await\ fs.readFile('browser.js'))}
+\DoxyCodeLine{const\ document\ =\ \`{}<a\ name="{}old"{}></a>}
+\DoxyCodeLine{<h1\ id="{}current"{}>Current</h1>}
+\DoxyCodeLine{\$\{`<p>\$\{'Lorem\ ipsum\ dolor\ sit\ amet.\ '.repeat(20)\}</p>\(\backslash\)n`.repeat(20)\}}
+\DoxyCodeLine{<p>Link\ to\ <a\ href="{}\#current"{}>current</a>,\ link\ to\ <a\ href="{}\#old"{}>old</a>.`}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(rehypeParse,\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ .use(function\ ()\ \{}
+\DoxyCodeLine{\ \ \ \ /**}
+\DoxyCodeLine{\ \ \ \ \ *\ @param\ \{Root\}\ tree}
+\DoxyCodeLine{\ \ \ \ \ */}
+\DoxyCodeLine{\ \ \ \ return\ function\ (tree)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ tree.children.push(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ type:\ 'element',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ tagName:\ 'script',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ properties:\ \{type:\ 'module'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ browser\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ .process(document)}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ fs.writeFile('output.html',\ String(file))}
+
+\end{DoxyCode}
+
+
+This code processes HTML, inlines our browser script into it, and writes it out. The input HTML models how markdown often looks on platforms like Git\+Hub, which allow heading IDs to be generated from their text and embedded HTML (including {\ttfamily \texorpdfstring{$<$}{<}a name="{}old"{}\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>}}, which can be used to create anchors for renamed headings to prevent links from breaking). The generated HTML looks like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<a\ name="{}old"{}></a>}
+\DoxyCodeLine{<h1\ id="{}current"{}>Current</h1>}
+\DoxyCodeLine{<p>Lorem\ ipsum\ dolor\ sit\ amet.<!-\/-\/…-\/-\/></p>}
+\DoxyCodeLine{<p>Link\ to\ <a\ href="{}\#current"{}>current</a>,\ link\ to\ <a\ href="{}\#old"{}>old</a>.</p>}
+\DoxyCodeLine{<script\ type="{}module"{}>console.log(current)</script>}
+
+\end{DoxyCode}
+
+
+When you run this code locally and open the generated {\ttfamily output.\+html}, you can observe that the links at the bottom work, but also that the {\ttfamily \texorpdfstring{$<$}{<}h1\texorpdfstring{$>$}{>}} element is printed to the console (the clobbering).
+
+{\ttfamily rehype-\/sanitize} solves the clobbering by prefixing every {\ttfamily id} and {\ttfamily name} attribute with `\textquotesingle{}user-\/content-\/'{\ttfamily . Changing}example.\+js\`{}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{@@\ -\/15,6\ +15,7\ @@\ \$\{`<p>\$\{'Lorem\ ipsum\ dolor\ sit\ amet.\ '.repeat(20)\}</p>\(\backslash\)n`.repeat(20)\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ \ \ \ .use(rehypeParse,\ \{fragment:\ true\})}
+\DoxyCodeLine{+\ \ \ \ .use(rehypeSanitize)}
+\DoxyCodeLine{\ \ \ \ \ .use(function\ ()\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ /**}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ *\ @param\ \{Root\}\ tree}
+
+\end{DoxyCode}
+
+
+Now yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/<a\ name="{}old"{}></a>}
+\DoxyCodeLine{-\/<h1\ id="{}current"{}>Current</h1>}
+\DoxyCodeLine{+<a\ name="{}user-\/content-\/old"{}></a>}
+\DoxyCodeLine{+<h1\ id="{}user-\/content-\/current"{}>Current</h1>}
+
+\end{DoxyCode}
+
+
+This introduces another problem as the links are now broken. It could perhaps be solved by changing all links, but that would make the links rather ugly, and we’d need to track what IDs we have outside of the user content on our pages too. Alternatively, and what arguably looks better, we could rewrite pretty links to their safe but ugly prefixed elements. This is what Git\+Hub does. Replace {\ttfamily browser.\+js} with the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{///\ <reference\ lib="{}dom"{}\ />}
+\DoxyCodeLine{/*\ eslint-\/env\ browser\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Page\ load\ (you\ could\ wrap\ this\ in\ a\ DOM\ ready\ if\ the\ script\ is\ loaded\ early).}
+\DoxyCodeLine{hashchange()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ When\ URL\ changes.}
+\DoxyCodeLine{window.addEventListener('hashchange',\ hashchange)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ When\ on\ the\ URL\ already,\ perhaps\ after\ scrolling,\ and\ clicking\ again,\ which}
+\DoxyCodeLine{//\ doesn’t\ emit\ \`{}hashchange`.}
+\DoxyCodeLine{document.addEventListener(}
+\DoxyCodeLine{\ \ 'click',}
+\DoxyCodeLine{\ \ function\ (event)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (}
+\DoxyCodeLine{\ \ \ \ \ \ event.target\ \&\&}
+\DoxyCodeLine{\ \ \ \ \ \ event.target\ instanceof\ HTMLAnchorElement\ \&\&}
+\DoxyCodeLine{\ \ \ \ \ \ event.target.href\ ===\ location.href\ \&\&}
+\DoxyCodeLine{\ \ \ \ \ \ location.hash.length\ >\ 1}
+\DoxyCodeLine{\ \ \ \ )\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ setImmediate(function\ ()\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (!event.defaultPrevented)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ hashchange()}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ false}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ hashchange()\ \{}
+\DoxyCodeLine{\ \ /**\ @type\ \{string\ |\ undefined\}\ */}
+\DoxyCodeLine{\ \ let\ hash}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ hash\ =\ decodeURIComponent(location.hash.slice(1)).toLowerCase()}
+\DoxyCodeLine{\ \ \}\ catch\ \{}
+\DoxyCodeLine{\ \ \ \ return}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ name\ =\ 'user-\/content-\/'\ +\ hash}
+\DoxyCodeLine{\ \ const\ target\ =}
+\DoxyCodeLine{\ \ \ \ document.getElementById(name)\ ||\ document.getElementsByName(name)[0]}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ if\ (target)\ \{}
+\DoxyCodeLine{\ \ \ \ setImmediate(function\ ()\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ target.scrollIntoView()}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28940}{}\doxysubsubsection{\texorpdfstring{Example\+: math}{Example\+: math}}\label{readme.md_autotoc_md28940}
+Math can be enabled in rehype by using the plugins \href{https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex}{\texttt{ {\ttfamily rehype-\/katex}}} or \href{https://github.com/remarkjs/remark-math/tree/main/packages/rehype-mathjax}{\texttt{ {\ttfamily rehype-\/mathjax}}}. The operate on {\ttfamily span}s and {\ttfamily div}s with certain classes and inject complex markup and of inline styles, most of which this plugin will remove. Say our module {\ttfamily example.\+js} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeKatex\ from\ 'rehype-\/katex'}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeSanitize\ from\ 'rehype-\/sanitize'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(rehypeParse,\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ .use(rehypeKatex)}
+\DoxyCodeLine{\ \ .use(rehypeSanitize)}
+\DoxyCodeLine{\ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ .process('<span\ class="{}math\ math-\/inline"{}>L</span>')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+Running that yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<span><span><span>LL</span><span\ aria-\/hidden="{}true"{}><span><span></span><span>L</span></span></span></span></span>}
+
+\end{DoxyCode}
+
+
+It is possible to pass a schema which allows Math\+ML and inline styles, but it would be complex, and allows {\itshape all} inline styles, which is unsafe. Alternatively, and arguably better, would be to {\itshape first} sanitize the HTML, allowing only the specific classes that {\ttfamily rehype-\/katex} and {\ttfamily rehype-\/mathjax} use, and {\itshape then} using those plugins\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{@@\ -\/1,7\ +1,7\ @@}
+\DoxyCodeLine{\ import\ rehypeKatex\ from\ 'rehype-\/katex'}
+\DoxyCodeLine{\ import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{-\/import\ rehypeSanitize\ from\ 'rehype-\/sanitize'}
+\DoxyCodeLine{+import\ rehypeSanitize,\ \{defaultSchema\}\ from\ 'rehype-\/sanitize'}
+\DoxyCodeLine{\ import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{\ import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ main()}
+\DoxyCodeLine{@@\ -\/9,8\ +9,21\ @@\ main()}
+\DoxyCodeLine{\ const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ \ .use(rehypeParse,\ \{fragment:\ true\})}
+\DoxyCodeLine{+\ \ .use(rehypeSanitize,\ \{}
+\DoxyCodeLine{+\ \ \ \ ...defaultSchema,}
+\DoxyCodeLine{+\ \ \ \ attributes:\ \{}
+\DoxyCodeLine{+\ \ \ \ \ \ ...defaultSchema.attributes,}
+\DoxyCodeLine{+\ \ \ \ \ \ div:\ [}
+\DoxyCodeLine{+\ \ \ \ \ \ \ \ ...(defaultSchema.attributes.div\ ||\ []),}
+\DoxyCodeLine{+\ \ \ \ \ \ \ \ ['className',\ 'math',\ 'math-\/display']}
+\DoxyCodeLine{+\ \ \ \ \ \ ],}
+\DoxyCodeLine{+\ \ \ \ \ \ span:\ [}
+\DoxyCodeLine{+\ \ \ \ \ \ \ \ ...(defaultSchema.attributes.span\ ||\ []),}
+\DoxyCodeLine{+\ \ \ \ \ \ \ \ ['className',\ 'math',\ 'math-\/inline']}
+\DoxyCodeLine{+\ \ \ \ \ \ ]}
+\DoxyCodeLine{+\ \ \ \ \}}
+\DoxyCodeLine{+\ \ \})}
+\DoxyCodeLine{\ \ \ .use(rehypeKatex)}
+\DoxyCodeLine{-\/\ \ .use(rehypeSanitize)}
+\DoxyCodeLine{\ \ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ \ .process('<span\ class="{}math\ math-\/inline"{}>L</span>')}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28941}{}\doxysubsubsection{\texorpdfstring{Example\+: syntax highlighting}{Example\+: syntax highlighting}}\label{readme.md_autotoc_md28941}
+Highlighting, for example with \href{https://github.com/rehypejs/rehype-highlight}{\texttt{ {\ttfamily rehype-\/highlight}}}, can be solved similar to how math is solved (see previous example). That is, use {\ttfamily rehype-\/sanitize} and allow the classes needed for highlighting, and highlight afterwards\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeHighlight\ from\ 'rehype-\/highlight'}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeSanitize,\ \{defaultSchema\}\ from\ 'rehype-\/sanitize'}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(rehypeParse,\ \{fragment:\ true\})}
+\DoxyCodeLine{\ \ .use(rehypeSanitize,\ \{}
+\DoxyCodeLine{\ \ \ \ ...defaultSchema,}
+\DoxyCodeLine{\ \ \ \ attributes:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ ...defaultSchema.attributes,}
+\DoxyCodeLine{\ \ \ \ \ \ code:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ...(defaultSchema.attributes.code\ ||\ []),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ List\ of\ all\ allowed\ languages:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ['className',\ 'language-\/js',\ 'language-\/css',\ 'language-\/md']}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .use(rehypeHighlight,\ \{subset:\ false\})}
+\DoxyCodeLine{\ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ .process('<pre><code\ className="{}language-\/js"{}>console.log(1)</code></pre>')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+Alternatively, it’s possible to make highlighting safe by allowing all the classes used on tokens. Modifying the above code like so\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ \ .use(rehypeParse,\ \{fragment:\ true\})}
+\DoxyCodeLine{+\ \ .use(rehypeHighlight,\ \{subset:\ false\})}
+\DoxyCodeLine{\ \ \ .use(rehypeSanitize,\ \{}
+\DoxyCodeLine{\ \ \ \ \ ...defaultSchema,}
+\DoxyCodeLine{\ \ \ \ \ attributes:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ ...defaultSchema.attributes,}
+\DoxyCodeLine{-\/\ \ \ \ \ \ code:\ [}
+\DoxyCodeLine{-\/\ \ \ \ \ \ \ \ ...(defaultSchema.attributes.code\ ||\ []),}
+\DoxyCodeLine{-\/\ \ \ \ \ \ \ \ //\ List\ of\ all\ allowed\ languages:}
+\DoxyCodeLine{-\/\ \ \ \ \ \ \ \ ['className',\ 'hljs',\ 'language-\/js',\ 'language-\/css',\ 'language-\/md']}
+\DoxyCodeLine{+\ \ \ \ \ \ span:\ [}
+\DoxyCodeLine{+\ \ \ \ \ \ \ \ ...(defaultSchema.attributes.span\ ||\ []),}
+\DoxyCodeLine{+\ \ \ \ \ \ \ \ //\ List\ of\ all\ allowed\ tokens:}
+\DoxyCodeLine{+\ \ \ \ \ \ \ \ ['className',\ 'hljs-\/addition',\ 'hljs-\/attr',\ 'hljs-\/attribute',\ 'hljs-\/built\_in',\ 'hljs-\/bullet',\ 'hljs-\/char',\ 'hljs-\/code',\ 'hljs-\/comment',\ 'hljs-\/deletion',\ 'hljs-\/doctag',\ 'hljs-\/emphasis',\ 'hljs-\/formula',\ 'hljs-\/keyword',\ 'hljs-\/link',\ 'hljs-\/literal',\ 'hljs-\/meta',\ 'hljs-\/name',\ 'hljs-\/number',\ 'hljs-\/operator',\ 'hljs-\/params',\ 'hljs-\/property',\ 'hljs-\/punctuation',\ 'hljs-\/quote',\ 'hljs-\/regexp',\ 'hljs-\/section',\ 'hljs-\/selector-\/attr',\ 'hljs-\/selector-\/class',\ 'hljs-\/selector-\/id',\ 'hljs-\/selector-\/pseudo',\ 'hljs-\/selector-\/tag',\ 'hljs-\/string',\ 'hljs-\/strong',\ 'hljs-\/subst',\ 'hljs-\/symbol',\ 'hljs-\/tag',\ 'hljs-\/template-\/tag',\ 'hljs-\/template-\/variable',\ 'hljs-\/title',\ 'hljs-\/type',\ 'hljs-\/variable'}
+\DoxyCodeLine{+\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \})}
+\DoxyCodeLine{-\/\ \ .use(rehypeHighlight,\ \{subset:\ false\})}
+\DoxyCodeLine{\ \ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ \ .process('<pre><code\ className="{}language-\/js"{}>console.log(1)</code></pre>')}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28942}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md28942}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md28943}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md28943}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily rehype-\/sanitize@\texorpdfstring{$^\wedge$}{\string^}6}, compatible with Node.\+js 16.
+
+This plugin works with {\ttfamily rehype-\/parse} version 3+, {\ttfamily rehype-\/stringify} version 3+, {\ttfamily rehype} version 5+, and {\ttfamily unified} version 6+.\hypertarget{readme.md_autotoc_md28944}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md28944}
+The defaults are safe but improper use of {\ttfamily rehype-\/sanitize} can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack.
+
+Use {\ttfamily rehype-\/sanitize} after the last unsafe thing\+: everything after {\ttfamily rehype-\/sanitize} could be unsafe (but is fine if you do trust it).\hypertarget{readme.md_autotoc_md28945}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md28945}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/sanitize}}} — utility to sanitize \href{https://github.com/syntax-tree/hast}{\texttt{ hast}}
+\item \href{https://github.com/rehypejs/rehype-format}{\texttt{ {\ttfamily rehype-\/format}}} — format HTML
+\item \href{https://github.com/rehypejs/rehype-minify}{\texttt{ {\ttfamily rehype-\/minify}}} — minify HTML
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28946}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md28946}
+See \href{https://github.com/rehypejs/.github/blob/HEAD/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/rehypejs/.github}{\texttt{ {\ttfamily rehypejs/.github}}} for ways to get started. See \href{https://github.com/rehypejs/.github/blob/HEAD/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/rehypejs/.github/blob/HEAD/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md28947}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md28947}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

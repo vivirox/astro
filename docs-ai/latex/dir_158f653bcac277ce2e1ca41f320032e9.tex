@@ -1,0 +1,125 @@
+\doxysection{node\+\_\+modules/url-\/parse Directory Reference}
+\hypertarget{dir_158f653bcac277ce2e1ca41f320032e9}{}\label{dir_158f653bcac277ce2e1ca41f320032e9}\index{node\_modules/url-\/parse Directory Reference@{node\_modules/url-\/parse Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/url-parse}{\texttt{ }}\href{https://github.com/unshiftio/url-parse/actions?query=workflow\%3ACI+branch\%3Amaster}{\texttt{ }}\href{https://coveralls.io/r/unshiftio/url-parse?branch=master}{\texttt{ }}
+
+\href{https://saucelabs.com/u/url-parse}{\texttt{ }}
+
+{\bfseries{{\ttfamily url-\/parse} was created in 2014 when the WHATWG URL API was not available in Node.\+js and the {\ttfamily URL} interface was supported only in some browsers. Today this is no longer true. The {\ttfamily URL} interface is available in all supported Node.\+js release lines and basically all browsers. Consider using it for better security and accuracy.}}
+
+The {\ttfamily url-\/parse} method exposes two different API interfaces. The \href{https://nodejs.org/api/url.html}{\texttt{ {\ttfamily url}}} interface that you know from Node.\+js and the new \href{https://developer.mozilla.org/en-US/docs/Web/API/URL/URL}{\texttt{ {\ttfamily URL}}} interface that is available in the latest browsers.
+
+In version {\ttfamily 0.\+1} we moved from a DOM based parsing solution, using the {\ttfamily \texorpdfstring{$<$}{<}a\texorpdfstring{$>$}{>}} element, to a full Regular Expression solution. The main reason for this was to make the URL parser available in different Java\+Script environments as you don\textquotesingle{}t always have access to the DOM. An example of such environment is the \href{https://developer.mozilla.org/en/docs/Web/API/Worker}{\texttt{ {\ttfamily Worker}}} interface. The Reg\+Exp based solution didn\textquotesingle{}t work well as it required a lot of lookups causing major problems in Fire\+Fox. In version {\ttfamily 1.\+0.\+0} we ditched the Reg\+Exp based solution in favor of a pure string parsing solution which chops up the URL into smaller pieces. This module still has a really small footprint as it has been designed to be used on the client side.
+
+In addition to URL parsing we also expose the bundled {\ttfamily querystringify} module.\hypertarget{README.md_autotoc_md34550}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md34550}
+This module is designed to be used using either browserify or Node.\+js it\textquotesingle{}s released in the public npm registry and can be installed using\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ url-\/parse}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34551}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md34551}
+All examples assume that this library is bootstrapped using\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict';}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ Url\ =\ require('url-\/parse');}
+
+\end{DoxyCode}
+
+
+To parse an URL simply call the {\ttfamily URL} method with the URL that needs to be transformed into an object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ url\ =\ new\ Url('https://github.com/foo/bar');}
+
+\end{DoxyCode}
+
+
+The {\ttfamily new} keyword is optional but it will save you an extra function invocation. The constructor takes the following arguments\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily url} ({\ttfamily String})\+: A string representing an absolute or relative URL.
+\item {\ttfamily base\+URL} ({\ttfamily Object} \texorpdfstring{$\vert$}{|} {\ttfamily String})\+: An object or string representing the base URL to use in case {\ttfamily url} is a relative URL. This argument is optional and defaults to \href{https://developer.mozilla.org/en-US/docs/Web/API/Location}{\texttt{ {\ttfamily location}}} in the browser.
+\item {\ttfamily parser} ({\ttfamily Boolean} \texorpdfstring{$\vert$}{|} {\ttfamily Function})\+: This argument is optional and specifies how to parse the query string. By default it is {\ttfamily false} so the query string is not parsed. If you pass {\ttfamily true} the query string is parsed using the embedded {\ttfamily querystringify} module. If you pass a function the query string will be parsed using this function.
+\end{DoxyItemize}
+
+As said above we also support the Node.\+js interface so you can also use the library in this way\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'use\ strict';}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ parse\ =\ require('url-\/parse')}
+\DoxyCodeLine{\ \ ,\ url\ =\ parse('https://github.com/foo/bar',\ true);}
+
+\end{DoxyCode}
+
+
+The returned {\ttfamily url} instance contains the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily protocol}\+: The protocol scheme of the URL (e.\+g. {\ttfamily http\+:}).
+\item {\ttfamily slashes}\+: A boolean which indicates whether the {\ttfamily protocol} is followed by two forward slashes ({\ttfamily //}).
+\item {\ttfamily auth}\+: Authentication information portion (e.\+g. {\ttfamily username\+:password}).
+\item {\ttfamily username}\+: Username of basic authentication.
+\item {\ttfamily password}\+: Password of basic authentication.
+\item {\ttfamily host}\+: Host name with port number. The hostname might be invalid.
+\item {\ttfamily hostname}\+: Host name without port number. This might be an invalid hostname.
+\item {\ttfamily port}\+: Optional port number.
+\item {\ttfamily pathname}\+: URL path.
+\item {\ttfamily query}\+: Parsed object containing query string, unless parsing is set to false.
+\item {\ttfamily hash}\+: The "{}fragment"{} portion of the URL including the pound-\/sign ({\ttfamily \#}).
+\item {\ttfamily href}\+: The full URL.
+\item {\ttfamily origin}\+: The origin of the URL.
+\end{DoxyItemize}
+
+Note that when {\ttfamily url-\/parse} is used in a browser environment, it will default to using the browser\textquotesingle{}s current window location as the base URL when parsing all inputs. To parse an input independently of the browser\textquotesingle{}s current URL (e.\+g. for functionality parity with the library in a Node environment), pass an empty location object as the second parameter\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ parse\ =\ require('url-\/parse');}
+\DoxyCodeLine{parse('hostname',\ \{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md34552}{}\doxysubsubsection{\texorpdfstring{Url.\+set(key, value)}{Url.\+set(key, value)}}\label{README.md_autotoc_md34552}
+A simple helper function to change parts of the URL and propagating it through all properties. When you set a new {\ttfamily host} you want the same value to be applied to {\ttfamily port} if has a different port number, {\ttfamily hostname} so it has a correct name again and {\ttfamily href} so you have a complete URL.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ parsed\ =\ parse('http://google.com/parse-\/things');}
+\DoxyCodeLine{}
+\DoxyCodeLine{parsed.set('hostname',\ 'yahoo.com');}
+\DoxyCodeLine{console.log(parsed.href);\ //\ http://yahoo.com/parse-\/things}
+
+\end{DoxyCode}
+
+
+It\textquotesingle{}s aware of default ports so you cannot set a port 80 on an URL which has {\ttfamily http} as protocol.\hypertarget{README.md_autotoc_md34553}{}\doxysubsubsection{\texorpdfstring{Url.\+to\+String()}{Url.\+to\+String()}}\label{README.md_autotoc_md34553}
+The returned {\ttfamily url} object comes with a custom {\ttfamily to\+String} method which will generate a full URL again when called. The method accepts an extra function which will stringify the query string for you. If you don\textquotesingle{}t supply a function we will use our default method.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ location\ =\ url.toString();\ //\ http://example.com/whatever/?qs=32}
+
+\end{DoxyCode}
+
+
+You would rarely need to use this method as the full URL is also available as {\ttfamily href} property. If you are using the {\ttfamily URL.\+set} method to make changes, this will automatically update.\hypertarget{README.md_autotoc_md34554}{}\doxysubsection{\texorpdfstring{Testing}{Testing}}\label{README.md_autotoc_md34554}
+The testing of this module is done in 3 different ways\+:
+
+
+\begin{DoxyEnumerate}
+\item We have unit tests that run under Node.\+js. You can run these tests with the {\ttfamily npm test} command.
+\item Code coverage can be run manually using {\ttfamily npm run coverage}.
+\item For browser testing we use Sauce Labs and {\ttfamily zuul}. You can run browser tests using the {\ttfamily npm run test-\/browser} command.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md34555}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md34555}
+\mbox{[}MIT\mbox{]}(LICENSE) 

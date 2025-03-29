@@ -1,0 +1,411 @@
+\doxysection{node\+\_\+modules/@octokit/graphql Directory Reference}
+\hypertarget{dir_cc3cb30624fc2b2f25712a45dd8a73e6}{}\label{dir_cc3cb30624fc2b2f25712a45dd8a73e6}\index{node\_modules/"@octokit/graphql Directory Reference@{node\_modules/"@octokit/graphql Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Git\+Hub Graph\+QL API client for browsers and Node \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/graphql}{\texttt{ }} \href{https://github.com/octokit/graphql.js/actions?query=workflow\%3ATest+branch\%3Amain}{\texttt{ }}
+
+
+\begin{DoxyItemize}
+\item \doxylink{readme.md_usage}{Usage}
+\begin{DoxyItemize}
+\item Send a simple query
+\item Authentication
+\item Variables
+\item Pass query together with headers and variables
+\item Use with Git\+Hub Enterprise
+\item Use custom \`{}@octokit/request\`{} instance
+\end{DoxyItemize}
+\item Type\+Script
+\begin{DoxyItemize}
+\item Additional Types
+\end{DoxyItemize}
+\item Errors
+\item Partial responses
+\item Writing tests
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5238}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5238}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers }&
+
+Load {\ttfamily @octokit/graphql} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ graphql\ \}\ from\ "{}https://esm.sh/@octokit/graphql"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node }&
+
+Install with {\ttfamily npm install @octokit/graphql}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ graphql\ \}\ from\ "{}@octokit/graphql"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5239}{}\doxysubsubsection{\texorpdfstring{Send a simple query}{Send a simple query}}\label{README.md_autotoc_md5239}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ repository\ \}\ =\ await\ graphql(}
+\DoxyCodeLine{\ \ \`{}}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ repository(owner:\ "{}octokit"{},\ name:\ "{}graphql.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ issues(last:\ 3)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \`{},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ authorization:\ \`{}token\ secret123`,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5240}{}\doxysubsubsection{\texorpdfstring{Authentication}{Authentication}}\label{README.md_autotoc_md5240}
+The simplest way to authenticate a request is to set the {\ttfamily Authorization} header, e.\+g. to a \href{https://github.com/settings/tokens/}{\texttt{ personal access token}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ graphqlWithAuth\ =\ graphql.defaults(\{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ \`{}token\ secret123`,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ \{\ repository\ \}\ =\ await\ graphqlWithAuth(`}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ repository(owner:\ "{}octokit"{},\ name:\ "{}graphql.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ issues(last:\ 3)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\`{});}
+
+\end{DoxyCode}
+
+
+For more complex authentication strategies such as Git\+Hub Apps or Basic, we recommend the according authentication library exported by \href{https://github.com/octokit/auth.js}{\texttt{ {\ttfamily @octokit/auth}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ createAppAuth\ \}\ =\ await\ import("{}@octokit/auth-\/app"{});}
+\DoxyCodeLine{const\ auth\ =\ createAppAuth(\{}
+\DoxyCodeLine{\ \ appId:\ process.env.APP\_ID,}
+\DoxyCodeLine{\ \ privateKey:\ process.env.PRIVATE\_KEY,}
+\DoxyCodeLine{\ \ installationId:\ 123,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ graphqlWithAuth\ =\ graphql.defaults(\{}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ hook:\ auth.hook,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ repository\ \}\ =\ await\ graphqlWithAuth(}
+\DoxyCodeLine{\ \ \`{}\{}
+\DoxyCodeLine{\ \ \ \ repository(owner:\ "{}octokit"{},\ name:\ "{}graphql.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ issues(last:\ 3)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}`,}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5241}{}\doxysubsubsection{\texorpdfstring{Variables}{Variables}}\label{README.md_autotoc_md5241}
+⚠️ Do not use \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals}{\texttt{ template literals}} in the query strings as they make your code vulnerable to query injection attacks (see \href{https://github.com/octokit/graphql.js/issues/2}{\texttt{ \#2}}). Use variables instead\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ repository\ \}\ =\ await\ graphql(}
+\DoxyCodeLine{\ \ \`{}}
+\DoxyCodeLine{\ \ \ \ query\ lastIssues(\$owner:\ String!,\ \$repo:\ String!,\ \$num:\ Int\ =\ 3)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ repository(owner:\ \$owner,\ name:\ \$repo)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ issues(last:\ \$num)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \`{},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ owner:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ \ \ repo:\ "{}graphql.js"{},}
+\DoxyCodeLine{\ \ \ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ authorization:\ \`{}token\ secret123`,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5242}{}\doxysubsubsection{\texorpdfstring{Pass query together with headers and variables}{Pass query together with headers and variables}}\label{README.md_autotoc_md5242}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ graphql\ \}\ from("{}@octokit/graphql"{});}
+\DoxyCodeLine{const\ \{\ repository\ \}\ =\ await\ graphql(\{}
+\DoxyCodeLine{\ \ query:\ \`{}query\ lastIssues(\$owner:\ String!,\ \$repo:\ String!,\ \$num:\ Int\ =\ 3)\ \{}
+\DoxyCodeLine{\ \ \ \ repository(owner:\ \$owner,\ name:\ \$repo)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ issues(last:\ \$num)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}`,}
+\DoxyCodeLine{\ \ owner:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ repo:\ "{}graphql.js"{},}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ \`{}token\ secret123`,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5243}{}\doxysubsubsection{\texorpdfstring{Use with Git\+Hub Enterprise}{Use with Git\+Hub Enterprise}}\label{README.md_autotoc_md5243}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ graphql\ \}\ from\ "{}@octokit/graphql"{};}
+\DoxyCodeLine{graphql\ =\ graphql.defaults(\{}
+\DoxyCodeLine{\ \ baseUrl:\ "{}https://github-\/enterprise.acme-\/inc.com/api"{},}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ \`{}token\ secret123`,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ \{\ repository\ \}\ =\ await\ graphql(`}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ repository(owner:\ "{}acme-\/project"{},\ name:\ "{}acme-\/repo"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ issues(last:\ 3)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\`{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5244}{}\doxysubsubsection{\texorpdfstring{Use custom {\ttfamily @octokit/request} instance}{Use custom {\ttfamily @octokit/request} instance}}\label{README.md_autotoc_md5244}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ request\ \}\ from\ "{}@octokit/request"{};}
+\DoxyCodeLine{import\ \{\ withCustomRequest\ \}\ from\ "{}@octokit/graphql"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ requestCounter\ =\ 0;}
+\DoxyCodeLine{const\ myRequest\ =\ request.defaults(\{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ "{}bearer\ secret123"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ hook(request,\ options)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ requestCounter++;}
+\DoxyCodeLine{\ \ \ \ \ \ return\ request(options);}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ myGraphql\ =\ withCustomRequest(myRequest);}
+\DoxyCodeLine{await\ request("{}/"{});}
+\DoxyCodeLine{await\ myGraphql(`}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ repository(owner:\ "{}acme-\/project"{},\ name:\ "{}acme-\/repo"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ issues(last:\ 3)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\`{});}
+\DoxyCodeLine{//\ requestCounter\ is\ now\ 2}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5245}{}\doxysubsection{\texorpdfstring{Type\+Script}{Type\+Script}}\label{README.md_autotoc_md5245}
+{\ttfamily @octokit/graphql} is exposing proper types for its usage with Type\+Script projects.\hypertarget{README.md_autotoc_md5246}{}\doxysubsubsection{\texorpdfstring{Additional Types}{Additional Types}}\label{README.md_autotoc_md5246}
+Additionally, {\ttfamily Graph\+Ql\+Query\+Response\+Data} has been exposed to users\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ GraphQlQueryResponseData\ \}\ from\ "{}@octokit/graphql"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5247}{}\doxysubsection{\texorpdfstring{Errors}{Errors}}\label{README.md_autotoc_md5247}
+In case of a Graph\+QL error, {\ttfamily error.\+message} is set to a combined message describing all errors returned by the endpoint. All errors can be accessed at {\ttfamily error.\+errors}. {\ttfamily error.\+request} has the request options such as query, variables and headers set for easier debugging.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ graphql,\ GraphqlResponseError\ \}\ from\ "{}@octokit/graphql"{};}
+\DoxyCodeLine{graphql\ =\ graphql.defaults(\{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ \`{}token\ secret123`,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ query\ =\ \`{}\{}
+\DoxyCodeLine{\ \ viewer\ \{}
+\DoxyCodeLine{\ \ \ \ bioHtml}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}`;}
+\DoxyCodeLine{}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ const\ result\ =\ await\ graphql(query);}
+\DoxyCodeLine{\}\ catch\ (error)\ \{}
+\DoxyCodeLine{\ \ if\ (error\ instanceof\ GraphqlResponseError)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ do\ something\ with\ the\ error,\ allowing\ you\ to\ detect\ a\ graphql\ response\ error,}
+\DoxyCodeLine{\ \ \ \ //\ compared\ to\ accidentally\ catching\ unrelated\ errors.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ server\ responds\ with\ an\ object\ like\ the\ following\ (as\ an\ example)}
+\DoxyCodeLine{\ \ \ \ //\ class\ GraphqlResponseError\ \{}
+\DoxyCodeLine{\ \ \ \ //\ \ "{}headers"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ "{}status"{}:\ "{}403"{},}
+\DoxyCodeLine{\ \ \ \ //\ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ \ "{}data"{}:\ null,}
+\DoxyCodeLine{\ \ \ \ //\ \ "{}errors"{}:\ [\{}
+\DoxyCodeLine{\ \ \ \ //\ \ \ "{}message"{}:\ "{}Field\ 'bioHtml'\ doesn't\ exist\ on\ type\ 'User'"{},}
+\DoxyCodeLine{\ \ \ \ //\ \ \ "{}locations"{}:\ [\{}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ "{}line"{}:\ 3,}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ "{}column"{}:\ 5}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \}]}
+\DoxyCodeLine{\ \ \ \ //\ \ \}]}
+\DoxyCodeLine{\ \ \ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log("{}Request\ failed:"{},\ error.request);\ //\ \{\ query,\ variables:\ \{\},\ headers:\ \{\ authorization:\ 'token\ secret123'\ \}\ \}}
+\DoxyCodeLine{\ \ \ \ console.log(error.message);\ //\ Field\ 'bioHtml'\ doesn't\ exist\ on\ type\ 'User'}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ //\ handle\ non-\/GraphQL\ error}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5248}{}\doxysubsection{\texorpdfstring{Partial responses}{Partial responses}}\label{README.md_autotoc_md5248}
+A Graph\+QL query may respond with partial data accompanied by errors. In this case we will throw an error but the partial data will still be accessible through {\ttfamily error.\+data}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ graphql\ \}\ from\ "{}@octokit/graphql"{};}
+\DoxyCodeLine{graphql\ =\ graphql.defaults(\{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ \`{}token\ secret123`,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ query\ =\ \`{}\{}
+\DoxyCodeLine{\ \ repository(name:\ "{}probot"{},\ owner:\ "{}probot"{})\ \{}
+\DoxyCodeLine{\ \ \ \ name}
+\DoxyCodeLine{\ \ \ \ ref(qualifiedName:\ "{}master"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ target\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ...\ on\ Commit\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ history(first:\ 25,\ after:\ "{}invalid\ cursor"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ nodes\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ message}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}`;}
+\DoxyCodeLine{}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ const\ result\ =\ await\ graphql(query);}
+\DoxyCodeLine{\}\ catch\ (error)\ \{}
+\DoxyCodeLine{\ \ //\ server\ responds\ with}
+\DoxyCodeLine{\ \ //\ \{}
+\DoxyCodeLine{\ \ //\ \ \ "{}data"{}:\ \{}
+\DoxyCodeLine{\ \ //\ \ \ \ \ "{}repository"{}:\ \{}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ "{}name"{}:\ "{}probot"{},}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ "{}ref"{}:\ null}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \}}
+\DoxyCodeLine{\ \ //\ \ \ \},}
+\DoxyCodeLine{\ \ //\ \ \ "{}errors"{}:\ [}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \{}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ "{}type"{}:\ "{}INVALID\_CURSOR\_ARGUMENTS"{},}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ "{}path"{}:\ [}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ "{}repository"{},}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ "{}ref"{},}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ "{}target"{},}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ "{}history"{}}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ "{}locations"{}:\ [}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ \ \ "{}line"{}:\ 7,}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ \ \ "{}column"{}:\ 11}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ "{}message"{}:\ "{}`invalid\ cursor`\ does\ not\ appear\ to\ be\ a\ valid\ cursor."{}}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \}}
+\DoxyCodeLine{\ \ //\ \ \ ]}
+\DoxyCodeLine{\ \ //\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log("{}Request\ failed:"{},\ error.request);\ //\ \{\ query,\ variables:\ \{\},\ headers:\ \{\ authorization:\ 'token\ secret123'\ \}\ \}}
+\DoxyCodeLine{\ \ console.log(error.message);\ //\ \`{}invalid\ cursor`\ does\ not\ appear\ to\ be\ a\ valid\ cursor.}
+\DoxyCodeLine{\ \ console.log(error.data);\ //\ \{\ repository:\ \{\ name:\ 'probot',\ ref:\ null\ \}\ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5249}{}\doxysubsection{\texorpdfstring{Writing tests}{Writing tests}}\label{README.md_autotoc_md5249}
+You can pass a replacement for \href{https://github.com/bitinn/node-fetch}{\texttt{ the built-\/in fetch implementation}} as {\ttfamily request.\+fetch} option. For example, using \href{http://www.wheresrhys.co.uk/fetch-mock/}{\texttt{ fetch-\/mock}} works great to write tests
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ assert\ from\ "{}assert"{};}
+\DoxyCodeLine{import\ fetchMock\ from\ "{}fetch-\/mock"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{\ graphql\ \}\ from\ "{}@octokit/graphql"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{graphql("{}\{\ viewer\ \{\ login\ \}\ \}"{},\ \{}
+\DoxyCodeLine{\ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ authorization:\ "{}token\ secret123"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ fetch:\ fetchMock}
+\DoxyCodeLine{\ \ \ \ \ \ .sandbox()}
+\DoxyCodeLine{\ \ \ \ \ \ .post("{}https://api.github.com/graphql"{},\ (url,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ assert.strictEqual(options.headers.authorization,\ "{}token\ secret123"{});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ assert.strictEqual(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ options.body,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ '\{"{}query"{}:"{}\{\ viewer\ \{\ login\ \}\ \}"{}\}',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}Sends\ correct\ query"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ \{\ data:\ \{\}\ \};}
+\DoxyCodeLine{\ \ \ \ \ \ \}),}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5250}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md5250}
+\mbox{[}MIT\mbox{]}(LICENSE) 

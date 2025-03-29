@@ -1,0 +1,65 @@
+\doxysection{node\+\_\+modules/postgres-\/range Directory Reference}
+\hypertarget{dir_36d9ebb18668ccedfd3dc7eec7bc1780}{}\label{dir_36d9ebb18668ccedfd3dc7eec7bc1780}\index{node\_modules/postgres-\/range Directory Reference@{node\_modules/postgres-\/range Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Parse postgres range columns \end{quote}
+\hypertarget{README.md_autotoc_md26281}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md26281}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ postgres-\/range}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26282}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md26282}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ range\ =\ require('postgres-\/range')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ rng\ =\ range.parse('[0,5)',\ (value)\ =>\ parseInt(value,\ 10))}
+\DoxyCodeLine{rng.isBounded()}
+\DoxyCodeLine{//\ =>\ true}
+\DoxyCodeLine{rng.isLowerBoundClosed()}
+\DoxyCodeLine{//\ =>\ true}
+\DoxyCodeLine{rng.isUpperBoundClosed()}
+\DoxyCodeLine{//\ =>\ false}
+\DoxyCodeLine{rng.hasLowerBound()}
+\DoxyCodeLine{//\ =>\ true}
+\DoxyCodeLine{rng.hasUpperBound()}
+\DoxyCodeLine{//\ =>\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{rng.containsPoint(4)}
+\DoxyCodeLine{//\ =>\ true}
+\DoxyCodeLine{rng.containsRange(range.parse('[1,2]',\ x\ =>\ parseInt(x)))}
+\DoxyCodeLine{//\ =>\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{range.parse('empty').isEmpty()}
+\DoxyCodeLine{//\ =>\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{range.serialize(new\ range.Range(0,\ 5))}
+\DoxyCodeLine{//\ =>\ '(0,5)'}
+\DoxyCodeLine{range.serialize(new\ range.Range(0,\ 5,\ range.RANGE\_LB\_INC\ |\ RANGE\_UB\_INC))}
+\DoxyCodeLine{//\ =>\ '[0,5]'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md26283}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md26283}
+\hypertarget{README.md_autotoc_md26284}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily parse(input, \mbox{[}transform\mbox{]})} -\/\texorpdfstring{$>$}{>} {\ttfamily Range}}{{\ttfamily parse(input, \mbox{[}transform\mbox{]})} -\/\texorpdfstring{$>$}{>} {\ttfamily Range}}}\label{README.md_autotoc_md26284}
+\hypertarget{README.md_autotoc_md26285}{}\doxysubsubsubsubsection{\texorpdfstring{input}{input}}\label{README.md_autotoc_md26285}
+{\itshape Required} ~\newline
+ Type\+: {\ttfamily string}
+
+A Postgres range string.\hypertarget{README.md_autotoc_md26286}{}\doxysubsubsubsubsection{\texorpdfstring{transform}{transform}}\label{README.md_autotoc_md26286}
+Type\+: {\ttfamily function} ~\newline
+ Default\+: {\ttfamily identity}
+
+A function that transforms non-\/null bounds of the range.\hypertarget{README.md_autotoc_md26287}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily serialize(range, \mbox{[}format\mbox{]})} -\/\texorpdfstring{$>$}{>} {\ttfamily string}}{{\ttfamily serialize(range, \mbox{[}format\mbox{]})} -\/\texorpdfstring{$>$}{>} {\ttfamily string}}}\label{README.md_autotoc_md26287}
+\hypertarget{README.md_autotoc_md26288}{}\doxysubsubsubsubsection{\texorpdfstring{range}{range}}\label{README.md_autotoc_md26288}
+{\itshape Required} ~\newline
+ Type\+: {\ttfamily Range}
+
+A {\ttfamily Range} object.\hypertarget{README.md_autotoc_md26289}{}\doxysubsubsubsubsection{\texorpdfstring{format}{format}}\label{README.md_autotoc_md26289}
+Type\+: {\ttfamily function} ~\newline
+ Default\+: {\ttfamily identity}
+
+A function that formats non-\/null bounds of the range.\hypertarget{README.md_autotoc_md26290}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md26290}
+MIT © \href{http://github.com/martianboy}{\texttt{ Abbas Mashayekh}} 

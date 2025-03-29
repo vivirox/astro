@@ -1,0 +1,96 @@
+\doxysection{node\+\_\+modules/@astrojs/markdown-\/remark/node\+\_\+modules/retext Directory Reference}
+\hypertarget{dir_2720b019b8bc2049b30f893222a353d6}{}\label{dir_2720b019b8bc2049b30f893222a353d6}\index{node\_modules/"@astrojs/markdown-\/remark/node\_modules/retext Directory Reference@{node\_modules/"@astrojs/markdown-\/remark/node\_modules/retext Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_b182c99439abe3580fada35352461a04}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/retextjs/retext/actions}{\texttt{ }} \href{https://codecov.io/github/retextjs/retext}{\texttt{ }} \href{https://www.npmjs.com/package/retext}{\texttt{ }} \href{https://bundlephobia.com/result?p=retext}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/retextjs/retext/discussions}{\texttt{ }}
+
+\href{https://github.com/retextjs/retext}{\texttt{ {\bfseries{retext}}}} is a natural language processor powered by \href{https://github.com/retextjs/retext/tree/main/doc/plugins.md}{\texttt{ plugins}} part of the \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} \href{https://opencollective.com/unified}{\texttt{ collective}}.
+
+
+\begin{DoxyItemize}
+\item API by \href{https://github.com/unifiedjs/unified}{\texttt{ {\bfseries{unified}}}}
+\item Parses natural language to the tree with \href{https://github.com/retextjs/retext/tree/main/packages/retext-latin}{\texttt{ {\ttfamily retext-\/latin}}}
+\item \href{https://github.com/syntax-tree/nlcst}{\texttt{ {\bfseries{nlcst}}}} syntax tree
+\item \href{https://github.com/retextjs/retext/tree/main/doc/plugins.md}{\texttt{ Plugins}} transform the tree
+\item Serialize the tree to natural language using \href{https://github.com/retextjs/retext/tree/main/packages/retext-stringify}{\texttt{ {\ttfamily retext-\/stringify}}}
+\end{DoxyItemize}
+
+Don’t need the parser? Or the compiler? \href{https://github.com/unifiedjs/unified\#usage}{\texttt{ That’s OK}}.\hypertarget{readme.md_autotoc_md942}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{readme.md_autotoc_md942}
+Support this effort and give back by sponsoring on \href{https://opencollective.com/unified}{\texttt{ Open\+Collective}}!
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{10}{|X[-1]}|}
+\hline
+\multicolumn{2}{|c|}{\PBS\centering \href{https://www.gatsbyjs.org}{\texttt{ Gatsby}} 🥇~\newline
+~\newline
+ \href{https://www.gatsbyjs.org}{\texttt{ }}  }&\multicolumn{2}{c|}{\PBS\centering \href{https://vercel.com}{\texttt{ Vercel}} 🥇~\newline
+~\newline
+ \href{https://vercel.com}{\texttt{ }}  }&\multicolumn{2}{c|}{\PBS\centering \href{https://www.netlify.com}{\texttt{ Netlify}}~\newline
+~\newline
+
+
+\href{https://www.netlify.com}{\texttt{ }}  }&\PBS\centering \href{https://www.holloway.com}{\texttt{ Holloway}}~\newline
+~\newline
+ \href{https://www.holloway.com}{\texttt{ }}  &\PBS\centering \href{https://themeisle.com}{\texttt{ Theme\+Isle}}~\newline
+~\newline
+ \href{https://themeisle.com}{\texttt{ }}  &\PBS\centering \href{https://boosthub.io}{\texttt{ Boost Hub}}~\newline
+~\newline
+ \href{https://boosthub.io}{\texttt{ }}  &\PBS\centering \href{https://expo.io}{\texttt{ Expo}}~\newline
+~\newline
+ \href{https://expo.io}{\texttt{ }}   \\\cline{1-10}
+\multicolumn{10}{|c|}{\PBS\centering ~\newline
+ \href{https://opencollective.com/unified}{\texttt{ {\bfseries{You?}}}} ~\newline
+~\newline
+   }\\\cline{1-10}
+\end{longtabu}
+\hypertarget{readme.md_autotoc_md943}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md943}
+\href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ retext}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md944}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md944}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{retext\}\ from\ 'retext'}
+\DoxyCodeLine{import\ retextProfanities\ from\ 'retext-\/profanities'}
+\DoxyCodeLine{import\ retextEmoji\ from\ 'retext-\/emoji'}
+\DoxyCodeLine{import\ \{reporter\}\ from\ 'vfile-\/reporter'}
+\DoxyCodeLine{}
+\DoxyCodeLine{retext()}
+\DoxyCodeLine{\ \ .use(retextProfanities)}
+\DoxyCodeLine{\ \ .use(retextEmoji,\ \{convert:\ 'encode'\})}
+\DoxyCodeLine{\ \ .process('He’s\ set\ on\ beating\ your\ butt\ for\ sheriff!\ :cop:')}
+\DoxyCodeLine{\ \ .then((file)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(String(file))}
+\DoxyCodeLine{\ \ \ \ console.error(reporter(file))}
+\DoxyCodeLine{\ \ \})}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{He’s\ set\ on\ beating\ your\ butt\ \textcolor{keywordflow}{for}\ sheriff!\ 👮}
+\DoxyCodeLine{\ \ 1:26-\/1:30\ \ warning\ \ Be\ careful\ with\ “butt”,\ it’s\ profane\ in\ some\ cases\ \ butt\ \ retext-\/profanities}
+\DoxyCodeLine{}
+\DoxyCodeLine{⚠\ 1\ warning}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md945}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md945}
+See \href{https://github.com/retextjs/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/retextjs/.github}{\texttt{ {\ttfamily retextjs/.github}}} for ways to get started. See \href{https://github.com/retextjs/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help. Ideas for new plugins and tools can be posted in \href{https://github.com/retextjs/ideas}{\texttt{ {\ttfamily retextjs/ideas}}}.
+
+A curated list of awesome retext resources can be found in \href{https://github.com/retextjs/awesome-retext}{\texttt{ {\bfseries{awesome retext}}}}.
+
+This project has a \href{https://github.com/retextjs/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md946}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md946}
+\href{https://github.com/retextjs/retext/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

@@ -1,0 +1,53 @@
+\doxysection{node\+\_\+modules/pagefind Directory Reference}
+\hypertarget{dir_ca62edacbdd014bccb11f8c27b314ea5}{}\label{dir_ca62edacbdd014bccb11f8c27b314ea5}\index{node\_modules/pagefind Directory Reference@{node\_modules/pagefind Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Pagefind is a fully static search library that aims to perform well on large sites, while using as little of your users’ bandwidth as possible, and without hosting any infrastructure.
+
+The full documentation on using Pagefind can be found at \href{https://pagefind.app/}{\texttt{ https\+://pagefind.\+app/}}.
+
+This packages houses a wrapper for running the precompiled Pagefind binary, and also serves as a Node\+JS indexing library that can be integrated into existing tools.\hypertarget{README.md_autotoc_md25496}{}\doxysubsection{\texorpdfstring{Running Pagefind through NPX}{Running Pagefind through NPX}}\label{README.md_autotoc_md25496}
+This is the recommended way of running Pagefind on a static site.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npx\ pagefind\ -\/-\/site\ "{}public"{}}
+
+\end{DoxyCode}
+
+
+For more details on using the Pagefind binary, see \href{https://pagefind.app/docs/installation/\#running-via-npx}{\texttt{ Installing and running Pagefind}}, and the rest of the Pagefind documentation.\hypertarget{README.md_autotoc_md25497}{}\doxysubsection{\texorpdfstring{Using Pagefind as a Node library}{Using Pagefind as a Node library}}\label{README.md_autotoc_md25497}
+This package also provides an interface to the Pagefind binary directly as a package you can import.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ pagefind\ from\ "{}pagefind"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ Pagefind\ search\ index\ to\ work\ with}
+\DoxyCodeLine{const\ \{\ index\ \}\ =\ await\ pagefind.createIndex();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Index\ all\ HTML\ files\ in\ a\ directory}
+\DoxyCodeLine{await\ index.addDirectory(\{}
+\DoxyCodeLine{\ \ \ \ path:\ "{}public"{}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Add\ extra\ content}
+\DoxyCodeLine{await\ index.addCustomRecord(\{}
+\DoxyCodeLine{\ \ \ \ url:\ "{}/resume.pdf"{},}
+\DoxyCodeLine{\ \ \ \ content:\ "{}Aenean\ lacinia\ bibendum\ nulla\ sed\ consectetur"{},}
+\DoxyCodeLine{\ \ \ \ language:\ "{}en"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Get\ the\ index\ files\ in-\/memory}
+\DoxyCodeLine{const\ \{\ files\ \}\ =\ await\ index.getFiles();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Or,\ write\ the\ index\ to\ disk}
+\DoxyCodeLine{await\ index.writeFiles(\{}
+\DoxyCodeLine{\ \ \ \ outputPath:\ "{}public/pagefind"{}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+For more details on using Pagefind as a library, see \href{https://pagefind.app/docs/node-api/}{\texttt{ Indexing content using the Node\+JS API}}. 

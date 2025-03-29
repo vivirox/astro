@@ -1,0 +1,98 @@
+\doxysection{node\+\_\+modules/stack-\/utils Directory Reference}
+\hypertarget{dir_29134e89c328edbe00975455e1466b9c}{}\label{dir_29134e89c328edbe00975455e1466b9c}\index{node\_modules/stack-\/utils Directory Reference@{node\_modules/stack-\/utils Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_66b2cf792ae7c97e45a6c93259b9bbe4}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Captures and cleans stack traces. \end{quote}
+
+
+\href{https://travis-ci.org/tapjs/stack-utils}{\texttt{ }} \href{https://ci.appveyor.com/project/jamestalmage/stack-utils-oiw96/branch/master}{\texttt{ }} \href{https://coveralls.io/github/tapjs/stack-utils?branch=master}{\texttt{ }}
+
+Extracted from {\ttfamily lib/stack.\+js} in the \href{https://github.com/tapjs/node-tap}{\texttt{ {\ttfamily node-\/tap} project}}\hypertarget{readme.md_autotoc_md31208}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md31208}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ stack-\/utils}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31209}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md31209}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ StackUtils\ =\ require('stack-\/utils');}
+\DoxyCodeLine{const\ stack\ =\ new\ StackUtils(\{cwd:\ process.cwd(),\ internals:\ StackUtils.nodeInternals()\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(stack.clean(new\ Error().stack));}
+\DoxyCodeLine{//\ outputs\ a\ beautified\ stack\ trace}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31210}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md31210}
+\hypertarget{readme.md_autotoc_md31211}{}\doxysubsubsection{\texorpdfstring{new Stack\+Utils(\mbox{[}options\mbox{]})}{new Stack\+Utils(\mbox{[}options\mbox{]})}}\label{readme.md_autotoc_md31211}
+Creates a new {\ttfamily stack\+Utils} instance.\hypertarget{readme.md_autotoc_md31212}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md31212}
+\hypertarget{readme.md_autotoc_md31213}{}\doxysubsubsubsubsection{\texorpdfstring{internals}{internals}}\label{readme.md_autotoc_md31213}
+Type\+: {\ttfamily array} of {\ttfamily Regular\+Expression}s ~\newline
+
+
+A set of regular expressions that match internal stack stack trace lines which should be culled from the stack trace. The default is {\ttfamily Stack\+Utils.\+node\+Internals()}, this can be disabled by setting {\ttfamily \mbox{[}\mbox{]}} or appended using {\ttfamily Stack\+Utils.\+node\+Internals().concat(additional\+Reg\+Exp)}. See also {\ttfamily ignored\+Packages}.\hypertarget{readme.md_autotoc_md31214}{}\doxysubsubsubsubsection{\texorpdfstring{ignored\+Packages}{ignored\+Packages}}\label{readme.md_autotoc_md31214}
+Type\+: {\ttfamily array} of {\ttfamily string}s
+
+An array of npm modules to be culled from the stack trace. This list will mapped to regular expressions and merged with the {\ttfamily internals}.
+
+Default `'\textquotesingle{}\`{}.\hypertarget{readme.md_autotoc_md31215}{}\doxysubsubsubsubsection{\texorpdfstring{cwd}{cwd}}\label{readme.md_autotoc_md31215}
+Type\+: {\ttfamily string}
+
+The path to the current working directory. File names in the stack trace will be shown relative to this directory.\hypertarget{readme.md_autotoc_md31216}{}\doxysubsubsubsubsection{\texorpdfstring{wrap\+Call\+Site}{wrap\+Call\+Site}}\label{readme.md_autotoc_md31216}
+Type\+: {\ttfamily function(\+Call\+Site)}
+
+A mapping function for manipulating Call\+Sites before processing. The first argument is a Call\+Site instance, and the function should return a modified Call\+Site. This is useful for providing source map support.\hypertarget{readme.md_autotoc_md31217}{}\doxysubsubsection{\texorpdfstring{Stack\+Utils.\+node\+Internals()}{Stack\+Utils.\+node\+Internals()}}\label{readme.md_autotoc_md31217}
+Returns an array of regular expressions that be used to cull lines from the stack trace that reference common Node.\+js internal files.\hypertarget{readme.md_autotoc_md31218}{}\doxysubsubsection{\texorpdfstring{stack\+Utils.\+clean(stack, indent = 0)}{stack\+Utils.\+clean(stack, indent = 0)}}\label{readme.md_autotoc_md31218}
+Cleans up a stack trace by deleting any lines that match the {\ttfamily internals} passed to the constructor, and shortening file names relative to {\ttfamily cwd}.
+
+Returns a {\ttfamily string} with the cleaned up stack (always terminated with a {\ttfamily \textbackslash{}n} newline character). Spaces at the start of each line are trimmed, indentation can be added by setting {\ttfamily indent} to the desired number of spaces.\hypertarget{readme.md_autotoc_md31219}{}\doxysubsubsubsection{\texorpdfstring{stack}{stack}}\label{readme.md_autotoc_md31219}
+{\itshape Required} ~\newline
+ Type\+: {\ttfamily string} or an {\ttfamily array} of {\ttfamily string}s\hypertarget{readme.md_autotoc_md31220}{}\doxysubsubsection{\texorpdfstring{stack\+Utils.\+capture(\mbox{[}limit\mbox{]}, \mbox{[}start\+Stack\+Function\mbox{]})}{stack\+Utils.\+capture(\mbox{[}limit\mbox{]}, \mbox{[}start\+Stack\+Function\mbox{]})}}\label{readme.md_autotoc_md31220}
+Captures the current stack trace, returning an array of {\ttfamily Call\+Site}s. There are good overviews of the available Call\+Site methods \href{https://github.com/v8/v8/wiki/Stack\%20Trace\%20API\#customizing-stack-traces}{\texttt{ here}}, and \href{https://github.com/sindresorhus/callsites\#api}{\texttt{ here}}.\hypertarget{readme.md_autotoc_md31221}{}\doxysubsubsubsection{\texorpdfstring{limit}{limit}}\label{readme.md_autotoc_md31221}
+Type\+: {\ttfamily number} Default\+: {\ttfamily Infinity}
+
+Limits the number of lines returned by dropping all lines in excess of the limit. This removes lines from the stack trace.\hypertarget{readme.md_autotoc_md31222}{}\doxysubsubsubsection{\texorpdfstring{start\+Stack\+Function}{start\+Stack\+Function}}\label{readme.md_autotoc_md31222}
+Type\+: {\ttfamily function}
+
+The function where the stack trace should start. The first line of the stack trace will be the function that called {\ttfamily start\+Stack\+Function}. This removes lines from the end of the stack trace.\hypertarget{readme.md_autotoc_md31223}{}\doxysubsubsection{\texorpdfstring{stack\+Utils.\+capture\+String(\mbox{[}limit\mbox{]}, \mbox{[}start\+Stack\+Function\mbox{]})}{stack\+Utils.\+capture\+String(\mbox{[}limit\mbox{]}, \mbox{[}start\+Stack\+Function\mbox{]})}}\label{readme.md_autotoc_md31223}
+Captures the current stack trace, cleans it using {\ttfamily stack\+Utils.\+clean(stack)}, and returns a string with the cleaned stack trace. It takes the same arguments as {\ttfamily stack\+Utils.\+capture}.\hypertarget{readme.md_autotoc_md31224}{}\doxysubsubsection{\texorpdfstring{stack\+Utils.\+at(\mbox{[}start\+Stack\+Function\mbox{]})}{stack\+Utils.\+at(\mbox{[}start\+Stack\+Function\mbox{]})}}\label{readme.md_autotoc_md31224}
+Captures the first line of the stack trace (or the first line after {\ttfamily start\+Stack\+Function} if supplied), and returns a {\ttfamily Call\+Site} like object that is serialization friendly (properties are actual values instead of getter functions).
+
+The available properties are\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily line}\+: {\ttfamily number}
+\item {\ttfamily column}\+: {\ttfamily number}
+\item {\ttfamily file}\+: {\ttfamily string}
+\item {\ttfamily constructor}\+: {\ttfamily boolean}
+\item {\ttfamily eval\+Origin}\+: {\ttfamily string}
+\item {\ttfamily native}\+: {\ttfamily boolean}
+\item {\ttfamily type}\+: {\ttfamily string}
+\item {\ttfamily function}\+: {\ttfamily string}
+\item {\ttfamily method}\+: {\ttfamily string}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31225}{}\doxysubsubsection{\texorpdfstring{stack\+Utils.\+parse\+Line(line)}{stack\+Utils.\+parse\+Line(line)}}\label{readme.md_autotoc_md31225}
+Parses a {\ttfamily string} (which should be a single line from a stack trace), and generates an object with the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily line}\+: {\ttfamily number}
+\item {\ttfamily column}\+: {\ttfamily number}
+\item {\ttfamily file}\+: {\ttfamily string}
+\item {\ttfamily constructor}\+: {\ttfamily boolean}
+\item {\ttfamily eval\+Origin}\+: {\ttfamily string}
+\item {\ttfamily eval\+Line}\+: {\ttfamily number}
+\item {\ttfamily eval\+Column}\+: {\ttfamily number}
+\item {\ttfamily eval\+File}\+: {\ttfamily string}
+\item {\ttfamily native}\+: {\ttfamily boolean}
+\item {\ttfamily function}\+: {\ttfamily string}
+\item {\ttfamily method}\+: {\ttfamily string}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31226}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md31226}
+MIT © \href{http://github.com/isaacs}{\texttt{ Isaac Z. Schlueter}}, \href{http://github.com/jamestalmage}{\texttt{ James Talmage}} 

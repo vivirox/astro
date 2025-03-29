@@ -1,0 +1,116 @@
+\chapter{Migrating 0.x to 1.x}
+\hypertarget{md_node__modules_2comment-parser_2migrate-1_80}{}\label{md_node__modules_2comment-parser_2migrate-1_80}\index{Migrating 0.x to 1.x@{Migrating 0.x to 1.x}}
+\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10886}%
+\Hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10886}%
+\hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10887}{}\doxysection{\texorpdfstring{Parser}{Parser}}\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10887}
+0.\+x can be mostly translated into 1.\+x one way or another. The idea behind the new config structure is to handle only the most common cases, and provide the fallback for alternative implementation.\hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10888}{}\doxysubsection{\texorpdfstring{{\ttfamily dotted\+\_\+names\+: boolean}}{{\ttfamily dotted\+\_\+names\+: boolean}}}\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10888}
+\begin{quote}
+By default dotted names like {\ttfamily name.\+subname.\+subsubname} will be expanded into nested sections, this can be prevented by passing opts.\+dotted\+\_\+names = false. \end{quote}
+
+
+{\bfseries{Removed}} This feature is removed but still can be done on top of the {\ttfamily parse()} output. Please post a request or contribute a PR if you need it.\hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10889}{}\doxysubsection{\texorpdfstring{{\ttfamily trim\+: boolean}}{{\ttfamily trim\+: boolean}}}\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10889}
+\begin{quote}
+Set this to false to avoid the default of trimming whitespace at the start and end of each line. \end{quote}
+
+
+In the new parser all original spacing is kept along with comment lines in {\ttfamily .source}. Description lines are joined together depending on {\ttfamily spacing} option
+
+{\bfseries{New option\+:}}
+
+
+\begin{DoxyItemize}
+\item {\ttfamily spacing\+: "{}compact"{}} lines concatenated with a single space and no line breaks
+\item {\ttfamily spacing\+: "{}preserve"{}} keeps line breaks and space around as is. Indentation space counts from {\ttfamily \texorpdfstring{$\ast$}{*}} delimiter or from the start of the line if the delimiter is omitted
+\item {\ttfamily spacing\+: (lines\+: Line\mbox{[}\mbox{]}) =\texorpdfstring{$>$}{>} string} completely freeform joining strategy, since all original spacing can be accessed, there is no limit to how this can be implemented. See \href{./src/primitives.ts}{\texttt{ primitives.\+ts}} and \href{./src/parser/spacer.ts}{\texttt{ spacer.\+ts}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10890}{}\doxysubsection{\texorpdfstring{{\ttfamily join\+: string \texorpdfstring{$\vert$}{|} number \texorpdfstring{$\vert$}{|} boolean}}{{\ttfamily join\+: string \texorpdfstring{$\vert$}{|} number \texorpdfstring{$\vert$}{|} boolean}}}\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10890}
+\begin{quote}
+If the following lines of a multiline comment do not start with a star, {\ttfamily join} will have the following effect on tag source (and description) when joining the lines together\+:
+
+
+\begin{DoxyItemize}
+\item If a string, use that string in place of the leading whitespace (and avoid newlines).
+\item If a non-\/zero number (e.\+g., 1), do no trimming and avoid newlines.
+\item If undefined, false, or 0, use the default behavior of not trimming but adding a newline.
+\item Otherwise (e.\+g., if join is true), replace any leading whitespace with a single space and avoid newlines.
+\end{DoxyItemize}
+
+Note that if a multi-\/line comment has lines that start with a star, these will be appended with initial whitespace as is and with newlines regardless of the join setting. \end{quote}
+
+
+See the {\ttfamily spacing} option above, all the variations can be fine-\/tunned with {\ttfamily spacing\+: (lines\+: Line\mbox{[}\mbox{]}) =\texorpdfstring{$>$}{>} string}\hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10891}{}\doxysubsection{\texorpdfstring{{\ttfamily fence\+: string \texorpdfstring{$\vert$}{|} Reg\+Exp \texorpdfstring{$\vert$}{|} ((source\+: string) =\texorpdfstring{$>$}{>} boolean)}}{{\ttfamily fence\+: string \texorpdfstring{$\vert$}{|} Reg\+Exp \texorpdfstring{$\vert$}{|} ((source\+: string) =\texorpdfstring{$>$}{>} boolean)}}}\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10891}
+\begin{quote}
+Set to a string or regular expression to toggle state upon finding an odd number of matches within a line. Defaults to \`{}\`{}\`{}.
+
+If set to a function, it should return true to toggle fenced state; upon returning true the first time, this will prevent subsequent lines from being interpreted as starting a new jsdoc tag until such time as the function returns true again to indicate that the state has toggled back. \end{quote}
+
+
+This is mostly kept the same
+
+{\bfseries{New optoins\+:}}
+
+
+\begin{DoxyItemize}
+\item {\ttfamily fence\+: \textquotesingle{}\`{}\`{}\`{}\textquotesingle{}} same as 0.\+x
+\item {\ttfamily fencer\+: (source\+: string) =\texorpdfstring{$>$}{>} boolean} same as 0.\+x, see \href{./src/parser/block-parser.ts}{\texttt{ parser/block-\/parser.\+ts}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10892}{}\doxysubsection{\texorpdfstring{{\ttfamily parsers\+: Parser\mbox{[}\mbox{]}}}{{\ttfamily parsers\+: Parser\mbox{[}\mbox{]}}}}\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10892}
+\begin{quote}
+In case you need to parse tags in different way you can pass opts.\+parsers = \mbox{[}parser1, ..., parserN\mbox{]}, where each parser is function name(str\+:\+String, data\+:\+Object)\+:\{source\+:String, data\+:Object\}. ... \end{quote}
+
+
+{\bfseries{New options\+:}}
+
+
+\begin{DoxyItemize}
+\item {\ttfamily tokenizers\+: \mbox{[}\mbox{]}Tokenizer} is a list of functions extracting the {\ttfamily tag}, {\ttfamily type}, {\ttfamily name} and {\ttfamily description} tokens from this string. See \href{./src/parser/spec-parser.ts}{\texttt{ parser/spec-\/parser.\+ts}} and \href{./src/primitives.ts}{\texttt{ primitives.\+ts}}
+\end{DoxyItemize}
+
+Default tokenizers chain is
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ tagTokenizer(),}
+\DoxyCodeLine{\ \ typeTokenizer(),}
+\DoxyCodeLine{\ \ nameTokenizer(),}
+\DoxyCodeLine{\ \ descriptionTokenizer(getSpacer(spacing)),}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+where
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Tokenizer\ =\ (spec:\ Spec)\ =>\ Spec}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ Spec\ \{}
+\DoxyCodeLine{\ \ tag:\ string;}
+\DoxyCodeLine{\ \ name:\ string;}
+\DoxyCodeLine{\ \ default?:\ string;}
+\DoxyCodeLine{\ \ type:\ string;}
+\DoxyCodeLine{\ \ optional:\ boolean;}
+\DoxyCodeLine{\ \ description:\ string;}
+\DoxyCodeLine{\ \ problems:\ Problem[];}
+\DoxyCodeLine{\ \ source:\ Line[];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+chain starts with blank {\ttfamily Spec} and each tokenizer fulfills a piece using {\ttfamily .source} input\hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10893}{}\doxysection{\texorpdfstring{Stringifier}{Stringifier}}\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10893}
+\begin{quote}
+One may also convert comment-\/parser JSON structures back into strings using the stringify method (stringify(o\+: (object\texorpdfstring{$\vert$}{|}\+Array) \mbox{[}, opts\+: object\mbox{]})\+: string). ... \end{quote}
+
+
+Stringifier config follows the same strategy – a couple of common cases, and freeform formatter as a fallback
+
+{\bfseries{New Options\+:}}
+
+
+\begin{DoxyItemize}
+\item {\ttfamily format\+: "{}none"{}} re-\/assembles the source with original spacing and delimiters preserved
+\item {\ttfamily format\+: "{}align"{}} aligns tag, name, type, and descriptions into fixed-\/width columns
+\item {\ttfamily format\+: (tokens\+: Tokens) =\texorpdfstring{$>$}{>} string\mbox{[}\mbox{]}} do what you like, resulting lines will be concatenated into the output. Despite the simple interface, this can be turned into a complex stateful formatter, see {\ttfamily "{}align"{}} implementation in \href{./src/transforms/align.ts}{\texttt{ transforms/align.\+ts}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10894}{}\doxysection{\texorpdfstring{Stream}{Stream}}\label{md_node__modules_2comment-parser_2migrate-1_80_autotoc_md10894}
+Work in progress 

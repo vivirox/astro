@@ -1,0 +1,302 @@
+\doxysection{node\+\_\+modules/@octokit/plugin-\/paginate-\/graphql Directory Reference}
+\hypertarget{dir_b70eecdbc50469cbfb8e815753042c64}{}\label{dir_b70eecdbc50469cbfb8e815753042c64}\index{node\_modules/"@octokit/plugin-\/paginate-\/graphql Directory Reference@{node\_modules/"@octokit/plugin-\/paginate-\/graphql Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Octokit plugin to paginate Graph\+QL API endpoint responses \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/plugin-paginate-graphql}{\texttt{ }} \href{https://github.com/octokit/plugin-paginate-graphql.js/actions?workflow=Test}{\texttt{ }}\hypertarget{README.md_autotoc_md5315}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5315}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers }&
+
+Load {\ttfamily @octokit/plugin-\/paginate-\/graphql} and \href{https://github.com/octokit/core.js}{\texttt{ {\ttfamily @octokit/core}}} (or core-\/compatible module) directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ Octokit\ \}\ from\ "{}https://esm.sh/@octokit/core"{};}
+\DoxyCodeLine{\ \ import\ \{\ paginateGraphQL\ \}\ from\ "{}https://esm.sh/@octokit/plugin-\/paginate-\/graphql"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node }&
+
+Install with {\ttfamily npm install @octokit/core @octokit/plugin-\/paginate-\/graphql}. Optionally replace {\ttfamily @octokit/core} with a core-\/compatible module
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit\ \}\ from\ "{}@octokit/core"{};}
+\DoxyCodeLine{import\ \{\ paginateGraphQL\ \}\ from\ "{}@octokit/plugin-\/paginate-\/graphql"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+\begin{DoxyImportant}{Important}
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json} by setting {\ttfamily "{}module\+Resolution"{}\+: "{}node16"{}, "{}module"{}\+: "{}node16"{}}. ~\newline
+~\newline
+ See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.~\newline
+ See this \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ helpful guide on transitioning to ESM}} from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}}
+\end{DoxyImportant}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MyOctokit\ =\ Octokit.plugin(paginateGraphQL);}
+\DoxyCodeLine{const\ octokit\ =\ new\ MyOctokit(\{\ auth:\ "{}secret123"{}\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ repository\ \}\ =\ await\ octokit.graphql.paginate(}
+\DoxyCodeLine{\ \ \`{}query\ paginate(\$cursor:\ String)\ \{}
+\DoxyCodeLine{\ \ \ \ repository(owner:\ "{}octokit"{},\ name:\ "{}rest.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ issues(first:\ 10,\ after:\ \$cursor)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ nodes\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}`,}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(`Found\ \$\{repository.issues.nodes.length\}\ issues!`);}
+
+\end{DoxyCode}
+
+
+There are two conventions this plugin relies on\+:
+
+
+\begin{DoxyEnumerate}
+\item The name of the cursor variable must be {\ttfamily \$cursor}
+\item You must include a valid {\ttfamily page\+Info} object in the paginated resource (see Pagination Direction for more info on what is considered valid)
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md5316}{}\doxysubsection{\texorpdfstring{{\ttfamily octokit.\+graphql.\+paginate()}}{{\ttfamily octokit.\+graphql.\+paginate()}}}\label{README.md_autotoc_md5316}
+The {\ttfamily paginate\+Graph\+QL} plugin adds a new {\ttfamily octokit.\+graphql.\+paginate()} method which accepts a query with a single {\ttfamily \$cursor} variable that is used to paginate.
+
+The query gets passed over to the {\ttfamily octokit.\+graphql()}-\/function. The response is then scanned for the required {\ttfamily page\+Info}-\/object. If {\ttfamily has\+Next\+Page} is {\ttfamily true}, it will automatically use the {\ttfamily end\+Cursor} to execute the next query until {\ttfamily has\+Next\+Page} is {\ttfamily false}.
+
+While iterating, it continually merges all {\ttfamily nodes} and/or {\ttfamily edges} of all responses and returns a combined response in the end.
+
+\begin{quote}
+{\bfseries{Warning}} Please note that this plugin only supports pagination of a single resource -\/ so you can {\bfseries{not}} execute queries with parallel or nested pagination. You can find more details in the chapter below. \end{quote}
+\hypertarget{README.md_autotoc_md5317}{}\doxysubsection{\texorpdfstring{{\ttfamily octokit.\+graphql.\+paginate.\+iterator()}}{{\ttfamily octokit.\+graphql.\+paginate.\+iterator()}}}\label{README.md_autotoc_md5317}
+If your target runtime environments supports async iterators (such as most modern browsers and Node 10+), you can iterate through each response\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ pageIterator\ =\ octokit.graphql.paginate.iterator(}
+\DoxyCodeLine{\ \ \`{}query\ paginate(\$cursor:\ String)\ \{}
+\DoxyCodeLine{\ \ \ \ repository(owner:\ "{}octokit"{},\ name:\ "{}rest.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ issues(first:\ 10,\ after:\ \$cursor)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ nodes\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}`,}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{for\ await\ (const\ response\ of\ pageIterator)\ \{}
+\DoxyCodeLine{\ \ const\ issues\ =\ response.repository.issues;}
+\DoxyCodeLine{\ \ console.log(`\$\{issues.length\}\ issues\ found.`);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5318}{}\doxysubsubsection{\texorpdfstring{Variables}{Variables}}\label{README.md_autotoc_md5318}
+Just like with \href{https://github.com/octokit/graphql.js/\#variables}{\texttt{ octokit/graphql.\+js}}, you can pass your own variables as a second parameter to the {\ttfamily paginate} or {\ttfamily iterator} function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ octokit.graphql.paginate(}
+\DoxyCodeLine{\ \ \`{}}
+\DoxyCodeLine{\ \ \ \ \ \ query\ paginate(\$cursor:\ String,\ \$organization:\ String!)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ repository(owner:\ \$organization,\ name:\ "{}rest.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ issues(first:\ 10,\ after:\ \$cursor)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ nodes\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ organization:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+You can also use this to pass a initial cursor value\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ octokit.graphql.paginate(}
+\DoxyCodeLine{\ \ \`{}}
+\DoxyCodeLine{\ \ \ \ \ \ query\ paginate(\$cursor:\ String,\ \$organization:\ String!)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ repository(owner:\ \$organization,\ name:\ "{}rest.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ issues(first:\ 10,\ after:\ \$cursor)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ nodes\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ organization:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ \ \ cursor:\ "{}initialValue"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5319}{}\doxysubsubsection{\texorpdfstring{Pagination Direction}{Pagination Direction}}\label{README.md_autotoc_md5319}
+You can control the pagination direction by the properties defined in the {\ttfamily page\+Info} resource.
+
+For a forward pagination, use\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pageInfo\ \{}
+\DoxyCodeLine{\ \ hasNextPage}
+\DoxyCodeLine{\ \ endCursor}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+For a backwards pagination, use\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pageInfo\ \{}
+\DoxyCodeLine{\ \ hasPreviousPage}
+\DoxyCodeLine{\ \ startCursor}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you provide all 4 properties in a {\ttfamily page\+Info}, the plugin will default to forward pagination.\hypertarget{README.md_autotoc_md5320}{}\doxysubsubsection{\texorpdfstring{Unsupported\+: Nested pagination}{Unsupported\+: Nested pagination}}\label{README.md_autotoc_md5320}
+Nested pagination with Graph\+QL is complicated, so the following {\bfseries{is not supported}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ octokit.graphql.paginate((cursor)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ issuesCursor\ =\ cursor.create("{}issuesCursor"{});}
+\DoxyCodeLine{\ \ const\ commentsCursor\ =\ cursor.create("{}issuesCursor"{});}
+\DoxyCodeLine{\ \ return\ \`{}\{}
+\DoxyCodeLine{\ \ \ \ repository(owner:\ "{}octokit"{},\ name:\ "{}rest.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ issues(first:\ 10,\ after:\ \$\{issuesCursor\})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ nodes\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ title,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ comments(first:\ 10,\ after:\ \$\{commentsCursor\})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ nodes:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ body}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}`;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+There is a great video from Git\+Hub Universe 2019 \href{https://www.youtube.com/watch?v=i5pIszu9MeM&t=719s}{\texttt{ Advanced patterns for Git\+Hub\textquotesingle{}s Graph\+QL API}} by \href{https://github.com/ReaLoretta}{\texttt{ @\+Rea\+Loretta}} that goes into depth why this is so hard to achieve and patterns and ways around it.\hypertarget{README.md_autotoc_md5321}{}\doxysubsubsection{\texorpdfstring{Type\+Script Support}{Type\+Script Support}}\label{README.md_autotoc_md5321}
+You can type the response of the {\ttfamily paginate\+Graph\+QL()} and {\ttfamily iterator()} functions like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ octokit.graphql.paginate<RepositoryIssueResponseType>((cursor)\ =>\ \{}
+\DoxyCodeLine{\ \ return\ \`{}\{}
+\DoxyCodeLine{\ \ \ \ \ \ repository(owner:\ "{}octokit"{},\ name:\ "{}rest.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ issues(first:\ 10,\ after:\ \$\{cursor.create()\})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ nodes\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}`;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+You can utilize the {\ttfamily Page\+Info\+Forward} and {\ttfamily Page\+Info\+Backward}-\/Interfaces exported from this library to construct your response-\/types\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ PageInfoForward\ \}\ from\ "{}@octokit/plugin-\/paginate-\/graphql"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Issues\ =\ \{}
+\DoxyCodeLine{\ \ title:\ string;}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ IssueResponseType\ =\ \{}
+\DoxyCodeLine{\ \ repository:\ \{}
+\DoxyCodeLine{\ \ \ \ issues:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ nodes:\ Issues[];}
+\DoxyCodeLine{\ \ \ \ \ \ pageInfo:\ PageInfoForward;}
+\DoxyCodeLine{\ \ \ \ \};}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Response\ will\ be\ of\ type\ IssueResponseType}
+\DoxyCodeLine{const\ response\ =\ await\ octokit.graphql.paginate<IssueResponseType>((cursor)\ =>\ \{}
+\DoxyCodeLine{\ \ return\ \`{}\{}
+\DoxyCodeLine{\ \ \ \ \ \ repository(owner:\ "{}octokit"{},\ name:\ "{}rest.js"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ issues(first:\ 10,\ after:\ \$\{cursor.create()\})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ nodes\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}`;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+The {\ttfamily Page\+Info\+Backward} contains the properties {\ttfamily has\+Previous\+Page} and {\ttfamily start\+Cursor} and can be used accordingly when doing backwards pagination.\hypertarget{README.md_autotoc_md5322}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md5322}
+See \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{CONTRIBUTING.md}\hypertarget{README.md_autotoc_md5323}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md5323}
+\mbox{[}MIT\mbox{]}(LICENSE) 

@@ -1,0 +1,66 @@
+\doxysection{node\+\_\+modules/color-\/string Directory Reference}
+\hypertarget{dir_2523380b79262f5e54d3f81e77145f2b}{}\label{dir_2523380b79262f5e54d3f81e77145f2b}\index{node\_modules/color-\/string Directory Reference@{node\_modules/color-\/string Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+library for parsing and generating CSS color strings. \end{quote}
+\hypertarget{README.md_autotoc_md10701}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md10701}
+With \href{http://npmjs.org/}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ color-\/string}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10702}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md10702}
+\hypertarget{README.md_autotoc_md10703}{}\doxysubsubsection{\texorpdfstring{Parsing}{Parsing}}\label{README.md_autotoc_md10703}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{colorString.get('\#FFF')\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \{model:\ 'rgb',\ value:\ [255,\ 255,\ 255,\ 1]\}}
+\DoxyCodeLine{colorString.get('\#FFFA')\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \{model:\ 'rgb',\ value:\ [255,\ 255,\ 255,\ 0.67]\}}
+\DoxyCodeLine{colorString.get('\#FFFFFFAA')\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \{model:\ 'rgb',\ value:\ [255,\ 255,\ 255,\ 0.67]\}}
+\DoxyCodeLine{colorString.get('hsl(360,\ 100\%,\ 50\%)')\ \ \ \ \ \ \ \ \ \ \ //\ \{model:\ 'hsl',\ value:\ [0,\ 100,\ 50,\ 1]\}}
+\DoxyCodeLine{colorString.get('hsl(360\ 100\%\ 50\%)')\ \ \ \ \ \ \ \ \ \ \ \ \ //\ \{model:\ 'hsl',\ value:\ [0,\ 100,\ 50,\ 1]\}}
+\DoxyCodeLine{colorString.get('hwb(60,\ 3\%,\ 60\%)')\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ \{model:\ 'hwb',\ value:\ [60,\ 3,\ 60,\ 1]\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{colorString.get.rgb('\#FFF')\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ [255,\ 255,\ 255,\ 1]}
+\DoxyCodeLine{colorString.get.rgb('blue')\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ [0,\ 0,\ 255,\ 1]}
+\DoxyCodeLine{colorString.get.rgb('rgba(200,\ 60,\ 60,\ 0.3)')\ \ \ \ //\ [200,\ 60,\ 60,\ 0.3]}
+\DoxyCodeLine{colorString.get.rgb('rgba(200\ 60\ 60\ /\ 0.3)')\ \ \ \ \ //\ [200,\ 60,\ 60,\ 0.3]}
+\DoxyCodeLine{colorString.get.rgb('rgba(200\ 60\ 60\ /\ 30\%)')\ \ \ \ \ //\ [200,\ 60,\ 60,\ 0.3]}
+\DoxyCodeLine{colorString.get.rgb('rgb(200,\ 200,\ 200)')\ \ \ \ \ \ \ \ //\ [200,\ 200,\ 200,\ 1]}
+\DoxyCodeLine{colorString.get.rgb('rgb(200\ 200\ 200)')\ \ \ \ \ \ \ \ \ \ //\ [200,\ 200,\ 200,\ 1]}
+\DoxyCodeLine{}
+\DoxyCodeLine{colorString.get.hsl('hsl(360,\ 100\%,\ 50\%)')\ \ \ \ \ \ \ //\ [0,\ 100,\ 50,\ 1]}
+\DoxyCodeLine{colorString.get.hsl('hsl(360\ 100\%\ 50\%)')\ \ \ \ \ \ \ \ \ //\ [0,\ 100,\ 50,\ 1]}
+\DoxyCodeLine{colorString.get.hsl('hsla(360,\ 60\%,\ 50\%,\ 0.4)')\ \ //\ [0,\ 60,\ 50,\ 0.4]}
+\DoxyCodeLine{colorString.get.hsl('hsl(360\ 60\%\ 50\%\ /\ 0.4)')\ \ \ \ //\ [0,\ 60,\ 50,\ 0.4]}
+\DoxyCodeLine{}
+\DoxyCodeLine{colorString.get.hwb('hwb(60,\ 3\%,\ 60\%)')\ \ \ \ \ \ \ \ \ \ //\ [60,\ 3,\ 60,\ 1]}
+\DoxyCodeLine{colorString.get.hwb('hwb(60,\ 3\%,\ 60\%,\ 0.6)')\ \ \ \ \ //\ [60,\ 3,\ 60,\ 0.6]}
+\DoxyCodeLine{}
+\DoxyCodeLine{colorString.get.rgb('invalid\ color\ string')\ \ \ \ \ \ //\ null}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10704}{}\doxysubsubsection{\texorpdfstring{Generation}{Generation}}\label{README.md_autotoc_md10704}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{colorString.to.hex([255,\ 255,\ 255])\ \ \ \ \ //\ "{}\#FFFFFF"{}}
+\DoxyCodeLine{colorString.to.hex([0,\ 0,\ 255,\ 0.4])\ \ \ \ //\ "{}\#0000FF66"{}}
+\DoxyCodeLine{colorString.to.hex([0,\ 0,\ 255],\ 0.4)\ \ \ \ //\ "{}\#0000FF66"{}}
+\DoxyCodeLine{colorString.to.rgb([255,\ 255,\ 255])\ \ \ \ \ //\ "{}rgb(255,\ 255,\ 255)"{}}
+\DoxyCodeLine{colorString.to.rgb([0,\ 0,\ 255,\ 0.4])\ \ \ \ //\ "{}rgba(0,\ 0,\ 255,\ 0.4)"{}}
+\DoxyCodeLine{colorString.to.rgb([0,\ 0,\ 255],\ 0.4)\ \ \ \ //\ "{}rgba(0,\ 0,\ 255,\ 0.4)"{}}
+\DoxyCodeLine{colorString.to.rgb.percent([0,\ 0,\ 255])\ //\ "{}rgb(0\%,\ 0\%,\ 100\%)"{}}
+\DoxyCodeLine{colorString.to.keyword([255,\ 255,\ 0])\ \ \ //\ "{}yellow"{}}
+\DoxyCodeLine{colorString.to.hsl([360,\ 100,\ 100])\ \ \ \ \ //\ "{}hsl(360,\ 100\%,\ 100\%)"{}}
+\DoxyCodeLine{colorString.to.hwb([50,\ 3,\ 15])\ \ \ \ \ \ \ \ \ //\ "{}hwb(50,\ 3\%,\ 15\%)"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ all\ functions\ also\ support\ swizzling}
+\DoxyCodeLine{colorString.to.rgb(0,\ [0,\ 255],\ 0.4)\ \ \ \ //\ "{}rgba(0,\ 0,\ 255,\ 0.4)"{}}
+\DoxyCodeLine{colorString.to.rgb([0,\ 0],\ [255],\ 0.4)\ \ //\ "{}rgba(0,\ 0,\ 255,\ 0.4)"{}}
+\DoxyCodeLine{colorString.to.rgb([0],\ 0,\ [255,\ 0.4])\ \ //\ "{}rgba(0,\ 0,\ 255,\ 0.4)"{}}
+
+\end{DoxyCode}
+ 

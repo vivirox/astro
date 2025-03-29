@@ -1,0 +1,93 @@
+\doxysection{node\+\_\+modules/perfect-\/debounce Directory Reference}
+\hypertarget{dir_103e44d505b966e99342edb7499a6ef2}{}\label{dir_103e44d505b966e99342edb7499a6ef2}\index{node\_modules/perfect-\/debounce Directory Reference@{node\_modules/perfect-\/debounce Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/perfect-debounce}{\texttt{ }} \href{https://npmjs.com/package/perfect-debounce}{\texttt{ }} \href{https://github.com/unjs/perfect-debounce/actions?query=workflow\%3Aci}{\texttt{ }} \href{https://codecov.io/gh/unjs/perfect-debounce}{\texttt{ }}
+
+\begin{quote}
+An improved debounce function with Promise support. \end{quote}
+
+
+
+\begin{DoxyItemize}
+\item Well tested debounce implementation
+\item Native Promise support
+\item Avoid duplicate calls while promise is being resolved
+\item Configurable {\ttfamily trailing} and {\ttfamily leading} behavior
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25897}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md25897}
+Install package\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ install\ perfect-\/debounce}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ perfect-\/debounce}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ pnpm}
+\DoxyCodeLine{pnpm\ add\ perfect-\/debounce}
+
+\end{DoxyCode}
+
+
+Import\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ESM}
+\DoxyCodeLine{import\ \{\ debounce\ \}\ from\ 'perfect-\/debounce'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ debounce\ \}\ =\ require('perfect-\/debounce')}
+
+\end{DoxyCode}
+
+
+Debounce function\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ debounced\ =\ debounce(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Some\ heavy\ stuff}
+\DoxyCodeLine{\},\ 25)}
+
+\end{DoxyCode}
+
+
+When calling {\ttfamily debounced}, it will wait at least for {\ttfamily 25ms} as configured before actually calling our function. This helps to avoid multiple calls.
+
+To avoid initial wait, we can set {\ttfamily leading\+: true} option. It will cause function to be immediately called if there is no other call\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ debounced\ =\ debounce(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Some\ heavy\ stuff}
+\DoxyCodeLine{\},\ 25,\ \{\ leading:\ true\ \})}
+
+\end{DoxyCode}
+
+
+If executing async function takes longer than debounce value, duplicate calls will be still prevented a last call will happen. To disable this behavior, we can set {\ttfamily trailing\+: false} option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ debounced\ =\ debounce(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Some\ heavy\ stuff}
+\DoxyCodeLine{\},\ 25,\ \{\ trailing:\ false\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25898}{}\doxysubsection{\texorpdfstring{💻 Development}{💻 Development}}\label{README.md_autotoc_md25898}
+
+\begin{DoxyItemize}
+\item Clone this repository
+\item Enable \href{https://github.com/nodejs/corepack}{\texttt{ Corepack}} using {\ttfamily corepack enable} (use {\ttfamily npm i -\/g corepack} for Node.\+js \texorpdfstring{$<$}{<} 16.\+10)
+\item Install dependencies using {\ttfamily pnpm install}
+\item Run interactive tests using {\ttfamily pnpm dev}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25899}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md25899}
+Made with 💛
+
+Based on \href{https://github.com/sindresorhus/p-debounce}{\texttt{ sindresorhus/p-\/debounce}}.
+
+Published under \href{./LICENSE}{\texttt{ MIT License}}. 

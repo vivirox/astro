@@ -1,0 +1,33 @@
+\chapter{Explicit property check}
+\hypertarget{md_node__modules_2fast-equals_2recipes_2explicit-property-check}{}\label{md_node__modules_2fast-equals_2recipes_2explicit-property-check}\index{Explicit property check@{Explicit property check}}
+\label{md_node__modules_2fast-equals_2recipes_2explicit-property-check_autotoc_md15079}%
+\Hypertarget{md_node__modules_2fast-equals_2recipes_2explicit-property-check_autotoc_md15079}%
+
+
+Sometimes it is necessary to squeeze every once of performance out of your runtime code, and deep equality checks can be a bottleneck. When this is occurs, it can be advantageous to build a custom comparison that allows for highly specific equality checks.
+
+An example where you know the shape of the objects being passed in, where the {\ttfamily foo} property is a simple primitive and the {\ttfamily bar} property is a nested object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createCustomEqual\ \}\ from\ 'fast-\/equals';}
+\DoxyCodeLine{import\ type\ \{\ TypeEqualityComparator\ \}\ from\ 'fast-\/equals';}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ SpecialObject\ \{}
+\DoxyCodeLine{\ \ foo:\ string;}
+\DoxyCodeLine{\ \ bar:\ \{}
+\DoxyCodeLine{\ \ \ \ baz:\ number;}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ areObjectsEqual:\ TypeEqualityComparator<SpecialObject,\ undefined>\ =\ (}
+\DoxyCodeLine{\ \ a,}
+\DoxyCodeLine{\ \ b,}
+\DoxyCodeLine{)\ =>\ a.foo\ ===\ b.foo\ \&\&\ a.bar.baz\ ===\ b.bar.baz;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ isSpecialObjectEqual\ =\ createCustomEqual(\{}
+\DoxyCodeLine{\ \ createCustomConfig:\ ()\ =>\ (\{\ areObjectsEqual\ \}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

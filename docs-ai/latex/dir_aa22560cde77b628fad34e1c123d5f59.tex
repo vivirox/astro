@@ -1,0 +1,27 @@
+\doxysection{node\+\_\+modules/common-\/ancestor-\/path Directory Reference}
+\hypertarget{dir_aa22560cde77b628fad34e1c123d5f59}{}\label{dir_aa22560cde77b628fad34e1c123d5f59}\index{node\_modules/common-\/ancestor-\/path Directory Reference@{node\_modules/common-\/ancestor-\/path Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Find the common ancestor of 2 or more paths on Windows or Unix\hypertarget{README.md_autotoc_md10907}{}\doxysubsection{\texorpdfstring{USAGE}{USAGE}}\label{README.md_autotoc_md10907}
+Give it two or more path strings, and it\textquotesingle{}ll do the thing.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ ancestor\ =\ require('common-\/ancestor-\/path')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ output\ /a/b}
+\DoxyCodeLine{console.log(ancestor('/a/b/c/d',\ '/a/b/x/y/z',\ '/a/b/c/i/j/k'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ normalizes\ separators,\ but\ NOT\ cases,\ since\ it\ matters\ sometimes}
+\DoxyCodeLine{console.log(ancestor('C:\(\backslash\)\(\backslash\)a\(\backslash\)\(\backslash\)b\(\backslash\)\(\backslash\)c',\ 'C:\(\backslash\)\(\backslash\)a\(\backslash\)\(\backslash\)b\(\backslash\)\(\backslash\)x'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ no\ common\ ancestor\ on\ different\ windows\ drive\ letters}
+\DoxyCodeLine{//\ so,\ this\ returns\ null}
+\DoxyCodeLine{console.log(ancestor('c:\(\backslash\)\(\backslash\)a\(\backslash\)\(\backslash\)b\(\backslash\)\(\backslash\)c',\ 'd:\(\backslash\)\(\backslash\)d\(\backslash\)\(\backslash\)e\(\backslash\)\(\backslash\)f'))}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10908}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md10908}
+{\ttfamily common\+Ancestor\+Path(...\+paths)}
+
+Returns the nearest (deepest) common ancestor path, or {\ttfamily null} if on different roots on Windows. 

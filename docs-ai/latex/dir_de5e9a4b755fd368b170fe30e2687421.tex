@@ -1,0 +1,174 @@
+\doxysection{node\+\_\+modules/synckit Directory Reference}
+\hypertarget{dir_de5e9a4b755fd368b170fe30e2687421}{}\label{dir_de5e9a4b755fd368b170fe30e2687421}\index{node\_modules/synckit Directory Reference@{node\_modules/synckit Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/un-ts/synckit/actions/workflows/ci.yml}{\texttt{ }} \href{https://codecov.io/gh/un-ts/synckit}{\texttt{ }} \href{https://github.com/plantain-00/type-coverage}{\texttt{ }} \href{https://www.npmjs.com/package/synckit}{\texttt{ }} \href{https://github.com/un-ts/synckit/releases}{\texttt{ }}
+
+\href{https://conventionalcommits.org}{\texttt{ }} \href{https://renovatebot.com}{\texttt{ }} \href{https://standardjs.com}{\texttt{ }} \href{https://github.com/prettier/prettier}{\texttt{ }}
+
+Perform async work synchronously in Node.\+js using {\ttfamily worker\+\_\+threads} with first-\/class Type\+Script and Yarn P\textquotesingle{}n\textquotesingle{}P support.\hypertarget{README.md_autotoc_md31841}{}\doxysubsection{\texorpdfstring{TOC }{TOC }}\label{README.md_autotoc_md31841}
+
+\begin{DoxyItemize}
+\item \doxylink{readme.md_usage}{Usage}
+\begin{DoxyItemize}
+\item Install
+\item \doxylink{README.md_api}{API}
+\item \doxylink{readme.md_types}{Types}
+\item \doxylink{README.md_options}{Options}
+\item Envs
+\item Type\+Script
+\begin{DoxyItemize}
+\item \`{}ts-\/node\`{}
+\item \`{}esbuild-\/register\`{}
+\item \`{}esbuild-\/runner\`{}
+\item \`{}swc\`{}
+\item \`{}tsx\`{}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item \doxylink{readme.md_benchmark}{Benchmark}
+\item Sponsors
+\item Backers
+\item Changelog
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31842}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md31842}
+\hypertarget{README.md_autotoc_md31843}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md31843}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ synckit}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ i\ synckit}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31844}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md31844}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ runner.js}
+\DoxyCodeLine{import\ \{\ createSyncFn\ \}\ from\ 'synckit'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ the\ worker\ path\ must\ be\ absolute}
+\DoxyCodeLine{const\ syncFn\ =\ createSyncFn(require.resolve('./worker'),\ \{}
+\DoxyCodeLine{\ \ tsRunner:\ 'tsx',\ //\ optional,\ can\ be\ \`{}'ts-\/node'\ |\ 'esbuild-\/register'\ |\ 'esbuild-\/runner'\ |\ 'tsx'`}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ do\ whatever\ you\ want,\ you\ will\ get\ the\ result\ synchronously!}
+\DoxyCodeLine{const\ result\ =\ syncFn(...args)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ worker.js}
+\DoxyCodeLine{import\ \{\ runAsWorker\ \}\ from\ 'synckit'}
+\DoxyCodeLine{}
+\DoxyCodeLine{runAsWorker(async\ (...args)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ do\ expensive\ work}
+\DoxyCodeLine{\ \ return\ result}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+You must make sure, the {\ttfamily result} is serializable by \href{https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm}{\texttt{ {\ttfamily Structured Clone Algorithm}}}\hypertarget{README.md_autotoc_md31845}{}\doxysubsubsection{\texorpdfstring{Types}{Types}}\label{README.md_autotoc_md31845}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ interface\ GlobalShim\ \{}
+\DoxyCodeLine{\ \ moduleName:\ string}
+\DoxyCodeLine{\ \ /**}
+\DoxyCodeLine{\ \ \ *\ \`{}undefined`\ means\ side\ effect\ only}
+\DoxyCodeLine{\ \ \ */}
+\DoxyCodeLine{\ \ globalName?:\ string}
+\DoxyCodeLine{\ \ /**}
+\DoxyCodeLine{\ \ \ *\ 1.\ \`{}undefined`\ or\ empty\ string\ means\ \`{}default`,\ for\ example:}
+\DoxyCodeLine{\ \ \ *\ \`{}\`{}\`{}js}
+\DoxyCodeLine{\ \ \ *\ import\ globalName\ from\ 'module-\/name'}
+\DoxyCodeLine{\ \ \ *\ \`{}\`{}\`{}}
+\DoxyCodeLine{\ \ \ *}
+\DoxyCodeLine{\ \ \ *\ 2.\ \`{}null`\ means\ namespaced,\ for\ example:}
+\DoxyCodeLine{\ \ \ *\ \`{}\`{}\`{}js}
+\DoxyCodeLine{\ \ \ *\ import\ *\ as\ globalName\ from\ 'module-\/name'}
+\DoxyCodeLine{\ \ \ *\ \`{}\`{}\`{}}
+\DoxyCodeLine{\ \ \ *}
+\DoxyCodeLine{\ \ \ */}
+\DoxyCodeLine{\ \ named?:\ string\ |\ null}
+\DoxyCodeLine{\ \ /**}
+\DoxyCodeLine{\ \ \ *\ If\ not\ \`{}false`,\ the\ shim\ will\ only\ be\ applied\ when\ the\ original\ \`{}globalName`\ unavailable,}
+\DoxyCodeLine{\ \ \ *\ for\ example\ you\ may\ only\ want\ polyfill\ \`{}globalThis.fetch`\ when\ it's\ unavailable\ natively:}
+\DoxyCodeLine{\ \ \ *\ \`{}\`{}\`{}js}
+\DoxyCodeLine{\ \ \ *\ import\ fetch\ from\ 'node-\/fetch'}
+\DoxyCodeLine{\ \ \ *}
+\DoxyCodeLine{\ \ \ *\ if\ (!globalThis.fetch)\ \{}
+\DoxyCodeLine{\ \ \ *\ \ \ globalThis.fetch\ =\ fetch}
+\DoxyCodeLine{\ \ \ *\ \}}
+\DoxyCodeLine{\ \ \ *\ \`{}\`{}\`{}}
+\DoxyCodeLine{\ \ \ */}
+\DoxyCodeLine{\ \ conditional?:\ boolean}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31846}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md31846}
+
+\begin{DoxyEnumerate}
+\item {\ttfamily exec\+Argv} same as env {\ttfamily SYNCKIT\+\_\+\+EXEC\+\_\+\+ARGV}
+\item {\ttfamily global\+Shims}\+: Similar like env {\ttfamily SYNCKIT\+\_\+\+GLOBAL\+\_\+\+SHIMS} but much more flexible which can be a {\ttfamily Global\+Shim} {\ttfamily Array}, see {\ttfamily Global\+Shim}\textquotesingle{}s \doxylink{readme.md_types}{definition} for more details
+\item {\ttfamily timeout} same as env {\ttfamily SYNCKIT\+\_\+\+TIMEOUT}
+\item {\ttfamily transfer\+List}\+: Please refer Node.\+js \href{https://nodejs.org/api/worker_threads.html\#:~:text=Default\%3A\%20true.-,transferList,-\%3CObject\%5B\%5D\%3E\%20If}{\texttt{ {\ttfamily worker\+\_\+threads}}} documentation
+\item {\ttfamily ts\+Runner} same as env {\ttfamily SYNCKIT\+\_\+\+TS\+\_\+\+RUNNER}
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md31847}{}\doxysubsubsection{\texorpdfstring{Envs}{Envs}}\label{README.md_autotoc_md31847}
+
+\begin{DoxyEnumerate}
+\item {\ttfamily SYNCKIT\+\_\+\+EXEC\+\_\+\+ARGV}\+: List of node CLI options passed to the worker, split with comma {\ttfamily ,}. (default as {\ttfamily \mbox{[}\mbox{]}}), see also \href{https://nodejs.org/api/worker_threads.html}{\texttt{ {\ttfamily node} docs}}
+\item {\ttfamily SYNCKIT\+\_\+\+GLOBAL\+\_\+\+SHIMS}\+: Whether to enable the default {\ttfamily DEFAULT\+\_\+\+GLOBAL\+\_\+\+SHIMS\+\_\+\+PRESET} as {\ttfamily global\+Shims}
+\item {\ttfamily SYNCKIT\+\_\+\+TIMEOUT}\+: {\ttfamily timeout} for performing the async job (no default)
+\item {\ttfamily SYNCKIT\+\_\+\+TS\+\_\+\+RUNNER}\+: Which Type\+Script runner to be used, it could be very useful for development, could be `\textquotesingle{}ts-\/node' \texorpdfstring{$\vert$}{|} \textquotesingle{}esbuild-\/register\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}esbuild-\/runner\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}swc\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}tsx\textquotesingle{}{\ttfamily ,}\textquotesingle{}ts-\/node\textquotesingle{}\`{} is used by default, make sure you have installed them already
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md31848}{}\doxysubsubsection{\texorpdfstring{Type\+Script}{Type\+Script}}\label{README.md_autotoc_md31848}
+\hypertarget{README.md_autotoc_md31849}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily ts-\/node}}{{\ttfamily ts-\/node}}}\label{README.md_autotoc_md31849}
+If you want to use {\ttfamily ts-\/node} for worker file (a {\ttfamily .ts} file), it is supported out of box!
+
+If you want to use a custom tsconfig as project instead of default {\ttfamily tsconfig.\+json}, use {\ttfamily TS\+\_\+\+NODE\+\_\+\+PROJECT} env. Please view \href{https://github.com/TypeStrong/ts-node\#tsconfig}{\texttt{ ts-\/node}} for more details.
+
+If you want to integrate with \href{https://www.npmjs.com/package/tsconfig-paths}{\texttt{ tsconfig-\/paths}}, please view \href{https://github.com/TypeStrong/ts-node\#paths-and-baseurl}{\texttt{ ts-\/node}} for more details.\hypertarget{README.md_autotoc_md31850}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily esbuild-\/register}}{{\ttfamily esbuild-\/register}}}\label{README.md_autotoc_md31850}
+Please view \href{https://github.com/egoist/esbuild-register}{\texttt{ {\ttfamily esbuild-\/register}}} for its document\hypertarget{README.md_autotoc_md31851}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily esbuild-\/runner}}{{\ttfamily esbuild-\/runner}}}\label{README.md_autotoc_md31851}
+Please view \href{https://github.com/folke/esbuild-runner}{\texttt{ {\ttfamily esbuild-\/runner}}} for its document\hypertarget{README.md_autotoc_md31852}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily swc}}{{\ttfamily swc}}}\label{README.md_autotoc_md31852}
+Please view \href{https://github.com/swc-project/swc-node/tree/master/packages/register}{\texttt{ {\ttfamily @swc-\/node/register}}} for its document\hypertarget{README.md_autotoc_md31853}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily tsx}}{{\ttfamily tsx}}}\label{README.md_autotoc_md31853}
+Please view \href{https://github.com/esbuild-kit/tsx}{\texttt{ {\ttfamily tsx}}} for its document\hypertarget{README.md_autotoc_md31854}{}\doxysubsection{\texorpdfstring{Benchmark}{Benchmark}}\label{README.md_autotoc_md31854}
+It is about 50x faster than \href{https://github.com/lambci/sync-threads}{\texttt{ {\ttfamily sync-\/threads}}} but 10x slower than native for reading the file content itself 1000 times during runtime, and 40x faster than {\ttfamily sync-\/threads} but 10x slower than native for total time on my personal Mac\+Book Pro with 64G M1 Max.
+
+And it\textquotesingle{}s almost 5x faster than \href{https://github.com/abbr/deasync}{\texttt{ {\ttfamily deasync}}} but requires no native bindings or {\ttfamily node-\/gyp}.
+
+See \href{./benchmarks/benchmark.cjs.txt}{\texttt{ benchmark.\+cjs}} and \href{./benchmarks/benchmark.esm.txt}{\texttt{ benchmark.\+esm}} for more details.
+
+You can try it with running {\ttfamily yarn benchmark} by yourself. \href{./benchmarks/benchmark.js}{\texttt{ Here}} is the benchmark source code.\hypertarget{README.md_autotoc_md31855}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md31855}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ 1stG   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Rx\+TS   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Un\+TS    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ 1stG   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Rx\+TS   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Un\+TS    }\\\cline{1-3}
+\endhead
+\href{https://opencollective.com/1stG}{\texttt{ }}   &\href{https://opencollective.com/rxts}{\texttt{ }}   &\href{https://opencollective.com/unts}{\texttt{ }}   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md31856}{}\doxysubsection{\texorpdfstring{Backers}{Backers}}\label{README.md_autotoc_md31856}
+\href{https://github.com/sponsors/JounQin}{\texttt{ }}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ 1stG   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Rx\+TS   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Un\+TS    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ 1stG   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Rx\+TS   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Un\+TS    }\\\cline{1-3}
+\endhead
+\href{https://opencollective.com/1stG}{\texttt{ }}   &\href{https://opencollective.com/rxts}{\texttt{ }}   &\href{https://opencollective.com/unts}{\texttt{ }}   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md31857}{}\doxysubsection{\texorpdfstring{Changelog}{Changelog}}\label{README.md_autotoc_md31857}
+Detailed changes for each release are documented in \doxylink{tests_2security_2node__modules_2_8pnpm_2axios_0d1_88_83_2node__modules_2axios_2_c_h_a_n_g_e_l_o_g_8md}{CHANGELOG.md}.\hypertarget{README.md_autotoc_md31858}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md31858}
+\href{http://opensource.org/licenses/MIT}{\texttt{ MIT}} © \href{https://GitHub.com/JounQin}{\texttt{ Joun\+Qin}}\texorpdfstring{$<$}{<}a href="{}https\+://www.\+1stg.\+me"{} \texorpdfstring{$>$}{>}1st\+G.\+me 

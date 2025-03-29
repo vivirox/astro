@@ -1,0 +1,45 @@
+\doxysection{node\+\_\+modules/arraybuffer.prototype.\+slice Directory Reference}
+\hypertarget{dir_52b58df92a51ce0c4ae4fbd133a58a62}{}\label{dir_52b58df92a51ce0c4ae4fbd133a58a62}\index{node\_modules/arraybuffer.prototype.slice Directory Reference@{node\_modules/arraybuffer.prototype.slice Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/es-shims/ArrayBuffer.prototype.slice/actions}{\texttt{ }} \href{https://app.codecov.io/gh/es-shims/ArrayBuffer.prototype.slice/}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=arraybuffer.prototype.slice}{\texttt{ }}
+
+\href{https://npmjs.org/package/arraybuffer.prototype.slice}{\texttt{ }}
+
+An ES spec-\/compliant {\ttfamily Array\+Buffer.\+prototype.\+slice} shim. Invoke its "{}shim"{} method to shim Array\+Buffer.\+prototype.\+slice if it is unavailable.
+
+This package implements the \href{https://github.com/es-shims/api}{\texttt{ es-\/shim API}} interface. It works in an ES5-\/supported environment and complies with the \href{https://tc39.es/ecma262/\#sec-arraybuffer.prototype.slice}{\texttt{ spec}}.
+
+Most common usage\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{var\ slice\ =\ require('arraybuffer.prototype.slice');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ ab\ =\ new\ ArrayBuffer(1);}
+\DoxyCodeLine{var\ arr\ =\ new\ Uint8Array(ab);}
+\DoxyCodeLine{arr[0]\ =\ 123;}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ ab2\ =\ slice(ab);}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ arr2\ =\ new\ Uint8Array(ab2);}
+\DoxyCodeLine{arr2[0]\ =\ 234;}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(arr,\ new\ Uint8Array([123]));}
+\DoxyCodeLine{assert.deepEqual(arr2,\ new\ Uint8Array([234]));}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (!ArrayBuffer.prototype.transfer)\ \{}
+\DoxyCodeLine{\ \ \ \ slice.shim();}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ ab2\ =\ ab.slice();}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ arr2\ =\ new\ Uint8Array(ab2);}
+\DoxyCodeLine{arr2[0]\ =\ 234;}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(arr,\ new\ Uint8Array([123]));}
+\DoxyCodeLine{assert.deepEqual(arr2,\ new\ Uint8Array([234]));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8194}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md8194}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

@@ -1,0 +1,100 @@
+\doxysection{node\+\_\+modules/pify Directory Reference}
+\hypertarget{dir_0ccb049dcac465db6770b07ee5c1399e}{}\label{dir_0ccb049dcac465db6770b07ee5c1399e}\index{node\_modules/pify Directory Reference@{node\_modules/pify Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Promisify a callback-\/style function \end{quote}
+\hypertarget{readme.md_autotoc_md25961}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md25961}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ pify}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25962}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md25962}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fs\ =\ require('fs');}
+\DoxyCodeLine{const\ pify\ =\ require('pify');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ promisify\ a\ single\ function}
+\DoxyCodeLine{}
+\DoxyCodeLine{pify(fs.readFile)('package.json',\ 'utf8').then(data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(JSON.parse(data).name);}
+\DoxyCodeLine{\ \ \ \ //=>\ 'pify'}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ or\ promisify\ all\ methods\ in\ a\ module}
+\DoxyCodeLine{}
+\DoxyCodeLine{pify(fs).readFile('package.json',\ 'utf8').then(data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(JSON.parse(data).name);}
+\DoxyCodeLine{\ \ \ \ //=>\ 'pify'}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25963}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md25963}
+\hypertarget{readme.md_autotoc_md25964}{}\doxysubsubsection{\texorpdfstring{pify(input, \mbox{[}promise\+Module\mbox{]}, \mbox{[}options\mbox{]})}{pify(input, \mbox{[}promise\+Module\mbox{]}, \mbox{[}options\mbox{]})}}\label{readme.md_autotoc_md25964}
+Returns a promise wrapped version of the supplied function or module.\hypertarget{readme.md_autotoc_md25965}{}\doxysubsubsubsection{\texorpdfstring{input}{input}}\label{readme.md_autotoc_md25965}
+Type\+: {\ttfamily function}, {\ttfamily object}
+
+Callback-\/style function or module whose methods you want to promisify.\hypertarget{readme.md_autotoc_md25966}{}\doxysubsubsubsection{\texorpdfstring{promise\+Module}{promise\+Module}}\label{readme.md_autotoc_md25966}
+Type\+: {\ttfamily function}
+
+Custom promise module to use instead of the native one.
+
+Check out \href{https://github.com/floatdrop/pinkie-promise}{\texttt{ {\ttfamily pinkie-\/promise}}} if you need a tiny promise polyfill.\hypertarget{readme.md_autotoc_md25967}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md25967}
+\hypertarget{readme.md_autotoc_md25968}{}\doxysubsubsubsubsection{\texorpdfstring{multi\+Args}{multi\+Args}}\label{readme.md_autotoc_md25968}
+Type\+: {\ttfamily boolean} ~\newline
+ Default\+: {\ttfamily false}
+
+By default, the promisified function will only return the second argument from the callback, which works fine for most APIs. This option can be useful for modules like {\ttfamily request} that return multiple arguments. Turning this on will make it return an array of all arguments from the callback, excluding the error argument, instead of just the second argument.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ request\ =\ require('request');}
+\DoxyCodeLine{const\ pify\ =\ require('pify');}
+\DoxyCodeLine{}
+\DoxyCodeLine{pify(request,\ \{multiArgs:\ true\})('https://sindresorhus.com').then(result\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ [httpResponse,\ body]\ =\ result;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25969}{}\doxysubsubsubsubsection{\texorpdfstring{include}{include}}\label{readme.md_autotoc_md25969}
+Type\+: {\ttfamily array} of ({\ttfamily string}\texorpdfstring{$\vert$}{|}{\ttfamily regex})
+
+Methods in a module to promisify. Remaining methods will be left untouched.\hypertarget{readme.md_autotoc_md25970}{}\doxysubsubsubsubsection{\texorpdfstring{exclude}{exclude}}\label{readme.md_autotoc_md25970}
+Type\+: {\ttfamily array} of ({\ttfamily string}\texorpdfstring{$\vert$}{|}{\ttfamily regex}) ~\newline
+ Default\+: {\ttfamily \mbox{[}/.+Sync\$/\mbox{]}}
+
+Methods in a module {\bfseries{not}} to promisify. Methods with names ending with `\textquotesingle{}Sync'\`{} are excluded by default.\hypertarget{readme.md_autotoc_md25971}{}\doxysubsubsubsubsection{\texorpdfstring{exclude\+Main}{exclude\+Main}}\label{readme.md_autotoc_md25971}
+Type\+: {\ttfamily boolean} ~\newline
+ Default\+: {\ttfamily false}
+
+By default, if given module is a function itself, this function will be promisified. Turn this option on if you want to promisify only methods of the module.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ pify\ =\ require('pify');}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ fn()\ \{}
+\DoxyCodeLine{\ \ \ \ return\ true;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{fn.method\ =\ (data,\ callback)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ setImmediate(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ callback(data,\ null);}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ promisify\ methods\ but\ not\ fn()}
+\DoxyCodeLine{const\ promiseFn\ =\ pify(fn,\ \{excludeMain:\ true\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (promiseFn())\ \{}
+\DoxyCodeLine{\ \ \ \ promiseFn.method('hi').then(data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(data);}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25972}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md25972}
+MIT © \href{http://sindresorhus.com}{\texttt{ Sindre Sorhus}} 

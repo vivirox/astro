@@ -1,0 +1,323 @@
+\doxysection{node\+\_\+modules/@octokit/app Directory Reference}
+\hypertarget{dir_4878e32b3dcb2cfd536b90e8838604fd}{}\label{dir_4878e32b3dcb2cfd536b90e8838604fd}\index{node\_modules/"@octokit/app Directory Reference@{node\_modules/"@octokit/app Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Git\+Hub App toolset for Node.\+js \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/app}{\texttt{ }} \href{https://github.com/octokit/app.js/actions?workflow=Test}{\texttt{ }}
+
+
+\begin{DoxyItemize}
+\item \doxylink{readme.md_usage}{Usage}
+\item \`{}\+App.defaults(options)\`{}
+\item Constructor
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}app.octokit\`{}
+\item \`{}app.log\`{}
+\item \`{}app.get\+Installation\+Octokit\`{}
+\item \`{}app.each\+Installation\`{}
+\item \`{}app.each\+Repository\`{}
+\item \`{}app.get\+Installation\+Url\`{}
+\item \`{}app.webhooks\`{}
+\item \`{}app.oauth\`{}
+\end{DoxyItemize}
+\item Middlewares
+\begin{DoxyItemize}
+\item \`{}create\+Node\+Middleware(app, options)\`{}
+\end{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_contributing}{Contributing}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5099}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5099}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ 
+
+Browsers
+
+}&
+
+{\ttfamily @octokit/app} is not meant for browser usage.
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ 
+
+Node
+
+}&
+
+Install with {\ttfamily npm install @octokit/app}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ App,\ createNodeMiddleware\ \}\ =\ require("{}@octokit/app"{});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+\begin{DoxyImportant}{Important}
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json} by setting {\ttfamily "{}module\+Resolution"{}\+: "{}node16"{}, "{}module"{}\+: "{}node16"{}}. ~\newline
+~\newline
+ See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.~\newline
+ See this \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ helpful guide on transitioning to ESM}} from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}}
+\end{DoxyImportant}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ app\ =\ new\ App(\{}
+\DoxyCodeLine{\ \ appId:\ 123,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ oauth:\ \{}
+\DoxyCodeLine{\ \ \ \ clientId:\ "{}0123"{},}
+\DoxyCodeLine{\ \ \ \ clientSecret:\ "{}0123secret"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ webhooks:\ \{}
+\DoxyCodeLine{\ \ \ \ secret:\ "{}secret"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data\ \}\ =\ await\ app.octokit.request("{}/app"{});}
+\DoxyCodeLine{console.log("{}authenticated\ as\ \%s"{},\ data.name);}
+\DoxyCodeLine{for\ await\ (const\ \{\ installation\ \}\ of\ app.eachInstallation.iterator())\ \{}
+\DoxyCodeLine{\ \ for\ await\ (const\ \{\ octokit,\ repository\ \}\ of\ app.eachRepository.iterator(\{}
+\DoxyCodeLine{\ \ \ \ installationId:\ installation.id,}
+\DoxyCodeLine{\ \ \}))\ \{}
+\DoxyCodeLine{\ \ \ \ await\ octokit.request("{}POST\ /repos/\{owner\}/\{repo\}/dispatches"{},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ owner:\ repository.owner.login,}
+\DoxyCodeLine{\ \ \ \ \ \ repo:\ repository.name,}
+\DoxyCodeLine{\ \ \ \ \ \ event\_type:\ "{}my\_event"{},}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.webhooks.on("{}issues.opened"{},\ async\ (\{\ octokit,\ payload\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ await\ octokit.request(}
+\DoxyCodeLine{\ \ \ \ "{}POST\ /repos/\{owner\}/\{repo\}/issues/\{issue\_number\}/comments"{},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ owner:\ payload.repository.owner.login,}
+\DoxyCodeLine{\ \ \ \ \ \ repo:\ payload.repository.name,}
+\DoxyCodeLine{\ \ \ \ \ \ issue\_number:\ payload.issue.number,}
+\DoxyCodeLine{\ \ \ \ \ \ body:\ "{}Hello\ World!"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.oauth.on("{}token"{},\ async\ (\{\ token,\ octokit\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ const\ \{\ data\ \}\ =\ await\ octokit.request("{}GET\ /user"{});}
+\DoxyCodeLine{\ \ console.log(`Token\ retrieved\ for\ \$\{data.login\}`);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{require("{}http"{}).createServer(createNodeMiddleware(app)).listen(3000);}
+\DoxyCodeLine{//\ can\ now\ receive\ requests\ at\ /api/github/*}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5100}{}\doxysubsection{\texorpdfstring{{\ttfamily App.\+defaults(options)}}{{\ttfamily App.\+defaults(options)}}}\label{README.md_autotoc_md5100}
+Create a new {\ttfamily App} with custom defaults for the constructor options
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MyApp\ =\ App.defaults(\{}
+\DoxyCodeLine{\ \ Octokit:\ MyOctokit,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ app\ =\ new\ MyApp(\{\ clientId,\ clientSecret\ \});}
+\DoxyCodeLine{//\ app.octokit\ is\ now\ an\ instance\ of\ MyOctokit}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5101}{}\doxysubsection{\texorpdfstring{Constructor}{Constructor}}\label{README.md_autotoc_md5101}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily app\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily number}  }&{\bfseries{Required}}. Find the {\bfseries{App ID}} on the app’s about page in settings.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily private\+Key}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required}}. Content of the {\ttfamily \texorpdfstring{$\ast$}{*}.pem} file you downloaded from the app’s about page. You can generate a new private key if needed.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily Octokit}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily Constructor}  }&
+
+You can pass in your own Octokit constructor with custom defaults and plugins. Note that {\ttfamily auth\+Strategy} will be always be set to {\ttfamily create\+App\+Auth} from \href{https://github.com/octokit/auth-app.js}{\texttt{ {\ttfamily @octokit/auth-\/app}}}.
+
+For usage with enterprise, set {\ttfamily base\+Url} to the hostname + {\ttfamily /api/v3}. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ Octokit\ \}\ =\ require("{}@octokit/core"{});}
+\DoxyCodeLine{new\ App(\{}
+\DoxyCodeLine{\ \ appId:\ 123,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ oauth:\ \{}
+\DoxyCodeLine{\ \ \ \ clientId:\ 123,}
+\DoxyCodeLine{\ \ \ \ clientSecret:\ "{}secret"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ webhooks:\ \{}
+\DoxyCodeLine{\ \ \ \ secret:\ "{}secret"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ Octokit:\ Octokit.defaults(\{}
+\DoxyCodeLine{\ \ \ \ baseUrl:\ "{}https://ghe.my-\/company.com/api/v3"{},}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Defaults to \href{https://github.com/octokit/core.js}{\texttt{ {\ttfamily @octokit/core}}}.
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily log}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily object}  }&Used for internal logging. Defaults to \href{https://developer.mozilla.org/en-US/docs/Web/API/console}{\texttt{ {\ttfamily console}}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily webhooks.\+secret}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required.}} Secret as configured in the Git\+Hub App\textquotesingle{}s settings.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily webhooks.\+transform}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily function}  }&Only relevant for {\ttfamily app.\+webhooks.\+on}. Transform emitted event before calling handlers. Can be asynchronous.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily oauth.\+client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily number}  }&Find the OAuth {\bfseries{Client ID}} on the app’s about page in settings.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily oauth.\+client\+Secret}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily number}  }&Find the OAuth {\bfseries{Client Secret}} on the app’s about page in settings.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily oauth.\+allow\+Signup}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily boolean}  }&Sets the default value for {\ttfamily app.\+oauth.\+get\+Authorization\+Url(options)}.    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5102}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md5102}
+\hypertarget{README.md_autotoc_md5103}{}\doxysubsubsection{\texorpdfstring{{\ttfamily app.\+octokit}}{{\ttfamily app.\+octokit}}}\label{README.md_autotoc_md5103}
+Octokit instance. Uses the \`{}\+Octokit\`{} constructor option if passed.\hypertarget{README.md_autotoc_md5104}{}\doxysubsubsection{\texorpdfstring{{\ttfamily app.\+log}}{{\ttfamily app.\+log}}}\label{README.md_autotoc_md5104}
+See \href{https://github.com/octokit/core.js\#logging}{\texttt{ https\+://github.\+com/octokit/core.\+js\#logging}}. Customize using the \`{}log\`{} constructor option.\hypertarget{README.md_autotoc_md5105}{}\doxysubsubsection{\texorpdfstring{{\ttfamily app.\+get\+Installation\+Octokit}}{{\ttfamily app.\+get\+Installation\+Octokit}}}\label{README.md_autotoc_md5105}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ await\ app.getInstallationOctokit(123);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5106}{}\doxysubsubsection{\texorpdfstring{{\ttfamily app.\+each\+Installation}}{{\ttfamily app.\+each\+Installation}}}\label{README.md_autotoc_md5106}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{for\ await\ (const\ \{\ octokit,\ installation\ \}\ of\ app.eachInstallation.iterator())\ \{\ /*\ ...\ */\ \}}
+\DoxyCodeLine{await\ app.eachInstallation((\{\ octokit,\ installation\ \})\ =>\ /*\ ...\ */)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5107}{}\doxysubsubsection{\texorpdfstring{{\ttfamily app.\+each\+Repository}}{{\ttfamily app.\+each\+Repository}}}\label{README.md_autotoc_md5107}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{for\ await\ (const\ \{\ octokit,\ repository\ \}\ of\ app.eachRepository.iterator())\ \{\ /*\ ...\ */\ \}}
+\DoxyCodeLine{await\ app.eachRepository((\{\ octokit,\ repository\ \})\ =>\ /*\ ...\ */)}
+
+\end{DoxyCode}
+
+
+Optionally pass installation ID to iterate through all repositories in one installation
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{for\ await\ (const\ \{\ octokit,\ repository\ \}\ of\ app.eachRepository.iterator(\{\ installationId\ \}))\ \{\ /*\ ...\ */\ \}}
+\DoxyCodeLine{await\ app.eachRepository(\{\ installationId\ \},\ (\{\ octokit,\ repository\ \})\ =>\ /*\ ...\ */)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5108}{}\doxysubsubsection{\texorpdfstring{{\ttfamily app.\+get\+Installation\+Url}}{{\ttfamily app.\+get\+Installation\+Url}}}\label{README.md_autotoc_md5108}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ installationUrl\ =\ await\ app.getInstallationUrl();}
+\DoxyCodeLine{return\ res.redirect(installationUrl);}
+
+\end{DoxyCode}
+
+
+Optionally pass the ID of a Git\+Hub organization or user to request installation on that specific target.
+
+If the user will be sent to a redirect URL after installation (such as if you request user authorization during installation), you can also supply a {\ttfamily state} string that will be included in the query of the post-\/install redirect.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ installationUrl\ =\ await\ app.getInstallationUrl(\{\ state,\ target\_id\ \});}
+\DoxyCodeLine{return\ res.redirect(installationUrl);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5109}{}\doxysubsubsection{\texorpdfstring{{\ttfamily app.\+webhooks}}{{\ttfamily app.\+webhooks}}}\label{README.md_autotoc_md5109}
+An \href{https://github.com/octokit/webhooks.js/\#readme}{\texttt{ {\ttfamily @octokit/webhooks} instance}}\hypertarget{README.md_autotoc_md5110}{}\doxysubsubsection{\texorpdfstring{{\ttfamily app.\+oauth}}{{\ttfamily app.\+oauth}}}\label{README.md_autotoc_md5110}
+An \href{https://github.com/octokit/oauth-app.js/\#readme}{\texttt{ {\ttfamily @octokit/oauth-\/app} instance}}\hypertarget{README.md_autotoc_md5111}{}\doxysubsection{\texorpdfstring{Middlewares}{Middlewares}}\label{README.md_autotoc_md5111}
+A middleware is a method or set of methods to handle requests for common environments.
+
+By default, all middlewares expose the following routes
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Route   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Route Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Route   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Route Description    }\\\cline{1-2}
+\endhead
+{\ttfamily POST /api/github/webhooks}   &Endpoint to receive Git\+Hub Webhook Event requests    \\\cline{1-2}
+{\ttfamily GET /api/github/oauth/login}   &Redirects to Git\+Hub\textquotesingle{}s authorization endpoint. Accepts optional {\ttfamily ?state} query parameter.    \\\cline{1-2}
+{\ttfamily GET /api/github/oauth/callback}   &The client\textquotesingle{}s redirect endpoint. This is where the {\ttfamily token} event gets triggered    \\\cline{1-2}
+{\ttfamily POST /api/github/oauth/token}   &Exchange an authorization code for an OAuth Access token. If successful, the {\ttfamily token} event gets triggered.    \\\cline{1-2}
+{\ttfamily GET /api/github/oauth/token}   &Check if token is valid. Must authenticate using token in {\ttfamily Authorization} header. Uses Git\+Hub\textquotesingle{}s \href{https://developer.github.com/v3/apps/oauth_applications/\#check-a-token}{\texttt{ {\ttfamily POST /applications/\{client\+\_\+id\}/token}}} endpoint    \\\cline{1-2}
+{\ttfamily PATCH /api/github/oauth/token}   &Resets a token (invalidates current one, returns new token). Must authenticate using token in {\ttfamily Authorization} header. Uses Git\+Hub\textquotesingle{}s \href{https://developer.github.com/v3/apps/oauth_applications/\#reset-a-token}{\texttt{ {\ttfamily PATCH /applications/\{client\+\_\+id\}/token}}} endpoint.    \\\cline{1-2}
+{\ttfamily DELETE /api/github/oauth/token}   &Invalidates current token, basically the equivalent of a logout. Must authenticate using token in {\ttfamily Authorization} header.    \\\cline{1-2}
+{\ttfamily DELETE /api/github/oauth/grant}   &Revokes the user\textquotesingle{}s grant, basically the equivalent of an uninstall. must authenticate using token in {\ttfamily Authorization} header.   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5112}{}\doxysubsubsection{\texorpdfstring{{\ttfamily create\+Node\+Middleware(app, options)}}{{\ttfamily create\+Node\+Middleware(app, options)}}}\label{README.md_autotoc_md5112}
+Middleware for Node\textquotesingle{}s built in http server or \href{https://expressjs.com/}{\texttt{ {\ttfamily express}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ App,\ createNodeMiddleware\ \}\ =\ require("{}@octokit/app"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ app\ =\ new\ App(\{}
+\DoxyCodeLine{\ \ appId:\ 123,}
+\DoxyCodeLine{\ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ oauth:\ \{}
+\DoxyCodeLine{\ \ \ \ clientId:\ "{}0123"{},}
+\DoxyCodeLine{\ \ \ \ clientSecret:\ "{}0123secret"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ webhooks:\ \{}
+\DoxyCodeLine{\ \ \ \ secret:\ "{}secret"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ middleware\ =\ createNodeMiddleware(app);}
+\DoxyCodeLine{require("{}http"{})}
+\DoxyCodeLine{\ \ .createServer(async\ (req,\ res)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ \`{}middleware`\ returns\ \`{}false`\ when\ \`{}req`\ is\ unhandled\ (beyond\ \`{}/api/github`)}
+\DoxyCodeLine{\ \ \ \ if\ (await\ middleware(req,\ res))\ return;}
+\DoxyCodeLine{\ \ \ \ res.writeHead(404);}
+\DoxyCodeLine{\ \ \ \ res.end();}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .listen(3000);}
+\DoxyCodeLine{//\ can\ now\ receive\ user\ authorization\ callbacks\ at\ /api/github/*}
+
+\end{DoxyCode}
+
+
+The middleware returned from {\ttfamily create\+Node\+Middleware} can also serve as an {\ttfamily Express.\+js} middleware directly.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily app}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily App instance}  }&{\bfseries{Required}}.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily options.\+path\+Prefix}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&
+
+All exposed paths will be prefixed with the provided prefix. Defaults to {\ttfamily "{}/api/github"{}}
+
+\\\cline{1-3}
+{\ttfamily log} {\itshape  object }  &
+
+Used for internal logging. Defaults to \href{https://developer.mozilla.org/en-US/docs/Web/API/console}{\texttt{ {\ttfamily console}}} with {\ttfamily debug} and {\ttfamily info} doing nothing. \begin{DoxyVerb}  </td>
+</tr>
+\end{DoxyVerb}
+
+
+\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5113}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md5113}
+See \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{CONTRIBUTING.md}\hypertarget{README.md_autotoc_md5114}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md5114}
+\mbox{[}MIT\mbox{]}(LICENSE) 

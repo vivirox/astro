@@ -1,0 +1,42 @@
+\doxysection{node\+\_\+modules/acorn-\/jsx Directory Reference}
+\hypertarget{dir_908bc36625400e6d9f68eae417b96265}{}\label{dir_908bc36625400e6d9f68eae417b96265}\index{node\_modules/acorn-\/jsx Directory Reference@{node\_modules/acorn-\/jsx Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/acornjs/acorn-jsx}{\texttt{ }} \href{https://www.npmjs.org/package/acorn-jsx}{\texttt{ }}
+
+This is plugin for \href{http://marijnhaverbeke.nl/acorn/}{\texttt{ Acorn}} -\/ a tiny, fast Java\+Script parser, written completely in Java\+Script.
+
+It was created as an experimental alternative, faster \href{http://facebook.github.io/react/docs/jsx-in-depth.html}{\texttt{ React.\+js JSX}} parser. Later, it replaced the \href{https://github.com/facebookarchive/esprima}{\texttt{ official parser}} and these days is used by many prominent development tools.\hypertarget{README.md_autotoc_md7367}{}\doxysubsection{\texorpdfstring{Transpiler}{Transpiler}}\label{README.md_autotoc_md7367}
+Please note that this tool only parses source code to JSX AST, which is useful for various language tools and services. If you want to transpile your code to regular ES5-\/compliant Java\+Script with source map, check out \href{https://babeljs.io/}{\texttt{ Babel}} and \href{https://buble.surge.sh/}{\texttt{ Buble}} transpilers which use {\ttfamily acorn-\/jsx} under the hood.\hypertarget{README.md_autotoc_md7368}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md7368}
+Requiring this module provides you with an Acorn plugin that you can use like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ acorn\ =\ require("{}acorn"{});}
+\DoxyCodeLine{var\ jsx\ =\ require("{}acorn-\/jsx"{});}
+\DoxyCodeLine{acorn.Parser.extend(jsx()).parse("{}my(<jsx/>,\ 'code');"{});}
+
+\end{DoxyCode}
+
+
+Note that official spec doesn\textquotesingle{}t support mix of XML namespaces and object-\/style access in tag names (\#27) like in {\ttfamily \texorpdfstring{$<$}{<}namespace\+:Object.\+Property /\texorpdfstring{$>$}{>}}, so it was deprecated in {\ttfamily acorn-\/jsx@3.\+0}. If you still want to opt-\/in to support of such constructions, you can pass the following option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{acorn.Parser.extend(jsx(\{\ allowNamespacedObjects:\ true\ \}))}
+
+\end{DoxyCode}
+
+
+Also, since most apps use pure React transformer, a new option was introduced that allows to prohibit namespaces completely\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{acorn.Parser.extend(jsx(\{\ allowNamespaces:\ false\ \}))}
+
+\end{DoxyCode}
+
+
+Note that by default {\ttfamily allow\+Namespaces} is enabled for spec compliancy.\hypertarget{README.md_autotoc_md7369}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md7369}
+This plugin is issued under the \href{./LICENSE}{\texttt{ MIT license}}. 

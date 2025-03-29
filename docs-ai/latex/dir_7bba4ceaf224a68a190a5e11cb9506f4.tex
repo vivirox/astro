@@ -1,0 +1,87 @@
+\doxysection{node\+\_\+modules/micromark-\/util-\/normalize-\/identifier Directory Reference}
+\hypertarget{dir_7bba4ceaf224a68a190a5e11cb9506f4}{}\label{dir_7bba4ceaf224a68a190a5e11cb9506f4}\index{node\_modules/micromark-\/util-\/normalize-\/identifier Directory Reference@{node\_modules/micromark-\/util-\/normalize-\/identifier Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-util-normalize-identifier}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-util-normalize-identifier}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} utility normalize identifiers.\hypertarget{readme.md_autotoc_md23741}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23741}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}normalize\+Identifier(value)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23742}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23742}
+This package exposes an algorithm to normalize identifiers found in markdown.\hypertarget{readme.md_autotoc_md23743}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md23743}
+This package might be useful when you are making your own micromark extensions.\hypertarget{readme.md_autotoc_md23744}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23744}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/util-\/normalize-\/identifier}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{normalizeIdentifier\}\ from\ 'https://esm.sh/micromark-\/util-\/normalize-\/identifier@1'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{normalizeIdentifier\}\ from\ 'https://esm.sh/micromark-\/util-\/normalize-\/identifier@1?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23745}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23745}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{normalizeIdentifier\}\ from\ 'micromark-\/util-\/normalize-\/identifier'}
+\DoxyCodeLine{}
+\DoxyCodeLine{normalizeIdentifier('\ a\ ')\ //\ 'A'}
+\DoxyCodeLine{normalizeIdentifier('a\(\backslash\)t\(\backslash\)r\(\backslash\)nb')\ //\ 'A\ B'}
+\DoxyCodeLine{normalizeIdentifier('ТОЛПОЙ')\ //\ 'ТОЛПОЙ'}
+\DoxyCodeLine{normalizeIdentifier('Толпой')\ //\ 'ТОЛПОЙ'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23746}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23746}
+This module exports the identifier \`{}normalize\+Identifier\`{}. There is no default export.\hypertarget{readme.md_autotoc_md23747}{}\doxysubsubsection{\texorpdfstring{{\ttfamily normalize\+Identifier(value)}}{{\ttfamily normalize\+Identifier(value)}}}\label{readme.md_autotoc_md23747}
+Normalize an identifier (as found in references, definitions).
+
+Collapses markdown whitespace, trim, and then lower-\/ and uppercase.
+
+Some characters are considered “uppercase”, such as U+03\+F4 ({\ttfamily ϴ}), but if their lowercase counterpart (U+03\+B8 ({\ttfamily θ})) is uppercased will result in a different uppercase character (U+0398 ({\ttfamily Θ})). So, to get a canonical form, we perform both lower-\/ and uppercase.
+
+Using uppercase last makes sure keys will never interact with default prototypal values (such as {\ttfamily constructor})\+: nothing in the prototype of {\ttfamily Object} is uppercase.\hypertarget{readme.md_autotoc_md23748}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23748}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} ({\ttfamily string}) — identifier to normalize
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23749}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23749}
+Normalized identifier ({\ttfamily string}).\hypertarget{readme.md_autotoc_md23750}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23750}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md23751}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23751}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/util-\/normalize-\/identifier@2}, compatible with Node.\+js 16. This package works with {\ttfamily micromark@3}.\hypertarget{readme.md_autotoc_md23752}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23752}
+This package is safe. See \href{https://github.com/micromark/.github/blob/main/security.md}{\texttt{ {\ttfamily security.\+md}}} in \href{https://github.com/micromark/.github}{\texttt{ {\ttfamily micromark/.github}}} for how to submit a security report.\hypertarget{readme.md_autotoc_md23753}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23753}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/micromark/.github}{\texttt{ {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organisation, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23754}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23754}
+\href{https://github.com/micromark/micromark/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

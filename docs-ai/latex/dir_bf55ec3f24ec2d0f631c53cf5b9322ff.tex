@@ -1,0 +1,115 @@
+\doxysection{tests/security/node\+\_\+modules/.pnpm/@eslint+eslintrc@2.1.4/node\+\_\+modules/@eslint/eslintrc Directory Reference}
+\hypertarget{dir_bf55ec3f24ec2d0f631c53cf5b9322ff}{}\label{dir_bf55ec3f24ec2d0f631c53cf5b9322ff}\index{tests/security/node\_modules/.pnpm/"@eslint+eslintrc"@2.1.4/node\_modules/"@eslint/eslintrc Directory Reference@{tests/security/node\_modules/.pnpm/"@eslint+eslintrc"@2.1.4/node\_modules/"@eslint/eslintrc Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This repository contains the legacy ESLint\+RC configuration file format for ESLint. This package is not intended for use outside of the ESLint ecosystem. It is ESLint-\/specific and not intended for use in other programs.
+
+{\bfseries{Note\+:}} This package is frozen except for critical bug fixes as ESLint moves to a new config system.\hypertarget{README.md_autotoc_md37522}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md37522}
+You can install the package as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @eslint/eslintrc\ -\/-\/save-\/dev}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ or}
+\DoxyCodeLine{}
+\DoxyCodeLine{yarn\ add\ @eslint/eslintrc\ -\/D}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37523}{}\doxysubsection{\texorpdfstring{Usage (ESM)}{Usage (ESM)}}\label{README.md_autotoc_md37523}
+The primary class in this package is {\ttfamily Flat\+Compat}, which is a utility to translate ESLint\+RC-\/style configs into flat configs. Here\textquotesingle{}s how you use it inside of your {\ttfamily eslint.\+config.\+js} file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ FlatCompat\ \}\ from\ "{}@eslint/eslintrc"{};}
+\DoxyCodeLine{import\ js\ from\ "{}@eslint/js"{};}
+\DoxyCodeLine{import\ path\ from\ "{}path"{};}
+\DoxyCodeLine{import\ \{\ fileURLToPath\ \}\ from\ "{}url"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ mimic\ CommonJS\ variables\ -\/-\/\ not\ needed\ if\ using\ CommonJS}
+\DoxyCodeLine{const\ \_\_filename\ =\ fileURLToPath(import.meta.url);}
+\DoxyCodeLine{const\ \_\_dirname\ =\ path.dirname(\_\_filename);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ compat\ =\ new\ FlatCompat(\{}
+\DoxyCodeLine{\ \ \ \ baseDirectory:\ \_\_dirname,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ optional;\ default:\ process.cwd()}
+\DoxyCodeLine{\ \ \ \ resolvePluginsRelativeTo:\ \_\_dirname,\ \ \ \ \ \ \ //\ optional}
+\DoxyCodeLine{\ \ \ \ recommendedConfig:\ js.configs.recommended,\ //\ optional}
+\DoxyCodeLine{\ \ \ \ allConfig:\ js.configs.all,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ optional}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ [}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ mimic\ ESLintRC-\/style\ extends}
+\DoxyCodeLine{\ \ \ \ ...compat.extends("{}standard"{},\ "{}example"{}),}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ mimic\ environments}
+\DoxyCodeLine{\ \ \ \ ...compat.env(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ es2020:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ node:\ true}
+\DoxyCodeLine{\ \ \ \ \}),}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ mimic\ plugins}
+\DoxyCodeLine{\ \ \ \ ...compat.plugins("{}airbnb"{},\ "{}react"{}),}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ translate\ an\ entire\ config}
+\DoxyCodeLine{\ \ \ \ ...compat.config(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ plugins:\ ["{}airbnb"{},\ "{}react"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ extends:\ "{}standard"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ env:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ es2020:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ node:\ true}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ semi:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37524}{}\doxysubsection{\texorpdfstring{Usage (Common\+JS)}{Usage (Common\+JS)}}\label{README.md_autotoc_md37524}
+Using {\ttfamily Flat\+Compat} in Common\+JS files is similar to ESM, but you\textquotesingle{}ll use {\ttfamily require()} and {\ttfamily module.\+exports} instead of {\ttfamily import} and {\ttfamily export}. Here\textquotesingle{}s how you use it inside of your {\ttfamily eslint.\+config.\+js} Common\+JS file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ FlatCompat\ \}\ =\ require("{}@eslint/eslintrc"{});}
+\DoxyCodeLine{const\ js\ =\ require("{}@eslint/js"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ compat\ =\ new\ FlatCompat(\{}
+\DoxyCodeLine{\ \ \ \ baseDirectory:\ \_\_dirname,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ optional;\ default:\ process.cwd()}
+\DoxyCodeLine{\ \ \ \ resolvePluginsRelativeTo:\ \_\_dirname,\ \ \ \ \ \ \ //\ optional}
+\DoxyCodeLine{\ \ \ \ recommendedConfig:\ js.configs.recommended,\ //\ optional}
+\DoxyCodeLine{\ \ \ \ allConfig:\ js.configs.all,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ optional}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{module.exports\ =\ [}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ mimic\ ESLintRC-\/style\ extends}
+\DoxyCodeLine{\ \ \ \ ...compat.extends("{}standard"{},\ "{}example"{}),}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ mimic\ environments}
+\DoxyCodeLine{\ \ \ \ ...compat.env(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ es2020:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ node:\ true}
+\DoxyCodeLine{\ \ \ \ \}),}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ mimic\ plugins}
+\DoxyCodeLine{\ \ \ \ ...compat.plugins("{}airbnb"{},\ "{}react"{}),}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ translate\ an\ entire\ config}
+\DoxyCodeLine{\ \ \ \ ...compat.config(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ plugins:\ ["{}airbnb"{},\ "{}react"{}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ extends:\ "{}standard"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ env:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ es2020:\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ node:\ true}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ rules:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ semi:\ "{}error"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37525}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md37525}
+MIT License 

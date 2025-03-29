@@ -1,0 +1,38 @@
+\doxysection{node\+\_\+modules/is-\/shared-\/array-\/buffer Directory Reference}
+\hypertarget{dir_d3a647ba0e06e0fde14fcc0e45e4b068}{}\label{dir_d3a647ba0e06e0fde14fcc0e45e4b068}\index{node\_modules/is-\/shared-\/array-\/buffer Directory Reference@{node\_modules/is-\/shared-\/array-\/buffer Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/inspect-js/is-shared-array-buffer/actions}{\texttt{ }} \href{https://app.codecov.io/gh/inspect-js/is-shared-array-buffer/}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=is-shared-array-buffer}{\texttt{ }}
+
+\href{https://npmjs.org/package/is-shared-array-buffer}{\texttt{ }}
+
+Is this value a JS Shared\+Array\+Buffer? This module works cross-\/realm/iframe, does not depend on {\ttfamily instanceof} or mutable properties, and despite ES6 Symbol.\+to\+String\+Tag.\hypertarget{README.md_autotoc_md18791}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md18791}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{var\ isSharedArrayBuffer\ =\ require('is-\/shared-\/array-\/buffer');}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(function\ ()\ \{\}));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(null));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(function*\ ()\ \{\ yield\ 42;\ return\ Infinity;\ \});}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(Symbol('foo')));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(1n));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(Object(1n)));}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(new\ Set()));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(new\ WeakSet()));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(new\ Map()));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(new\ WeakMap()));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(new\ WeakRef(\{\})));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(new\ FinalizationRegistry(()\ =>\ \{\})));}
+\DoxyCodeLine{assert(!isSharedArrayBuffer(new\ ArrayBuffer()));}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert(isSharedArrayBuffer(new\ SharedArrayBuffer()));}
+\DoxyCodeLine{}
+\DoxyCodeLine{class\ MySharedArrayBuffer\ extends\ SharedArrayBuffer\ \{\}}
+\DoxyCodeLine{assert(isSharedArrayBuffer(new\ MySharedArrayBuffer()));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18792}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md18792}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

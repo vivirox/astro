@@ -1,0 +1,614 @@
+\chapter{Binary format for R1\+CS}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format}{}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format}\index{Binary format for R1CS@{Binary format for R1CS}}
+\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26776}%
+\Hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26776}%
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26777}{}\doxysection{\texorpdfstring{Simple Summary}{Simple Summary}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26777}
+This standard defines a standard format for a binery representation of a r1cs constraint system.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26778}{}\doxysection{\texorpdfstring{Abstract}{Abstract}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26778}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26779}{}\doxysection{\texorpdfstring{Motivation}{Motivation}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26779}
+The zero knowledge primitives, requires the definition of a statment that wants to be proved. This statment can be expressed as a deterministric program or an algebraic circuit. Lots of primitives like zk\+Snarks, bullet\+Proofs or aurora, requires to convert this statment to a rank-\/one constraint system.
+
+This standard specifies a format for a r1cs and allows the to connect a set of tools that compiles a program or a circuit to r1cs that can be used for the zksnarks or bulletproofs primitives.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26780}{}\doxysection{\texorpdfstring{Specification}{Specification}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26780}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26781}{}\doxysubsection{\texorpdfstring{General considerations}{General considerations}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26781}
+The standard extension is {\ttfamily .r1cs}
+
+A deterministic program (or circuit) is a program that generates a set of deterministic values given an input. All those values are labeled from l\+\_\+\{0\} to l\+\_\+\{n\+\_\+labels\}
+
+This file defines a map beween l\+\_\+\{i\} -\/\texorpdfstring{$>$}{>} w\+\_\+\{j\} and defines a series a R1\+CS of the form
+
+\$\$ \textbackslash{}left\textbackslash{}\{ \textbackslash{}begin\{array\}\{rclclcl\} (a\+\_\+\{0,0\}w\+\_\+0 + a\+\_\+\{0,1\}w\+\_\+1 + ... + a\+\_\+\{0,n\}w\+\_\+\{n\}) \&\textbackslash{}cdot\& (b\+\_\+\{0,0\} w\+\_\+0 + b\+\_\+\{0,1\} w\+\_\+1 + ... + b\+\_\+\{0,n\} w\+\_\+\{n\}) \&-\/\& (c\+\_\+\{0,0\} w\+\_\+0 + c\+\_\+\{0,1\} w\+\_\+1 + ... + c\+\_\+\{0,n\}w\+\_\+\{n\}) \&=\& 0 \textbackslash{} (a\+\_\+\{1,0\}w\+\_\+0 + a\+\_\+\{1,1\}w\+\_\+1 + ... + a\+\_\+\{1,n\}w\+\_\+\{n\}) \&\textbackslash{}cdot\& (b\+\_\+\{1,0\} w\+\_\+0 + b\+\_\+\{1,1\} w\+\_\+1 + ... + b\+\_\+\{1,n\} w\+\_\+\{n\}) \&-\/\& (c\+\_\+\{1,0\} w\+\_\+0 + c\+\_\+\{1,1\}w\+\_\+1 + ... + c\+\_\+\{1,n\}w\+\_\+\{n\}) \&=\& 0 \textbackslash{} ...\textbackslash{} (a\+\_\+\{m-\/1,0\}w\+\_\+0 + a\+\_\+\{m-\/1,1\}w\+\_\+1 + ... + a\+\_\+\{m-\/1,n\}w\+\_\+\{n\}) \&\textbackslash{}cdot\& (b\+\_\+\{m-\/1,0\} w\+\_\+0 + b\+\_\+\{m-\/1,1\} w\+\_\+1 + ... + b\+\_\+\{m-\/1,n\} w\+\_\+\{n\}) \&-\/\& (c\+\_\+\{m-\/1,0\} w\+\_\+0 + c\+\_\+\{m-\/1,1\}w\+\_\+1 + ... + c\+\_\+\{m-\/1,n\}w\+\_\+\{n\}) \&=\& 0 \textbackslash{}end\{array\} \textbackslash{}right. \$\$
+
+Wire 0 must be always mapped to label 0 and it\textquotesingle{}s an input forced to value "{}1"{} implicitly\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26782}{}\doxysubsection{\texorpdfstring{Format of the file}{Format of the file}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26782}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 4\ \ │\ \ \ 72\ 31\ 63\ 73\ \ \ ┃\ \ \ \ \ Magic\ \ "{}r1cs"{}}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 4\ \ │\ \ \ 01\ 00\ 00\ 00\ \ \ ┃\ \ \ \ \ \ \ Version\ 1}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 4\ \ │\ \ \ 03\ 00\ 00\ 00\ \ \ ┃\ \ \ \ \ \ \ Number\ of\ Sections}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 4\ \ │\ sectionType\ \ \ \ \ ┃\ \ 8\ \ │\ \ \ SectionSize\ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ Section\ Content\ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 4\ \ │\ sectionType\ \ \ \ \ ┃\ \ 8\ \ │\ \ \ SectionSize\ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ Section\ Content\ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{...}
+\DoxyCodeLine{...}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26783}{}\doxysubsubsection{\texorpdfstring{Magic Number}{Magic Number}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26783}
+Size\+: 4 bytes The file start with a constant 4 bytes (magic number) "{}r1cs"{}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0x72\ 0x31\ 0x63\ 0x73}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26784}{}\doxysubsubsection{\texorpdfstring{Version}{Version}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26784}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+For this standard it\textquotesingle{}s fixed to
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0x01\ 0x00\ 0x00\ 0x00}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26785}{}\doxysubsubsection{\texorpdfstring{Number of Sections}{Number of Sections}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26785}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Number of sections contained in the file\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26786}{}\doxysubsubsection{\texorpdfstring{Section\+Type}{Section\+Type}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26786}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Type of the section.
+
+Currently there are 5 types of sections defined\+:
+
+
+\begin{DoxyItemize}
+\item 0x00000001 \+: Header Section
+\item 0x00000002 \+: Constraint Section
+\item 0x00000003 \+: Wire2\+Label\+Id Map Section
+\item 0x00000004 \+: Custom gates List Section \mbox{[}Ultra\+Plonk\mbox{]}
+\item 0x00000005 \+: Custom gates Application Section \mbox{[}Ultra\+Plonk\mbox{]}
+\end{DoxyItemize}
+
+If the file contain other types, the format is valid, but they MUST be ignored.
+
+Any order of the section must be accepted.
+
+Example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0x01\ 0x00\ 0x00\ 0x00}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26787}{}\doxysubsubsection{\texorpdfstring{Section\+Size}{Section\+Size}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26787}
+Size\+: {\ttfamily ws} bytes Format\+: Little-\/\+Endian
+
+Size in bytes of the section\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26788}{}\doxysubsection{\texorpdfstring{Header Section}{Header Section}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26788}
+Section Type\+: 0x01 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 4\ \ │\ \ \ 20\ 00\ 00\ 00\ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Field\ Size\ in\ bytes\ (fs)}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ fs\ │\ \ \ 010000f0\ 93f5e143\ 9170b979\ 48e83328\ 5d588181\ b64550b8\ 29a031e1\ 724e6430\ ┃\ \ Prime\ size}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ │\ \ \ 01\ 00\ 00\ 00\ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nWires}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ │\ \ \ 01\ 00\ 00\ 00\ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nPubOut}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ │\ \ \ 01\ 00\ 00\ 00\ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nPubIn}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ │\ \ \ 01\ 00\ 00\ 00\ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nPrvIn}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 64\ │\ \ \ 01\ 00\ 00\ 00\ 00\ 00\ 00\ 00\ \ \ ┃\ \ \ nLabels}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ │\ \ \ 01\ 00\ 00\ 00\ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mConstraints}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┛}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26789}{}\doxysubsubsection{\texorpdfstring{field Size (fs)}{field Size (fs)}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26789}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Size in bytes of a field element. Must be a multiple of 8.
+
+Example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0x00\ 0x0\ 0x00\ 0x00}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26790}{}\doxysubsubsection{\texorpdfstring{Prime}{Prime}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26790}
+Prime Number of the field
+
+Example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0x010000f0\_93f5e143\_9170b979\_48e83328\_5d588181\_b64550b8\_29a031e1\_724e6430}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26791}{}\doxysubsubsection{\texorpdfstring{Number of wires}{Number of wires}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26791}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Total Number of wires including ONE signal (Index 0).\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26792}{}\doxysubsubsection{\texorpdfstring{Number of public outputs}{Number of public outputs}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26792}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Total Number of wires public output wires. They should be starting at idx 1\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26793}{}\doxysubsubsection{\texorpdfstring{Number of public inputs}{Number of public inputs}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26793}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Total Number of wires public input wires. They should be starting just after the public output\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26794}{}\doxysubsubsection{\texorpdfstring{Number of private inputs}{Number of private inputs}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26794}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Total Number of wires private input wires. They should be starting just after the public inputs\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26795}{}\doxysubsubsection{\texorpdfstring{Number of Labels}{Number of Labels}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26795}
+Size\+: 8 bytes Format\+: Little-\/\+Endian
+
+Total Number of wires private input wires. They should be starting just after the public inputs\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26796}{}\doxysubsubsection{\texorpdfstring{Number of constraints (m)}{Number of constraints (m)}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26796}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Total Number of constraints\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26797}{}\doxysubsection{\texorpdfstring{Constraints section}{Constraints section}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26797}
+Section Type\+: 0x02
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nA\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ \ a\_\{0,wireId\_1\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ \ a\_\{0,wireId\_2\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nA\ \ \ ┃\ fs\ │\ \ \ \ \ a\_\{0,wireId\_nA\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nB\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ \ b\_\{0,wireId\_1\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ \ b\_\{0,wireId\_2\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ \ ╱\ \ Constraint\_0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nB\ \ \ ┃\ fs\ │\ \ \ \ \ b\_\{0,wireId\_nB\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nC\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ \ c\_\{0,wireId\_1\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ \ c\_\{0,wireId\_2\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nC\ \ \ ┃\ fs\ │\ \ \ \ \ c\_\{0,wireId\_nC\}\ \ \ \ ┃\ \ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nA\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ \ a\_\{1,wireId\_1\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ \ a\_\{1,wireId\_2\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nA\ \ \ ┃\ fs\ │\ \ \ \ \ a\_\{1,wireId\_nA\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nB\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ \ b\_\{1,wireId\_1\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ \ b\_\{1,wireId\_2\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ \ ╱\ \ Constraint\_1}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nB\ \ \ ┃\ fs\ │\ \ \ \ \ b\_\{1,wireId\_nB\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nC\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ \ c\_\{1,wireId\_1\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ \ c\_\{1,wireId\_2\}\ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nC\ \ \ ┃\ fs\ │\ \ \ \ \ c\_\{1,wireId\_nC\}\ \ \ \ ┃\ \ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nA\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ a\_\{m-\/1,wireId\_1\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ a\_\{m-\/1,wireId\_2\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nA\ \ \ ┃\ fs\ │\ \ \ \ a\_\{m-\/1,wireId\_nA\}\ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nB\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ b\_\{m-\/1,wireId\_1\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ b\_\{m-\/1,wireId\_2\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ ╲}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ \ ╱\ \ Constraint\_\{m-\/1\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nB\ \ \ ┃\ fs\ │\ \ \ \ b\_\{m-\/1,wireId\_nB\}\ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ \ \ nC\ \ \ \ \ \ \ \ ┃\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_1\ \ \ \ ┃\ fs\ │\ \ \ \ c\_\{m-\/1,wireId\_1\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━╋━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━┫\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_2\ \ \ \ ┃\ fs\ │\ \ \ \ c\_\{m-\/1,wireId\_2\}\ \ \ \ ┃\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ \ \ \ \ │}
+\DoxyCodeLine{┃\ 32\ │\ \ \ \ \ wireId\_nC\ \ \ ┃\ fs\ │\ \ \ \ c\_\{m-\/1,wireId\_nC\}\ \ \ ┃\ \ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ \ \ ╱}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ╱}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26798}{}\doxysubsubsection{\texorpdfstring{Constraints}{Constraints}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26798}
+Each constraint contains 3 linear combinations A, B, C.
+
+The constraint is such that\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{A*B-\/C\ =\ 0}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26799}{}\doxysubsubsection{\texorpdfstring{Linear combination}{Linear combination}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26799}
+Each linear combination is of the form\+:
+
+\$\$ a\+\_\+\{j,0\}w\+\_\+0 + a\+\_\+\{j,1\}w\+\_\+1 + ... + a\+\_\+\{j,n\}w\+\_\+\{n\} \$\$\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26800}{}\doxysubsubsection{\texorpdfstring{Number of non\+Zero Factors}{Number of non\+Zero Factors}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26800}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Total number of non Zero factors in the linear combination.
+
+The factors MUST be sorted in ascending order.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26801}{}\doxysubsubsection{\texorpdfstring{Factor}{Factor}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26801}
+For each factor we have the index of the factor and the value of the factor.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26802}{}\doxysubsubsection{\texorpdfstring{Wire\+Id of the factor}{Wire\+Id of the factor}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26802}
+Size\+: 4 bytes Format\+: Little-\/\+Endian
+
+Wire\+Id of the non\+Zero Factor\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26803}{}\doxysubsubsection{\texorpdfstring{Value of the factor}{Value of the factor}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26803}
+This is the factor that multiplies the associated wire in the linear combination.
+
+For example, to represent the linear combination\+:
+
+\$\$ 5w\+\_\+4 +8w\+\_\+5 + 260w\+\_\+\{886\} \$\$
+
+The linear combination would be represented as\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┏━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ \ \ 03\ 00\ 00\ 00\ \ \ ┃}
+\DoxyCodeLine{┣━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ \ \ 04\ 00\ 00\ 00\ \ \ ┃\ 05000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{┣━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ \ \ 05\ 00\ 00\ 00\ \ \ ┃\ 08000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{┣━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ \ \ 76\ 03\ 00\ 00\ \ \ ┃\ 04010000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{┗━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26804}{}\doxysubsection{\texorpdfstring{Wire\+Id2\+Label\+Id Map Section}{Wire\+Id2\+Label\+Id Map Section}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26804}
+Section Type\+: 0x03
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━┓\ \ \ \ \ ┏━━━━┳━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 64\ │\ labelId\ of\ Wire\_0\ ┃\ 64\ │\ labelId\ of\ Wire\_1\ ┃\ ...\ ┃\ 64\ │\ labelId\ of\ Wire\_n\ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━┻━━━━┻━━━━━━━━━━━━━━━━━━━┛\ \ \ \ \ ┗━━━━┻━━━━━━━━━━━━━━━━━━━┛}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26805}{}\doxysubsection{\texorpdfstring{Custom gates List Section \mbox{[}Plonk\mbox{]}}{Custom gates List Section \mbox{[}Plonk\mbox{]}}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26805}
+Section Type\+: 0x04
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ ┃\ Number\ of\ custom\ gates\ M\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{}
+\DoxyCodeLine{Custom\ gate\ 0}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ \ \ \ ┃\ Custom\ gate\ template\ name\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃\ Sequence\ of\ N\ 1-\/byte\ char\ ending\ with\ 0x0}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ 32\ ┃\ Number\ of\ template\ parameters\ N0\ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ fs\ ┃\ Parameter\ 0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ fs\ ┃\ Parameter\ 2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ fs\ ┃\ Parameter\ N0-\/1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{...}
+\DoxyCodeLine{...}
+\DoxyCodeLine{...}
+\DoxyCodeLine{Custom\ gate\ M-\/1}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ \ \ \ ┃\ Custom\ gate\ template\ name\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃\ Sequence\ of\ N\ 1-\/byte\ char\ ending\ with\ 0x0}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ 32\ ┃\ Number\ of\ template\ parameters\ Nm\ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ fs\ ┃\ Parameter\ 0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ fs\ ┃\ Parameter\ 2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ ...\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ fs\ ┃\ Parameter\ Nm-\/1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+
+\end{DoxyCode}
+
+
+Custom gates are identified by the position in the list starting at index 0.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26806}{}\doxysubsection{\texorpdfstring{Custom gates Application Section \mbox{[}Plonk\mbox{]}}{Custom gates Application Section \mbox{[}Plonk\mbox{]}}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26806}
+Section Type\+: 0x05
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ ┃\ Number\ of\ Custom\ gates\ applications\ N\ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{}
+\DoxyCodeLine{Application\ 0}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ ┃\ Custom\ gate\ identifier\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ 32\ ┃\ Number\ of\ signals\ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ 32\ ┃\ Signal\ 0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ 32\ ┃\ Signal\ 1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{┃\ 32\ ┃\ Signal\ S-\/1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{...}
+\DoxyCodeLine{...}
+\DoxyCodeLine{...}
+\DoxyCodeLine{Application\ N-\/1}
+\DoxyCodeLine{┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 32\ ┃\ Custom\ gate\ identifier\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ 32\ ┃\ Number\ of\ signals\ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┣━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ 32\ ┃\ Signal\ 0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┃\ 32\ ┃\ Signal\ 1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{┃\ 32\ ┃\ Signal\ S-\/1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ┃}
+\DoxyCodeLine{┗━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+
+\end{DoxyCode}
+
+
+List of signals are inputs and outputs of the custom gate in the order they appear in the {\ttfamily CIRCOM} definition of the custom gate.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26807}{}\doxysection{\texorpdfstring{Rationale}{Rationale}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26807}
+Variable size for field elements allows to shrink the size of the file and allows to work with any field.
+
+Version allows to update the format.
+
+Have a very good comprasion ratio for sparse r1cs as it\textquotesingle{}s the normal case.
+
+The motivation of having a map between l and w is that this allows optimizers to calculate equivalent r1cs systems but keeping the original values geneated by the circuit.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26808}{}\doxysection{\texorpdfstring{Backward Compatibility}{Backward Compatibility}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26808}
+N.\+A.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26809}{}\doxysection{\texorpdfstring{Test Cases}{Test Cases}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26809}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26810}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26810}
+Given this r1cs in a 256 bit Field\+:
+
+\$\$ \textbackslash{}left\textbackslash{}\{ \textbackslash{}begin\{array\}\{rclclcl\} (3w\+\_\+5 + 8w\+\_\+6) \&\textbackslash{}cdot\& (2w\+\_\+0 + 20w\+\_\+2 + 12w\+\_\+3) \&-\/\& (5w\+\_\+0 + 7w\+\_\+2) \&=\& 0 \textbackslash{} (4w\+\_\+1 + 8w\+\_\+4 + 3w\+\_\+5) \&\textbackslash{}cdot\& (6w\+\_\+6 + 44w\+\_\+3) \&\& \&=\& 0 \textbackslash{} (4w\+\_\+6) \&\textbackslash{}cdot\& (6w\+\_\+0 + 5w\+\_\+3 + 11s\+\_\+2) \&-\/\& (600w\+\_\+6) \&=\& 0 \textbackslash{}end\{array\} \textbackslash{}right. \$\$
+
+And a Wire to label map.
+
+\$\$ w\+\_\+0 \+:= l\+\_\+0 \textbackslash{} w\+\_\+1 \+:= l\+\_\+3 \textbackslash{} w\+\_\+2 \+:= l\+\_\+\{10\} \textbackslash{} w\+\_\+3 \+:= l\+\_\+\{11\} \textbackslash{} w\+\_\+4 \+:= l\+\_\+\{12\} \textbackslash{} w\+\_\+5 \+:= l\+\_\+\{15\} \textbackslash{} w\+\_\+6 \+:= l\+\_\+\{324\} \textbackslash{} \$\$
+
+The format will be\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{┏━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 72316373\ ┃\ \ \ \ \ \ \ Magic}
+\DoxyCodeLine{┣━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ 01000000\ ┃\ \ \ \ \ \ \ Version}
+\DoxyCodeLine{┣━━━━━━━━━━┫}
+\DoxyCodeLine{┃\ 03000000\ ┃\ \ \ \ \ \ \ nSections}
+\DoxyCodeLine{┗━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 01000000\ ┃\ 40000000\ 00000000\ ┃\ \ \ \ \ \ SectionType:\ Header}
+\DoxyCodeLine{┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 20000000\ ┃\ \ \ \ Field\ Size}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 010000f0\ 93f5e143\ 9170b979\ 48e83328\ 5d588181\ b64550b8\ 29a031e1\ 724e6430\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┃\ 07000000\ ┃\ \ \ \ \#\ of\ wires}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 01000000\ ┃\ \ \ \ \#\ Public\ Outs}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 02000000\ ┃\ \ \ \ \#\ Public\ Ins}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ ┃\ \ \ \ \#\ Private\ Ins}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━┻━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ e8030000\ 00000000\ ┃\ \ \ \ \#\ Labels}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━┳━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ ┃\ \ \ \ \#\ Constraints}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┛}
+\DoxyCodeLine{┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 02000000\ ┃\ 88020000\ 00000000\ ┃\ \ \ \ \ \ SectionType:\ Constraints}
+\DoxyCodeLine{┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓\ \ \ Constraint\ 0:\ (3w\_5\ +\ 8w\_6)\ *\ (2w\_0\ +\ 20w\_2\ +\ 12w\_3)\ -\/\ (5w\_0\ +\ 7w\_2)\ =\ 0}
+\DoxyCodeLine{\ \ \ ┃\ 02000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 05000000\ ┃\ 03000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 06000000\ ┃\ 08000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 00000000\ ┃\ 02000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 02000000\ ┃\ 14000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ ┃\ 0C000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 02000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 00000000\ ┃\ 05000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 02000000\ ┃\ 07000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓\ \ \ Constraint\ 1:\ (4w\_1\ +\ 8w\_4\ +\ 3w\_5)\ *\ (6w\_6\ +\ 44w\_3)\ =\ 0}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 01000000\ ┃\ 04000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 04000000\ ┃\ 08000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 05000000\ ┃\ 03000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 02000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ ┃\ 2C000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 06000000\ ┃\ 06000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┛}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓\ \ \ Constraint\ 2:\ (4w\_6)\ *\ (6w\_0\ +\ 5w\_3\ +\ 11w\_2)\ -\/\ (600w\_6)\ =\ 0}
+\DoxyCodeLine{\ \ \ ┃\ 01000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 06000000\ ┃\ 04000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 00000000\ ┃\ 06000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 02000000\ ┃\ 0B000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ ┃\ 05000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 01000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 06000000\ ┃\ 58020000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{}
+\DoxyCodeLine{┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{┃\ 03000000\ ┃\ 38000000\ 00000000\ ┃\ \ \ \ \ \ Wire\ to\ Label\ Map}
+\DoxyCodeLine{┗━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━┛}
+\DoxyCodeLine{\ \ \ ┏━━━━━━━━━━━━━━━━━━━┓}
+\DoxyCodeLine{\ \ \ ┃\ 00000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 03000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 0a000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 0b000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 0c000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 0f000000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┣━━━━━━━━━━━━━━━━━━━┫}
+\DoxyCodeLine{\ \ \ ┃\ 44010000\ 00000000\ ┃}
+\DoxyCodeLine{\ \ \ ┗━━━━━━━━━━━━━━━━━━━┛}
+
+\end{DoxyCode}
+
+
+And the binary representation in Hex\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{72316373}
+\DoxyCodeLine{01000000}
+\DoxyCodeLine{03000000}
+\DoxyCodeLine{01000000\ 40000000\ 00000000}
+\DoxyCodeLine{20000000}
+\DoxyCodeLine{010000f0\ 93f5e143\ 9170b979\ 48e83328\ 5d588181\ b64550b8\ 29a031e1\ 724e6430}
+\DoxyCodeLine{07000000}
+\DoxyCodeLine{01000000}
+\DoxyCodeLine{02000000}
+\DoxyCodeLine{03000000}
+\DoxyCodeLine{e8030000\ 00000000}
+\DoxyCodeLine{03000000}
+\DoxyCodeLine{02000000\ 88020000\ 00000000}
+\DoxyCodeLine{02000000}
+\DoxyCodeLine{05000000\ 03000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{06000000\ 08000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{03000000}
+\DoxyCodeLine{00000000\ 02000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{02000000\ 14000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{03000000\ 0C000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{02000000}
+\DoxyCodeLine{00000000\ 05000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{02000000\ 07000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{03000000}
+\DoxyCodeLine{01000000\ 04000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{04000000\ 08000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{05000000\ 03000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{02000000}
+\DoxyCodeLine{03000000\ 2C000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{06000000\ 06000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{00000000}
+\DoxyCodeLine{01000000}
+\DoxyCodeLine{06000000\ 04000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{03000000}
+\DoxyCodeLine{00000000\ 06000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{02000000\ 0B000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{03000000\ 05000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{01000000}
+\DoxyCodeLine{06000000\ 58020000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000\ 00000000}
+\DoxyCodeLine{03000000\ 38000000\ 00000000}
+\DoxyCodeLine{00000000\ 00000000}
+\DoxyCodeLine{03000000\ 00000000}
+\DoxyCodeLine{0a000000\ 00000000}
+\DoxyCodeLine{0b000000\ 00000000}
+\DoxyCodeLine{0c000000\ 00000000}
+\DoxyCodeLine{0f000000\ 00000000}
+\DoxyCodeLine{44010000\ 00000000}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26811}{}\doxysection{\texorpdfstring{Implementation}{Implementation}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26811}
+circom will output this format.\hypertarget{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26812}{}\doxysection{\texorpdfstring{Copyright}{Copyright}}\label{md_node__modules_2r1csfile_2doc_2r1cs__bin__format_autotoc_md26812}
+Copyright and related rights waived via \href{https://creativecommons.org/publicdomain/zero/1.0/}{\texttt{ CC0}}. 

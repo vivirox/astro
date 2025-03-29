@@ -1,0 +1,54 @@
+\doxysection{node\+\_\+modules/agent-\/base Directory Reference}
+\hypertarget{dir_411ccf130f5ac25562e25d3a844fa1be}{}\label{dir_411ccf130f5ac25562e25d3a844fa1be}\index{node\_modules/agent-\/base Directory Reference@{node\_modules/agent-\/base Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{README.md_autotoc_md7674}{}\doxysubsubsection{\texorpdfstring{Turn a function into an \href{https://nodejs.org/api/http.html\#http_class_http_agent}{\texttt{ {\ttfamily http.\+Agent}}} instance}{Turn a function into an \href{https://nodejs.org/api/http.html\#http_class_http_agent}{\texttt{ {\ttfamily http.\+Agent}}} instance}}\label{README.md_autotoc_md7674}
+This module is a thin wrapper around the base {\ttfamily http.\+Agent} class.
+
+It provides an abstract class that must define a {\ttfamily connect()} function, which is responsible for creating the underlying socket that the HTTP client requests will use.
+
+The {\ttfamily connect()} function may return an arbitrary {\ttfamily Duplex} stream, or another {\ttfamily http.\+Agent} instance to delegate the request to, and may be asynchronous (by defining an {\ttfamily async} function).
+
+Instances of this agent can be used with the {\ttfamily http} and {\ttfamily https} modules. To differentiate, the options parameter in the {\ttfamily connect()} function includes a {\ttfamily secure\+Endpoint} property, which can be checked to determine what type of socket should be returned.\hypertarget{README.md_autotoc_md7675}{}\doxysubsubsubsection{\texorpdfstring{Some subclasses\+:}{Some subclasses\+:}}\label{README.md_autotoc_md7675}
+Here are some more interesting uses of {\ttfamily agent-\/base}. Send a pull request to list yours!
+
+
+\begin{DoxyItemize}
+\item \href{../http-proxy-agent}{\texttt{ {\ttfamily http-\/proxy-\/agent}}}\+: An HTTP(s) proxy {\ttfamily http.\+Agent} implementation for HTTP endpoints
+\item \href{../https-proxy-agent}{\texttt{ {\ttfamily https-\/proxy-\/agent}}}\+: An HTTP(s) proxy {\ttfamily http.\+Agent} implementation for HTTPS endpoints
+\item \href{../pac-proxy-agent}{\texttt{ {\ttfamily pac-\/proxy-\/agent}}}\+: A PAC file proxy {\ttfamily http.\+Agent} implementation for HTTP and HTTPS
+\item \href{../socks-proxy-agent}{\texttt{ {\ttfamily socks-\/proxy-\/agent}}}\+: A SOCKS proxy {\ttfamily http.\+Agent} implementation for HTTP and HTTPS
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md7676}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md7676}
+Here\textquotesingle{}s a minimal example that creates a new {\ttfamily net.\+Socket} or {\ttfamily tls.\+Socket} based on the {\ttfamily secure\+Endpoint} property. This agent can be used with both the {\ttfamily http} and {\ttfamily https} modules.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ net\ from\ 'net';}
+\DoxyCodeLine{import\ *\ as\ tls\ from\ 'tls';}
+\DoxyCodeLine{import\ *\ as\ http\ from\ 'http';}
+\DoxyCodeLine{import\ \{\ Agent\ \}\ from\ 'agent-\/base';}
+\DoxyCodeLine{}
+\DoxyCodeLine{class\ MyAgent\ extends\ Agent\ \{}
+\DoxyCodeLine{\ \ connect(req,\ opts)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ \`{}secureEndpoint`\ is\ true\ when\ using\ the\ "{}https"{}\ module}
+\DoxyCodeLine{\ \ \ \ if\ (opts.secureEndpoint)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ tls.connect(opts);}
+\DoxyCodeLine{\ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ net.connect(opts);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Keep\ alive\ enabled\ means\ that\ \`{}connect()`\ will\ only\ be}
+\DoxyCodeLine{//\ invoked\ when\ a\ new\ connection\ needs\ to\ be\ created}
+\DoxyCodeLine{const\ agent\ =\ new\ MyAgent(\{\ keepAlive:\ true\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Pass\ the\ \`{}agent`\ option\ when\ creating\ the\ HTTP\ request}
+\DoxyCodeLine{http.get('http://nodejs.org/api/',\ \{\ agent\ \},\ (res)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('"{}response"{}\ event!',\ res.headers);}
+\DoxyCodeLine{\ \ res.pipe(process.stdout);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

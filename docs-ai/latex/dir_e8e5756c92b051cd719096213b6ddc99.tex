@@ -1,0 +1,142 @@
+\doxysection{node\+\_\+modules/log-\/update/node\+\_\+modules/ansi-\/escapes Directory Reference}
+\hypertarget{dir_e8e5756c92b051cd719096213b6ddc99}{}\label{dir_e8e5756c92b051cd719096213b6ddc99}\index{node\_modules/log-\/update/node\_modules/ansi-\/escapes Directory Reference@{node\_modules/log-\/update/node\_modules/ansi-\/escapes Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+\href{https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm}{\texttt{ ANSI escape codes}} for manipulating the terminal \end{quote}
+\hypertarget{readme.md_autotoc_md21925}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md21925}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ ansi-\/escapes}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21926}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md21926}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ ansiEscapes\ from\ 'ansi-\/escapes';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Moves\ the\ cursor\ two\ rows\ up\ and\ to\ the\ left}
+\DoxyCodeLine{process.stdout.write(ansiEscapes.cursorUp(2)\ +\ ansiEscapes.cursorLeft);}
+\DoxyCodeLine{//=>\ '\(\backslash\)u001B[2A\(\backslash\)u001B[1000D'}
+
+\end{DoxyCode}
+
+
+Or use named exports...
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{cursorUp,\ cursorLeft\}\ from\ 'ansi-\/escapes';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ etc,\ as\ above...}
+
+\end{DoxyCode}
+
+
+{\bfseries{You can also use it in the browser with Xterm.\+js\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ ansiEscapes\ from\ 'ansi-\/escapes';}
+\DoxyCodeLine{import\ \{Terminal\}\ from\ 'xterm';}
+\DoxyCodeLine{import\ 'xterm/css/xterm.css';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ terminal\ =\ new\ Terminal(\{…\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Moves\ the\ cursor\ two\ rows\ up\ and\ to\ the\ left}
+\DoxyCodeLine{terminal.write(ansiEscapes.cursorUp(2)\ +\ ansiEscapes.cursorLeft);}
+\DoxyCodeLine{//=>\ '\(\backslash\)u001B[2A\(\backslash\)u001B[1000D'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md21927}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md21927}
+\hypertarget{readme.md_autotoc_md21928}{}\doxysubsubsection{\texorpdfstring{cursor\+To(x, y?)}{cursor\+To(x, y?)}}\label{readme.md_autotoc_md21928}
+Set the absolute position of the cursor. {\ttfamily x0} {\ttfamily y0} is the top left of the screen.\hypertarget{readme.md_autotoc_md21929}{}\doxysubsubsection{\texorpdfstring{cursor\+Move(x, y?)}{cursor\+Move(x, y?)}}\label{readme.md_autotoc_md21929}
+Set the position of the cursor relative to its current position.\hypertarget{readme.md_autotoc_md21930}{}\doxysubsubsection{\texorpdfstring{cursor\+Up(count)}{cursor\+Up(count)}}\label{readme.md_autotoc_md21930}
+Move cursor up a specific amount of rows. Default is {\ttfamily 1}.\hypertarget{readme.md_autotoc_md21931}{}\doxysubsubsection{\texorpdfstring{cursor\+Down(count)}{cursor\+Down(count)}}\label{readme.md_autotoc_md21931}
+Move cursor down a specific amount of rows. Default is {\ttfamily 1}.\hypertarget{readme.md_autotoc_md21932}{}\doxysubsubsection{\texorpdfstring{cursor\+Forward(count)}{cursor\+Forward(count)}}\label{readme.md_autotoc_md21932}
+Move cursor forward a specific amount of columns. Default is {\ttfamily 1}.\hypertarget{readme.md_autotoc_md21933}{}\doxysubsubsection{\texorpdfstring{cursor\+Backward(count)}{cursor\+Backward(count)}}\label{readme.md_autotoc_md21933}
+Move cursor backward a specific amount of columns. Default is {\ttfamily 1}.\hypertarget{readme.md_autotoc_md21934}{}\doxysubsubsection{\texorpdfstring{cursor\+Left}{cursor\+Left}}\label{readme.md_autotoc_md21934}
+Move cursor to the left side.\hypertarget{readme.md_autotoc_md21935}{}\doxysubsubsection{\texorpdfstring{cursor\+Save\+Position}{cursor\+Save\+Position}}\label{readme.md_autotoc_md21935}
+Save cursor position.\hypertarget{readme.md_autotoc_md21936}{}\doxysubsubsection{\texorpdfstring{cursor\+Restore\+Position}{cursor\+Restore\+Position}}\label{readme.md_autotoc_md21936}
+Restore saved cursor position.\hypertarget{readme.md_autotoc_md21937}{}\doxysubsubsection{\texorpdfstring{cursor\+Get\+Position}{cursor\+Get\+Position}}\label{readme.md_autotoc_md21937}
+Get cursor position.\hypertarget{readme.md_autotoc_md21938}{}\doxysubsubsection{\texorpdfstring{cursor\+Next\+Line}{cursor\+Next\+Line}}\label{readme.md_autotoc_md21938}
+Move cursor to the next line.\hypertarget{readme.md_autotoc_md21939}{}\doxysubsubsection{\texorpdfstring{cursor\+Prev\+Line}{cursor\+Prev\+Line}}\label{readme.md_autotoc_md21939}
+Move cursor to the previous line.\hypertarget{readme.md_autotoc_md21940}{}\doxysubsubsection{\texorpdfstring{cursor\+Hide}{cursor\+Hide}}\label{readme.md_autotoc_md21940}
+Hide cursor.\hypertarget{readme.md_autotoc_md21941}{}\doxysubsubsection{\texorpdfstring{cursor\+Show}{cursor\+Show}}\label{readme.md_autotoc_md21941}
+Show cursor.\hypertarget{readme.md_autotoc_md21942}{}\doxysubsubsection{\texorpdfstring{erase\+Lines(count)}{erase\+Lines(count)}}\label{readme.md_autotoc_md21942}
+Erase from the current cursor position up the specified amount of rows.\hypertarget{readme.md_autotoc_md21943}{}\doxysubsubsection{\texorpdfstring{erase\+End\+Line}{erase\+End\+Line}}\label{readme.md_autotoc_md21943}
+Erase from the current cursor position to the end of the current line.\hypertarget{readme.md_autotoc_md21944}{}\doxysubsubsection{\texorpdfstring{erase\+Start\+Line}{erase\+Start\+Line}}\label{readme.md_autotoc_md21944}
+Erase from the current cursor position to the start of the current line.\hypertarget{readme.md_autotoc_md21945}{}\doxysubsubsection{\texorpdfstring{erase\+Line}{erase\+Line}}\label{readme.md_autotoc_md21945}
+Erase the entire current line.\hypertarget{readme.md_autotoc_md21946}{}\doxysubsubsection{\texorpdfstring{erase\+Down}{erase\+Down}}\label{readme.md_autotoc_md21946}
+Erase the screen from the current line down to the bottom of the screen.\hypertarget{readme.md_autotoc_md21947}{}\doxysubsubsection{\texorpdfstring{erase\+Up}{erase\+Up}}\label{readme.md_autotoc_md21947}
+Erase the screen from the current line up to the top of the screen.\hypertarget{readme.md_autotoc_md21948}{}\doxysubsubsection{\texorpdfstring{erase\+Screen}{erase\+Screen}}\label{readme.md_autotoc_md21948}
+Erase the screen and move the cursor the top left position.\hypertarget{readme.md_autotoc_md21949}{}\doxysubsubsection{\texorpdfstring{scroll\+Up}{scroll\+Up}}\label{readme.md_autotoc_md21949}
+Scroll display up one line.\hypertarget{readme.md_autotoc_md21950}{}\doxysubsubsection{\texorpdfstring{scroll\+Down}{scroll\+Down}}\label{readme.md_autotoc_md21950}
+Scroll display down one line.\hypertarget{readme.md_autotoc_md21951}{}\doxysubsubsection{\texorpdfstring{clear\+Screen}{clear\+Screen}}\label{readme.md_autotoc_md21951}
+Clear the terminal screen. (Viewport)\hypertarget{readme.md_autotoc_md21952}{}\doxysubsubsection{\texorpdfstring{clear\+Terminal}{clear\+Terminal}}\label{readme.md_autotoc_md21952}
+Clear the whole terminal, including scrollback buffer. (Not just the visible part of it)\hypertarget{readme.md_autotoc_md21953}{}\doxysubsubsection{\texorpdfstring{enter\+Alternative\+Screen}{enter\+Alternative\+Screen}}\label{readme.md_autotoc_md21953}
+Enter the \href{https://terminalguide.namepad.de/mode/p47/}{\texttt{ alternative screen}}.\hypertarget{readme.md_autotoc_md21954}{}\doxysubsubsection{\texorpdfstring{exit\+Alternative\+Screen}{exit\+Alternative\+Screen}}\label{readme.md_autotoc_md21954}
+Exit the \href{https://terminalguide.namepad.de/mode/p47/}{\texttt{ alternative screen}}, assuming {\ttfamily enter\+Alternative\+Screen} was called before.\hypertarget{readme.md_autotoc_md21955}{}\doxysubsubsection{\texorpdfstring{beep}{beep}}\label{readme.md_autotoc_md21955}
+Output a beeping sound.\hypertarget{readme.md_autotoc_md21956}{}\doxysubsubsection{\texorpdfstring{link(text, url)}{link(text, url)}}\label{readme.md_autotoc_md21956}
+Create a clickable link.
+
+\href{https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda}{\texttt{ Supported terminals.}} Use \href{https://github.com/jamestalmage/supports-hyperlinks}{\texttt{ {\ttfamily supports-\/hyperlinks}}} to detect link support.\hypertarget{readme.md_autotoc_md21957}{}\doxysubsubsection{\texorpdfstring{image(file\+Path, options?)}{image(file\+Path, options?)}}\label{readme.md_autotoc_md21957}
+Display an image.
+
+See \href{https://github.com/sindresorhus/term-img}{\texttt{ term-\/img}} for a higher-\/level module.\hypertarget{readme.md_autotoc_md21958}{}\doxysubsubsubsection{\texorpdfstring{input}{input}}\label{readme.md_autotoc_md21958}
+Type\+: {\ttfamily Buffer}
+
+Buffer of an image. Usually read in with {\ttfamily fs.\+read\+File()}.\hypertarget{readme.md_autotoc_md21959}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md21959}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md21960}{}\doxysubsubsubsubsection{\texorpdfstring{width}{width}}\label{readme.md_autotoc_md21960}
+\hypertarget{readme.md_autotoc_md21961}{}\doxysubsubsubsubsection{\texorpdfstring{height}{height}}\label{readme.md_autotoc_md21961}
+Type\+: {\ttfamily string \texorpdfstring{$\vert$}{|} number}
+
+The width and height are given as a number followed by a unit, or the word "{}auto"{}.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily N}\+: N character cells.
+\item {\ttfamily Npx}\+: N pixels.
+\item {\ttfamily N\%}\+: N percent of the session\textquotesingle{}s width or height.
+\item {\ttfamily auto}\+: The image\textquotesingle{}s inherent size will be used to determine an appropriate dimension.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md21962}{}\doxysubsubsubsubsection{\texorpdfstring{preserve\+Aspect\+Ratio}{preserve\+Aspect\+Ratio}}\label{readme.md_autotoc_md21962}
+Type\+: {\ttfamily boolean}\textbackslash{} Default\+: {\ttfamily true}\hypertarget{readme.md_autotoc_md21963}{}\doxysubsubsection{\texorpdfstring{i\+Term.\+set\+Cwd(path?)}{i\+Term.\+set\+Cwd(path?)}}\label{readme.md_autotoc_md21963}
+Type\+: {\ttfamily string}\textbackslash{} Default\+: {\ttfamily process.\+cwd()}
+
+\href{https://www.iterm2.com/documentation-escape-codes.html}{\texttt{ Inform i\+Term2}} of the current directory to help semantic history and enable \href{https://coderwall.com/p/b7e82q/quickly-open-files-in-iterm-with-cmd-click}{\texttt{ Cmd-\/clicking relative paths}}.\hypertarget{readme.md_autotoc_md21964}{}\doxysubsubsection{\texorpdfstring{i\+Term.\+annotation(message, options?)}{i\+Term.\+annotation(message, options?)}}\label{readme.md_autotoc_md21964}
+Creates an escape code to display an "{}annotation"{} in i\+Term2.
+
+An annotation looks like this when shown\+:
+
+
+
+See the \href{https://iterm2.com/documentation-escape-codes.html}{\texttt{ i\+Term Proprietary Escape Codes documentation}} for more information.\hypertarget{readme.md_autotoc_md21965}{}\doxysubsubsubsection{\texorpdfstring{message}{message}}\label{readme.md_autotoc_md21965}
+Type\+: {\ttfamily string}
+
+The message to display within the annotation.
+
+The {\ttfamily \texorpdfstring{$\vert$}{|}} character is disallowed and will be stripped.\hypertarget{readme.md_autotoc_md21966}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md21966}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md21967}{}\doxysubsubsubsubsection{\texorpdfstring{length}{length}}\label{readme.md_autotoc_md21967}
+Type\+: {\ttfamily number}\textbackslash{} Default\+: The remainder of the line
+
+Nonzero number of columns to annotate.\hypertarget{readme.md_autotoc_md21968}{}\doxysubsubsubsubsection{\texorpdfstring{x}{x}}\label{readme.md_autotoc_md21968}
+Type\+: {\ttfamily number}\textbackslash{} Default\+: Cursor position
+
+Starting X coordinate.
+
+Must be used with {\ttfamily y} and {\ttfamily length}.\hypertarget{readme.md_autotoc_md21969}{}\doxysubsubsubsubsection{\texorpdfstring{y}{y}}\label{readme.md_autotoc_md21969}
+Type\+: {\ttfamily number}\textbackslash{} Default\+: Cursor position
+
+Starting Y coordinate.
+
+Must be used with {\ttfamily x} and {\ttfamily length}.\hypertarget{readme.md_autotoc_md21970}{}\doxysubsubsubsubsection{\texorpdfstring{is\+Hidden}{is\+Hidden}}\label{readme.md_autotoc_md21970}
+Type\+: {\ttfamily boolean}\textbackslash{} Default\+: {\ttfamily false}
+
+Create a "{}hidden"{} annotation.
+
+Annotations created this way can be shown using the "{}\+Show Annotations"{} i\+Term command.\hypertarget{readme.md_autotoc_md21971}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md21971}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/chalk/ansi-styles}{\texttt{ ansi-\/styles}} -\/ ANSI escape codes for styling strings in the terminal 
+\end{DoxyItemize}

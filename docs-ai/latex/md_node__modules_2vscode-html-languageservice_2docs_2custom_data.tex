@@ -1,0 +1,120 @@
+\chapter{Custom Data for HTML Language Service}
+\hypertarget{md_node__modules_2vscode-html-languageservice_2docs_2custom_data}{}\label{md_node__modules_2vscode-html-languageservice_2docs_2custom_data}\index{Custom Data for HTML Language Service@{Custom Data for HTML Language Service}}
+\label{md_node__modules_2vscode-html-languageservice_2docs_2custom_data_autotoc_md35302}%
+\Hypertarget{md_node__modules_2vscode-html-languageservice_2docs_2custom_data_autotoc_md35302}%
+
+
+In VS Code, there are two ways of loading custom HTML datasets\+:
+
+
+\begin{DoxyEnumerate}
+\item With setting {\ttfamily html.\+custom\+Data}
+\item With an extension that contributes {\ttfamily contributes.\+html.\+custom\+Data}
+\end{DoxyEnumerate}
+
+Both setting point to a list of JSON files. This document describes the shape of the JSON files.
+
+You can read more about custom data at\+: \href{https://github.com/microsoft/vscode-custom-data}{\texttt{ https\+://github.\+com/microsoft/vscode-\/custom-\/data}}.\hypertarget{md_node__modules_2vscode-html-languageservice_2docs_2custom_data_autotoc_md35303}{}\doxysection{\texorpdfstring{Custom Data Format}{Custom Data Format}}\label{md_node__modules_2vscode-html-languageservice_2docs_2custom_data_autotoc_md35303}
+The JSON have one required property, {\ttfamily version} and 3 other top level properties\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}version"{}:\ 1.1,}
+\DoxyCodeLine{\ \ "{}tags"{}:\ [],}
+\DoxyCodeLine{\ \ "{}globalAttributes"{}:\ [],}
+\DoxyCodeLine{\ \ "{}valueSets"{}:\ []}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Version denotes the schema version you are using. The latest schema version is {\ttfamily V1.\+1}.
+
+You can find other properties\textquotesingle{} shapes at \href{../src/htmlLanguageTypes.ts}{\texttt{ html\+Language\+Types.\+ts}} or the \href{./customData.schema.json}{\texttt{ JSON Schema}}.
+
+When working with VSCode, you should suffix your custom data file with {\ttfamily .html-\/data.\+json}, so VS Code will load the most recent schema for the JSON file.
+
+\href{../src/languageFacts/data/webCustomData.ts}{\texttt{ html5.\+ts}} contains that built-\/in dataset that conforms to the spec.\hypertarget{md_node__modules_2vscode-html-languageservice_2docs_2custom_data_autotoc_md35304}{}\doxysection{\texorpdfstring{Language Features}{Language Features}}\label{md_node__modules_2vscode-html-languageservice_2docs_2custom_data_autotoc_md35304}
+Custom data receives the following language features\+:
+
+
+\begin{DoxyItemize}
+\item Completion on tag, attribute and attribute value
+\item Hover on tag (here\textquotesingle{}s the \href{https://github.com/Microsoft/vscode-html-languageservice/issues/47}{\texttt{ issue}} for hover on attribute / attribute-\/name)
+\end{DoxyItemize}
+
+For example, for the following custom data\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}tags"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}name"{}:\ "{}foo"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}description"{}:\ "{}The\ foo\ element"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}attributes"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{\ "{}name"{}:\ "{}bar"{}\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}name"{}:\ "{}baz"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}values"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}name"{}:\ "{}baz-\/val-\/1"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ "{}globalAttributes"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ "{}name"{}:\ "{}fooAttr"{},\ "{}description"{}:\ "{}Foo\ Attribute"{}\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ "{}name"{}:\ "{}xattr"{},\ "{}description"{}:\ "{}X\ attributes"{},\ "{}valueSet"{}:\ "{}x"{}\ \}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ "{}valueSets"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}name"{}:\ "{}x"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}values"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}name"{}:\ "{}xval"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}description"{}:\ "{}x\ value"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item Completion on {\ttfamily \texorpdfstring{$<$}{<}\texorpdfstring{$\vert$}{|}} will provide {\ttfamily foo}
+\item Completion on {\ttfamily \texorpdfstring{$<$}{<}foo \texorpdfstring{$\vert$}{|}} will provide {\ttfamily bar} and {\ttfamily baz}
+\item Completion on {\ttfamily \texorpdfstring{$<$}{<}foo baz=\texorpdfstring{$\vert$}{|}} will provide {\ttfamily baz-\/val-\/1}
+\item Completion on {\ttfamily \texorpdfstring{$<$}{<}foo \texorpdfstring{$\vert$}{|}} will also provide the global attributes {\ttfamily foo\+Attr} and {\ttfamily xattr}
+\item Completion on {\ttfamily \texorpdfstring{$<$}{<}foo xattr=\texorpdfstring{$>$}{>}} will provide all values in value\+Set {\ttfamily x}, which is {\ttfamily xval}
+\item Hover on {\ttfamily foo} will show {\ttfamily The foo element}
+\end{DoxyItemize}\hypertarget{md_node__modules_2vscode-html-languageservice_2docs_2custom_data_autotoc_md35305}{}\doxysubsection{\texorpdfstring{Additional properties}{Additional properties}}\label{md_node__modules_2vscode-html-languageservice_2docs_2custom_data_autotoc_md35305}
+For either {\ttfamily tag}, {\ttfamily attribute} or {\ttfamily attribute\+Value}, you can provide a {\ttfamily references} property of the following form
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}tags"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}name"{}:\ "{}foo"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}description"{}:\ "{}The\ foo\ element"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}references"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}name"{}:\ "{}My\ foo\ element\ reference"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}url"{}:\ "{}https://www.foo.com/element/foo"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+It will be displayed in Markdown form in completion and hover as {\ttfamily \mbox{[}My foo element reference\mbox{]}(\href{https://www.foo.com/element/foo}{\texttt{ https\+://www.\+foo.\+com/element/foo}})}. 

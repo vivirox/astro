@@ -1,0 +1,114 @@
+\doxysection{node\+\_\+modules/unist-\/util-\/find-\/after Directory Reference}
+\hypertarget{dir_c6b09f4129ce6449f173e563ae213b90}{}\label{dir_c6b09f4129ce6449f173e563ae213b90}\index{node\_modules/unist-\/util-\/find-\/after Directory Reference@{node\_modules/unist-\/util-\/find-\/after Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/unist-util-find-after/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/unist-util-find-after}{\texttt{ }} \href{https://www.npmjs.com/package/unist-util-find-after}{\texttt{ }} \href{https://bundlejs.com/?q=unist-util-find-after}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/unist}{\texttt{ unist}} utility to find a node after another node.\hypertarget{readme.md_autotoc_md34247}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md34247}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}find\+After(parent, node\texorpdfstring{$\vert$}{|}index\mbox{[}, test\mbox{]})\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34248}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md34248}
+This is a tiny utility that you can use to find a node after another node or after an index in a parent.\hypertarget{readme.md_autotoc_md34249}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md34249}
+This is super tiny. You can of course do it yourself. But this helps when integrating with the rest of unified and unist.\hypertarget{readme.md_autotoc_md34250}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md34250}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ unist-\/util-\/find-\/after}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{findAfter\}\ from\ 'https://esm.sh/unist-\/util-\/find-\/after@5'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{findAfter\}\ from\ 'https://esm.sh/unist-\/util-\/find-\/after@5?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34251}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md34251}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{u\}\ from\ 'unist-\/builder'}
+\DoxyCodeLine{import\ \{findAfter\}\ from\ 'unist-\/util-\/find-\/after'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ u('tree',\ [}
+\DoxyCodeLine{\ \ u('leaf',\ 'leaf\ 1'),}
+\DoxyCodeLine{\ \ u('parent',\ [u('leaf',\ 'leaf\ 2'),\ u('leaf',\ 'leaf\ 3')]),}
+\DoxyCodeLine{\ \ u('leaf',\ 'leaf\ 4'),}
+\DoxyCodeLine{\ \ u('parent',\ [u('leaf',\ 'leaf\ 5')]),}
+\DoxyCodeLine{\ \ u('leaf',\ 'leaf\ 6'),}
+\DoxyCodeLine{\ \ u('empty'),}
+\DoxyCodeLine{\ \ u('leaf',\ 'leaf\ 7')}
+\DoxyCodeLine{])}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(findAfter(tree,\ 1,\ 'parent'))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{type:\ 'parent',\ children:\ [\{\ type:\ 'leaf',\ value:\ 'leaf\ 5'\}]\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md34252}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md34252}
+This package exports the identifier \`{}find\+After\`{}. There is no default export.\hypertarget{readme.md_autotoc_md34253}{}\doxysubsubsection{\texorpdfstring{{\ttfamily find\+After(parent, node\texorpdfstring{$\vert$}{|}index\mbox{[}, test\mbox{]})}}{{\ttfamily find\+After(parent, node\texorpdfstring{$\vert$}{|}index\mbox{[}, test\mbox{]})}}}\label{readme.md_autotoc_md34253}
+Find the first node in {\ttfamily parent} after another {\ttfamily node} or after an index, that passes {\ttfamily test}.\hypertarget{readme.md_autotoc_md34254}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md34254}
+
+\begin{DoxyItemize}
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — parent node
+\item {\ttfamily index} ({\ttfamily number}) — index of child in {\ttfamily parent}
+\item {\ttfamily child} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — child in {\ttfamily parent}
+\item {\ttfamily test} (\href{https://github.com/syntax-tree/unist-util-is\#test}{\texttt{ {\ttfamily Test}}}) — {\ttfamily unist-\/util-\/is}-\/compatible test
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34255}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md34255}
+Child of {\ttfamily parent} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) or {\ttfamily undefined}.\hypertarget{readme.md_autotoc_md34256}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md34256}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types (types for the test are in {\ttfamily unist-\/util-\/is}).\hypertarget{readme.md_autotoc_md34257}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md34257}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily unist-\/util-\/find-\/after@\texorpdfstring{$^\wedge$}{\string^}5}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md34258}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md34258}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/unist-util-visit}{\texttt{ {\ttfamily unist-\/util-\/visit}}} — walk the tree
+\item \href{https://github.com/syntax-tree/unist-util-visit-parents}{\texttt{ {\ttfamily unist-\/util-\/visit-\/parents}}} — walk the tree with a stack of parents
+\item \href{https://github.com/syntax-tree/unist-util-filter}{\texttt{ {\ttfamily unist-\/util-\/filter}}} — create a new tree with all nodes that pass a test
+\item \href{https://github.com/syntax-tree/unist-util-map}{\texttt{ {\ttfamily unist-\/util-\/map}}} — create a new tree with all nodes mapped by a given function
+\item \href{https://gitlab.com/staltz/unist-util-flatmap}{\texttt{ {\ttfamily unist-\/util-\/flatmap}}} — create a new tree by mapping (to an array) with the provided function and then flattening
+\item \href{https://github.com/syntax-tree/unist-util-find-before}{\texttt{ {\ttfamily unist-\/util-\/find-\/before}}} — find a node before another node
+\item \href{https://github.com/syntax-tree/unist-util-find-all-after}{\texttt{ {\ttfamily unist-\/util-\/find-\/all-\/after}}} — find all nodes after another node
+\item \href{https://github.com/syntax-tree/unist-util-find-all-before}{\texttt{ {\ttfamily unist-\/util-\/find-\/all-\/before}}} — find all nodes before another node
+\item \href{https://github.com/mrzmmr/unist-util-find-all-between}{\texttt{ {\ttfamily unist-\/util-\/find-\/all-\/between}}} — find all nodes between two nodes
+\item \href{https://github.com/syntax-tree/unist-util-remove}{\texttt{ {\ttfamily unist-\/util-\/remove}}} — remove nodes from a tree that pass a test
+\item \href{https://github.com/syntax-tree/unist-util-select}{\texttt{ {\ttfamily unist-\/util-\/select}}} — select nodes with CSS-\/like selectors
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md34259}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md34259}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ Code of Conduct}}. By interacting with this repository, organisation, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md34260}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md34260}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

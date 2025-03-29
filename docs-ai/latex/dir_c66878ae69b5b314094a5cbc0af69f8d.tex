@@ -1,0 +1,36 @@
+\doxysection{node\+\_\+modules/unrs-\/resolver Directory Reference}
+\hypertarget{dir_c66878ae69b5b314094a5cbc0af69f8d}{}\label{dir_c66878ae69b5b314094a5cbc0af69f8d}\index{node\_modules/unrs-\/resolver Directory Reference@{node\_modules/unrs-\/resolver Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+See
+
+
+\begin{DoxyItemize}
+\item {\ttfamily index.\+d.\+ts} for {\ttfamily resolve\+Sync} and {\ttfamily Resolver\+Factory} API.
+\item \href{https://github.com/unrs/unrs-resolver\#unrs-resolver}{\texttt{ README.\+md}} for options.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md34502}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md34502}
+{\ttfamily resolve(directory, specifier)} -\/ resolve {\ttfamily specifier} at an absolute path to a {\ttfamily directory}.\hypertarget{README.md_autotoc_md34503}{}\doxysubsubsection{\texorpdfstring{{\ttfamily directory}}{{\ttfamily directory}}}\label{README.md_autotoc_md34503}
+An {\bfseries{absolute}} path to a directory where the specifier is resolved against.
+
+For Common\+JS modules, it is the {\ttfamily \+\_\+\+\_\+dirname} variable that contains the absolute path to the folder containing current module.
+
+For ECMAScript modules, it is the value of {\ttfamily import.\+meta.\+url}.
+
+Behavior is undefined when given a path to a file.\hypertarget{README.md_autotoc_md34504}{}\doxysubsubsection{\texorpdfstring{{\ttfamily specifier}}{{\ttfamily specifier}}}\label{README.md_autotoc_md34504}
+The string passed to {\ttfamily require} or {\ttfamily import}, i.\+e. {\ttfamily require("{}specifier"{})} or {\ttfamily import "{}specifier"{}}\hypertarget{README.md_autotoc_md34505}{}\doxysubsection{\texorpdfstring{ESM Example}{ESM Example}}\label{README.md_autotoc_md34505}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ assert\ from\ 'assert';}
+\DoxyCodeLine{import\ path\ from\ 'path';}
+\DoxyCodeLine{import\ resolve,\ \{\ ResolverFactory\ \}\ from\ './index.js';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \`{}resolve`}
+\DoxyCodeLine{assert(resolve.sync(process.cwd(),\ './index.js').path,\ path.join(cwd,\ 'index.js'));}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \`{}ResolverFactory`}
+\DoxyCodeLine{const\ resolver\ =\ new\ ResolverFactory();}
+\DoxyCodeLine{assert(resolver.sync(process.cwd(),\ './index.js').path,\ path.join(cwd,\ 'index.js'));}
+
+\end{DoxyCode}
+ 

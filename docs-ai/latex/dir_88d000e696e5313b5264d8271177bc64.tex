@@ -1,0 +1,286 @@
+\doxysection{node\+\_\+modules/@neondatabase/serverless Directory Reference}
+\hypertarget{dir_88d000e696e5313b5264d8271177bc64}{}\label{dir_88d000e696e5313b5264d8271177bc64}\index{node\_modules/"@neondatabase/serverless Directory Reference@{node\_modules/"@neondatabase/serverless Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+{\ttfamily @neondatabase/serverless} is \href{https://neon.tech}{\texttt{ Neon}}\textquotesingle{}s Postgre\+SQL driver for Java\+Script and Type\+Script. It\textquotesingle{}s\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Low-\/latency}}, thanks to \href{https://neon.tech/blog/quicker-serverless-postgres}{\texttt{ message pipelining}} and other optimizations
+\item {\bfseries{Ideal for serverless/edge}} deployment, using https and Web\+Sockets in place of TCP
+\item {\bfseries{A drop-\/in replacement}} for \href{https://node-postgres.com/}{\texttt{ node-\/postgres}}, aka \href{https://www.npmjs.com/package/pg}{\texttt{ {\ttfamily pg}}} (on which it\textquotesingle{}s based)
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5016}{}\doxysubsection{\texorpdfstring{Get started}{Get started}}\label{README.md_autotoc_md5016}
+\hypertarget{README.md_autotoc_md5017}{}\doxysubsubsection{\texorpdfstring{Install it}{Install it}}\label{README.md_autotoc_md5017}
+Install it with your preferred Java\+Script package manager. It\textquotesingle{}s named {\ttfamily @neondatabase/serverless} on npm and {\ttfamily @neon/serverless} on JSR. So, for example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @neondatabase/serverless}
+
+\end{DoxyCode}
+
+
+or
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{bunx\ jsr\ add\ @neon/serverless}
+
+\end{DoxyCode}
+
+
+Using Type\+Script? No worries\+: types are included either way.\hypertarget{README.md_autotoc_md5018}{}\doxysubsubsection{\texorpdfstring{Configure it}{Configure it}}\label{README.md_autotoc_md5018}
+Get your connection string from the \href{https://console.neon.tech/}{\texttt{ Neon console}} and set it as an environment variable. Something like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{DATABASE\_URL=postgres://username:password@host.neon.tech/neondb}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5019}{}\doxysubsubsection{\texorpdfstring{Use it}{Use it}}\label{README.md_autotoc_md5019}
+For one-\/shot queries, use the {\ttfamily neon} function. For instance\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ neon\ \}\ from\ '@neondatabase/serverless';}
+\DoxyCodeLine{const\ sql\ =\ neon(process.env.DATABASE\_URL);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ [post]\ =\ await\ sql`SELECT\ *\ FROM\ posts\ WHERE\ id\ =\ \$\{postId\}`;}
+\DoxyCodeLine{//\ \`{}post`\ is\ now\ \{\ id:\ 12,\ title:\ 'My\ post',\ ...\ \}\ (or\ undefined)}
+
+\end{DoxyCode}
+
+
+Note\+: interpolating {\ttfamily \$\{post\+Id\}} here is \href{https://neon.tech/blog/sql-template-tags}{\texttt{ safe from SQL injection}}.\hypertarget{README.md_autotoc_md5020}{}\doxysubsubsection{\texorpdfstring{Deploy it}{Deploy it}}\label{README.md_autotoc_md5020}
+Turn this example into a complete API endpoint deployed on \href{https://vercel.com/docs/concepts/functions/edge-functions}{\texttt{ Vercel Edge Functions}} at {\ttfamily \href{https://myapp.vercel.dev/api/post?postId=123}{\texttt{ https\+://myapp.\+vercel.\+dev/api/post?post\+Id=123}}} by following two simple steps\+:
+
+
+\begin{DoxyEnumerate}
+\item Create a new file {\ttfamily api/post.\+ts}\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ neon\ \}\ from\ '@neondatabase/serverless';}
+\DoxyCodeLine{const\ sql\ =\ neon(process.env.DATABASE\_URL);}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ async\ (req:\ Request,\ ctx:\ any)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ get\ and\ validate\ the\ \`{}postId`\ query\ parameter}
+\DoxyCodeLine{\ \ const\ postId\ =\ parseInt(new\ URL(req.url).searchParams.get('postId'),\ 10);}
+\DoxyCodeLine{\ \ if\ (isNaN(postId))\ return\ new\ Response('Bad\ request',\ \{\ status:\ 400\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ query\ and\ validate\ the\ post}
+\DoxyCodeLine{\ \ const\ [post]\ =\ await\ sql`SELECT\ *\ FROM\ posts\ WHERE\ id\ =\ \$\{postId\}`;}
+\DoxyCodeLine{\ \ if\ (!post)\ return\ new\ Response('Not\ found',\ \{\ status:\ 404\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ return\ the\ post\ as\ JSON}
+\DoxyCodeLine{\ \ return\ new\ Response(JSON.stringify(post),\ \{\ }
+\DoxyCodeLine{\ \ \ \ headers:\ \{\ 'content-\/type':\ 'application/json'\ \}}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ const\ config\ =\ \{}
+\DoxyCodeLine{\ \ runtime:\ 'edge',}
+\DoxyCodeLine{\ \ regions:\ ['iad1'],\ \ //\ specify\ the\ region\ nearest\ your\ Neon\ DB}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Test and deploy
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/g\ vercel\ \ \#\ install\ vercel\ CLI}
+\DoxyCodeLine{npx\ vercel\ env\ add\ DATABASE\_URL\ \ \#\ paste\ Neon\ connection\ string,\ select\ all\ environments}
+\DoxyCodeLine{npx\ vercel\ dev\ \ \#\ check\ working\ locally,\ then\ ...}
+\DoxyCodeLine{npx\ vercel\ deploy}
+
+\end{DoxyCode}
+
+
+The {\ttfamily neon} query function has a few \doxysectlink{md_node__modules_2_0dneondatabase_2serverless_2_c_o_n_f_i_g}{additional options}{0}.\hypertarget{README.md_autotoc_md5021}{}\doxysubsection{\texorpdfstring{Sessions, transactions, and node-\/postgres compatibility}{Sessions, transactions, and node-\/postgres compatibility}}\label{README.md_autotoc_md5021}
+A query using the {\ttfamily neon} function, as shown above, is carried by an https \href{https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API}{\texttt{ fetch}} request.
+
+This should work — and work fast — from any modern Java\+Script environment. But you can only send one query at a time this way\+: sessions and transactions are not supported.\hypertarget{README.md_autotoc_md5022}{}\doxysubsubsection{\texorpdfstring{{\ttfamily transaction()}}{{\ttfamily transaction()}}}\label{README.md_autotoc_md5022}
+Multiple queries can be issued via fetch request within a single, non-\/interactive transaction by using the {\ttfamily transaction()} function. This is exposed as a property on the query function.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ neon\ \}\ from\ '@neondatabase/serverless';}
+\DoxyCodeLine{const\ sql\ =\ neon(process.env.DATABASE\_URL);}
+\DoxyCodeLine{const\ showLatestN\ =\ 10;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ [posts,\ tags]\ =\ await\ sql.transaction([}
+\DoxyCodeLine{\ \ sql`SELECT\ *\ FROM\ posts\ ORDER\ BY\ posted\_at\ DESC\ LIMIT\ \$\{showLatestN\}`,}
+\DoxyCodeLine{\ \ sql`SELECT\ *\ FROM\ tags`,}
+\DoxyCodeLine{]);}
+
+\end{DoxyCode}
+
+
+There are some \doxysectlink{md_node__modules_2_0dneondatabase_2serverless_2_c_o_n_f_i_g}{additional options}{0} when using {\ttfamily transaction()}.\hypertarget{README.md_autotoc_md5023}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Pool} and {\ttfamily Client}}{{\ttfamily Pool} and {\ttfamily Client}}}\label{README.md_autotoc_md5023}
+Use the {\ttfamily Pool} or {\ttfamily Client} constructors, instead of the functions described above, when you need\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{session or interactive transaction support}}, and/or
+\item {\bfseries{compatibility with node-\/postgres}}, which supports query libraries like \href{https://kysely.dev/}{\texttt{ Kysely}} or \href{https://jawj.github.io/zapatos/}{\texttt{ Zapatos}}.
+\end{DoxyItemize}
+
+Queries using {\ttfamily Pool} and {\ttfamily Client} are carried by Web\+Sockets. There are {\bfseries{two key things}} to know about this\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{In Node.\+js}} and some other environments, there\textquotesingle{}s no built-\/in Web\+Socket support. In these cases, supply a Web\+Socket constructor function.
+\item {\bfseries{In serverless environments}} such as Vercel Edge Functions or Cloudflare Workers, Web\+Socket connections can\textquotesingle{}t outlive a single request.
+
+That means {\ttfamily Pool} or {\ttfamily Client} objects must be connected, used and closed {\bfseries{within a single request handler}}. Don\textquotesingle{}t create them outside a request handler; don\textquotesingle{}t create them in one handler and try to reuse them in another; and to avoid exhausting available connections, don\textquotesingle{}t forget to close them.
+\end{DoxyEnumerate}
+
+These points are demonstrated in the examples below.\hypertarget{README.md_autotoc_md5024}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md5024}
+
+\begin{DoxyItemize}
+\item {\bfseries{The full API guide}} to {\ttfamily Pool} and {\ttfamily Client} can be found in the \href{https://node-postgres.com/}{\texttt{ node-\/postgres docs}}.
+\item There are a few \doxysectlink{md_node__modules_2_0dneondatabase_2serverless_2_c_o_n_f_i_g}{additional configuration options}{0} that apply to {\ttfamily Pool} and {\ttfamily Client} here.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5025}{}\doxysubsection{\texorpdfstring{Example\+: Node.\+js with {\ttfamily Pool.\+connect()}}{Example\+: Node.\+js with {\ttfamily Pool.\+connect()}}}\label{README.md_autotoc_md5025}
+In Node.\+js, it takes two lines to configure Web\+Socket support. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Pool,\ neonConfig\ \}\ from\ '@neondatabase/serverless';}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ ws\ from\ 'ws';}
+\DoxyCodeLine{neonConfig.webSocketConstructor\ =\ ws;\ \ //\ <-\/-\/\ this\ is\ the\ key\ bit}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pool\ =\ new\ Pool(\{\ connectionString:\ process.env.DATABASE\_URL\ \});}
+\DoxyCodeLine{pool.on('error',\ err\ =>\ console.error(err));\ \ //\ deal\ with\ e.g.\ re-\/connect}
+\DoxyCodeLine{//\ ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ client\ =\ await\ pool.connect();}
+\DoxyCodeLine{}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ await\ client.query('BEGIN');}
+\DoxyCodeLine{\ \ const\ \{\ rows:\ [\{\ id:\ postId\ \}]\ \}\ =\ await\ client.query('INSERT\ INTO\ posts\ (title)\ VALUES\ (\$1)\ RETURNING\ id',\ ['Welcome']);}
+\DoxyCodeLine{\ \ await\ client.query('INSERT\ INTO\ photos\ (post\_id,\ url)\ VALUES\ (\$1,\ \$2)',\ [postId,\ 's3.bucket/photo/url']);}
+\DoxyCodeLine{\ \ await\ client.query('COMMIT');}
+\DoxyCodeLine{}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ await\ client.query('ROLLBACK');}
+\DoxyCodeLine{\ \ throw\ err;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\}\ finally\ \{}
+\DoxyCodeLine{\ \ client.release();}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ...}
+\DoxyCodeLine{await\ pool.end();}
+
+\end{DoxyCode}
+
+
+Other Web\+Socket libraries are available. For example, you could replace {\ttfamily ws} in the above example with {\ttfamily undici}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ WebSocket\ \}\ from\ 'undici';}
+\DoxyCodeLine{neonConfig.webSocketConstructor\ =\ WebSocket;\ }
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5026}{}\doxysubsection{\texorpdfstring{Example\+: Vercel Edge Function with {\ttfamily Pool.\+query()}}{Example\+: Vercel Edge Function with {\ttfamily Pool.\+query()}}}\label{README.md_autotoc_md5026}
+We can rewrite the Vercel Edge Function shown above (under the heading \textquotesingle{}Deploy it\textquotesingle{}) to use {\ttfamily Pool}, as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Pool\ \}\ from\ '@neondatabase/serverless';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ *don't*\ create\ a\ \`{}Pool`\ or\ \`{}Client`\ here,\ outside\ the\ request\ handler}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ async\ (req:\ Request,\ ctx:\ any)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ create\ a\ \`{}Pool`\ inside\ the\ request\ handler}
+\DoxyCodeLine{\ \ const\ pool\ =\ new\ Pool(\{\ connectionString:\ process.env.DATABASE\_URL\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ get\ and\ validate\ the\ \`{}postId`\ query\ parameter}
+\DoxyCodeLine{\ \ const\ postId\ =\ parseInt(new\ URL(req.url).searchParams.get('postId'),\ 10);}
+\DoxyCodeLine{\ \ if\ (isNaN(postId))\ return\ new\ Response('Bad\ request',\ \{\ status:\ 400\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ query\ and\ validate\ the\ post}
+\DoxyCodeLine{\ \ const\ [post]\ =\ await\ pool.query('SELECT\ *\ FROM\ posts\ WHERE\ id\ =\ \$1',\ [postId]);}
+\DoxyCodeLine{\ \ if\ (!post)\ return\ new\ Response('Not\ found',\ \{\ status:\ 404\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ end\ the\ \`{}Pool`\ inside\ the\ same\ request\ handler\ }
+\DoxyCodeLine{\ \ //\ (unlike\ \`{}await`,\ \`{}ctx.waitUntil`\ won't\ hold\ up\ the\ response)}
+\DoxyCodeLine{\ \ ctx.waitUntil(pool.end());}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ return\ the\ post\ as\ JSON}
+\DoxyCodeLine{\ \ return\ new\ Response(JSON.stringify(post),\ \{\ }
+\DoxyCodeLine{\ \ \ \ headers:\ \{\ 'content-\/type':\ 'application/json'\ \}}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ const\ config\ =\ \{}
+\DoxyCodeLine{\ \ runtime:\ 'edge',}
+\DoxyCodeLine{\ \ regions:\ ['iad1'],\ \ //\ specify\ the\ region\ nearest\ your\ Neon\ DB}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+Note\+: we don\textquotesingle{}t actually use the pooling capabilities of {\ttfamily Pool} in this example. But it\textquotesingle{}s slightly briefer than using {\ttfamily Client} and, because {\ttfamily Pool.\+query} is designed for one-\/shot queries, we may in future automatically route these queries over https for lower latency.\hypertarget{README.md_autotoc_md5027}{}\doxysubsection{\texorpdfstring{Example\+: Vercel Edge Function with {\ttfamily Client}}{Example\+: Vercel Edge Function with {\ttfamily Client}}}\label{README.md_autotoc_md5027}
+Using {\ttfamily Client} instead, the example looks like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Client\ \}\ from\ '@neondatabase/serverless';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ don't\ create\ a\ \`{}Pool`\ or\ \`{}Client`\ here,\ outside\ the\ request\ handler}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ async\ (req:\ Request,\ ctx:\ any)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ create\ a\ \`{}Client`\ inside\ the\ request\ handler}
+\DoxyCodeLine{\ \ const\ client\ =\ new\ Client(process.env.DATABASE\_URL);}
+\DoxyCodeLine{\ \ await\ client.connect();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ get\ and\ validate\ the\ \`{}postId`\ query\ parameter}
+\DoxyCodeLine{\ \ const\ postId\ =\ parseInt(new\ URL(req.url).searchParams.get('postId'),\ 10);}
+\DoxyCodeLine{\ \ if\ (isNaN(postId))\ return\ new\ Response('Bad\ request',\ \{\ status:\ 400\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ query\ and\ validate\ the\ post}
+\DoxyCodeLine{\ \ const\ [post]\ =\ await\ client.query('SELECT\ *\ FROM\ posts\ WHERE\ id\ =\ \$1',\ [postId]);}
+\DoxyCodeLine{\ \ if\ (!post)\ return\ new\ Response('Not\ found',\ \{\ status:\ 404\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ end\ the\ \`{}Client`\ inside\ the\ same\ request\ handler\ }
+\DoxyCodeLine{\ \ //\ (unlike\ \`{}await`,\ \`{}ctx.waitUntil`\ won't\ hold\ up\ the\ response)}
+\DoxyCodeLine{\ \ ctx.waitUntil(client.end());}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ return\ the\ post\ as\ JSON}
+\DoxyCodeLine{\ \ return\ new\ Response(JSON.stringify(post),\ \{\ }
+\DoxyCodeLine{\ \ \ \ headers:\ \{\ 'content-\/type':\ 'application/json'\ \}}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ const\ config\ =\ \{}
+\DoxyCodeLine{\ \ runtime:\ 'edge',}
+\DoxyCodeLine{\ \ regions:\ ['iad1'],\ \ //\ specify\ the\ region\ nearest\ your\ Neon\ DB}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5028}{}\doxysubsection{\texorpdfstring{More examples}{More examples}}\label{README.md_autotoc_md5028}
+These repos show how to use {\ttfamily @neondatabase/serverless} with a variety of environments and tools\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/neondatabase/neon-vercel-rawsql}{\texttt{ Raw SQL + Vercel Edge Functions}}
+\item \href{https://github.com/neondatabase/neon-vercel-http}{\texttt{ Raw SQL via https + Vercel Edge Functions}}
+\item \href{https://github.com/neondatabase/serverless-cfworker-demo}{\texttt{ Raw SQL + Cloudflare Workers}}
+\item \href{https://github.com/neondatabase/neon-vercel-kysely}{\texttt{ Kysely + Vercel Edge Functions}}
+\item \href{https://github.com/neondatabase/neon-vercel-zapatos}{\texttt{ Zapatos + Vercel Edge Functions}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5029}{}\doxysubsection{\texorpdfstring{Bring your own Postgres database}{Bring your own Postgres database}}\label{README.md_autotoc_md5029}
+This package comes configured to connect to a Neon database. But you can also use it to connect to your own Postgres instances if you \doxysectlink{md_node__modules_2_0dneondatabase_2serverless_2_d_e_p_l_o_y}{run your own Web\+Socket proxy}{0}.\hypertarget{README.md_autotoc_md5030}{}\doxysubsection{\texorpdfstring{Open-\/source}{Open-\/source}}\label{README.md_autotoc_md5030}
+This code is released under the \mbox{[}MIT license\mbox{]}(LICENSE).\hypertarget{README.md_autotoc_md5031}{}\doxysubsection{\texorpdfstring{Feedback and support}{Feedback and support}}\label{README.md_autotoc_md5031}
+Please visit \href{https://community.neon.tech/}{\texttt{ Neon Community}} or \href{https://neon.tech/docs/introduction/support}{\texttt{ Support}}. 

@@ -1,0 +1,102 @@
+\doxysection{node\+\_\+modules/ai Directory Reference}
+\hypertarget{dir_5bb71335c6d0c035b9f1ede77bc71d50}{}\label{dir_5bb71335c6d0c035b9f1ede77bc71d50}\index{node\_modules/ai Directory Reference@{node\_modules/ai Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_5cfbe64d3cda075fc45ba6570d877a31}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The Vercel AI SDK is {\bfseries{a library for building AI-\/powered streaming text and chat UIs}}.\hypertarget{README.md_autotoc_md7680}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md7680}
+
+\begin{DoxyItemize}
+\item \href{https://swr.vercel.app}{\texttt{ SWR}}-\/powered React, Svelte, Vue and Solid helpers for streaming text responses and building chat and completion UIs
+\item First-\/class support for \href{https://js.langchain.com/docs}{\texttt{ Lang\+Chain}} and \href{https://openai.com}{\texttt{ Open\+AI}}, \href{https://www.anthropic.com}{\texttt{ Anthropic}}, \href{https://cohere.com}{\texttt{ Cohere}}, \href{https://huggingface.co}{\texttt{ Hugging Face}}, \href{https://app.fireworks.ai}{\texttt{ Fireworks}} and \href{https://replicate.com}{\texttt{ Replicate}}
+\item Node.\+js, Serverless, and \href{https://edge-runtime.vercel.app/}{\texttt{ Edge Runtime}} support
+\item Callbacks for saving completed streaming responses to a database (in the same request)
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md7681}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md7681}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ install\ ai}
+
+\end{DoxyCode}
+
+
+View the full documentation and examples on \href{https://sdk.vercel.ai/docs}{\texttt{ sdk.\+vercel.\+ai/docs}}\hypertarget{README.md_autotoc_md7682}{}\doxysubsection{\texorpdfstring{Example\+: An AI Chatbot with Next.\+js and Open\+AI}{Example\+: An AI Chatbot with Next.\+js and Open\+AI}}\label{README.md_autotoc_md7682}
+With the Vercel AI SDK, you can build a Chat\+GPT-\/like app in just a few lines of code\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ./app/api/chat/route.js}
+\DoxyCodeLine{import\ OpenAI\ from\ 'openai';}
+\DoxyCodeLine{import\ \{\ OpenAIStream,\ StreamingTextResponse\ \}\ from\ 'ai';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ openai\ =\ new\ OpenAI(\{}
+\DoxyCodeLine{\ \ apiKey:\ process.env.OPENAI\_API\_KEY,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ const\ runtime\ =\ 'edge';}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ async\ function\ POST(req)\ \{}
+\DoxyCodeLine{\ \ const\ \{\ messages\ \}\ =\ await\ req.json();}
+\DoxyCodeLine{\ \ const\ response\ =\ await\ openai.chat.completions.create(\{}
+\DoxyCodeLine{\ \ \ \ model:\ 'gpt-\/4',}
+\DoxyCodeLine{\ \ \ \ stream:\ true,}
+\DoxyCodeLine{\ \ \ \ messages,}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\ \ const\ stream\ =\ OpenAIStream(response);}
+\DoxyCodeLine{\ \ return\ new\ StreamingTextResponse(stream);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ./app/page.js}
+\DoxyCodeLine{'use\ client';}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{\ useChat\ \}\ from\ 'ai/react';}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ function\ Chat()\ \{}
+\DoxyCodeLine{\ \ const\ \{\ messages,\ input,\ handleInputChange,\ handleSubmit\ \}\ =\ useChat();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ \{messages.map(m\ =>\ (}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <div\ key=\{m.id\}>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{m.role\}:\ \{m.content\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ </div>}
+\DoxyCodeLine{\ \ \ \ \ \ ))\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ <form\ onSubmit=\{handleSubmit\}>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <input}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ value=\{input\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ placeholder="{}Say\ something..."{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ onChange=\{handleInputChange\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ />}
+\DoxyCodeLine{\ \ \ \ \ \ </form>}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+
+
+View the full documentation and examples on \href{https://sdk.vercel.ai/docs}{\texttt{ sdk.\+vercel.\+ai/docs}}.\hypertarget{README.md_autotoc_md7684}{}\doxysubsection{\texorpdfstring{Authors}{Authors}}\label{README.md_autotoc_md7684}
+This library is created by \href{https://vercel.com}{\texttt{ Vercel}} and \href{https://nextjs.org}{\texttt{ Next.\+js}} team members, with contributions from\+:
+
+
+\begin{DoxyItemize}
+\item Jared Palmer (\href{https://twitter.com/jaredpalmer}{\texttt{ @jaredpalmer}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\item Shu Ding (\href{https://twitter.com/shuding_}{\texttt{ @shuding\+\_\+}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\item Max Leiter (\href{https://twitter.com/max_leiter}{\texttt{ @max\+\_\+leiter}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\item Malte Ubl (\href{https://twitter.com/cramforce}{\texttt{ @cramforce}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\item Justin Ridgewell (\href{https://github.com/jridgewell}{\texttt{ @jridgewell}}) -\/ \href{https://vercel.com}{\texttt{ Vercel}}
+\end{DoxyItemize}
+
+\href{https://github.com/vercel/ai/graphs/contributors}{\texttt{ Contributors}} 

@@ -1,0 +1,68 @@
+\doxysection{node\+\_\+modules/spdx-\/expression-\/parse Directory Reference}
+\hypertarget{dir_85ff35ad231f6a4aaaba02b9e43a8770}{}\label{dir_85ff35ad231f6a4aaaba02b9e43a8770}\index{node\_modules/spdx-\/expression-\/parse Directory Reference@{node\_modules/spdx-\/expression-\/parse Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This package parses \mbox{[}SPDX license expression\mbox{]}(\href{https://spdx.org/spdx-specification-21-web-version\#h.jxpfx0ykyb60}{\texttt{ https\+://spdx.\+org/spdx-\/specification-\/21-\/web-\/version\#h.\+jxpfx0ykyb60}}) strings describing license terms, like \mbox{[}package.\+json license strings\mbox{]}(\href{https://docs.npmjs.com/files/package.json\#license}{\texttt{ https\+://docs.\+npmjs.\+com/files/package.\+json\#license}}), into consistently structured ECMAScript objects. The npm command-\/line interface depends on this package, as do many automatic license-\/audit tools.
+
+In a nutshell\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ parse\ =\ require('spdx-\/expression-\/parse')}
+\DoxyCodeLine{var\ assert\ =\ require('assert')}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(}
+\DoxyCodeLine{\ \ //\ Licensed\ under\ the\ terms\ of\ the\ Two-\/Clause\ BSD\ License.}
+\DoxyCodeLine{\ \ parse('BSD-\/2-\/Clause'),}
+\DoxyCodeLine{\ \ \{license:\ 'BSD-\/2-\/Clause'\}}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.throws(function\ ()\ \{}
+\DoxyCodeLine{\ \ //\ An\ invalid\ SPDX\ license\ expression.}
+\DoxyCodeLine{\ \ //\ Should\ be\ \`{}Apache-\/2.0`.}
+\DoxyCodeLine{\ \ parse('Apache\ 2')}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(}
+\DoxyCodeLine{\ \ //\ Dual\ licensed\ under\ either:}
+\DoxyCodeLine{\ \ //\ -\/\ LGPL\ 2.1}
+\DoxyCodeLine{\ \ //\ -\/\ a\ combination\ of\ Three-\/Clause\ BSD\ and\ MIT}
+\DoxyCodeLine{\ \ parse('(LGPL-\/2.1\ OR\ BSD-\/3-\/Clause\ AND\ MIT)'),}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ left:\ \{license:\ 'LGPL-\/2.1'\},}
+\DoxyCodeLine{\ \ \ \ conjunction:\ 'or',}
+\DoxyCodeLine{\ \ \ \ right:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ left:\ \{license:\ 'BSD-\/3-\/Clause'\},}
+\DoxyCodeLine{\ \ \ \ \ \ conjunction:\ 'and',}
+\DoxyCodeLine{\ \ \ \ \ \ right:\ \{license:\ 'MIT'\}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+The syntax comes from the \href{https://spdx.org/}{\texttt{ Software Package Data e\+Xchange (SPDX)}}, a standard from the \href{https://www.linuxfoundation.org}{\texttt{ Linux Foundation}} for shareable data about software package license terms. SPDX aims to make sharing and auditing license data easy, especially for users of open-\/source software.
+
+The bulk of the SPDX standard describes syntax and semantics of XML metadata files. This package implements two lightweight, plain-\/text components of that larger standard\+:
+
+
+\begin{DoxyEnumerate}
+\item The \href{https://spdx.org/licenses}{\texttt{ license list}}, a mapping from specific string identifiers, like {\ttfamily Apache-\/2.\+0}, to standard form license texts and bolt-\/on license exceptions. The \href{https://www.npmjs.com/package/spdx-license-ids}{\texttt{ spdx-\/license-\/ids}} and \href{https://www.npmjs.com/package/spdx-exceptions}{\texttt{ spdx-\/exceptions}} packages implement the license list. {\ttfamily spdx-\/expression-\/parse} depends on and {\ttfamily require()}s them.
+
+Any license identifier from the license list is a valid license expression\+:
+
+\`{}\`{}`javascript var identifiers = \mbox{[}\mbox{]} .concat(require(\textquotesingle{}spdx-\/license-\/ids')) .concat(require(\textquotesingle{}spdx-\/license-\/ids/deprecated\textquotesingle{}))
+
+identifiers.\+for\+Each(function (id) \{ assert.\+deep\+Equal(parse(id), \{license\+: id\}) \}) \`{}\`{}\`{}
+
+So is any license identifier {\ttfamily WITH} a standardized license exception\+:
+
+{\ttfamily javascript identifiers.\+for\+Each(function (id) \{ require(\textquotesingle{}spdx-\/exceptions\textquotesingle{}).for\+Each(function (e) \{ assert.\+deep\+Equal( parse(id + \textquotesingle{} WITH \textquotesingle{} + e), \{license\+: id, exception\+: e\} ) \}) \}) }
+\item The license expression language, for describing simple and complex license terms, like {\ttfamily MIT} for MIT-\/licensed and {\ttfamily (GPL-\/2.\+0 OR Apache-\/2.\+0)} for dual-\/licensing under GPL 2.\+0 and Apache 2.\+0. {\ttfamily spdx-\/expression-\/parse} itself implements license expression language, exporting a parser.
+
+{\ttfamily javascript assert.\+deep\+Equal( // Licensed under a combination of\+: // -\/ the MIT License AND // -\/ a combination of\+: // -\/ LGPL 2.\+1 (or a later version) AND // -\/ Three-\/\+Clause BSD parse(\textquotesingle{}(MIT AND (LGPL-\/2.\+1+ AND BSD-\/3-\/\+Clause))\textquotesingle{}), \{ left\+: \{license\+: \textquotesingle{}MIT\textquotesingle{}\}, conjunction\+: \textquotesingle{}and\textquotesingle{}, right\+: \{ left\+: \{license\+: \textquotesingle{}LGPL-\/2.\+1\textquotesingle{}, plus\+: true\}, conjunction\+: \textquotesingle{}and\textquotesingle{}, right\+: \{license\+: \textquotesingle{}BSD-\/3-\/\+Clause\textquotesingle{}\} \} \} ) }
+\end{DoxyEnumerate}
+
+The Linux Foundation and its contributors license the SPDX standard under the terms of \href{http://spdx.org/licenses/CC-BY-3.0}{\texttt{ the Creative Commons Attribution License 3.\+0 Unported (SPDX\+: "{}\+CC-\/\+BY-\/3.\+0"{})}}. "{}\+SPDX"{} is a United States federally registered trademark of the Linux Foundation. The authors of this package license their work under the terms of the MIT License. 

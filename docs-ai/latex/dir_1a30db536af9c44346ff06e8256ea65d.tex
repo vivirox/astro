@@ -1,0 +1,45 @@
+\doxysection{node\+\_\+modules/get-\/caller-\/file Directory Reference}
+\hypertarget{dir_1a30db536af9c44346ff06e8256ea65d}{}\label{dir_1a30db536af9c44346ff06e8256ea65d}\index{node\_modules/get-\/caller-\/file Directory Reference@{node\_modules/get-\/caller-\/file Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/stefanpenner/get-caller-file}{\texttt{ }} \href{https://ci.appveyor.com/project/embercli/get-caller-file/branch/master}{\texttt{ }}
+
+This is a utility, which allows a function to figure out from which file it was invoked. It does so by inspecting v8\textquotesingle{}s stack trace at the time it is invoked.
+
+Inspired by \href{http://stackoverflow.com/questions/13227489}{\texttt{ http\+://stackoverflow.\+com/questions/13227489}}
+
+{\itshape note\+: this relies on Node/\+V8 specific APIs, as such other runtimes may not work}\hypertarget{README.md_autotoc_md16035}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md16035}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ get-\/caller-\/file}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16036}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md16036}
+Given\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ./foo.js}
+\DoxyCodeLine{const\ getCallerFile\ =\ require('get-\/caller-\/file');}
+\DoxyCodeLine{}
+\DoxyCodeLine{module.exports\ =\ function()\ \{}
+\DoxyCodeLine{\ \ return\ getCallerFile();\ //\ figures\ out\ who\ called\ it}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ index.js}
+\DoxyCodeLine{const\ foo\ =\ require('./foo');}
+\DoxyCodeLine{}
+\DoxyCodeLine{foo()\ //\ =>\ /full/path/to/this/file/index.js}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16037}{}\doxysubsection{\texorpdfstring{Options\+:}{Options\+:}}\label{README.md_autotoc_md16037}
+
+\begin{DoxyItemize}
+\item {\ttfamily get\+Caller\+File(position = 2)}\+: where position is stack frame whos file\+Name we want. 
+\end{DoxyItemize}

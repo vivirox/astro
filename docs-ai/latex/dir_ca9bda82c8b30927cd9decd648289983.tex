@@ -1,0 +1,102 @@
+\doxysection{node\+\_\+modules/nwsapi Directory Reference}
+\hypertarget{dir_ca9bda82c8b30927cd9decd648289983}{}\label{dir_ca9bda82c8b30927cd9decd648289983}\index{node\_modules/nwsapi Directory Reference@{node\_modules/nwsapi Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Fast CSS Selectors API Engine
+
+   
+
+NWSAPI is the development progress of \href{https://github.com/dperini/nwmatcher}{\texttt{ NWMATCHER}} aiming at \href{https://www.w3.org/TR/selectors-4/}{\texttt{ Selectors Level 4}} conformance. It has been completely reworked to be easily extended and maintained. It is a right-\/to-\/left selector parser and compiler written in pure Javascript with no external dependencies. It was initially thought as a cross browser library to improve event delegation and web page scraping in various frameworks but it has become a popular replacement of the native CSS selection and matching functionality in newer browsers and headless environments.
+
+It uses \href{https://en.wikipedia.org/wiki/Regular_expression}{\texttt{ regular expressions}} to parse CSS selector strings and \href{https://en.wikipedia.org/wiki/Metaprogramming}{\texttt{ metaprogramming}} to transforms these selector strings into Javascript function resolvers. This process is executed only once for each selector string allowing memoization of the function resolvers and achieving unmatched performances.\hypertarget{README.md_autotoc_md24752}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md24752}
+To include NWSAPI in a standard web page\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}text/javascript"{}\ src="{}nwsapi.js"{}></script>}
+
+\end{DoxyCode}
+
+
+To include NWSAPI in a standard web page and automatically replace the native QSA\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}text/javascript"{}\ src="{}nwsapi.js"{}\ onload="{}NW.Dom.install()"{}></script>}
+
+\end{DoxyCode}
+
+
+To use NWSAPI with Node.\+js\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ nwsapi}
+
+\end{DoxyCode}
+
+
+NWSAPI currently supports browsers (as a global, {\ttfamily NW.\+Dom}) and headless environments (as a Common\+JS module).\hypertarget{README.md_autotoc_md24753}{}\doxysubsection{\texorpdfstring{Supported Selectors}{Supported Selectors}}\label{README.md_autotoc_md24753}
+Here is a list of all the CSS2/\+CSS3/\+CSS4 \href{https://github.com/dperini/nwsapi/wiki/CSS-supported-selectors}{\texttt{ Supported selectors}}.\hypertarget{README.md_autotoc_md24754}{}\doxysubsection{\texorpdfstring{Features and Compliance}{Features and Compliance}}\label{README.md_autotoc_md24754}
+You can read more about NWSAPI \href{https://github.com/dperini/nwsapi/wiki/Features-and-compliance}{\texttt{ features and compliance}} on the wiki.\hypertarget{README.md_autotoc_md24755}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md24755}
+\hypertarget{README.md_autotoc_md24756}{}\doxysubsubsection{\texorpdfstring{DOM Selection}{DOM Selection}}\label{README.md_autotoc_md24756}
+\hypertarget{README.md_autotoc_md24757}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily ancestor( selector, context, callback )}}{{\ttfamily ancestor( selector, context, callback )}}}\label{README.md_autotoc_md24757}
+Returns a reference to the nearest ancestor element matching {\ttfamily selector}, starting at {\ttfamily context}. Returns {\ttfamily null} if no element is found. If {\ttfamily callback} is provided, it is invoked for the matched element.\hypertarget{README.md_autotoc_md24758}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily first( selector, context, callback )}}{{\ttfamily first( selector, context, callback )}}}\label{README.md_autotoc_md24758}
+Returns a reference to the first element matching {\ttfamily selector}, starting at {\ttfamily context}. Returns {\ttfamily null} if no element matches. If {\ttfamily callback} is provided, it is invoked for the matched element.\hypertarget{README.md_autotoc_md24759}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily match( selector, element, callback )}}{{\ttfamily match( selector, element, callback )}}}\label{README.md_autotoc_md24759}
+Returns {\ttfamily true} if {\ttfamily element} matches {\ttfamily selector}, starting at {\ttfamily context}; returns {\ttfamily false} otherwise. If {\ttfamily callback} is provided, it is invoked for the matched element.\hypertarget{README.md_autotoc_md24760}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily select( selector, context, callback )}}{{\ttfamily select( selector, context, callback )}}}\label{README.md_autotoc_md24760}
+Returns an array of all the elements matching {\ttfamily selector}, starting at {\ttfamily context}; returns empty {\ttfamily Array} otherwise. If {\ttfamily callback} is provided, it is invoked for each matching element.\hypertarget{README.md_autotoc_md24761}{}\doxysubsubsection{\texorpdfstring{DOM Helpers}{DOM Helpers}}\label{README.md_autotoc_md24761}
+\hypertarget{README.md_autotoc_md24762}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily by\+Id( id, from )}}{{\ttfamily by\+Id( id, from )}}}\label{README.md_autotoc_md24762}
+Returns a reference to the first element with ID {\ttfamily id}, optionally filtered to descendants of the element {\ttfamily from}.\hypertarget{README.md_autotoc_md24763}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily by\+Tag( tag, from )}}{{\ttfamily by\+Tag( tag, from )}}}\label{README.md_autotoc_md24763}
+Returns an array of elements having the specified tag name {\ttfamily tag}, optionally filtered to descendants of the element {\ttfamily from}.\hypertarget{README.md_autotoc_md24764}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily by\+Class( class, from )}}{{\ttfamily by\+Class( class, from )}}}\label{README.md_autotoc_md24764}
+Returns an array of elements having the specified class name {\ttfamily class}, optionally filtered to descendants of the element {\ttfamily from}.\hypertarget{README.md_autotoc_md24765}{}\doxysubsubsection{\texorpdfstring{Engine Configuration}{Engine Configuration}}\label{README.md_autotoc_md24765}
+\hypertarget{README.md_autotoc_md24766}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily configure( options )}}{{\ttfamily configure( options )}}}\label{README.md_autotoc_md24766}
+The following is the list of currently available configuration options, their default values and descriptions, they are boolean flags that can be set to {\ttfamily true} or {\ttfamily false}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily IDS\+\_\+\+DUPES}\+: true -\/ true to allow using multiple elements having the same id, false to disallow
+\item {\ttfamily LIVECACHE}\+: true -\/ true for caching both results and resolvers, false for caching only resolvers
+\item {\ttfamily MIXEDCASE}\+: true -\/ true to match tag names case insensitive, false to match using case sensitive
+\item {\ttfamily LOGERRORS}\+: true -\/ true to print errors and warnings to the console, false to mute both of them
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md24767}{}\doxysubsubsection{\texorpdfstring{Examples on extending the basic functionalities}{Examples on extending the basic functionalities}}\label{README.md_autotoc_md24767}
+\hypertarget{README.md_autotoc_md24768}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily configure( \{ \texorpdfstring{$<$}{<}configuration-\/flag\texorpdfstring{$>$}{>}\+: \mbox{[} true \texorpdfstring{$\vert$}{|} false \mbox{]} \} )}}{{\ttfamily configure( \{ \texorpdfstring{$<$}{<}configuration-\/flag\texorpdfstring{$>$}{>}\+: \mbox{[} true \texorpdfstring{$\vert$}{|} false \mbox{]} \} )}}}\label{README.md_autotoc_md24768}
+Disable logging errors/warnings to console, disallow duplicate ids. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{NW.Dom.configure(\ \{\ LOGERRORS:\ false,\ IDS\_DUPES:\ false\ \}\ );}
+
+\end{DoxyCode}
+ NOTE\+: NW.\+Dom.\+configure() without parameters return the current configuration.\hypertarget{README.md_autotoc_md24769}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily register\+Combinator( symbol, resolver )}}{{\ttfamily register\+Combinator( symbol, resolver )}}}\label{README.md_autotoc_md24769}
+Registers a new symbol and its matching resolver in the combinators table. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{NW.Dom.registerCombinator(\ '\string^',\ 'e.parentElement'\ );}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md24770}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily register\+Operator( symbol, resolver )}}{{\ttfamily register\+Operator( symbol, resolver )}}}\label{README.md_autotoc_md24770}
+Registers a new symbol and its matching resolver in the attribute operators table. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{NW.Dom.registerOperator(\ '!=',\ \{\ p1:\ '\string^',\ p2:\ '\$',\ p3:\ 'false'\ \}\ );}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md24771}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily register\+Selector( name, rexp, func )}}{{\ttfamily register\+Selector( name, rexp, func )}}}\label{README.md_autotoc_md24771}
+Registers a new selector, the matching RE and the resolver function, in the selectors table. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{NW.Dom.registerSelector('Controls',\ /\string^\(\backslash\):(control)(.*)/i,}
+\DoxyCodeLine{\ \ (function(global)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ function(match,\ source,\ mode,\ callback)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ var\ status\ =\ true;}
+\DoxyCodeLine{\ \ \ \ \ \ source\ =\ 'if(/\string^(button|input|select|textarea)/i.test(e.nodeName))\{'\ +\ source\ +\ '\}';}
+\DoxyCodeLine{\ \ \ \ \ \ return\ \{\ 'source':\ source,\ 'status':\ status\ \};}
+\DoxyCodeLine{\ \ \ \ \};}
+\DoxyCodeLine{\ \ \})(this));}
+
+\end{DoxyCode}
+ 

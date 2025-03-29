@@ -1,0 +1,310 @@
+\doxysection{src/docs/examples/secure-\/analytics Directory Reference}
+\hypertarget{dir_a75789be5044296cc68e2b705f0f1a9a}{}\label{dir_a75789be5044296cc68e2b705f0f1a9a}\index{src/docs/examples/secure-\/analytics Directory Reference@{src/docs/examples/secure-\/analytics Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This example demonstrates how to use MP-\/\+SPDZ Type\+Script bindings to perform secure analytics on private data from multiple parties.\hypertarget{README.md_autotoc_md37196}{}\doxysubsection{\texorpdfstring{Overview}{Overview}}\label{README.md_autotoc_md37196}
+The application performs the following analytics operations securely\+:
+
+
+\begin{DoxyEnumerate}
+\item Mean calculation
+\item Standard deviation
+\item Correlation coefficient
+\item Linear regression
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37197}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md37197}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Install\ dependencies}
+\DoxyCodeLine{npm\ install\ @gradiant/mp-\/spdz-\/bindings}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Install\ system\ dependencies\ (Ubuntu/Debian)}
+\DoxyCodeLine{sudo\ apt-\/get\ install\ automake\ build-\/essential\ clang\ cmake\ git\ \(\backslash\)}
+\DoxyCodeLine{\ \ libboost-\/dev\ libgmp-\/dev\ libntl-\/dev\ libsodium-\/dev\ libssl-\/dev\ \(\backslash\)}
+\DoxyCodeLine{\ \ libtool\ python3\ libstdc++-\/12-\/dev}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37198}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md37198}
+\hypertarget{README.md_autotoc_md37199}{}\doxysubsubsection{\texorpdfstring{1. Initialize the Environment}{1. Initialize the Environment}}\label{README.md_autotoc_md37199}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ JIFFAdapter,\ JIFFAdapterConfig,\ MPCProtocol\ \}\ from\ '@gradiant/mp-\/spdz-\/bindings'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ config:\ JIFFAdapterConfig\ =\ \{}
+\DoxyCodeLine{\ \ partyId:\ 0,\ //\ Change\ for\ each\ party}
+\DoxyCodeLine{\ \ numParties:\ 3,}
+\DoxyCodeLine{\ \ threshold:\ 1,}
+\DoxyCodeLine{\ \ protocol:\ MPCProtocol.SEMI2K\ //\ Use\ SEMI2K\ for\ better\ performance}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ adapter\ =\ new\ JIFFAdapter(config)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37200}{}\doxysubsubsection{\texorpdfstring{2. Secure Mean Calculation}{2. Secure Mean Calculation}}\label{README.md_autotoc_md37200}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{async\ function\ calculateSecureMean(values:\ number[]):\ Promise<number>\ \{}
+\DoxyCodeLine{\ \ //\ Share\ all\ values}
+\DoxyCodeLine{\ \ const\ shares\ =\ await\ Promise.all(}
+\DoxyCodeLine{\ \ \ \ values.map(value\ =>\ adapter.share(value))}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Sum\ the\ shares}
+\DoxyCodeLine{\ \ let\ sum\ =\ shares[0]}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 1;\ i\ <\ shares.length;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ sum\ =\ await\ adapter.add(sum,\ shares[i])}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Create\ share\ for\ length}
+\DoxyCodeLine{\ \ const\ length\ =\ await\ adapter.share(BigInt(values.length))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Divide\ sum\ by\ length}
+\DoxyCodeLine{\ \ const\ mean\ =\ await\ adapter.multiply(sum,\ length)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Open\ the\ result}
+\DoxyCodeLine{\ \ return\ Number(await\ adapter.open(mean))}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ usage}
+\DoxyCodeLine{const\ values\ =\ [1,\ 2,\ 3,\ 4,\ 5]}
+\DoxyCodeLine{const\ mean\ =\ await\ calculateSecureMean(values)}
+\DoxyCodeLine{console.log('Secure\ mean:',\ mean)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37201}{}\doxysubsubsection{\texorpdfstring{3. Secure Standard Deviation}{3. Secure Standard Deviation}}\label{README.md_autotoc_md37201}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{async\ function\ calculateSecureStdDev(values:\ number[]):\ Promise<number>\ \{}
+\DoxyCodeLine{\ \ //\ Calculate\ mean\ first}
+\DoxyCodeLine{\ \ const\ mean\ =\ await\ calculateSecureMean(values)}
+\DoxyCodeLine{\ \ const\ meanShare\ =\ await\ adapter.share(mean)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Share\ all\ values}
+\DoxyCodeLine{\ \ const\ shares\ =\ await\ Promise.all(}
+\DoxyCodeLine{\ \ \ \ values.map(value\ =>\ adapter.share(value))}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ squared\ differences}
+\DoxyCodeLine{\ \ const\ squaredDiffs\ =\ await\ Promise.all(}
+\DoxyCodeLine{\ \ \ \ shares.map(async\ (share)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ const\ diff\ =\ await\ adapter.subtract(share,\ meanShare)}
+\DoxyCodeLine{\ \ \ \ \ \ return\ adapter.multiply(diff,\ diff)}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Sum\ squared\ differences}
+\DoxyCodeLine{\ \ let\ sum\ =\ squaredDiffs[0]}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 1;\ i\ <\ squaredDiffs.length;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ sum\ =\ await\ adapter.add(sum,\ squaredDiffs[i])}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Divide\ by\ length}
+\DoxyCodeLine{\ \ const\ length\ =\ await\ adapter.share(BigInt(values.length))}
+\DoxyCodeLine{\ \ const\ variance\ =\ await\ adapter.multiply(sum,\ length)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Open\ the\ result\ and\ calculate\ square\ root}
+\DoxyCodeLine{\ \ const\ varianceValue\ =\ Number(await\ adapter.open(variance))}
+\DoxyCodeLine{\ \ return\ Math.sqrt(varianceValue)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ usage}
+\DoxyCodeLine{const\ stdDev\ =\ await\ calculateSecureStdDev(values)}
+\DoxyCodeLine{console.log('Secure\ standard\ deviation:',\ stdDev)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37202}{}\doxysubsubsection{\texorpdfstring{4. Secure Correlation Coefficient}{4. Secure Correlation Coefficient}}\label{README.md_autotoc_md37202}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{async\ function\ calculateSecureCorrelation(}
+\DoxyCodeLine{\ \ x:\ number[],}
+\DoxyCodeLine{\ \ y:\ number[]}
+\DoxyCodeLine{):\ Promise<number>\ \{}
+\DoxyCodeLine{\ \ if\ (x.length\ !==\ y.length)\ \{}
+\DoxyCodeLine{\ \ \ \ throw\ new\ Error('Arrays\ must\ have\ same\ length')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Share\ all\ values}
+\DoxyCodeLine{\ \ const\ xShares\ =\ await\ Promise.all(x.map(value\ =>\ adapter.share(value)))}
+\DoxyCodeLine{\ \ const\ yShares\ =\ await\ Promise.all(y.map(value\ =>\ adapter.share(value)))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ means}
+\DoxyCodeLine{\ \ const\ xMean\ =\ await\ calculateSecureMean(x)}
+\DoxyCodeLine{\ \ const\ yMean\ =\ await\ calculateSecureMean(y)}
+\DoxyCodeLine{\ \ const\ xMeanShare\ =\ await\ adapter.share(xMean)}
+\DoxyCodeLine{\ \ const\ yMeanShare\ =\ await\ adapter.share(yMean)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ covariance\ numerator}
+\DoxyCodeLine{\ \ const\ covProducts\ =\ await\ Promise.all(}
+\DoxyCodeLine{\ \ \ \ xShares.map(async\ (xShare,\ i)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ const\ xDiff\ =\ await\ adapter.subtract(xShare,\ xMeanShare)}
+\DoxyCodeLine{\ \ \ \ \ \ const\ yDiff\ =\ await\ adapter.subtract(yShares[i],\ yMeanShare)}
+\DoxyCodeLine{\ \ \ \ \ \ return\ adapter.multiply(xDiff,\ yDiff)}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Sum\ products}
+\DoxyCodeLine{\ \ let\ covSum\ =\ covProducts[0]}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 1;\ i\ <\ covProducts.length;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ covSum\ =\ await\ adapter.add(covSum,\ covProducts[i])}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ standard\ deviations}
+\DoxyCodeLine{\ \ const\ xStdDev\ =\ await\ calculateSecureStdDev(x)}
+\DoxyCodeLine{\ \ const\ yStdDev\ =\ await\ calculateSecureStdDev(y)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ correlation\ coefficient}
+\DoxyCodeLine{\ \ const\ denominator\ =\ await\ adapter.share(BigInt(xStdDev\ *\ yStdDev))}
+\DoxyCodeLine{\ \ const\ correlation\ =\ await\ adapter.multiply(covSum,\ denominator)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Open\ the\ result}
+\DoxyCodeLine{\ \ return\ Number(await\ adapter.open(correlation))}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ usage}
+\DoxyCodeLine{const\ x\ =\ [1,\ 2,\ 3,\ 4,\ 5]}
+\DoxyCodeLine{const\ y\ =\ [2,\ 4,\ 6,\ 8,\ 10]}
+\DoxyCodeLine{const\ correlation\ =\ await\ calculateSecureCorrelation(x,\ y)}
+\DoxyCodeLine{console.log('Secure\ correlation:',\ correlation)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37203}{}\doxysubsubsection{\texorpdfstring{5. Secure Linear Regression}{5. Secure Linear Regression}}\label{README.md_autotoc_md37203}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{async\ function\ calculateSecureLinearRegression(}
+\DoxyCodeLine{\ \ x:\ number[],}
+\DoxyCodeLine{\ \ y:\ number[]}
+\DoxyCodeLine{):\ Promise<\{\ slope:\ number,\ intercept:\ number\ \}>\ \{}
+\DoxyCodeLine{\ \ if\ (x.length\ !==\ y.length)\ \{}
+\DoxyCodeLine{\ \ \ \ throw\ new\ Error('Arrays\ must\ have\ same\ length')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Share\ all\ values}
+\DoxyCodeLine{\ \ const\ xShares\ =\ await\ Promise.all(x.map(value\ =>\ adapter.share(value)))}
+\DoxyCodeLine{\ \ const\ yShares\ =\ await\ Promise.all(y.map(value\ =>\ adapter.share(value)))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ means}
+\DoxyCodeLine{\ \ const\ xMean\ =\ await\ calculateSecureMean(x)}
+\DoxyCodeLine{\ \ const\ yMean\ =\ await\ calculateSecureMean(y)}
+\DoxyCodeLine{\ \ const\ xMeanShare\ =\ await\ adapter.share(xMean)}
+\DoxyCodeLine{\ \ const\ yMeanShare\ =\ await\ adapter.share(yMean)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ slope\ numerator\ and\ denominator}
+\DoxyCodeLine{\ \ const\ numeratorProducts\ =\ await\ Promise.all(}
+\DoxyCodeLine{\ \ \ \ xShares.map(async\ (xShare,\ i)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ const\ xDiff\ =\ await\ adapter.subtract(xShare,\ xMeanShare)}
+\DoxyCodeLine{\ \ \ \ \ \ const\ yDiff\ =\ await\ adapter.subtract(yShares[i],\ yMeanShare)}
+\DoxyCodeLine{\ \ \ \ \ \ return\ adapter.multiply(xDiff,\ yDiff)}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ denominatorProducts\ =\ await\ Promise.all(}
+\DoxyCodeLine{\ \ \ \ xShares.map(async\ (xShare)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ const\ xDiff\ =\ await\ adapter.subtract(xShare,\ xMeanShare)}
+\DoxyCodeLine{\ \ \ \ \ \ return\ adapter.multiply(xDiff,\ xDiff)}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Sum\ products}
+\DoxyCodeLine{\ \ let\ numeratorSum\ =\ numeratorProducts[0]}
+\DoxyCodeLine{\ \ let\ denominatorSum\ =\ denominatorProducts[0]}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 1;\ i\ <\ numeratorProducts.length;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ numeratorSum\ =\ await\ adapter.add(numeratorSum,\ numeratorProducts[i])}
+\DoxyCodeLine{\ \ \ \ denominatorSum\ =\ await\ adapter.add(denominatorSum,\ denominatorProducts[i])}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ slope}
+\DoxyCodeLine{\ \ const\ slope\ =\ await\ adapter.multiply(numeratorSum,\ denominatorSum)}
+\DoxyCodeLine{\ \ const\ slopeValue\ =\ Number(await\ adapter.open(slope))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Calculate\ intercept}
+\DoxyCodeLine{\ \ const\ interceptShare\ =\ await\ adapter.subtract(}
+\DoxyCodeLine{\ \ \ \ yMeanShare,}
+\DoxyCodeLine{\ \ \ \ await\ adapter.multiply(xMeanShare,\ await\ adapter.share(slopeValue))}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ const\ interceptValue\ =\ Number(await\ adapter.open(interceptShare))}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ \{\ slope:\ slopeValue,\ intercept:\ interceptValue\ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Example\ usage}
+\DoxyCodeLine{const\ regression\ =\ await\ calculateSecureLinearRegression(x,\ y)}
+\DoxyCodeLine{console.log('Secure\ linear\ regression:',\ regression)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37204}{}\doxysubsection{\texorpdfstring{Performance Considerations}{Performance Considerations}}\label{README.md_autotoc_md37204}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Batch Processing}}
+\begin{DoxyItemize}
+\item Process multiple values in parallel using {\ttfamily Promise.\+all}
+\item Use preprocessing for better performance
+\end{DoxyItemize}
+\item {\bfseries{Protocol Selection}}
+\begin{DoxyItemize}
+\item Use Semi2k for better performance when security requirements allow
+\item Use SPDZ2k for integer-\/heavy computations
+\item Use MASCOT when malicious security is required
+\end{DoxyItemize}
+\item {\bfseries{Memory Management}}
+\begin{DoxyItemize}
+\item Clean up shares when no longer needed
+\item Monitor memory usage during large computations
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37205}{}\doxysubsection{\texorpdfstring{Security Considerations}{Security Considerations}}\label{README.md_autotoc_md37205}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Data Privacy}}
+\begin{DoxyItemize}
+\item All input data remains private
+\item Only final results are revealed
+\item Intermediate values remain secret
+\end{DoxyItemize}
+\item {\bfseries{Protocol Security}}
+\begin{DoxyItemize}
+\item Semi2k provides semi-\/honest security
+\item Use MASCOT for malicious security if needed
+\item Ensure proper network security (TLS)
+\end{DoxyItemize}
+\item {\bfseries{Error Handling}}
+\begin{DoxyItemize}
+\item Handle all errors appropriately
+\item Log security-\/relevant events
+\item Never expose sensitive data in errors
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37206}{}\doxysubsection{\texorpdfstring{Testing}{Testing}}\label{README.md_autotoc_md37206}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{describe('Secure\ Analytics',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ let\ adapter:\ JIFFAdapter}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ beforeEach(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ adapter\ =\ new\ JIFFAdapter(\{}
+\DoxyCodeLine{\ \ \ \ \ \ partyId:\ 0,}
+\DoxyCodeLine{\ \ \ \ \ \ numParties:\ 3,}
+\DoxyCodeLine{\ \ \ \ \ \ protocol:\ MPCProtocol.SEMI2K}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ it('should\ calculate\ mean\ securely',\ async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ values\ =\ [1,\ 2,\ 3,\ 4,\ 5]}
+\DoxyCodeLine{\ \ \ \ const\ mean\ =\ await\ calculateSecureMean(values)}
+\DoxyCodeLine{\ \ \ \ expect(mean).toBe(3)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ it('should\ calculate\ correlation\ securely',\ async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ x\ =\ [1,\ 2,\ 3,\ 4,\ 5]}
+\DoxyCodeLine{\ \ \ \ const\ y\ =\ [2,\ 4,\ 6,\ 8,\ 10]}
+\DoxyCodeLine{\ \ \ \ const\ correlation\ =\ await\ calculateSecureCorrelation(x,\ y)}
+\DoxyCodeLine{\ \ \ \ expect(correlation).toBeCloseTo(1.0)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37207}{}\doxysubsection{\texorpdfstring{Further Resources}{Further Resources}}\label{README.md_autotoc_md37207}
+
+\begin{DoxyItemize}
+\item \doxylink{src_2docs_2protocols_2_r_e_a_d_m_e_8md}{Protocol Documentation}
+\item JIFF Migration Guide
+\item \href{../../protocols/security/}{\texttt{ Security Analysis}}
+\item \href{../../protocols/benchmarks/}{\texttt{ Performance Benchmarks}} 
+\end{DoxyItemize}

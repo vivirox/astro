@@ -1,0 +1,157 @@
+\doxysection{node\+\_\+modules/prompts/node\+\_\+modules/kleur Directory Reference}
+\hypertarget{dir_0a5039b25ede0df3d25d319f00c8d51c}{}\label{dir_0a5039b25ede0df3d25d319f00c8d51c}\index{node\_modules/prompts/node\_modules/kleur Directory Reference@{node\_modules/prompts/node\_modules/kleur Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+  
+
+ \href{https://npmjs.org/package/kleur}{\texttt{  }} \href{https://travis-ci.org/lukeed/kleur}{\texttt{  }} \href{https://npmjs.org/package/kleur}{\texttt{  }} \href{https://packagephobia.now.sh/result?p=kleur}{\texttt{  }} 
+
+The fastest Node.\+js library for formatting terminal text with ANSI colors\texorpdfstring{$\sim$}{\string~}!\hypertarget{readme.md_autotoc_md26549}{}\doxysubsubsection{\texorpdfstring{Features}{Features}}\label{readme.md_autotoc_md26549}
+
+\begin{DoxyItemize}
+\item No dependencies
+\item Super lightweight \& performant
+\item Supports nested \& chained colors
+\item No {\ttfamily String.\+prototype} modifications
+\item Conditional color support
+\item Familiar \doxylink{README.md_api}{API}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+
+
+As of {\ttfamily v3.\+0} the Chalk-\/style syntax (magical getter) is no longer used.~\newline
+If you need or require that syntax, consider using \href{https://github.com/doowb/ansi-colors}{\texttt{ {\ttfamily ansi-\/colors}}}, which maintains {\ttfamily chalk} parity.
+
+\DoxyHorRuler{0}
+\hypertarget{readme.md_autotoc_md26552}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md26552}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ kleur}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26553}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md26553}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ red,\ white,\ blue,\ bold\ \}\ =\ require('kleur');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ basic\ usage}
+\DoxyCodeLine{red('red\ text');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ chained\ methods}
+\DoxyCodeLine{blue().bold().underline('howdy\ partner');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ nested\ methods}
+\DoxyCodeLine{bold(`\$\{\ white().bgRed('[ERROR]')\ \}\ \$\{\ red().italic('Something\ happened')\}`);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26554}{}\doxysubsubsubsection{\texorpdfstring{Chained Methods}{Chained Methods}}\label{readme.md_autotoc_md26554}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(bold().red('this\ is\ a\ bold\ red\ message'));}
+\DoxyCodeLine{console.log(bold().italic('this\ is\ a\ bold\ italicized\ message'));}
+\DoxyCodeLine{console.log(bold().yellow().bgRed().italic('this\ is\ a\ bold\ yellow\ italicized\ message'));}
+\DoxyCodeLine{console.log(green().bold().underline('this\ is\ a\ bold\ green\ underlined\ message'));}
+
+\end{DoxyCode}
+
+
+\hypertarget{readme.md_autotoc_md26555}{}\doxysubsubsubsection{\texorpdfstring{Nested Methods}{Nested Methods}}\label{readme.md_autotoc_md26555}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ yellow,\ red,\ cyan\ \}\ =\ require('kleur');}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(yellow(`foo\ \$\{red().bold('red')\}\ bar\ \$\{cyan('cyan')\}\ baz`));}
+\DoxyCodeLine{console.log(yellow('foo\ '\ +\ red().bold('red')\ +\ '\ bar\ '\ +\ cyan('cyan')\ +\ '\ baz'));}
+
+\end{DoxyCode}
+
+
+\hypertarget{readme.md_autotoc_md26556}{}\doxysubsubsubsection{\texorpdfstring{Conditional Support}{Conditional Support}}\label{readme.md_autotoc_md26556}
+Toggle color support as needed; {\ttfamily kleur} includes simple auto-\/detection which may not cover all cases.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ kleur\ =\ require('kleur');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ manually\ disable}
+\DoxyCodeLine{kleur.enabled\ =\ false;}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ or\ use\ another\ library\ to\ detect\ support}
+\DoxyCodeLine{kleur.enabled\ =\ require('color-\/support').level;}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(kleur.red('I\ will\ only\ be\ colored\ red\ if\ the\ terminal\ supports\ colors'));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26557}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md26557}
+Any {\ttfamily kleur} method returns a {\ttfamily String} when invoked with input; otherwise chaining is expected.
+
+\begin{quote}
+It\textquotesingle{}s up to the developer to pass the output to destinations like {\ttfamily console.\+log}, {\ttfamily process.\+stdout.\+write}, etc. \end{quote}
+
+
+The methods below are grouped by type for legibility purposes only. They each can be chained or nested with one another.
+
+{\itshape {\bfseries{Colors\+:}}} \begin{quote}
+black --- red --- green --- yellow --- blue --- magenta --- cyan --- white --- gray --- grey \end{quote}
+
+
+{\itshape {\bfseries{Backgrounds\+:}}} \begin{quote}
+bg\+Black --- bg\+Red --- bg\+Green --- bg\+Yellow --- bg\+Blue --- bg\+Magenta --- bg\+Cyan --- bg\+White \end{quote}
+
+
+{\itshape {\bfseries{Modifiers\+:}}} \begin{quote}
+reset --- bold --- dim --- italic\texorpdfstring{$\ast$}{*} --- underline --- inverse --- hidden --- strikethrough\texorpdfstring{$\ast$}{*} \end{quote}
+
+
+\textsuperscript{\texorpdfstring{$\ast$}{*} {\itshape Not widely supported}}\hypertarget{readme.md_autotoc_md26558}{}\doxysubsubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{readme.md_autotoc_md26558}
+\begin{quote}
+Using Node v10.\+13.\+0 \end{quote}
+\hypertarget{readme.md_autotoc_md26559}{}\doxysubsubsubsection{\texorpdfstring{Load time}{Load time}}\label{readme.md_autotoc_md26559}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{chalk\ \ \ \ \ \ \ ::\ 14.543ms}
+\DoxyCodeLine{kleur\ \ \ \ \ \ \ ::\ \ 0.474ms}
+\DoxyCodeLine{ansi-\/colors\ ::\ \ 1.923ms}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26560}{}\doxysubsubsubsection{\texorpdfstring{Performance}{Performance}}\label{readme.md_autotoc_md26560}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ All\ Colors}
+\DoxyCodeLine{\ \ ansi-\/colors\ \ x\ 199,381\ ops/sec\ ±1.04\%\ (96\ runs\ sampled)}
+\DoxyCodeLine{\ \ chalk\ \ \ \ \ \ \ \ x\ \ 12,107\ ops/sec\ ±2.07\%\ (87\ runs\ sampled)}
+\DoxyCodeLine{\ \ kleur\ \ \ \ \ \ \ \ x\ 715,334\ ops/sec\ ±0.30\%\ (93\ runs\ sampled)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Stacked\ colors}
+\DoxyCodeLine{\ \ ansi-\/colors\ \ x\ 24,494\ ops/sec\ ±1.03\%\ (93\ runs\ sampled)}
+\DoxyCodeLine{\ \ chalk\ \ \ \ \ \ \ \ x\ \ 2,650\ ops/sec\ ±2.06\%\ (85\ runs\ sampled)}
+\DoxyCodeLine{\ \ kleur\ \ \ \ \ \ \ \ x\ 75,798\ ops/sec\ ±0.19\%\ (97\ runs\ sampled)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Nested\ colors}
+\DoxyCodeLine{\ \ ansi-\/colors\ \ x\ \ 77,766\ ops/sec\ ±0.32\%\ (94\ runs\ sampled)}
+\DoxyCodeLine{\ \ chalk\ \ \ \ \ \ \ \ x\ \ \ 5,596\ ops/sec\ ±1.85\%\ (86\ runs\ sampled)}
+\DoxyCodeLine{\ \ kleur\ \ \ \ \ \ \ \ x\ 137,660\ ops/sec\ ±0.31\%\ (93\ runs\ sampled)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md26561}{}\doxysubsubsection{\texorpdfstring{Credits}{Credits}}\label{readme.md_autotoc_md26561}
+This project originally forked \href{https://github.com/doowb}{\texttt{ Brian Woodward}}\textquotesingle{}s awesome \href{https://github.com/doowb/ansi-colors}{\texttt{ {\ttfamily ansi-\/colors}}} library.
+
+Beginning with {\ttfamily kleur@3.\+0}, the Chalk-\/style syntax (magical getter) has been replaced with function calls per key\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Old:}
+\DoxyCodeLine{c.red.bold.underline('old');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ New:}
+\DoxyCodeLine{c.red().bold().underline('new');}
+
+\end{DoxyCode}
+ \begin{quote}
+\textsuperscript{{\itshape As I work more with Rust, the newer syntax feels so much better \& more natural!}} \end{quote}
+
+
+If you prefer the old syntax, you may migrate to {\ttfamily ansi-\/colors}. Versions below {\ttfamily kleur@3.\+0} have been deprecated.\hypertarget{readme.md_autotoc_md26562}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md26562}
+MIT © \href{https://lukeed.com}{\texttt{ Luke Edwards}} 

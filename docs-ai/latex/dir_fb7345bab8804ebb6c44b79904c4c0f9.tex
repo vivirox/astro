@@ -1,0 +1,980 @@
+\doxysection{node\+\_\+modules/octokit Directory Reference}
+\hypertarget{dir_fb7345bab8804ebb6c44b79904c4c0f9}{}\label{dir_fb7345bab8804ebb6c44b79904c4c0f9}\index{node\_modules/octokit Directory Reference@{node\_modules/octokit Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+The all-\/batteries-\/included Git\+Hub SDK for Browsers, Node.\+js, and Deno. \end{quote}
+
+
+The {\ttfamily octokit} package integrates the three main Octokit libraries
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{API client}} (REST API requests, Graph\+QL API queries, Authentication)
+\item {\bfseries{App client}} (Git\+Hub App \& installations, Webhooks, OAuth)
+\item {\bfseries{Action client}} (Pre-\/authenticated API client for single repository)
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md25044}{}\doxysubsection{\texorpdfstring{Table of contents }{Table of contents }}\label{README.md_autotoc_md25044}
+
+\begin{DoxyItemize}
+\item octokit.js
+\begin{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_features}{Features}
+\item \doxylink{readme.md_usage}{Usage}
+\item \`{}\+Octokit\`{} API Client
+\begin{DoxyItemize}
+\item Constructor options
+\item Authentication
+\item Proxy Servers (Node.js only)
+\begin{DoxyItemize}
+\item Fetch missing
+\end{DoxyItemize}
+\item REST API
+\begin{DoxyItemize}
+\item \`{}octokit.rest\`{} endpoint methods
+\item \`{}octokit.request()\`{}
+\item Pagination
+\item Media Type formats
+\item Request error handling
+\end{DoxyItemize}
+\item Graph\+QL API queries
+\begin{DoxyItemize}
+\item Pagination
+\item Schema previews
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item App client
+\begin{DoxyItemize}
+\item Git\+Hub App
+\item Webhooks
+\item OAuth
+\item App Server
+\item OAuth for browser apps
+\end{DoxyItemize}
+\item Action client
+\item \doxylink{README.md_license}{LICENSE}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25045}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md25045}
+
+\begin{DoxyItemize}
+\item {\bfseries{Complete}}. All features of Git\+Hub\textquotesingle{}s platform APIs are covered.
+\item {\bfseries{Prescriptive}}. All recommended best practices are implemented.
+\item {\bfseries{Universal}}. Works in all modern browsers, \href{https://nodejs.org/}{\texttt{ Node.\+js}}, and \href{https://deno.land/}{\texttt{ Deno}}.
+\item {\bfseries{Tested}}. All libraries have a 100\% test coverage.
+\item {\bfseries{Typed}}. All libraries have extensive Type\+Script declarations.
+\item {\bfseries{Decomposable}}. Use only the code you need. You can build your own Octokit in only a few lines of code or use the underlying static methods. Make your own tradeoff between functionality and bundle size.
+\item {\bfseries{Extendable}}. A feature missing? Add functionalities with plugins, hook into the request or webhook lifecycle or implement your own authentication strategy.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25046}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md25046}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers }&Load {\ttfamily octokit} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{import\ \{\ Octokit,\ App\ \}\ from\ "{}https://esm.sh/octokit"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Deno }&Load {\ttfamily octokit} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit,\ App\ \}\ from\ "{}https://esm.sh/octokit?dts"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node }&
+
+Install with {\ttfamily npm/pnpm install octokit}, or {\ttfamily yarn add octokit}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit,\ App\ \}\ from\ "{}octokit"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+\begin{DoxyImportant}{Important}
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json} by setting {\ttfamily "{}module\+Resolution"{}\+: "{}node16"{}, "{}module"{}\+: "{}node16"{}}. ~\newline
+~\newline
+ See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.~\newline
+ See this \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ helpful guide on transitioning to ESM}} from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}}
+\end{DoxyImportant}
+\hypertarget{README.md_autotoc_md25047}{}\doxysubsection{\texorpdfstring{{\ttfamily Octokit} API Client}{{\ttfamily Octokit} API Client}}\label{README.md_autotoc_md25047}
+{\bfseries{standalone minimal Octokit}}\+: \href{https://github.com/octokit/core.js/\#readme}{\texttt{ {\ttfamily @octokit/core}}}.
+
+The {\ttfamily Octokit} client can be used to send requests to \href{https://docs.github.com/rest/}{\texttt{ Git\+Hub\textquotesingle{}s REST API}} and queries to \href{https://docs.github.com/graphql}{\texttt{ Git\+Hub\textquotesingle{}s Graph\+QL API}}.
+
+{\bfseries{Example}}\+: Get the username for the authenticated user.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Create\ a\ personal\ access\ token\ at\ https://github.com/settings/tokens/new?scopes=repo}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{\ auth:\ \`{}personal-\/access-\/token123`\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Compare:\ https://docs.github.com/en/rest/reference/users\#get-\/the-\/authenticated-\/user}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ data:\ \{\ login\ \},}
+\DoxyCodeLine{\}\ =\ await\ octokit.rest.users.getAuthenticated();}
+\DoxyCodeLine{console.log("{}Hello,\ \%s"{},\ login);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25048}{}\doxysubsubsection{\texorpdfstring{Constructor options}{Constructor options}}\label{README.md_autotoc_md25048}
+The most commonly used options are
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily user\+Agent}  }&{\ttfamily String}  &
+
+Setting a user agent is required for all requests sent to Git\+Hub\textquotesingle{}s Platform APIs. The user agent defaults to something like this\+: {\ttfamily octokit.\+js/v1.2.\+3 Node.\+js/v8.9.\+4 (mac\+OS High Sierra; x64)}. It is recommend to set your own user agent, which will prepend the default one.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ userAgent:\ "{}my-\/app/v1.2.3"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily auth\+Strategy}  }&{\ttfamily Function}  &
+
+Defaults to \href{https://github.com/octokit/auth-token.js\#readme}{\texttt{ {\ttfamily @octokit/auth-\/token}}}.
+
+See Authentication below.
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily auth}  }&{\ttfamily String} or {\ttfamily Object}  &
+
+Set to a \href{https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token}{\texttt{ personal access token}} unless you changed the {\ttfamily auth\+Strategy} option.
+
+See Authentication below.
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily base\+Url}  }&{\ttfamily String}  &
+
+When using with Git\+Hub Enterprise Server, set {\ttfamily options.\+base\+Url} to the root URL of the API. For example, if your Git\+Hub Enterprise Server\textquotesingle{}s hostname is {\ttfamily github.\+acme-\/inc.\+com}, then set {\ttfamily options.\+base\+Url} to {\ttfamily \href{https://github.acme-inc.com/api/v3}{\texttt{ https\+://github.\+acme-\/inc.\+com/api/v3}}}. Example
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ baseUrl:\ "{}https://github.acme-\/inc.com/api/v3"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\end{longtabu}
+
+
+Advanced options
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily request}  }&{\ttfamily Object}  &
+
+
+\begin{DoxyItemize}
+\item {\ttfamily request.\+signal}\+: Use an \href{https://developer.mozilla.org/en-US/docs/Web/API/AbortController}{\texttt{ {\ttfamily Abort\+Controller}}} instance to cancel a request. \href{https://www.npmjs.com/package/abort-controller}{\texttt{ {\ttfamily abort-\/controller}}} is an implementation for Node.
+\item {\ttfamily request.\+fetch}\+: Replacement for \href{https://nodejs.org/en/blog/announcements/v18-release-announce\#fetch-(experimental)}{\texttt{ built-\/in fetch method}}.
+\end{DoxyItemize}
+
+Node only
+
+
+\begin{DoxyItemize}
+\item {\ttfamily request.\+timeout} sets a request timeout, defaults to 0
+\end{DoxyItemize}
+
+The {\ttfamily request} option can also be set on a per-\/request basis.
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily time\+Zone}  }&{\ttfamily String}  &
+
+Sets the {\ttfamily Time-\/\+Zone} header which defines a timezone according to the \href{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones}{\texttt{ list of names from the Olson database}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ timeZone:\ "{}America/Los\_Angeles"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+The time zone header will determine the timezone used for generating the timestamp when creating commits. See \href{https://developer.github.com/v3/\#timezones}{\texttt{ Git\+Hub\textquotesingle{}s Timezones documentation}}.
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily throttle}  }&{\ttfamily Object}  &
+
+{\ttfamily Octokit} implements request throttling using \href{https://github.com/octokit/plugin-throttling.js/\#readme}{\texttt{ {\ttfamily @octokit/plugin-\/throttling}}}
+
+By default, requests are retried once and warnings are logged in case of hitting a rate or secondary rate limit.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ onRateLimit:\ (retryAfter,\ options,\ octokit)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ octokit.log.warn(}
+\DoxyCodeLine{\ \ \ \ \ \ \`{}Request\ quota\ exhausted\ for\ request\ \$\{options.method\}\ \$\{options.url\}`}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ if\ (options.request.retryCount\ ===\ 0)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ only\ retries\ once}
+\DoxyCodeLine{\ \ \ \ \ \ octokit.log.info(`Retrying\ after\ \$\{retryAfter\}\ seconds!`);}
+\DoxyCodeLine{\ \ \ \ \ \ return\ true;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ onSecondaryRateLimit:\ (retryAfter,\ options,\ octokit)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ octokit.log.warn(}
+\DoxyCodeLine{\ \ \ \ \ \ \`{}SecondaryRateLimit\ detected\ for\ request\ \$\{options.method\}\ \$\{options.url\}`}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ if\ (options.request.retryCount\ ===\ 0)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ only\ retries\ once}
+\DoxyCodeLine{\ \ \ \ \ \ octokit.log.info(`Retrying\ after\ \$\{retryAfter\}\ seconds!`);}
+\DoxyCodeLine{\ \ \ \ \ \ return\ true;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+To opt-\/out of this feature\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ Octokit(\{\ throttle:\ \{\ enabled:\ false\ \}\ \});}
+
+\end{DoxyCode}
+
+
+Throttling in a cluster is supported using a Redis backend. See \href{https://github.com/octokit/plugin-throttling.js/\#clustering}{\texttt{ {\ttfamily @octokit/plugin-\/throttling} Clustering}}
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily retry}  }&{\ttfamily Object}  &
+
+{\ttfamily Octokit} implements request retries using \href{https://github.com/octokit/plugin-retry.js/\#readme}{\texttt{ {\ttfamily @octokit/plugin-\/retry}}}
+
+To opt-\/out of this feature\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ Octokit(\{\ retry:\ \{\ enabled:\ false\ \}\ \});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md25049}{}\doxysubsubsection{\texorpdfstring{Authentication}{Authentication}}\label{README.md_autotoc_md25049}
+By default, the {\ttfamily Octokit} API client supports authentication using a static token.
+
+There are different means of authentication that are supported by Git\+Hub, that are described in detail at \href{https://github.com/octokit/authentication-strategies.js/\#readme}{\texttt{ octokit/authentication-\/strategies.\+js}}. You can set each of them as the {\ttfamily auth\+Strategy} constructor option, and pass the strategy options as the {\ttfamily auth} constructor option.
+
+For example, in order to authenticate as a Git\+Hub App Installation\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createAppAuth\ \}\ from\ "{}@octokit/auth-\/app"{};}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ authStrategy:\ createAppAuth,}
+\DoxyCodeLine{\ \ auth:\ \{}
+\DoxyCodeLine{\ \ \ \ appId:\ 1,}
+\DoxyCodeLine{\ \ \ \ privateKey:\ "{}-\/-\/-\/-\/-\/BEGIN\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n..."{},}
+\DoxyCodeLine{\ \ \ \ installationId:\ 123,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ authenticates\ as\ app\ based\ on\ request\ URLs}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ data:\ \{\ slug\ \},}
+\DoxyCodeLine{\}\ =\ await\ octokit.rest.apps.getAuthenticated();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ creates\ an\ installation\ access\ token\ as\ needed}
+\DoxyCodeLine{//\ assumes\ that\ installationId\ 123\ belongs\ to\ @octocat,\ otherwise\ the\ request\ will\ fail}
+\DoxyCodeLine{await\ octokit.rest.issues.create(\{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ title:\ "{}Hello\ world\ from\ "{}\ +\ slug,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+You can use the \`{}\+App\`{} or \`{}\+OAuth\+App\`{} SDKs which provide APIs and internal wiring to cover most use cases.
+
+For example, to implement the above using {\ttfamily App}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ app\ =\ new\ App(\{\ appId,\ privateKey\ \});}
+\DoxyCodeLine{const\ \{\ data:\ slug\ \}\ =\ await\ app.octokit.rest.apps.getAuthenticated();}
+\DoxyCodeLine{const\ octokit\ =\ await\ app.getInstallationOctokit(123);}
+\DoxyCodeLine{await\ octokit.rest.issues.create(\{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ title:\ "{}Hello\ world\ from\ "{}\ +\ slug,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Learn more about \href{https://github.com/octokit/authentication-strategies.js/\#how-authentication-strategies-work}{\texttt{ how authentication strategies work}} or how to \href{https://github.com/octokit/authentication-strategies.js/\#create-your-own-octokit-authentication-strategy-module}{\texttt{ create your own}}.\hypertarget{README.md_autotoc_md25050}{}\doxysubsubsection{\texorpdfstring{Proxy Servers (Node.\+js only)}{Proxy Servers (Node.\+js only)}}\label{README.md_autotoc_md25050}
+By default, the {\ttfamily Octokit} API client does not make use of the standard proxy server environment variables. To add support for proxy servers you will need to provide an https client that supports them such as \href{https://undici.nodejs.org/\#/docs/api/ProxyAgent}{\texttt{ {\ttfamily undici.\+Proxy\+Agent()}}}.
+
+For example, this would use a {\ttfamily Proxy\+Agent} to make requests through a proxy server\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ fetch\ as\ undiciFetch,\ ProxyAgent\ \}\ from\ 'undici';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myFetch\ =\ (url,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ return\ undiciFetch(url,\ \{}
+\DoxyCodeLine{\ \ \ \ ...options,}
+\DoxyCodeLine{\ \ \ \ dispatcher:\ new\ ProxyAgent(<your\_proxy\_url>)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ \ fetch:\ myFetch}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+If you are writing a module that uses {\ttfamily Octokit} and is designed to be used by other people, you should ensure that consumers can provide an alternative agent for your {\ttfamily Octokit} or as a parameter to specific calls such as\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ fetch\ as\ undiciFetch,\ ProxyAgent\ \}\ from\ 'undici';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ myFetch\ =\ (url,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ return\ undiciFetch(url,\ \{}
+\DoxyCodeLine{\ \ \ \ ...options,}
+\DoxyCodeLine{\ \ \ \ dispatcher:\ new\ ProxyAgent(<your\_proxy\_url>)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{octokit.rest.repos.get(\{}
+\DoxyCodeLine{\ \ owner,}
+\DoxyCodeLine{\ \ repo,}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ fetch:\ myFetch}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25051}{}\doxysubsubsubsection{\texorpdfstring{Fetch missing}{Fetch missing}}\label{README.md_autotoc_md25051}
+If you get the following error\+:
+
+\begin{quote}
+fetch is not set. Please pass a fetch implementation as new Octokit(\{ request\+: \{ fetch \}\}). \end{quote}
+
+
+It probably means you are trying to run Octokit with an unsupported version of Node\+JS. Octokit requires Node 18 or higher, \href{https://nodejs.org/en/blog/announcements/v18-release-announce\#fetch-(experimental)}{\texttt{ which includes a native fetch API}}.
+
+To bypass this problem you can provide your own {\ttfamily fetch} implementation (or a built-\/in version like {\ttfamily node-\/fetch}) like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fetch\ from\ "{}node-\/fetch"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ fetch:\ fetch,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25052}{}\doxysubsubsection{\texorpdfstring{REST API}{REST API}}\label{README.md_autotoc_md25052}
+There are two ways of using the Git\+Hub REST API, the \`{}octokit.rest.\texorpdfstring{$\ast$}{*}\`{} endpoint methods and \`{}octokit.request\`{}. Both act the same way, the {\ttfamily octokit.\+rest.\texorpdfstring{$\ast$}{*}} methods are just added for convenience, they use {\ttfamily octokit.\+request} internally.
+
+For example
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ octokit.rest.issues.create(\{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ title:\ "{}Hello,\ world!"{},}
+\DoxyCodeLine{\ \ body:\ "{}I\ created\ this\ issue\ using\ Octokit!"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Is the same as
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ octokit.request("{}POST\ /repos/\{owner\}/\{repo\}/issues"{},\ \{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ title:\ "{}Hello,\ world!"{},}
+\DoxyCodeLine{\ \ body:\ "{}I\ created\ this\ issue\ using\ Octokit!"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+In both cases a given request is authenticated, retried, and throttled transparently by the {\ttfamily octokit} instance which also manages the {\ttfamily accept} and {\ttfamily user-\/agent} headers as needed.
+
+{\ttfamily octokit.\+request} can be used to send requests to other domains by passing a full URL and to send requests to endpoints that are not (yet) documented in \href{https://docs.github.com/rest}{\texttt{ Git\+Hub\textquotesingle{}s REST API documentation}}.\hypertarget{README.md_autotoc_md25053}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily octokit.\+rest} endpoint methods}{{\ttfamily octokit.\+rest} endpoint methods}}\label{README.md_autotoc_md25053}
+Every Git\+Hub REST API endpoint has an associated {\ttfamily octokit.\+rest} endpoint method for better code readability and developer convenience. See \href{https://github.com/octokit/plugin-rest-endpoint-methods.js/\#readme}{\texttt{ {\ttfamily @octokit/plugin-\/rest-\/endpoint-\/methods}}} for full details.
+
+Example\+: \href{https://docs.github.com/en/rest/reference/issues\#create-an-issue}{\texttt{ Create an issue}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ octokit.rest.issues.create(\{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ title:\ "{}Hello,\ world!"{},}
+\DoxyCodeLine{\ \ body:\ "{}I\ created\ this\ issue\ using\ Octokit!"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+The {\ttfamily octokit.\+rest} endpoint methods are generated automatically from \href{https://github.com/github/rest-api-description/}{\texttt{ Git\+Hub\textquotesingle{}s Open\+API specification}}. We track operation ID and parameter name changes in order to implement deprecation warnings and reduce the frequency of breaking changes.
+
+Under the covers, every endpoint method is just {\ttfamily octokit.\+request} with defaults set, so it supports the same parameters as well as the {\ttfamily .endpoint()} API.\hypertarget{README.md_autotoc_md25054}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily octokit.\+request()}}{{\ttfamily octokit.\+request()}}}\label{README.md_autotoc_md25054}
+You can call the Git\+Hub REST API directly using {\ttfamily octokit.\+request}. The {\ttfamily request} API matches Git\+Hub\textquotesingle{}s REST API documentation 1\+:1 so anything you see there, you can call using {\ttfamily request}. See \href{https://github.com/octokit/request.js\#readme}{\texttt{ {\ttfamily @octokit/request}}} for all the details.
+
+Example\+: \href{https://docs.github.com/en/rest/reference/issues\#create-an-issue}{\texttt{ Create an issue}}
+
+\href{https://docs.github.com/en/rest/reference/issues\#create-an-issue}{\texttt{ }}
+
+The {\ttfamily octokit.\+request} API call corresponding to that issue creation documentation looks like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ https://docs.github.com/en/rest/reference/issues\#create-\/an-\/issue}
+\DoxyCodeLine{await\ octokit.request("{}POST\ /repos/\{owner\}/\{repo\}/issues"{},\ \{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ title:\ "{}Hello,\ world!"{},}
+\DoxyCodeLine{\ \ body:\ "{}I\ created\ this\ issue\ using\ Octokit!"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+The 1st argument is the REST API route as listed in Git\+Hub\textquotesingle{}s API documentation. The 2nd argument is an object with all parameters, independent of whether they are used in the path, query, or body.\hypertarget{README.md_autotoc_md25055}{}\doxysubsubsubsection{\texorpdfstring{Pagination}{Pagination}}\label{README.md_autotoc_md25055}
+All REST API endpoints that paginate return the first 30 items by default. If you want to retrieve all items, you can use the pagination API. The pagination API expects the REST API route as first argument, but you can also pass any of the {\ttfamily octokit.\+rest.\texorpdfstring{$\ast$}{*}.list\texorpdfstring{$\ast$}{*}} methods for convenience and better code readability.
+
+Example\+: iterate through all issues in a repository
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ iterator\ =\ octokit.paginate.iterator(octokit.rest.issues.listForRepo,\ \{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ per\_page:\ 100,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ iterate\ through\ each\ response}
+\DoxyCodeLine{for\ await\ (const\ \{\ data:\ issues\ \}\ of\ iterator)\ \{}
+\DoxyCodeLine{\ \ for\ (const\ issue\ of\ issues)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log("{}Issue\ \#\%d:\ \%s"{},\ issue.number,\ issue.title);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Using the \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of}{\texttt{ async iterator}} is the most memory efficient way to iterate through all items. But you can also retrieve all items in a single call
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ issues\ =\ await\ octokit.paginate(octokit.rest.issues.listForRepo,\ \{}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ per\_page:\ 100,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25056}{}\doxysubsubsubsection{\texorpdfstring{Media Type formats}{Media Type formats}}\label{README.md_autotoc_md25056}
+Media type formats can be set using {\ttfamily media\+Type\+: \{ format \}} on every request.
+
+Example\+: retrieve the raw content of a {\ttfamily package.\+json} file
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data\ \}\ =\ await\ octokit.rest.repos.getContent(\{}
+\DoxyCodeLine{\ \ mediaType:\ \{}
+\DoxyCodeLine{\ \ \ \ format:\ "{}raw"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ path:\ "{}package.json"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{console.log("{}package\ name:\ \%s"{},\ JSON.parse(data).name);}
+
+\end{DoxyCode}
+
+
+Learn more about \href{https://docs.github.com/en/rest/overview/media-types}{\texttt{ Media type formats}}.\hypertarget{README.md_autotoc_md25057}{}\doxysubsubsubsection{\texorpdfstring{Request error handling}{Request error handling}}\label{README.md_autotoc_md25057}
+{\bfseries{Standalone module\+:}} \href{https://github.com/octokit/request-error.js/\#readme}{\texttt{ {\ttfamily @octokit/request-\/error}}}
+
+For request error handling, import {\ttfamily Request\+Error} and use {\ttfamily try...catch} statement.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ RequestError\ \}\ from\ "{}octokit"{};}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ //\ your\ code\ here\ that\ sends\ at\ least\ one\ Octokit\ request}
+\DoxyCodeLine{\ \ await\ octokit.request("{}GET\ /"{});}
+\DoxyCodeLine{\}\ catch\ (error)\ \{}
+\DoxyCodeLine{\ \ //\ Octokit\ errors\ are\ instances\ of\ RequestError,\ so\ they\ always\ have\ an\ \`{}error.status`\ property\ containing\ the\ HTTP\ response\ code.}
+\DoxyCodeLine{\ \ if\ (error\ instanceof\ RequestError)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ handle\ Octokit\ error}
+\DoxyCodeLine{\ \ \ \ //\ error.message;\ //\ Oops}
+\DoxyCodeLine{\ \ \ \ //\ error.status;\ //\ 500}
+\DoxyCodeLine{\ \ \ \ //\ error.request;\ //\ \{\ method,\ url,\ headers,\ body\ \}}
+\DoxyCodeLine{\ \ \ \ //\ error.response;\ //\ \{\ url,\ status,\ headers,\ data\ \}}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ //\ handle\ all\ other\ errors}
+\DoxyCodeLine{\ \ \ \ throw\ error;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25058}{}\doxysubsubsection{\texorpdfstring{Graph\+QL API queries}{Graph\+QL API queries}}\label{README.md_autotoc_md25058}
+Octokit also supports Git\+Hub\textquotesingle{}s Graph\+QL API directly -- you can use the same queries shown in the documentation and available in the Graph\+QL explorer in your calls with {\ttfamily octokit.\+graphql}.
+
+Example\+: get the login of the authenticated user
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ viewer:\ \{\ login\ \},}
+\DoxyCodeLine{\}\ =\ await\ octokit.graphql(`\{}
+\DoxyCodeLine{\ \ viewer\ \{}
+\DoxyCodeLine{\ \ \ \ login}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}`);}
+
+\end{DoxyCode}
+
+
+Variables can be passed as 2nd argument
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ lastIssues\ \}\ =\ await\ octokit.graphql(}
+\DoxyCodeLine{\ \ \`{}}
+\DoxyCodeLine{\ \ \ \ query\ lastIssues(\$owner:\ String!,\ \$repo:\ String!,\ \$num:\ Int\ =\ 3)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ repository(owner:\ \$owner,\ name:\ \$repo)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ issues(last:\ \$num)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \`{},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ owner:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ \ \ repo:\ "{}graphql.js"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25059}{}\doxysubsubsubsection{\texorpdfstring{Pagination}{Pagination}}\label{README.md_autotoc_md25059}
+Git\+Hub\textquotesingle{}s Graph\+QL API returns a maximum of 100 items. If you want to retrieve all items, you can use the pagination API.
+
+Example\+: get all issues
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ allIssues\ \}\ =\ await\ octokit.graphql.paginate(}
+\DoxyCodeLine{\ \ \`{}}
+\DoxyCodeLine{\ \ \ \ query\ allIssues(\$owner:\ String!,\ \$repo:\ String!,\ \$num:\ Int\ =\ 10,\ \$cursor:\ String)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ repository(owner:\ \$owner,\ name:\ \$repo)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ issues(first:\ \$num,\ after:\ \$cursor)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ edges\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ node\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ title}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ pageInfo\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ hasNextPage}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ endCursor}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \`{},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ owner:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ \ \ repo:\ "{}graphql.js"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+Learn more about \href{https://github.com/octokit/plugin-paginate-graphql.js\#readme}{\texttt{ Git\+Hub\textquotesingle{}s Graph\+QL Pagination}} usage.\hypertarget{README.md_autotoc_md25060}{}\doxysubsubsubsection{\texorpdfstring{Schema previews}{Schema previews}}\label{README.md_autotoc_md25060}
+Previews can be enabled using the {\ttfamily \{media\+Type\+: previews\+: \mbox{[}\mbox{]} \}} option.
+
+Example\+: create a label
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ octokit.graphql(}
+\DoxyCodeLine{\ \ \`{}mutation\ createLabel(\$repositoryId:ID!,name:String!,color:String!)\ \{}
+\DoxyCodeLine{\ \ createLabel(input:\{repositoryId:\$repositoryId,name:\$name\})\ \{}
+\DoxyCodeLine{\ \ \ \ label:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ id}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}`,}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ repositoryId:\ 1,}
+\DoxyCodeLine{\ \ \ \ name:\ "{}important"{},}
+\DoxyCodeLine{\ \ \ \ color:\ "{}cc0000"{},}
+\DoxyCodeLine{\ \ \ \ mediaType:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ previews:\ ["{}bane"{}],}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+Learn more about \href{https://docs.github.com/en/graphql/overview/schema-previews}{\texttt{ Git\+Hub\textquotesingle{}s Graph\+QL schema previews}}\hypertarget{README.md_autotoc_md25061}{}\doxysubsection{\texorpdfstring{App client}{App client}}\label{README.md_autotoc_md25061}
+The {\ttfamily App} client combines features for Git\+Hub Apps, Webhooks, and OAuth\hypertarget{README.md_autotoc_md25062}{}\doxysubsubsection{\texorpdfstring{Git\+Hub App}{Git\+Hub App}}\label{README.md_autotoc_md25062}
+{\bfseries{Standalone module}}\+: \href{https://github.com/octokit/app.js/\#readme}{\texttt{ {\ttfamily @octokit/app}}}
+
+For integrators, Git\+Hub Apps are a means of authentication and authorization. A Git\+Hub app can be registered on a Git\+Hub user or organization account. A Git\+Hub App registration defines a set of permissions and webhooks events it wants to receive and provides a set of credentials in return. Users can grant access to repositories by installing them.
+
+Some API endpoints require the Git\+Hub app to authenticate as itself using a JSON Web Token (JWT). For requests affecting an installation, an installation access token has to be created using the app\textquotesingle{}s credentials and the installation ID.
+
+The {\ttfamily App} client takes care of all that for you.
+
+Example\+: Dispatch a repository event in every repository the app is installed on
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ App\ \}\ from\ "{}octokit"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ app\ =\ new\ App(\{\ appId,\ privateKey\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{for\ await\ (const\ \{\ octokit,\ repository\ \}\ of\ app.eachRepository.iterator())\ \{}
+\DoxyCodeLine{\ \ //\ https://docs.github.com/en/rest/reference/repos\#create-\/a-\/repository-\/dispatch-\/event}
+\DoxyCodeLine{\ \ await\ octokit.rest.repos.createDispatchEvent(\{}
+\DoxyCodeLine{\ \ \ \ owner:\ repository.owner.login,}
+\DoxyCodeLine{\ \ \ \ repo:\ repository.name,}
+\DoxyCodeLine{\ \ \ \ event\_type:\ "{}my\_event"{},}
+\DoxyCodeLine{\ \ \ \ client\_payload:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ foo:\ "{}bar"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\ \ console.log("{}Event\ dispatched\ for\ \%s"{},\ repository.full\_name);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Example\+: Get an {\ttfamily octokit} instance authenticated as an installation
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ await\ app.getInstallationOctokit(123);}
+
+\end{DoxyCode}
+
+
+Learn more about \href{https://docs.github.com/apps}{\texttt{ apps}}.\hypertarget{README.md_autotoc_md25063}{}\doxysubsubsection{\texorpdfstring{Webhooks}{Webhooks}}\label{README.md_autotoc_md25063}
+{\bfseries{Standalone module}}\+: \href{https://github.com/octokit/webhooks.js/\#readme}{\texttt{ {\ttfamily @octokit/webhooks}}}
+
+When installing an app, events that the app registration requests will be sent as requests to the webhook URL set in the app\textquotesingle{}s registration.
+
+Webhook event requests are signed using the webhook secret, which is also part of the app\textquotesingle{}s registration. You must verify that secret before handling the request payload.
+
+The {\ttfamily app.\+webhooks.\texorpdfstring{$\ast$}{*}} APIs provide methods to receiving, verifying, and handling webhook events.
+
+Example\+: create a comment on new issues
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createServer\ \}\ from\ "{}node:http"{};}
+\DoxyCodeLine{import\ \{\ App,\ createNodeMiddleware\ \}\ from\ "{}octokit"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ app\ =\ new\ App(\{}
+\DoxyCodeLine{\ \ appId,}
+\DoxyCodeLine{\ \ privateKey,}
+\DoxyCodeLine{\ \ webhooks:\ \{\ secret\ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.webhooks.on("{}issues.opened"{},\ (\{\ octokit,\ payload\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ return\ octokit.rest.issues.createComment(\{}
+\DoxyCodeLine{\ \ \ \ owner:\ payload.repository.owner.login,}
+\DoxyCodeLine{\ \ \ \ repo:\ payload.repository.name,}
+\DoxyCodeLine{\ \ \ \ issue\_number:\ payload.issue.number,}
+\DoxyCodeLine{\ \ \ \ body:\ "{}Hello,\ World!"{},}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Your\ app\ can\ now\ receive\ webhook\ events\ at\ \`{}/api/github/webhooks`}
+\DoxyCodeLine{createServer(createNodeMiddleware(app)).listen(3000);}
+
+\end{DoxyCode}
+
+
+For serverless environments, you can explicitly verify and receive an event
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ app.webhooks.verifyAndReceive(\{}
+\DoxyCodeLine{\ \ id:\ request.headers["{}x-\/github-\/delivery"{}],}
+\DoxyCodeLine{\ \ name:\ request.headers["{}x-\/github-\/event"{}],}
+\DoxyCodeLine{\ \ signature:\ request.headers["{}x-\/hub-\/signature-\/256"{}],}
+\DoxyCodeLine{\ \ payload:\ request.body,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Learn more about \href{https://docs.github.com/webhooks}{\texttt{ Git\+Hub webhooks}}.\hypertarget{README.md_autotoc_md25064}{}\doxysubsubsection{\texorpdfstring{OAuth}{OAuth}}\label{README.md_autotoc_md25064}
+{\bfseries{Standalone module\+:}} \href{https://github.com/octokit/oauth-app.js/\#readme}{\texttt{ {\ttfamily @octokit/oauth-\/app}}}
+
+Both OAuth Apps and Git\+Hub Apps support authenticating Git\+Hub users using OAuth, see \href{https://docs.github.com/en/developers/apps/authorizing-oauth-apps}{\texttt{ Authorizing OAuth Apps}} and \href{https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps}{\texttt{ Identifying and authorizing users for Git\+Hub Apps}}.
+
+There are some differences\+:
+
+
+\begin{DoxyItemize}
+\item Only OAuth Apps support scopes. Git\+Hub apps have permissions, and access is granted via installations of the app on repositories.
+\item Only Git\+Hub Apps support expiring user tokens
+\item Only Git\+Hub Apps support creating a scoped token to reduce the permissions and repository access
+\end{DoxyItemize}
+
+{\ttfamily App} is for Git\+Hub Apps. If you need OAuth App-\/specific functionality, use \href{https://github.com/octokit/oauth-app.js/}{\texttt{ {\ttfamily OAuth\+App} instead}}.
+
+Example\+: Watch a repository when a user logs in using the OAuth web flow
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createServer\ \}\ from\ "{}node:http"{};}
+\DoxyCodeLine{import\ \{\ App,\ createNodeMiddleware\ \}\ from\ "{}octokit"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ app\ =\ new\ App(\{}
+\DoxyCodeLine{\ \ oauth:\ \{\ clientId,\ clientSecret\ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.oauth.on("{}token.created"{},\ async\ (\{\ token,\ octokit\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ await\ octokit.rest.activity.setRepoSubscription(\{}
+\DoxyCodeLine{\ \ \ \ owner:\ "{}octocat"{},}
+\DoxyCodeLine{\ \ \ \ repo:\ "{}hello-\/world"{},}
+\DoxyCodeLine{\ \ \ \ subscribed:\ true,}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Your\ app\ can\ receive\ the\ OAuth\ redirect\ at\ /api/github/oauth/callback}
+\DoxyCodeLine{//\ Users\ can\ initiate\ the\ OAuth\ web\ flow\ by\ opening\ /api/github/oauth/login}
+\DoxyCodeLine{createServer(createNodeMiddleware(app)).listen(3000);}
+
+\end{DoxyCode}
+
+
+For serverless environments, you can explicitly exchange the {\ttfamily code} from the OAuth web flow redirect for an access token. {\ttfamily app.\+oauth.\+create\+Token()} returns an authentication object and emits the "{}token.\+created"{} event.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ token\ \}\ =\ await\ app.oauth.createToken(\{}
+\DoxyCodeLine{\ \ code:\ request.query.code,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Example\+: create a token using the device flow.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ token\ \}\ =\ await\ app.oauth.createToken(\{}
+\DoxyCodeLine{\ \ async\ onVerification(verification)\ \{}
+\DoxyCodeLine{\ \ \ \ await\ sendMessageToUser(}
+\DoxyCodeLine{\ \ \ \ \ \ request.body.phoneNumber,}
+\DoxyCodeLine{\ \ \ \ \ \ \`{}Your\ code\ is\ \$\{verification.user\_code\}.\ Enter\ it\ at\ \$\{verification.verification\_uri\}`,}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Example\+: Create an OAuth App Server with default scopes
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createServer\ \}\ from\ "{}node:http"{};}
+\DoxyCodeLine{import\ \{\ OAuthApp,\ createNodeMiddleware\ \}\ from\ "{}octokit"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ app\ =\ new\ OAuthApp(\{}
+\DoxyCodeLine{\ \ clientId,}
+\DoxyCodeLine{\ \ clientSecret,}
+\DoxyCodeLine{\ \ defaultScopes:\ ["{}repo"{},\ "{}gist"{}],}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.oauth.on("{}token"{},\ async\ (\{\ token,\ octokit\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ await\ octokit.rest.gists.create(\{}
+\DoxyCodeLine{\ \ \ \ description:\ "{}I\ created\ this\ gist\ using\ Octokit!"{},}
+\DoxyCodeLine{\ \ \ \ public:\ true,}
+\DoxyCodeLine{\ \ \ \ files:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}example.js"{}:\ \`{}/*\ some\ code\ here\ */`,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Your\ app\ can\ receive\ the\ OAuth\ redirect\ at\ /api/github/oauth/callback}
+\DoxyCodeLine{//\ Users\ can\ initiate\ the\ OAuth\ web\ flow\ by\ opening\ /api/oauth/login}
+\DoxyCodeLine{createServer(createNodeMiddleware(app)).listen(3000);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25065}{}\doxysubsubsection{\texorpdfstring{App Server}{App Server}}\label{README.md_autotoc_md25065}
+After registering your Git\+Hub app, you need to create and deploy a server which can retrieve the webhook event requests from Git\+Hub as well as accept redirects from the OAuth user web flow.
+
+The simplest way to create such a server is to use {\ttfamily create\+Node\+Middleware()}, it works with both, Node\textquotesingle{}s \href{https://nodejs.org/api/http.html\#http_http_createserver_options_requestlistener}{\texttt{ {\ttfamily http.\+create\+Server()}}} method as well as an \href{https://expressjs.com/en/guide/using-middleware.html}{\texttt{ Express middleware}}.
+
+The default routes that the middleware exposes are
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Route   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Route Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Route   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Route Description    }\\\cline{1-2}
+\endhead
+{\ttfamily POST /api/github/webhooks}   &Endpoint to receive Git\+Hub Webhook Event requests    \\\cline{1-2}
+{\ttfamily GET /api/github/oauth/login}   &Redirects to Git\+Hub\textquotesingle{}s authorization endpoint. Accepts optional {\ttfamily ?state} and {\ttfamily ?scopes} query parameters. {\ttfamily ?scopes} is a comma-\/separated list of \href{https://docs.github.com/en/developers/apps/scopes-for-oauth-apps\#available-scopes}{\texttt{ supported OAuth scope names}}    \\\cline{1-2}
+{\ttfamily GET /api/github/oauth/callback}   &The client\textquotesingle{}s redirect endpoint. This is where the {\ttfamily token} event gets triggered    \\\cline{1-2}
+{\ttfamily POST /api/github/oauth/token}   &Exchange an authorization code for an OAuth Access token. If successful, the {\ttfamily token} event gets triggered.    \\\cline{1-2}
+{\ttfamily GET /api/github/oauth/token}   &Check if token is valid. Must authenticate using token in {\ttfamily Authorization} header. Uses Git\+Hub\textquotesingle{}s \href{https://docs.github.com/en/rest/reference/apps\#check-a-token}{\texttt{ {\ttfamily POST /applications/\{client\+\_\+id\}/token}}} endpoint    \\\cline{1-2}
+{\ttfamily PATCH /api/github/oauth/token}   &Resets a token (invalidates current one, returns new token). Must authenticate using token in {\ttfamily Authorization} header. Uses Git\+Hub\textquotesingle{}s \href{https://docs.github.com/en/rest/reference/apps\#reset-a-token}{\texttt{ {\ttfamily PATCH /applications/\{client\+\_\+id\}/token}}} endpoint.    \\\cline{1-2}
+{\ttfamily PATCH /api/github/oauth/refresh-\/token}   &Refreshes an expiring token (invalidates current one, returns new access token and refresh token). Must authenticate using token in {\ttfamily Authorization} header. Uses Git\+Hub\textquotesingle{}s \href{https://docs.github.com/en/developers/apps/refreshing-user-to-server-access-tokens\#renewing-a-user-token-with-a-refresh-token}{\texttt{ {\ttfamily POST https\+://github.\+com/login/oauth/access\+\_\+token}}} OAuth endpoint.    \\\cline{1-2}
+{\ttfamily POST /api/github/oauth/token/scoped}   &Creates a scoped token (does not invalidate the current one). Must authenticate using token in {\ttfamily Authorization} header. Uses Git\+Hub\textquotesingle{}s \href{https://docs.github.com/en/rest/reference/apps\#create-a-scoped-access-token}{\texttt{ {\ttfamily POST /applications/\{client\+\_\+id\}/token/scoped}}} endpoint.    \\\cline{1-2}
+{\ttfamily DELETE /api/github/oauth/token}   &Invalidates current token, basically the equivalent of a logout. Must authenticate using token in {\ttfamily Authorization} header.    \\\cline{1-2}
+{\ttfamily DELETE /api/github/oauth/grant}   &Revokes the user\textquotesingle{}s grant, basically the equivalent of an uninstall. must authenticate using token in {\ttfamily Authorization} header.   \\\cline{1-2}
+\end{longtabu}
+
+
+Example\+: create a Git\+Hub server with express
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ express\ from\ "{}express"{};}
+\DoxyCodeLine{import\ \{\ App,\ createNodeMiddleware\ \}\ from\ "{}octokit"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ expressApp\ =\ express();}
+\DoxyCodeLine{const\ octokitApp\ =\ new\ App(\{}
+\DoxyCodeLine{\ \ appId,}
+\DoxyCodeLine{\ \ privateKey,}
+\DoxyCodeLine{\ \ webhooks:\ \{\ secret\ \},}
+\DoxyCodeLine{\ \ oauth:\ \{\ clientId,\ clientSecret\ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{expressApp.use(createNodeMiddleware(app));}
+\DoxyCodeLine{}
+\DoxyCodeLine{expressApp.listen(3000,\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(`Example\ app\ listening\ at\ http://localhost:3000`);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25066}{}\doxysubsubsection{\texorpdfstring{OAuth for browser apps}{OAuth for browser apps}}\label{README.md_autotoc_md25066}
+You must not expose your app\textquotesingle{}s client secret to the user, so you cannot use the {\ttfamily App} constructor. Instead, you have to create a server using the {\ttfamily App} constructor which exposes the {\ttfamily /api/github/oauth/\texorpdfstring{$\ast$}{*}} routes, through which you can safely implement an OAuth login for apps running in a web browser.
+
+If you set {\ttfamily (User) Authorization callback URL} to your own app, than you need to read out the {\ttfamily ?code=...\&state=...} query parameters, compare the {\ttfamily state} parameter to the value returned by {\ttfamily app.\+oauth\+Login\+Url()} earlier to protect against forgery attacks, then exchange the {\ttfamily code} for an OAuth Authorization token.
+
+If you run an app server as described above, the default route to do that is {\ttfamily POST /api/github/oauth/token}.
+
+Once you successfully retrieved the token, it is also recommended to remove the {\ttfamily ?code=...\&state=...} query parameters from the browser\textquotesingle{}s URL
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ code\ =\ new\ URL(location.href).searchParams.get("{}code"{});}
+\DoxyCodeLine{if\ (code)\ \{}
+\DoxyCodeLine{\ \ //\ remove\ ?code=...\ from\ URL}
+\DoxyCodeLine{\ \ const\ path\ =}
+\DoxyCodeLine{\ \ \ \ location.pathname\ +}
+\DoxyCodeLine{\ \ \ \ location.search.replace(/\(\backslash\)b(code|state)=\(\backslash\)w+/g,\ "{}"{}).replace(/[?\&]+\$/,\ "{}"{});}
+\DoxyCodeLine{\ \ history.replaceState(\{\},\ "{}"{},\ path);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ exchange\ the\ code\ for\ a\ token\ with\ your\ backend.}
+\DoxyCodeLine{\ \ //\ If\ you\ use\ https://github.com/octokit/oauth-\/app.js}
+\DoxyCodeLine{\ \ //\ the\ exchange\ would\ look\ something\ like\ this}
+\DoxyCodeLine{\ \ const\ response\ =\ await\ fetch("{}/api/github/oauth/token"{},\ \{}
+\DoxyCodeLine{\ \ \ \ method:\ "{}POST"{},}
+\DoxyCodeLine{\ \ \ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}content-\/type"{}:\ "{}application/json"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ body:\ JSON.stringify(\{\ code\ \}),}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\ \ const\ \{\ token\ \}\ =\ await\ response.json();}
+\DoxyCodeLine{\ \ //\ \`{}token`\ is\ the\ OAuth\ Access\ Token\ that\ can\ be\ use}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{\ Octokit\ \}\ =\ await\ import("{}https://esm.sh/@octokit/core"{});}
+\DoxyCodeLine{\ \ const\ octokit\ =\ new\ Octokit(\{\ auth:\ token\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ const\ \{}
+\DoxyCodeLine{\ \ \ \ data:\ \{\ login\ \},}
+\DoxyCodeLine{\ \ \}\ =\ await\ octokit.request("{}GET\ /user"{});}
+\DoxyCodeLine{\ \ alert("{}Hi\ there,\ "{}\ +\ login);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+🚧 We are working on \href{https://github.com/octokit/auth-oauth-user-client.js\#readme}{\texttt{ {\ttfamily @octokit/auth-\/oauth-\/user-\/client}}} to provide a simple API for all methods related to OAuth user tokens.
+
+The plan is to add an new {\ttfamily GET /api/github/oauth/octokit.js} route to the node middleware which will return a Java\+Script file that can be imported into an HTML file. It will make a pre-\/authenticated {\ttfamily octokit} Instance available.\hypertarget{README.md_autotoc_md25067}{}\doxysubsection{\texorpdfstring{Action client}{Action client}}\label{README.md_autotoc_md25067}
+{\bfseries{standalone module\+:}} \href{https://github.com/octokit/action.js\#readme}{\texttt{ {\ttfamily @octokit/action}}}
+
+🚧 A fully fledged {\ttfamily Action} client is pending. You can use \href{https://github.com/actions/toolkit/tree/main/packages/github}{\texttt{ {\ttfamily @actions/github}}} for the time being\hypertarget{README.md_autotoc_md25068}{}\doxysubsection{\texorpdfstring{LICENSE}{LICENSE}}\label{README.md_autotoc_md25068}
+\mbox{[}MIT\mbox{]}(LICENSE) 

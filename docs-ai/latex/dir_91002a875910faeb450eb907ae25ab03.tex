@@ -1,0 +1,175 @@
+\doxysection{node\+\_\+modules/esast-\/util-\/from-\/js Directory Reference}
+\hypertarget{dir_91002a875910faeb450eb907ae25ab03}{}\label{dir_91002a875910faeb450eb907ae25ab03}\index{node\_modules/esast-\/util-\/from-\/js Directory Reference@{node\_modules/esast-\/util-\/from-\/js Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/esast-util-from-js/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/esast-util-from-js}{\texttt{ }} \href{https://www.npmjs.com/package/esast-util-from-js}{\texttt{ }} \href{https://bundlejs.com/?q=esast-util-from-js}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/esast}{\texttt{ esast}} (and \href{https://github.com/estree/estree}{\texttt{ estree}}) utility to parse trees from Java\+Script.\hypertarget{readme.md_autotoc_md12749}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md12749}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}from\+Js(value\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Plugin\`{}
+\item \`{}\+Value\`{}
+\item \`{}\+Version\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md12750}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md12750}
+This package is a utility that turns a string of Java\+Script into an esast (estree with some extra cleanliness) syntax tree.\hypertarget{readme.md_autotoc_md12751}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md12751}
+You can use this utility when you want to deal with ASTs of Java\+Script combined with other \href{https://github.com/syntax-tree/unist}{\texttt{ unist}} and \href{https://github.com/vfile/vfile}{\texttt{ {\ttfamily vfile}}} things. You can use \href{https://github.com/acornjs/acorn}{\texttt{ {\ttfamily acorn}}} itself if you don’t care about unified.
+
+The utility \href{https://github.com/syntax-tree/estree-util-to-js}{\texttt{ {\ttfamily estree-\/util-\/to-\/js}}} does the inverse of this utility. It turns the tree into a string of Java\+Script.\hypertarget{readme.md_autotoc_md12752}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md12752}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ esast-\/util-\/from-\/js}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{fromJs\}\ from\ 'https://esm.sh/esast-\/util-\/from-\/js@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{fromJs\}\ from\ 'https://esm.sh/esast-\/util-\/from-\/js@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12753}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md12753}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{fromJs\}\ from\ 'esast-\/util-\/from-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromJs(await\ fs.readFile('example.js'),\ \{module:\ true\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(tree)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'Program',}
+\DoxyCodeLine{\ \ body:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'ImportDeclaration',}
+\DoxyCodeLine{\ \ \ \ \ \ specifiers:\ [Array],}
+\DoxyCodeLine{\ \ \ \ \ \ source:\ [Object],}
+\DoxyCodeLine{\ \ \ \ \ \ position:\ [Object]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'ImportDeclaration',}
+\DoxyCodeLine{\ \ \ \ \ \ specifiers:\ [Array],}
+\DoxyCodeLine{\ \ \ \ \ \ source:\ [Object],}
+\DoxyCodeLine{\ \ \ \ \ \ position:\ [Object]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'VariableDeclaration',}
+\DoxyCodeLine{\ \ \ \ \ \ declarations:\ [Array],}
+\DoxyCodeLine{\ \ \ \ \ \ kind:\ 'const',}
+\DoxyCodeLine{\ \ \ \ \ \ position:\ [Object]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'ExpressionStatement',}
+\DoxyCodeLine{\ \ \ \ \ \ expression:\ [Object],}
+\DoxyCodeLine{\ \ \ \ \ \ position:\ [Object]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ sourceType:\ 'module',}
+\DoxyCodeLine{\ \ comments:\ [],}
+\DoxyCodeLine{\ \ position:\ \{}
+\DoxyCodeLine{\ \ \ \ start:\ \{line:\ 1,\ column:\ 1,\ offset:\ 0\},}
+\DoxyCodeLine{\ \ \ \ end:\ \{line:\ 7,\ column:\ 1,\ offset:\ 157\}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12754}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md12754}
+This package exports the identifier \`{}from\+Js\`{}. There is no default export.\hypertarget{readme.md_autotoc_md12755}{}\doxysubsubsection{\texorpdfstring{{\ttfamily from\+Js(value\mbox{[}, options\mbox{]})}}{{\ttfamily from\+Js(value\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md12755}
+Parse Java\+Script to an esast.\hypertarget{readme.md_autotoc_md12756}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md12756}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} (\`{}\+Value\`{}) — serialized Java\+Script to parse
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md12757}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md12757}
+Tree (\href{https://github.com/syntax-tree/esast\#node}{\texttt{ {\ttfamily Node}}}).\hypertarget{readme.md_autotoc_md12758}{}\doxysubsubsubsubsubsection{\texorpdfstring{Throws}{Throws}}\label{readme.md_autotoc_md12758}
+When the Java\+Script cannot be parsed with {\ttfamily acorn}, a \href{https://github.com/vfile/vfile-message}{\texttt{ {\ttfamily VFile\+Message}}} is thrown.
+
+This can for example happen when passing modern syntax (you could maybe use a newer {\ttfamily version}, or it might be that the syntax is not yet supported), or just otherwise invalid Java\+Script (you might need a plugin).\hypertarget{readme.md_autotoc_md12759}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md12759}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md12760}{}\doxysubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md12760}
+\hypertarget{readme.md_autotoc_md12761}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily version}}{{\ttfamily version}}}\label{readme.md_autotoc_md12761}
+Java\+Script version (\`{}\+Version\`{}, default\+: `\textquotesingle{}latest'\`{}).
+
+When a number, must be a year in the range {\ttfamily 2015} and {\ttfamily 2023} (both including). `\textquotesingle{}latest'\`{} is the same as passing the latest supported year.
+
+\begin{quote}
+☢️ {\bfseries{Danger}}\+: `\textquotesingle{}latest'{\ttfamily is a sliding thing, you could consider it as breaking semver. Pass an actual year to lock that down. \texorpdfstring{$<$}{<}/blockquote\texorpdfstring{$>$}{>}\textbackslash{}ilinebr @subparagraph autotoc\+\_\+md12762}module\`{}
+
+Whether this is a module (ESM) or a script ({\ttfamily boolean}, default\+: {\ttfamily false}).
+
+\end{quote}
+\hypertarget{readme.md_autotoc_md12763}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily allow\+Return\+Outside\+Function}}{{\ttfamily allow\+Return\+Outside\+Function}}}\label{readme.md_autotoc_md12763}
+Whether a return statement is allowed in the top scope ({\ttfamily boolean}, default\+: {\ttfamily false}).\hypertarget{readme.md_autotoc_md12764}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily allow\+Import\+Export\+Everywhere}}{{\ttfamily allow\+Import\+Export\+Everywhere}}}\label{readme.md_autotoc_md12764}
+Whether import/export statements are allowed in the every scope ({\ttfamily boolean}, default\+: {\ttfamily false}).\hypertarget{readme.md_autotoc_md12765}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily allow\+Await\+Outside\+Function}}{{\ttfamily allow\+Await\+Outside\+Function}}}\label{readme.md_autotoc_md12765}
+Whether {\ttfamily await} is allowed in the top scope ({\ttfamily boolean}, default\+: depends). Defaults to {\ttfamily version \texorpdfstring{$>$}{>}= 2022}.\hypertarget{readme.md_autotoc_md12766}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily allow\+Super\+Outside\+Method}}{{\ttfamily allow\+Super\+Outside\+Method}}}\label{readme.md_autotoc_md12766}
+Whether {\ttfamily super} is allowed outside methods ({\ttfamily boolean}, default\+: {\ttfamily false}).\hypertarget{readme.md_autotoc_md12767}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily allow\+Hash\+Bang}}{{\ttfamily allow\+Hash\+Bang}}}\label{readme.md_autotoc_md12767}
+Whether a shell hasbang is allowed ({\ttfamily boolean}, default\+: {\ttfamily false}).\hypertarget{readme.md_autotoc_md12768}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily plugins}}{{\ttfamily plugins}}}\label{readme.md_autotoc_md12768}
+List of acorn plugins (\`{}\+Array\texorpdfstring{$<$}{<}Plugin\texorpdfstring{$>$}{>}\`{}, default\+: {\ttfamily \mbox{[}\mbox{]}}). Examples are \href{https://github.com/acornjs/acorn-jsx}{\texttt{ {\ttfamily acorn-\/jsx}}} and \href{https://github.com/acornjs/acorn-stage3}{\texttt{ {\ttfamily acorn-\/stage3}}}.\hypertarget{readme.md_autotoc_md12769}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Plugin}}{{\ttfamily Plugin}}}\label{readme.md_autotoc_md12769}
+Acorn plugin (Type\+Script type).\hypertarget{readme.md_autotoc_md12770}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md12770}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Plugin\ =\ (Parser:\ ParserClass)\ =>\ ParserClass}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12771}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Value}}{{\ttfamily Value}}}\label{readme.md_autotoc_md12771}
+Input value (Type\+Script type).
+
+When a typed array, must be UTF-\/8.\hypertarget{readme.md_autotoc_md12772}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md12772}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Value\ =\ Uint8Array\ |\ string}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12773}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Version}}{{\ttfamily Version}}}\label{readme.md_autotoc_md12773}
+Java\+Script version (Type\+Script type).
+
+`\textquotesingle{}latest'\`{} is equivalent to the latest supported year.\hypertarget{readme.md_autotoc_md12774}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md12774}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Version\ =\ 2015\ |\ 2016\ |\ 2017\ |\ 2018\ |\ 2019\ |\ 2020\ |\ 2021\ |\ 2022\ |\ 2023\ |\ 'latest'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md12775}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md12775}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \doxylink{README.md_options}{\`{}\+Options\`{}}, \`{}\+Plugin\`{}, \`{}\+Value\`{}, and \`{}\+Version\`{}.\hypertarget{readme.md_autotoc_md12776}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md12776}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily esast-\/util-\/from-\/js@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md12777}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md12777}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md12778}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md12778}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

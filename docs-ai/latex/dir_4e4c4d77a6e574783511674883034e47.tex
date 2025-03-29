@@ -1,0 +1,79 @@
+\doxysection{node\+\_\+modules/makeerror Directory Reference}
+\hypertarget{dir_4e4c4d77a6e574783511674883034e47}{}\label{dir_4e4c4d77a6e574783511674883034e47}\index{node\_modules/makeerror Directory Reference@{node\_modules/makeerror Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+A library to make errors.\hypertarget{readme.md_autotoc_md22207}{}\doxysubsection{\texorpdfstring{Basics}{Basics}}\label{readme.md_autotoc_md22207}
+Makes an Error constructor function with the signature below. All arguments are optional, and if the first argument is not a {\ttfamily String}, it will be assumed to be {\ttfamily data}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function(message,\ data)}
+
+\end{DoxyCode}
+
+
+You\textquotesingle{}ll typically do something like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ makeError\ =\ require('makeerror')}
+\DoxyCodeLine{var\ UnknownFileTypeError\ =\ makeError(}
+\DoxyCodeLine{\ \ 'UnknownFileTypeError',}
+\DoxyCodeLine{\ \ 'The\ specified\ type\ is\ not\ known.'}
+\DoxyCodeLine{)}
+\DoxyCodeLine{var\ er\ =\ UnknownFileTypeError()}
+
+\end{DoxyCode}
+
+
+{\ttfamily er} will have a prototype chain that ensures\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{er\ instanceof\ UnknownFileTypeError}
+\DoxyCodeLine{er\ instanceof\ Error}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22208}{}\doxysubsection{\texorpdfstring{Templatized Error Messages}{Templatized Error Messages}}\label{readme.md_autotoc_md22208}
+There is support for simple string substitutions like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ makeError\ =\ require('makeerror')}
+\DoxyCodeLine{var\ UnknownFileTypeError\ =\ makeError(}
+\DoxyCodeLine{\ \ 'UnknownFileTypeError',}
+\DoxyCodeLine{\ \ 'The\ specified\ type\ "{}\{type\}"{}\ is\ not\ known.'}
+\DoxyCodeLine{)}
+\DoxyCodeLine{var\ er\ =\ UnknownFileTypeError(\{\ type:\ 'bmp'\ \})}
+
+\end{DoxyCode}
+
+
+Now {\ttfamily er.\+message} or {\ttfamily er.\+to\+String()} will return `\textquotesingle{}The specified type "{}bmp"{} is not known.'\`{}.\hypertarget{readme.md_autotoc_md22209}{}\doxysubsection{\texorpdfstring{Prototype Hierarchies}{Prototype Hierarchies}}\label{readme.md_autotoc_md22209}
+You can create simple hierarchies as well using the {\ttfamily prototype} chain\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ makeError\ =\ require('makeerror')}
+\DoxyCodeLine{var\ ParentError\ =\ makeError('ParentError')}
+\DoxyCodeLine{var\ ChildError\ =\ makeError(}
+\DoxyCodeLine{\ \ 'ChildError',}
+\DoxyCodeLine{\ \ 'The\ child\ error.',}
+\DoxyCodeLine{\ \ \{\ proto:\ ParentError()\ \}}
+\DoxyCodeLine{)}
+\DoxyCodeLine{var\ er\ =\ ChildError()}
+
+\end{DoxyCode}
+
+
+{\ttfamily er} will have a prototype chain that ensures\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{er\ instanceof\ ChildError}
+\DoxyCodeLine{er\ instanceof\ ParentError}
+\DoxyCodeLine{er\ instanceof\ Error}
+
+\end{DoxyCode}
+ 

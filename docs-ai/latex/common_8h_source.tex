@@ -1,0 +1,399 @@
+\doxysection{common.\+h}
+\hypertarget{common_8h_source}{}\label{common_8h_source}\index{node\_modules/sharp/src/common.h@{node\_modules/sharp/src/common.h}}
+\mbox{\hyperlink{common_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2013\ Lovell\ Fuller\ and\ others.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ SRC\_COMMON\_H\_}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ SRC\_COMMON\_H\_}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <tuple>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <napi.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <vips/vips8>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Verify\ platform\ and\ compiler\ compatibility}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#if\ (VIPS\_MAJOR\_VERSION\ <\ 8)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\ \ (VIPS\_MAJOR\_VERSION\ ==\ 8\ \&\&\ VIPS\_MINOR\_VERSION\ <\ 15)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ (VIPS\_MAJOR\_VERSION\ ==\ 8\ \&\&\ VIPS\_MINOR\_VERSION\ ==\ 15\ \&\&\ VIPS\_MICRO\_VERSION\ <\ 3)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#error\ "{}libvips\ version\ 8.15.3+\ is\ required\ -\/\ please\ see\ https://sharp.pixelplumbing.com/install"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#if\ ((!defined(\_\_clang\_\_))\ \&\&\ defined(\_\_GNUC\_\_)\ \&\&\ (\_\_GNUC\_\_\ <\ 4\ ||\ (\_\_GNUC\_\_\ ==\ 4\ \&\&\ \_\_GNUC\_MINOR\_\_\ <\ 6)))}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#error\ "{}GCC\ version\ 4.6+\ is\ required\ for\ C++11\ features\ -\/\ please\ see\ https://sharp.pixelplumbing.com/install"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#if\ (defined(\_\_clang\_\_)\ \&\&\ defined(\_\_has\_feature))}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#if\ (!\_\_has\_feature(cxx\_range\_for))}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#error\ "{}clang\ version\ 3.0+\ is\ required\ for\ C++11\ features\ -\/\ please\ see\ https://sharp.pixelplumbing.com/install"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{using\ }vips::VImage;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacesharp}{sharp}}\ \{}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structsharp_1_1_input_descriptor_a47f6365797825b7e85751bfdf0b7f8f6}{InputDescriptor}}\ \{\ \ \textcolor{comment}{//\ NOLINT(runtime/indentation\_namespace)}}
+\DoxyCodeLine{00038\ \ \ \ \ std::string\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_af0b9e9b4fc6035352f66a3a2311cc815}{name}};}
+\DoxyCodeLine{00039\ \ \ \ \ std::string\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ac30083cc7bc142934516b3bd5f853c13}{file}};}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structsharp_1_1_input_descriptor_aa23ea71fe240df9d72b770205c2bfed3}{buffer}};}
+\DoxyCodeLine{00041\ \ \ \ \ VipsFailOn\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_adb25562f75257b286a60c072d1a9ac29}{failOn}};}
+\DoxyCodeLine{00042\ \ \ \ \ uint64\_t\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a0125c50a316fa7529f4dc718f97a1edd}{limitInputPixels}};}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a0b5fe91b3d61f4cd16547ab78994f8a1}{unlimited}};}
+\DoxyCodeLine{00044\ \ \ \ \ VipsAccess\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ae294803c179c7a56ecda1979a199f4a1}{access}};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a6d7f143a401e7458474df356e41637d4}{bufferLength}};}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a4a9f7606b186a112053ba93c0f5330f9}{isBuffer}};}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a32299c1267ee0e7c38e07bf908695fe2}{density}};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aee3f90382e902d9e57822934ce13d0ad}{ignoreIcc}};}
+\DoxyCodeLine{00049\ \ \ \ \ VipsBandFormat\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a4483fdde97b79f4cb55ef7ad599e9fdc}{rawDepth}};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_abd090340bcea29c905eddef6a549ee8f}{rawChannels}};}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ae365889586adeda0fc608d7cda1cfefd}{rawWidth}};}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a9d7023dad8e33ee27dfeade1f88a6d41}{rawHeight}};}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa218af9c24b53ae056fdf209e50a87db}{rawPremultiplied}};}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa10898485b8471cc21cdddb75f3a4f79}{pages}};}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ad974340e5c5f2fbb346ca8ae6fd076e6}{page}};}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ac8d40757bc1099b1056691663a8aa3cf}{level}};}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a765fb10dac1f61ed4e5a5efb48c95657}{subifd}};}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a299bafdda28fe60170be5a66c6a42a44}{createChannels}};}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_adb3a6ace1d20c6eb49b9f146441b6fe8}{createWidth}};}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a1a8af3db0d17580d3dd71a9ebb196452}{createHeight}};}
+\DoxyCodeLine{00061\ \ \ \ \ std::vector<double>\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a1b8cf0c2ef883ad66f2ceb46c5b57b1b}{createBackground}};}
+\DoxyCodeLine{00062\ \ \ \ \ std::string\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ad350c481f583c59dbd57f6ec5da064c5}{createNoiseType}};}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a49b93b0a7084c9c8a3a56946fc3c73f6}{createNoiseMean}};}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa3bdd71a203728094f04a7b293e49d15}{createNoiseSigma}};}
+\DoxyCodeLine{00065\ \ \ \ \ std::string\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a1bf4f653beb5176a5fc9b79b0e56a7fd}{textValue}};}
+\DoxyCodeLine{00066\ \ \ \ \ std::string\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_af57021608ed9a39aa9933563cce0de19}{textFont}};}
+\DoxyCodeLine{00067\ \ \ \ \ std::string\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ae11caf2a2ad13340d0f35cacbea9e0e2}{textFontfile}};}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a99a378e65a79498986ae2469353275fc}{textWidth}};}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a4aed0e51c9fc902fe72e445fe7cd8460}{textHeight}};}
+\DoxyCodeLine{00070\ \ \ \ \ VipsAlign\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a7afb209510f01b9b804c9529c11866ba}{textAlign}};}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a821d060fda8d539d3b45e472a7ab5f7d}{textJustify}};}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_afa3e016a9bc977df8dd5da82c460761b}{textDpi}};}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ae816b76d3d9cf4fbad9cb811ce4b4938}{textRgba}};}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a19ec681351baf14227f4ebec2bc53d6e}{textSpacing}};}
+\DoxyCodeLine{00075\ \ \ \ \ VipsTextWrap\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa232a26a4a3585151241f72225514cda}{textWrap}};}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a02d88e58657aba236307902162a3fcb3}{textAutofitDpi}};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a47f6365797825b7e85751bfdf0b7f8f6}{InputDescriptor}}():}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa23ea71fe240df9d72b770205c2bfed3}{buffer}}(nullptr),}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_adb25562f75257b286a60c072d1a9ac29}{failOn}}(VIPS\_FAIL\_ON\_WARNING),}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a0125c50a316fa7529f4dc718f97a1edd}{limitInputPixels}}(0x3FFF\ *\ 0x3FFF),}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a0b5fe91b3d61f4cd16547ab78994f8a1}{unlimited}}(false),}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ae294803c179c7a56ecda1979a199f4a1}{access}}(VIPS\_ACCESS\_RANDOM),}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a6d7f143a401e7458474df356e41637d4}{bufferLength}}(0),}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a4a9f7606b186a112053ba93c0f5330f9}{isBuffer}}(false),}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a32299c1267ee0e7c38e07bf908695fe2}{density}}(72.0),}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aee3f90382e902d9e57822934ce13d0ad}{ignoreIcc}}(false),}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a4483fdde97b79f4cb55ef7ad599e9fdc}{rawDepth}}(VIPS\_FORMAT\_UCHAR),}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_abd090340bcea29c905eddef6a549ee8f}{rawChannels}}(0),}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ae365889586adeda0fc608d7cda1cfefd}{rawWidth}}(0),}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a9d7023dad8e33ee27dfeade1f88a6d41}{rawHeight}}(0),}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa218af9c24b53ae056fdf209e50a87db}{rawPremultiplied}}(false),}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa10898485b8471cc21cdddb75f3a4f79}{pages}}(1),}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ad974340e5c5f2fbb346ca8ae6fd076e6}{page}}(0),}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ac8d40757bc1099b1056691663a8aa3cf}{level}}(0),}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a765fb10dac1f61ed4e5a5efb48c95657}{subifd}}(-\/1),}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a299bafdda28fe60170be5a66c6a42a44}{createChannels}}(0),}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_adb3a6ace1d20c6eb49b9f146441b6fe8}{createWidth}}(0),}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a1a8af3db0d17580d3dd71a9ebb196452}{createHeight}}(0),}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a1b8cf0c2ef883ad66f2ceb46c5b57b1b}{createBackground}}\{\ 0.0,\ 0.0,\ 0.0,\ 255.0\ \},}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a49b93b0a7084c9c8a3a56946fc3c73f6}{createNoiseMean}}(0.0),}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa3bdd71a203728094f04a7b293e49d15}{createNoiseSigma}}(0.0),}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a99a378e65a79498986ae2469353275fc}{textWidth}}(0),}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a4aed0e51c9fc902fe72e445fe7cd8460}{textHeight}}(0),}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a7afb209510f01b9b804c9529c11866ba}{textAlign}}(VIPS\_ALIGN\_LOW),}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a821d060fda8d539d3b45e472a7ab5f7d}{textJustify}}(false),}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_afa3e016a9bc977df8dd5da82c460761b}{textDpi}}(72),}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_ae816b76d3d9cf4fbad9cb811ce4b4938}{textRgba}}(false),}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a19ec681351baf14227f4ebec2bc53d6e}{textSpacing}}(0),}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_aa232a26a4a3585151241f72225514cda}{textWrap}}(VIPS\_TEXT\_WRAP\_WORD),}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \mbox{\hyperlink{structsharp_1_1_input_descriptor_a02d88e58657aba236307902162a3fcb3}{textAutofitDpi}}(0)\ \{\}}
+\DoxyCodeLine{00112\ \ \ \};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \textcolor{comment}{//\ Convenience\ methods\ to\ access\ the\ attributes\ of\ a\ Napi::Object}}
+\DoxyCodeLine{00115\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a81cfee93c550fc7810df226b1828b0f0}{HasAttr}}(Napi::Object\ obj,\ std::string\ attr);}
+\DoxyCodeLine{00116\ \ \ std::string\ \mbox{\hyperlink{namespacesharp_a01b7cd6f34c6e691c4155a1e6a6caf50}{AttrAsStr}}(Napi::Object\ obj,\ std::string\ attr);}
+\DoxyCodeLine{00117\ \ \ std::string\ \mbox{\hyperlink{namespacesharp_a01b7cd6f34c6e691c4155a1e6a6caf50}{AttrAsStr}}(Napi::Object\ obj,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ attr);}
+\DoxyCodeLine{00118\ \ \ uint32\_t\ \mbox{\hyperlink{namespacesharp_aae0d3f5120185df56b4305a9d2b27297}{AttrAsUint32}}(Napi::Object\ obj,\ std::string\ attr);}
+\DoxyCodeLine{00119\ \ \ int32\_t\ \mbox{\hyperlink{namespacesharp_ac9b50ef5d437de0e84dd325f78685e78}{AttrAsInt32}}(Napi::Object\ obj,\ std::string\ attr);}
+\DoxyCodeLine{00120\ \ \ int32\_t\ \mbox{\hyperlink{namespacesharp_ac9b50ef5d437de0e84dd325f78685e78}{AttrAsInt32}}(Napi::Object\ obj,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ attr);}
+\DoxyCodeLine{00121\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespacesharp_a1f77973c471508cfdd7ec85346d6ece6}{AttrAsDouble}}(Napi::Object\ obj,\ std::string\ attr);}
+\DoxyCodeLine{00122\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespacesharp_a1f77973c471508cfdd7ec85346d6ece6}{AttrAsDouble}}(Napi::Object\ obj,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ attr);}
+\DoxyCodeLine{00123\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_af3817fce9af91130ae5fbb2dcde21def}{AttrAsBool}}(Napi::Object\ obj,\ std::string\ attr);}
+\DoxyCodeLine{00124\ \ \ std::vector<double>\ \mbox{\hyperlink{namespacesharp_afd48bb2b07087ce8a51ee9f92da689b9}{AttrAsVectorOfDouble}}(Napi::Object\ obj,\ std::string\ attr);}
+\DoxyCodeLine{00125\ \ \ std::vector<int32\_t>\ \mbox{\hyperlink{namespacesharp_a730218392f181f720b76a81453720f32}{AttrAsInt32Vector}}(Napi::Object\ obj,\ std::string\ attr);}
+\DoxyCodeLine{00126\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T\ \mbox{\hyperlink{namespacesharp_a042b4f0e6f24e4e06b0a3811fd87a83b}{AttrAsEnum}}(Napi::Object\ obj,\ std::string\ attr,\ GType\ type)\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ vips\_enum\_from\_nick(\textcolor{keyword}{nullptr},\ type,\ \mbox{\hyperlink{namespacesharp_a01b7cd6f34c6e691c4155a1e6a6caf50}{AttrAsStr}}(obj,\ attr).data()));}
+\DoxyCodeLine{00129\ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \textcolor{comment}{//\ Create\ an\ InputDescriptor\ instance\ from\ a\ Napi::Object\ describing\ an\ input\ image}}
+\DoxyCodeLine{00132\ \ \ InputDescriptor*\ \mbox{\hyperlink{namespacesharp_a3f2ac7b69894ff11334c3fbf41aa0647}{CreateInputDescriptor}}(Napi::Object\ input);}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626}{ImageType}}\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a907e06a16862d82ca6907a28a68d0ad6}{JPEG}},}
+\DoxyCodeLine{00136\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a55505ba281b015ec31f03ccb151b2a34}{PNG}},}
+\DoxyCodeLine{00137\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626ab8dbf614b2c3a603c8c8c723a3f6eb7a}{WEBP}},}
+\DoxyCodeLine{00138\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a56bcab6b12cb931c49908c9197a31365}{JP2}},}
+\DoxyCodeLine{00139\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626ace0dbe5045edda1a0e9686ce899798ea}{TIFF}},}
+\DoxyCodeLine{00140\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a95a66bab4c0c0fd8387e680daeff99a8}{GIF}},}
+\DoxyCodeLine{00141\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626acd15a75c26008696647b31a3f0de43b3}{SVG}},}
+\DoxyCodeLine{00142\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a3b33585df254e97252462ac92ceab238}{HEIF}},}
+\DoxyCodeLine{00143\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626abcd1b68617759b1dfcff0403a6b5a8d1}{PDF}},}
+\DoxyCodeLine{00144\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a7f32177daf575866e0585aa7a73185f1}{MAGICK}},}
+\DoxyCodeLine{00145\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a3bc7cb5d17a388fc8a7bc6af7c0da85a}{OPENSLIDE}},}
+\DoxyCodeLine{00146\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a4bb1ebdeeb70354069bc644b9c94ee5f}{PPM}},}
+\DoxyCodeLine{00147\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a6c9f7af0b3d765adfa41f8a5ecb6bd5b}{FITS}},}
+\DoxyCodeLine{00148\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626aeb63de47b8691d315fefa05620191725}{EXR}},}
+\DoxyCodeLine{00149\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626ac86979304ea7a8b0b96f90e8ffc493d3}{JXL}},}
+\DoxyCodeLine{00150\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a110212f20af19ceae8d1c83e45ccc0bc}{VIPS}},}
+\DoxyCodeLine{00151\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a633d6abff0a3fc22404347728d195059}{RAW}},}
+\DoxyCodeLine{00152\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a696b031073e74bf2cb98e5ef201d4aa3}{UNKNOWN}},}
+\DoxyCodeLine{00153\ \ \ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626a10d1208b485425756fcc932229386b02}{MISSING}}}
+\DoxyCodeLine{00154\ \ \ \};}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespacesharp_adf39d6db8ba6695b8b1e2bc93bb511f0}{Canvas}}\ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \mbox{\hyperlink{namespacesharp_adf39d6db8ba6695b8b1e2bc93bb511f0a611b0ab62590d6a92a429520f6a06363}{CROP}},}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \mbox{\hyperlink{namespacesharp_adf39d6db8ba6695b8b1e2bc93bb511f0ac17ee73343e7b19a3d0c610ae31cf2a2}{EMBED}},}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \mbox{\hyperlink{namespacesharp_adf39d6db8ba6695b8b1e2bc93bb511f0a26a4b44a837bf97b972628509912b4a5}{MAX}},}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \mbox{\hyperlink{namespacesharp_adf39d6db8ba6695b8b1e2bc93bb511f0ace31e2a082d17e038fcc6e3006166653}{MIN}},}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \mbox{\hyperlink{namespacesharp_adf39d6db8ba6695b8b1e2bc93bb511f0a1a7de05850127e7acf6416561e1898d5}{IGNORE\_ASPECT}}}
+\DoxyCodeLine{00162\ \ \ \};}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \textcolor{comment}{//\ How\ many\ tasks\ are\ in\ the\ queue?}}
+\DoxyCodeLine{00165\ \ \ \textcolor{keyword}{extern}\ std::atomic<int>\ \mbox{\hyperlink{namespacesharp_a68b926e888516f790b4be924364ed8c1}{counterQueue}};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \textcolor{comment}{//\ How\ many\ tasks\ are\ being\ processed?}}
+\DoxyCodeLine{00168\ \ \ \textcolor{keyword}{extern}\ std::atomic<int>\ \mbox{\hyperlink{namespacesharp_aa58edcacb1a9c0b24f62ec23ee51347d}{counterProcess}};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \textcolor{comment}{//\ Filename\ extension\ checkers}}
+\DoxyCodeLine{00171\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a7dc56c0c6ff38b07d757bf0b260cbe05}{IsJpeg}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00172\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_ab0596bdff2dd8914f1a8812207b69011}{IsPng}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00173\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_ab04ba727eda6646d3fca8346f83e92f0}{IsWebp}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00174\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_ab288db6c04597124cceedcccd2d704e1}{IsJp2}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00175\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_ac8bbceccc71d74636af015200a39c824}{IsGif}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00176\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_aaba41f14caa542b115e8815ed6bfd90f}{IsTiff}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00177\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a3bf2fbb8b86a43c68f7d2d0c9cebb217}{IsHeic}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00178\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a7c031dcd11874cf2a37d272d896fbf0f}{IsHeif}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00179\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_adc5d47511efe5e03d35385d17aff3862}{IsAvif}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00180\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_ad2445aa059c1596eea269e3cc3d80d83}{IsJxl}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00181\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_ab9452dc28134aea95018a07ac49e311a}{IsDz}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00182\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a5e8bd89af36f5d239716ea99885b5f26}{IsDzZip}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00183\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a2b0a478d3b14fd663e38e43cc3712239}{IsV}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ \ \ \ Trim\ space\ from\ end\ of\ string.}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00188\ \ \ std::string\ \mbox{\hyperlink{namespacesharp_ad1c141f4fc13d8a294eb2687093c400d}{TrimEnd}}(std::string\ \textcolor{keyword}{const}\ \&str);}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ \ \ \ Provide\ a\ string\ identifier\ for\ the\ given\ image\ type.}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00193\ \ \ std::string\ \mbox{\hyperlink{namespacesharp_ace8b0212e74016d120b94f7050ed4464}{ImageTypeId}}(\mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626}{ImageType}}\ \textcolor{keyword}{const}\ imageType);}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ \ \ \ Determine\ image\ format\ of\ a\ buffer.}}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626}{ImageType}}\ \mbox{\hyperlink{namespacesharp_a0eb20fe29ada937e987b100c9ac9ebb5}{DetermineImageType}}(\textcolor{keywordtype}{void}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ \textcolor{keyword}{const}\ length);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ \ \ \ Determine\ image\ format\ of\ a\ file.}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626}{ImageType}}\ \mbox{\hyperlink{namespacesharp_a0eb20fe29ada937e987b100c9ac9ebb5}{DetermineImageType}}(\textcolor{keywordtype}{char}\ \textcolor{keyword}{const}\ *file);}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ \ \ \ Does\ this\ image\ type\ support\ multiple\ pages?}}
+\DoxyCodeLine{00207\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00208\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a2b24b73051dbda8d7e89176fc276f2c2}{ImageTypeSupportsPage}}(\mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626}{ImageType}}\ imageType);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ \ \ \ Does\ this\ image\ type\ support\ removal\ of\ safety\ limits?}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_afc3582dd130d985601f8ee7dfa4449da}{ImageTypeSupportsUnlimited}}(\mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626}{ImageType}}\ imageType);}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ \ \ \ Open\ an\ image\ from\ the\ given\ InputDescriptor\ (filesystem,\ compressed\ buffer,\ raw\ pixel\ data)}}
+\DoxyCodeLine{00217\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00218\ \ \ std::tuple<VImage,\ ImageType>\ \mbox{\hyperlink{namespacesharp_a11b6f1ac395c0d2d803e4249977dea76}{OpenInput}}(InputDescriptor\ *descriptor);}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00221\ \textcolor{comment}{\ \ \ \ Does\ this\ image\ have\ an\ embedded\ profile?}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00223\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a417ead3da897b6d636f3fbdd2b8e3810}{HasProfile}}(VImage\ image);}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ \ \ \ Get\ copy\ of\ embedded\ profile.}}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00228\ \ \ std::pair<char*,\ size\_t>\ \mbox{\hyperlink{namespacesharp_ae4bac0d0306f53f3cb4d1e7fec45848c}{GetProfile}}(VImage\ image);}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ \ \ \ Set\ embedded\ profile.}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00233\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_aab04d1328740b1b9ddb83d0d46159305}{SetProfile}}(VImage\ image,\ std::pair<char*,\ size\_t>\ icc);}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ \ \ \ Does\ this\ image\ have\ an\ alpha\ channel?}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ \ \ \ Uses\ colour\ space\ interpretation\ with\ number\ of\ channels\ to\ guess\ this.}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00239\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_ae7eb446a5907852c8888411a1d4d1c93}{HasAlpha}}(VImage\ image);}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00242\ \textcolor{comment}{\ \ \ \ Remove\ all\ EXIF-\/related\ image\ fields.}}
+\DoxyCodeLine{00243\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00244\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_a83141fa54bd021b1a53439ea19ce4b21}{RemoveExif}}(VImage\ image);}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00247\ \textcolor{comment}{\ \ \ \ Get\ EXIF\ Orientation\ of\ image,\ if\ any.}}
+\DoxyCodeLine{00248\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00249\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacesharp_af53887c98ee72b2469b59b8792ccdbd6}{ExifOrientation}}(VImage\ image);}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00252\ \textcolor{comment}{\ \ \ \ Set\ EXIF\ Orientation\ of\ image.}}
+\DoxyCodeLine{00253\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00254\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_a2f0135e70a64c88ee5ff0a09a56b5e64}{SetExifOrientation}}(VImage\ image,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ orientation);}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00257\ \textcolor{comment}{\ \ \ \ Remove\ EXIF\ Orientation\ from\ image.}}
+\DoxyCodeLine{00258\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00259\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_a87c2eb7ba6b66e3da6fb575133027b18}{RemoveExifOrientation}}(VImage\ image);}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00262\ \textcolor{comment}{\ \ \ \ Set\ animation\ properties\ if\ necessary.}}
+\DoxyCodeLine{00263\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00264\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_ac2a8d875cecdf7ef4d48e7779325be77}{SetAnimationProperties}}(VImage\ image,\ \textcolor{keywordtype}{int}\ nPages,\ \textcolor{keywordtype}{int}\ pageHeight,\ std::vector<int>\ delay,\ \textcolor{keywordtype}{int}\ loop);}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00267\ \textcolor{comment}{\ \ \ \ Remove\ animation\ properties\ from\ image.}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00269\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_a171a6ce120dc796548874ec894123618}{RemoveAnimationProperties}}(VImage\ image);}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ \ \ \ Remove\ GIF\ palette\ from\ image.}}
+\DoxyCodeLine{00273\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00274\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_a0d4dcf59c15e38e8804f61a997ff3a0b}{RemoveGifPalette}}(VImage\ image);}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ \ \ \ Does\ this\ image\ have\ a\ non-\/default\ density?}}
+\DoxyCodeLine{00278\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00279\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_a404d5decf879436d5cc8407edcad23d5}{HasDensity}}(VImage\ image);}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00282\ \textcolor{comment}{\ \ \ \ Get\ pixels/mm\ resolution\ as\ pixels/inch\ density.}}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00284\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacesharp_a2d7f45d8d04e0e10a7782fbadf5ada8d}{GetDensity}}(VImage\ image);}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ \ \ \ Set\ pixels/mm\ resolution\ based\ on\ a\ pixels/inch\ density.}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00289\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_adc2ad96f4b1eab5e5f46e8499705dd20}{SetDensity}}(VImage\ image,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ density);}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ \ \ \ Multi-\/page\ images\ can\ have\ a\ page\ height.\ Fetch\ it,\ and\ sanity\ check\ it.}}
+\DoxyCodeLine{00293\ \textcolor{comment}{\ \ \ \ If\ page-\/height\ is\ not\ set,\ it\ defaults\ to\ the\ image\ height}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00295\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacesharp_a8632476cea54ea969bd2f50a9a686844}{GetPageHeight}}(VImage\ image);}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00298\ \textcolor{comment}{\ \ \ \ Check\ the\ proposed\ format\ supports\ the\ current\ dimensions.}}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00300\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesharp_a2edf352bb2ca18bbe9e30a2d32f785ef}{AssertImageTypeDimensions}}(VImage\ image,\ \mbox{\hyperlink{namespacesharp_a1b89465a72f5608d796c7cf31aa3b626}{ImageType}}\ \textcolor{keyword}{const}\ imageType);}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ \ \ \ Called\ when\ a\ Buffer\ undergoes\ GC,\ required\ to\ support\ mixed\ runtime\ libraries\ in\ Windows}}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00305\ \ \ \textcolor{keyword}{extern}\ std::function<void(\textcolor{keywordtype}{void}*,\ \textcolor{keywordtype}{char}*)>\ \mbox{\hyperlink{namespacesharp_ad242823ac5730d56bb977708d2ec2dca}{FreeCallback}};}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00308\ \textcolor{comment}{\ \ \ \ Called\ with\ warnings\ from\ the\ glib-\/registered\ "{}VIPS"{}\ domain}}
+\DoxyCodeLine{00309\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00310\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesharp_affff22065cab2ec3acc0a09bf438ce78}{VipsWarningCallback}}(\textcolor{keywordtype}{char}\ \textcolor{keyword}{const}*\ log\_domain,\ GLogLevelFlags\ log\_level,\ \textcolor{keywordtype}{char}\ \textcolor{keyword}{const}*\ message,\ \textcolor{keywordtype}{void}*\ ignore);}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00313\ \textcolor{comment}{\ \ \ \ Pop\ the\ oldest\ warning\ message\ from\ the\ queue}}
+\DoxyCodeLine{00314\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00315\ \ \ std::string\ \mbox{\hyperlink{namespacesharp_a93dc50ec03e5161d9d4eb83d808e3e11}{VipsWarningPop}}();}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00318\ \textcolor{comment}{\ \ \ \ Attach\ an\ event\ listener\ for\ progress\ updates,\ used\ to\ detect\ timeout}}
+\DoxyCodeLine{00319\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00320\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesharp_add6debbbc9d52802ad3c1d8217648373}{SetTimeout}}(VImage\ image,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ timeoutSeconds);}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00323\ \textcolor{comment}{\ \ \ \ Event\ listener\ for\ progress\ updates,\ used\ to\ detect\ timeout}}
+\DoxyCodeLine{00324\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00325\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacesharp_ae7fb89109189bec80898dab34cbb9346}{VipsProgressCallBack}}(VipsImage\ *image,\ VipsProgress\ *progress,\ \textcolor{keywordtype}{int}\ *timeoutSeconds);}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00328\ \textcolor{comment}{\ \ \ \ Calculate\ the\ (left,\ top)\ coordinates\ of\ the\ output\ image}}
+\DoxyCodeLine{00329\ \textcolor{comment}{\ \ \ \ within\ the\ input\ image,\ applying\ the\ given\ gravity\ during\ an\ embed.}}
+\DoxyCodeLine{00330\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00331\ \ \ std::tuple<int,\ int>\ \mbox{\hyperlink{namespacesharp_a18385196717cae6c9f19b1005aac10c0}{CalculateEmbedPosition}}(\textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ inWidth,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ inHeight,}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ outWidth,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ outHeight,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ gravity);}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00335\ \textcolor{comment}{\ \ \ \ Calculate\ the\ (left,\ top)\ coordinates\ of\ the\ output\ image}}
+\DoxyCodeLine{00336\ \textcolor{comment}{\ \ \ \ within\ the\ input\ image,\ applying\ the\ given\ gravity.}}
+\DoxyCodeLine{00337\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00338\ \ \ std::tuple<int,\ int>\ \mbox{\hyperlink{namespacesharp_af7dfab9594595c338bf17b4f2eb39e43}{CalculateCrop}}(\textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ inWidth,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ inHeight,}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ outWidth,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ outHeight,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ gravity);}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00342\ \textcolor{comment}{\ \ \ \ Calculate\ the\ (left,\ top)\ coordinates\ of\ the\ output\ image}}
+\DoxyCodeLine{00343\ \textcolor{comment}{\ \ \ \ within\ the\ input\ image,\ applying\ the\ given\ x\ and\ y\ offsets\ of\ the\ output\ image.}}
+\DoxyCodeLine{00344\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00345\ \ \ std::tuple<int,\ int>\ \mbox{\hyperlink{namespacesharp_af7dfab9594595c338bf17b4f2eb39e43}{CalculateCrop}}(\textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ inWidth,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ inHeight,}
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ outWidth,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ outHeight,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ x,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ y);}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00349\ \textcolor{comment}{\ \ \ \ Are\ pixel\ values\ in\ this\ image\ 16-\/bit\ integer?}}
+\DoxyCodeLine{00350\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00351\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespacesharp_afbc1dba0c01a0afe83a7de216eb0ff9f}{Is16Bit}}(VipsInterpretation\ \textcolor{keyword}{const}\ interpretation);}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00354\ \textcolor{comment}{\ \ \ \ Return\ the\ image\ alpha\ maximum.\ Useful\ for\ combining\ alpha\ bands.\ scRGB}}
+\DoxyCodeLine{00355\ \textcolor{comment}{\ \ \ \ images\ are\ 0\ -\/\ 1\ for\ image\ data,\ but\ the\ alpha\ is\ 0\ -\/\ 255.}}
+\DoxyCodeLine{00356\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00357\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespacesharp_a482a48b0a5819d66d352feda7fee2598}{MaximumImageAlpha}}(VipsInterpretation\ \textcolor{keyword}{const}\ interpretation);}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00360\ \textcolor{comment}{\ \ \ \ Convert\ RGBA\ value\ to\ another\ colourspace}}
+\DoxyCodeLine{00361\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00362\ \ \ std::vector<double>\ \mbox{\hyperlink{namespacesharp_acdc685a5ab95d4fa681739d25fd39748}{GetRgbaAsColourspace}}(std::vector<double>\ \textcolor{keyword}{const}\ rgba,}
+\DoxyCodeLine{00363\ \ \ \ \ VipsInterpretation\ \textcolor{keyword}{const}\ interpretation,\ \textcolor{keywordtype}{bool}\ premultiply);}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00366\ \textcolor{comment}{\ \ \ \ Apply\ the\ alpha\ channel\ to\ a\ given\ colour}}
+\DoxyCodeLine{00367\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00368\ \ \ std::tuple<VImage,\ std::vector<double>>\ \mbox{\hyperlink{namespacesharp_a13adbe20a21c239a3f743eb637755512}{ApplyAlpha}}(VImage\ image,\ std::vector<double>\ colour,\ \textcolor{keywordtype}{bool}\ premultiply);}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00371\ \textcolor{comment}{\ \ \ \ Removes\ alpha\ channel,\ if\ any.}}
+\DoxyCodeLine{00372\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00373\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_a74b4ba1780bf0ef20bfc6dc02482505c}{RemoveAlpha}}(VImage\ image);}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00376\ \textcolor{comment}{\ \ \ \ Ensures\ alpha\ channel,\ if\ missing.}}
+\DoxyCodeLine{00377\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00378\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_a9ffe97aa72ea2abbc5be3a04d2521839}{EnsureAlpha}}(VImage\ image,\ \textcolor{keywordtype}{double}\ \textcolor{keyword}{const}\ value);}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00381\ \textcolor{comment}{\ \ \ \ Calculate\ the\ horizontal\ and\ vertical\ shrink\ factors,\ taking\ the\ canvas\ mode\ into\ account.}}
+\DoxyCodeLine{00382\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00383\ \ \ std::pair<double,\ double>\ \mbox{\hyperlink{namespacesharp_ae7fa2f52d9fd1f2c19b2fc52cc5d6d36}{ResolveShrink}}(\textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ \textcolor{keywordtype}{int}\ targetWidth,\ \textcolor{keywordtype}{int}\ targetHeight,}
+\DoxyCodeLine{00384\ \ \ \ \ \mbox{\hyperlink{namespacesharp_adf39d6db8ba6695b8b1e2bc93bb511f0}{Canvas}}\ canvas,\ \textcolor{keywordtype}{bool}\ withoutEnlargement,\ \textcolor{keywordtype}{bool}\ withoutReduction);}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00387\ \textcolor{comment}{\ \ \ \ Ensure\ decoding\ remains\ sequential.}}
+\DoxyCodeLine{00388\ \textcolor{comment}{\ \ */}}
+\DoxyCodeLine{00389\ \ \ VImage\ \mbox{\hyperlink{namespacesharp_a8c219bbcc9b792260c54b7a9e68cd02e}{StaySequential}}(VImage\ image,\ \textcolor{keywordtype}{bool}\ condition\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \}\ \ \textcolor{comment}{//\ namespace\ sharp}}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ SRC\_COMMON\_H\_}}
+
+\end{DoxyCode}

@@ -8,6 +8,7 @@ import vercel from '@astrojs/vercel'
 import UnoCSS from '@unocss/astro'
 import { defineConfig } from 'astro/config'
 import flexsearchIntegration from './src/integrations/search'
+import { modulesTransformPlugin } from './src/lib/vite/module-transform.js'
 
 export default defineConfig({
   site: 'https://gradiantascent.xyz',
@@ -24,7 +25,11 @@ export default defineConfig({
         },
       ],
     }),
-    react(),
+    react({
+      include: ['**/*.tsx', '**/*.jsx'],
+      exclude: [],
+      ssr: true,
+    }),
     mdx(),
     UnoCSS({
       injectReset: true,
@@ -44,8 +49,12 @@ export default defineConfig({
   },
   vite: {
     optimizeDeps: {
-      include: ['unocss', 'three', 'react', 'react-dom'],
-      exclude: [],
+      include: ['unocss', 'three'],
+      exclude: ['react', 'react-dom'],
+      esbuildOptions: {
+        jsx: 'automatic',
+        jsxImportSource: 'react',
+      },
     },
     build: {
       chunkSizeWarningLimit: 1500,
@@ -61,7 +70,6 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks: {
-            'react-vendor': ['react', 'react-dom'],
             'ui-vendor': ['@radix-ui/react-icons', '@radix-ui/react-slot'],
             'three-vendor': ['three'],
             'vendor': ['dayjs', 'nprogress', 'html-entities'],
@@ -81,9 +89,51 @@ export default defineConfig({
         '@utils': path.resolve('./src/utils'),
         '@lib': path.resolve('./src/lib'),
       },
+      mainFields: ['browser', 'module', 'main'],
+      conditions: ['browser', 'module', 'import', 'default'],
     },
+    plugins: [
+      modulesTransformPlugin(),
+      {
+        name: 'vite-plugin-handle-react-esm',
+        enforce: 'pre',
+        resolveId(id) {
+          return null
+        },
+        load(id) {
+          if (id.includes('node_modules/react/index.js')) {
+            return `
+              import * as React from './cjs/react.development.js';
+              export default React;
+              export const {
+                Children, Component, Fragment, Profiler, PureComponent,
+                StrictMode, Suspense, cloneElement, createContext,
+                createElement, createFactory, createRef, forwardRef,
+                isValidElement, lazy, memo, useCallback, useContext,
+                useDebugValue, useEffect, useImperativeHandle, useLayoutEffect,
+                useMemo, useReducer, useRef, useState, version, startTransition
+              } = React;
+            `
+          }
+
+          if (id.includes('node_modules/react-dom/index.js')) {
+            return `
+              import * as ReactDOM from './cjs/react-dom.development.js';
+              export default ReactDOM;
+              export const {
+                createPortal, findDOMNode, flushSync, hydrate, render,
+                unmountComponentAtNode, unstable_batchedUpdates, version,
+                createRoot, hydrateRoot
+              } = ReactDOM;
+            `
+          }
+
+          return null
+        },
+      },
+    ],
     ssr: {
-      noExternal: ['react'],
+      external: ['react', 'react-dom', 'react-dom/server'],
     },
   },
   output: 'server',
@@ -108,11 +158,8 @@ export default defineConfig({
     ],
   },
   typescript: {
-    // Enable TypeScript strict mode
     strict: true,
-    // Allow JavaScript files
     allowJS: true,
-    // Show TypeScript errors in dev server
     reportTypeErrors: true,
   },
 })

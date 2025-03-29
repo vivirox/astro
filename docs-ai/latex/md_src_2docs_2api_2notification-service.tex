@@ -1,0 +1,607 @@
+\chapter{Notification Service API Documentation}
+\hypertarget{md_src_2docs_2api_2notification-service}{}\label{md_src_2docs_2api_2notification-service}\index{Notification Service API Documentation@{Notification Service API Documentation}}
+\label{md_src_2docs_2api_2notification-service_autotoc_md36884}%
+\Hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36884}%
+
+
+The Gradiant platform includes multiple notification services that handle different aspects of the system\textquotesingle{}s notification capabilities. This document provides comprehensive documentation for these services, their interfaces, methods, and usage examples.\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36885}{}\doxysection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{md_src_2docs_2api_2notification-service_autotoc_md36885}
+
+\begin{DoxyItemize}
+\item \doxylink{md_node__modules_2safer-buffer_2_porting-_buffer_overview}{Overview}
+\item Notification\+Service
+\item Automated\+Notification\+Service
+\item Security Notification\+Service
+\item Common Interfaces
+\item Best Practices
+\item Error Handling
+\item Performance Considerations
+\item Integration Examples
+\end{DoxyItemize}\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36886}{}\doxysection{\texorpdfstring{Overview}{Overview}}\label{md_src_2docs_2api_2notification-service_autotoc_md36886}
+The notification system in Gradiant is designed to handle various types of notifications across different channels. The system includes three main services\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Notification\+Service}}\+: A basic notification service for cache alerts
+\item {\bfseries{Automated\+Notification\+Service}}\+: An enhanced service with support for multiple channels and advanced features
+\item {\bfseries{Security Notification\+Service}}\+: A specialized service for security-\/related notifications with advanced error handling and circuit breaking
+\end{DoxyEnumerate}
+
+These services share common concepts but are tailored for specific use cases within the application.\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36887}{}\doxysection{\texorpdfstring{Notification\+Service}{Notification\+Service}}\label{md_src_2docs_2api_2notification-service_autotoc_md36887}
+The {\ttfamily Notification\+Service} is a singleton class that handles notifications for cache alerts.\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36888}{}\doxysubsection{\texorpdfstring{Base Service Interfaces}{Base Service Interfaces}}\label{md_src_2docs_2api_2notification-service_autotoc_md36888}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ NotificationConfig\ \{}
+\DoxyCodeLine{\ \ enabled:\ boolean}
+\DoxyCodeLine{\ \ channels:\ \{}
+\DoxyCodeLine{\ \ \ \ email?:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ enabled:\ boolean}
+\DoxyCodeLine{\ \ \ \ \ \ recipients:\ string[]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ slack?:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ enabled:\ boolean}
+\DoxyCodeLine{\ \ \ \ \ \ channel:\ string}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ throttle:\ \{}
+\DoxyCodeLine{\ \ \ \ maxNotifications:\ number}
+\DoxyCodeLine{\ \ \ \ windowMs:\ number}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36889}{}\doxysubsection{\texorpdfstring{Base Service Methods}{Base Service Methods}}\label{md_src_2docs_2api_2notification-service_autotoc_md36889}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36890}{}\doxysubsubsection{\texorpdfstring{{\ttfamily get\+Instance()}}{{\ttfamily get\+Instance()}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36890}
+Returns the singleton instance of the Notification\+Service.
+
+{\bfseries{Returns}}\+: {\ttfamily Notification\+Service}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ notificationService\ =\ NotificationService.getInstance()}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36891}{}\doxysubsubsection{\texorpdfstring{{\ttfamily notify(alert\+: Cache\+Alert)}}{{\ttfamily notify(alert\+: Cache\+Alert)}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36891}
+Sends notifications for a cache alert through configured channels.
+
+{\bfseries{Parameters}}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily alert}\+: A {\ttfamily Cache\+Alert} object containing information about the alert
+\end{DoxyItemize}
+
+{\bfseries{Returns}}\+: {\ttfamily Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ alert\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'memory\_usage',}
+\DoxyCodeLine{\ \ value:\ 85,}
+\DoxyCodeLine{\ \ threshold:\ 80,}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ notificationService.notify(alert)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36892}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clear\+Notification\+History()}}{{\ttfamily clear\+Notification\+History()}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36892}
+Clears the notification history, resetting throttling counters.
+
+{\bfseries{Returns}}\+: {\ttfamily Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ notificationService.clearNotificationHistory()}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36893}{}\doxysubsection{\texorpdfstring{Base Service Private Methods}{Base Service Private Methods}}\label{md_src_2docs_2api_2notification-service_autotoc_md36893}
+The service also includes several private methods\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily get\+Notification\+Config()}\+: Fetches notification configuration from the database
+\item {\ttfamily should\+Throttle(alert\+Id\+: string, config\+: Notification\+Config)}\+: Determines if notifications should be throttled
+\item {\ttfamily send\+Email\+Notification(alert\+: Cache\+Alert, config\+: Notification\+Config)}\+: Sends email notifications
+\item {\ttfamily send\+Slack\+Notification(alert\+: Cache\+Alert, config\+: Notification\+Config)}\+: Sends Slack notifications
+\end{DoxyItemize}\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36894}{}\doxysection{\texorpdfstring{Automated\+Notification\+Service}{Automated\+Notification\+Service}}\label{md_src_2docs_2api_2notification-service_autotoc_md36894}
+The {\ttfamily Automated\+Notification\+Service} is an enhanced notification service that extends Event\+Emitter and supports multiple notification channels with advanced features.\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36895}{}\doxysubsection{\texorpdfstring{Automated Service Interfaces 2}{Automated Service Interfaces 2}}\label{md_src_2docs_2api_2notification-service_autotoc_md36895}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ NotificationChannel\ =\ 'email'\ |\ 'slack'\ |\ 'sms'\ |\ 'webhook'}
+\DoxyCodeLine{type\ NotificationSeverity\ =\ 'low'\ |\ 'medium'\ |\ 'high'\ |\ 'critical'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ NotificationTemplate\ \{}
+\DoxyCodeLine{\ \ subject:\ string}
+\DoxyCodeLine{\ \ body:\ string}
+\DoxyCodeLine{\ \ channels:\ NotificationChannel[]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ NotificationConfig\ \{}
+\DoxyCodeLine{\ \ enabled:\ boolean}
+\DoxyCodeLine{\ \ channels:\ \{}
+\DoxyCodeLine{\ \ \ \ email?:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ enabled:\ boolean}
+\DoxyCodeLine{\ \ \ \ \ \ recipients:\ string[]}
+\DoxyCodeLine{\ \ \ \ \ \ templates?:\ Record<string,\ string>}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ slack?:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ enabled:\ boolean}
+\DoxyCodeLine{\ \ \ \ \ \ channel:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ templates?:\ Record<string,\ string>}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ sms?:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ enabled:\ boolean}
+\DoxyCodeLine{\ \ \ \ \ \ numbers:\ string[]}
+\DoxyCodeLine{\ \ \ \ \ \ templates?:\ Record<string,\ string>}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ webhook?:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ enabled:\ boolean}
+\DoxyCodeLine{\ \ \ \ \ \ url:\ string}
+\DoxyCodeLine{\ \ \ \ \ \ headers?:\ Record<string,\ string>}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ throttling:\ \{}
+\DoxyCodeLine{\ \ \ \ maxPerMinute:\ number}
+\DoxyCodeLine{\ \ \ \ maxPerHour:\ number}
+\DoxyCodeLine{\ \ \ \ cooldownPeriod:\ number}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ Notification\ \{}
+\DoxyCodeLine{\ \ id:\ string}
+\DoxyCodeLine{\ \ type:\ string}
+\DoxyCodeLine{\ \ severity:\ NotificationSeverity}
+\DoxyCodeLine{\ \ message:\ string}
+\DoxyCodeLine{\ \ metadata?:\ Record<string,\ any>}
+\DoxyCodeLine{\ \ timestamp:\ Date}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36896}{}\doxysubsection{\texorpdfstring{Automated Service Methods}{Automated Service Methods}}\label{md_src_2docs_2api_2notification-service_autotoc_md36896}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36897}{}\doxysubsubsection{\texorpdfstring{{\ttfamily get\+Instance()} 2}{{\ttfamily get\+Instance()} 2}}\label{md_src_2docs_2api_2notification-service_autotoc_md36897}
+Returns the singleton instance of the Automated\+Notification\+Service.
+
+{\bfseries{Returns}}\+: {\ttfamily Automated\+Notification\+Service}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ notificationService\ =\ AutomatedNotificationService.getInstance()}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36898}{}\doxysubsubsection{\texorpdfstring{{\ttfamily notify(notification\+: Notification)}}{{\ttfamily notify(notification\+: Notification)}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36898}
+Sends a notification through configured channels based on severity and type.
+
+{\bfseries{Parameters}}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily notification}\+: A {\ttfamily Notification} object containing information about the notification
+\end{DoxyItemize}
+
+{\bfseries{Returns}}\+: {\ttfamily Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ notification\ =\ \{}
+\DoxyCodeLine{\ \ id:\ 'notif-\/123',}
+\DoxyCodeLine{\ \ type:\ 'system\_alert',}
+\DoxyCodeLine{\ \ severity:\ 'high',}
+\DoxyCodeLine{\ \ message:\ 'Database\ connection\ issues\ detected',}
+\DoxyCodeLine{\ \ metadata:\ \{\ connectionAttempts:\ 5,\ lastError:\ 'Connection\ timeout'\ \},}
+\DoxyCodeLine{\ \ timestamp:\ new\ Date(),}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ notificationService.notify(notification)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36899}{}\doxysubsection{\texorpdfstring{Automated Service Events}{Automated Service Events}}\label{md_src_2docs_2api_2notification-service_autotoc_md36899}
+The Automated\+Notification\+Service emits the following events\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily notification\+:sent}\+: Emitted when a notification is successfully sent
+\item {\ttfamily notification\+:error}\+: Emitted when an error occurs while sending a notification
+\end{DoxyItemize}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ notificationService\ =\ AutomatedNotificationService.getInstance()}
+\DoxyCodeLine{}
+\DoxyCodeLine{notificationService.on('notification:sent',\ (notification)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(`Notification\ \$\{notification.id\}\ sent\ successfully`)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{notificationService.on('notification:error',\ (\{\ notification,\ error\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ console.error(`Error\ sending\ notification\ \$\{notification.id\}:`,\ error)}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36900}{}\doxysection{\texorpdfstring{Security Notification\+Service}{Security Notification\+Service}}\label{md_src_2docs_2api_2notification-service_autotoc_md36900}
+The {\ttfamily Notification\+Service} in the security module is a specialized service for handling security-\/related notifications with advanced error handling, circuit breaking, and performance monitoring.\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36901}{}\doxysubsection{\texorpdfstring{Security Service Interfaces 2}{Security Service Interfaces 2}}\label{md_src_2docs_2api_2notification-service_autotoc_md36901}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ NotificationChannelType\ =\ 'email'\ |\ 'sms'\ |\ 'slack'\ |\ 'webhook'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ NotificationChannel\ \{}
+\DoxyCodeLine{\ \ readonly\ type:\ NotificationChannelType}
+\DoxyCodeLine{\ \ readonly\ target:\ string}
+\DoxyCodeLine{\ \ readonly\ enabled:\ boolean}
+\DoxyCodeLine{\ \ readonly\ retryConfig?:\ Readonly<\{}
+\DoxyCodeLine{\ \ \ \ maxRetries:\ number}
+\DoxyCodeLine{\ \ \ \ initialDelay:\ number}
+\DoxyCodeLine{\ \ \ \ maxDelay:\ number}
+\DoxyCodeLine{\ \ \ \ backoffFactor:\ number}
+\DoxyCodeLine{\ \ \}>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ NotificationTemplate\ \{}
+\DoxyCodeLine{\ \ readonly\ subject:\ string}
+\DoxyCodeLine{\ \ readonly\ body:\ string}
+\DoxyCodeLine{\ \ readonly\ severity:\ IncidentSeverity}
+\DoxyCodeLine{\ \ readonly\ type:\ IncidentType}
+\DoxyCodeLine{\ \ readonly\ variables?:\ readonly\ string[]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ NotificationMessage\ \{}
+\DoxyCodeLine{\ \ readonly\ subject:\ string}
+\DoxyCodeLine{\ \ readonly\ body:\ string}
+\DoxyCodeLine{\ \ readonly\ metadata?:\ Readonly<Record<string,\ unknown>>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36902}{}\doxysubsection{\texorpdfstring{Security Service Methods}{Security Service Methods}}\label{md_src_2docs_2api_2notification-service_autotoc_md36902}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36903}{}\doxysubsubsection{\texorpdfstring{{\ttfamily notify\+Incident(incident\+: Security\+Incident)}}{{\ttfamily notify\+Incident(incident\+: Security\+Incident)}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36903}
+Sends notifications for a security incident through configured channels.
+
+{\bfseries{Parameters}}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily incident}\+: A {\ttfamily Security\+Incident} object containing information about the security incident
+\end{DoxyItemize}
+
+{\bfseries{Returns}}\+: {\ttfamily Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ incident\ =\ \{}
+\DoxyCodeLine{\ \ id:\ 'incident-\/123',}
+\DoxyCodeLine{\ \ type:\ IncidentType.UNAUTHORIZED\_ACCESS,}
+\DoxyCodeLine{\ \ severity:\ IncidentSeverity.HIGH,}
+\DoxyCodeLine{\ \ source:\ 'login-\/service',}
+\DoxyCodeLine{\ \ timestamp:\ new\ Date(),}
+\DoxyCodeLine{\ \ details:\ \{}
+\DoxyCodeLine{\ \ \ \ ipAddress:\ '192.168.1.1',}
+\DoxyCodeLine{\ \ \ \ userId:\ 'user-\/123',}
+\DoxyCodeLine{\ \ \ \ attempts:\ 5,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ notificationService.notifyIncident(incident)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36904}{}\doxysubsubsection{\texorpdfstring{{\ttfamily add\+Notification\+Channel(severity\+: Incident\+Severity, channel\+: Notification\+Channel)}}{{\ttfamily add\+Notification\+Channel(severity\+: Incident\+Severity, channel\+: Notification\+Channel)}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36904}
+Adds a notification channel for a specific severity level.
+
+{\bfseries{Parameters}}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily severity}\+: The severity level for which to add the channel
+\item {\ttfamily channel}\+: The notification channel to add
+\end{DoxyItemize}
+
+{\bfseries{Returns}}\+: {\ttfamily Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ channel\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'email',}
+\DoxyCodeLine{\ \ target:\ 'security@example.com',}
+\DoxyCodeLine{\ \ enabled:\ true,}
+\DoxyCodeLine{\ \ retryConfig:\ \{}
+\DoxyCodeLine{\ \ \ \ maxRetries:\ 3,}
+\DoxyCodeLine{\ \ \ \ initialDelay:\ 1000,}
+\DoxyCodeLine{\ \ \ \ maxDelay:\ 5000,}
+\DoxyCodeLine{\ \ \ \ backoffFactor:\ 2,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ notificationService.addNotificationChannel(}
+\DoxyCodeLine{\ \ IncidentSeverity.HIGH,}
+\DoxyCodeLine{\ \ channel,}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36905}{}\doxysubsubsection{\texorpdfstring{{\ttfamily remove\+Notification\+Channel(severity\+: Incident\+Severity, channel\+Type\+: string, target\+: string)}}{{\ttfamily remove\+Notification\+Channel(severity\+: Incident\+Severity, channel\+Type\+: string, target\+: string)}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36905}
+Removes a notification channel for a specific severity level.
+
+{\bfseries{Parameters}}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily severity}\+: The severity level from which to remove the channel
+\item {\ttfamily channel\+Type}\+: The type of channel to remove
+\item {\ttfamily target}\+: The target of the channel to remove
+\end{DoxyItemize}
+
+{\bfseries{Returns}}\+: {\ttfamily Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ notificationService.removeNotificationChannel(}
+\DoxyCodeLine{\ \ IncidentSeverity.HIGH,}
+\DoxyCodeLine{\ \ 'email',}
+\DoxyCodeLine{\ \ 'security@example.com',}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36906}{}\doxysubsubsection{\texorpdfstring{{\ttfamily add\+Template(key\+: string, template\+: Notification\+Template)}}{{\ttfamily add\+Template(key\+: string, template\+: Notification\+Template)}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36906}
+Adds a notification template for a specific incident type.
+
+{\bfseries{Parameters}}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily key}\+: The key for the template
+\item {\ttfamily template}\+: The notification template to add
+\end{DoxyItemize}
+
+{\bfseries{Returns}}\+: {\ttfamily Promise\texorpdfstring{$<$}{<}void\texorpdfstring{$>$}{>}}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ template\ =\ \{}
+\DoxyCodeLine{\ \ subject:\ 'Security\ Alert:\ Unauthorized\ Access',}
+\DoxyCodeLine{\ \ body:\ 'An\ unauthorized\ access\ attempt\ was\ detected\ from\ IP:\ \{\{ipAddress\}\}',}
+\DoxyCodeLine{\ \ severity:\ IncidentSeverity.HIGH,}
+\DoxyCodeLine{\ \ type:\ IncidentType.UNAUTHORIZED\_ACCESS,}
+\DoxyCodeLine{\ \ variables:\ ['ipAddress'],}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ notificationService.addTemplate('unauthorized\_access',\ template)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36907}{}\doxysubsubsection{\texorpdfstring{{\ttfamily get\+Metrics()}}{{\ttfamily get\+Metrics()}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36907}
+Returns metrics for all notification channels.
+
+{\bfseries{Returns}}\+: {\ttfamily Record\texorpdfstring{$<$}{<}Notification\+Channel\+Type, Channel\+Metrics\texorpdfstring{$>$}{>}}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ metrics\ =\ notificationService.getMetrics()}
+\DoxyCodeLine{console.log('Email\ channel\ metrics:',\ metrics.email)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36908}{}\doxysubsubsection{\texorpdfstring{{\ttfamily get\+Channel\+Metrics(channel\+Type\+: string)}}{{\ttfamily get\+Channel\+Metrics(channel\+Type\+: string)}}}\label{md_src_2docs_2api_2notification-service_autotoc_md36908}
+Returns metrics for a specific notification channel.
+
+{\bfseries{Parameters}}\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily channel\+Type}\+: The type of channel for which to get metrics
+\end{DoxyItemize}
+
+{\bfseries{Returns}}\+: {\ttfamily Channel\+Metrics \texorpdfstring{$\vert$}{|} undefined}
+
+{\bfseries{Example}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ emailMetrics\ =\ notificationService.getChannelMetrics('email')}
+\DoxyCodeLine{console.log('Email\ success\ rate:',\ 1\ -\/\ emailMetrics.failureRate)}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36909}{}\doxysection{\texorpdfstring{Common Interfaces}{Common Interfaces}}\label{md_src_2docs_2api_2notification-service_autotoc_md36909}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36910}{}\doxysubsection{\texorpdfstring{Cache\+Alert}{Cache\+Alert}}\label{md_src_2docs_2api_2notification-service_autotoc_md36910}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ CacheAlert\ \{}
+\DoxyCodeLine{\ \ type:\ string}
+\DoxyCodeLine{\ \ value:\ number}
+\DoxyCodeLine{\ \ threshold:\ number}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36911}{}\doxysubsection{\texorpdfstring{Channel\+Metrics}{Channel\+Metrics}}\label{md_src_2docs_2api_2notification-service_autotoc_md36911}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ ChannelMetrics\ \{}
+\DoxyCodeLine{\ \ totalRequests:\ number}
+\DoxyCodeLine{\ \ successfulRequests:\ number}
+\DoxyCodeLine{\ \ failedRequests:\ number}
+\DoxyCodeLine{\ \ lastSuccessTime:\ number}
+\DoxyCodeLine{\ \ lastFailureTime:\ number}
+\DoxyCodeLine{\ \ lastReset:\ number}
+\DoxyCodeLine{\ \ totalSuccessDuration:\ number}
+\DoxyCodeLine{\ \ totalFailureDuration:\ number}
+\DoxyCodeLine{\ \ averageSuccessDuration:\ number}
+\DoxyCodeLine{\ \ averageFailureDuration:\ number}
+\DoxyCodeLine{\ \ averageResponseTime:\ number}
+\DoxyCodeLine{\ \ failureRate:\ number}
+\DoxyCodeLine{\ \ isOpen:\ boolean}
+\DoxyCodeLine{\ \ consecutiveFailures:\ number}
+\DoxyCodeLine{\ \ consecutiveSuccesses:\ number}
+\DoxyCodeLine{\ \ lastError?:\ \{}
+\DoxyCodeLine{\ \ \ \ message:\ string}
+\DoxyCodeLine{\ \ \ \ category:\ string}
+\DoxyCodeLine{\ \ \ \ timestamp:\ number}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36912}{}\doxysection{\texorpdfstring{Best Practices}{Best Practices}}\label{md_src_2docs_2api_2notification-service_autotoc_md36912}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36913}{}\doxysubsection{\texorpdfstring{Configuration}{Configuration}}\label{md_src_2docs_2api_2notification-service_autotoc_md36913}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Environment Variables}}\+: Store sensitive information like API keys and credentials in environment variables
+\item {\bfseries{Database Configuration}}\+: Store notification configuration in the database for easy updates without code changes
+\item {\bfseries{Throttling}}\+: Always implement throttling to prevent notification flooding
+\item {\bfseries{Templates}}\+: Use templates for notification content to maintain consistency
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36914}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{md_src_2docs_2api_2notification-service_autotoc_md36914}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Severity Levels}}\+: Use appropriate severity levels for notifications
+\item {\bfseries{Metadata}}\+: Include relevant metadata in notifications for better context
+\item {\bfseries{Error Handling}}\+: Always handle errors when sending notifications
+\item {\bfseries{Circuit Breaking}}\+: Implement circuit breaking to prevent cascading failures
+\item {\bfseries{Monitoring}}\+: Monitor notification metrics to detect issues
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36915}{}\doxysection{\texorpdfstring{Error Handling}{Error Handling}}\label{md_src_2docs_2api_2notification-service_autotoc_md36915}
+The notification services implement various error handling strategies\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Retries}}\+: Automatically retry failed notifications with exponential backoff
+\item {\bfseries{Circuit Breaking}}\+: Prevent sending notifications through failing channels
+\item {\bfseries{Fallbacks}}\+: Use alternative channels when primary channels fail
+\item {\bfseries{Logging}}\+: Log all notification errors for troubleshooting
+\item {\bfseries{Metrics}}\+: Track error rates and performance metrics
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36916}{}\doxysubsection{\texorpdfstring{Error Categories}{Error Categories}}\label{md_src_2docs_2api_2notification-service_autotoc_md36916}
+
+\begin{DoxyItemize}
+\item {\ttfamily VALIDATION}\+: Errors related to invalid input data
+\item {\ttfamily NETWORK}\+: Errors related to network connectivity
+\item {\ttfamily RATE\+\_\+\+LIMIT}\+: Errors related to rate limiting by notification providers
+\item {\ttfamily AUTHENTICATION}\+: Errors related to authentication with notification providers
+\item {\ttfamily UNKNOWN}\+: Other unspecified errors
+\end{DoxyItemize}\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36917}{}\doxysection{\texorpdfstring{Performance Considerations}{Performance Considerations}}\label{md_src_2docs_2api_2notification-service_autotoc_md36917}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Throttling}}\+: Implement throttling to prevent overwhelming notification providers
+\item {\bfseries{Batching}}\+: Batch notifications when possible to reduce API calls
+\item {\bfseries{Asynchronous Processing}}\+: Process notifications asynchronously to avoid blocking
+\item {\bfseries{Caching}}\+: Cache notification templates and configuration
+\item {\bfseries{Monitoring}}\+: Monitor notification performance metrics
+\end{DoxyEnumerate}\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36918}{}\doxysection{\texorpdfstring{Integration Examples}{Integration Examples}}\label{md_src_2docs_2api_2notification-service_autotoc_md36918}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36919}{}\doxysubsection{\texorpdfstring{Basic Cache Alert Notification}{Basic Cache Alert Notification}}\label{md_src_2docs_2api_2notification-service_autotoc_md36919}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ CacheMonitoringService\ \}\ from\ '@/services/CacheMonitoringService'}
+\DoxyCodeLine{import\ \{\ NotificationService\ \}\ from\ '@/services/NotificationService'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Set\ up\ cache\ monitoring\ with\ notification}
+\DoxyCodeLine{const\ cacheMonitoring\ =\ new\ CacheMonitoringService()}
+\DoxyCodeLine{const\ notificationService\ =\ NotificationService.getInstance()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Configure\ alert\ handler}
+\DoxyCodeLine{cacheMonitoring.on('alert',\ async\ (alert)\ =>\ \{}
+\DoxyCodeLine{\ \ await\ notificationService.notify(alert)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Start\ monitoring}
+\DoxyCodeLine{cacheMonitoring.startMonitoring()}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36920}{}\doxysubsection{\texorpdfstring{Automated Notification for System Events}{Automated Notification for System Events}}\label{md_src_2docs_2api_2notification-service_autotoc_md36920}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ AutomatedNotificationService\ \}\ from\ '@/services/AutomatedNotificationService'}
+\DoxyCodeLine{import\ \{\ SystemMonitoringService\ \}\ from\ '@/services/SystemMonitoringService'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Set\ up\ system\ monitoring\ with\ notification}
+\DoxyCodeLine{const\ systemMonitoring\ =\ new\ SystemMonitoringService()}
+\DoxyCodeLine{const\ notificationService\ =\ AutomatedNotificationService.getInstance()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Configure\ event\ handler}
+\DoxyCodeLine{systemMonitoring.on('event',\ async\ (event)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ notification\ =\ \{}
+\DoxyCodeLine{\ \ \ \ id:\ \`{}event-\/\$\{event.id\}`,}
+\DoxyCodeLine{\ \ \ \ type:\ event.type,}
+\DoxyCodeLine{\ \ \ \ severity:\ mapSeverity(event.level),}
+\DoxyCodeLine{\ \ \ \ message:\ event.message,}
+\DoxyCodeLine{\ \ \ \ metadata:\ event.details,}
+\DoxyCodeLine{\ \ \ \ timestamp:\ new\ Date(),}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ await\ notificationService.notify(notification)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Helper\ function\ to\ map\ event\ levels\ to\ notification\ severities}
+\DoxyCodeLine{function\ mapSeverity(level:\ string):\ 'low'\ |\ 'medium'\ |\ 'high'\ |\ 'critical'\ \{}
+\DoxyCodeLine{\ \ switch\ (level)\ \{}
+\DoxyCodeLine{\ \ \ \ case\ 'debug':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ 'low'}
+\DoxyCodeLine{\ \ \ \ case\ 'info':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ 'low'}
+\DoxyCodeLine{\ \ \ \ case\ 'warn':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ 'medium'}
+\DoxyCodeLine{\ \ \ \ case\ 'error':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ 'high'}
+\DoxyCodeLine{\ \ \ \ case\ 'fatal':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ 'critical'}
+\DoxyCodeLine{\ \ \ \ default:}
+\DoxyCodeLine{\ \ \ \ \ \ return\ 'medium'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Start\ monitoring}
+\DoxyCodeLine{systemMonitoring.startMonitoring()}
+
+\end{DoxyCode}
+\hypertarget{md_src_2docs_2api_2notification-service_autotoc_md36921}{}\doxysubsection{\texorpdfstring{Security Incident Notification}{Security Incident Notification}}\label{md_src_2docs_2api_2notification-service_autotoc_md36921}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ NotificationService\ \}\ from\ '@/security/NotificationService'}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ IncidentSeverity,}
+\DoxyCodeLine{\ \ IncidentType,}
+\DoxyCodeLine{\ \ SecurityIncidentService,}
+\DoxyCodeLine{\}\ from\ '@/security/SecurityIncidentService'}
+\DoxyCodeLine{import\ \{\ SecurityAuditService\ \}\ from\ '@/services/SecurityAuditService'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Initialize\ services}
+\DoxyCodeLine{const\ auditService\ =\ new\ SecurityAuditService()}
+\DoxyCodeLine{const\ notificationService\ =\ new\ NotificationService(auditService)}
+\DoxyCodeLine{const\ incidentService\ =\ new\ SecurityIncidentService()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Configure\ incident\ handler}
+\DoxyCodeLine{incidentService.on('incident',\ async\ (incident)\ =>\ \{}
+\DoxyCodeLine{\ \ await\ notificationService.notifyIncident(incident)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ and\ report\ an\ incident}
+\DoxyCodeLine{async\ function\ reportUnauthorizedAccess(}
+\DoxyCodeLine{\ \ ipAddress:\ string,}
+\DoxyCodeLine{\ \ userId:\ string,}
+\DoxyCodeLine{\ \ attempts:\ number,}
+\DoxyCodeLine{)\ \{}
+\DoxyCodeLine{\ \ const\ incident\ =\ \{}
+\DoxyCodeLine{\ \ \ \ id:\ \`{}incident-\/\$\{Date.now()\}`,}
+\DoxyCodeLine{\ \ \ \ type:\ IncidentType.UNAUTHORIZED\_ACCESS,}
+\DoxyCodeLine{\ \ \ \ severity:\ attempts\ >\ 5\ ?\ IncidentSeverity.HIGH\ :\ IncidentSeverity.MEDIUM,}
+\DoxyCodeLine{\ \ \ \ source:\ 'auth-\/service',}
+\DoxyCodeLine{\ \ \ \ timestamp:\ new\ Date(),}
+\DoxyCodeLine{\ \ \ \ details:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ ipAddress,}
+\DoxyCodeLine{\ \ \ \ \ \ userId,}
+\DoxyCodeLine{\ \ \ \ \ \ attempts,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ await\ incidentService.reportIncident(incident)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 

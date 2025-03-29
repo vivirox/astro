@@ -1,0 +1,411 @@
+\doxysection{node\+\_\+modules/consola Directory Reference}
+\hypertarget{dir_5ce7e0bbd41b98863f0b1f9fb1858e0e}{}\label{dir_5ce7e0bbd41b98863f0b1f9fb1858e0e}\index{node\_modules/consola Directory Reference@{node\_modules/consola Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Elegant Console Wrapper \end{quote}
+
+
+\href{https://npmjs.com/package/consola}{\texttt{ }} \href{https://npmjs.com/package/consola}{\texttt{ }} \href{https://bundlephobia.com/result?p=consola}{\texttt{ }}\hypertarget{README.md_autotoc_md10933}{}\doxysubsection{\texorpdfstring{Why Consola?}{Why Consola?}}\label{README.md_autotoc_md10933}
+👌~ Easy to use~\newline
+ 💅~ Fancy output with fallback for minimal environments~\newline
+ 🔌~ Pluggable reporters~\newline
+ 💻~ Consistent command line interface (CLI) experience~\newline
+ 🏷~ Tag support~\newline
+ 🚏~ Redirect {\ttfamily console} and {\ttfamily stdout/stderr} to consola and easily restore redirect.~\newline
+ 🌐~ Browser support~\newline
+ ⏯~ Pause/\+Resume support~\newline
+ 👻~ Mocking support~\newline
+ 👮‍♂️~ Spam prevention by throttling logs~\newline
+ ❯~ Interactive prompt support powered by \href{https://github.com/natemoo-re/clack}{\texttt{ {\ttfamily clack}}}~\newline
+\hypertarget{README.md_autotoc_md10934}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md10934}
+Using npm\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ consola}
+
+\end{DoxyCode}
+
+
+Using yarn\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ consola}
+
+\end{DoxyCode}
+
+
+Using pnpm\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pnpm\ i\ consola}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10935}{}\doxysubsection{\texorpdfstring{Getting Started}{Getting Started}}\label{README.md_autotoc_md10935}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ESM}
+\DoxyCodeLine{import\ \{\ consola,\ createConsola\ \}\ from\ "{}consola"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ consola,\ createConsola\ \}\ =\ require("{}consola"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{consola.info("{}Using\ consola\ 3.0.0"{});}
+\DoxyCodeLine{consola.start("{}Building\ project..."{});}
+\DoxyCodeLine{consola.warn("{}A\ new\ version\ of\ consola\ is\ available:\ 3.0.1"{});}
+\DoxyCodeLine{consola.success("{}Project\ built!"{});}
+\DoxyCodeLine{consola.error(new\ Error("{}This\ is\ an\ example\ error.\ Everything\ is\ fine!"{}));}
+\DoxyCodeLine{consola.box("{}I\ am\ a\ simple\ box"{});}
+\DoxyCodeLine{await\ consola.prompt("{}Deploy\ to\ the\ production?"{},\ \{}
+\DoxyCodeLine{\ \ type:\ "{}confirm"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Will display in the terminal\+:
+
+
+
+You can use smaller core builds without fancy reporter to save 80\% of the bundle size\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ consola,\ createConsola\ \}\ from\ "{}consola/basic"{};}
+\DoxyCodeLine{import\ \{\ consola,\ createConsola\ \}\ from\ "{}consola/browser"{};}
+\DoxyCodeLine{import\ \{\ createConsola\ \}\ from\ "{}consola/core"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md10936}{}\doxysubsection{\texorpdfstring{Consola Methods}{Consola Methods}}\label{README.md_autotoc_md10936}
+\hypertarget{README.md_autotoc_md10937}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily \texorpdfstring{$<$}{<}type\texorpdfstring{$>$}{>}(log\+Object)} {\ttfamily \texorpdfstring{$<$}{<}type\texorpdfstring{$>$}{>}(args...)}}{{\ttfamily \texorpdfstring{$<$}{<}type\texorpdfstring{$>$}{>}(log\+Object)} {\ttfamily \texorpdfstring{$<$}{<}type\texorpdfstring{$>$}{>}(args...)}}}\label{README.md_autotoc_md10937}
+Log to all reporters.
+
+Example\+: `consola.\+info(\textquotesingle{}Message')\`{}\hypertarget{README.md_autotoc_md10938}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily await prompt(message, \{ type, cancel \})}}{{\ttfamily await prompt(message, \{ type, cancel \})}}}\label{README.md_autotoc_md10938}
+Show an input prompt. Type can either of {\ttfamily text}, {\ttfamily confirm}, {\ttfamily select} or {\ttfamily multiselect}.
+
+If prompt is canceled by user (with Ctrol+C), default value will be resolved by default. This strategy can be configured by setting {\ttfamily \{ cancel\+: "{}..."{} \}} option\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily "{}default"{}} -\/ Resolve the promise with the {\ttfamily default} value or {\ttfamily initial} value.
+\item {\ttfamily "{}undefined$<$/tt$>$"{} -\/ Resolve the promise with \`{}undefined\`{}.}
+\item {\ttfamily \`{}"{}null"{}\`{} -\/ Resolve the promise with \`{}null\`{}.}
+\item {\ttfamily \`{}"{}symbol"{}\`{} -\/ Resolve the promise with a symbol \`{}\+Symbol.for("{}cancel"{})\`{}.}
+\item {\ttfamily \`{}"{}reject"{}\`{} -\/ Reject the promise with an error.}
+\end{DoxyItemize}
+
+{\ttfamily See \href{./examples/prompt.ts}{\texttt{ examples/prompt.\+ts}} for usage examples.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10939}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily add\+Reporter(reporter)}}}{{\ttfamily {\ttfamily add\+Reporter(reporter)}}}}\label{README.md_autotoc_md10939}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item Aliases\+: {\ttfamily add}
+\end{DoxyItemize}}
+
+{\ttfamily Register a custom reporter instance.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10940}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily remove\+Reporter(reporter?)}}}{{\ttfamily {\ttfamily remove\+Reporter(reporter?)}}}}\label{README.md_autotoc_md10940}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item Aliases\+: {\ttfamily remove}, {\ttfamily clear}
+\end{DoxyItemize}}
+
+{\ttfamily Remove a registered reporter.}
+
+{\ttfamily If no arguments are passed all reporters will be removed.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10941}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily set\+Reporters(reporter\texorpdfstring{$\vert$}{|}reporter\mbox{[}\mbox{]})}}}{{\ttfamily {\ttfamily set\+Reporters(reporter\texorpdfstring{$\vert$}{|}reporter\mbox{[}\mbox{]})}}}}\label{README.md_autotoc_md10941}
+{\ttfamily }
+
+{\ttfamily Replace all reporters.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10942}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily create(options)}}}{{\ttfamily {\ttfamily create(options)}}}}\label{README.md_autotoc_md10942}
+{\ttfamily }
+
+{\ttfamily Create a new {\ttfamily Consola} instance and inherit all parent options for defaults.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10943}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily with\+Defaults(defaults)}}}{{\ttfamily {\ttfamily with\+Defaults(defaults)}}}}\label{README.md_autotoc_md10943}
+{\ttfamily }
+
+{\ttfamily Create a new {\ttfamily Consola} instance with provided defaults}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10944}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily with\+Tag(tag)}}}{{\ttfamily {\ttfamily with\+Tag(tag)}}}}\label{README.md_autotoc_md10944}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item Aliases\+: {\ttfamily with\+Scope}
+\end{DoxyItemize}}
+
+{\ttfamily Create a new {\ttfamily Consola} instance with that tag.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10945}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily wrap\+Console()} {\ttfamily restore\+Console()}}}{{\ttfamily {\ttfamily wrap\+Console()} {\ttfamily restore\+Console()}}}}\label{README.md_autotoc_md10945}
+{\ttfamily }
+
+{\ttfamily Globally redirect all {\ttfamily console.\+log}, etc calls to consola handlers.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10946}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily wrap\+Std()} {\ttfamily restore\+Std()}}}{{\ttfamily {\ttfamily wrap\+Std()} {\ttfamily restore\+Std()}}}}\label{README.md_autotoc_md10946}
+{\ttfamily }
+
+{\ttfamily Globally redirect all stdout/stderr outputs to consola.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10947}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily wrap\+All()} {\ttfamily restore\+All()}}}{{\ttfamily {\ttfamily wrap\+All()} {\ttfamily restore\+All()}}}}\label{README.md_autotoc_md10947}
+{\ttfamily }
+
+{\ttfamily Wrap both, std and console.}
+
+{\ttfamily console uses std in the underlying so calling {\ttfamily wrap\+Std} redirects console too. Benefit of this function is that things like {\ttfamily console.\+info} will be correctly redirected to the corresponding type.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10948}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily pause\+Logs()} {\ttfamily resume\+Logs()}}}{{\ttfamily {\ttfamily pause\+Logs()} {\ttfamily resume\+Logs()}}}}\label{README.md_autotoc_md10948}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item Aliases\+: {\ttfamily pause}/{\ttfamily resume}
+\end{DoxyItemize}}
+
+{\ttfamily {\bfseries{Globally}} pause and resume logs.}
+
+{\ttfamily Consola will enqueue all logs when paused and then sends them to the reported when resumed.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10949}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily mock\+Types}}}{{\ttfamily {\ttfamily mock\+Types}}}}\label{README.md_autotoc_md10949}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item Aliases\+: {\ttfamily mock}
+\end{DoxyItemize}}
+
+{\ttfamily Mock all types. Useful for using with tests.}
+
+{\ttfamily The first argument passed to {\ttfamily mock\+Types} should be a callback function accepting {\ttfamily (type\+Name, type)} and returning the mocked value\+:}
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Jest}
+\DoxyCodeLine{consola.mockTypes((typeName,\ type)\ =>\ jest.fn());}
+\DoxyCodeLine{//\ Vitest}
+\DoxyCodeLine{consola.mockTypes((typeName,\ type)\ =>\ vi.fn());}
+
+\end{DoxyCode}
+}
+
+{\ttfamily Please note that with the example above, everything is mocked independently for each type. If you need one mocked fn create it outside\+:}
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Jest}
+\DoxyCodeLine{const\ fn\ =\ jest.fn();}
+\DoxyCodeLine{//\ Vitest}
+\DoxyCodeLine{const\ fn\ =\ vi.fn();}
+\DoxyCodeLine{consola.mockTypes(()\ =>\ fn);}
+
+\end{DoxyCode}
+}
+
+{\ttfamily If callback function returns a {\itshape falsy} value, that type won\textquotesingle{}t be mocked.}
+
+{\ttfamily For example if you just need to mock {\ttfamily consola.\+fatal}\+:}
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Jest}
+\DoxyCodeLine{consola.mockTypes((typeName)\ =>\ typeName\ ===\ "{}fatal"{}\ \&\&\ jest.fn());}
+\DoxyCodeLine{//\ Vitest}
+\DoxyCodeLine{consola.mockTypes((typeName)\ =>\ typeName\ ===\ "{}fatal"{}\ \&\&\ vi.fn());}
+
+\end{DoxyCode}
+}
+
+{\ttfamily {\bfseries{NOTE\+:}} Any instance of consola that inherits the mocked instance, will apply provided callback again. This way, mocking works for {\ttfamily with\+Tag} scoped loggers without need to extra efforts.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10950}{}\doxysubsection{\texorpdfstring{{\ttfamily Custom Reporters}}{{\ttfamily Custom Reporters}}}\label{README.md_autotoc_md10950}
+{\ttfamily }
+
+{\ttfamily Consola ships with 3 built-\/in reporters out of the box. A fancy colored reporter by default and fallsback to a basic reporter if running in a testing or CI environment detected using \href{https://github.com/unjs/std-env}{\texttt{ unjs/std-\/env}} and a basic browser reporter.}
+
+{\ttfamily You can create a new reporter object that implements {\ttfamily \{ log(log\+Object)\+: () =\texorpdfstring{$>$}{>} \{ \} \}} interface.}
+
+{\ttfamily {\bfseries{Example\+:}} Simple JSON reporter}
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createConsola\ \}\ from\ "{}consola"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ consola\ =\ createConsola(\{}
+\DoxyCodeLine{\ \ reporters:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ log:\ (logObj)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(JSON.stringify(logObj));}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Prints\ \{"{}date"{}:"{}2023-\/04-\/18T12:43:38.693Z"{},"{}args"{}:["{}foo\ bar"{}],"{}type"{}:"{}log"{},"{}level"{}:2,"{}tag"{}:"{}"{}\}}
+\DoxyCodeLine{consola.log("{}foo\ bar"{});}
+
+\end{DoxyCode}
+}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10951}{}\doxysubsection{\texorpdfstring{{\ttfamily Log Level}}{{\ttfamily Log Level}}}\label{README.md_autotoc_md10951}
+{\ttfamily }
+
+{\ttfamily Consola only shows logs with configured log level or below. (Default is {\ttfamily 3})}
+
+{\ttfamily Available log levels\+:}
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item {\ttfamily 0}\+: Fatal and Error
+\item {\ttfamily 1}\+: Warnings
+\item {\ttfamily 2}\+: Normal logs
+\item {\ttfamily 3}\+: Informational logs, success, fail, ready, start, ...
+\item {\ttfamily 4}\+: Debug logs
+\item {\ttfamily 5}\+: Trace logs
+\item {\ttfamily -\/999}\+: Silent
+\item {\ttfamily +999}\+: Verbose logs
+\end{DoxyItemize}}
+
+{\ttfamily You can set the log level by either\+:}
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item Passing {\ttfamily level} option to {\ttfamily create\+Consola}
+\item Setting {\ttfamily consola.\+level} on instance
+\item Using the {\ttfamily CONSOLA\+\_\+\+LEVEL} environment variable (not supported for browser and core builds).
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10952}{}\doxysubsection{\texorpdfstring{{\ttfamily Log Types}}{{\ttfamily Log Types}}}\label{README.md_autotoc_md10952}
+{\ttfamily }
+
+{\ttfamily Log types are exposed as {\ttfamily consola.\mbox{[}type\mbox{]}(...)} and each is a preset of styles and log level.}
+
+{\ttfamily A list of all available built-\/in types is \href{./src/constants.ts}{\texttt{ available here}}.}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10953}{}\doxysubsection{\texorpdfstring{{\ttfamily Creating a new instance}}{{\ttfamily Creating a new instance}}}\label{README.md_autotoc_md10953}
+{\ttfamily }
+
+{\ttfamily Consola has a global instance and is recommended to use everywhere. In case more control is needed, create a new instance.}
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createConsola\ \}\ from\ "{}consola"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ logger\ =\ createConsola(\{}
+\DoxyCodeLine{\ \ //\ level:\ 4,}
+\DoxyCodeLine{\ \ //\ fancy:\ true\ |\ false}
+\DoxyCodeLine{\ \ //\ formatOptions:\ \{}
+\DoxyCodeLine{\ \ //\ \ \ \ \ columns:\ 80,}
+\DoxyCodeLine{\ \ //\ \ \ \ \ colors:\ false,}
+\DoxyCodeLine{\ \ //\ \ \ \ \ compact:\ false,}
+\DoxyCodeLine{\ \ //\ \ \ \ \ date:\ false,}
+\DoxyCodeLine{\ \ //\ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10954}{}\doxysubsection{\texorpdfstring{{\ttfamily Integrations}}{{\ttfamily Integrations}}}\label{README.md_autotoc_md10954}
+{\ttfamily }
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10955}{}\doxysubsubsection{\texorpdfstring{{\ttfamily With jest or vitest}}{{\ttfamily With jest or vitest}}}\label{README.md_autotoc_md10955}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{describe("{}your-\/consola-\/mock-\/test"{},\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ beforeAll(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Redirect\ std\ and\ console\ to\ consola\ too}
+\DoxyCodeLine{\ \ \ \ //\ Calling\ this\ once\ is\ sufficient}
+\DoxyCodeLine{\ \ \ \ consola.wrapAll();}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ beforeEach(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Re-\/mock\ consola\ before\ each\ test\ call\ to\ remove}
+\DoxyCodeLine{\ \ \ \ //\ calls\ from\ before}
+\DoxyCodeLine{\ \ \ \ //\ Jest}
+\DoxyCodeLine{\ \ \ \ consola.mockTypes(()\ =>\ jest.fn());}
+\DoxyCodeLine{\ \ \ \ //\ Vitest}
+\DoxyCodeLine{\ \ \ \ consola.mockTypes(()\ =>\ vi.fn());}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ test("{}your\ test"{},\ async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Some\ code\ here}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Let's\ retrieve\ all\ messages\ of\ \`{}consola.log`}
+\DoxyCodeLine{\ \ \ \ //\ Get\ the\ mock\ and\ map\ all\ calls\ to\ their\ first\ argument}
+\DoxyCodeLine{\ \ \ \ const\ consolaMessages\ =\ consola.log.mock.calls.map((c)\ =>\ c[0]);}
+\DoxyCodeLine{\ \ \ \ expect(consolaMessages).toContain("{}your\ message"{});}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10956}{}\doxysubsubsection{\texorpdfstring{{\ttfamily With jsdom}}{{\ttfamily With jsdom}}}\label{README.md_autotoc_md10956}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ new\ jsdom.VirtualConsole().sendTo(consola);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10957}{}\doxysubsection{\texorpdfstring{{\ttfamily Console Utils}}{{\ttfamily Console Utils}}}\label{README.md_autotoc_md10957}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ESM}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ stripAnsi,}
+\DoxyCodeLine{\ \ centerAlign,}
+\DoxyCodeLine{\ \ rightAlign,}
+\DoxyCodeLine{\ \ leftAlign,}
+\DoxyCodeLine{\ \ align,}
+\DoxyCodeLine{\ \ box,}
+\DoxyCodeLine{\ \ colors,}
+\DoxyCodeLine{\ \ getColor,}
+\DoxyCodeLine{\ \ colorize,}
+\DoxyCodeLine{\}\ from\ "{}consola/utils"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ stripAnsi\ \}\ =\ require("{}consola/utils"{});}
+
+\end{DoxyCode}
+}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10958}{}\doxysubsection{\texorpdfstring{{\ttfamily Raw logging methods}}{{\ttfamily Raw logging methods}}}\label{README.md_autotoc_md10958}
+{\ttfamily }
+
+{\ttfamily Objects sent to the reporter could lead to unexpected output when object is close to internal object structure containing either {\ttfamily message} or {\ttfamily args} props. To enforce the object to be interpreted as pure object, you can use the {\ttfamily raw} method chained to any log type.}
+
+{\ttfamily {\bfseries{Example\+:}}}
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Prints\ "{}hello"{}}
+\DoxyCodeLine{consola.log(\{\ message:\ "{}hello"{}\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Prints\ "{}\{\ message:\ 'hello'\ \}"{}}
+\DoxyCodeLine{consola.log.raw(\{\ message:\ "{}hello"{}\ \});}
+
+\end{DoxyCode}
+}
+
+{\ttfamily }\hypertarget{README.md_autotoc_md10959}{}\doxysubsection{\texorpdfstring{{\ttfamily License}}{{\ttfamily License}}}\label{README.md_autotoc_md10959}
+{\ttfamily }
+
+{\ttfamily MIT }

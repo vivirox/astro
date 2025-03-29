@@ -1,0 +1,109 @@
+\doxysection{node\+\_\+modules/parse-\/css-\/color Directory Reference}
+\hypertarget{dir_a56215d3bd67b3bf04019979e6a473b4}{}\label{dir_a56215d3bd67b3bf04019979e6a473b4}\index{node\_modules/parse-\/css-\/color Directory Reference@{node\_modules/parse-\/css-\/color Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/parse-css-color}{\texttt{ }}  \href{https://github.com/noeldelgado/parse-css-color/blob/master/LICENSE}{\texttt{ }} \href{https://snyk.io/test/npm/parse-css-color}{\texttt{ }} \href{https://libraries.io/npm/parse-css-color}{\texttt{ }} \href{https://lgtm.com/projects/g/noeldelgado/parse-css-color/alerts/}{\texttt{ }} \href{https://lgtm.com/projects/g/noeldelgado/parse-css-color/context:javascript}{\texttt{ }}
+
+Parse a CSS color string.\hypertarget{README.md_autotoc_md25540}{}\doxysubsubsection{\texorpdfstring{Supports}{Supports}}\label{README.md_autotoc_md25540}
+
+\begin{DoxyItemize}
+\item \texorpdfstring{$<$}{<}color value\texorpdfstring{$>$}{>}
+\begin{DoxyItemize}
+\item Hexadecimal RGB value\+: \#\+RGB \#\+RRGGBB
+\item \#\+RGBA \#\+RRGGBBAA (4 and 8-\/digit hexadecimal RGBA notation)
+\item RGB/A color module level 3 and 4 (number, percentage)
+\item HSL/A color module level 3 and 4 (number, deg, rad, turn)
+\end{DoxyItemize}
+\item \texorpdfstring{$<$}{<}color keyword\texorpdfstring{$>$}{>}
+\begin{DoxyItemize}
+\item One of the \href{https://www.w3.org/wiki/CSS/Properties/color/keywords}{\texttt{ pre-\/defined color keywords}}.
+\end{DoxyItemize}
+\item transparent
+\begin{DoxyItemize}
+\item Shorthand for transparent black, rgba(0,0,0,0).
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25541}{}\doxysubsubsection{\texorpdfstring{Does not support}{Does not support}}\label{README.md_autotoc_md25541}
+
+\begin{DoxyItemize}
+\item current\+Color
+\item inherit
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25542}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md25542}
+{\bfseries{NPM}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ parse-\/css-\/color}
+
+\end{DoxyCode}
+
+
+Or as a {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}} tag from a CDN as {\ttfamily parse\+Css\+Color}\+:
+
+{\bfseries{Unpkg CDN}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}https://unpkg.com/parse-\/css-\/color"{}></script>}
+
+\end{DoxyCode}
+
+
+{\bfseries{js\+Delivr CDN}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/npm/parse-\/css-\/color"{}></script>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25543}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md25543}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ parse\ from\ 'parse-\/css-\/color'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HEX/A}
+\DoxyCodeLine{parse('\#00f')}
+\DoxyCodeLine{//>\ \{\ type:\ 'rgb',\ values:\ [0,\ 0,\ 255],\ alpha:\ 1\ \}}
+\DoxyCodeLine{parse('\#00f8')}
+\DoxyCodeLine{//>\ \{\ type:\ 'rgb',\ values:\ [0,\ 0,\ 255],\ alpha:\ 0.5333333333333333\ \}}
+\DoxyCodeLine{parse('\#0000FF80')}
+\DoxyCodeLine{//>\ \{\ type:\ 'rgb',\ values:\ [0,\ 0,\ 255],\ alpha:\ 0.5019607843137255\ \}}
+\DoxyCodeLine{parse('\#00g')}
+\DoxyCodeLine{//>\ null}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HSL/A}
+\DoxyCodeLine{parse('hsl(270deg\ 60\%\ 70\%\ /\ 25\%)')}
+\DoxyCodeLine{//>\ \{\ type:\ 'hsl',\ values:\ [270,\ 60,\ 70],\ alpha:\ 0.25\ \}}
+\DoxyCodeLine{parse('hsl(4.71239rad\ 260\%\ -\/70\%\ /\ 0.5)')\ //\ clipped\ to}
+\DoxyCodeLine{//>\ \{\ type:\ 'hsl',\ values:\ [270,\ 100,\ 0],\ alpha:\ 0.5\ \}}
+\DoxyCodeLine{parse('hsla(.75turn,\ 60\%,\ 70\%,\ 50\%)')}
+\DoxyCodeLine{//>\ \{\ type:\ 'hsl',\ values:\ [270,\ 60,\ 70],\ alpha:\ 0.5\ \}}
+\DoxyCodeLine{parse('hsla(100deg\ 0\ 0\ /\ 0)')\ //\ error:\ missing\ percetanges}
+\DoxyCodeLine{//>\ null}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ RGB/A}
+\DoxyCodeLine{parse('rgb(255\ 0\ 0\ /\ 0.5)')}
+\DoxyCodeLine{//>\ \{\ type:\ 'rgb',\ values:\ [255,\ 0,\ 0],\ alpha:\ 0.5\ \}}
+\DoxyCodeLine{parse('rgb(500\ -\/100\ 0\ /\ 200\%)')\ //\ clipped\ to}
+\DoxyCodeLine{//>\ \{\ type:\ 'rgb',\ values:\ [255,\ 0,\ 0],\ alpha:\ 1\ \}}
+\DoxyCodeLine{parse('rgba(255,\ 0,\ 255,\ 20\%)')}
+\DoxyCodeLine{//>\ \{\ type:\ 'rgb',\ values:\ [255,\ 0,\ 255],\ alpha:\ 0.2\ \}}
+\DoxyCodeLine{parse('rgba(100\%\ 255\ 100\%\ /\ 0)')\ //\ error:\ mixed\ percetange\ with\ integer}
+\DoxyCodeLine{//>\ null}
+
+\end{DoxyCode}
+ See \href{https://github.com/noeldelgado/parse-css-color/tree/master/test}{\texttt{ tests}} for more cases.\hypertarget{README.md_autotoc_md25544}{}\doxysubsection{\texorpdfstring{Dev}{Dev}}\label{README.md_autotoc_md25544}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ \ \ \#\ install\ dependencies}
+\DoxyCodeLine{npm\ test\ \ \ \ \ \ \#\ run\ the\ tests\ (append\ \`{}-\/-\/\ -\/w`)\ to\ watch}
+\DoxyCodeLine{npm\ run\ dev\ \ \ \#\ watch\ for\ changes\ and\ rebuild}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25545}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{README.md_autotoc_md25545}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/noeldelgado/mix-css-color}{\texttt{ mix-\/css-\/color}} -\/ Mix two CSS colors together in variable proportion. Opacity is included in the calculations.
+\item \href{https://github.com/noeldelgado/values.js}{\texttt{ values.\+js}} -\/ Get the tints and shades of a CSS color.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25546}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md25546}
+MIT © \href{http://pixelia.me/}{\texttt{ Noel Delgado}} 

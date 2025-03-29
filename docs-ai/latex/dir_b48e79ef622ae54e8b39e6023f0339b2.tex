@@ -1,0 +1,74 @@
+\doxysection{node\+\_\+modules/pg-\/types Directory Reference}
+\hypertarget{dir_b48e79ef622ae54e8b39e6023f0339b2}{}\label{dir_b48e79ef622ae54e8b39e6023f0339b2}\index{node\_modules/pg-\/types Directory Reference@{node\_modules/pg-\/types Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This is the code that turns all the raw text from postgres into Java\+Script types for \href{https://github.com/brianc/node-postgres.git}{\texttt{ node-\/postgres}}\hypertarget{README.md_autotoc_md25910}{}\doxysubsection{\texorpdfstring{use}{use}}\label{README.md_autotoc_md25910}
+This module is consumed and exported from the root {\ttfamily pg} object of node-\/postgres. To access it, do the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ types\ =\ require('pg').types}
+
+\end{DoxyCode}
+
+
+Generally what you\textquotesingle{}ll want to do is override how a specific data-\/type is parsed and turned into a Java\+Script type. By default the Postgre\+SQL backend server returns everything as strings. Every data type corresponds to a unique {\ttfamily OID} within the server, and these {\ttfamily OIDs} are sent back with the query response. So, you need to match a particluar {\ttfamily OID} to a function you\textquotesingle{}d like to use to take the raw text input and produce a valid Java\+Script object as a result. {\ttfamily null} values are never parsed.
+
+Let\textquotesingle{}s do something I commonly like to do on projects\+: return 64-\/bit integers {\ttfamily (int8)} as Java\+Script integers. Because Java\+Script doesn\textquotesingle{}t have support for 64-\/bit integers node-\/postgres cannot confidently parse {\ttfamily int8} data type results as numbers because if you have a {\itshape huge} number it will overflow and the result you\textquotesingle{}d get back from node-\/postgres would not be the result in the database. That would be a {\bfseries{very bad thing}} so node-\/postgres just returns {\ttfamily int8} results as strings and leaves the parsing up to you. Let\textquotesingle{}s say that you know you don\textquotesingle{}t and wont ever have numbers greater than {\ttfamily int4} in your database, but you\textquotesingle{}re tired of receiving results from the {\ttfamily COUNT(\texorpdfstring{$\ast$}{*})} function as strings (because that function returns {\ttfamily int8}). You would do this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ types\ =\ require('pg').types}
+\DoxyCodeLine{types.setTypeParser(20,\ function(val)\ \{}
+\DoxyCodeLine{\ \ return\ parseInt(val,\ 10)}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+{\bfseries{boom}}\+: now you get numbers instead of strings.
+
+Just as another example -- not saying this is a good idea -- let\textquotesingle{}s say you want to return all dates from your database as \href{http://momentjs.com/docs/}{\texttt{ moment}} objects. Okay, do this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ types\ =\ require('pg').types}
+\DoxyCodeLine{var\ moment\ =\ require('moment')}
+\DoxyCodeLine{var\ parseFn\ =\ function(val)\ \{}
+\DoxyCodeLine{\ \ \ return\ val\ ===\ null\ ?\ null\ :\ moment(val)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{types.setTypeParser(types.builtins.TIMESTAMPTZ,\ parseFn)}
+\DoxyCodeLine{types.setTypeParser(types.builtins.TIMESTAMP,\ parseFn)}
+
+\end{DoxyCode}
+ {\itshape note\+: I\textquotesingle{}ve never done that with my dates, and I\textquotesingle{}m not 100\% sure moment can parse all the date strings returned from postgres. It\textquotesingle{}s just an example!}
+
+If you\textquotesingle{}re thinking "{}gee, this seems pretty handy, but how can I get a list of all the OIDs in the database and what they correspond to?!?!?!"{} worry not\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ psql\ -\/c\ "{}select\ typname,\ oid,\ typarray\ from\ pg\_type\ order\ by\ oid"{}}
+
+\end{DoxyCode}
+
+
+If you want to find out the OID of a specific type\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ psql\ -\/c\ "{}select\ typname,\ oid,\ typarray\ from\ pg\_type\ where\ typname\ =\ 'daterange'\ order\ by\ oid"{}}
+
+\end{DoxyCode}
+
+
+\+:smile\+:\hypertarget{README.md_autotoc_md25911}{}\doxysubsection{\texorpdfstring{license}{license}}\label{README.md_autotoc_md25911}
+The MIT License (MIT)
+
+Copyright (c) 2014 Brian M. Carlson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "{}\+Software"{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "{}\+AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 

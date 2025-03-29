@@ -1,0 +1,279 @@
+\doxysection{node\+\_\+modules/markdown-\/table Directory Reference}
+\hypertarget{dir_5902dd4f8e98cf2c64b7ed9b61858923}{}\label{dir_5902dd4f8e98cf2c64b7ed9b61858923}\index{node\_modules/markdown-\/table Directory Reference@{node\_modules/markdown-\/table Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/wooorm/markdown-table/actions}{\texttt{ }} \href{https://codecov.io/github/wooorm/markdown-table}{\texttt{ }} \href{https://www.npmjs.com/package/markdown-table}{\texttt{ }} \href{https://bundlephobia.com/result?p=markdown-table}{\texttt{ }}
+
+Generate a markdown (\href{https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables}{\texttt{ GFM}}) table.\hypertarget{readme.md_autotoc_md22214}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22214}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}markdown\+Table(table\mbox{[}, options\mbox{]})\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Inspiration
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22215}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22215}
+This is a simple package that takes table data and generates a \href{https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables}{\texttt{ Git\+Hub flavored markdown (GFM)}} table.\hypertarget{readme.md_autotoc_md22216}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md22216}
+You can use this package when you want to generate the source code of a GFM table from some data.
+
+This is a simple solution in that it doesn’t handle escapes or HTML or any of that. For a complete but heavier solution, build an AST and serialize it with \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} (with \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}}).\hypertarget{readme.md_autotoc_md22217}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22217}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 14.\+14+, 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ markdown-\/table}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{markdownTable\}\ from\ 'https://esm.sh/markdown-\/table@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{markdownTable\}\ from\ 'https://esm.sh/markdown-\/table@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22218}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22218}
+Typical usage (defaults to align left)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{markdownTable\}\ from\ 'markdown-\/table'}
+\DoxyCodeLine{}
+\DoxyCodeLine{markdownTable([}
+\DoxyCodeLine{\ \ ['Branch',\ 'Commit'],}
+\DoxyCodeLine{\ \ ['main',\ '0123456789abcdef'],}
+\DoxyCodeLine{\ \ ['staging',\ 'fedcba9876543210']}
+\DoxyCodeLine{])}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Branch\ \ |\ Commit\ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{|\ -\/-\/-\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ |}
+\DoxyCodeLine{|\ main\ \ \ \ |\ 0123456789abcdef\ |}
+\DoxyCodeLine{|\ staging\ |\ fedcba9876543210\ |}
+
+\end{DoxyCode}
+
+
+With align\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{markdownTable(}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ ['Beep',\ 'No.',\ 'Boop'],}
+\DoxyCodeLine{\ \ \ \ ['beep',\ '1024',\ 'xyz'],}
+\DoxyCodeLine{\ \ \ \ ['boop',\ '3388450',\ 'tuv'],}
+\DoxyCodeLine{\ \ \ \ ['foo',\ '10106',\ 'qrstuv'],}
+\DoxyCodeLine{\ \ \ \ ['bar',\ '45',\ 'lmno']}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ \{align:\ ['l',\ 'c',\ 'r']\}}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Beep\ |\ \ \ No.\ \ \ |\ \ \ Boop\ |}
+\DoxyCodeLine{|\ :-\/-\/-\/\ |\ :-\/-\/-\/-\/-\/:\ |\ -\/-\/-\/-\/-\/:\ |}
+\DoxyCodeLine{|\ beep\ |\ \ \ 1024\ \ |\ \ \ \ xyz\ |}
+\DoxyCodeLine{|\ boop\ |\ 3388450\ |\ \ \ \ tuv\ |}
+\DoxyCodeLine{|\ foo\ \ |\ \ 10106\ \ |\ qrstuv\ |}
+\DoxyCodeLine{|\ bar\ \ |\ \ \ \ 45\ \ \ |\ \ \ lmno\ |}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22219}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22219}
+This package exports the identifier {\ttfamily markdown\+Table}. There is no default export.\hypertarget{readme.md_autotoc_md22220}{}\doxysubsubsection{\texorpdfstring{{\ttfamily markdown\+Table(table\mbox{[}, options\mbox{]})}}{{\ttfamily markdown\+Table(table\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md22220}
+Generate a markdown table from table data (matrix of strings).\hypertarget{readme.md_autotoc_md22221}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily options}}{{\ttfamily options}}}\label{readme.md_autotoc_md22221}
+Configuration (optional).\hypertarget{readme.md_autotoc_md22222}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+align}}{{\ttfamily options.\+align}}}\label{readme.md_autotoc_md22222}
+One style for all columns, or styles for their respective columns ({\ttfamily string} or {\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}). Each style is either `\textquotesingle{}l'{\ttfamily (left),}\textquotesingle{}r\textquotesingle{}{\ttfamily (right), or}\textquotesingle{}c\textquotesingle{}{\ttfamily (center). Other values are treated as}\textquotesingle{}\textquotesingle{}{\ttfamily , which doesn’t place the colon in the alignment row but does align left. \texorpdfstring{$\ast$}{*}\+Only the lowercased first character is used, so}Right\`{} is fine.\texorpdfstring{$\ast$}{*}\hypertarget{readme.md_autotoc_md22223}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+padding}}{{\ttfamily options.\+padding}}}\label{readme.md_autotoc_md22223}
+Whether to add a space of padding between delimiters and cells ({\ttfamily boolean}, default\+: {\ttfamily true}).
+
+When {\ttfamily true}, there is padding\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ |\ B\ \ \ \ \ |}
+\DoxyCodeLine{|\ -\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/\ |}
+\DoxyCodeLine{|\ C\ \ \ \ \ |\ Delta\ |}
+
+\end{DoxyCode}
+
+
+When {\ttfamily false}, there is no padding\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|Alpha|B\ \ \ \ |}
+\DoxyCodeLine{|-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/|}
+\DoxyCodeLine{|C\ \ \ \ |Delta|}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22224}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+delimiter\+Start}}{{\ttfamily options.\+delimiter\+Start}}}\label{readme.md_autotoc_md22224}
+Whether to begin each row with the delimiter ({\ttfamily boolean}, default\+: {\ttfamily true}).
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: please don’t use this\+: it could create fragile structures that aren’t understandable to some markdown parsers. \end{quote}
+
+
+When {\ttfamily true}, there are starting delimiters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ |\ B\ \ \ \ \ |}
+\DoxyCodeLine{|\ -\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/\ |}
+\DoxyCodeLine{|\ C\ \ \ \ \ |\ Delta\ |}
+
+\end{DoxyCode}
+
+
+When {\ttfamily false}, there are no starting delimiters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Alpha\ |\ B\ \ \ \ \ |}
+\DoxyCodeLine{-\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/\ |}
+\DoxyCodeLine{C\ \ \ \ \ |\ Delta\ |}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22225}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+delimiter\+End}}{{\ttfamily options.\+delimiter\+End}}}\label{readme.md_autotoc_md22225}
+Whether to end each row with the delimiter ({\ttfamily boolean}, default\+: {\ttfamily true}).
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: please don’t use this\+: it could create fragile structures that aren’t understandable to some markdown parsers. \end{quote}
+
+
+When {\ttfamily true}, there are ending delimiters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ |\ B\ \ \ \ \ |}
+\DoxyCodeLine{|\ -\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/\ |}
+\DoxyCodeLine{|\ C\ \ \ \ \ |\ Delta\ |}
+
+\end{DoxyCode}
+
+
+When {\ttfamily false}, there are no ending delimiters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ |\ B}
+\DoxyCodeLine{|\ -\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/}
+\DoxyCodeLine{|\ C\ \ \ \ \ |\ Delta}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22226}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+align\+Delimiters}}{{\ttfamily options.\+align\+Delimiters}}}\label{readme.md_autotoc_md22226}
+Whether to align the delimiters ({\ttfamily boolean}, default\+: {\ttfamily true}). By default, they are aligned\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ |\ B\ \ \ \ \ |}
+\DoxyCodeLine{|\ -\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/\ |}
+\DoxyCodeLine{|\ C\ \ \ \ \ |\ Delta\ |}
+
+\end{DoxyCode}
+
+
+Pass {\ttfamily false} to make them staggered\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ |\ B\ |}
+\DoxyCodeLine{|\ -\/\ |\ -\/\ |}
+\DoxyCodeLine{|\ C\ |\ Delta\ |}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22227}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+string\+Length}}{{\ttfamily options.\+string\+Length}}}\label{readme.md_autotoc_md22227}
+Function to detect the length of table cell content ({\ttfamily Function}, default\+: {\ttfamily s =\texorpdfstring{$>$}{>} s.\+length}). This is used when aligning the delimiters ({\ttfamily \texorpdfstring{$\vert$}{|}}) between table cells. Full-\/width characters and emoji mess up delimiter alignment when viewing the markdown source. To fix this, you can pass this function, which receives the cell content and returns its “visible” size. Note that what is and isn’t visible depends on where the text is displayed.
+
+Without such a function, the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{markdownTable([}
+\DoxyCodeLine{\ \ ['Alpha',\ 'Bravo'],}
+\DoxyCodeLine{\ \ ['中文',\ 'Charlie'],}
+\DoxyCodeLine{\ \ ['👩‍❤️‍👩',\ 'Delta']}
+\DoxyCodeLine{])}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ |\ Bravo\ |}
+\DoxyCodeLine{|\ -\/\ |\ -\/\ |}
+\DoxyCodeLine{|\ 中文\ |\ Charlie\ |}
+\DoxyCodeLine{|\ 👩‍❤️‍👩\ |\ Delta\ |}
+
+\end{DoxyCode}
+
+
+With \href{https://github.com/sindresorhus/string-width}{\texttt{ {\ttfamily string-\/width}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ stringWidth\ from\ 'string-\/width'}
+\DoxyCodeLine{}
+\DoxyCodeLine{markdownTable(}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ ['Alpha',\ 'Bravo'],}
+\DoxyCodeLine{\ \ \ \ ['中文',\ 'Charlie'],}
+\DoxyCodeLine{\ \ \ \ ['👩‍❤️‍👩',\ 'Delta']}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ \{stringLength:\ stringWidth\}}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{|\ Alpha\ |\ Bravo\ \ \ |}
+\DoxyCodeLine{|\ -\/-\/-\/-\/-\/\ |\ -\/-\/-\/-\/-\/-\/-\/\ |}
+\DoxyCodeLine{|\ 中文\ \ |\ Charlie\ |}
+\DoxyCodeLine{|\ 👩‍❤️‍👩\ \ \ \ |\ Delta\ \ \ |}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22228}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md22228}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type {\ttfamily Options}.\hypertarget{readme.md_autotoc_md22229}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md22229}
+This package is at least compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 14.\+14+ and 16.\+0+. It also works in Deno and modern browsers.\hypertarget{readme.md_autotoc_md22230}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md22230}
+This package is safe.\hypertarget{readme.md_autotoc_md22231}{}\doxysubsection{\texorpdfstring{Inspiration}{Inspiration}}\label{readme.md_autotoc_md22231}
+The original idea and basic implementation was inspired by James Halliday’s \href{https://github.com/substack/text-table}{\texttt{ {\ttfamily text-\/table}}} library.\hypertarget{readme.md_autotoc_md22232}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md22232}
+Yes please! See \href{https://opensource.guide/how-to-contribute/}{\texttt{ How to Contribute to Open Source}}.\hypertarget{readme.md_autotoc_md22233}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md22233}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

@@ -1,0 +1,61 @@
+\doxysection{node\+\_\+modules/pathe Directory Reference}
+\hypertarget{dir_650bd2a139fe9c4a7778850d43622592}{}\label{dir_650bd2a139fe9c4a7778850d43622592}\index{node\_modules/pathe Directory Reference@{node\_modules/pathe Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Universal filesystem path utils \end{quote}
+
+
+\href{https://npmjs.com/package/pathe}{\texttt{ }} \href{https://npmjs.com/package/pathe}{\texttt{ }} \href{https://packagephobia.now.sh/result?p=pathe}{\texttt{ }}\hypertarget{README.md_autotoc_md25856}{}\doxysubsection{\texorpdfstring{❓ Why}{❓ Why}}\label{README.md_autotoc_md25856}
+For \href{https://docs.microsoft.com/en-us/archive/blogs/larryosterman/why-is-the-dos-path-character}{\texttt{ historical reasons}}, windows followed MS-\/\+DOS and used backslash for separating paths rather than slash used for mac\+OS, Linux, and other Posix operating systems. Nowadays, \href{https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file?redirectedfrom=MSDN}{\texttt{ Windows}} supports both Slash and Backslash for paths. \href{https://nodejs.org/api/path.html}{\texttt{ Node.\+js\textquotesingle{}s built-\/in {\ttfamily path} module}} in the default operation of the path module varies based on the operating system on which a Node.\+js application is running. Specifically, when running on a Windows operating system, the path module will assume that Windows-\/style paths are being used. {\bfseries{This makes inconsistent code behavior between Windows and POSIX.}}
+
+Compared to popular \href{https://github.com/anodynos/upath}{\texttt{ upath}}, pathe provides {\bfseries{identical exports}} of Node.\+js with normalization on {\bfseries{all operations}} and is written in modern {\bfseries{ESM/\+Type\+Script}} and has {\bfseries{no dependency on Node.\+js}}!
+
+This package is a drop-\/in replacement of the Node.\+js\textquotesingle{}s \href{https://nodejs.org/api/path.html}{\texttt{ path module}} module and ensures paths are normalized with slash {\ttfamily /} and work in environments including Node.\+js.\hypertarget{README.md_autotoc_md25857}{}\doxysubsection{\texorpdfstring{💿 Usage}{💿 Usage}}\label{README.md_autotoc_md25857}
+Install using npm or yarn\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ i\ pathe}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ pathe}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ pnpm}
+\DoxyCodeLine{pnpm\ i\ pathe}
+
+\end{DoxyCode}
+
+
+Import\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ESM\ /\ Typescript}
+\DoxyCodeLine{import\ \{\ resolve,\ matchesGlob\ \}\ from\ "{}pathe"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ resolve,\ matchesGlob\ \}\ =\ require("{}pathe"{});}
+
+\end{DoxyCode}
+
+
+Read more about path utils from \href{https://nodejs.org/api/path.html}{\texttt{ Node.\+js documentation}} and rest assured behavior is consistently like POSIX regardless of your input paths format and running platform (the only exception is {\ttfamily delimiter} constant export, it will be set to {\ttfamily ;} on windows platform).\hypertarget{README.md_autotoc_md25858}{}\doxysubsubsection{\texorpdfstring{Extra utilities}{Extra utilities}}\label{README.md_autotoc_md25858}
+Pathe exports some extra utilities that do not exist in standard Node.\+js \href{https://nodejs.org/api/path.html}{\texttt{ path module}}. In order to use them, you can import from {\ttfamily pathe/utils} subpath\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ filename,}
+\DoxyCodeLine{\ \ normalizeAliases,}
+\DoxyCodeLine{\ \ resolveAlias,}
+\DoxyCodeLine{\ \ reverseResolveAlias,}
+\DoxyCodeLine{\}\ from\ "{}pathe/utils"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25859}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md25859}
+Made with 💛 Published under the \href{./LICENSE}{\texttt{ MIT}} license.
+
+Some code was used from the Node.\+js project. Glob supported is powered by \href{https://github.com/fabiospampinato/zeptomatch}{\texttt{ zeptomatch}}. 

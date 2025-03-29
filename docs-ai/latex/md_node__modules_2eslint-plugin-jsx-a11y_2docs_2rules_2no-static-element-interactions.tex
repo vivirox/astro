@@ -1,0 +1,141 @@
+\chapter{jsx-\/a11y/no-\/static-\/element-\/interactions}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions}{}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions}\index{jsx-\/a11y/no-\/static-\/element-\/interactions@{jsx-\/a11y/no-\/static-\/element-\/interactions}}
+\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13945}%
+\Hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13945}%
+
+
+💼 This rule is enabled in the following configs\+: ☑️ {\ttfamily recommended}, 🔒 {\ttfamily strict}.
+
+Static HTML elements do not have semantic meaning. This is clear in the case of {\ttfamily \texorpdfstring{$<$}{<}div\texorpdfstring{$>$}{>}} and {\ttfamily \texorpdfstring{$<$}{<}span\texorpdfstring{$>$}{>}}. It is less so clear in the case of elements that {\itshape seem} semantic, but that do not have a semantic mapping in the accessibility layer. For example {\ttfamily \texorpdfstring{$<$}{<}a\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}big\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}blockquote\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}footer\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}picture\texorpdfstring{$>$}{>}}, {\ttfamily \texorpdfstring{$<$}{<}strike\texorpdfstring{$>$}{>}} and {\ttfamily \texorpdfstring{$<$}{<}time\texorpdfstring{$>$}{>}} -- to name a few -- have no semantic layer mapping. They are as void of meaning as {\ttfamily \texorpdfstring{$<$}{<}div\texorpdfstring{$>$}{>}}.
+
+The \href{https://www.w3.org/TR/wai-aria-1.1/\#usage_intro}{\texttt{ WAI-\/\+ARIA {\ttfamily role} attribute}} confers a semantic mapping to an element. The semantic value can then be expressed to a user via assistive technology.
+
+In order to add interactivity such as a mouse or key event listener to a static element, that element must be given a role value as well.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13946}{}\doxysection{\texorpdfstring{How do I resolve this error?}{How do I resolve this error?}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13946}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13947}{}\doxysubsection{\texorpdfstring{Case\+: This element acts like a button, link, menuitem, etc}{Case\+: This element acts like a button, link, menuitem, etc}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13947}
+Indicate the element\textquotesingle{}s role with the {\ttfamily role} attribute\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div}
+\DoxyCodeLine{\ \ onClick=\{onClickHandler\}}
+\DoxyCodeLine{\ \ onKeyPress=\{onKeyPressHandler\}}
+\DoxyCodeLine{\ \ role="{}button"{}}
+\DoxyCodeLine{\ \ tabindex="{}0"{}>}
+\DoxyCodeLine{\ \ Save}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+
+
+Common interactive roles include\+:
+
+
+\begin{DoxyEnumerate}
+\item {\ttfamily button}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily link}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily checkbox}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily menuitem}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily menuitemcheckbox}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily menuitemradio}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily option}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily radio}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily searchbox}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily switch}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily textbox}
+\end{DoxyEnumerate}
+
+Note\+: Adding a role to your element does {\bfseries{not}} add behavior. When a semantic HTML element like {\ttfamily \texorpdfstring{$<$}{<}button\texorpdfstring{$>$}{>}} is used, then it will also respond to Enter key presses when it has focus. The developer is responsible for providing the expected behavior of an element that the role suggests it would have\+: focusability and key press support.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13948}{}\doxysubsection{\texorpdfstring{Case\+: The event handler is only being used to capture bubbled events}{Case\+: The event handler is only being used to capture bubbled events}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13948}
+If your element is catching bubbled click or key events from descendant elements, there are no appropriate roles for your element\+: you will have to deactivate the rule. Consider explaining the reason for disabling the rule as well.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{/*\ The\ <div>\ element\ has\ a\ child\ <button>\ element\ that\ allows\ keyboard\ interaction\ */\}}
+\DoxyCodeLine{\{/*\ eslint-\/disable-\/next-\/line\ jsx-\/a11y/no-\/static-\/element-\/interactions\ */\}}
+\DoxyCodeLine{<div\ onClick=\{this.handleButtonClick\}>}
+\DoxyCodeLine{\ \ <button>Save</button>}
+\DoxyCodeLine{\ \ <button>Cancel</button>}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+
+
+Do not use the role {\ttfamily presentation} on the element\+: it removes the element\textquotesingle{}s semantics, and may also remove its children\textquotesingle{}s semantics, creating big issues with assistive technology.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13949}{}\doxysection{\texorpdfstring{Rule options}{Rule options}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13949}
+You may configure which handler props should be taken into account when applying this rule. The recommended configuration includes the following 6 handlers and the {\ttfamily allow\+Expression\+Values} option.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{'jsx-\/a11y/no-\/static-\/element-\/interactions':\ [}
+\DoxyCodeLine{\ \ 'error',}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ handlers:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ 'onClick',}
+\DoxyCodeLine{\ \ \ \ \ \ 'onMouseDown',}
+\DoxyCodeLine{\ \ \ \ \ \ 'onMouseUp',}
+\DoxyCodeLine{\ \ \ \ \ \ 'onKeyPress',}
+\DoxyCodeLine{\ \ \ \ \ \ 'onKeyDown',}
+\DoxyCodeLine{\ \ \ \ \ \ 'onKeyUp',}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ allowExpressionValues:\ true,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{],}
+
+\end{DoxyCode}
+
+
+Adjust the list of handler prop names in the handlers array to increase or decrease the coverage surface of this rule in your codebase.
+
+The {\ttfamily allow\+Expression\+Values} option determines whether the {\ttfamily role} attribute is allowed to be assigned using an expression. For example, the following would pass in recommended mode if {\ttfamily allow\+Expression\+Values} is set to be {\ttfamily true}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ role=\{ROLE\_BUTTON\}\ onClick=\{()\ =>\ \{\}\}\ />;}
+\DoxyCodeLine{//\ In\ case\ of\ a\ conditional\ expression,\ there\ should\ be\ literals\ on\ both\ sides\ of\ ternary\ operator}
+\DoxyCodeLine{<div\ role=\{isButton\ ?\ "{}button"{}\ :\ "{}link"{}\}\ onClick=\{()\ =>\ \{\}\}\ />;}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13950}{}\doxysubsection{\texorpdfstring{Succeed}{Succeed}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13950}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<button\ onClick=\{()\ =>\ \{\}\}\ className="{}foo"{}\ />}
+\DoxyCodeLine{<div\ className="{}foo"{}\ onClick=\{()\ =>\ \{\}\}\ role="{}button"{}\ />}
+\DoxyCodeLine{<input\ type="{}text"{}\ onClick=\{()\ =>\ \{\}\}\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13951}{}\doxysubsection{\texorpdfstring{Fail}{Fail}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13951}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ onClick=\{()\ =>\ \{\}\}\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13952}{}\doxysection{\texorpdfstring{Accessibility guidelines}{Accessibility guidelines}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13952}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/name-role-value}{\texttt{ WCAG 4.\+1.\+2}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13953}{}\doxysubsection{\texorpdfstring{Resources}{Resources}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-static-element-interactions_autotoc_md13953}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/TR/wai-aria-1.1/\#usage_intro}{\texttt{ WAI-\/\+ARIA {\ttfamily role} attribute}}
+\item \href{https://www.w3.org/TR/wai-aria-practices-1.1/\#aria_ex}{\texttt{ WAI-\/\+ARIA Authoring Practices Guide -\/ Design Patterns and Widgets}}
+\item \href{https://www.w3.org/TR/wai-aria-practices-1.1/\#kbd_generalnav}{\texttt{ Fundamental Keyboard Navigation Conventions}}
+\item \href{https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role\#Keyboard_and_focus}{\texttt{ Mozilla Developer Network -\/ ARIA Techniques}} 
+\end{DoxyItemize}

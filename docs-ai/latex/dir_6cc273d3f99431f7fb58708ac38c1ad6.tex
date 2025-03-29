@@ -1,0 +1,216 @@
+\doxysection{node\+\_\+modules/@inquirer/search Directory Reference}
+\hypertarget{dir_6cc273d3f99431f7fb58708ac38c1ad6}{}\label{dir_6cc273d3f99431f7fb58708ac38c1ad6}\index{node\_modules/"@inquirer/search Directory Reference@{node\_modules/"@inquirer/search Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Interactive search prompt component for command line interfaces.
+
+\hypertarget{README.md_autotoc_md3806}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md3806}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ npm }&\cellcolor{\tableheadbgcolor}\textbf{ yarn  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ npm }&\cellcolor{\tableheadbgcolor}\textbf{ yarn  }\\\cline{1-2}
+\endhead
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @inquirer/prompts}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ @inquirer/prompts}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @inquirer/search}
+
+\end{DoxyCode}
+
+
+&
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ @inquirer/search}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md3807}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3807}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ search,\ Separator\ \}\ from\ '@inquirer/prompts';}
+\DoxyCodeLine{//\ Or}
+\DoxyCodeLine{//\ import\ search,\ \{\ Separator\ \}\ from\ '@inquirer/search';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ answer\ =\ await\ search(\{}
+\DoxyCodeLine{\ \ message:\ 'Select\ an\ npm\ package',}
+\DoxyCodeLine{\ \ source:\ async\ (input,\ \{\ signal\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (!input)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ [];}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ const\ response\ =\ await\ fetch(}
+\DoxyCodeLine{\ \ \ \ \ \ \`{}https://registry.npmjs.org/-\//v1/search?text=\$\{encodeURIComponent(input)\}\&size=20`,}
+\DoxyCodeLine{\ \ \ \ \ \ \{\ signal\ \},}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{\ \ \ \ const\ data\ =\ await\ response.json();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ return\ data.objects.map((pkg)\ =>\ (\{}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ pkg.package.name,}
+\DoxyCodeLine{\ \ \ \ \ \ value:\ pkg.package.name,}
+\DoxyCodeLine{\ \ \ \ \ \ description:\ pkg.package.description,}
+\DoxyCodeLine{\ \ \ \ \}));}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3808}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md3808}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Property   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Required   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Property   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Required   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endhead
+message   &{\ttfamily string}   &yes   &The question to ask    \\\cline{1-4}
+source   &{\ttfamily (term\+: string \textbackslash{}\texorpdfstring{$\vert$}{|} void) =\texorpdfstring{$>$}{>} Promise\texorpdfstring{$<$}{<}Choice\mbox{[}\mbox{]}\texorpdfstring{$>$}{>}}   &yes   &This function returns the choices relevant to the search term.    \\\cline{1-4}
+page\+Size   &{\ttfamily number}   &no   &By default, lists of choice longer than 7 will be paginated. Use this option to control how many choices will appear on the screen at once.    \\\cline{1-4}
+validate   &{\ttfamily Value =\texorpdfstring{$>$}{>} boolean \textbackslash{}\texorpdfstring{$\vert$}{|} string \textbackslash{}\texorpdfstring{$\vert$}{|} Promise\texorpdfstring{$<$}{<}boolean \textbackslash{}\texorpdfstring{$\vert$}{|} string\texorpdfstring{$>$}{>}}   &no   &On submit, validate the answer. When returning a string, it\textquotesingle{}ll be used as the error message displayed to the user. Note\+: returning a rejected promise, we\textquotesingle{}ll assume a code error happened and crash.    \\\cline{1-4}
+theme   &See Theming   &no   &Customize look of the prompt.   \\\cline{1-4}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md3809}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily source} function}{{\ttfamily source} function}}\label{README.md_autotoc_md3809}
+The full signature type of {\ttfamily source} is as follow\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function(}
+\DoxyCodeLine{\ \ term:\ string\ |\ void,}
+\DoxyCodeLine{\ \ opt:\ \{\ signal:\ AbortSignal\ \},}
+\DoxyCodeLine{):\ Promise<ReadonlyArray<Choice<Value>\ |\ Separator>>;}
+
+\end{DoxyCode}
+
+
+When {\ttfamily term} is {\ttfamily undefined}, it means the search term input is empty. You can use this to return default choices, or return an empty array.
+
+Aside from returning the choices\+:
+
+
+\begin{DoxyEnumerate}
+\item An {\ttfamily Abort\+Signal} is passed in to cancel ongoing network calls when the search term change.
+\item {\ttfamily Separator}s can be used to organize the list.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md3810}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Choice} object}{{\ttfamily Choice} object}}\label{README.md_autotoc_md3810}
+The {\ttfamily Choice} object is typed as
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Choice<Value>\ =\ \{}
+\DoxyCodeLine{\ \ value:\ Value;}
+\DoxyCodeLine{\ \ name?:\ string;}
+\DoxyCodeLine{\ \ description?:\ string;}
+\DoxyCodeLine{\ \ short?:\ string;}
+\DoxyCodeLine{\ \ disabled?:\ boolean\ |\ string;}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+Here\textquotesingle{}s each property\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily value}\+: The value is what will be returned by {\ttfamily await search()}.
+\item {\ttfamily name}\+: This is the string displayed in the choice list.
+\item {\ttfamily description}\+: Option for a longer description string that\textquotesingle{}ll appear under the list when the cursor highlight a given choice.
+\item {\ttfamily short}\+: Once the prompt is done (press enter), we\textquotesingle{}ll use {\ttfamily short} if defined to render next to the question. By default we\textquotesingle{}ll use {\ttfamily name}.
+\item {\ttfamily disabled}\+: Disallow the option from being selected. If {\ttfamily disabled} is a string, it\textquotesingle{}ll be used as a help tip explaining why the choice isn\textquotesingle{}t available.
+\end{DoxyItemize}
+
+Choices can also be an array of string, in which case the string will be used both as the {\ttfamily value} and the {\ttfamily name}.\hypertarget{README.md_autotoc_md3811}{}\doxysubsubsubsection{\texorpdfstring{Validation \& autocomplete interaction}{Validation \& autocomplete interaction}}\label{README.md_autotoc_md3811}
+The validation within the search prompt acts as a signal for the autocomplete feature.
+
+When a list value is submitted and fail validation, the prompt will compare it to the search term. If they\textquotesingle{}re the same, the prompt display the error. If they\textquotesingle{}re not the same, we\textquotesingle{}ll autocomplete the search term to match the value. Doing this will trigger a new search.
+
+You can rely on this behavior to implement progressive autocomplete searches. Where you want the user to narrow the search in a progressive manner.
+
+Pressing {\ttfamily tab} also triggers the term autocomplete.
+
+You can see this behavior in action in \href{https://github.com/SBoudrias/Inquirer.js/blob/main/packages/demo/demos/search.mjs}{\texttt{ our search demo}}.\hypertarget{README.md_autotoc_md3812}{}\doxysubsubsection{\texorpdfstring{Theming}{Theming}}\label{README.md_autotoc_md3812}
+You can theme a prompt by passing a {\ttfamily theme} object option. The theme object only need to includes the keys you wish to modify, we\textquotesingle{}ll fallback on the defaults for the rest.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Theme\ =\ \{}
+\DoxyCodeLine{\ \ prefix:\ string\ |\ \{\ idle:\ string;\ done:\ string\ \};}
+\DoxyCodeLine{\ \ spinner:\ \{}
+\DoxyCodeLine{\ \ \ \ interval:\ number;}
+\DoxyCodeLine{\ \ \ \ frames:\ string[];}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\ \ style:\ \{}
+\DoxyCodeLine{\ \ \ \ answer:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ message:\ (text:\ string,\ status:\ 'idle'\ |\ 'done'\ |\ 'loading')\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ error:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ help:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ highlight:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ description:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ disabled:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \ \ searchTerm:\ (text:\ string)\ =>\ string;}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\ \ icon:\ \{}
+\DoxyCodeLine{\ \ \ \ cursor:\ string;}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\ \ helpMode:\ 'always'\ |\ 'never'\ |\ 'auto';}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3813}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily theme.\+help\+Mode}}{{\ttfamily theme.\+help\+Mode}}}\label{README.md_autotoc_md3813}
+
+\begin{DoxyItemize}
+\item {\ttfamily auto} (default)\+: Hide the help tips after an interaction occurs.
+\item {\ttfamily always}\+: The help tips will always show and never hide.
+\item {\ttfamily never}\+: The help tips will never show.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md3814}{}\doxysubsubsection{\texorpdfstring{Recipes}{Recipes}}\label{README.md_autotoc_md3814}
+\hypertarget{README.md_autotoc_md3815}{}\doxysubsubsubsection{\texorpdfstring{Debounce search}{Debounce search}}\label{README.md_autotoc_md3815}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ setTimeout\ \}\ from\ 'node:timers/promises';}
+\DoxyCodeLine{import\ \{\ search\ \}\ from\ '@inquirer/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ answer\ =\ await\ search(\{}
+\DoxyCodeLine{\ \ message:\ 'Select\ an\ npm\ package',}
+\DoxyCodeLine{\ \ source:\ async\ (input,\ \{\ signal\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ await\ setTimeout(300);}
+\DoxyCodeLine{\ \ \ \ if\ (signal.aborted)\ return\ [];}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Do\ the\ search}
+\DoxyCodeLine{\ \ \ \ fetch(...)}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3816}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md3816}
+Copyright (c) 2024 Simon Boudrias (twitter\+: \href{https://twitter.com/Vaxilart}{\texttt{ @vaxilart}})~\newline
+ Licensed under the MIT license. 

@@ -1,0 +1,180 @@
+\doxysection{node\+\_\+modules/bcp-\/47 Directory Reference}
+\hypertarget{dir_5b58b376ed177ddde00a303f4453cf2c}{}\label{dir_5b58b376ed177ddde00a303f4453cf2c}\index{node\_modules/bcp-\/47 Directory Reference@{node\_modules/bcp-\/47 Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/wooorm/bcp-47/actions}{\texttt{ }} \href{https://codecov.io/github/wooorm/bcp-47}{\texttt{ }} \href{https://www.npmjs.com/package/bcp-47}{\texttt{ }} \href{https://bundlephobia.com/result?p=bcp-47}{\texttt{ }}
+
+Parse and stringify \href{https://tools.ietf.org/rfc/bcp/bcp47.html}{\texttt{ BCP 47}} language tags.\hypertarget{readme.md_autotoc_md9177}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md9177}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}parse(tag\mbox{[}, options\mbox{]})\`{}
+\item \`{}stringify(schema)\`{}
+\item \`{}\+Schema\`{}
+\item \`{}function warning(reason, code, offset)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md9178}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md9178}
+This is a package that can parse BCP 47 language tags to an object representing them, and serialize those objects back into language tags. It supports a forgiving mode to handle incorrect BCP 47 tags and can emit warnings about problems in incorrect tags.\hypertarget{readme.md_autotoc_md9179}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md9179}
+You can use this package if you need to access the data stored in BCP 47 language tags. You can also use this package if you want to check (lint) or manipulate tags.\hypertarget{readme.md_autotoc_md9180}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md9180}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 12.\+20+, 14.\+14+, or 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ bcp-\/47}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://www.skypack.dev}{\texttt{ Skypack}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ bcp47\ from\ 'https://cdn.skypack.dev/bcp-\/47@2?dts'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://www.skypack.dev}{\texttt{ Skypack}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ *\ as\ bcp47\ from\ 'https://cdn.skypack.dev/bcp-\/47@2?min'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md9181}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md9181}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{parse,\ stringify\}\ from\ 'bcp-\/47'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ schema\ =\ parse('hy-\/Latn-\/IT-\/arevela')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(schema)}
+\DoxyCodeLine{console.log(stringify(schema))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ language:\ 'hy',}
+\DoxyCodeLine{\ \ extendedLanguageSubtags:\ [],}
+\DoxyCodeLine{\ \ script:\ 'Latn',}
+\DoxyCodeLine{\ \ region:\ 'IT',}
+\DoxyCodeLine{\ \ variants:\ ['arevela'],}
+\DoxyCodeLine{\ \ extensions:\ [],}
+\DoxyCodeLine{\ \ privateuse:\ [],}
+\DoxyCodeLine{\ \ irregular:\ null,}
+\DoxyCodeLine{\ \ regular:\ null\ \}}
+\DoxyCodeLine{'hy-\/Latn-\/IT-\/arevela'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md9182}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md9182}
+This package exports the following identifiers\+: {\ttfamily parse} and {\ttfamily stringify}. There is no default export.\hypertarget{readme.md_autotoc_md9183}{}\doxysubsubsection{\texorpdfstring{{\ttfamily parse(tag\mbox{[}, options\mbox{]})}}{{\ttfamily parse(tag\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md9183}
+Parse a BCP 47 tag into a language schema. Note that the algorithm is case insensitive.\hypertarget{readme.md_autotoc_md9184}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+normalize}}{{\ttfamily options.\+normalize}}}\label{readme.md_autotoc_md9184}
+Whether to normalize legacy tags when possible ({\ttfamily boolean}, default\+: {\ttfamily true}). For example, {\ttfamily i-\/klingon} does not match the BCP 47 language algorithm but is considered valid by BCP 47 nonetheless. It is suggested to use {\ttfamily tlh} instead (the ISO 639-\/3 code for Klingon). When {\ttfamily normalize} is {\ttfamily true}, passing {\ttfamily i-\/klingon} or other deprecated tags, is handled as if their suggested valid tag was given instead.\hypertarget{readme.md_autotoc_md9185}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+forgiving}}{{\ttfamily options.\+forgiving}}}\label{readme.md_autotoc_md9185}
+By default, when an error is encountered, an empty object is returned. When in forgiving mode, all found values up to the point of the error are included ({\ttfamily boolean}, default\+: {\ttfamily false}). So, for example, where by default {\ttfamily en-\/\+GB-\/abcdefghi} an empty object is returned (as the language variant is too long), in {\ttfamily forgiving} mode the {\ttfamily language} of {\ttfamily schema} is populated with {\ttfamily en} and the {\ttfamily region} is populated with {\ttfamily GB}.\hypertarget{readme.md_autotoc_md9186}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+warning}}{{\ttfamily options.\+warning}}}\label{readme.md_autotoc_md9186}
+When given, {\ttfamily warning} is called when an error is encountered (\`{}\+Function\`{}).\hypertarget{readme.md_autotoc_md9187}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md9187}
+Parsed BCP 47 language tag (\`{}\+Schema\`{}).\hypertarget{readme.md_autotoc_md9188}{}\doxysubsubsubsubsubsection{\texorpdfstring{Throws}{Throws}}\label{readme.md_autotoc_md9188}
+When {\ttfamily tag} is {\ttfamily null} or {\ttfamily undefined}.\hypertarget{readme.md_autotoc_md9189}{}\doxysubsubsection{\texorpdfstring{{\ttfamily stringify(schema)}}{{\ttfamily stringify(schema)}}}\label{readme.md_autotoc_md9189}
+Compile a \`{}schema\`{} to a BCP 47 language tag.\hypertarget{readme.md_autotoc_md9190}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md9190}
+BCP 47 language tag ({\ttfamily string}).\hypertarget{readme.md_autotoc_md9191}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Schema}}{{\ttfamily Schema}}}\label{readme.md_autotoc_md9191}
+A schema represents a language tag. A schema is deemed empty when it has neither {\ttfamily language}, {\ttfamily irregular}, {\ttfamily regular}, nor {\ttfamily privateuse} (where an empty {\ttfamily privateuse} array is handled as no {\ttfamily privateuse} as well).\hypertarget{readme.md_autotoc_md9192}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+language}}{{\ttfamily schema.\+language}}}\label{readme.md_autotoc_md9192}
+Two or three character \href{https://en.wikipedia.org/wiki/ISO_639}{\texttt{ ISO 639}} language code, four character reserved language code, or 5 to 8 (inclusive) characters registered language subtag ({\ttfamily string}). For example, {\ttfamily en} (English) or {\ttfamily cmn} (Mandarin Chinese).\hypertarget{readme.md_autotoc_md9193}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+extended\+Language\+Subtags}}{{\ttfamily schema.\+extended\+Language\+Subtags}}}\label{readme.md_autotoc_md9193}
+Selected three-\/character \href{https://en.wikipedia.org/wiki/ISO_639}{\texttt{ ISO 639}} codes({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}), such as {\ttfamily yue} in {\ttfamily zh-\/yue-\/\+HK} (Chinese, Cantonese, as used in Hong Kong SAR).\hypertarget{readme.md_autotoc_md9194}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+script}}{{\ttfamily schema.\+script}}}\label{readme.md_autotoc_md9194}
+Four character \href{https://en.wikipedia.org/wiki/ISO_15924}{\texttt{ ISO 15924}} script code ({\ttfamily string}), such as {\ttfamily Latn} in {\ttfamily hy-\/\+Latn-\/\+IT-\/arevela} (Eastern Armenian written in Latin script, as used in Italy).\hypertarget{readme.md_autotoc_md9195}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+region}}{{\ttfamily schema.\+region}}}\label{readme.md_autotoc_md9195}
+Two alphabetical character \href{https://en.wikipedia.org/wiki/ISO_3166-1}{\texttt{ ISO 3166-\/1}} code or three digit \href{https://en.wikipedia.org/wiki/UN_M.49}{\texttt{ UN M49}} code ({\ttfamily string}). For example, {\ttfamily CN} in {\ttfamily cmn-\/\+Hans-\/\+CN} (Mandarin Chinese, Simplified script, as used in China) or {\ttfamily 419} in {\ttfamily es-\/419} (Spanish as used in Latin America and the Caribbean).\hypertarget{readme.md_autotoc_md9196}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+variants}}{{\ttfamily schema.\+variants}}}\label{readme.md_autotoc_md9196}
+5 to 8 (inclusive) character language variants ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}), such as {\ttfamily rozaj} and {\ttfamily biske} in {\ttfamily sl-\/rozaj-\/biske} (San Giorgio dialect of Resian dialect of Slovenian).\hypertarget{readme.md_autotoc_md9197}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+extensions}}{{\ttfamily schema.\+extensions}}}\label{readme.md_autotoc_md9197}
+List of extensions ({\ttfamily Array\texorpdfstring{$<$}{<}Object\texorpdfstring{$>$}{>}}), each an object containing a one character {\ttfamily singleton}, and a list of {\ttfamily extensions} ({\ttfamily string}). {\ttfamily singleton} cannot be {\ttfamily x} (case insensitive) and {\ttfamily extensions} must be between two and eight (inclusive) characters. For example, an extension would be {\ttfamily u-\/co-\/phonebk} in {\ttfamily de-\/\+DE-\/u-\/co-\/phonebk} (German, as used in Germany, using German phonebook sort order), where {\ttfamily u} is the {\ttfamily singleton} and {\ttfamily co} and {\ttfamily phonebk} are its extensions.\hypertarget{readme.md_autotoc_md9198}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+privateuse}}{{\ttfamily schema.\+privateuse}}}\label{readme.md_autotoc_md9198}
+List of private-\/use subtags ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}), where each subtag must be between one and eight (inclusive) characters.\hypertarget{readme.md_autotoc_md9199}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+regular}}{{\ttfamily schema.\+regular}}}\label{readme.md_autotoc_md9199}
+One of the {\ttfamily regular} tags ({\ttfamily string})\+: tags that are seen as something different by the algorithm. Valid values are\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily art-\/lojban}
+\item {\ttfamily cel-\/gaulish}
+\item {\ttfamily no-\/bok}
+\item {\ttfamily no-\/nyn}
+\item {\ttfamily zh-\/guoyu}
+\item {\ttfamily zh-\/hakka}
+\item {\ttfamily zh-\/min}
+\item {\ttfamily zh-\/min-\/nan}
+\item {\ttfamily zh-\/xiang}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md9200}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily schema.\+irregular}}{{\ttfamily schema.\+irregular}}}\label{readme.md_autotoc_md9200}
+One of the {\ttfamily irregular} tags ({\ttfamily string})\+: tags that are seen as invalid by the algorithm). Valid values are\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily en-\/\+GB-\/oed}
+\item {\ttfamily i-\/ami}
+\item {\ttfamily i-\/bnn}
+\item {\ttfamily i-\/default}
+\item {\ttfamily i-\/enochian}
+\item {\ttfamily i-\/hak}
+\item {\ttfamily i-\/klingon}
+\item {\ttfamily i-\/lux}
+\item {\ttfamily i-\/mingo}
+\item {\ttfamily i-\/navajo}
+\item {\ttfamily i-\/pwn}
+\item {\ttfamily i-\/tao}
+\item {\ttfamily i-\/tay}
+\item {\ttfamily i-\/tsu}
+\item {\ttfamily sgn-\/\+BE-\/\+FR}
+\item {\ttfamily sgn-\/\+BE-\/\+NL}
+\item {\ttfamily sgn-\/\+CH-\/\+DE}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md9201}{}\doxysubsubsection{\texorpdfstring{{\ttfamily function warning(reason, code, offset)}}{{\ttfamily function warning(reason, code, offset)}}}\label{readme.md_autotoc_md9201}
+Called when an error occurs.\hypertarget{readme.md_autotoc_md9202}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md9202}
+
+\begin{DoxyItemize}
+\item {\ttfamily reason} ({\ttfamily string}) — English reason for failure
+\item {\ttfamily code} ({\ttfamily number}) — code for failure
+\item {\ttfamily offset} ({\ttfamily number}) — index-\/based place where the error occurred in the tag
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md9203}{}\doxysubsubsubsubsubsection{\texorpdfstring{Warnings}{Warnings}}\label{readme.md_autotoc_md9203}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ code   }&\cellcolor{\tableheadbgcolor}\textbf{ reason    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ code   }&\cellcolor{\tableheadbgcolor}\textbf{ reason    }\\\cline{1-2}
+\endhead
+1   &Too long variant, expected at most 8 characters    \\\cline{1-2}
+2   &Too long extension, expected at most 8 characters    \\\cline{1-2}
+3   &Too many extended language subtags, expected at most 3 subtags    \\\cline{1-2}
+4   &Empty extension, extensions must have at least 2 characters of content    \\\cline{1-2}
+5   &Too long private-\/use area, expected at most 8 characters    \\\cline{1-2}
+6   &Found superfluous content after tag   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{readme.md_autotoc_md9204}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md9204}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports additional {\ttfamily Schema}, {\ttfamily Extension}, {\ttfamily Warning}, and {\ttfamily Options} types that model their respective interfaces.\hypertarget{readme.md_autotoc_md9205}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md9205}
+This package is at least compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 12.\+20+, 14.\+14+, and 16.\+0+. It also works in Deno and modern browsers.\hypertarget{readme.md_autotoc_md9206}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md9206}
+This package is safe.\hypertarget{readme.md_autotoc_md9207}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md9207}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/wooorm/bcp-47-match}{\texttt{ {\ttfamily wooorm/bcp-\/47-\/match}}} — match BCP 47 language tags with language ranges per RFC 4647
+\item \href{https://github.com/wooorm/bcp-47-normalize}{\texttt{ {\ttfamily wooorm/bcp-\/47-\/normalize}}} — normalize, canonicalize, and format BCP 47 tags
+\item \href{https://github.com/wooorm/iso-3166}{\texttt{ {\ttfamily wooorm/iso-\/3166}}} — ISO 3166 codes
+\item \href{https://github.com/wooorm/iso-639-2}{\texttt{ {\ttfamily wooorm/iso-\/639-\/2}}} — ISO 639-\/2 codes
+\item \href{https://github.com/wooorm/iso-639-3}{\texttt{ {\ttfamily wooorm/iso-\/639-\/3}}} — ISO 639-\/3 codes
+\item \href{https://github.com/wooorm/iso-15924}{\texttt{ {\ttfamily wooorm/iso-\/15924}}} — ISO 15924 codes
+\item \href{https://github.com/wooorm/un-m49}{\texttt{ {\ttfamily wooorm/un-\/m49}}} — UN M49 codes
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md9208}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md9208}
+Yes please! See \href{https://opensource.guide/how-to-contribute/}{\texttt{ How to Contribute to Open Source}}.\hypertarget{readme.md_autotoc_md9209}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md9209}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

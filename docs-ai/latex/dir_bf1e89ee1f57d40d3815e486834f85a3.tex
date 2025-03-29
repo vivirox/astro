@@ -1,0 +1,195 @@
+\doxysection{node\+\_\+modules/remark-\/stringify Directory Reference}
+\hypertarget{dir_bf1e89ee1f57d40d3815e486834f85a3}{}\label{dir_bf1e89ee1f57d40d3815e486834f85a3}\index{node\_modules/remark-\/stringify Directory Reference@{node\_modules/remark-\/stringify Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/remarkjs/remark/actions}{\texttt{ }} \href{https://codecov.io/github/remarkjs/remark}{\texttt{ }} \href{https://www.npmjs.com/package/remark-stringify}{\texttt{ }} \href{https://bundlejs.com/?q=remark-stringify}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/remarkjs/remark/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/remarkjs/remark}{\texttt{ remark}}}} plugin to add support for serializing to markdown.\hypertarget{readme.md_autotoc_md29260}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md29260}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}unified().use(remark\+Stringify\mbox{[}, options\mbox{]})\`{}
+\end{DoxyItemize}
+\item Syntax
+\item Syntax tree
+\item \doxylink{readme.md_types}{Types}
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item Sponsor
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29261}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md29261}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} (\href{https://github.com/remarkjs/remark}{\texttt{ remark}}) plugin that defines how to take a syntax tree as input and turn it into serialized markdown. When it’s used, markdown is serialized as the final result.
+
+See \href{https://github.com/remarkjs/remark}{\texttt{ the monorepo readme}} for info on what the remark ecosystem is.\hypertarget{readme.md_autotoc_md29262}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md29262}
+This plugin adds support to unified for serializing markdown. If you also need to parse markdown, you can alternatively use \href{../remark/}{\texttt{ {\ttfamily remark}}}, which combines unified, \href{../remark-parse/}{\texttt{ {\ttfamily remark-\/parse}}}, and this plugin.
+
+If you don’t use plugins and have access to a syntax tree, you can directly use \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}}, which is used inside this plugin. remark focusses on making it easier to transform content by abstracting these internals away.
+
+You can combine this plugin with other plugins to add syntax extensions. Notable examples that deeply integrate with it are \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, \href{https://github.com/mdx-js/mdx/tree/main/packages/remark-mdx}{\texttt{ {\ttfamily remark-\/mdx}}}, \href{https://github.com/remarkjs/remark-frontmatter}{\texttt{ {\ttfamily remark-\/frontmatter}}}, \href{https://github.com/remarkjs/remark-math}{\texttt{ {\ttfamily remark-\/math}}}, and \href{https://github.com/remarkjs/remark-directive}{\texttt{ {\ttfamily remark-\/directive}}}. You can also use any other \href{https://github.com/remarkjs/remark\#plugin}{\texttt{ remark plugin}} before {\ttfamily remark-\/stringify}.\hypertarget{readme.md_autotoc_md29263}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md29263}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ remark-\/stringify}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ remarkStringify\ from\ 'https://esm.sh/remark-\/stringify@11'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ remarkStringify\ from\ 'https://esm.sh/remark-\/stringify@11?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29264}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md29264}
+Say we have the following module {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeParse\ from\ 'rehype-\/parse'}
+\DoxyCodeLine{import\ rehypeRemark\ from\ 'rehype-\/remark'}
+\DoxyCodeLine{import\ remarkStringify\ from\ 'remark-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ \`{}}
+\DoxyCodeLine{<h1>Uranus</h1>}
+\DoxyCodeLine{<p><b>Uranus</b>\ is\ the\ seventh}
+\DoxyCodeLine{<a\ href="{}/wiki/Planet"{}\ title="{}Planet"{}>planet</a>\ from\ the\ Sun\ and\ is\ a\ gaseous}
+\DoxyCodeLine{cyan\ <a\ href="{}/wiki/Ice\_giant"{}\ title="{}Ice\ giant"{}>ice\ giant</a>.</p>}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(rehypeParse)}
+\DoxyCodeLine{\ \ .use(rehypeRemark)}
+\DoxyCodeLine{\ \ .use(remarkStringify)}
+\DoxyCodeLine{\ \ .process(doc)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+…then running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Uranus}
+\DoxyCodeLine{}
+\DoxyCodeLine{**Uranus**\ is\ the\ seventh\ [planet](/wiki/Planet\ "{}Planet"{})\ from\ the\ Sun\ and\ is\ a\ gaseous\ cyan\ [ice\ giant](/wiki/Ice\_giant\ "{}Ice\ giant"{}).}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29265}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md29265}
+This package exports no identifiers. The default export is \`{}remark\+Stringify\`{}.\hypertarget{readme.md_autotoc_md29266}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unified().use(remark\+Stringify\mbox{[}, options\mbox{]})}}{{\ttfamily unified().use(remark\+Stringify\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md29266}
+Add support for serializing to markdown.\hypertarget{readme.md_autotoc_md29267}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md29267}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29268}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md29268}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md29269}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md29269}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md29270}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md29270}
+
+\begin{DoxyItemize}
+\item {\ttfamily bullet} (`'{\itshape \textquotesingle{}{\ttfamily ,}\textquotesingle{}+\textquotesingle{}{\ttfamily , or}\textquotesingle{}-\/\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}}\textquotesingle{}{\ttfamily ) — marker to use for bullets of items in unordered lists \texorpdfstring{$\ast$}{*}}bullet\+Other{\ttfamily (}\textquotesingle{}{\itshape \textquotesingle{}{\ttfamily ,}\textquotesingle{}+\textquotesingle{}{\ttfamily , or}\textquotesingle{}-\/\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}-\/\textquotesingle{}{\ttfamily when}bullet{\ttfamily is }\textquotesingle{}}\textquotesingle{}{\ttfamily ,}\textquotesingle{}{\itshape \textquotesingle{}{\ttfamily otherwise) — marker to use in certain cases where the primary bullet doesn’t work; cannot be equal to}bullet{\ttfamily  \texorpdfstring{$\ast$}{*}}bullet\+Ordered{\ttfamily (}\textquotesingle{}.\textquotesingle{}{\ttfamily or}\textquotesingle{})\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}.\textquotesingle{}{\ttfamily ) — marker to use for bullets of items in ordered lists \texorpdfstring{$\ast$}{*}}close\+Atx{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — add the same number of number signs (}\#{\ttfamily ) at the end of an ATX heading as the opening sequence \texorpdfstring{$\ast$}{*}}emphasis{\ttfamily (}\textquotesingle{}}\textquotesingle{}{\ttfamily or}\textquotesingle{}{\itshape \textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}{\itshape \textquotesingle{}{\ttfamily ) — marker to use for emphasis \texorpdfstring{$\ast$}{*}}fence{\ttfamily (}`'`'{\ttfamily or \`{}\textquotesingle{}\texorpdfstring{$\sim$}{\string~}\textquotesingle{}\`{}, default\+:}\textquotesingle{}`'\`{}{\ttfamily ) — marker to use for fenced code \texorpdfstring{$\ast$}{*}}fences{\ttfamily (}boolean{\ttfamily , default\+:}true{\ttfamily ) — use fenced code always; when}false{\ttfamily , uses fenced code if there is a language defined, if the code is empty, or if it starts or ends in blank lines \texorpdfstring{$\ast$}{*}}handlers{\ttfamily (}Handlers{\ttfamily , optional) — handle particular nodes; see \mbox{[}}mdast-\/util-\/to-\/markdown{\ttfamily \mbox{]}\mbox{[}mdast-\/util-\/to-\/markdown\mbox{]} for more info \texorpdfstring{$\ast$}{*}}increment\+List\+Marker{\ttfamily (}boolean{\ttfamily , default\+:}true{\ttfamily ) — increment the counter of ordered lists items \texorpdfstring{$\ast$}{*}}join{\ttfamily (}Array$<$\+Join$>${\ttfamily , optional) — how to join blocks; see \mbox{[}}mdast-\/util-\/to-\/markdown{\ttfamily \mbox{]}\mbox{[}mdast-\/util-\/to-\/markdown\mbox{]} for more info \texorpdfstring{$\ast$}{*}}list\+Item\+Indent{\ttfamily (}\textquotesingle{}mixed\textquotesingle{}{\ttfamily ,}\textquotesingle{}one\textquotesingle{}{\ttfamily , or}\textquotesingle{}tab\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}one\textquotesingle{}{\ttfamily ) — how to indent the content of list items; either with the size of the bullet plus one space (when}\textquotesingle{}one\textquotesingle{}{\ttfamily ), a tab stop (}\textquotesingle{}tab\textquotesingle{}{\ttfamily ), or depending on the item and its parent list\+:}\textquotesingle{}mixed\textquotesingle{}{\ttfamily  uses}\textquotesingle{}one\textquotesingle{}{\ttfamily if the item and list are tight and}\textquotesingle{}tab\textquotesingle{}{\ttfamily otherwise \texorpdfstring{$\ast$}{*}}quote{\ttfamily (}\textquotesingle{}"{}\textquotesingle{}\`{} or \`{}"{}\textquotesingle{}"{}\`{}, default\+: \`{}\textquotesingle{}"{}\textquotesingle{}{\ttfamily ) — marker to use for titles \texorpdfstring{$\ast$}{*}}resource\+Link{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — always use resource links (}\mbox{[}text\mbox{]}(url){\ttfamily ); when}false{\ttfamily , uses autolinks (}\href{https://example.com}{\texttt{ https\+://example.\+com}}{\ttfamily ) when possible \texorpdfstring{$\ast$}{*}}rule{\ttfamily (}\textquotesingle{}}\textquotesingle{}{\ttfamily ,}\textquotesingle{}-\/\textquotesingle{}{\ttfamily , or}\textquotesingle{}}\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}\texorpdfstring{$\ast$}{*}\textquotesingle{}{\ttfamily ) — marker to use for thematic breaks \texorpdfstring{$\ast$}{*}}rule\+Repetition{\ttfamily (}number{\ttfamily , default\+:}3{\ttfamily , min\+:}3{\ttfamily ) — number of markers to use for thematic breaks \texorpdfstring{$\ast$}{*}}rule\+Spaces{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — add spaces between markers in thematic breaks \texorpdfstring{$\ast$}{*}}setext{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — use setext headings when possible; when}true{\ttfamily , uses setext headings (}heading~\newline
+======={\ttfamily ) for non-\/empty rank 1 or 2 headings \texorpdfstring{$\ast$}{*}}strong{\ttfamily (}\textquotesingle{}{\itshape \textquotesingle{}{\ttfamily or}\textquotesingle{}\+\_\+\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}}\textquotesingle{}{\ttfamily ) — marker to use for strong \texorpdfstring{$\ast$}{*}}tight\+Definitions{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — join definitions without a blank line \texorpdfstring{$\ast$}{*}}unsafe{\ttfamily (}Array$<$\+Unsafe$>${\ttfamily , optional) — schemas that define when characters cannot occur; see \mbox{[}}mdast-\/util-\/to-\/markdown\`{}\mbox{]}\href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ mdast-\/util-\/to-\/markdown}} for more info
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29271}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md29271}
+Markdown is serialized according to Common\+Mark but care is taken to format in a way that works with most markdown parsers. Other plugins can add support for syntax extensions.\hypertarget{readme.md_autotoc_md29272}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md29272}
+The syntax tree used in remark is \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}.\hypertarget{readme.md_autotoc_md29273}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md29273}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.
+
+It also registers {\ttfamily Settings} with {\ttfamily unified}. If you’re passing options with `.data(\textquotesingle{}settings', …)\`{}, make sure to import this package somewhere in your types, as that registers the fields.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{///\ <reference\ types="{}remark-\/stringify"{}\ />}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ @ts-\/expect-\/error:\ \`{}thisDoesNotExist`\ is\ not\ a\ valid\ option.}
+\DoxyCodeLine{unified().data('settings',\ \{thisDoesNotExist:\ false\})}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29274}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md29274}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily remark-\/stringify@\texorpdfstring{$^\wedge$}{\string^}11}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md29275}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md29275}
+Use of {\ttfamily remark-\/stringify} is safe.
+
+Use of remark plugins can open you up to attacks. Carefully assess each plugin and the risks involved in using them.
+
+For info on how to submit a report, see our \href{https://github.com/remarkjs/.github/blob/main/security.md}{\texttt{ security policy}}.\hypertarget{readme.md_autotoc_md29276}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md29276}
+See \href{https://github.com/remarkjs/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/remarkjs/.github}{\texttt{ {\ttfamily remarkjs/.github}}} for ways to get started. See \href{https://github.com/remarkjs/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help. Join us in \href{https://github.com/remarkjs/remark/discussions}{\texttt{ Discussions}} to chat with the community and contributors.
+
+This project has a \href{https://github.com/remarkjs/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md29277}{}\doxysubsection{\texorpdfstring{Sponsor}{Sponsor}}\label{readme.md_autotoc_md29277}
+Support this effort and give back by sponsoring on \href{https://opencollective.com/unified}{\texttt{ Open\+Collective}}!
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{10}{|X[-1]}|}
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}{\PBS\centering \href{https://vercel.com}{\texttt{ Vercel}}~\newline
+~\newline
+ \href{https://vercel.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://motif.land}{\texttt{ Motif}}~\newline
+~\newline
+ \href{https://motif.land}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.hashicorp.com}{\texttt{ Hashi\+Corp}}~\newline
+~\newline
+ \href{https://www.hashicorp.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gitbook.com}{\texttt{ Git\+Book}}~\newline
+~\newline
+ \href{https://www.gitbook.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gatsbyjs.org}{\texttt{ Gatsby}}~\newline
+~\newline
+ \href{https://www.gatsbyjs.org}{\texttt{ }}   }}\\
+&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}\\\cline{1-10}
+\end{longtabu}
+
+
+\href{https://www.netlify.com}{\texttt{ Netlify}}~\newline
+~\newline
+
+
+\href{https://www.netlify.com}{\texttt{ }}  
+
+\href{https://www.coinbase.com}{\texttt{ Coinbase}}~\newline
+~\newline
+ \href{https://www.coinbase.com}{\texttt{ }}  
+
+\href{https://themeisle.com}{\texttt{ Theme\+Isle}}~\newline
+~\newline
+ \href{https://themeisle.com}{\texttt{ }}  
+
+\href{https://expo.io}{\texttt{ Expo}}~\newline
+~\newline
+ \href{https://expo.io}{\texttt{ }}  
+
+\href{https://boostnote.io}{\texttt{ Boost Note}}~\newline
+~\newline
+ \href{https://boostnote.io}{\texttt{ }}  
+
+\href{https://markdown.space}{\texttt{ Markdown Space}}~\newline
+~\newline
+ \href{https://markdown.space}{\texttt{ }}  
+
+\href{https://www.holloway.com}{\texttt{ Holloway}}~\newline
+~\newline
+ \href{https://www.holloway.com}{\texttt{ }}  
+
+~\newline
+ \href{https://opencollective.com/unified}{\texttt{ {\bfseries{You?}}}} ~\newline
+~\newline
+   \hypertarget{readme.md_autotoc_md29278}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md29278}
+\href{https://github.com/remarkjs/remark/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

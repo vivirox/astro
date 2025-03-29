@@ -1,0 +1,55 @@
+\doxysection{node\+\_\+modules/blake2b-\/wasm Directory Reference}
+\hypertarget{dir_70e0aab30d274fb9ebfeb06c33239c72}{}\label{dir_70e0aab30d274fb9ebfeb06c33239c72}\index{node\_modules/blake2b-\/wasm Directory Reference@{node\_modules/blake2b-\/wasm Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Blake2b implemented in WASM
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ blake2b-\/wasm}
+
+\end{DoxyCode}
+
+
+Works in browsers that support WASM and Node.\+js 8+.\hypertarget{README.md_autotoc_md9421}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md9421}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ blake2b\ =\ require('blake2b-\/wasm')}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (!blake2b.SUPPORTED)\ \{}
+\DoxyCodeLine{\ \ console.log('WebAssembly\ not\ supported\ by\ your\ runtime')}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{blake2b.ready(function\ (err)\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ throw\ err}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ var\ hash\ =\ blake2b()}
+\DoxyCodeLine{\ \ \ \ .update(Buffer.from('hello'))\ //\ pass\ in\ a\ buffer\ or\ uint8array}
+\DoxyCodeLine{\ \ \ \ .update(Buffer.from('\ '))}
+\DoxyCodeLine{\ \ \ \ .update(Buffer.from('world'))}
+\DoxyCodeLine{\ \ \ \ .digest('hex')}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log('Blake2b\ hash\ of\ "{}hello\ world"{}\ is\ \%s',\ hash)}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9422}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md9422}
+\hypertarget{README.md_autotoc_md9423}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily var hash = blake2b(\mbox{[}digest\+Length\mbox{]}, \mbox{[}key\mbox{]}, \mbox{[}salt\mbox{]}, \mbox{[}personal\mbox{]})}}{{\ttfamily var hash = blake2b(\mbox{[}digest\+Length\mbox{]}, \mbox{[}key\mbox{]}, \mbox{[}salt\mbox{]}, \mbox{[}personal\mbox{]})}}}\label{README.md_autotoc_md9423}
+Create a new hash instance. {\ttfamily digest\+Length} defaults to {\ttfamily 32}.\hypertarget{README.md_autotoc_md9424}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily hash.\+update(data)}}{{\ttfamily hash.\+update(data)}}}\label{README.md_autotoc_md9424}
+Update the hash with a new piece of data. {\ttfamily data} should be a buffer or uint8array.\hypertarget{README.md_autotoc_md9425}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily var digest = hash.\+digest(\mbox{[}enc\mbox{]})}}{{\ttfamily var digest = hash.\+digest(\mbox{[}enc\mbox{]})}}}\label{README.md_autotoc_md9425}
+Digest the hash.\hypertarget{README.md_autotoc_md9426}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily hash.\+get\+Partial\+Hash()}}{{\ttfamily hash.\+get\+Partial\+Hash()}}}\label{README.md_autotoc_md9426}
+Returns the current partial hash.\hypertarget{README.md_autotoc_md9427}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily hash.\+set\+Partial\+Hash(data)}}{{\ttfamily hash.\+set\+Partial\+Hash(data)}}}\label{README.md_autotoc_md9427}
+Set the hash to a previously set hash. {\ttfamily data} should be the result of {\ttfamily get\+Partial\+Hash()} (which returns uint8array)\hypertarget{README.md_autotoc_md9428}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily var promise = blake2b.\+ready(\mbox{[}cb\mbox{]})}}{{\ttfamily var promise = blake2b.\+ready(\mbox{[}cb\mbox{]})}}}\label{README.md_autotoc_md9428}
+Wait for the WASM code to load. Returns the Web\+Assembly instance promise as well for convenience. You have to call this at least once before instantiating the hash.\hypertarget{README.md_autotoc_md9429}{}\doxysubsection{\texorpdfstring{Browser demo}{Browser demo}}\label{README.md_autotoc_md9429}
+There is a browser example included in \href{example.html}{\texttt{ example.\+html}} and \href{example.js}{\texttt{ example.\+js}}.\hypertarget{README.md_autotoc_md9430}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md9430}
+The bulk of this module is implemented in Web\+Assembly in the \href{blake2b.wat}{\texttt{ blake2b.\+wat}} file. To build the thin Javascript wrapper do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ run\ compile}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9431}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md9431}
+MIT 

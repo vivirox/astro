@@ -1,0 +1,145 @@
+\chapter{jsx-\/a11y/label-\/has-\/for}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for}{}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for}\index{jsx-\/a11y/label-\/has-\/for@{jsx-\/a11y/label-\/has-\/for}}
+\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13848}%
+\Hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13848}%
+
+
+❌ This rule is deprecated. It was replaced by \doxysectlink{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-associated-control}{{\ttfamily jsx-\/a11y/label-\/has-\/associated-\/control}}{0}.
+
+🚫 This rule is {\itshape disabled} in the following configs\+: ☑️ {\ttfamily recommended}, 🔒 {\ttfamily strict}.
+
+{\itshape This rule was deprecated in v6.\+1.\+0. It will no longer be maintained.}
+
+Enforce label tags have associated control.
+
+There are two supported ways to associate a label with a control\+:
+
+
+\begin{DoxyItemize}
+\item nesting\+: by wrapping a control in a label tag
+\item id\+: by using the prop {\ttfamily html\+For} (or any configured attribute) as in {\ttfamily html\+For=\mbox{[}ID of control\mbox{]}}
+\end{DoxyItemize}
+
+To fully cover 100\% of assistive devices, you\textquotesingle{}re encouraged to validate for both nesting and id.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13849}{}\doxysection{\texorpdfstring{Rule options}{Rule options}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13849}
+This rule takes one optional object argument of type object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}jsx-\/a11y/label-\/has-\/for"{}:\ [\ 2,\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}components"{}:\ [\ "{}Label"{}\ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}required"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}every"{}:\ [\ "{}nesting"{},\ "{}id"{}\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}allowChildren"{}:\ false}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+For the {\ttfamily components} option, these strings determine which JSX elements ({\bfseries{always including}} {\ttfamily \texorpdfstring{$<$}{<}label\texorpdfstring{$>$}{>}}) should be checked for having {\ttfamily html\+For} prop. This is a good use case when you have a wrapper component that simply renders a {\ttfamily label} element (like in React)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Label.js}
+\DoxyCodeLine{const\ Label\ =\ props\ =>\ \{}
+\DoxyCodeLine{\ \ const\ \{}
+\DoxyCodeLine{\ \ \ \ htmlFor,}
+\DoxyCodeLine{\ \ \ \ ...otherProps}
+\DoxyCodeLine{\ \ \}\ =\ props;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <label\ htmlFor=\{htmlFor\}\ \{...otherProps\}\ />}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CreateAccount.js\ (for\ example)}
+\DoxyCodeLine{...}
+\DoxyCodeLine{return\ (}
+\DoxyCodeLine{\ \ <form>}
+\DoxyCodeLine{\ \ \ \ <input\ id="{}firstName"{}\ type="{}text"{}\ />}
+\DoxyCodeLine{\ \ \ \ <Label\ htmlFor="{}firstName"{}>First\ Name</Label>}
+\DoxyCodeLine{\ \ </form>}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+The {\ttfamily required} option (defaults to {\ttfamily "{}required"{}\+: \{ "{}every"{}\+: \mbox{[}"{}nesting"{}, "{}id"{}\mbox{]} \}}) determines which checks are activated. You\textquotesingle{}re allowed to pass in one of the following types\+:
+
+
+\begin{DoxyItemize}
+\item string\+: must be one of the acceptable strings ({\ttfamily "{}nesting"{}} or {\ttfamily "{}id"{}})
+\item object, must have one of the following properties\+:
+\begin{DoxyItemize}
+\item some\+: an array of acceptable strings, will pass if ANY of the requested checks passed
+\item every\+: an array of acceptable strings, will pass if ALL of the requested checks passed
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+The {\ttfamily allow\+Children} option (defaults to {\ttfamily false}) determines whether {\ttfamily \{children\}} content is allowed to be passed into a {\ttfamily label} element. For example, the following pattern, by default, is not allowed\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<label>\{children\}</label>}
+
+\end{DoxyCode}
+
+
+However, if {\ttfamily allow\+Children} is set to {\ttfamily true}, no error will be raised. If you want to pass in {\ttfamily \{children\}} content without raising an error, because you cannot be sure what {\ttfamily \{children\}} will render, then set {\ttfamily allow\+Children} to {\ttfamily true}.
+
+Note that passing props as spread attribute without {\ttfamily html\+For} explicitly defined will cause this rule to fail. Explicitly pass down {\ttfamily html\+For} prop for rule to pass. The prop must have an actual value to pass. Use {\ttfamily Label} component above as a reference. {\bfseries{It is a good thing to explicitly pass props that you expect to be passed for self-\/documentation.}} For example\+:\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13850}{}\doxysubsubsection{\texorpdfstring{Bad}{Bad}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13850}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ Foo(props)\ \{}
+\DoxyCodeLine{\ \ return\ <label\ \{...props\}\ />}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13851}{}\doxysubsubsection{\texorpdfstring{Good}{Good}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13851}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ Foo(\{\ htmlFor,\ ...props\})\ \{}
+\DoxyCodeLine{\ \ \ \ return\ <label\ htmlFor=\{htmlFor\}\ \{...props\}\ />}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ OR}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Foo(props)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ htmlFor,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ...otherProps}
+\DoxyCodeLine{\ \ \ \ \}\ =\ props;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ return\ <label\ htmlFor=\{htmlFor\}\ \{...otherProps\}\ />}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13852}{}\doxysubsection{\texorpdfstring{Succeed}{Succeed}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13852}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<label\ htmlFor="{}firstName"{}>}
+\DoxyCodeLine{\ \ <input\ type="{}text"{}\ id="{}firstName"{}\ />}
+\DoxyCodeLine{\ \ First\ Name}
+\DoxyCodeLine{</label>}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13853}{}\doxysubsection{\texorpdfstring{Fail}{Fail}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13853}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<input\ type="{}text"{}\ id="{}firstName"{}\ />}
+\DoxyCodeLine{<label>First\ Name</label>}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13854}{}\doxysection{\texorpdfstring{Accessibility guidelines}{Accessibility guidelines}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2label-has-for_autotoc_md13854}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships}{\texttt{ WCAG 1.\+3.\+1}}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/labels-or-instructions}{\texttt{ WCAG 3.\+3.\+2}}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/name-role-value}{\texttt{ WCAG 4.\+1.\+2}} 
+\end{DoxyItemize}

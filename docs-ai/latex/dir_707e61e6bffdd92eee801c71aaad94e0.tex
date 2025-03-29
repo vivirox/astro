@@ -1,0 +1,238 @@
+\doxysection{node\+\_\+modules/@vercel/nft Directory Reference}
+\hypertarget{dir_707e61e6bffdd92eee801c71aaad94e0}{}\label{dir_707e61e6bffdd92eee801c71aaad94e0}\index{node\_modules/"@vercel/nft Directory Reference@{node\_modules/"@vercel/nft Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_24c8a76d14364bfc335cf2f1093d28e8}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/vercel/nft/actions/workflows/ci.yml}{\texttt{ }}
+
+Used to determine exactly which files (including {\ttfamily node\+\_\+modules}) are necessary for the application runtime.
+
+This is similar to \href{https://npmjs.com/package/@vercel/ncc}{\texttt{ @vercel/ncc}} except there is no bundling performed and therefore no reliance on webpack. This achieves the same tree-\/shaking benefits without moving any assets or binaries.\hypertarget{readme.md_autotoc_md7181}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md7181}
+\hypertarget{readme.md_autotoc_md7182}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{readme.md_autotoc_md7182}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ @vercel/nft}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7183}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md7183}
+Provide the list of source files as input\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ nodeFileTrace\ \}\ =\ require('@vercel/nft');}
+\DoxyCodeLine{const\ files\ =\ ['./src/main.js',\ './src/second.js'];}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files);}
+
+\end{DoxyCode}
+
+
+The list of files will include all {\ttfamily node\+\_\+modules} modules and assets that may be needed by the application code.\hypertarget{readme.md_autotoc_md7184}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{readme.md_autotoc_md7184}
+\hypertarget{readme.md_autotoc_md7185}{}\doxysubsubsubsection{\texorpdfstring{Base}{Base}}\label{readme.md_autotoc_md7185}
+The base path for the file list -\/ all files will be provided as relative to this base.
+
+By default the {\ttfamily process.\+cwd()} is used\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ base:\ process.cwd(),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Any files/folders above the {\ttfamily base} are ignored in the listing and analysis.\hypertarget{readme.md_autotoc_md7186}{}\doxysubsubsubsection{\texorpdfstring{Process Cwd}{Process Cwd}}\label{readme.md_autotoc_md7186}
+When applying analysis certain functions rely on the {\ttfamily process.\+cwd()} value, such as `path.\+resolve('./relative\textquotesingle{}){\ttfamily or even a direct}process.\+cwd()\`{} invocation.
+
+Setting the {\ttfamily process\+Cwd} option allows this analysis to be guided to the right path to ensure that assets are correctly detected.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ processCwd:\ path.resolve(\_\_dirname),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+By default {\ttfamily process\+Cwd} is the same as {\ttfamily base}.\hypertarget{readme.md_autotoc_md7187}{}\doxysubsubsubsection{\texorpdfstring{Exports \& Imports}{Exports \& Imports}}\label{readme.md_autotoc_md7187}
+By default tracing of the \href{https://nodejs.org/dist/latest-v14.x/docs/api/esm.html\#esm_package_entry_points}{\texttt{ Node.\+js "{}exports"{} and "{}imports"{} fields}} is supported, with the {\ttfamily "{}node"{}}, {\ttfamily "{}require"{}}, {\ttfamily "{}import"{}} and {\ttfamily "{}default"{}} conditions traced as defined.
+
+Alternatively the explicit list of conditions can be provided\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ conditions:\ ['node',\ 'production'],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Only the {\ttfamily "{}node"{}} export should be explicitly included (if needed) when specifying the exact export condition list. The {\ttfamily "{}require"{}}, {\ttfamily "{}import"{}} and {\ttfamily "{}default"{}} conditions will always be traced as defined, no matter what custom conditions are set.\hypertarget{readme.md_autotoc_md7188}{}\doxysubsubsubsection{\texorpdfstring{Exports Only}{Exports Only}}\label{readme.md_autotoc_md7188}
+When tracing exports the {\ttfamily "{}main"{}} / index field will still be traced for Node.\+js versions without {\ttfamily "{}exports"{}} support.
+
+This can be disabled with the {\ttfamily exports\+Only} option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ exportsOnly:\ true,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Any package with {\ttfamily "{}exports"{}} will then only have its exports traced, and the main will not be included at all. This can reduce the output size when targeting \href{https://github.com/nodejs/node/blob/master/doc/changelogs/CHANGELOG_V12.md\#12.17.0}{\texttt{ Node.\+js 12.\+17.\+0}} or newer.\hypertarget{readme.md_autotoc_md7189}{}\doxysubsubsubsection{\texorpdfstring{Paths}{Paths}}\label{readme.md_autotoc_md7189}
+\begin{quote}
+Status\+: Experimental. May change at any time. \end{quote}
+
+
+Custom resolution path definitions to use.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ paths:\ \{}
+\DoxyCodeLine{\ \ \ \ 'utils/':\ '/path/to/utils/',}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Trailing slashes map directories, exact paths map exact only.\hypertarget{readme.md_autotoc_md7190}{}\doxysubsubsubsection{\texorpdfstring{Hooks}{Hooks}}\label{readme.md_autotoc_md7190}
+The following FS functions can be hooked by passing them as options\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily read\+File(path)\+: Promise\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}
+\item {\ttfamily stat(path)\+: Promise\texorpdfstring{$<$}{<}FS.\+Stats\texorpdfstring{$>$}{>}}
+\item {\ttfamily readlink(path)\+: Promise\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}
+\item {\ttfamily resolve(id\+: string, parent\+: string)\+: Promise\texorpdfstring{$<$}{<}string \texorpdfstring{$\vert$}{|} string\mbox{[}\mbox{]}\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md7191}{}\doxysubsubsubsubsection{\texorpdfstring{Advanced Resolving}{Advanced Resolving}}\label{readme.md_autotoc_md7191}
+When providing a custom resolve hook you are responsible for returning one or more absolute paths to resolved files based on the {\ttfamily id} input. However it may be the case that you only want to augment or override the resolve behavior in certain cases. You can use {\ttfamily nft}\textquotesingle{}s underlying resolver by importing it. The builtin {\ttfamily resolve} function expects additional arguments that need to be forwarded from the hook
+
+
+\begin{DoxyItemize}
+\item {\ttfamily resolve(id\+: string, parent\+: string, job\+: Job, is\+Cjs\+: boolean)\+: Promise\texorpdfstring{$<$}{<}string \texorpdfstring{$\vert$}{|} string\mbox{[}\mbox{]}\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+
+Here is an example showing one id being resolved to a bespoke path while all other paths being resolved by the built-\/in resolver
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ nodeFileTrace,\ resolve\ \}\ =\ require('@vercel/nft');}
+\DoxyCodeLine{const\ files\ =\ ['./src/main.js',\ './src/second.js'];}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ resolve:\ async\ (id,\ parent,\ job,\ isCjs)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (id\ ===\ './src/main.js')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ '/path/to/some/resolved/main/file.js';}
+\DoxyCodeLine{\ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ resolve(id,\ parent,\ job,\ isCjs);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7192}{}\doxysubsubsubsection{\texorpdfstring{Type\+Script}{Type\+Script}}\label{readme.md_autotoc_md7192}
+The internal resolution supports resolving {\ttfamily .ts} files in traces by default.
+
+By its nature of integrating into existing build systems, the Type\+Script compiler is not included in this project -\/ rather the Type\+Script transform layer requires separate integration into the {\ttfamily read\+File} hook.\hypertarget{readme.md_autotoc_md7193}{}\doxysubsubsubsection{\texorpdfstring{File IO Concurrency}{File IO Concurrency}}\label{readme.md_autotoc_md7193}
+In some large projects, the file tracing logic may process many files at the same time. In this case, if you do not limit the number of concurrent files IO, OOM problems are likely to occur.
+
+We use a default of 1024 concurrency to balance performance and memory usage for fs operations. You can increase this value to a higher number for faster speed, but be aware of the memory issues if the concurrency is too high.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ fileIOConcurrency:\ 2048,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7194}{}\doxysubsubsubsection{\texorpdfstring{Analysis}{Analysis}}\label{readme.md_autotoc_md7194}
+Analysis options allow customizing how much analysis should be performed to exactly work out the dependency list.
+
+By default as much analysis as possible is done to ensure no possibly needed files are left out of the trace.
+
+To disable all analysis, set {\ttfamily analysis\+: false}. Alternatively, individual analysis options can be customized via\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ //\ default}
+\DoxyCodeLine{\ \ analysis:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ whether\ to\ glob\ any\ analysis\ like\ \_\_dirname\ +\ '/dir/'\ or\ require('x/'\ +\ y)}
+\DoxyCodeLine{\ \ \ \ //\ that\ might\ output\ any\ file\ in\ a\ directory}
+\DoxyCodeLine{\ \ \ \ emitGlobs:\ true,}
+\DoxyCodeLine{\ \ \ \ //\ whether\ \_\_filename\ and\ \_\_dirname\ style}
+\DoxyCodeLine{\ \ \ \ //\ expressions\ should\ be\ analyzed\ as\ file\ references}
+\DoxyCodeLine{\ \ \ \ computeFileReferences:\ true,}
+\DoxyCodeLine{\ \ \ \ //\ evaluate\ known\ bindings\ to\ assist\ with\ glob\ and\ file\ reference\ analysis}
+\DoxyCodeLine{\ \ \ \ evaluatePureExpressions:\ true,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md7195}{}\doxysubsubsubsection{\texorpdfstring{Ignore}{Ignore}}\label{readme.md_autotoc_md7195}
+Custom ignores can be provided to skip file inclusion (and consequently analysis of the file for references in turn as well).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(files,\ \{}
+\DoxyCodeLine{\ \ ignore:\ ['./node\_modules/pkg/file.js'],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Ignore will also accept a function or globs.
+
+Note that the path provided to ignore is relative to {\ttfamily base}.\hypertarget{readme.md_autotoc_md7196}{}\doxysubsubsubsection{\texorpdfstring{Cache}{Cache}}\label{readme.md_autotoc_md7196}
+To persist the file cache between builds, pass an empty {\ttfamily cache} object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ cache\ =\ Object.create(null);}
+\DoxyCodeLine{const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(['index.ts'],\ \{\ cache\ \});}
+\DoxyCodeLine{//\ later:}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ const\ \{\ fileList\ \}\ =\ await\ nodeFileTrace(['index.ts'],\ \{\ cache\ \});}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Note that cache invalidations are not supported so the assumption is that the file system is not changed between runs.\hypertarget{readme.md_autotoc_md7197}{}\doxysubsubsubsection{\texorpdfstring{Reasons}{Reasons}}\label{readme.md_autotoc_md7197}
+To get the underlying reasons for individual files being included, a {\ttfamily reasons} object is also provided by the output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ fileList,\ reasons\ \}\ =\ await\ nodeFileTrace(files);}
+
+\end{DoxyCode}
+
+
+The {\ttfamily reasons} output will then be an object of the following form\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ [file:\ string]:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ 'dependency'\ |\ 'asset'\ |\ 'sharedlib',}
+\DoxyCodeLine{\ \ \ \ ignored:\ true\ |\ false,}
+\DoxyCodeLine{\ \ \ \ parents:\ string[]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\ttfamily reasons} also includes files that were ignored as {\ttfamily ignored\+: true}, with their {\ttfamily ignore\+Reason}.
+
+Every file is included because it is referenced by another file. The {\ttfamily parents} list will contain the list of all files that caused this file to be included. 

@@ -1,0 +1,108 @@
+\doxysection{node\+\_\+modules/@supabase/supabase-\/js Directory Reference}
+\hypertarget{dir_0e759424f68b49030e605e5a0c554da4}{}\label{dir_0e759424f68b49030e605e5a0c554da4}\index{node\_modules/"@supabase/supabase-\/js Directory Reference@{node\_modules/"@supabase/supabase-\/js Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+
+\begin{DoxyItemize}
+\item {\bfseries{Documentation\+:}} \href{https://supabase.com/docs/reference/javascript/start}{\texttt{ https\+://supabase.\+com/docs/reference/javascript/start}}
+\item Type\+Doc\+: \href{https://supabase.github.io/supabase-js/v2/}{\texttt{ https\+://supabase.\+github.\+io/supabase-\/js/v2/}}
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+Do you want to help us shape the future of this library? \href{https://jobs.ashbyhq.com/supabase/85d07345-47c6-4980-82e2-57782f83ab4e}{\texttt{ We\textquotesingle{}re hiring}}.
+\end{DoxyNote}
+\hypertarget{README.md_autotoc_md6137}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md6137}
+First of all, you need to install the library\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @supabase/supabase-\/js}
+
+\end{DoxyCode}
+
+
+Then you\textquotesingle{}re able to import the library and establish the connection with the database\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createClient\ \}\ from\ '@supabase/supabase-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ single\ supabase\ client\ for\ interacting\ with\ your\ database}
+\DoxyCodeLine{const\ supabase\ =\ createClient('https://xyzcompany.supabase.co',\ 'public-\/anon-\/key')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6138}{}\doxysubsubsection{\texorpdfstring{UMD}{UMD}}\label{README.md_autotoc_md6138}
+You can use plain {\ttfamily \texorpdfstring{$<$}{<}script\texorpdfstring{$>$}{>}}s to import supabase-\/js from CDNs, like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}https://cdn.jsdelivr.net/npm/@supabase/supabase-\/js@2"{}></script>}
+
+\end{DoxyCode}
+
+
+or even\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src="{}https://unpkg.com/@supabase/supabase-\/js@2"{}></script>}
+
+\end{DoxyCode}
+
+
+Then you can use it from a global {\ttfamily supabase} variable\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{\ \ const\ \{\ createClient\ \}\ =\ supabase}
+\DoxyCodeLine{\ \ const\ \_supabase\ =\ createClient('https://xyzcompany.supabase.co',\ 'public-\/anon-\/key')}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log('Supabase\ Instance:\ ',\ \_supabase)}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6139}{}\doxysubsubsection{\texorpdfstring{ESM}{ESM}}\label{README.md_autotoc_md6139}
+You can use {\ttfamily \texorpdfstring{$<$}{<}script type="{}module"{}\texorpdfstring{$>$}{>}} to import supabase-\/js from CDNs, like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ createClient\ \}\ from\ 'https://cdn.jsdelivr.net/npm/@supabase/supabase-\/js/+esm'}
+\DoxyCodeLine{\ \ const\ supabase\ =\ createClient('https://xyzcompany.supabase.co',\ 'public-\/anon-\/key')}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log('Supabase\ Instance:\ ',\ supabase)}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6140}{}\doxysubsubsection{\texorpdfstring{Deno}{Deno}}\label{README.md_autotoc_md6140}
+You can use supabase-\/js in the Deno runtime via \href{https://jsr.io/@supabase/supabase-js}{\texttt{ JSR}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createClient\ \}\ from\ 'jsr:@supabase/supabase-\/js@2'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6141}{}\doxysubsubsection{\texorpdfstring{Custom {\ttfamily fetch} implementation}{Custom {\ttfamily fetch} implementation}}\label{README.md_autotoc_md6141}
+{\ttfamily supabase-\/js} uses the \href{https://www.npmjs.com/package/cross-fetch}{\texttt{ {\ttfamily cross-\/fetch}}} library to make HTTP requests, but an alternative {\ttfamily fetch} implementation can be provided as an option. This is most useful in environments where {\ttfamily cross-\/fetch} is not compatible, for instance Cloudflare Workers\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createClient\ \}\ from\ '@supabase/supabase-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Provide\ a\ custom\ \`{}fetch`\ implementation\ as\ an\ option}
+\DoxyCodeLine{const\ supabase\ =\ createClient('https://xyzcompany.supabase.co',\ 'public-\/anon-\/key',\ \{}
+\DoxyCodeLine{\ \ global:\ \{}
+\DoxyCodeLine{\ \ \ \ fetch:\ (...args)\ =>\ fetch(...args),}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6142}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md6142}
+We are building the features of Firebase using enterprise-\/grade, open source products. We support existing communities wherever possible, and if the products don’t exist we build them and open source them ourselves. Thanks to these sponsors who are making the OSS ecosystem better for everyone.
+
+\href{https://github.com/sponsors/supabase}{\texttt{ }}\hypertarget{README.md_autotoc_md6143}{}\doxysubsection{\texorpdfstring{Badges}{Badges}}\label{README.md_autotoc_md6143}
+\href{https://coveralls.io/github/supabase/supabase-js?branch=master}{\texttt{ }} 

@@ -1,0 +1,210 @@
+\doxysection{node\+\_\+modules/@clack/prompts Directory Reference}
+\hypertarget{dir_4ba72a49f20a96e72db9094920177700}{}\label{dir_4ba72a49f20a96e72db9094920177700}\index{node\_modules/"@clack/prompts Directory Reference@{node\_modules/"@clack/prompts Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Effortlessly build beautiful command-\/line apps 🪄 \href{https://stackblitz.com/edit/clack-prompts?file=index.js}{\texttt{ Try the demo}}
+
+
+
+\DoxyHorRuler{0}
+
+
+{\ttfamily @clack/prompts} is an opinionated, pre-\/styled wrapper around \href{https://www.npmjs.com/package/@clack/core}{\texttt{ {\ttfamily @clack/core}}}.
+
+
+\begin{DoxyItemize}
+\item 🤏 80\% smaller than other options
+\item 💎 Beautiful, minimal UI
+\item ✅ Simple API
+\item 🧱 Comes with {\ttfamily text}, {\ttfamily confirm}, {\ttfamily select}, {\ttfamily multiselect}, and {\ttfamily spinner} components
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md2853}{}\doxysubsection{\texorpdfstring{Basics}{Basics}}\label{README.md_autotoc_md2853}
+\hypertarget{README.md_autotoc_md2854}{}\doxysubsubsection{\texorpdfstring{Setup}{Setup}}\label{README.md_autotoc_md2854}
+The {\ttfamily intro} and {\ttfamily outro} functions will print a message to begin or end a prompt session, respectively.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ intro,\ outro\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{intro(`create-\/my-\/app`);}
+\DoxyCodeLine{//\ Do\ stuff}
+\DoxyCodeLine{outro(`You're\ all\ set!`);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2855}{}\doxysubsubsection{\texorpdfstring{Cancellation}{Cancellation}}\label{README.md_autotoc_md2855}
+The {\ttfamily is\+Cancel} function is a guard that detects when a user cancels a question with {\ttfamily CTRL + C}. You should handle this situation for each prompt, optionally providing a nice cancellation message with the {\ttfamily cancel} utility.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ isCancel,\ cancel,\ text\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ value\ =\ await\ text(\{}
+\DoxyCodeLine{\ \ message:\ 'What\ is\ the\ meaning\ of\ life?',}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (isCancel(value))\ \{}
+\DoxyCodeLine{\ \ cancel('Operation\ cancelled.');}
+\DoxyCodeLine{\ \ process.exit(0);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2856}{}\doxysubsection{\texorpdfstring{Components}{Components}}\label{README.md_autotoc_md2856}
+\hypertarget{README.md_autotoc_md2857}{}\doxysubsubsection{\texorpdfstring{Text}{Text}}\label{README.md_autotoc_md2857}
+The text component accepts a single line of text.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ text\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ meaning\ =\ await\ text(\{}
+\DoxyCodeLine{\ \ message:\ 'What\ is\ the\ meaning\ of\ life?',}
+\DoxyCodeLine{\ \ placeholder:\ 'Not\ sure',}
+\DoxyCodeLine{\ \ initialValue:\ '42',}
+\DoxyCodeLine{\ \ validate(value)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (value.length\ ===\ 0)\ return\ \`{}Value\ is\ required!`;}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2858}{}\doxysubsubsection{\texorpdfstring{Confirm}{Confirm}}\label{README.md_autotoc_md2858}
+The confirm component accepts a yes or no answer. The result is a boolean value of {\ttfamily true} or {\ttfamily false}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ confirm\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ shouldContinue\ =\ await\ confirm(\{}
+\DoxyCodeLine{\ \ message:\ 'Do\ you\ want\ to\ continue?',}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2859}{}\doxysubsubsection{\texorpdfstring{Select}{Select}}\label{README.md_autotoc_md2859}
+The select component allows a user to choose one value from a list of options. The result is the {\ttfamily value} prop of a given option.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ select\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ projectType\ =\ await\ select(\{}
+\DoxyCodeLine{\ \ message:\ 'Pick\ a\ project\ type.',}
+\DoxyCodeLine{\ \ options:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ value:\ 'ts',\ label:\ 'TypeScript'\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ value:\ 'js',\ label:\ 'JavaScript'\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ value:\ 'coffee',\ label:\ 'CoffeeScript',\ hint:\ 'oh\ no'\ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2860}{}\doxysubsubsection{\texorpdfstring{Multi-\/\+Select}{Multi-\/\+Select}}\label{README.md_autotoc_md2860}
+The {\ttfamily multiselect} component allows a user to choose many values from a list of options. The result is an array with all selected {\ttfamily value} props.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ multiselect\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ additionalTools\ =\ await\ multiselect(\{}
+\DoxyCodeLine{\ \ message:\ 'Select\ additional\ tools.',}
+\DoxyCodeLine{\ \ options:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ value:\ 'eslint',\ label:\ 'ESLint',\ hint:\ 'recommended'\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ value:\ 'prettier',\ label:\ 'Prettier'\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ value:\ 'gh-\/action',\ label:\ 'GitHub\ Action'\ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ required:\ false,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2861}{}\doxysubsubsection{\texorpdfstring{Spinner}{Spinner}}\label{README.md_autotoc_md2861}
+The spinner component surfaces a pending action, such as a long-\/running download or dependency installation.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ spinner\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ s\ =\ spinner();}
+\DoxyCodeLine{s.start('Installing\ via\ npm');}
+\DoxyCodeLine{//\ Do\ installation\ here}
+\DoxyCodeLine{s.stop('Installed\ via\ npm');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2862}{}\doxysubsection{\texorpdfstring{Utilities}{Utilities}}\label{README.md_autotoc_md2862}
+\hypertarget{README.md_autotoc_md2863}{}\doxysubsubsection{\texorpdfstring{Grouping}{Grouping}}\label{README.md_autotoc_md2863}
+Grouping prompts together is a great way to keep your code organized. This accepts a JSON object with a name that can be used to reference the group later. The second argument is an optional but has a {\ttfamily on\+Cancel} callback that will be called if the user cancels one of the prompts in the group.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ p\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ group\ =\ await\ p.group(}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ name:\ ()\ =>\ p.text(\{\ message:\ 'What\ is\ your\ name?'\ \}),}
+\DoxyCodeLine{\ \ \ \ age:\ ()\ =>\ p.text(\{\ message:\ 'What\ is\ your\ age?'\ \}),}
+\DoxyCodeLine{\ \ \ \ color:\ (\{\ results\ \})\ =>}
+\DoxyCodeLine{\ \ \ \ \ \ p.multiselect(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ message:\ \`{}What\ is\ your\ favorite\ color\ \$\{results.name\}?`,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ options:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{\ value:\ 'red',\ label:\ 'Red'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{\ value:\ 'green',\ label:\ 'Green'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{\ value:\ 'blue',\ label:\ 'Blue'\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \}),}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ //\ On\ Cancel\ callback\ that\ wraps\ the\ group}
+\DoxyCodeLine{\ \ \ \ //\ So\ if\ the\ user\ cancels\ one\ of\ the\ prompts\ in\ the\ group\ this\ function\ will\ be\ called}
+\DoxyCodeLine{\ \ \ \ onCancel:\ (\{\ results\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ p.cancel('Operation\ cancelled.');}
+\DoxyCodeLine{\ \ \ \ \ \ process.exit(0);}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(group.name,\ group.age,\ group.color);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2864}{}\doxysubsubsection{\texorpdfstring{Tasks}{Tasks}}\label{README.md_autotoc_md2864}
+Execute multiple tasks in spinners.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{await\ p.tasks([}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ title:\ 'Installing\ via\ npm',}
+\DoxyCodeLine{\ \ \ \ task:\ async\ (message)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Do\ installation\ here}
+\DoxyCodeLine{\ \ \ \ \ \ return\ 'Installed\ via\ npm';}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{]);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2865}{}\doxysubsubsection{\texorpdfstring{Logs}{Logs}}\label{README.md_autotoc_md2865}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ log\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{log.info('Info!');}
+\DoxyCodeLine{log.success('Success!');}
+\DoxyCodeLine{log.step('Step!');}
+\DoxyCodeLine{log.warn('Warn!');}
+\DoxyCodeLine{log.error('Error!');}
+\DoxyCodeLine{log.message('Hello,\ World',\ \{\ symbol:\ color.cyan('\string~')\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md2866}{}\doxysubsubsection{\texorpdfstring{Stream}{Stream}}\label{README.md_autotoc_md2866}
+When interacting with dynamic LLMs or other streaming message providers, use the {\ttfamily stream} APIs to log messages from an iterable, even an async one.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ stream\ \}\ from\ '@clack/prompts';}
+\DoxyCodeLine{}
+\DoxyCodeLine{stream.info((function\ *()\ \{\ yield\ 'Info!';\ \})());}
+\DoxyCodeLine{stream.success((function\ *()\ \{\ yield\ 'Success!';\ \})());}
+\DoxyCodeLine{stream.step((function\ *()\ \{\ yield\ 'Step!';\ \})());}
+\DoxyCodeLine{stream.warn((function\ *()\ \{\ yield\ 'Warn!';\ \})());}
+\DoxyCodeLine{stream.error((function\ *()\ \{\ yield\ 'Error!';\ \})());}
+\DoxyCodeLine{stream.message((function\ *()\ \{\ yield\ 'Hello';\ yield\ "{},\ World"{}\ \})(),\ \{\ symbol:\ color.cyan('\string~')\ \});}
+
+\end{DoxyCode}
+
+
+\href{https://github.com/natemoo-re/clack/blob/main/.github/assets/clack-logs.png}{\texttt{ clack-\/log-\/prompts}} 

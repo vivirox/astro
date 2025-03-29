@@ -1,0 +1,233 @@
+\doxysection{node\+\_\+modules/@sinonjs/fake-\/timers Directory Reference}
+\hypertarget{dir_a6d37b3ce432a5fcc2929c9e73022906}{}\label{dir_a6d37b3ce432a5fcc2929c9e73022906}\index{node\_modules/"@sinonjs/fake-\/timers Directory Reference@{node\_modules/"@sinonjs/fake-\/timers Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://codecov.io/gh/sinonjs/fake-timers}{\texttt{ }} \href{CODE_OF_CONDUCT.md}{\texttt{ }}
+
+Java\+Script implementation of the timer APIs; {\ttfamily set\+Timeout}, {\ttfamily clear\+Timeout}, {\ttfamily set\+Immediate}, {\ttfamily clear\+Immediate}, {\ttfamily set\+Interval}, {\ttfamily clear\+Interval}, {\ttfamily request\+Animation\+Frame}, {\ttfamily cancel\+Animation\+Frame}, {\ttfamily request\+Idle\+Callback}, and {\ttfamily cancel\+Idle\+Callback}, along with a clock instance that controls the flow of time. Fake\+Timers also provides a {\ttfamily Date} implementation that gets its time from the clock.
+
+In addition in browser environment {\ttfamily @sinonjs/fake-\/timers} provides a {\ttfamily performance} implementation that gets its time from the clock. In Node environments Fake\+Timers provides a {\ttfamily next\+Tick} implementation that is synchronized with the clock -\/ and a {\ttfamily process.\+hrtime} shim that works with the clock.
+
+{\ttfamily @sinonjs/fake-\/timers} can be used to simulate passing time in automated tests and other situations where you want the scheduling semantics, but don\textquotesingle{}t want to actually wait.
+
+{\ttfamily @sinonjs/fake-\/timers} is extracted from \href{https://github.com/sinonjs/sinon.js}{\texttt{ Sinon.\+JS}} and targets the \href{https://sinonjs.org/releases/latest/\#supported-runtimes}{\texttt{ same runtimes}}.\hypertarget{README.md_autotoc_md6014}{}\doxysubsection{\texorpdfstring{Autocomplete, Intelli\+Sense and Type\+Script definitions}{Autocomplete, Intelli\+Sense and Type\+Script definitions}}\label{README.md_autotoc_md6014}
+Version 7 introduced JSDoc to the codebase. This should provide autocomplete and type suggestions in supporting IDEs. If you need more elaborate type support, Type\+Script definitions for the Sinon projects are independently maintained by the Definitely Types community\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/D\ @types/sinonjs\_\_fake-\/timers}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6015}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md6015}
+{\ttfamily @sinonjs/fake-\/timers} can be used in both Node and browser environments. Installation is as easy as
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @sinonjs/fake-\/timers}
+
+\end{DoxyCode}
+
+
+If you want to use {\ttfamily @sinonjs/fake-\/timers} in a browser you can either build your own bundle or use \href{https://www.skypack.dev}{\texttt{ Skypack}}.\hypertarget{README.md_autotoc_md6016}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md6016}
+To use {\ttfamily @sinonjs/fake-\/timers}, create a new clock, schedule events on it using the timer functions and pass time using the {\ttfamily tick} method.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ In\ the\ browser\ distribution,\ a\ global\ \`{}FakeTimers`\ is\ already\ available}
+\DoxyCodeLine{var\ FakeTimers\ =\ require("{}@sinonjs/fake-\/timers"{});}
+\DoxyCodeLine{var\ clock\ =\ FakeTimers.createClock();}
+\DoxyCodeLine{}
+\DoxyCodeLine{clock.setTimeout(function\ ()\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}The\ poblano\ is\ a\ mild\ chili\ pepper\ originating\ in\ the\ state\ of\ Puebla,\ Mexico."{}}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{\},\ 15);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{clock.tick(15);}
+
+\end{DoxyCode}
+
+
+Upon executing the last line, an interesting fact about the \href{https://en.wikipedia.org/wiki/Poblano}{\texttt{ Poblano}} will be printed synchronously to the screen. If you want to simulate asynchronous behavior, please see the {\ttfamily async} function variants (eg {\ttfamily clock.\+tick(time)} vs {\ttfamily await clock.\+tick\+Async(time)}).
+
+The {\ttfamily next}, {\ttfamily run\+All}, {\ttfamily run\+To\+Frame}, and {\ttfamily run\+To\+Last} methods are available to advance the clock. See the API Reference for more details.\hypertarget{README.md_autotoc_md6017}{}\doxysubsubsection{\texorpdfstring{Faking the native timers}{Faking the native timers}}\label{README.md_autotoc_md6017}
+When using {\ttfamily @sinonjs/fake-\/timers} to test timers, you will most likely want to replace the native timers such that calling {\ttfamily set\+Timeout} actually schedules a callback with your clock instance, not the browser\textquotesingle{}s internals.
+
+Calling {\ttfamily install} with no arguments achieves this. You can call {\ttfamily uninstall} later to restore things as they were again.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ In\ the\ browser\ distribution,\ a\ global\ \`{}FakeTimers`\ is\ already\ available}
+\DoxyCodeLine{var\ FakeTimers\ =\ require("{}@sinonjs/fake-\/timers"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ clock\ =\ FakeTimers.install();}
+\DoxyCodeLine{//\ Equivalent\ to}
+\DoxyCodeLine{//\ var\ clock\ =\ FakeTimers.install(typeof\ global\ !==\ "{}undefined"{}\ ?\ global\ :\ window);}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(fn,\ 15);\ //\ Schedules\ with\ clock.setTimeout}
+\DoxyCodeLine{}
+\DoxyCodeLine{clock.uninstall();}
+\DoxyCodeLine{//\ setTimeout\ is\ restored\ to\ the\ native\ implementation}
+
+\end{DoxyCode}
+
+
+To hijack timers in another context pass it to the {\ttfamily install} method.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ FakeTimers\ =\ require("{}@sinonjs/fake-\/timers"{});}
+\DoxyCodeLine{var\ context\ =\ \{}
+\DoxyCodeLine{\ \ \ \ setTimeout:\ setTimeout,\ //\ By\ default\ context.setTimeout\ uses\ the\ global\ setTimeout}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{var\ clock\ =\ FakeTimers.withGlobal(context).install();}
+\DoxyCodeLine{}
+\DoxyCodeLine{context.setTimeout(fn,\ 15);\ //\ Schedules\ with\ clock.setTimeout}
+\DoxyCodeLine{}
+\DoxyCodeLine{clock.uninstall();}
+\DoxyCodeLine{//\ context.setTimeout\ is\ restored\ to\ the\ original\ implementation}
+
+\end{DoxyCode}
+
+
+Usually you want to install the timers onto the global object, so call {\ttfamily install} without arguments.\hypertarget{README.md_autotoc_md6018}{}\doxysubsubsubsection{\texorpdfstring{Automatically incrementing mocked time}{Automatically incrementing mocked time}}\label{README.md_autotoc_md6018}
+Fake\+Timers supports the possibility to attach the faked timers to any change in the real system time. This means that there is no need to {\ttfamily tick()} the clock in a situation where you won\textquotesingle{}t know {\bfseries{when}} to call {\ttfamily tick()}.
+
+Please note that this is achieved using the original set\+Immediate() API at a certain configurable interval {\ttfamily config.\+advance\+Time\+Delta} (default\+: 20ms). Meaning time would be incremented every 20ms, not in real time.
+
+An example would be\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ FakeTimers\ =\ require("{}@sinonjs/fake-\/timers"{});}
+\DoxyCodeLine{var\ clock\ =\ FakeTimers.install(\{}
+\DoxyCodeLine{\ \ \ \ shouldAdvanceTime:\ true,}
+\DoxyCodeLine{\ \ \ \ advanceTimeDelta:\ 40,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log("{}this\ just\ timed\ out"{});\ //executed\ after\ 40ms}
+\DoxyCodeLine{\},\ 30);}
+\DoxyCodeLine{}
+\DoxyCodeLine{setImmediate(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log("{}not\ so\ immediate"{});\ //executed\ after\ 40ms}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log("{}this\ timed\ out\ after"{});\ //executed\ after\ 80ms}
+\DoxyCodeLine{\ \ \ \ clock.uninstall();}
+\DoxyCodeLine{\},\ 50);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6019}{}\doxysubsection{\texorpdfstring{API Reference}{API Reference}}\label{README.md_autotoc_md6019}
+\hypertarget{README.md_autotoc_md6020}{}\doxysubsubsection{\texorpdfstring{{\ttfamily var clock = Fake\+Timers.\+create\+Clock(\mbox{[}now\mbox{[}, loop\+Limit\mbox{]}\mbox{]})}}{{\ttfamily var clock = Fake\+Timers.\+create\+Clock(\mbox{[}now\mbox{[}, loop\+Limit\mbox{]}\mbox{]})}}}\label{README.md_autotoc_md6020}
+Creates a clock. The default \href{https://en.wikipedia.org/wiki/Epoch_\%28reference_date\%29}{\texttt{ epoch}} is {\ttfamily 0}.
+
+The {\ttfamily now} argument may be a number (in milliseconds) or a Date object.
+
+The {\ttfamily loop\+Limit} argument sets the maximum number of timers that will be run when calling {\ttfamily run\+All()} before assuming that we have an infinite loop and throwing an error. The default is {\ttfamily 1000}.\hypertarget{README.md_autotoc_md6021}{}\doxysubsubsection{\texorpdfstring{{\ttfamily var clock = Fake\+Timers.\+install(\mbox{[}config\mbox{]})}}{{\ttfamily var clock = Fake\+Timers.\+install(\mbox{[}config\mbox{]})}}}\label{README.md_autotoc_md6021}
+Installs Fake\+Timers using the specified config (otherwise with epoch {\ttfamily 0} on the global scope). The following configuration options are available
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Parameter   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Default   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Parameter   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Default   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endhead
+{\ttfamily config.\+now}   &Number/\+Date   &0   &installs Fake\+Timers with the specified unix epoch    \\\cline{1-4}
+{\ttfamily config.\+to\+Fake}   &String\mbox{[}\mbox{]}   &\mbox{[}"{}set\+Timeout"{}, "{}clear\+Timeout"{}, "{}set\+Immediate"{}, "{}clear\+Immediate"{},"{}set\+Interval"{}, "{}clear\+Interval"{}, "{}\+Date"{}, "{}request\+Animation\+Frame"{}, "{}cancel\+Animation\+Frame"{}, "{}request\+Idle\+Callback"{}, "{}cancel\+Idle\+Callback"{}, "{}hrtime"{}, "{}performance"{}\mbox{]}   &an array with explicit function names (or objects, in the case of "{}performance"{}) to hijack. {\itshape When not set, Fake\+Timers will automatically fake all methods {\bfseries{except}} {\ttfamily next\+Tick}} e.\+g., {\ttfamily Fake\+Timers.\+install(\{ to\+Fake\+: \mbox{[}"{}set\+Timeout"{},"{}next\+Tick"{}\mbox{]}\})} will fake only {\ttfamily set\+Timeout} and {\ttfamily next\+Tick}    \\\cline{1-4}
+{\ttfamily config.\+loop\+Limit}   &Number   &1000   &the maximum number of timers that will be run when calling run\+All()    \\\cline{1-4}
+{\ttfamily config.\+should\+Advance\+Time}   &Boolean   &false   &tells Fake\+Timers to increment mocked time automatically based on the real system time shift (e.\+g. the mocked time will be incremented by 20ms for every 20ms change in the real system time)    \\\cline{1-4}
+{\ttfamily config.\+advance\+Time\+Delta}   &Number   &20   &relevant only when using with {\ttfamily should\+Advance\+Time\+: true}. increment mocked time by {\ttfamily advance\+Time\+Delta} ms every {\ttfamily advance\+Time\+Delta} ms change in the real system time.    \\\cline{1-4}
+{\ttfamily config.\+should\+Clear\+Native\+Timers}   &Boolean   &false   &tells Fake\+Timers to clear \textquotesingle{}native\textquotesingle{} (i.\+e. not fake) timers by delegating to their respective handlers. These are not cleared by default, leading to potentially unexpected behavior if timers existed prior to installing Fake\+Timers.   \\\cline{1-4}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md6022}{}\doxysubsubsection{\texorpdfstring{{\ttfamily var id = clock.\+set\+Timeout(callback, timeout)}}{{\ttfamily var id = clock.\+set\+Timeout(callback, timeout)}}}\label{README.md_autotoc_md6022}
+Schedules the callback to be fired once {\ttfamily timeout} milliseconds have ticked by.
+
+In Node.\+js {\ttfamily set\+Timeout} returns a timer object. Fake\+Timers will do the same, however its {\ttfamily ref()} and {\ttfamily unref()} methods have no effect.
+
+In browsers a timer ID is returned.\hypertarget{README.md_autotoc_md6023}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+clear\+Timeout(id)}}{{\ttfamily clock.\+clear\+Timeout(id)}}}\label{README.md_autotoc_md6023}
+Clears the timer given the ID or timer object, as long as it was created using {\ttfamily set\+Timeout}.\hypertarget{README.md_autotoc_md6024}{}\doxysubsubsection{\texorpdfstring{{\ttfamily var id = clock.\+set\+Interval(callback, timeout)}}{{\ttfamily var id = clock.\+set\+Interval(callback, timeout)}}}\label{README.md_autotoc_md6024}
+Schedules the callback to be fired every time {\ttfamily timeout} milliseconds have ticked by.
+
+In Node.\+js {\ttfamily set\+Interval} returns a timer object. Fake\+Timers will do the same, however its {\ttfamily ref()} and {\ttfamily unref()} methods have no effect.
+
+In browsers a timer ID is returned.\hypertarget{README.md_autotoc_md6025}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+clear\+Interval(id)}}{{\ttfamily clock.\+clear\+Interval(id)}}}\label{README.md_autotoc_md6025}
+Clears the timer given the ID or timer object, as long as it was created using {\ttfamily set\+Interval}.\hypertarget{README.md_autotoc_md6026}{}\doxysubsubsection{\texorpdfstring{{\ttfamily var id = clock.\+set\+Immediate(callback)}}{{\ttfamily var id = clock.\+set\+Immediate(callback)}}}\label{README.md_autotoc_md6026}
+Schedules the callback to be fired once {\ttfamily 0} milliseconds have ticked by. Note that you\textquotesingle{}ll still have to call {\ttfamily clock.\+tick()} for the callback to fire. If called during a tick the callback won\textquotesingle{}t fire until {\ttfamily 1} millisecond has ticked by.
+
+In Node.\+js {\ttfamily set\+Immediate} returns a timer object. Fake\+Timers will do the same, however its {\ttfamily ref()} and {\ttfamily unref()} methods have no effect.
+
+In browsers a timer ID is returned.\hypertarget{README.md_autotoc_md6027}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+clear\+Immediate(id)}}{{\ttfamily clock.\+clear\+Immediate(id)}}}\label{README.md_autotoc_md6027}
+Clears the timer given the ID or timer object, as long as it was created using {\ttfamily set\+Immediate}.\hypertarget{README.md_autotoc_md6028}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+request\+Animation\+Frame(callback)}}{{\ttfamily clock.\+request\+Animation\+Frame(callback)}}}\label{README.md_autotoc_md6028}
+Schedules the callback to be fired on the next animation frame, which runs every 16 ticks. Returns an {\ttfamily id} which can be used to cancel the callback. This is available in both browser \& node environments.\hypertarget{README.md_autotoc_md6029}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+cancel\+Animation\+Frame(id)}}{{\ttfamily clock.\+cancel\+Animation\+Frame(id)}}}\label{README.md_autotoc_md6029}
+Cancels the callback scheduled by the provided id.\hypertarget{README.md_autotoc_md6030}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+request\+Idle\+Callback(callback\mbox{[}, timeout\mbox{]})}}{{\ttfamily clock.\+request\+Idle\+Callback(callback\mbox{[}, timeout\mbox{]})}}}\label{README.md_autotoc_md6030}
+Queued the callback to be fired during idle periods to perform background and low priority work on the main event loop. Callbacks which have a timeout option will be fired no later than time in milliseconds. Returns an {\ttfamily id} which can be used to cancel the callback.\hypertarget{README.md_autotoc_md6031}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+cancel\+Idle\+Callback(id)}}{{\ttfamily clock.\+cancel\+Idle\+Callback(id)}}}\label{README.md_autotoc_md6031}
+Cancels the callback scheduled by the provided id.\hypertarget{README.md_autotoc_md6032}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+count\+Timers()}}{{\ttfamily clock.\+count\+Timers()}}}\label{README.md_autotoc_md6032}
+Returns the number of waiting timers. This can be used to assert that a test finishes without leaking any timers.\hypertarget{README.md_autotoc_md6033}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+hrtime(prev\+Time?)}}{{\ttfamily clock.\+hrtime(prev\+Time?)}}}\label{README.md_autotoc_md6033}
+Only available in Node.\+js, mimicks process.\+hrtime().\hypertarget{README.md_autotoc_md6034}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+next\+Tick(callback)}}{{\ttfamily clock.\+next\+Tick(callback)}}}\label{README.md_autotoc_md6034}
+Only available in Node.\+js, mimics {\ttfamily process.\+next\+Tick} to enable completely synchronous testing flows.\hypertarget{README.md_autotoc_md6035}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+performance.\+now()}}{{\ttfamily clock.\+performance.\+now()}}}\label{README.md_autotoc_md6035}
+Only available in browser environments, mimicks performance.\+now().\hypertarget{README.md_autotoc_md6036}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+tick(time)} / {\ttfamily await clock.\+tick\+Async(time)}}{{\ttfamily clock.\+tick(time)} / {\ttfamily await clock.\+tick\+Async(time)}}}\label{README.md_autotoc_md6036}
+Advance the clock, firing callbacks if necessary. {\ttfamily time} may be the number of milliseconds to advance the clock by or a human-\/readable string. Valid string formats are {\ttfamily "{}08"{}} for eight seconds, {\ttfamily "{}01\+:00"{}} for one minute and {\ttfamily "{}02\+:34\+:10"{}} for two hours, 34 minutes and ten seconds.
+
+The {\ttfamily tick\+Async()} will also break the event loop, allowing any scheduled promise callbacks to execute {\itshape before} running the timers.\hypertarget{README.md_autotoc_md6037}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+next()} / {\ttfamily await clock.\+next\+Async()}}{{\ttfamily clock.\+next()} / {\ttfamily await clock.\+next\+Async()}}}\label{README.md_autotoc_md6037}
+Advances the clock to the the moment of the first scheduled timer, firing it.
+
+The {\ttfamily next\+Async()} will also break the event loop, allowing any scheduled promise callbacks to execute {\itshape before} running the timers.\hypertarget{README.md_autotoc_md6038}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+jump(time)}}{{\ttfamily clock.\+jump(time)}}}\label{README.md_autotoc_md6038}
+Advance the clock by jumping forward in time, firing callbacks at most once. {\ttfamily time} takes the same formats as \`{}clock.tick\`{}.
+
+This can be used to simulate the JS engine (such as a browser) being put to sleep and resumed later, skipping intermediary timers.\hypertarget{README.md_autotoc_md6039}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+reset()}}{{\ttfamily clock.\+reset()}}}\label{README.md_autotoc_md6039}
+Removes all timers and ticks without firing them, and sets {\ttfamily now} to {\ttfamily config.\+now} that was provided to {\ttfamily Fake\+Timers.\+install} or to {\ttfamily 0} if {\ttfamily config.\+now} was not provided. Useful to reset the state of the clock without having to {\ttfamily uninstall} and {\ttfamily install} it.\hypertarget{README.md_autotoc_md6040}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+run\+All()} / {\ttfamily await clock.\+run\+All\+Async()}}{{\ttfamily clock.\+run\+All()} / {\ttfamily await clock.\+run\+All\+Async()}}}\label{README.md_autotoc_md6040}
+This runs all pending timers until there are none remaining. If new timers are added while it is executing they will be run as well.
+
+This makes it easier to run asynchronous tests to completion without worrying about the number of timers they use, or the delays in those timers.
+
+It runs a maximum of {\ttfamily loop\+Limit} times after which it assumes there is an infinite loop of timers and throws an error.
+
+The {\ttfamily run\+All\+Async()} will also break the event loop, allowing any scheduled promise callbacks to execute {\itshape before} running the timers.\hypertarget{README.md_autotoc_md6041}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+run\+Microtasks()}}{{\ttfamily clock.\+run\+Microtasks()}}}\label{README.md_autotoc_md6041}
+This runs all pending microtasks scheduled with {\ttfamily next\+Tick} but none of the timers and is mostly useful for libraries using Fake\+Timers underneath and for running {\ttfamily next\+Tick} items without any timers.\hypertarget{README.md_autotoc_md6042}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+run\+To\+Frame()}}{{\ttfamily clock.\+run\+To\+Frame()}}}\label{README.md_autotoc_md6042}
+Advances the clock to the next frame, firing all scheduled animation frame callbacks, if any, for that frame as well as any other timers scheduled along the way.\hypertarget{README.md_autotoc_md6043}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+run\+To\+Last()} / {\ttfamily await clock.\+run\+To\+Last\+Async()}}{{\ttfamily clock.\+run\+To\+Last()} / {\ttfamily await clock.\+run\+To\+Last\+Async()}}}\label{README.md_autotoc_md6043}
+This takes note of the last scheduled timer when it is run, and advances the clock to that time firing callbacks as necessary.
+
+If new timers are added while it is executing they will be run only if they would occur before this time.
+
+This is useful when you want to run a test to completion, but the test recursively sets timers that would cause {\ttfamily run\+All} to trigger an infinite loop warning.
+
+The {\ttfamily run\+To\+Last\+Async()} will also break the event loop, allowing any scheduled promise callbacks to execute {\itshape before} running the timers.\hypertarget{README.md_autotoc_md6044}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+set\+System\+Time(\mbox{[}now\mbox{]})}}{{\ttfamily clock.\+set\+System\+Time(\mbox{[}now\mbox{]})}}}\label{README.md_autotoc_md6044}
+This simulates a user changing the system clock while your program is running. It affects the current time but it does not in itself cause e.\+g. timers to fire; they will fire exactly as they would have done without the call to set\+System\+Time().\hypertarget{README.md_autotoc_md6045}{}\doxysubsubsection{\texorpdfstring{{\ttfamily clock.\+uninstall()}}{{\ttfamily clock.\+uninstall()}}}\label{README.md_autotoc_md6045}
+Restores the original methods of the native timers or the methods on the object that was passed to {\ttfamily Fake\+Timers.\+with\+Global}\hypertarget{README.md_autotoc_md6046}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Date}}{{\ttfamily Date}}}\label{README.md_autotoc_md6046}
+Implements the {\ttfamily Date} object but using the clock to provide the correct time.\hypertarget{README.md_autotoc_md6047}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Performance}}{{\ttfamily Performance}}}\label{README.md_autotoc_md6047}
+Implements the {\ttfamily now} method of the \href{https://developer.mozilla.org/en-US/docs/Web/API/Performance/now}{\texttt{ {\ttfamily Performance}}} object but using the clock to provide the correct time. Only available in environments that support the Performance object (browsers mostly).\hypertarget{README.md_autotoc_md6048}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Fake\+Timers.\+with\+Global}}{{\ttfamily Fake\+Timers.\+with\+Global}}}\label{README.md_autotoc_md6048}
+In order to support creating clocks based on separate or sandboxed environments (such as JSDOM), Fake\+Timers exports a factory method which takes single argument {\ttfamily global}, which it inspects to figure out what to mock and what features to support. When invoking this function with a global, you will get back an object with {\ttfamily timers}, {\ttfamily create\+Clock} and {\ttfamily install} -\/ same as the regular Fake\+Timers exports only based on the passed in global instead of the global environment.\hypertarget{README.md_autotoc_md6049}{}\doxysubsection{\texorpdfstring{Running tests}{Running tests}}\label{README.md_autotoc_md6049}
+Fake\+Timers has a comprehensive test suite. If you\textquotesingle{}re thinking of contributing bug fixes or suggesting new features, you need to make sure you have not broken any tests. You are also expected to add tests for any new behavior.\hypertarget{README.md_autotoc_md6050}{}\doxysubsubsection{\texorpdfstring{On node\+:}{On node\+:}}\label{README.md_autotoc_md6050}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ test}
+
+\end{DoxyCode}
+
+
+Or, if you prefer more verbose output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$(npm\ bin)/mocha\ ./test/fake-\/timers-\/test.js}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6051}{}\doxysubsubsection{\texorpdfstring{In the browser}{In the browser}}\label{README.md_autotoc_md6051}
+\href{https://github.com/mantoni/mochify.js}{\texttt{ Mochify}} is used to run the tests in Phantom\+JS. Make sure you have {\ttfamily phantomjs} installed. Then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ test-\/headless}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6052}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md6052}
+BSD 3-\/clause "{}\+New"{} or "{}\+Revised"{} License (see LICENSE file) 

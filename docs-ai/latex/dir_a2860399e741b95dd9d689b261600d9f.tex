@@ -1,0 +1,240 @@
+\doxysection{node\+\_\+modules/remark-\/code-\/import/node\+\_\+modules/unist-\/util-\/is Directory Reference}
+\hypertarget{dir_a2860399e741b95dd9d689b261600d9f}{}\label{dir_a2860399e741b95dd9d689b261600d9f}\index{node\_modules/remark-\/code-\/import/node\_modules/unist-\/util-\/is Directory Reference@{node\_modules/remark-\/code-\/import/node\_modules/unist-\/util-\/is Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/unist-util-is/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/unist-util-is}{\texttt{ }} \href{https://www.npmjs.com/package/unist-util-is}{\texttt{ }} \href{https://bundlephobia.com/result?p=unist-util-is}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/unist}{\texttt{ unist}} utility to check if nodes pass a test.\hypertarget{readme.md_autotoc_md28995}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md28995}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}is(node\mbox{[}, test\mbox{[}, index, parent\mbox{[}, context\mbox{]}\mbox{]}\mbox{]})\`{}
+\item \`{}convert(test)\`{}
+\item \`{}\+Assert\+Anything\`{}
+\item \`{}\+Assert\+Predicate\`{}
+\item \`{}\+Test\`{}
+\item \`{}\+Test\+Function\+Anything\`{}
+\item \`{}\+Predicate\+Test\`{}
+\item \`{}\+Test\+Function\+Predicate\`{}
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Example of \`{}convert\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md28996}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md28996}
+This package is a small utility that checks that a node is a certain node.\hypertarget{readme.md_autotoc_md28997}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md28997}
+Use this small utility if you find yourself repeating code for checking what nodes are.
+
+A similar package, \href{https://github.com/syntax-tree/hast-util-is-element}{\texttt{ {\ttfamily hast-\/util-\/is-\/element}}}, works on hast elements.
+
+For more advanced tests, \href{https://github.com/syntax-tree/unist-util-select}{\texttt{ {\ttfamily unist-\/util-\/select}}} can be used to match against CSS selectors.\hypertarget{readme.md_autotoc_md28998}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md28998}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 14.\+14+ and 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ unist-\/util-\/is}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{is\}\ from\ 'https://esm.sh/unist-\/util-\/is@5'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{is\}\ from\ 'https://esm.sh/unist-\/util-\/is@5?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md28999}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md28999}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{is\}\ from\ 'unist-\/util-\/is'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ node\ =\ \{type:\ 'strong'\}}
+\DoxyCodeLine{const\ parent\ =\ \{type:\ 'paragraph',\ children:\ [node]\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{is()\ //\ =>\ false}
+\DoxyCodeLine{is(\{children:\ []\})\ //\ =>\ false}
+\DoxyCodeLine{is(node)\ //\ =>\ true}
+\DoxyCodeLine{is(node,\ 'strong')\ //\ =>\ true}
+\DoxyCodeLine{is(node,\ 'emphasis')\ //\ =>\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{is(node,\ node)\ //\ =>\ true}
+\DoxyCodeLine{is(parent,\ \{type:\ 'paragraph'\})\ //\ =>\ true}
+\DoxyCodeLine{is(parent,\ \{type:\ 'strong'\})\ //\ =>\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{is(node,\ test)\ //\ =>\ false}
+\DoxyCodeLine{is(node,\ test,\ 4,\ parent)\ //\ =>\ false}
+\DoxyCodeLine{is(node,\ test,\ 5,\ parent)\ //\ =>\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ test(node,\ n)\ \{}
+\DoxyCodeLine{\ \ return\ n\ ===\ 5}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29000}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md29000}
+This package exports the identifiers \`{}convert\`{} and \`{}is\`{}. There is no default export.\hypertarget{readme.md_autotoc_md29001}{}\doxysubsubsection{\texorpdfstring{{\ttfamily is(node\mbox{[}, test\mbox{[}, index, parent\mbox{[}, context\mbox{]}\mbox{]}\mbox{]})}}{{\ttfamily is(node\mbox{[}, test\mbox{[}, index, parent\mbox{[}, context\mbox{]}\mbox{]}\mbox{]})}}}\label{readme.md_autotoc_md29001}
+Check if {\ttfamily node} is a {\ttfamily Node} and whether it passes the given test.\hypertarget{readme.md_autotoc_md29002}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md29002}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} ({\ttfamily unknown}) — thing to check, typically \href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}
+\item {\ttfamily test} (\`{}\+Test\`{} or \`{}\+Predicate\+Test\`{}, optional) — a check for a specific element
+\item {\ttfamily index} ({\ttfamily number}, optional) — the node’s position in its parent
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}, optional) — the node’s parent
+\item {\ttfamily context} ({\ttfamily any}, optional) — context object ({\ttfamily this}) to call {\ttfamily test} with
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29003}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md29003}
+Whether {\ttfamily node} is a \href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}} and passes a test ({\ttfamily boolean}).\hypertarget{readme.md_autotoc_md29004}{}\doxysubsubsubsubsubsection{\texorpdfstring{Throws}{Throws}}\label{readme.md_autotoc_md29004}
+When an incorrect {\ttfamily test}, {\ttfamily index}, or {\ttfamily parent} is given. There is no error thrown when {\ttfamily node} is not a node.\hypertarget{readme.md_autotoc_md29005}{}\doxysubsubsection{\texorpdfstring{{\ttfamily convert(test)}}{{\ttfamily convert(test)}}}\label{readme.md_autotoc_md29005}
+Generate a check from a test.
+
+Useful if you’re going to test many nodes, for example when creating a utility where something else passes a compatible test.
+
+The created function is a bit faster because it expects valid input only\+: a {\ttfamily node}, {\ttfamily index}, and {\ttfamily parent}.\hypertarget{readme.md_autotoc_md29006}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md29006}
+
+\begin{DoxyItemize}
+\item {\ttfamily test} (\`{}\+Test\`{} or \`{}\+Predicate\+Test\`{}, optional) — a check for a specific node
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29007}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md29007}
+An assertion (\`{}\+Assert\+Anything\`{} or \`{}\+Assert\+Predicate\`{}).\hypertarget{readme.md_autotoc_md29008}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Assert\+Anything}}{{\ttfamily Assert\+Anything}}}\label{readme.md_autotoc_md29008}
+Check that an arbitrary value is a node, unaware of Type\+Script inferral (Type\+Script type).\hypertarget{readme.md_autotoc_md29009}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md29009}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} ({\ttfamily unknown}) — anything (typically a node)
+\item {\ttfamily index} ({\ttfamily number}, optional) — the node’s position in its parent
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}, optional) — the node’s parent
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29010}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md29010}
+Whether this is a node and passes a test ({\ttfamily boolean}).\hypertarget{readme.md_autotoc_md29011}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Assert\+Predicate}}{{\ttfamily Assert\+Predicate}}}\label{readme.md_autotoc_md29011}
+Check that an arbitrary value is a specific node, aware of Type\+Script (Type\+Script type).\hypertarget{readme.md_autotoc_md29012}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type parameters}{Type parameters}}\label{readme.md_autotoc_md29012}
+
+\begin{DoxyItemize}
+\item {\ttfamily Kind} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — node type
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29013}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md29013}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} ({\ttfamily unknown}) — anything (typically a node)
+\item {\ttfamily index} ({\ttfamily number}, optional) — the node’s position in its parent
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}, optional) — the node’s parent
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29014}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md29014}
+Whether this is a node and passes a test ({\ttfamily node is Kind}).\hypertarget{readme.md_autotoc_md29015}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Test}}{{\ttfamily Test}}}\label{readme.md_autotoc_md29015}
+Check for an arbitrary node, unaware of Type\+Script inferral (Type\+Script type).\hypertarget{readme.md_autotoc_md29016}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md29016}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Test\ =}
+\DoxyCodeLine{\ \ |\ null}
+\DoxyCodeLine{\ \ |\ undefined}
+\DoxyCodeLine{\ \ |\ string}
+\DoxyCodeLine{\ \ |\ Record<string,\ unknown>}
+\DoxyCodeLine{\ \ |\ TestFunctionAnything}
+\DoxyCodeLine{\ \ |\ Array<string\ |\ Record<string,\ unknown>\ |\ TestFunctionAnything>}
+
+\end{DoxyCode}
+
+
+Checks that the given thing is a node, and then\+:
+
+
+\begin{DoxyItemize}
+\item when {\ttfamily string}, checks that the node has that tag name
+\item when {\ttfamily function}, see \`{}\+Test\+Function\+Anything\`{}
+\item when {\ttfamily object}, checks that all keys in test are in node, and that they have (strictly) equal values
+\item when {\ttfamily Array}, checks if one of the subtests pass
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29017}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Test\+Function\+Anything}}{{\ttfamily Test\+Function\+Anything}}}\label{readme.md_autotoc_md29017}
+Check if a node passes a test, unaware of Type\+Script inferral (Type\+Script type).\hypertarget{readme.md_autotoc_md29018}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md29018}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — a node
+\item {\ttfamily index} ({\ttfamily number}, optional) — the node’s position in its parent
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}, optional) — the node’s parent
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29019}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md29019}
+Whether this node passes the test ({\ttfamily boolean}).\hypertarget{readme.md_autotoc_md29020}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Predicate\+Test}}{{\ttfamily Predicate\+Test}}}\label{readme.md_autotoc_md29020}
+Check for a node that can be inferred by Type\+Script (Type\+Script type).\hypertarget{readme.md_autotoc_md29021}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md29021}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ PredicateTest<Kind\ extends\ Node>\ =}
+\DoxyCodeLine{\ \ |\ Kind['type']}
+\DoxyCodeLine{\ \ |\ Partial<Kind>}
+\DoxyCodeLine{\ \ |\ TestFunctionPredicate<Kind>}
+\DoxyCodeLine{\ \ |\ Array<Kind['type']\ |\ Partial<Kind>\ |\ TestFunctionPredicate<Kind>>}
+
+\end{DoxyCode}
+
+
+See \`{}\+Test\+Function\+Predicate\`{}.\hypertarget{readme.md_autotoc_md29022}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Test\+Function\+Predicate}}{{\ttfamily Test\+Function\+Predicate}}}\label{readme.md_autotoc_md29022}
+Check if a node passes a certain node test (Type\+Script type).\hypertarget{readme.md_autotoc_md29023}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type parameters}{Type parameters}}\label{readme.md_autotoc_md29023}
+
+\begin{DoxyItemize}
+\item {\ttfamily Kind} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — node type
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29024}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md29024}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — a node
+\item {\ttfamily index} ({\ttfamily number}, optional) — the node’s position in its parent
+\item {\ttfamily parent} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}, optional) — the node’s parent
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29025}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md29025}
+Whether this node passes the test ({\ttfamily node is Kind}).\hypertarget{readme.md_autotoc_md29026}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md29026}
+\hypertarget{readme.md_autotoc_md29027}{}\doxysubsubsection{\texorpdfstring{Example of {\ttfamily convert}}{Example of {\ttfamily convert}}}\label{readme.md_autotoc_md29027}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{u\}\ from\ 'unist-\/builder'}
+\DoxyCodeLine{import\ \{convert\}\ from\ 'unist-\/util-\/is'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ test\ =\ convert('leaf')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ u('tree',\ [}
+\DoxyCodeLine{\ \ u('node',\ [u('leaf',\ '1')]),}
+\DoxyCodeLine{\ \ u('leaf',\ '2'),}
+\DoxyCodeLine{\ \ u('node',\ [u('leaf',\ '3'),\ u('leaf',\ '4')]),}
+\DoxyCodeLine{\ \ u('leaf',\ '5')}
+\DoxyCodeLine{])}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ leafs\ =\ tree.children.filter((child,\ index)\ =>\ test(child,\ index,\ tree))}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(leafs)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\{type:\ 'leaf',\ value:\ '2'\},\ \{type:\ 'leaf',\ value:\ '5'\}]}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29028}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md29028}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Assert\+Anything\`{}, \`{}\+Assert\+Predicate\`{}, \`{}\+Test\`{}, \`{}\+Test\+Function\+Anything\`{}, \`{}\+Test\+Function\+Predicate\`{}, and \`{}\+Predicate\+Test\`{}.\hypertarget{readme.md_autotoc_md29029}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md29029}
+Projects maintained by the unified collective are compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 14.\+14+ and 16.\+0+. Our projects sometimes work with older versions, but this is not guaranteed.\hypertarget{readme.md_autotoc_md29030}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md29030}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/unist-util-find-after}{\texttt{ {\ttfamily unist-\/util-\/find-\/after}}} — find a node after another node
+\item \href{https://github.com/syntax-tree/unist-util-find-before}{\texttt{ {\ttfamily unist-\/util-\/find-\/before}}} — find a node before another node
+\item \href{https://github.com/syntax-tree/unist-util-find-all-after}{\texttt{ {\ttfamily unist-\/util-\/find-\/all-\/after}}} — find all nodes after another node
+\item \href{https://github.com/syntax-tree/unist-util-find-all-before}{\texttt{ {\ttfamily unist-\/util-\/find-\/all-\/before}}} — find all nodes before another node
+\item \href{https://github.com/mrzmmr/unist-util-find-all-between}{\texttt{ {\ttfamily unist-\/util-\/find-\/all-\/between}}} — find all nodes between two nodes
+\item \href{https://github.com/syntax-tree/unist-util-filter}{\texttt{ {\ttfamily unist-\/util-\/filter}}} — create a new tree with nodes that pass a check
+\item \href{https://github.com/syntax-tree/unist-util-remove}{\texttt{ {\ttfamily unist-\/util-\/remove}}} — remove nodes from tree
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29031}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md29031}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md29032}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md29032}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

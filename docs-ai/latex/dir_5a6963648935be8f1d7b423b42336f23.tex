@@ -1,0 +1,42 @@
+\doxysection{node\+\_\+modules/side-\/channel-\/weakmap Directory Reference}
+\hypertarget{dir_5a6963648935be8f1d7b423b42336f23}{}\label{dir_5a6963648935be8f1d7b423b42336f23}\index{node\_modules/side-\/channel-\/weakmap Directory Reference@{node\_modules/side-\/channel-\/weakmap Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/ljharb/side-channel-weakmap/actions}{\texttt{ }} \href{https://app.codecov.io/gh/ljharb/side-channel-weakmap/}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=side-channel-weakmap}{\texttt{ }}
+
+\href{https://npmjs.org/package/side-channel-weakmap}{\texttt{ }}
+
+Store information about any JS value in a side channel. Uses Weak\+Map if available.
+
+Warning\+: this implementation will leak memory until you {\ttfamily delete} the {\ttfamily key}. Use \href{https://npmjs.com/side-channel}{\texttt{ {\ttfamily side-\/channel}}} for the best available strategy.\hypertarget{README.md_autotoc_md30691}{}\doxysubsection{\texorpdfstring{Getting started}{Getting started}}\label{README.md_autotoc_md30691}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ side-\/channel-\/weakmap}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30692}{}\doxysubsection{\texorpdfstring{Usage/\+Examples}{Usage/\+Examples}}\label{README.md_autotoc_md30692}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ assert\ =\ require('assert');}
+\DoxyCodeLine{const\ getSideChannelList\ =\ require('side-\/channel-\/weakmap');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ channel\ =\ getSideChannelList();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ key\ =\ \{\};}
+\DoxyCodeLine{assert.equal(channel.has(key),\ false);}
+\DoxyCodeLine{assert.throws(()\ =>\ channel.assert(key),\ TypeError);}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.set(key,\ 42);}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.assert(key);\ //\ does\ not\ throw}
+\DoxyCodeLine{assert.equal(channel.has(key),\ true);}
+\DoxyCodeLine{assert.equal(channel.get(key),\ 42);}
+\DoxyCodeLine{}
+\DoxyCodeLine{channel.delete(key);}
+\DoxyCodeLine{assert.equal(channel.has(key),\ false);}
+\DoxyCodeLine{assert.throws(()\ =>\ channel.assert(key),\ TypeError);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30693}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md30693}
+Clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

@@ -1,0 +1,1546 @@
+\doxysection{node\+\_\+modules/ioredis Directory Reference}
+\hypertarget{dir_6502a3e7f9c01e7917faa59b71ed6eda}{}\label{dir_6502a3e7f9c01e7917faa59b71ed6eda}\index{node\_modules/ioredis Directory Reference@{node\_modules/ioredis Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}ioredis\mbox{]}(\href{https://cdn.jsdelivr.net/gh/redis/ioredis@b5e8c74/logo.svg}{\texttt{ https\+://cdn.\+jsdelivr.\+net/gh/redis/ioredis@b5e8c74/logo.\+svg}})\mbox{]}(\href{https://github.com/redis/ioredis}{\texttt{ https\+://github.\+com/redis/ioredis}})
+
+\href{https://github.com/redis/ioredis/actions/workflows/release.yml?query=branch\%3Amain}{\texttt{ }} \href{https://coveralls.io/github/luin/ioredis?branch=main}{\texttt{ }} \href{http://commitizen.github.io/cz-cli/}{\texttt{ }} \href{https://github.com/semantic-release/semantic-release}{\texttt{ }}
+
+\href{https://discord.gg/redis}{\texttt{ }} \href{https://www.twitch.tv/redisinc}{\texttt{ }} \href{https://www.youtube.com/redisinc}{\texttt{ }} \href{https://twitter.com/redisinc}{\texttt{ }}
+
+A robust, performance-\/focused and full-\/featured \href{http://redis.io}{\texttt{ Redis}} client for \href{https://nodejs.org}{\texttt{ Node.\+js}}.
+
+Supports Redis \texorpdfstring{$>$}{>}= 2.\+6.\+12. Completely compatible with Redis 7.\+x.
+
+ioredis is a stable project and maintenance is done on a best-\/effort basis for relevant issues (contributions to ioredis will still be evaluated, reviewed, and merged when they benefit the project). For new projects, node-\/redis is the recommended client library. \href{https://github.com/redis/node-redis}{\texttt{ node-\/redis}} is the open-\/source (MIT license) Redis Java\+Script client library redesigned from the ground up and actively maintained. \href{https://github.com/redis/node-redis}{\texttt{ node-\/redis}} supports new (hash-\/field expiration) and future commands and the capabilities available in Redis Stack and Redis 8 (search, JSON, time-\/series, probabilistic data structures).\hypertarget{README.md_autotoc_md18199}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md18199}
+ioredis is a robust, full-\/featured Redis client that is used in the world\textquotesingle{}s biggest online commerce company \href{http://www.alibaba.com/}{\texttt{ Alibaba}} and many other awesome companies.
+
+
+\begin{DoxyEnumerate}
+\item Full-\/featured. It supports \href{http://redis.io/topics/cluster-tutorial}{\texttt{ Cluster}}, \href{https://redis.io/docs/reference/sentinel-clients}{\texttt{ Sentinel}}, \href{https://redis.io/topics/streams-intro}{\texttt{ Streams}}, \href{http://redis.io/topics/pipelining}{\texttt{ Pipelining}}, and of course \href{http://redis.io/commands/eval}{\texttt{ Lua scripting}}, \href{https://redis.io/topics/functions-intro}{\texttt{ Redis Functions}}, \href{http://redis.io/topics/pubsub}{\texttt{ Pub/\+Sub}} (with the support of binary messages).
+\item High performance 🚀.
+\item Delightful API 😄. It works with Node callbacks and Native promises.
+\item Transformation of command arguments and replies.
+\item Transparent key prefixing.
+\item Abstraction for Lua scripting, allowing you to \href{https://github.com/redis/ioredis\#lua-scripting}{\texttt{ define custom commands}}.
+\item Supports \href{https://github.com/redis/ioredis\#handle-binary-data}{\texttt{ binary data}}.
+\item Supports \href{https://github.com/redis/ioredis\#tls-options}{\texttt{ TLS}} 🔒.
+\item Supports offline queue and ready checking.
+\item Supports ES6 types, such as {\ttfamily Map} and {\ttfamily Set}.
+\item Supports GEO commands 📍.
+\item Supports Redis ACL.
+\item Sophisticated error handling strategy.
+\item Supports NAT mapping.
+\item Supports autopipelining.
+\end{DoxyEnumerate}
+
+{\bfseries{100\% written in Type\+Script and official declarations are provided\+:}}
+
+\hypertarget{README.md_autotoc_md18200}{}\doxysubsection{\texorpdfstring{Versions}{Versions}}\label{README.md_autotoc_md18200}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Branch   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Node.\+js Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Redis Version    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Branch   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Node.\+js Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Redis Version    }\\\cline{1-4}
+\endhead
+5.\+x.\+x (latest)   &main   &\texorpdfstring{$>$}{>}= 12   &2.\+6.\+12 \texorpdfstring{$\sim$}{\string~} latest    \\\cline{1-4}
+4.\+x.\+x   &v4   &\texorpdfstring{$>$}{>}= 8   &2.\+6.\+12 \texorpdfstring{$\sim$}{\string~} 7   \\\cline{1-4}
+\end{longtabu}
+
+
+Refer to \doxylink{tests_2security_2node__modules_2_8pnpm_2axios_0d1_88_83_2node__modules_2axios_2_c_h_a_n_g_e_l_o_g_8md}{CHANGELOG.md} for features and bug fixes introduced in v5.
+
+🚀 \href{https://github.com/redis/ioredis/wiki/Upgrading-from-v4-to-v5}{\texttt{ Upgrading from v4 to v5}}\hypertarget{README.md_autotoc_md18201}{}\doxysubsection{\texorpdfstring{Links}{Links}}\label{README.md_autotoc_md18201}
+
+\begin{DoxyItemize}
+\item \href{https://redis.github.io/ioredis/}{\texttt{ API Documentation}} (\href{https://redis.github.io/ioredis/classes/Redis.html}{\texttt{ Redis}}, \href{https://redis.github.io/ioredis/classes/Cluster.html}{\texttt{ Cluster}})
+\item \doxylink{tests_2security_2node__modules_2_8pnpm_2axios_0d1_88_83_2node__modules_2axios_2_c_h_a_n_g_e_l_o_g_8md}{Changelog}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md18202}{}\doxysubsection{\texorpdfstring{Quick Start}{Quick Start}}\label{README.md_autotoc_md18202}
+\hypertarget{README.md_autotoc_md18203}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md18203}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ ioredis}
+
+\end{DoxyCode}
+
+
+In a Type\+Script project, you may want to add Type\+Script declarations for Node.\+js\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save-\/dev\ @types/node}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18204}{}\doxysubsubsection{\texorpdfstring{Basic Usage}{Basic Usage}}\label{README.md_autotoc_md18204}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Import\ ioredis.}
+\DoxyCodeLine{//\ You\ can\ also\ use\ \`{}import\ \{\ Redis\ \}\ from\ "{}ioredis"{}`}
+\DoxyCodeLine{//\ if\ your\ project\ is\ a\ TypeScript\ project,}
+\DoxyCodeLine{//\ Note\ that\ \`{}import\ Redis\ from\ "{}ioredis"{}`\ is\ still\ supported,}
+\DoxyCodeLine{//\ but\ will\ be\ deprecated\ in\ the\ next\ major\ version.}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ Redis\ instance.}
+\DoxyCodeLine{//\ By\ default,\ it\ will\ connect\ to\ localhost:6379.}
+\DoxyCodeLine{//\ We\ are\ going\ to\ cover\ how\ to\ specify\ connection\ options\ soon.}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis();}
+\DoxyCodeLine{}
+\DoxyCodeLine{redis.set("{}mykey"{},\ "{}value"{});\ //\ Returns\ a\ promise\ which\ resolves\ to\ "{}OK"{}\ when\ the\ command\ succeeds.}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ioredis\ supports\ the\ node.js\ callback\ style}
+\DoxyCodeLine{redis.get("{}mykey"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ console.error(err);}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(result);\ //\ Prints\ "{}value"{}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Or\ ioredis\ returns\ a\ promise\ if\ the\ last\ argument\ isn't\ a\ function}
+\DoxyCodeLine{redis.get("{}mykey"{}).then((result)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(result);\ //\ Prints\ "{}value"{}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{redis.zadd("{}sortedSet"{},\ 1,\ "{}one"{},\ 2,\ "{}dos"{},\ 4,\ "{}quatro"{},\ 3,\ "{}three"{});}
+\DoxyCodeLine{redis.zrange("{}sortedSet"{},\ 0,\ 2,\ "{}WITHSCORES"{}).then((elements)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ ["{}one"{},\ "{}1"{},\ "{}dos"{},\ "{}2"{},\ "{}three"{},\ "{}3"{}]\ as\ if\ the\ command\ was\ \`{}redis>\ ZRANGE\ sortedSet\ 0\ 2\ WITHSCORES`}
+\DoxyCodeLine{\ \ console.log(elements);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ All\ arguments\ are\ passed\ directly\ to\ the\ redis\ server,}
+\DoxyCodeLine{//\ so\ technically\ ioredis\ supports\ all\ Redis\ commands.}
+\DoxyCodeLine{//\ The\ format\ is:\ redis[SOME\_REDIS\_COMMAND\_IN\_LOWERCASE](ARGUMENTS\_ARE\_JOINED\_INTO\_COMMAND\_STRING)}
+\DoxyCodeLine{//\ so\ the\ following\ statement\ is\ equivalent\ to\ the\ CLI:\ \`{}redis>\ SET\ mykey\ hello\ EX\ 10`}
+\DoxyCodeLine{redis.set("{}mykey"{},\ "{}hello"{},\ "{}EX"{},\ 10);}
+
+\end{DoxyCode}
+
+
+See the {\ttfamily examples/} folder for more examples. For example\+:
+
+
+\begin{DoxyItemize}
+\item \href{examples/ttl.js}{\texttt{ TTL}}
+\item \href{examples/string.js}{\texttt{ Strings}}
+\item \href{examples/hash.js}{\texttt{ Hashes}}
+\item \href{examples/list.js}{\texttt{ Lists}}
+\item \href{examples/set.js}{\texttt{ Sets}}
+\item \href{examples/zset.js}{\texttt{ Sorted Sets}}
+\item \href{examples/stream.js}{\texttt{ Streams}}
+\item \href{examples/module.js}{\texttt{ Redis Modules}} e.\+g. Redis\+JSON
+\end{DoxyItemize}
+
+All Redis commands are supported. See \href{https://redis.github.io/ioredis/classes/Redis.html}{\texttt{ the documentation}} for details.\hypertarget{README.md_autotoc_md18205}{}\doxysubsubsection{\texorpdfstring{Connect to Redis}{Connect to Redis}}\label{README.md_autotoc_md18205}
+When a new {\ttfamily Redis} instance is created, a connection to Redis will be created at the same time. You can specify which Redis to connect to by\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{new\ Redis();\ //\ Connect\ to\ 127.0.0.1:6379}
+\DoxyCodeLine{new\ Redis(6380);\ //\ 127.0.0.1:6380}
+\DoxyCodeLine{new\ Redis(6379,\ "{}192.168.1.1"{});\ //\ 192.168.1.1:6379}
+\DoxyCodeLine{new\ Redis("{}/tmp/redis.sock"{});}
+\DoxyCodeLine{new\ Redis(\{}
+\DoxyCodeLine{\ \ port:\ 6379,\ //\ Redis\ port}
+\DoxyCodeLine{\ \ host:\ "{}127.0.0.1"{},\ //\ Redis\ host}
+\DoxyCodeLine{\ \ username:\ "{}default"{},\ //\ needs\ Redis\ >=\ 6}
+\DoxyCodeLine{\ \ password:\ "{}my-\/top-\/secret"{},}
+\DoxyCodeLine{\ \ db:\ 0,\ //\ Defaults\ to\ 0}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+You can also specify connection options as a \href{http://www.iana.org/assignments/uri-schemes/prov/redis}{\texttt{ {\ttfamily redis\+://} URL}} or \href{https://www.iana.org/assignments/uri-schemes/prov/rediss}{\texttt{ {\ttfamily rediss\+://} URL}} when using TLS encryption\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Connect\ to\ 127.0.0.1:6380,\ db\ 4,\ using\ password\ "{}authpassword"{}:}
+\DoxyCodeLine{new\ Redis("{}redis://:authpassword@127.0.0.1:6380/4"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Username\ can\ also\ be\ passed\ via\ URI.}
+\DoxyCodeLine{new\ Redis("{}redis://username:authpassword@127.0.0.1:6380/4"{});}
+
+\end{DoxyCode}
+
+
+See \href{https://redis.github.io/ioredis/index.html\#RedisOptions}{\texttt{ API Documentation}} for all available options.\hypertarget{README.md_autotoc_md18206}{}\doxysubsubsection{\texorpdfstring{Pub/\+Sub}{Pub/\+Sub}}\label{README.md_autotoc_md18206}
+Redis provides several commands for developers to implement the \href{https://en.wikipedia.org/wiki/Publish\%E2\%80\%93subscribe_pattern}{\texttt{ Publish–subscribe pattern}}. There are two roles in this pattern\+: publisher and subscriber. Publishers are not programmed to send their messages to specific subscribers. Rather, published messages are characterized into channels, without knowledge of what (if any) subscribers there may be.
+
+By leveraging Node.\+js\textquotesingle{}s built-\/in events module, ioredis makes pub/sub very straightforward to use. Below is a simple example that consists of two files, one is publisher.\+js that publishes messages to a channel, the other is subscriber.\+js that listens for messages on specific channels.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ publisher.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis();}
+\DoxyCodeLine{}
+\DoxyCodeLine{setInterval(()\ =>\ \{}
+\DoxyCodeLine{\ \ const\ message\ =\ \{\ foo:\ Math.random()\ \};}
+\DoxyCodeLine{\ \ //\ Publish\ to\ my-\/channel-\/1\ or\ my-\/channel-\/2\ randomly.}
+\DoxyCodeLine{\ \ const\ channel\ =\ \`{}my-\/channel-\/\$\{1\ +\ Math.round(Math.random())\}`;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Message\ can\ be\ either\ a\ string\ or\ a\ buffer}
+\DoxyCodeLine{\ \ redis.publish(channel,\ JSON.stringify(message));}
+\DoxyCodeLine{\ \ console.log("{}Published\ \%s\ to\ \%s"{},\ message,\ channel);}
+\DoxyCodeLine{\},\ 1000);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ subscriber.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis();}
+\DoxyCodeLine{}
+\DoxyCodeLine{redis.subscribe("{}my-\/channel-\/1"{},\ "{}my-\/channel-\/2"{},\ (err,\ count)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Just\ like\ other\ commands,\ subscribe()\ can\ fail\ for\ some\ reasons,}
+\DoxyCodeLine{\ \ \ \ //\ ex\ network\ issues.}
+\DoxyCodeLine{\ \ \ \ console.error("{}Failed\ to\ subscribe:\ \%s"{},\ err.message);}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ //\ \`{}count`\ represents\ the\ number\ of\ channels\ this\ client\ are\ currently\ subscribed\ to.}
+\DoxyCodeLine{\ \ \ \ console.log(}
+\DoxyCodeLine{\ \ \ \ \ \ \`{}Subscribed\ successfully!\ This\ client\ is\ currently\ subscribed\ to\ \$\{count\}\ channels.`}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{redis.on("{}message"{},\ (channel,\ message)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(`Received\ \$\{message\}\ from\ \$\{channel\}`);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ There's\ also\ an\ event\ called\ 'messageBuffer',\ which\ is\ the\ same\ as\ 'message'\ except}
+\DoxyCodeLine{//\ it\ returns\ buffers\ instead\ of\ strings.}
+\DoxyCodeLine{//\ It's\ useful\ when\ the\ messages\ are\ binary\ data.}
+\DoxyCodeLine{redis.on("{}messageBuffer"{},\ (channel,\ message)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Both\ \`{}channel`\ and\ \`{}message`\ are\ buffers.}
+\DoxyCodeLine{\ \ console.log(channel,\ message);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+It\textquotesingle{}s worth noticing that a connection (aka a {\ttfamily Redis} instance) can\textquotesingle{}t play both roles at the same time. More specifically, when a client issues {\ttfamily subscribe()} or {\ttfamily psubscribe()}, it enters the "{}subscriber"{} mode. From that point, only commands that modify the subscription set are valid. Namely, they are\+: {\ttfamily subscribe}, {\ttfamily psubscribe}, {\ttfamily unsubscribe}, {\ttfamily punsubscribe}, {\ttfamily ping}, and {\ttfamily quit}. When the subscription set is empty (via {\ttfamily unsubscribe}/{\ttfamily punsubscribe}), the connection is put back into the regular mode.
+
+If you want to do pub/sub in the same file/process, you should create a separate connection\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{const\ sub\ =\ new\ Redis();}
+\DoxyCodeLine{const\ pub\ =\ new\ Redis();}
+\DoxyCodeLine{}
+\DoxyCodeLine{sub.subscribe(/*\ ...\ */);\ //\ From\ now,\ \`{}sub`\ enters\ the\ subscriber\ mode.}
+\DoxyCodeLine{sub.on("{}message"{}\ /*\ ...\ */);}
+\DoxyCodeLine{}
+\DoxyCodeLine{setInterval(()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ \`{}pub`\ can\ be\ used\ to\ publish\ messages,\ or\ send\ other\ regular\ commands\ (e.g.\ \`{}hgetall`)}
+\DoxyCodeLine{\ \ //\ because\ it's\ not\ in\ the\ subscriber\ mode.}
+\DoxyCodeLine{\ \ pub.publish(/*\ ...\ */);}
+\DoxyCodeLine{\},\ 1000);}
+
+\end{DoxyCode}
+
+
+{\ttfamily PSUBSCRIBE} is also supported in a similar way when you want to subscribe all channels whose name matches a pattern\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis.psubscribe("{}pat?ern"{},\ (err,\ count)\ =>\ \{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Event\ names\ are\ "{}pmessage"{}/"{}pmessageBuffer"{}\ instead\ of\ "{}message/messageBuffer"{}.}
+\DoxyCodeLine{redis.on("{}pmessage"{},\ (pattern,\ channel,\ message)\ =>\ \{\});}
+\DoxyCodeLine{redis.on("{}pmessageBuffer"{},\ (pattern,\ channel,\ message)\ =>\ \{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18207}{}\doxysubsubsection{\texorpdfstring{Streams}{Streams}}\label{README.md_autotoc_md18207}
+Redis v5 introduces a new data type called streams. It doubles as a communication channel for building streaming architectures and as a log-\/like data structure for persisting data. With ioredis, the usage can be pretty straightforward. Say we have a producer publishes messages to a stream with {\ttfamily redis.\+xadd("{}mystream"{}, "{}\texorpdfstring{$\ast$}{*}"{}, "{}random\+Value"{}, Math.\+random())} (You may find the \href{https://redis.io/topics/streams-intro}{\texttt{ official documentation of Streams}} as a starter to understand the parameters used), to consume the messages, we\textquotesingle{}ll have a consumer with the following code\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ processMessage\ =\ (message)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log("{}Id:\ \%s.\ Data:\ \%O"{},\ message[0],\ message[1]);}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ listenForMessage(lastId\ =\ "{}\$"{})\ \{}
+\DoxyCodeLine{\ \ //\ \`{}results`\ is\ an\ array,\ each\ element\ of\ which\ corresponds\ to\ a\ key.}
+\DoxyCodeLine{\ \ //\ Because\ we\ only\ listen\ to\ one\ key\ (mystream)\ here,\ \`{}results`\ only\ contains}
+\DoxyCodeLine{\ \ //\ a\ single\ element.\ See\ more:\ https://redis.io/commands/xread\#return-\/value}
+\DoxyCodeLine{\ \ const\ results\ =\ await\ redis.xread("{}block"{},\ 0,\ "{}STREAMS"{},\ "{}mystream"{},\ lastId);}
+\DoxyCodeLine{\ \ const\ [key,\ messages]\ =\ results[0];\ //\ \`{}key`\ equals\ to\ "{}mystream"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ messages.forEach(processMessage);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Pass\ the\ last\ id\ of\ the\ results\ to\ the\ next\ round.}
+\DoxyCodeLine{\ \ await\ listenForMessage(messages[messages.length\ -\/\ 1][0]);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{listenForMessage();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18208}{}\doxysubsubsection{\texorpdfstring{Expiration}{Expiration}}\label{README.md_autotoc_md18208}
+Redis can set a timeout to expire your key, after the timeout has expired the key will be automatically deleted. (You can find the \href{https://redis.io/commands/expire/}{\texttt{ official Expire documentation}} to understand better the different parameters you can use), to set your key to expire in 60 seconds, we will have the following code\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis.set("{}key"{},\ "{}data"{},\ "{}EX"{},\ 60);}
+\DoxyCodeLine{//\ Equivalent\ to\ redis\ command\ "{}SET\ key\ data\ EX\ 60"{},\ because\ on\ ioredis\ set\ method,}
+\DoxyCodeLine{//\ all\ arguments\ are\ passed\ directly\ to\ the\ redis\ server.}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18209}{}\doxysubsubsection{\texorpdfstring{Handle Binary Data}{Handle Binary Data}}\label{README.md_autotoc_md18209}
+Binary data support is out of the box. Pass buffers to send binary data\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis.set("{}foo"{},\ Buffer.from([0x62,\ 0x75,\ 0x66]));}
+
+\end{DoxyCode}
+
+
+Every command that returns a \href{https://redis.io/docs/reference/protocol-spec/\#resp-bulk-strings}{\texttt{ bulk string}} has a variant command with a {\ttfamily Buffer} suffix. The variant command returns a buffer instead of a UTF-\/8 string\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ result\ =\ await\ redis.getBuffer("{}foo"{});}
+\DoxyCodeLine{//\ result\ is\ \`{}<Buffer\ 62\ 75\ 66>`}
+
+\end{DoxyCode}
+
+
+It\textquotesingle{}s worth noticing that you don\textquotesingle{}t need the {\ttfamily Buffer} suffix variant in order to {\bfseries{send}} binary data. That means in most case you should just use {\ttfamily redis.\+set()} instead of {\ttfamily redis.\+set\+Buffer()} unless you want to get the old value with the {\ttfamily GET} parameter\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ result\ =\ await\ redis.setBuffer("{}foo"{},\ "{}new\ value"{},\ "{}GET"{});}
+\DoxyCodeLine{//\ result\ is\ \`{}<Buffer\ 62\ 75\ 66>`\ as\ \`{}GET`\ indicates\ returning\ the\ old\ value.}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18210}{}\doxysubsubsection{\texorpdfstring{Pipelining}{Pipelining}}\label{README.md_autotoc_md18210}
+If you want to send a batch of commands (e.\+g. \texorpdfstring{$>$}{>} 5), you can use pipelining to queue the commands in memory and then send them to Redis all at once. This way the performance improves by 50\%\texorpdfstring{$\sim$}{\string~}300\% (See benchmark section).
+
+{\ttfamily redis.\+pipeline()} creates a {\ttfamily Pipeline} instance. You can call any Redis commands on it just like the {\ttfamily Redis} instance. The commands are queued in memory and flushed to Redis by calling the {\ttfamily exec} method\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ pipeline\ =\ redis.pipeline();}
+\DoxyCodeLine{pipeline.set("{}foo"{},\ "{}bar"{});}
+\DoxyCodeLine{pipeline.del("{}cc"{});}
+\DoxyCodeLine{pipeline.exec((err,\ results)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ \`{}err`\ is\ always\ null,\ and\ \`{}results`\ is\ an\ array\ of\ responses}
+\DoxyCodeLine{\ \ //\ corresponding\ to\ the\ sequence\ of\ queued\ commands.}
+\DoxyCodeLine{\ \ //\ Each\ response\ follows\ the\ format\ \`{}[err,\ result]`.}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ You\ can\ even\ chain\ the\ commands:}
+\DoxyCodeLine{redis}
+\DoxyCodeLine{\ \ .pipeline()}
+\DoxyCodeLine{\ \ .set("{}foo"{},\ "{}bar"{})}
+\DoxyCodeLine{\ \ .del("{}cc"{})}
+\DoxyCodeLine{\ \ .exec((err,\ results)\ =>\ \{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \`{}exec`\ also\ returns\ a\ Promise:}
+\DoxyCodeLine{const\ promise\ =\ redis.pipeline().set("{}foo"{},\ "{}bar"{}).get("{}foo"{}).exec();}
+\DoxyCodeLine{promise.then((result)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ result\ ===\ [[null,\ 'OK'],\ [null,\ 'bar']]}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Each chained command can also have a callback, which will be invoked when the command gets a reply\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis}
+\DoxyCodeLine{\ \ .pipeline()}
+\DoxyCodeLine{\ \ .set("{}foo"{},\ "{}bar"{})}
+\DoxyCodeLine{\ \ .get("{}foo"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ result\ ===\ 'bar'}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .exec((err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ result[1][1]\ ===\ 'bar'}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+In addition to adding commands to the {\ttfamily pipeline} queue individually, you can also pass an array of commands and arguments to the constructor\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis}
+\DoxyCodeLine{\ \ .pipeline([}
+\DoxyCodeLine{\ \ \ \ ["{}set"{},\ "{}foo"{},\ "{}bar"{}],}
+\DoxyCodeLine{\ \ \ \ ["{}get"{},\ "{}foo"{}],}
+\DoxyCodeLine{\ \ ])}
+\DoxyCodeLine{\ \ .exec(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+{\ttfamily \#length} property shows how many commands in the pipeline\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ length\ =\ redis.pipeline().set("{}foo"{},\ "{}bar"{}).get("{}foo"{}).length;}
+\DoxyCodeLine{//\ length\ ===\ 2}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18211}{}\doxysubsubsection{\texorpdfstring{Transaction}{Transaction}}\label{README.md_autotoc_md18211}
+Most of the time, the transaction commands {\ttfamily multi} \& {\ttfamily exec} are used together with pipeline. Therefore, when {\ttfamily multi} is called, a {\ttfamily Pipeline} instance is created automatically by default, so you can use {\ttfamily multi} just like {\ttfamily pipeline}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis}
+\DoxyCodeLine{\ \ .multi()}
+\DoxyCodeLine{\ \ .set("{}foo"{},\ "{}bar"{})}
+\DoxyCodeLine{\ \ .get("{}foo"{})}
+\DoxyCodeLine{\ \ .exec((err,\ results)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ results\ ===\ [[null,\ 'OK'],\ [null,\ 'bar']]}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+If there\textquotesingle{}s a syntax error in the transaction\textquotesingle{}s command chain (e.\+g. wrong number of arguments, wrong command name, etc), then none of the commands would be executed, and an error is returned\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis}
+\DoxyCodeLine{\ \ .multi()}
+\DoxyCodeLine{\ \ .set("{}foo"{})}
+\DoxyCodeLine{\ \ .set("{}foo"{},\ "{}new\ value"{})}
+\DoxyCodeLine{\ \ .exec((err,\ results)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ err:}
+\DoxyCodeLine{\ \ \ \ //\ \ \{\ [ReplyError:\ EXECABORT\ Transaction\ discarded\ because\ of\ previous\ errors.]}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ name:\ 'ReplyError',}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ message:\ 'EXECABORT\ Transaction\ discarded\ because\ of\ previous\ errors.',}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ command:\ \{\ name:\ 'exec',\ args:\ []\ \},}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ previousErrors:}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ \ [\ \{\ [ReplyError:\ ERR\ wrong\ number\ of\ arguments\ for\ 'set'\ command]}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ \ \ \ \ \ name:\ 'ReplyError',}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ \ \ \ \ \ message:\ 'ERR\ wrong\ number\ of\ arguments\ for\ \(\backslash\)'set\(\backslash\)'\ command',}
+\DoxyCodeLine{\ \ \ \ //\ \ \ \ \ \ \ \ \ command:\ [Object]\ \}\ ]\ \}}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+In terms of the interface, {\ttfamily multi} differs from {\ttfamily pipeline} in that when specifying a callback to each chained command, the queueing state is passed to the callback instead of the result of the command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis}
+\DoxyCodeLine{\ \ .multi()}
+\DoxyCodeLine{\ \ .set("{}foo"{},\ "{}bar"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ result\ ===\ 'QUEUED'}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .exec(/*\ ...\ */);}
+
+\end{DoxyCode}
+
+
+If you want to use transaction without pipeline, pass {\ttfamily \{ pipeline\+: false \}} to {\ttfamily multi}, and every command will be sent to Redis immediately without waiting for an {\ttfamily exec} invocation\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis.multi(\{\ pipeline:\ false\ \});}
+\DoxyCodeLine{redis.set("{}foo"{},\ "{}bar"{});}
+\DoxyCodeLine{redis.get("{}foo"{});}
+\DoxyCodeLine{redis.exec((err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ result\ ===\ [[null,\ 'OK'],\ [null,\ 'bar']]}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+The constructor of {\ttfamily multi} also accepts a batch of commands\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis}
+\DoxyCodeLine{\ \ .multi([}
+\DoxyCodeLine{\ \ \ \ ["{}set"{},\ "{}foo"{},\ "{}bar"{}],}
+\DoxyCodeLine{\ \ \ \ ["{}get"{},\ "{}foo"{}],}
+\DoxyCodeLine{\ \ ])}
+\DoxyCodeLine{\ \ .exec(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{\ \ \});}
+
+\end{DoxyCode}
+
+
+Inline transactions are supported by pipeline, which means you can group a subset of commands in the pipeline into a transaction\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis}
+\DoxyCodeLine{\ \ .pipeline()}
+\DoxyCodeLine{\ \ .get("{}foo"{})}
+\DoxyCodeLine{\ \ .multi()}
+\DoxyCodeLine{\ \ .set("{}foo"{},\ "{}bar"{})}
+\DoxyCodeLine{\ \ .get("{}foo"{})}
+\DoxyCodeLine{\ \ .exec()}
+\DoxyCodeLine{\ \ .get("{}foo"{})}
+\DoxyCodeLine{\ \ .exec();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18212}{}\doxysubsubsection{\texorpdfstring{Lua Scripting}{Lua Scripting}}\label{README.md_autotoc_md18212}
+ioredis supports all of the scripting commands such as {\ttfamily EVAL}, {\ttfamily EVALSHA} and {\ttfamily SCRIPT}. However, it\textquotesingle{}s tedious to use in real world scenarios since developers have to take care of script caching and to detect when to use {\ttfamily EVAL} and when to use {\ttfamily EVALSHA}. ioredis exposes a {\ttfamily define\+Command} method to make scripting much easier to use\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ will\ define\ a\ command\ myecho:}
+\DoxyCodeLine{redis.defineCommand("{}myecho"{},\ \{}
+\DoxyCodeLine{\ \ numberOfKeys:\ 2,}
+\DoxyCodeLine{\ \ lua:\ "{}return\ \{KEYS[1],KEYS[2],ARGV[1],ARGV[2]\}"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Now\ \`{}myecho`\ can\ be\ used\ just\ like\ any\ other\ ordinary\ command,}
+\DoxyCodeLine{//\ and\ ioredis\ will\ try\ to\ use\ \`{}EVALSHA`\ internally\ when\ possible\ for\ better\ performance.}
+\DoxyCodeLine{redis.myecho("{}k1"{},\ "{}k2"{},\ "{}a1"{},\ "{}a2"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ result\ ===\ ['k1',\ 'k2',\ 'a1',\ 'a2']}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \`{}myechoBuffer`\ is\ also\ defined\ automatically\ to\ return\ buffers\ instead\ of\ strings:}
+\DoxyCodeLine{redis.myechoBuffer("{}k1"{},\ "{}k2"{},\ "{}a1"{},\ "{}a2"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ result[0]\ equals\ to\ Buffer.from('k1');}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ And\ of\ course\ it\ works\ with\ pipeline:}
+\DoxyCodeLine{redis.pipeline().set("{}foo"{},\ "{}bar"{}).myecho("{}k1"{},\ "{}k2"{},\ "{}a1"{},\ "{}a2"{}).exec();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18213}{}\doxysubsubsubsection{\texorpdfstring{Dynamic Keys}{Dynamic Keys}}\label{README.md_autotoc_md18213}
+If the number of keys can\textquotesingle{}t be determined when defining a command, you can omit the {\ttfamily number\+Of\+Keys} property and pass the number of keys as the first argument when you call the command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis.defineCommand("{}echoDynamicKeyNumber"{},\ \{}
+\DoxyCodeLine{\ \ lua:\ "{}return\ \{KEYS[1],KEYS[2],ARGV[1],ARGV[2]\}"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Now\ you\ have\ to\ pass\ the\ number\ of\ keys\ as\ the\ first\ argument\ every\ time}
+\DoxyCodeLine{//\ you\ invoke\ the\ \`{}echoDynamicKeyNumber`\ command:}
+\DoxyCodeLine{redis.echoDynamicKeyNumber(2,\ "{}k1"{},\ "{}k2"{},\ "{}a1"{},\ "{}a2"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ result\ ===\ ['k1',\ 'k2',\ 'a1',\ 'a2']}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18214}{}\doxysubsubsubsection{\texorpdfstring{As Constructor Options}{As Constructor Options}}\label{README.md_autotoc_md18214}
+Besides {\ttfamily define\+Command()}, you can also define custom commands with the {\ttfamily scripts} constructor option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ scripts:\ \{}
+\DoxyCodeLine{\ \ \ \ myecho:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ numberOfKeys:\ 2,}
+\DoxyCodeLine{\ \ \ \ \ \ lua:\ "{}return\ \{KEYS[1],KEYS[2],ARGV[1],ARGV[2]\}"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18215}{}\doxysubsubsubsection{\texorpdfstring{Type\+Script Usages}{Type\+Script Usages}}\label{README.md_autotoc_md18215}
+You can refer to \href{examples/typescript/scripts.ts}{\texttt{ the example}} for how to declare your custom commands.\hypertarget{README.md_autotoc_md18216}{}\doxysubsubsection{\texorpdfstring{Transparent Key Prefixing}{Transparent Key Prefixing}}\label{README.md_autotoc_md18216}
+This feature allows you to specify a string that will automatically be prepended to all the keys in a command, which makes it easier to manage your key namespaces.
+
+{\bfseries{Warning}} This feature won\textquotesingle{}t apply to commands like \href{http://redis.io/commands/KEYS}{\texttt{ KEYS}} and \href{http://redis.io/commands/scan}{\texttt{ SCAN}} that take patterns rather than actual keys(\href{https://github.com/redis/ioredis/issues/239}{\texttt{ \#239}}), and this feature also won\textquotesingle{}t apply to the replies of commands even if they are key names (\href{https://github.com/redis/ioredis/issues/325}{\texttt{ \#325}}).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fooRedis\ =\ new\ Redis(\{\ keyPrefix:\ "{}foo:"{}\ \});}
+\DoxyCodeLine{fooRedis.set("{}bar"{},\ "{}baz"{});\ //\ Actually\ sends\ SET\ foo:bar\ baz}
+\DoxyCodeLine{}
+\DoxyCodeLine{fooRedis.defineCommand("{}myecho"{},\ \{}
+\DoxyCodeLine{\ \ numberOfKeys:\ 2,}
+\DoxyCodeLine{\ \ lua:\ "{}return\ \{KEYS[1],KEYS[2],ARGV[1],ARGV[2]\}"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Works\ well\ with\ pipelining/transaction}
+\DoxyCodeLine{fooRedis}
+\DoxyCodeLine{\ \ .pipeline()}
+\DoxyCodeLine{\ \ //\ Sends\ SORT\ foo:list\ BY\ foo:weight\_*-\/>fieldname}
+\DoxyCodeLine{\ \ .sort("{}list"{},\ "{}BY"{},\ "{}weight\_*-\/>fieldname"{})}
+\DoxyCodeLine{\ \ //\ Supports\ custom\ commands}
+\DoxyCodeLine{\ \ //\ Sends\ EVALSHA\ xxx\ foo:k1\ foo:k2\ a1\ a2}
+\DoxyCodeLine{\ \ .myecho("{}k1"{},\ "{}k2"{},\ "{}a1"{},\ "{}a2"{})}
+\DoxyCodeLine{\ \ .exec();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18217}{}\doxysubsubsection{\texorpdfstring{Transforming Arguments \& Replies}{Transforming Arguments \& Replies}}\label{README.md_autotoc_md18217}
+Most Redis commands take one or more Strings as arguments, and replies are sent back as a single String or an Array of Strings. However, sometimes you may want something different. For instance, it would be more convenient if the {\ttfamily HGETALL} command returns a hash (e.\+g. {\ttfamily \{ key\+: val1, key2\+: v2 \}}) rather than an array of key values (e.\+g. {\ttfamily \mbox{[}key1, val1, key2, val2\mbox{]}}).
+
+ioredis has a flexible system for transforming arguments and replies. There are two types of transformers, argument transformer and reply transformer\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Here's\ the\ built-\/in\ argument\ transformer\ converting}
+\DoxyCodeLine{//\ hmset('key',\ \{\ k1:\ 'v1',\ k2:\ 'v2'\ \})}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{//\ hmset('key',\ new\ Map([['k1',\ 'v1'],\ ['k2',\ 'v2']]))}
+\DoxyCodeLine{//\ into}
+\DoxyCodeLine{//\ hmset('key',\ 'k1',\ 'v1',\ 'k2',\ 'v2')}
+\DoxyCodeLine{Redis.Command.setArgumentTransformer("{}hmset"{},\ (args)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (args.length\ ===\ 2)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (args[1]\ instanceof\ Map)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ utils\ is\ a\ internal\ module\ of\ ioredis}
+\DoxyCodeLine{\ \ \ \ \ \ return\ [args[0],\ ...utils.convertMapToArray(args[1])];}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ if\ (typeof\ args[1]\ ===\ "{}object"{}\ \&\&\ args[1]\ !==\ null)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ [args[0],\ ...utils.convertObjectToArray(args[1])];}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ args;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Here's\ the\ built-\/in\ reply\ transformer\ converting\ the\ HGETALL\ reply}
+\DoxyCodeLine{//\ ['k1',\ 'v1',\ 'k2',\ 'v2']}
+\DoxyCodeLine{//\ into}
+\DoxyCodeLine{//\ \{\ k1:\ 'v1',\ 'k2':\ 'v2'\ \}}
+\DoxyCodeLine{Redis.Command.setReplyTransformer("{}hgetall"{},\ (result)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (Array.isArray(result))\ \{}
+\DoxyCodeLine{\ \ \ \ const\ obj\ =\ \{\};}
+\DoxyCodeLine{\ \ \ \ for\ (let\ i\ =\ 0;\ i\ <\ result.length;\ i\ +=\ 2)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ obj[result[i]]\ =\ result[i\ +\ 1];}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ return\ obj;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ result;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+There are three built-\/in transformers, two argument transformers for {\ttfamily hmset} \& {\ttfamily mset} and a reply transformer for {\ttfamily hgetall}. Transformers for {\ttfamily hmset} and {\ttfamily hgetall} were mentioned above, and the transformer for {\ttfamily mset} is similar to the one for {\ttfamily hmset}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis.mset(\{\ k1:\ "{}v1"{},\ k2:\ "{}v2"{}\ \});}
+\DoxyCodeLine{redis.get("{}k1"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ result\ ===\ 'v1';}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{redis.mset(}
+\DoxyCodeLine{\ \ new\ Map([}
+\DoxyCodeLine{\ \ \ \ ["{}k3"{},\ "{}v3"{}],}
+\DoxyCodeLine{\ \ \ \ ["{}k4"{},\ "{}v4"{}],}
+\DoxyCodeLine{\ \ ])}
+\DoxyCodeLine{);}
+\DoxyCodeLine{redis.get("{}k3"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ result\ ===\ 'v3';}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Another useful example of a reply transformer is one that changes {\ttfamily hgetall} to return array of arrays instead of objects which avoids an unwanted conversation of hash keys to strings when dealing with binary hash keys\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Redis.Command.setReplyTransformer("{}hgetall"{},\ (result)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ arr\ =\ [];}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 0;\ i\ <\ result.length;\ i\ +=\ 2)\ \{}
+\DoxyCodeLine{\ \ \ \ arr.push([result[i],\ result[i\ +\ 1]]);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ arr;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{redis.hset("{}h1"{},\ Buffer.from([0x01]),\ Buffer.from([0x02]));}
+\DoxyCodeLine{redis.hset("{}h1"{},\ Buffer.from([0x03]),\ Buffer.from([0x04]));}
+\DoxyCodeLine{redis.hgetallBuffer("{}h1"{},\ (err,\ result)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ result\ ===\ [\ [\ <Buffer\ 01>,\ <Buffer\ 02>\ ],\ [\ <Buffer\ 03>,\ <Buffer\ 04>\ ]\ ];}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18218}{}\doxysubsubsection{\texorpdfstring{Monitor}{Monitor}}\label{README.md_autotoc_md18218}
+Redis supports the MONITOR command, which lets you see all commands received by the Redis server across all client connections, including from other client libraries and other computers.
+
+The {\ttfamily monitor} method returns a monitor instance. After you send the MONITOR command, no other commands are valid on that connection. ioredis will emit a monitor event for every new monitor message that comes across. The callback for the monitor event takes a timestamp from the Redis server and an array of command arguments.
+
+Here is a simple example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{redis.monitor((err,\ monitor)\ =>\ \{}
+\DoxyCodeLine{\ \ monitor.on("{}monitor"{},\ (time,\ args,\ source,\ database)\ =>\ \{\});}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Here is another example illustrating an {\ttfamily async} function and {\ttfamily monitor.\+disconnect()}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ const\ monitor\ =\ await\ redis.monitor();}
+\DoxyCodeLine{\ \ monitor.on("{}monitor"{},\ console.log);}
+\DoxyCodeLine{\ \ //\ Any\ other\ tasks}
+\DoxyCodeLine{\ \ monitor.disconnect();}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18219}{}\doxysubsubsection{\texorpdfstring{Streamify Scanning}{Streamify Scanning}}\label{README.md_autotoc_md18219}
+Redis 2.\+8 added the {\ttfamily SCAN} command to incrementally iterate through the keys in the database. It\textquotesingle{}s different from {\ttfamily KEYS} in that {\ttfamily SCAN} only returns a small number of elements each call, so it can be used in production without the downside of blocking the server for a long time. However, it requires recording the cursor on the client side each time the {\ttfamily SCAN} command is called in order to iterate through all the keys correctly. Since it\textquotesingle{}s a relatively common use case, ioredis provides a streaming interface for the {\ttfamily SCAN} command to make things much easier. A readable stream can be created by calling {\ttfamily scan\+Stream}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis();}
+\DoxyCodeLine{//\ Create\ a\ readable\ stream\ (object\ mode)}
+\DoxyCodeLine{const\ stream\ =\ redis.scanStream();}
+\DoxyCodeLine{stream.on("{}data"{},\ (resultKeys)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ \`{}resultKeys`\ is\ an\ array\ of\ strings\ representing\ key\ names.}
+\DoxyCodeLine{\ \ //\ Note\ that\ resultKeys\ may\ contain\ 0\ keys,\ and\ that\ it\ will\ sometimes}
+\DoxyCodeLine{\ \ //\ contain\ duplicates\ due\ to\ SCAN's\ implementation\ in\ Redis.}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 0;\ i\ <\ resultKeys.length;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(resultKeys[i]);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{stream.on("{}end"{},\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ console.log("{}all\ keys\ have\ been\ visited"{});}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+{\ttfamily scan\+Stream} accepts an option, with which you can specify the {\ttfamily MATCH} pattern, the {\ttfamily TYPE} filter, and the {\ttfamily COUNT} argument\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ stream\ =\ redis.scanStream(\{}
+\DoxyCodeLine{\ \ //\ only\ returns\ keys\ following\ the\ pattern\ of\ \`{}user:*`}
+\DoxyCodeLine{\ \ match:\ "{}user:*"{},}
+\DoxyCodeLine{\ \ //\ only\ return\ objects\ that\ match\ a\ given\ type,}
+\DoxyCodeLine{\ \ //\ (requires\ Redis\ >=\ 6.0)}
+\DoxyCodeLine{\ \ type:\ "{}zset"{},}
+\DoxyCodeLine{\ \ //\ returns\ approximately\ 100\ elements\ per\ call}
+\DoxyCodeLine{\ \ count:\ 100,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Just like other commands, {\ttfamily scan\+Stream} has a binary version {\ttfamily scan\+Buffer\+Stream}, which returns an array of buffers. It\textquotesingle{}s useful when the key names are not utf8 strings.
+
+There are also {\ttfamily hscan\+Stream}, {\ttfamily zscan\+Stream} and {\ttfamily sscan\+Stream} to iterate through elements in a hash, zset and set. The interface of each is similar to {\ttfamily scan\+Stream} except the first argument is the key name\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ stream\ =\ redis.zscanStream("{}myhash"{},\ \{}
+\DoxyCodeLine{\ \ match:\ "{}age:??"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ The {\ttfamily hscan\+Stream} also accepts the {\ttfamily no\+Values} option to specify whether Redis should return only the keys in the hash table without their corresponding values. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ stream\ =\ redis.hscanStream("{}myhash"{},\ \{}
+\DoxyCodeLine{\ \ match:\ "{}age:??"{},}
+\DoxyCodeLine{\ \ noValues:\ true,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ You can learn more from the \href{http://redis.io/commands/scan}{\texttt{ Redis documentation}}.
+
+{\bfseries{Useful Tips}} It\textquotesingle{}s pretty common that doing an async task in the {\ttfamily data} handler. We\textquotesingle{}d like the scanning process to be paused until the async task to be finished. {\ttfamily Stream\#pause()} and {\ttfamily Stream\#resume()} do the trick. For example if we want to migrate data in Redis to My\+SQL\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ stream\ =\ redis.scanStream();}
+\DoxyCodeLine{stream.on("{}data"{},\ (resultKeys)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Pause\ the\ stream\ from\ scanning\ more\ keys\ until\ we've\ migrated\ the\ current\ keys.}
+\DoxyCodeLine{\ \ stream.pause();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ Promise.all(resultKeys.map(migrateKeyToMySQL)).then(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Resume\ the\ stream\ here.}
+\DoxyCodeLine{\ \ \ \ stream.resume();}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{stream.on("{}end"{},\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ console.log("{}done\ migration"{});}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18220}{}\doxysubsubsection{\texorpdfstring{Auto-\/reconnect}{Auto-\/reconnect}}\label{README.md_autotoc_md18220}
+By default, ioredis will try to reconnect when the connection to Redis is lost except when the connection is closed manually by {\ttfamily redis.\+disconnect()} or {\ttfamily redis.\+quit()}.
+
+It\textquotesingle{}s very flexible to control how long to wait to reconnect after disconnection using the {\ttfamily retry\+Strategy} option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ //\ This\ is\ the\ default\ value\ of\ \`{}retryStrategy`}
+\DoxyCodeLine{\ \ retryStrategy(times)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ delay\ =\ Math.min(times\ *\ 50,\ 2000);}
+\DoxyCodeLine{\ \ \ \ return\ delay;}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+{\ttfamily retry\+Strategy} is a function that will be called when the connection is lost. The argument {\ttfamily times} means this is the nth reconnection being made and the return value represents how long (in ms) to wait to reconnect. When the return value isn\textquotesingle{}t a number, ioredis will stop trying to reconnect, and the connection will be lost forever if the user doesn\textquotesingle{}t call {\ttfamily redis.\+connect()} manually.
+
+When reconnected, the client will auto subscribe to channels that the previous connection subscribed to. This behavior can be disabled by setting the {\ttfamily auto\+Resubscribe} option to {\ttfamily false}.
+
+And if the previous connection has some unfulfilled commands (most likely blocking commands such as {\ttfamily brpop} and {\ttfamily blpop}), the client will resend them when reconnected. This behavior can be disabled by setting the {\ttfamily auto\+Resend\+Unfulfilled\+Commands} option to {\ttfamily false}.
+
+By default, all pending commands will be flushed with an error every 20 retry attempts. That makes sure commands won\textquotesingle{}t wait forever when the connection is down. You can change this behavior by setting {\ttfamily max\+Retries\+Per\+Request}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ maxRetriesPerRequest:\ 1,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Set max\+Retries\+Per\+Request to {\ttfamily null} to disable this behavior, and every command will wait forever until the connection is alive again (which is the default behavior before ioredis v4).\hypertarget{README.md_autotoc_md18221}{}\doxysubsubsubsection{\texorpdfstring{Reconnect on Error}{Reconnect on Error}}\label{README.md_autotoc_md18221}
+Besides auto-\/reconnect when the connection is closed, ioredis supports reconnecting on certain Redis errors using the {\ttfamily reconnect\+On\+Error} option. Here\textquotesingle{}s an example that will reconnect when receiving {\ttfamily READONLY} error\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ reconnectOnError(err)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ targetError\ =\ "{}READONLY"{};}
+\DoxyCodeLine{\ \ \ \ if\ (err.message.includes(targetError))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ Only\ reconnect\ when\ the\ error\ contains\ "{}READONLY"{}}
+\DoxyCodeLine{\ \ \ \ \ \ return\ true;\ //\ or\ \`{}return\ 1;`}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+This feature is useful when using Amazon Elasti\+Cache instances with Auto-\/failover disabled. On these instances, test your {\ttfamily reconnect\+On\+Error} handler by manually promoting the replica node to the primary role using the AWS console. The following writes fail with the error {\ttfamily READONLY}. Using {\ttfamily reconnect\+On\+Error}, we can force the connection to reconnect on this error in order to connect to the new master. Furthermore, if the {\ttfamily reconnect\+On\+Error} returns {\ttfamily 2}, ioredis will resend the failed command after reconnecting.
+
+On Elasti\+Cache instances with Auto-\/failover enabled, {\ttfamily reconnect\+On\+Error} does not execute. Instead of returning a Redis error, AWS closes all connections to the master endpoint until the new primary node is ready. ioredis reconnects via {\ttfamily retry\+Strategy} instead of {\ttfamily reconnect\+On\+Error} after about a minute. On Elasti\+Cache instances with Auto-\/failover enabled, test failover events with the {\ttfamily Failover primary} option in the AWS console.\hypertarget{README.md_autotoc_md18222}{}\doxysubsubsection{\texorpdfstring{Connection Events}{Connection Events}}\label{README.md_autotoc_md18222}
+The Redis instance will emit some events about the state of the connection to the Redis server.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Event   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Event   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+connect   &emits when a connection is established to the Redis server.    \\\cline{1-2}
+ready   &If {\ttfamily enable\+Ready\+Check} is {\ttfamily true}, client will emit {\ttfamily ready} when the server reports that it is ready to receive commands (e.\+g. finish loading data from disk).~\newline
+Otherwise, {\ttfamily ready} will be emitted immediately right after the {\ttfamily connect} event.    \\\cline{1-2}
+error   &emits when an error occurs while connecting.~\newline
+However, ioredis emits all {\ttfamily error} events silently (only emits when there\textquotesingle{}s at least one listener) so that your application won\textquotesingle{}t crash if you\textquotesingle{}re not listening to the {\ttfamily error} event.    \\\cline{1-2}
+close   &emits when an established Redis server connection has closed.    \\\cline{1-2}
+reconnecting   &emits after {\ttfamily close} when a reconnection will be made. The argument of the event is the time (in ms) before reconnecting.    \\\cline{1-2}
+end   &emits after {\ttfamily close} when no more reconnections will be made, or the connection is failed to establish.    \\\cline{1-2}
+wait   &emits when {\ttfamily lazy\+Connect} is set and will wait for the first command to be called before connecting.   \\\cline{1-2}
+\end{longtabu}
+
+
+You can also check out the {\ttfamily Redis\#status} property to get the current connection status.
+
+Besides the above connection events, there are several other custom events\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Event   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Event   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+select   &emits when the database changed. The argument is the new db number.   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md18223}{}\doxysubsubsection{\texorpdfstring{Offline Queue}{Offline Queue}}\label{README.md_autotoc_md18223}
+When a command can\textquotesingle{}t be processed by Redis (being sent before the {\ttfamily ready} event), by default, it\textquotesingle{}s added to the offline queue and will be executed when it can be processed. You can disable this feature by setting the {\ttfamily enable\+Offline\+Queue} option to {\ttfamily false}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{\ enableOfflineQueue:\ false\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18224}{}\doxysubsubsection{\texorpdfstring{TLS Options}{TLS Options}}\label{README.md_autotoc_md18224}
+Redis doesn\textquotesingle{}t support TLS natively, however if the redis server you want to connect to is hosted behind a TLS proxy (e.\+g. \href{https://www.stunnel.org/}{\texttt{ stunnel}}) or is offered by a PaaS service that supports TLS connection (e.\+g. \href{https://redis.com/}{\texttt{ Redis.\+com}}), you can set the {\ttfamily tls} option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ host:\ "{}localhost"{},}
+\DoxyCodeLine{\ \ tls:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Refer\ to\ \`{}tls.connect()`\ section\ in}
+\DoxyCodeLine{\ \ \ \ //\ https://nodejs.org/api/tls.html}
+\DoxyCodeLine{\ \ \ \ //\ for\ all\ supported\ options}
+\DoxyCodeLine{\ \ \ \ ca:\ fs.readFileSync("{}cert.pem"{}),}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Alternatively, specify the connection through a \href{https://www.iana.org/assignments/uri-schemes/prov/rediss}{\texttt{ {\ttfamily rediss\+://} URL}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis("{}rediss://redis.my-\/service.com"{});}
+
+\end{DoxyCode}
+
+
+If you do not want to use a connection string, you can also specify an empty {\ttfamily tls\+: \{\}} object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ host:\ "{}redis.my-\/service.com"{},}
+\DoxyCodeLine{\ \ tls:\ \{\},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18225}{}\doxysubsubsubsection{\texorpdfstring{TLS Profiles}{TLS Profiles}}\label{README.md_autotoc_md18225}
+\begin{quote}
+{\bfseries{Warning}} TLS profiles described in this section are going to be deprecated in the next major version. Please provide TLS options explicitly. \end{quote}
+
+
+To make it easier to configure we provide a few pre-\/configured TLS profiles that can be specified by setting the {\ttfamily tls} option to the profile\textquotesingle{}s name or specifying a {\ttfamily tls.\+profile} option in case you need to customize some values of the profile.
+
+Profiles\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Redis\+Cloud\+Fixed}\+: Contains the CA for \href{https://redis.com/}{\texttt{ Redis.\+com}} Cloud fixed subscriptions
+\item {\ttfamily Redis\+Cloud\+Flexible}\+: Contains the CA for \href{https://redis.com/}{\texttt{ Redis.\+com}} Cloud flexible subscriptions
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ host:\ "{}localhost"{},}
+\DoxyCodeLine{\ \ tls:\ "{}RedisCloudFixed"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ redisWithClientCertificate\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ host:\ "{}localhost"{},}
+\DoxyCodeLine{\ \ tls:\ \{}
+\DoxyCodeLine{\ \ \ \ profile:\ "{}RedisCloudFixed"{},}
+\DoxyCodeLine{\ \ \ \ key:\ "{}123"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md18226}{}\doxysubsubsection{\texorpdfstring{Sentinel}{Sentinel}}\label{README.md_autotoc_md18226}
+ioredis supports Sentinel out of the box. It works transparently as all features that work when you connect to a single node also work when you connect to a sentinel group. Make sure to run Redis \texorpdfstring{$>$}{>}= 2.\+8.\+12 if you want to use this feature. Sentinels have a default port of 26379.
+
+To connect using Sentinel, use\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ sentinels:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ host:\ "{}localhost"{},\ port:\ 26379\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ host:\ "{}localhost"{},\ port:\ 26380\ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ name:\ "{}mymaster"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{redis.set("{}foo"{},\ "{}bar"{});}
+
+\end{DoxyCode}
+
+
+The arguments passed to the constructor are different from the ones you use to connect to a single node, where\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily name} identifies a group of Redis instances composed of a master and one or more slaves ({\ttfamily mymaster} in the example);
+\item {\ttfamily sentinel\+Password} (optional) password for Sentinel instances.
+\item {\ttfamily sentinels} are a list of sentinels to connect to. The list does not need to enumerate all your sentinel instances, but a few so that if one is down the client will try the next one.
+\item {\ttfamily role} (optional) with a value of {\ttfamily slave} will return a random slave from the Sentinel group.
+\item {\ttfamily preferred\+Slaves} (optional) can be used to prefer a particular slave or set of slaves based on priority. It accepts a function or array.
+\item {\ttfamily enable\+TLSFor\+Sentinel\+Mode} (optional) set to true if connecting to sentinel instances that are encrypted
+\end{DoxyItemize}
+
+ioredis {\bfseries{guarantees}} that the node you connected to is always a master even after a failover. When a failover happens, instead of trying to reconnect to the failed node (which will be demoted to slave when it\textquotesingle{}s available again), ioredis will ask sentinels for the new master node and connect to it. All commands sent during the failover are queued and will be executed when the new connection is established so that none of the commands will be lost.
+
+It\textquotesingle{}s possible to connect to a slave instead of a master by specifying the option {\ttfamily role} with the value of {\ttfamily slave} and ioredis will try to connect to a random slave of the specified master, with the guarantee that the connected node is always a slave. If the current node is promoted to master due to a failover, ioredis will disconnect from it and ask the sentinels for another slave node to connect to.
+
+If you specify the option {\ttfamily preferred\+Slaves} along with `role\+: \textquotesingle{}slave'{\ttfamily ioredis will attempt to use this value when selecting the slave from the pool of available slaves. The value of}preferred\+Slaves{\ttfamily should either be a function that accepts an array of available slaves and returns a single result, or an array of slave values priorities by the lowest}prio{\ttfamily value first with a default value of}1\`{}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ available\ slaves\ format}
+\DoxyCodeLine{const\ availableSlaves\ =\ [\{\ ip:\ "{}127.0.0.1"{},\ port:\ "{}31231"{},\ flags:\ "{}slave"{}\ \}];}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ preferredSlaves\ array\ format}
+\DoxyCodeLine{let\ preferredSlaves\ =\ [}
+\DoxyCodeLine{\ \ \{\ ip:\ "{}127.0.0.1"{},\ port:\ "{}31231"{},\ prio:\ 1\ \},}
+\DoxyCodeLine{\ \ \{\ ip:\ "{}127.0.0.1"{},\ port:\ "{}31232"{},\ prio:\ 2\ \},}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ preferredSlaves\ function\ format}
+\DoxyCodeLine{preferredSlaves\ =\ function\ (availableSlaves)\ \{}
+\DoxyCodeLine{\ \ for\ (let\ i\ =\ 0;\ i\ <\ availableSlaves.length;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ slave\ =\ availableSlaves[i];}
+\DoxyCodeLine{\ \ \ \ if\ (slave.ip\ ===\ "{}127.0.0.1"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ if\ (slave.port\ ===\ "{}31234"{})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ slave;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ //\ if\ no\ preferred\ slaves\ are\ available\ a\ random\ one\ is\ used}
+\DoxyCodeLine{\ \ return\ false;}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{}
+\DoxyCodeLine{\ \ sentinels:\ [}
+\DoxyCodeLine{\ \ \ \ \{\ host:\ "{}127.0.0.1"{},\ port:\ 26379\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ host:\ "{}127.0.0.1"{},\ port:\ 26380\ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ name:\ "{}mymaster"{},}
+\DoxyCodeLine{\ \ role:\ "{}slave"{},}
+\DoxyCodeLine{\ \ preferredSlaves:\ preferredSlaves,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Besides the {\ttfamily retry\+Strategy} option, there\textquotesingle{}s also a {\ttfamily sentinel\+Retry\+Strategy} in Sentinel mode which will be invoked when all the sentinel nodes are unreachable during connecting. If {\ttfamily sentinel\+Retry\+Strategy} returns a valid delay time, ioredis will try to reconnect from scratch. The default value of {\ttfamily sentinel\+Retry\+Strategy} is\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ (times)\ \{}
+\DoxyCodeLine{\ \ const\ delay\ =\ Math.min(times\ *\ 10,\ 1000);}
+\DoxyCodeLine{\ \ return\ delay;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18227}{}\doxysubsubsection{\texorpdfstring{Cluster}{Cluster}}\label{README.md_autotoc_md18227}
+Redis Cluster provides a way to run a Redis installation where data is automatically sharded across multiple Redis nodes. You can connect to a Redis Cluster like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ cluster\ =\ new\ Redis.Cluster([}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ port:\ 6380,}
+\DoxyCodeLine{\ \ \ \ host:\ "{}127.0.0.1"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ port:\ 6381,}
+\DoxyCodeLine{\ \ \ \ host:\ "{}127.0.0.1"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{cluster.set("{}foo"{},\ "{}bar"{});}
+\DoxyCodeLine{cluster.get("{}foo"{},\ (err,\ res)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ res\ ===\ 'bar'}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+{\ttfamily Cluster} constructor accepts two arguments, where\+:
+
+
+\begin{DoxyEnumerate}
+\item The first argument is a list of nodes of the cluster you want to connect to. Just like Sentinel, the list does not need to enumerate all your cluster nodes, but a few so that if one is unreachable the client will try the next one, and the client will discover other nodes automatically when at least one node is connected.
+\item The second argument is the options, where\+:
+\begin{DoxyItemize}
+\item {\ttfamily cluster\+Retry\+Strategy}\+: When none of the startup nodes are reachable, {\ttfamily cluster\+Retry\+Strategy} will be invoked. When a number is returned, ioredis will try to reconnect to the startup nodes from scratch after the specified delay (in ms). Otherwise, an error of "{}\+None of startup nodes is available"{} will be returned. The default value of this option is\+:
+
+{\ttfamily javascript function (times) \{ const delay = Math.\+min(100 + times \texorpdfstring{$\ast$}{*} 2, 2000); return delay; \} }
+
+It\textquotesingle{}s possible to modify the {\ttfamily startup\+Nodes} property in order to switch to another set of nodes here\+:
+
+{\ttfamily javascript function (times) \{ this.\+startup\+Nodes = \mbox{[}\{ port\+: 6790, host\+: \textquotesingle{}127.\+0.\+0.\+1\textquotesingle{} \}\mbox{]}; return Math.\+min(100 + times \texorpdfstring{$\ast$}{*} 2, 2000); \} }
+\item {\ttfamily dns\+Lookup}\+: Alternative DNS lookup function ({\ttfamily dns.\+lookup()} is used by default). It may be useful to override this in special cases, such as when AWS Elasti\+Cache used with TLS enabled.
+\item {\ttfamily enable\+Offline\+Queue}\+: Similar to the {\ttfamily enable\+Offline\+Queue} option of {\ttfamily Redis} class.
+\item {\ttfamily enable\+Ready\+Check}\+: When enabled, "{}ready"{} event will only be emitted when {\ttfamily CLUSTER INFO} command reporting the cluster is ready for handling commands. Otherwise, it will be emitted immediately after "{}connect"{} is emitted.
+\item {\ttfamily scale\+Reads}\+: Config where to send the read queries. See below for more details.
+\item {\ttfamily max\+Redirections}\+: When a cluster related error (e.\+g. {\ttfamily MOVED}, {\ttfamily ASK} and {\ttfamily CLUSTERDOWN} etc.) is received, the client will redirect the command to another node. This option limits the max redirections allowed when sending a command. The default value is {\ttfamily 16}.
+\item {\ttfamily retry\+Delay\+On\+Failover}\+: If the target node is disconnected when sending a command, ioredis will retry after the specified delay. The default value is {\ttfamily 100}. You should make sure {\ttfamily retry\+Delay\+On\+Failover \texorpdfstring{$\ast$}{*} max\+Redirections \texorpdfstring{$>$}{>} cluster-\/node-\/timeout} to insure that no command will fail during a failover.
+\item {\ttfamily retry\+Delay\+On\+Cluster\+Down}\+: When a cluster is down, all commands will be rejected with the error of {\ttfamily CLUSTERDOWN}. If this option is a number (by default, it is {\ttfamily 100}), the client will resend the commands after the specified time (in ms).
+\item {\ttfamily retry\+Delay\+On\+Try\+Again}\+: If this option is a number (by default, it is {\ttfamily 100}), the client will resend the commands rejected with {\ttfamily TRYAGAIN} error after the specified time (in ms).
+\item {\ttfamily retry\+Delay\+On\+Moved}\+: By default, this value is {\ttfamily 0} (in ms), which means when a {\ttfamily MOVED} error is received, the client will resend the command instantly to the node returned together with the {\ttfamily MOVED} error. However, sometimes it takes time for a cluster to become state stabilized after a failover, so adding a delay before resending can prevent a ping pong effect.
+\item {\ttfamily redis\+Options}\+: Default options passed to the constructor of {\ttfamily Redis} when connecting to a node.
+\item {\ttfamily slots\+Refresh\+Timeout}\+: Milliseconds before a timeout occurs while refreshing slots from the cluster (default {\ttfamily 1000}).
+\item {\ttfamily slots\+Refresh\+Interval}\+: Milliseconds between every automatic slots refresh (by default, it is disabled).
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md18228}{}\doxysubsubsubsection{\texorpdfstring{Read-\/\+Write Splitting}{Read-\/\+Write Splitting}}\label{README.md_autotoc_md18228}
+A typical redis cluster contains three or more masters and several slaves for each master. It\textquotesingle{}s possible to scale out redis cluster by sending read queries to slaves and write queries to masters by setting the {\ttfamily scale\+Reads} option.
+
+{\ttfamily scale\+Reads} is "{}master"{} by default, which means ioredis will never send any queries to slaves. There are other three available options\+:
+
+
+\begin{DoxyEnumerate}
+\item "{}all"{}\+: Send write queries to masters and read queries to masters or slaves randomly.
+\item "{}slave"{}\+: Send write queries to masters and read queries to slaves.
+\item a custom {\ttfamily function(nodes, command)\+: node}\+: Will choose the custom function to select to which node to send read queries (write queries keep being sent to master). The first node in {\ttfamily nodes} is always the master serving the relevant slots. If the function returns an array of nodes, a random node of that list will be selected.
+\end{DoxyEnumerate}
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ cluster\ =\ new\ Redis.Cluster(}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ /*\ nodes\ */}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ scaleReads:\ "{}slave"{},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{);}
+\DoxyCodeLine{cluster.set("{}foo"{},\ "{}bar"{});\ //\ This\ query\ will\ be\ sent\ to\ one\ of\ the\ masters.}
+\DoxyCodeLine{cluster.get("{}foo"{},\ (err,\ res)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ This\ query\ will\ be\ sent\ to\ one\ of\ the\ slaves.}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+{\bfseries{NB}} In the code snippet above, the {\ttfamily res} may not be equal to "{}bar"{} because of the lag of replication between the master and slaves.\hypertarget{README.md_autotoc_md18229}{}\doxysubsubsubsection{\texorpdfstring{Running Commands to Multiple Nodes}{Running Commands to Multiple Nodes}}\label{README.md_autotoc_md18229}
+Every command will be sent to exactly one node. For commands containing keys, (e.\+g. {\ttfamily GET}, {\ttfamily SET} and {\ttfamily HGETALL}), ioredis sends them to the node that serving the keys, and for other commands not containing keys, (e.\+g. {\ttfamily INFO}, {\ttfamily KEYS} and {\ttfamily FLUSHDB}), ioredis sends them to a random node.
+
+Sometimes you may want to send a command to multiple nodes (masters or slaves) of the cluster, you can get the nodes via {\ttfamily Cluster\#nodes()} method.
+
+{\ttfamily Cluster\#nodes()} accepts a parameter role, which can be "{}master"{}, "{}slave"{} and "{}all"{} (default), and returns an array of {\ttfamily Redis} instance. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Send\ \`{}FLUSHDB`\ command\ to\ all\ slaves:}
+\DoxyCodeLine{const\ slaves\ =\ cluster.nodes("{}slave"{});}
+\DoxyCodeLine{Promise.all(slaves.map((node)\ =>\ node.flushdb()));}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Get\ keys\ of\ all\ the\ masters:}
+\DoxyCodeLine{const\ masters\ =\ cluster.nodes("{}master"{});}
+\DoxyCodeLine{Promise.all(}
+\DoxyCodeLine{\ \ masters}
+\DoxyCodeLine{\ \ \ \ .map((node)\ =>\ node.keys())}
+\DoxyCodeLine{\ \ \ \ .then((keys)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ keys:\ [['key1',\ 'key2'],\ ['key3',\ 'key4']]}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18230}{}\doxysubsubsubsection{\texorpdfstring{NAT Mapping}{NAT Mapping}}\label{README.md_autotoc_md18230}
+Sometimes the cluster is hosted within a internal network that can only be accessed via a NAT (Network Address Translation) instance. See \href{https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/accessing-elasticache.html}{\texttt{ Accessing Elasti\+Cache from outside AWS}} as an example.
+
+You can specify nat mapping rules via {\ttfamily nat\+Map} option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ cluster\ =\ new\ Redis.Cluster(}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ "{}203.0.113.73"{},}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 30001,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ natMap:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}10.0.1.230:30001"{}:\ \{\ host:\ "{}203.0.113.73"{},\ port:\ 30001\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}10.0.1.231:30001"{}:\ \{\ host:\ "{}203.0.113.73"{},\ port:\ 30002\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}10.0.1.232:30001"{}:\ \{\ host:\ "{}203.0.113.73"{},\ port:\ 30003\ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+Or you can specify this parameter through function\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ cluster\ =\ new\ Redis.Cluster(}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ "{}203.0.113.73"{},}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 30001,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ natMap:\ (key)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ if(key.indexOf('30001'))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ \{\ host:\ "{}203.0.113.73"{},\ port:\ 30001\ \};}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ null;}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+This option is also useful when the cluster is running inside a Docker container. Also it works for Clusters in cloud infrastructure where cluster nodes connected through dedicated subnet.
+
+Specifying through may be useful if you don\textquotesingle{}t know concrete internal host and know only node port.\hypertarget{README.md_autotoc_md18231}{}\doxysubsubsubsection{\texorpdfstring{Transaction and Pipeline in Cluster Mode}{Transaction and Pipeline in Cluster Mode}}\label{README.md_autotoc_md18231}
+Almost all features that are supported by {\ttfamily Redis} are also supported by {\ttfamily Redis.\+Cluster}, e.\+g. custom commands, transaction and pipeline. However there are some differences when using transaction and pipeline in Cluster mode\+:
+
+
+\begin{DoxyEnumerate}
+\item All keys in a pipeline should belong to slots served by the same node, since ioredis sends all commands in a pipeline to the same node.
+\item You can\textquotesingle{}t use {\ttfamily multi} without pipeline (aka {\ttfamily cluster.\+multi(\{ pipeline\+: false \})}). This is because when you call {\ttfamily cluster.\+multi(\{ pipeline\+: false \})}, ioredis doesn\textquotesingle{}t know which node the {\ttfamily multi} command should be sent to.
+\end{DoxyEnumerate}
+
+When any commands in a pipeline receives a {\ttfamily MOVED} or {\ttfamily ASK} error, ioredis will resend the whole pipeline to the specified node automatically if all of the following conditions are satisfied\+:
+
+
+\begin{DoxyEnumerate}
+\item All errors received in the pipeline are the same. For example, we won\textquotesingle{}t resend the pipeline if we got two {\ttfamily MOVED} errors pointing to different nodes.
+\item All commands executed successfully are readonly commands. This makes sure that resending the pipeline won\textquotesingle{}t have side effects.
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md18232}{}\doxysubsubsubsection{\texorpdfstring{Pub/\+Sub}{Pub/\+Sub}}\label{README.md_autotoc_md18232}
+Pub/\+Sub in cluster mode works exactly as the same as in standalone mode. Internally, when a node of the cluster receives a message, it will broadcast the message to the other nodes. ioredis makes sure that each message will only be received once by strictly subscribing one node at the same time.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ nodes\ =\ [}
+\DoxyCodeLine{\ \ /*\ nodes\ */}
+\DoxyCodeLine{];}
+\DoxyCodeLine{const\ pub\ =\ new\ Redis.Cluster(nodes);}
+\DoxyCodeLine{const\ sub\ =\ new\ Redis.Cluster(nodes);}
+\DoxyCodeLine{sub.on("{}message"{},\ (channel,\ message)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(channel,\ message);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{sub.subscribe("{}news"{},\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ pub.publish("{}news"{},\ "{}highlights"{});}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18233}{}\doxysubsubsubsection{\texorpdfstring{Sharded Pub/\+Sub}{Sharded Pub/\+Sub}}\label{README.md_autotoc_md18233}
+For sharded Pub/\+Sub, use the {\ttfamily spublish} and {\ttfamily ssubscribe} commands instead of the traditional {\ttfamily publish} and {\ttfamily subscribe}. With the old commands, the Redis cluster handles message propagation behind the scenes, allowing you to publish or subscribe to any node without considering sharding. However, this approach has scalability limitations that are addressed with sharded Pub/\+Sub. Here’s what you need to know\+:
+
+
+\begin{DoxyEnumerate}
+\item Instead of a single subscriber connection, there is now one subscriber connection per shard. Because of the potential overhead, you can enable or disable the use of the cluster subscriber group with the {\ttfamily sharded\+Subscribers} option. By default, this option is set to {\ttfamily false}, meaning sharded subscriptions are disabled. You should enable this option when establishing your cluster connection before using {\ttfamily ssubscribe}.
+\item All channel names that you pass to a single {\ttfamily ssubscribe} need to map to the same hash slot. You can call {\ttfamily ssubscribe} multiple times on the same cluster client instance to subscribe to channels across slots. The cluster\textquotesingle{}s subscriber group takes care of forwarding the {\ttfamily ssubscribe} command to the shard that is responsible for the channels.
+\end{DoxyEnumerate}
+
+The following basic example shows you how to use sharded Pub/\+Sub\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ cluster:\ Cluster\ =\ new\ Cluster([\{host:\ host,\ port:\ port\}],\ \{shardedSubscribers:\ true\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//Register\ the\ callback}
+\DoxyCodeLine{cluster.on("{}smessage"{},\ (channel,\ message)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(message);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{//Subscribe\ to\ the\ channels\ on\ the\ same\ slot}
+\DoxyCodeLine{cluster.ssubscribe("{}channel\{my\}:1"{},\ "{}channel\{my\}:2"{}).then(\ (\ count:\ number\ )\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(count);}
+\DoxyCodeLine{\}).catch(\ (err)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(err);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//Publish\ a\ message}
+\DoxyCodeLine{cluster.spublish("{}channel\{my\}:1"{},\ "{}This\ is\ a\ test\ message\ to\ my\ first\ channel."{}).then((value:\ number)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log("{}Published\ a\ message\ to\ channel\{my\}:1"{});}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18234}{}\doxysubsubsubsection{\texorpdfstring{Events}{Events}}\label{README.md_autotoc_md18234}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Event   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Event   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+connect   &emits when a connection is established to the Redis server.    \\\cline{1-2}
+ready   &emits when {\ttfamily CLUSTER INFO} reporting the cluster is able to receive commands (if {\ttfamily enable\+Ready\+Check} is {\ttfamily true}) or immediately after {\ttfamily connect} event (if {\ttfamily enable\+Ready\+Check} is false).    \\\cline{1-2}
+error   &emits when an error occurs while connecting with a property of {\ttfamily last\+Node\+Error} representing the last node error received. This event is emitted silently (only emitting if there\textquotesingle{}s at least one listener).    \\\cline{1-2}
+close   &emits when an established Redis server connection has closed.    \\\cline{1-2}
+reconnecting   &emits after {\ttfamily close} when a reconnection will be made. The argument of the event is the time (in ms) before reconnecting.    \\\cline{1-2}
+end   &emits after {\ttfamily close} when no more reconnections will be made.    \\\cline{1-2}
++node   &emits when a new node is connected.    \\\cline{1-2}
+-\/node   &emits when a node is disconnected.    \\\cline{1-2}
+node error   &emits when an error occurs when connecting to a node. The second argument indicates the address of the node.   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md18235}{}\doxysubsubsubsection{\texorpdfstring{Password}{Password}}\label{README.md_autotoc_md18235}
+Setting the {\ttfamily password} option to access password-\/protected clusters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{const\ cluster\ =\ new\ Redis.Cluster(nodes,\ \{}
+\DoxyCodeLine{\ \ redisOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ password:\ "{}your-\/cluster-\/password"{},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+If some of nodes in the cluster using a different password, you should specify them in the first parameter\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{const\ cluster\ =\ new\ Redis.Cluster(}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ //\ Use\ password\ "{}password-\/for-\/30001"{}\ for\ 30001}
+\DoxyCodeLine{\ \ \ \ \{\ port:\ 30001,\ password:\ "{}password-\/for-\/30001"{}\ \},}
+\DoxyCodeLine{\ \ \ \ //\ Don't\ use\ password\ when\ accessing\ 30002}
+\DoxyCodeLine{\ \ \ \ \{\ port:\ 30002,\ password:\ null\ \},}
+\DoxyCodeLine{\ \ \ \ //\ Other\ nodes\ will\ use\ "{}fallback-\/password"{}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ redisOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ password:\ "{}fallback-\/password"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18236}{}\doxysubsubsubsection{\texorpdfstring{Special Note\+: Aws Elasticache Clusters with TLS}{Special Note\+: Aws Elasticache Clusters with TLS}}\label{README.md_autotoc_md18236}
+AWS Elasti\+Cache for Redis (Clustered Mode) supports TLS encryption. If you use this, you may encounter errors with invalid certificates. To resolve this issue, construct the {\ttfamily Cluster} with the {\ttfamily dns\+Lookup} option as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ cluster\ =\ new\ Redis.Cluster(}
+\DoxyCodeLine{\ \ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ "{}clustercfg.myCluster.abcdefg.xyz.cache.amazonaws.com"{},}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 6379,}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ dnsLookup:\ (address,\ callback)\ =>\ callback(null,\ address),}
+\DoxyCodeLine{\ \ \ \ redisOptions:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ tls:\ \{\},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md18237}{}\doxysubsubsection{\texorpdfstring{Autopipelining}{Autopipelining}}\label{README.md_autotoc_md18237}
+In standard mode, when you issue multiple commands, ioredis sends them to the server one by one. As described in Redis pipeline documentation, this is a suboptimal use of the network link, especially when such link is not very performant.
+
+The TCP and network overhead negatively affects performance. Commands are stuck in the send queue until the previous ones are correctly delivered to the server. This is a problem known as Head-\/\+Of-\/\+Line blocking (HOL).
+
+ioredis supports a feature called “auto pipelining”. It can be enabled by setting the option {\ttfamily enable\+Auto\+Pipelining} to {\ttfamily true}. No other code change is necessary.
+
+In auto pipelining mode, all commands issued during an event loop are enqueued in a pipeline automatically managed by ioredis. At the end of the iteration, the pipeline is executed and thus all commands are sent to the server at the same time.
+
+This feature can dramatically improve throughput and avoids HOL blocking. In our benchmarks, the improvement was between 35\% and 50\%.
+
+While an automatic pipeline is executing, all new commands will be enqueued in a new pipeline which will be executed as soon as the previous finishes.
+
+When using Redis Cluster, one pipeline per node is created. Commands are assigned to pipelines according to which node serves the slot.
+
+A pipeline will thus contain commands using different slots but that ultimately are assigned to the same node.
+
+Note that the same slot limitation within a single command still holds, as it is a Redis limitation.\hypertarget{README.md_autotoc_md18238}{}\doxysubsubsubsection{\texorpdfstring{Example of Automatic Pipeline Enqueuing}{Example of Automatic Pipeline Enqueuing}}\label{README.md_autotoc_md18238}
+This sample code uses ioredis with automatic pipeline enabled.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}./built"{});}
+\DoxyCodeLine{const\ http\ =\ require("{}http"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ db\ =\ new\ Redis(\{\ enableAutoPipelining:\ true\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ server\ =\ http.createServer((request,\ response)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ key\ =\ new\ URL(request.url,\ "{}https://localhost:3000/"{}).searchParams.get(}
+\DoxyCodeLine{\ \ \ \ "{}key"{}}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ db.get(key,\ (err,\ value)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ response.writeHead(200,\ \{\ "{}Content-\/Type"{}:\ "{}text/plain"{}\ \});}
+\DoxyCodeLine{\ \ \ \ response.end(value);}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{server.listen(3000);}
+
+\end{DoxyCode}
+
+
+When Node receives requests, it schedules them to be processed in one or more iterations of the events loop.
+
+All commands issued by requests processing during one iteration of the loop will be wrapped in a pipeline automatically created by ioredis.
+
+In the example above, the pipeline will have the following contents\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{GET\ key1}
+\DoxyCodeLine{GET\ key2}
+\DoxyCodeLine{GET\ key3}
+\DoxyCodeLine{...}
+\DoxyCodeLine{GET\ keyN}
+
+\end{DoxyCode}
+
+
+When all events in the current loop have been processed, the pipeline is executed and thus all commands are sent to the server at the same time.
+
+While waiting for pipeline response from Redis, Node will still be able to process requests. All commands issued by request handler will be enqueued in a new automatically created pipeline. This pipeline will not be sent to the server yet.
+
+As soon as a previous automatic pipeline has received all responses from the server, the new pipeline is immediately sent without waiting for the events loop iteration to finish.
+
+This approach increases the utilization of the network link, reduces the TCP overhead and idle times and therefore improves throughput.\hypertarget{README.md_autotoc_md18239}{}\doxysubsubsubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{README.md_autotoc_md18239}
+Here\textquotesingle{}s some of the results of our tests for a single node.
+
+Each iteration of the test runs 1000 random commands on the server.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Samples   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Result   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Tolerance    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Samples   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Result   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Tolerance    }\\\cline{1-4}
+\endhead
+default   &1000   &174.\+62 op/sec   &± 0.\+45 \%    \\\cline{1-4}
+enable\+Auto\+Pipelining=true   &1500   &233.\+33 op/sec   &± 0.\+88 \%   \\\cline{1-4}
+\end{longtabu}
+
+
+And here\textquotesingle{}s the same test for a cluster of 3 masters and 3 replicas\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Samples   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Result   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Tolerance    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Samples   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Result   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Tolerance    }\\\cline{1-4}
+\endhead
+default   &1000   &164.\+05 op/sec   &± 0.\+42 \%    \\\cline{1-4}
+enable\+Auto\+Pipelining=true   &3000   &235.\+31 op/sec   &± 0.\+94 \%   \\\cline{1-4}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md18240}{}\doxysubsection{\texorpdfstring{Error Handling}{Error Handling}}\label{README.md_autotoc_md18240}
+All the errors returned by the Redis server are instances of {\ttfamily Reply\+Error}, which can be accessed via {\ttfamily Redis}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis();}
+\DoxyCodeLine{//\ This\ command\ causes\ a\ reply\ error\ since\ the\ SET\ command\ requires\ two\ arguments.}
+\DoxyCodeLine{redis.set("{}foo"{},\ (err)\ =>\ \{}
+\DoxyCodeLine{\ \ err\ instanceof\ Redis.ReplyError;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+This is the error stack of the {\ttfamily Reply\+Error}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ReplyError:\ ERR\ wrong\ number\ of\ arguments\ for\ 'set'\ command}
+\DoxyCodeLine{\ \ \ \ at\ ReplyParser.\_parseResult\ (/app/node\_modules/ioredis/lib/parsers/javascript.js:60:14)}
+\DoxyCodeLine{\ \ \ \ at\ ReplyParser.execute\ (/app/node\_modules/ioredis/lib/parsers/javascript.js:178:20)}
+\DoxyCodeLine{\ \ \ \ at\ Socket.<anonymous>\ (/app/node\_modules/ioredis/lib/redis/event\_handler.js:99:22)}
+\DoxyCodeLine{\ \ \ \ at\ Socket.emit\ (events.js:97:17)}
+\DoxyCodeLine{\ \ \ \ at\ readableAddChunk\ (\_stream\_readable.js:143:16)}
+\DoxyCodeLine{\ \ \ \ at\ Socket.Readable.push\ (\_stream\_readable.js:106:10)}
+\DoxyCodeLine{\ \ \ \ at\ TCP.onread\ (net.js:509:20)}
+
+\end{DoxyCode}
+
+
+By default, the error stack doesn\textquotesingle{}t make any sense because the whole stack happens in the ioredis module itself, not in your code. So it\textquotesingle{}s not easy to find out where the error happens in your code. ioredis provides an option {\ttfamily show\+Friendly\+Error\+Stack} to solve the problem. When you enable {\ttfamily show\+Friendly\+Error\+Stack}, ioredis will optimize the error stack for you\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Redis\ =\ require("{}ioredis"{});}
+\DoxyCodeLine{const\ redis\ =\ new\ Redis(\{\ showFriendlyErrorStack:\ true\ \});}
+\DoxyCodeLine{redis.set("{}foo"{});}
+
+\end{DoxyCode}
+
+
+And the output will be\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ReplyError:\ ERR\ wrong\ number\ of\ arguments\ for\ 'set'\ command}
+\DoxyCodeLine{\ \ \ \ at\ Object.<anonymous>\ (/app/index.js:3:7)}
+\DoxyCodeLine{\ \ \ \ at\ Module.\_compile\ (module.js:446:26)}
+\DoxyCodeLine{\ \ \ \ at\ Object.Module.\_extensions..js\ (module.js:464:10)}
+\DoxyCodeLine{\ \ \ \ at\ Module.load\ (module.js:341:32)}
+\DoxyCodeLine{\ \ \ \ at\ Function.Module.\_load\ (module.js:296:12)}
+\DoxyCodeLine{\ \ \ \ at\ Function.Module.runMain\ (module.js:487:10)}
+\DoxyCodeLine{\ \ \ \ at\ startup\ (node.js:111:16)}
+\DoxyCodeLine{\ \ \ \ at\ node.js:799:3}
+
+\end{DoxyCode}
+
+
+This time the stack tells you that the error happens on the third line in your code. Pretty sweet! However, it would decrease the performance significantly to optimize the error stack. So by default, this option is disabled and can only be used for debugging purposes. You {\bfseries{shouldn\textquotesingle{}t}} use this feature in a production environment.\hypertarget{README.md_autotoc_md18241}{}\doxysubsection{\texorpdfstring{Running tests}{Running tests}}\label{README.md_autotoc_md18241}
+Start a Redis server on 127.\+0.\+0.\+1\+:6379, and then\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ test}
+
+\end{DoxyCode}
+
+
+{\ttfamily FLUSH ALL} will be invoked after each test, so make sure there\textquotesingle{}s no valuable data in it before running tests.
+
+If your testing environment does not let you spin up a Redis server \href{https://github.com/stipsan/ioredis-mock}{\texttt{ ioredis-\/mock}} is a drop-\/in replacement you can use in your tests. It aims to behave identically to ioredis connected to a Redis server so that your integration tests is easier to write and of better quality.\hypertarget{README.md_autotoc_md18242}{}\doxysubsection{\texorpdfstring{Debug}{Debug}}\label{README.md_autotoc_md18242}
+You can set the {\ttfamily DEBUG} env to {\ttfamily ioredis\+:\texorpdfstring{$\ast$}{*}} to print debug info\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ DEBUG=ioredis:*\ node\ app.js}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18243}{}\doxysubsection{\texorpdfstring{Join in!}{Join in!}}\label{README.md_autotoc_md18243}
+I\textquotesingle{}m happy to receive bug reports, fixes, documentation enhancements, and any other improvements.
+
+And since I\textquotesingle{}m not a native English speaker, if you find any grammar mistakes in the documentation, please also let me know. \+:)\hypertarget{README.md_autotoc_md18244}{}\doxysubsection{\texorpdfstring{Contributors}{Contributors}}\label{README.md_autotoc_md18244}
+This project exists thanks to all the people who contribute\+:
+
+\href{https://github.com/redis/ioredis/graphs/contributors}{\texttt{ }}\hypertarget{README.md_autotoc_md18245}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md18245}
+MIT
+
+\href{https://app.fossa.io/projects/git\%2Bgithub.com\%2Fluin\%2Fioredis?ref=badge_large}{\texttt{ }} 

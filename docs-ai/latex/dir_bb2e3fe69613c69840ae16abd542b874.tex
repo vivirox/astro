@@ -1,0 +1,139 @@
+\doxysection{node\+\_\+modules/core-\/js-\/compat Directory Reference}
+\hypertarget{dir_bb2e3fe69613c69840ae16abd542b874}{}\label{dir_bb2e3fe69613c69840ae16abd542b874}\index{node\_modules/core-\/js-\/compat Directory Reference@{node\_modules/core-\/js-\/compat Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+!\mbox{[}logo\mbox{]}(\href{https://user-images.githubusercontent.com/2213682/146607186-8e13ddef-26a4-4ebf-befd-5aac9d77c090.png}{\texttt{ https\+://user-\/images.\+githubusercontent.\+com/2213682/146607186-\/8e13ddef-\/26a4-\/4ebf-\/befd-\/5aac9d77c090.\+png}})
+
+
+
+\href{https://opencollective.com/core-js}{\texttt{ }} \href{https://github.com/zloirock/core-js/blob/master/CONTRIBUTING.md}{\texttt{ }} \href{https://www.npmjs.com/package/core-js-compat}{\texttt{ }} \href{https://npm-stat.com/charts.html?package=core-js&package=core-js-pure&package=core-js-compat&from=2014-11-18}{\texttt{ }}
+
+\hypertarget{README.md_autotoc_md11011}{}\doxysubsubsection{\texorpdfstring{{\bfseries{I highly recommend reading this\+: \href{https://github.com/zloirock/core-js/blob/master/docs/2023-02-14-so-whats-next.md}{\texttt{ So, what\textquotesingle{}s next?}}}}}{{\bfseries{I highly recommend reading this\+: \href{https://github.com/zloirock/core-js/blob/master/docs/2023-02-14-so-whats-next.md}{\texttt{ So, what\textquotesingle{}s next?}}}}}}\label{README.md_autotoc_md11011}
+\href{https://github.com/zloirock/core-js/tree/master/packages/core-js-compat}{\texttt{ {\ttfamily core-\/js-\/compat} package}} contains data about the necessity of \href{https://github.com/zloirock/core-js}{\texttt{ {\ttfamily core-\/js}}} modules and API for getting a list of required core-\/js modules by browserslist query.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ compat\ from\ 'core-\/js-\/compat';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{}
+\DoxyCodeLine{\ \ list,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ array\ of\ required\ modules}
+\DoxyCodeLine{\ \ targets,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ object\ with\ targets\ for\ each\ module}
+\DoxyCodeLine{\}\ =\ compat(\{}
+\DoxyCodeLine{\ \ targets:\ '>\ 1\%',\ \ \ \ \ \ \ \ \ \ \ \ //\ browserslist\ query\ or\ object\ of\ minimum\ environment\ versions\ to\ support,\ see\ below}
+\DoxyCodeLine{\ \ modules:\ [\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ optional\ list\ /\ filter\ of\ modules\ -\/\ regex,\ string\ or\ an\ array\ of\ them:}
+\DoxyCodeLine{\ \ \ \ 'core-\/js/actual',\ \ \ \ \ \ \ \ \ //\ -\/\ an\ entry\ point}
+\DoxyCodeLine{\ \ \ \ 'esnext.array.unique-\/by',\ //\ -\/\ a\ module\ name\ (or\ just\ a\ start\ of\ a\ module\ name)}
+\DoxyCodeLine{\ \ \ \ /\string^web\(\backslash\)./,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ -\/\ regex\ that\ a\ module\ name\ must\ satisfy}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ exclude:\ [\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ optional\ list\ /\ filter\ of\ modules\ to\ exclude,\ the\ signature\ is\ similar\ to\ \`{}modules`\ option}
+\DoxyCodeLine{\ \ \ \ 'web.atob',}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ version:\ '3.41',\ \ \ \ \ \ \ \ \ \ \ \ //\ used\ \`{}core-\/js`\ version,\ by\ default\ -\/\ the\ latest}
+\DoxyCodeLine{\ \ inverse:\ false,\ \ \ \ \ \ \ \ \ \ \ \ \ //\ inverse\ of\ the\ result\ -\/\ shows\ modules\ that\ are\ NOT\ required\ for\ the\ target\ environment}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(targets);}
+\DoxyCodeLine{/*\ =>}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ 'es.error.cause':\ \{\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.aggregate-\/error.cause':\ \{\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.array.at':\ \{\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.array.find-\/last':\ \{\ firefox:\ '100',\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.array.find-\/last-\/index':\ \{\ firefox:\ '100',\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.array.includes':\ \{\ firefox:\ '100'\ \},}
+\DoxyCodeLine{\ \ 'es.array.push':\ \{\ chrome:\ '100',\ edge:\ '101',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'es.array.unshift':\ \{\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'es.object.has-\/own':\ \{\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.regexp.flags':\ \{\ chrome:\ '100',\ edge:\ '101'\ \},}
+\DoxyCodeLine{\ \ 'es.string.at-\/alternative':\ \{\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.typed-\/array.at':\ \{\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.typed-\/array.find-\/last':\ \{\ firefox:\ '100',\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'es.typed-\/array.find-\/last-\/index':\ \{\ firefox:\ '100',\ ios:\ '14.5-\/14.8'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.group':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.group-\/by':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.group-\/by-\/to-\/map':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.group-\/to-\/map':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.to-\/reversed':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.to-\/sorted':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.to-\/spliced':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.unique-\/by':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.array.with':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.typed-\/array.to-\/reversed':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.typed-\/array.to-\/sorted':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.typed-\/array.to-\/spliced':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'esnext.typed-\/array.with':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'web.dom-\/exception.stack':\ \{\ chrome:\ '100',\ edge:\ '101',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'web.immediate':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \},}
+\DoxyCodeLine{\ \ 'web.structured-\/clone':\ \{\ chrome:\ '100',\ edge:\ '101',\ firefox:\ '100',\ ios:\ '14.5-\/14.8',\ safari:\ '15.4'\ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11012}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily targets} option}{{\ttfamily targets} option}}\label{README.md_autotoc_md11012}
+{\ttfamily targets} could be \href{https://github.com/browserslist/browserslist}{\texttt{ a {\ttfamily browserslist} query}} or a targets object that specifies minimum environment versions to support\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ browserslist\ query:}
+\DoxyCodeLine{'defaults,\ not\ IE\ 11,\ maintained\ node\ versions';}
+\DoxyCodeLine{//\ object\ (sure,\ all\ those\ fields\ optional):}
+\DoxyCodeLine{(\{}
+\DoxyCodeLine{\ \ android:\ '4.0',\ \ \ \ \ \ \ \ \ //\ Android\ WebView\ version}
+\DoxyCodeLine{\ \ bun:\ '0.1.2',\ \ \ \ \ \ \ \ \ \ \ //\ Bun\ version}
+\DoxyCodeLine{\ \ chrome:\ '38',\ \ \ \ \ \ \ \ \ \ \ //\ Chrome\ version}
+\DoxyCodeLine{\ \ 'chrome-\/android':\ '18',\ //\ Chrome\ for\ Android\ version}
+\DoxyCodeLine{\ \ deno:\ '1.12',\ \ \ \ \ \ \ \ \ \ \ //\ Deno\ version}
+\DoxyCodeLine{\ \ edge:\ '13',\ \ \ \ \ \ \ \ \ \ \ \ \ //\ Edge\ version}
+\DoxyCodeLine{\ \ electron:\ '5.0',\ \ \ \ \ \ \ \ //\ Electron\ framework\ version}
+\DoxyCodeLine{\ \ firefox:\ '15',\ \ \ \ \ \ \ \ \ \ //\ Firefox\ version}
+\DoxyCodeLine{\ \ 'firefox-\/android':\ '4',\ //\ Firefox\ for\ Android\ version}
+\DoxyCodeLine{\ \ hermes:\ '0.11',\ \ \ \ \ \ \ \ \ //\ Hermes\ version}
+\DoxyCodeLine{\ \ ie:\ '8',\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Internet\ Explorer\ version}
+\DoxyCodeLine{\ \ ios:\ '13.0',\ \ \ \ \ \ \ \ \ \ \ \ //\ iOS\ Safari\ version}
+\DoxyCodeLine{\ \ node:\ 'current',\ \ \ \ \ \ \ \ //\ NodeJS\ version,\ you\ can\ use\ 'current'\ for\ set\ it\ to\ currently\ used}
+\DoxyCodeLine{\ \ opera:\ '12',\ \ \ \ \ \ \ \ \ \ \ \ //\ Opera\ version}
+\DoxyCodeLine{\ \ 'opera-\/android':\ '7',\ \ \ //\ Opera\ for\ Android\ version}
+\DoxyCodeLine{\ \ phantom:\ '1.9',\ \ \ \ \ \ \ \ \ //\ PhantomJS\ headless\ browser\ version}
+\DoxyCodeLine{\ \ quest:\ '5.0',\ \ \ \ \ \ \ \ \ \ \ //\ Meta\ Quest\ Browser\ version}
+\DoxyCodeLine{\ \ 'react-\/native':\ '0.70',\ //\ React\ Native\ version\ (default\ Hermes\ engine)}
+\DoxyCodeLine{\ \ rhino:\ '1.7.13',\ \ \ \ \ \ \ \ //\ Rhino\ engine\ version}
+\DoxyCodeLine{\ \ safari:\ '14.0',\ \ \ \ \ \ \ \ \ //\ Safari\ version}
+\DoxyCodeLine{\ \ samsung:\ '14.0',\ \ \ \ \ \ \ \ //\ Samsung\ Internet\ version}
+\DoxyCodeLine{\ \ esmodules:\ true,\ \ \ \ \ \ \ \ //\ That\ option\ set\ target\ to\ minimum\ supporting\ ES\ Modules\ versions\ of\ all\ browsers}
+\DoxyCodeLine{\ \ browsers:\ '>\ 0.25\%',\ \ \ \ //\ Browserslist\ query\ or\ object\ with\ target\ browsers}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11013}{}\doxysubsubsubsection{\texorpdfstring{Additional API\+:}{Additional API\+:}}\label{README.md_autotoc_md11013}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ equals\ of\ of\ the\ method\ from\ the\ example\ above}
+\DoxyCodeLine{require('core-\/js-\/compat/compat')(\{\ targets,\ modules,\ version\ \});\ //\ =>\ \{\ list:\ Array<ModuleName>,\ targets:\ \{\ [ModuleName]:\ \{\ [EngineName]:\ EngineVersion\ \}\ \}\ \}}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{require('core-\/js-\/compat').compat(\{\ targets,\ modules,\ version\ \});\ //\ =>\ \{\ list:\ Array<ModuleName>,\ targets:\ \{\ [ModuleName]:\ \{\ [EngineName]:\ EngineVersion\ \}\ \}\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ full\ compat\ data:}
+\DoxyCodeLine{require('core-\/js-\/compat/data');\ //\ =>\ \{\ [ModuleName]:\ \{\ [EngineName]:\ EngineVersion\ \}\ \}}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{require('core-\/js-\/compat').data;\ //\ =>\ \{\ [ModuleName]:\ \{\ [EngineName]:\ EngineVersion\ \}\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ map\ of\ modules\ by\ \`{}core-\/js`\ entry\ points:}
+\DoxyCodeLine{require('core-\/js-\/compat/entries');\ //\ =>\ \{\ [EntryPoint]:\ Array<ModuleName>\ \}}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{require('core-\/js-\/compat').entries;\ //\ =>\ \{\ [EntryPoint]:\ Array<ModuleName>\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ full\ list\ of\ modules:}
+\DoxyCodeLine{require('core-\/js-\/compat/modules');\ //\ =>\ Array<ModuleName>}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{require('core-\/js-\/compat').modules;\ //\ =>\ Array<ModuleName>}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ the\ subset\ of\ modules\ which\ available\ in\ the\ passed\ \`{}core-\/js`\ version:}
+\DoxyCodeLine{require('core-\/js-\/compat/get-\/modules-\/list-\/for-\/target-\/version')('3.41');\ //\ =>\ Array<ModuleName>}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{require('core-\/js-\/compat').getModulesListForTargetVersion('3.41');\ //\ =>\ Array<ModuleName>}
+
+\end{DoxyCode}
+
+
+If you wanna help to improve this data, you could take a look at the related section of \href{https://github.com/zloirock/core-js/blob/master/CONTRIBUTING.md\#how-to-update-core-js-compat-data}{\texttt{ {\ttfamily CONTRIBUTING.\+md}}}. The visualization of compatibility data and the browser tests runner is available \href{http://zloirock.github.io/core-js/compat/}{\texttt{ here}}, the example\+:
+
+ 

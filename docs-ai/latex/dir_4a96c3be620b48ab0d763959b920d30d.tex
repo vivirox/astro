@@ -1,0 +1,532 @@
+\doxysection{node\+\_\+modules/zustand Directory Reference}
+\hypertarget{dir_4a96c3be620b48ab0d763959b920d30d}{}\label{dir_4a96c3be620b48ab0d763959b920d30d}\index{node\_modules/zustand Directory Reference@{node\_modules/zustand Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+
+
+ 
+
+\href{https://github.com/pmndrs/zustand/actions?query=workflow\%3ALint}{\texttt{ }} \href{https://bundlephobia.com/result?p=zustand}{\texttt{ }} \href{https://www.npmjs.com/package/zustand}{\texttt{ }} \href{https://www.npmjs.com/package/zustand}{\texttt{ }} \href{https://discord.gg/poimandres}{\texttt{ }}
+
+A small, fast and scalable bearbones state-\/management solution using simplified flux principles. Has a comfy API based on hooks, isn\textquotesingle{}t boilerplatey or opinionated.
+
+Don\textquotesingle{}t disregard it because it\textquotesingle{}s cute. It has quite the claws, lots of time was spent dealing with common pitfalls, like the dreaded \href{https://react-redux.js.org/api/hooks\#stale-props-and-zombie-children}{\texttt{ zombie child problem}}, \href{https://github.com/bvaughn/rfcs/blob/useMutableSource/text/0000-use-mutable-source.md}{\texttt{ react concurrency}}, and \href{https://github.com/facebook/react/issues/13332}{\texttt{ context loss}} between mixed renderers. It may be the one state-\/manager in the React space that gets all of these right.
+
+You can try a live demo \href{https://githubbox.com/pmndrs/zustand/tree/main/examples/demo}{\texttt{ here}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ zustand}
+
+\end{DoxyCode}
+
+
+\+:warning\+: This readme is written for Java\+Script users. If you are a Type\+Script user, be sure to check out our Type\+Script Usage section.\hypertarget{readme.md_autotoc_md36696}{}\doxysubsubsection{\texorpdfstring{First create a store}{First create a store}}\label{readme.md_autotoc_md36696}
+Your store is a hook! You can put anything in it\+: primitives, objects, functions. State has to be updated immutably and the {\ttfamily set} function merges state to help it.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ create\ \}\ from\ 'zustand'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useBearStore\ =\ create((set)\ =>\ (\{}
+\DoxyCodeLine{\ \ bears:\ 0,}
+\DoxyCodeLine{\ \ increasePopulation:\ ()\ =>\ set((state)\ =>\ (\{\ bears:\ state.bears\ +\ 1\ \})),}
+\DoxyCodeLine{\ \ removeAllBears:\ ()\ =>\ set(\{\ bears:\ 0\ \}),}
+\DoxyCodeLine{\}))}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36697}{}\doxysubsubsection{\texorpdfstring{Then bind your components, and that\textquotesingle{}s it!}{Then bind your components, and that\textquotesingle{}s it!}}\label{readme.md_autotoc_md36697}
+Use the hook anywhere, no providers are needed. Select your state and the component will re-\/render on changes.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ BearCounter()\ \{}
+\DoxyCodeLine{\ \ const\ bears\ =\ useBearStore((state)\ =>\ state.bears)}
+\DoxyCodeLine{\ \ return\ <h1>\{bears\}\ around\ here\ ...</h1>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Controls()\ \{}
+\DoxyCodeLine{\ \ const\ increasePopulation\ =\ useBearStore((state)\ =>\ state.increasePopulation)}
+\DoxyCodeLine{\ \ return\ <button\ onClick=\{increasePopulation\}>one\ up</button>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36698}{}\doxysubsubsubsection{\texorpdfstring{Why zustand over redux?}{Why zustand over redux?}}\label{readme.md_autotoc_md36698}
+
+\begin{DoxyItemize}
+\item Simple and un-\/opinionated
+\item Makes hooks the primary means of consuming state
+\item Doesn\textquotesingle{}t wrap your app in context providers
+\item Can inform components transiently (without causing render)
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md36699}{}\doxysubsubsubsection{\texorpdfstring{Why zustand over context?}{Why zustand over context?}}\label{readme.md_autotoc_md36699}
+
+\begin{DoxyItemize}
+\item Less boilerplate
+\item Renders components only on changes
+\item Centralized, action-\/based state management
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{readme.md_autotoc_md36701}{}\doxysubsection{\texorpdfstring{Recipes}{Recipes}}\label{readme.md_autotoc_md36701}
+\hypertarget{readme.md_autotoc_md36702}{}\doxysubsubsection{\texorpdfstring{Fetching everything}{Fetching everything}}\label{readme.md_autotoc_md36702}
+You can, but bear in mind that it will cause the component to update on every state change!
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ state\ =\ useBearStore()}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36703}{}\doxysubsubsection{\texorpdfstring{Selecting multiple state slices}{Selecting multiple state slices}}\label{readme.md_autotoc_md36703}
+It detects changes with strict-\/equality (old === new) by default, this is efficient for atomic state picks.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ nuts\ =\ useBearStore((state)\ =>\ state.nuts)}
+\DoxyCodeLine{const\ honey\ =\ useBearStore((state)\ =>\ state.honey)}
+
+\end{DoxyCode}
+
+
+If you want to construct a single object with multiple state-\/picks inside, similar to redux\textquotesingle{}s map\+State\+To\+Props, you can use use\+Shallow to prevent unnecessary rerenders when the selector output does not change according to shallow equal.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ create\ \}\ from\ 'zustand'}
+\DoxyCodeLine{import\ \{\ useShallow\ \}\ from\ 'zustand/react/shallow'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useBearStore\ =\ create((set)\ =>\ (\{}
+\DoxyCodeLine{\ \ bears:\ 0,}
+\DoxyCodeLine{\ \ increasePopulation:\ ()\ =>\ set((state)\ =>\ (\{\ bears:\ state.bears\ +\ 1\ \})),}
+\DoxyCodeLine{\ \ removeAllBears:\ ()\ =>\ set(\{\ bears:\ 0\ \}),}
+\DoxyCodeLine{\}))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Object\ pick,\ re-\/renders\ the\ component\ when\ either\ state.nuts\ or\ state.honey\ change}
+\DoxyCodeLine{const\ \{\ nuts,\ honey\ \}\ =\ useBearStore(}
+\DoxyCodeLine{\ \ useShallow((state)\ =>\ (\{\ nuts:\ state.nuts,\ honey:\ state.honey\ \})),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Array\ pick,\ re-\/renders\ the\ component\ when\ either\ state.nuts\ or\ state.honey\ change}
+\DoxyCodeLine{const\ [nuts,\ honey]\ =\ useBearStore(}
+\DoxyCodeLine{\ \ useShallow((state)\ =>\ [state.nuts,\ state.honey]),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Mapped\ picks,\ re-\/renders\ the\ component\ when\ state.treats\ changes\ in\ order,\ count\ or\ keys}
+\DoxyCodeLine{const\ treats\ =\ useBearStore(useShallow((state)\ =>\ Object.keys(state.treats)))}
+
+\end{DoxyCode}
+
+
+For more control over re-\/rendering, you may provide any custom equality function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ treats\ =\ useBearStore(}
+\DoxyCodeLine{\ \ (state)\ =>\ state.treats,}
+\DoxyCodeLine{\ \ (oldTreats,\ newTreats)\ =>\ compare(oldTreats,\ newTreats),}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36704}{}\doxysubsubsection{\texorpdfstring{Overwriting state}{Overwriting state}}\label{readme.md_autotoc_md36704}
+The {\ttfamily set} function has a second argument, {\ttfamily false} by default. Instead of merging, it will replace the state model. Be careful not to wipe out parts you rely on, like actions.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ omit\ from\ 'lodash-\/es/omit'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useFishStore\ =\ create((set)\ =>\ (\{}
+\DoxyCodeLine{\ \ salmon:\ 1,}
+\DoxyCodeLine{\ \ tuna:\ 2,}
+\DoxyCodeLine{\ \ deleteEverything:\ ()\ =>\ set(\{\},\ true),\ //\ clears\ the\ entire\ store,\ actions\ included}
+\DoxyCodeLine{\ \ deleteTuna:\ ()\ =>\ set((state)\ =>\ omit(state,\ ['tuna']),\ true),}
+\DoxyCodeLine{\}))}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36705}{}\doxysubsubsection{\texorpdfstring{Async actions}{Async actions}}\label{readme.md_autotoc_md36705}
+Just call {\ttfamily set} when you\textquotesingle{}re ready, zustand doesn\textquotesingle{}t care if your actions are async or not.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ useFishStore\ =\ create((set)\ =>\ (\{}
+\DoxyCodeLine{\ \ fishies:\ \{\},}
+\DoxyCodeLine{\ \ fetch:\ async\ (pond)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ response\ =\ await\ fetch(pond)}
+\DoxyCodeLine{\ \ \ \ set(\{\ fishies:\ await\ response.json()\ \})}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}))}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36706}{}\doxysubsubsection{\texorpdfstring{Read from state in actions}{Read from state in actions}}\label{readme.md_autotoc_md36706}
+{\ttfamily set} allows fn-\/updates {\ttfamily set(state =\texorpdfstring{$>$}{>} result)}, but you still have access to state outside of it through {\ttfamily get}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ useSoundStore\ =\ create((set,\ get)\ =>\ (\{}
+\DoxyCodeLine{\ \ sound:\ 'grunt',}
+\DoxyCodeLine{\ \ action:\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ sound\ =\ get().sound}
+\DoxyCodeLine{\ \ \ \ ...}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36707}{}\doxysubsubsection{\texorpdfstring{Reading/writing state and reacting to changes outside of components}{Reading/writing state and reacting to changes outside of components}}\label{readme.md_autotoc_md36707}
+Sometimes you need to access state in a non-\/reactive way or act upon the store. For these cases, the resulting hook has utility functions attached to its prototype.
+
+\+:warning\+: This technique is not recommended for adding state in \href{https://github.com/reactjs/rfcs/blob/main/text/0188-server-components.md}{\texttt{ React Server Components}} (typically in Next.\+js 13 and above). It can lead to unexpected bugs and privacy issues for your users. For more details, see \href{https://github.com/pmndrs/zustand/discussions/2200}{\texttt{ \#2200}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ useDogStore\ =\ create(()\ =>\ (\{\ paw:\ true,\ snout:\ true,\ fur:\ true\ \}))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Getting\ non-\/reactive\ fresh\ state}
+\DoxyCodeLine{const\ paw\ =\ useDogStore.getState().paw}
+\DoxyCodeLine{//\ Listening\ to\ all\ changes,\ fires\ synchronously\ on\ every\ change}
+\DoxyCodeLine{const\ unsub1\ =\ useDogStore.subscribe(console.log)}
+\DoxyCodeLine{//\ Updating\ state,\ will\ trigger\ listeners}
+\DoxyCodeLine{useDogStore.setState(\{\ paw:\ false\ \})}
+\DoxyCodeLine{//\ Unsubscribe\ listeners}
+\DoxyCodeLine{unsub1()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ You\ can\ of\ course\ use\ the\ hook\ as\ you\ always\ would}
+\DoxyCodeLine{function\ Component()\ \{}
+\DoxyCodeLine{\ \ const\ paw\ =\ useDogStore((state)\ =>\ state.paw)}
+\DoxyCodeLine{\ \ ...}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36708}{}\doxysubsubsubsection{\texorpdfstring{Using subscribe with selector}{Using subscribe with selector}}\label{readme.md_autotoc_md36708}
+If you need to subscribe with a selector, {\ttfamily subscribe\+With\+Selector} middleware will help.
+
+With this middleware {\ttfamily subscribe} accepts an additional signature\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{subscribe(selector,\ callback,\ options?:\ \{\ equalityFn,\ fireImmediately\ \}):\ Unsubscribe}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ subscribeWithSelector\ \}\ from\ 'zustand/middleware'}
+\DoxyCodeLine{const\ useDogStore\ =\ create(}
+\DoxyCodeLine{\ \ subscribeWithSelector(()\ =>\ (\{\ paw:\ true,\ snout:\ true,\ fur:\ true\ \})),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Listening\ to\ selected\ changes,\ in\ this\ case\ when\ "{}paw"{}\ changes}
+\DoxyCodeLine{const\ unsub2\ =\ useDogStore.subscribe((state)\ =>\ state.paw,\ console.log)}
+\DoxyCodeLine{//\ Subscribe\ also\ exposes\ the\ previous\ value}
+\DoxyCodeLine{const\ unsub3\ =\ useDogStore.subscribe(}
+\DoxyCodeLine{\ \ (state)\ =>\ state.paw,}
+\DoxyCodeLine{\ \ (paw,\ previousPaw)\ =>\ console.log(paw,\ previousPaw),}
+\DoxyCodeLine{)}
+\DoxyCodeLine{//\ Subscribe\ also\ supports\ an\ optional\ equality\ function}
+\DoxyCodeLine{const\ unsub4\ =\ useDogStore.subscribe(}
+\DoxyCodeLine{\ \ (state)\ =>\ [state.paw,\ state.fur],}
+\DoxyCodeLine{\ \ console.log,}
+\DoxyCodeLine{\ \ \{\ equalityFn:\ shallow\ \},}
+\DoxyCodeLine{)}
+\DoxyCodeLine{//\ Subscribe\ and\ fire\ immediately}
+\DoxyCodeLine{const\ unsub5\ =\ useDogStore.subscribe((state)\ =>\ state.paw,\ console.log,\ \{}
+\DoxyCodeLine{\ \ fireImmediately:\ true,}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36709}{}\doxysubsubsection{\texorpdfstring{Using zustand without React}{Using zustand without React}}\label{readme.md_autotoc_md36709}
+Zustand core can be imported and used without the React dependency. The only difference is that the create function does not return a hook, but the API utilities.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createStore\ \}\ from\ 'zustand/vanilla'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ store\ =\ createStore((set)\ =>\ ...)}
+\DoxyCodeLine{const\ \{\ getState,\ setState,\ subscribe,\ getInitialState\ \}\ =\ store}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ store}
+
+\end{DoxyCode}
+
+
+You can use a vanilla store with {\ttfamily use\+Store} hook available since v4.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ useStore\ \}\ from\ 'zustand'}
+\DoxyCodeLine{import\ \{\ vanillaStore\ \}\ from\ './vanillaStore'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useBoundStore\ =\ (selector)\ =>\ useStore(vanillaStore,\ selector)}
+
+\end{DoxyCode}
+
+
+\+:warning\+: Note that middlewares that modify {\ttfamily set} or {\ttfamily get} are not applied to {\ttfamily get\+State} and {\ttfamily set\+State}.\hypertarget{readme.md_autotoc_md36710}{}\doxysubsubsection{\texorpdfstring{Transient updates (for often occurring state-\/changes)}{Transient updates (for often occurring state-\/changes)}}\label{readme.md_autotoc_md36710}
+The subscribe function allows components to bind to a state-\/portion without forcing re-\/render on changes. Best combine it with use\+Effect for automatic unsubscribe on unmount. This can make a \href{https://codesandbox.io/s/peaceful-johnson-txtws}{\texttt{ drastic}} performance impact when you are allowed to mutate the view directly.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ useScratchStore\ =\ create((set)\ =>\ (\{\ scratches:\ 0,\ ...\ \}))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Component\ =\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Fetch\ initial\ state}
+\DoxyCodeLine{\ \ const\ scratchRef\ =\ useRef(useScratchStore.getState().scratches)}
+\DoxyCodeLine{\ \ //\ Connect\ to\ the\ store\ on\ mount,\ disconnect\ on\ unmount,\ catch\ state-\/changes\ in\ a\ reference}
+\DoxyCodeLine{\ \ useEffect(()\ =>\ useScratchStore.subscribe(}
+\DoxyCodeLine{\ \ \ \ state\ =>\ (scratchRef.current\ =\ state.scratches)}
+\DoxyCodeLine{\ \ ),\ [])}
+\DoxyCodeLine{\ \ ...}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36711}{}\doxysubsubsection{\texorpdfstring{Sick of reducers and changing nested states? Use Immer!}{Sick of reducers and changing nested states? Use Immer!}}\label{readme.md_autotoc_md36711}
+Reducing nested structures is tiresome. Have you tried \href{https://github.com/mweststrate/immer}{\texttt{ immer}}?
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ produce\ \}\ from\ 'immer'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useLushStore\ =\ create((set)\ =>\ (\{}
+\DoxyCodeLine{\ \ lush:\ \{\ forest:\ \{\ contains:\ \{\ a:\ 'bear'\ \}\ \}\ \},}
+\DoxyCodeLine{\ \ clearForest:\ ()\ =>}
+\DoxyCodeLine{\ \ \ \ set(}
+\DoxyCodeLine{\ \ \ \ \ \ produce((state)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ state.lush.forest.contains\ =\ null}
+\DoxyCodeLine{\ \ \ \ \ \ \}),}
+\DoxyCodeLine{\ \ \ \ ),}
+\DoxyCodeLine{\}))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ clearForest\ =\ useLushStore((state)\ =>\ state.clearForest)}
+\DoxyCodeLine{clearForest()}
+
+\end{DoxyCode}
+
+
+\href{./docs/guides/updating-state.md\#with-immer}{\texttt{ Alternatively, there are some other solutions.}}\hypertarget{readme.md_autotoc_md36712}{}\doxysubsubsection{\texorpdfstring{Persist middleware}{Persist middleware}}\label{readme.md_autotoc_md36712}
+You can persist your store\textquotesingle{}s data using any kind of storage.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ create\ \}\ from\ 'zustand'}
+\DoxyCodeLine{import\ \{\ persist,\ createJSONStorage\ \}\ from\ 'zustand/middleware'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useFishStore\ =\ create(}
+\DoxyCodeLine{\ \ persist(}
+\DoxyCodeLine{\ \ \ \ (set,\ get)\ =>\ (\{}
+\DoxyCodeLine{\ \ \ \ \ \ fishes:\ 0,}
+\DoxyCodeLine{\ \ \ \ \ \ addAFish:\ ()\ =>\ set(\{\ fishes:\ get().fishes\ +\ 1\ \}),}
+\DoxyCodeLine{\ \ \ \ \}),}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ name:\ 'food-\/storage',\ //\ name\ of\ the\ item\ in\ the\ storage\ (must\ be\ unique)}
+\DoxyCodeLine{\ \ \ \ \ \ storage:\ createJSONStorage(()\ =>\ sessionStorage),\ //\ (optional)\ by\ default,\ 'localStorage'\ is\ used}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ),}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+See the full documentation for this middleware.\hypertarget{readme.md_autotoc_md36713}{}\doxysubsubsection{\texorpdfstring{Immer middleware}{Immer middleware}}\label{readme.md_autotoc_md36713}
+Immer is available as middleware too.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ create\ \}\ from\ 'zustand'}
+\DoxyCodeLine{import\ \{\ immer\ \}\ from\ 'zustand/middleware/immer'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useBeeStore\ =\ create(}
+\DoxyCodeLine{\ \ immer((set)\ =>\ (\{}
+\DoxyCodeLine{\ \ \ \ bees:\ 0,}
+\DoxyCodeLine{\ \ \ \ addBees:\ (by)\ =>}
+\DoxyCodeLine{\ \ \ \ \ \ set((state)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ state.bees\ +=\ by}
+\DoxyCodeLine{\ \ \ \ \ \ \}),}
+\DoxyCodeLine{\ \ \})),}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36714}{}\doxysubsubsection{\texorpdfstring{Can\textquotesingle{}t live without redux-\/like reducers and action types?}{Can\textquotesingle{}t live without redux-\/like reducers and action types?}}\label{readme.md_autotoc_md36714}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ types\ =\ \{\ increase:\ 'INCREASE',\ decrease:\ 'DECREASE'\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ reducer\ =\ (state,\ \{\ type,\ by\ =\ 1\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ switch\ (type)\ \{}
+\DoxyCodeLine{\ \ \ \ case\ types.increase:}
+\DoxyCodeLine{\ \ \ \ \ \ return\ \{\ grumpiness:\ state.grumpiness\ +\ by\ \}}
+\DoxyCodeLine{\ \ \ \ case\ types.decrease:}
+\DoxyCodeLine{\ \ \ \ \ \ return\ \{\ grumpiness:\ state.grumpiness\ -\/\ by\ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useGrumpyStore\ =\ create((set)\ =>\ (\{}
+\DoxyCodeLine{\ \ grumpiness:\ 0,}
+\DoxyCodeLine{\ \ dispatch:\ (args)\ =>\ set((state)\ =>\ reducer(state,\ args)),}
+\DoxyCodeLine{\}))}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ dispatch\ =\ useGrumpyStore((state)\ =>\ state.dispatch)}
+\DoxyCodeLine{dispatch(\{\ type:\ types.increase,\ by:\ 2\ \})}
+
+\end{DoxyCode}
+
+
+Or, just use our redux-\/middleware. It wires up your main-\/reducer, sets the initial state, and adds a dispatch function to the state itself and the vanilla API.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ redux\ \}\ from\ 'zustand/middleware'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useGrumpyStore\ =\ create(redux(reducer,\ initialState))}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36715}{}\doxysubsubsection{\texorpdfstring{Redux devtools}{Redux devtools}}\label{readme.md_autotoc_md36715}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ devtools\ \}\ from\ 'zustand/middleware'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Usage\ with\ a\ plain\ action\ store,\ it\ will\ log\ actions\ as\ "{}setState"{}}
+\DoxyCodeLine{const\ usePlainStore\ =\ create(devtools((set)\ =>\ ...))}
+\DoxyCodeLine{//\ Usage\ with\ a\ redux\ store,\ it\ will\ log\ full\ action\ types}
+\DoxyCodeLine{const\ useReduxStore\ =\ create(devtools(redux(reducer,\ initialState)))}
+
+\end{DoxyCode}
+
+
+One redux devtools connection for multiple stores
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ devtools\ \}\ from\ 'zustand/middleware'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Usage\ with\ a\ plain\ action\ store,\ it\ will\ log\ actions\ as\ "{}setState"{}}
+\DoxyCodeLine{const\ usePlainStore1\ =\ create(devtools((set)\ =>\ ...,\ \{\ name,\ store:\ storeName1\ \}))}
+\DoxyCodeLine{const\ usePlainStore2\ =\ create(devtools((set)\ =>\ ...,\ \{\ name,\ store:\ storeName2\ \}))}
+\DoxyCodeLine{//\ Usage\ with\ a\ redux\ store,\ it\ will\ log\ full\ action\ types}
+\DoxyCodeLine{const\ useReduxStore\ =\ create(devtools(redux(reducer,\ initialState)),\ ,\ \{\ name,\ store:\ storeName3\ \})}
+\DoxyCodeLine{const\ useReduxStore\ =\ create(devtools(redux(reducer,\ initialState)),\ ,\ \{\ name,\ store:\ storeName4\ \})}
+
+\end{DoxyCode}
+
+
+Assigning different connection names will separate stores in redux devtools. This also helps group different stores into separate redux devtools connections.
+
+devtools takes the store function as its first argument, optionally you can name the store or configure \href{https://github.com/zalmoxisus/redux-devtools-extension/blob/master/docs/API/Arguments.md\#serialize}{\texttt{ serialize}} options with a second argument.
+
+Name store\+: {\ttfamily devtools(..., \{name\+: "{}\+My\+Store"{}\})}, which will create a separate instance named "{}\+My\+Store"{} in the devtools.
+
+Serialize options\+: {\ttfamily devtools(..., \{ serialize\+: \{ options\+: true \} \})}.\hypertarget{readme.md_autotoc_md36716}{}\doxysubsubsubsubsection{\texorpdfstring{Logging Actions}{Logging Actions}}\label{readme.md_autotoc_md36716}
+devtools will only log actions from each separated store unlike in a typical {\itshape combined reducers} redux store. See an approach to combining stores \href{https://github.com/pmndrs/zustand/issues/163}{\texttt{ https\+://github.\+com/pmndrs/zustand/issues/163}}
+
+You can log a specific action type for each {\ttfamily set} function by passing a third parameter\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ useBearStore\ =\ create(devtools((set)\ =>\ (\{}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{\ \ eatFish:\ ()\ =>\ set(}
+\DoxyCodeLine{\ \ \ \ (prev)\ =>\ (\{\ fishes:\ prev.fishes\ >\ 1\ ?\ prev.fishes\ -\/\ 1\ :\ 0\ \}),}
+\DoxyCodeLine{\ \ \ \ undefined,}
+\DoxyCodeLine{\ \ \ \ 'bear/eatFish'}
+\DoxyCodeLine{\ \ ),}
+\DoxyCodeLine{\ \ ...}
+
+\end{DoxyCode}
+
+
+You can also log the action\textquotesingle{}s type along with its payload\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{...}
+\DoxyCodeLine{addFishes:\ (count)\ =>\ set(}
+\DoxyCodeLine{\ \ (prev)\ =>\ (\{\ fishes:\ prev.fishes\ +\ count\ \}),}
+\DoxyCodeLine{\ \ undefined,}
+\DoxyCodeLine{\ \ \{\ type:\ 'bear/addFishes',\ count,\ \}}
+\DoxyCodeLine{),}
+\DoxyCodeLine{...}
+
+\end{DoxyCode}
+
+
+If an action type is not provided, it is defaulted to "{}anonymous"{}. You can customize this default value by providing an {\ttfamily anonymous\+Action\+Type} parameter\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{devtools(...,\ \{\ anonymousActionType:\ 'unknown',\ ...\ \})}
+
+\end{DoxyCode}
+
+
+If you wish to disable devtools (on production for instance). You can customize this setting by providing the {\ttfamily enabled} parameter\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{devtools(...,\ \{\ enabled:\ false,\ ...\ \})}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36717}{}\doxysubsubsection{\texorpdfstring{React context}{React context}}\label{readme.md_autotoc_md36717}
+The store created with {\ttfamily create} doesn\textquotesingle{}t require context providers. In some cases, you may want to use contexts for dependency injection or if you want to initialize your store with props from a component. Because the normal store is a hook, passing it as a normal context value may violate the rules of hooks.
+
+The recommended method available since v4 is to use the vanilla store.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createContext,\ useContext\ \}\ from\ 'react'}
+\DoxyCodeLine{import\ \{\ createStore,\ useStore\ \}\ from\ 'zustand'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ store\ =\ createStore(...)\ //\ vanilla\ store\ without\ hooks}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ StoreContext\ =\ createContext()}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ App\ =\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <StoreContext.Provider\ value=\{store\}>}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ </StoreContext.Provider>}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Component\ =\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ const\ store\ =\ useContext(StoreContext)}
+\DoxyCodeLine{\ \ const\ slice\ =\ useStore(store,\ selector)}
+\DoxyCodeLine{\ \ ...}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36718}{}\doxysubsubsection{\texorpdfstring{Type\+Script Usage}{Type\+Script Usage}}\label{readme.md_autotoc_md36718}
+Basic typescript usage doesn\textquotesingle{}t require anything special except for writing {\ttfamily create\texorpdfstring{$<$}{<}State\texorpdfstring{$>$}{>}()(...)} instead of {\ttfamily create(...)}...
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ create\ \}\ from\ 'zustand'}
+\DoxyCodeLine{import\ \{\ devtools,\ persist\ \}\ from\ 'zustand/middleware'}
+\DoxyCodeLine{import\ type\ \{\}\ from\ '@redux-\/devtools/extension'\ //\ required\ for\ devtools\ typing}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ BearState\ \{}
+\DoxyCodeLine{\ \ bears:\ number}
+\DoxyCodeLine{\ \ increase:\ (by:\ number)\ =>\ void}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ useBearStore\ =\ create<BearState>()(}
+\DoxyCodeLine{\ \ devtools(}
+\DoxyCodeLine{\ \ \ \ persist(}
+\DoxyCodeLine{\ \ \ \ \ \ (set)\ =>\ (\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ bears:\ 0,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ increase:\ (by)\ =>\ set((state)\ =>\ (\{\ bears:\ state.bears\ +\ by\ \})),}
+\DoxyCodeLine{\ \ \ \ \ \ \}),}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ name:\ 'bear-\/storage',}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ),}
+\DoxyCodeLine{\ \ ),}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+A more complete Type\+Script guide is here.\hypertarget{readme.md_autotoc_md36719}{}\doxysubsubsection{\texorpdfstring{Best practices}{Best practices}}\label{readme.md_autotoc_md36719}
+
+\begin{DoxyItemize}
+\item You may wonder how to organize your code for better maintenance\+: Splitting the store into separate slices.
+\item Recommended usage for this unopinionated library\+: Flux inspired practice.
+\item Calling actions outside a React event handler in pre-\/\+React 18.
+\item Testing
+\item For more, have a look \href{./docs/}{\texttt{ in the docs folder}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md36720}{}\doxysubsubsection{\texorpdfstring{Third-\/\+Party Libraries}{Third-\/\+Party Libraries}}\label{readme.md_autotoc_md36720}
+Some users may want to extend Zustand\textquotesingle{}s feature set which can be done using third-\/party libraries made by the community. For information regarding third-\/party libraries with Zustand, visit the doc.\hypertarget{readme.md_autotoc_md36721}{}\doxysubsubsection{\texorpdfstring{Comparison with other libraries}{Comparison with other libraries}}\label{readme.md_autotoc_md36721}
+
+\begin{DoxyItemize}
+\item \href{https://docs.pmnd.rs/zustand/getting-started/comparison}{\texttt{ Difference between zustand and other state management libraries for React}} 
+\end{DoxyItemize}

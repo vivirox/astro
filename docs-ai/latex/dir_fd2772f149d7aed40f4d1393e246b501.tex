@@ -1,0 +1,60 @@
+\doxysection{node\+\_\+modules/remark-\/smartypants Directory Reference}
+\hypertarget{dir_fd2772f149d7aed40f4d1393e246b501}{}\label{dir_fd2772f149d7aed40f4d1393e246b501}\index{node\_modules/remark-\/smartypants Directory Reference@{node\_modules/remark-\/smartypants Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/remark-smartypants}{\texttt{ }} \href{https://www.npmjs.com/package/remark-smartypants}{\texttt{ }}
+
+\href{https://remark.js.org}{\texttt{ remark}} plugin to implement \href{https://daringfireball.net/projects/smartypants}{\texttt{ Smarty\+Pants}}. Now with 100\% more ESM!\hypertarget{readme.md_autotoc_md29256}{}\doxysubsection{\texorpdfstring{Installing}{Installing}}\label{readme.md_autotoc_md29256}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ using\ npm}
+\DoxyCodeLine{npm\ install\ remark-\/smartypants}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ using\ yarn}
+\DoxyCodeLine{yarn\ add\ remark-\/smartypants}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29257}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md29257}
+Example using \mbox{[}remark\mbox{]}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ remark\ from\ "{}remark"{};}
+\DoxyCodeLine{import\ smartypants\ from\ "{}remark-\/smartypants"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ await\ remark().use(smartypants).process("{}\#\ <<Hello\ World!>>"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(result));}
+\DoxyCodeLine{//\ \#\ «Hello\ World!»}
+
+\end{DoxyCode}
+
+
+I created this plugin because I wanted to add Smarty\+Pants to \mbox{[}MDX\mbox{]}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ mdx\ from\ "{}@mdx-\/js/mdx"{};}
+\DoxyCodeLine{import\ smartypants\ from\ "{}remark-\/smartypants"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ result\ =\ await\ mdx("{}\#\ -\/-\/-\/Hello\ World!-\/-\/-\/"{},\ \{}
+\DoxyCodeLine{\ \ remarkPlugins:\ [smartypants],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Note that angle quotes in the former example ({\ttfamily \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<}...\texorpdfstring{$>$}{>}\texorpdfstring{$>$}{>}}) are probably impossible in MDX because there they are invalid syntax.
+
+This plugin uses \href{https://github.com/retextjs/retext-smartypants}{\texttt{ retext-\/smartypants}} under the hood, so it takes the same options\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ result\ =\ await\ remark()}
+\DoxyCodeLine{\ \ .use(smartypants,\ \{\ dashes:\ "{}oldschool"{}\ \})}
+\DoxyCodeLine{\ \ .process("{}en\ dash\ (-\/-\/),\ em\ dash\ (-\/-\/-\/)"{});}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29258}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md29258}
+\href{./LICENSE}{\texttt{ MIT License, Copyright (c) Matija Marohnić}} 

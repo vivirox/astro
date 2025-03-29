@@ -1,0 +1,86 @@
+\doxysection{node\+\_\+modules/package-\/manager-\/detector Directory Reference}
+\hypertarget{dir_9d2f395ce11d2345a54d33a3af5dfd4e}{}\label{dir_9d2f395ce11d2345a54d33a3af5dfd4e}\index{node\_modules/package-\/manager-\/detector Directory Reference@{node\_modules/package-\/manager-\/detector Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/package-manager-detector}{\texttt{ }} \href{https://npmjs.com/package/package-manager-detector}{\texttt{ }} \href{https://www.jsdocs.io/package/package-manager-detector}{\texttt{ }} \href{https://github.com/antfu-collective/package-manager-detector/blob/main/LICENSE}{\texttt{ }}
+
+Package manager detector is based on lock files, the {\ttfamily package.\+json} {\ttfamily package\+Manager} field, and installation metadata to detect the package manager used in a project.
+
+It supports {\ttfamily npm}, {\ttfamily yarn}, {\ttfamily pnpm}, {\ttfamily deno}, and {\ttfamily bun}.\hypertarget{README.md_autotoc_md25489}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md25489}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ pnpm}
+\DoxyCodeLine{pnpm\ add\ package-\/manager-\/detector}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ i\ package-\/manager-\/detector}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ package-\/manager-\/detector}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25490}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md25490}
+To check the file system for which package manager is used\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ detect\ \}\ from\ 'package-\/manager-\/detector/detect'}
+
+\end{DoxyCode}
+
+
+or to get the currently running package manager\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ getUserAgent\ \}\ from\ 'package-\/manager-\/detector/detect'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25491}{}\doxysubsection{\texorpdfstring{Customize Detection Strategy}{Customize Detection Strategy}}\label{README.md_autotoc_md25491}
+By default, the {\ttfamily detect} API searches through the current directory for lock files, and if none exists, it looks for the {\ttfamily package\+Manager} field in {\ttfamily package.\+json}. If that also doesn\textquotesingle{}t exist, it will check the {\ttfamily dev\+Engines.\+package\+Manager} field in {\ttfamily package.\+json}. If all strategies couldn\textquotesingle{}t detect the package manager, it\textquotesingle{}ll crawl upwards to the parent directory and repeat the detection process until it reaches the root directory.
+
+The strategies can be configured through {\ttfamily detect}\textquotesingle{}s {\ttfamily strategies} option with the following accepted strategies\+:
+
+
+\begin{DoxyItemize}
+\item `\textquotesingle{}lockfile'{\ttfamily \+: Look up for lock files. -\/}\textquotesingle{}package\+Manager-\/field\textquotesingle{}{\ttfamily \+: Look up for the}package\+Manager{\ttfamily field in package.\+json. -\/}\textquotesingle{}dev\+Engines-\/field\textquotesingle{}{\ttfamily \+: Look up for the}dev\+Engines.\+package\+Manager{\ttfamily field in package.\+json. -\/}\textquotesingle{}install-\/metadata\textquotesingle{}\`{}\+: Look up for installation metadata added by package managers.
+\end{DoxyItemize}
+
+The order of the strategies can also be changed to prioritize one strategy over another. For example, if you prefer to detect the package manager used for installation\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ detect\ \}\ from\ 'package-\/manager-\/detector/detect'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pm\ =\ await\ detect(\{}
+\DoxyCodeLine{\ \ strategies:\ ['install-\/metadata',\ 'lockfile',\ 'packageManager-\/field',\ 'devEngines-\/field']}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25492}{}\doxysubsection{\texorpdfstring{Agents and Commands}{Agents and Commands}}\label{README.md_autotoc_md25492}
+This package includes package manager agents and their corresponding commands for\+:
+
+
+\begin{DoxyItemize}
+\item `\textquotesingle{}agent'{\ttfamily -\/ run the package manager with no arguments -\/}\textquotesingle{}install\textquotesingle{}{\ttfamily -\/ install dependencies -\/}\textquotesingle{}frozen\textquotesingle{}{\ttfamily -\/ install dependencies using frozen lockfile -\/}\textquotesingle{}add\textquotesingle{}{\ttfamily -\/ add dependencies -\/}\textquotesingle{}uninstall\textquotesingle{}{\ttfamily -\/ remove dependencies -\/}\textquotesingle{}global\textquotesingle{}{\ttfamily -\/ install global packages -\/}\textquotesingle{}global\+\_\+uninstall\textquotesingle{}{\ttfamily -\/ remove global packages -\/}\textquotesingle{}upgrade\textquotesingle{}{\ttfamily -\/ upgrade dependencies -\/}\textquotesingle{}upgrade-\/interactive\textquotesingle{}{\ttfamily -\/ upgrade dependencies interactively\+: not available for}npm{\ttfamily and}bun{\ttfamily  -\/}\textquotesingle{}execute\textquotesingle{}{\ttfamily -\/ download \& execute binary scripts -\/}\textquotesingle{}execute-\/local\textquotesingle{}{\ttfamily -\/ execute binary scripts (from package locally installed) -\/}\textquotesingle{}run\textquotesingle{}{\ttfamily -\/ run}package.\+json\`{} scripts
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25493}{}\doxysubsubsection{\texorpdfstring{Using Agents and Commands}{Using Agents and Commands}}\label{README.md_autotoc_md25493}
+A {\ttfamily resolve\+Command} function is provided to resolve the command for a specific agent.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveCommand\ \}\ from\ 'package-\/manager-\/detector/commands'}
+\DoxyCodeLine{import\ \{\ detect\ \}\ from\ 'package-\/manager-\/detector/detect'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pm\ =\ await\ detect()}
+\DoxyCodeLine{if\ (!pm)}
+\DoxyCodeLine{\ \ throw\ new\ Error('Could\ not\ detect\ package\ manager')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ command,\ args\ \}\ =\ resolveCommand(pm.agent,\ 'add',\ ['@antfu/ni'])\ //\ \{\ command:\ 'pnpm',\ args:\ ['add',\ '@antfu/ni']\ \}}
+\DoxyCodeLine{console.log(`Detected\ the\ \$\{pm.agent\}\ package\ manager.\ You\ can\ run\ a\ install\ with\ \$\{command\}\ \$\{args.join('\ ')\}`)}
+
+\end{DoxyCode}
+
+
+You can check the source code or the \href{https://www.jsdocs.io/package/package-manager-detector}{\texttt{ JSDocs}} for more information.\hypertarget{README.md_autotoc_md25494}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md25494}
+\href{./LICENSE}{\texttt{ MIT}} License © 2020-\/PRESENT \href{https://github.com/antfu}{\texttt{ Anthony Fu}} 

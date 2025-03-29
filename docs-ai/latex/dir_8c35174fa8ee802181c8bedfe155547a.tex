@@ -1,0 +1,216 @@
+\doxysection{node\+\_\+modules/astro-\/loader-\/github-\/releases Directory Reference}
+\hypertarget{dir_8c35174fa8ee802181c8bedfe155547a}{}\label{dir_8c35174fa8ee802181c8bedfe155547a}\index{node\_modules/astro-\/loader-\/github-\/releases Directory Reference@{node\_modules/astro-\/loader-\/github-\/releases Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/astro-loader-github-releases}{\texttt{ }} \href{https://www.jsdocs.io/package/astro-loader-github-releases}{\texttt{ }} \href{https://npmjs.com/package/astro-loader-github-releases}{\texttt{ }} \href{https://astro-antfustyle-theme.vercel.app/releases/}{\texttt{ }}
+
+This package provides a Git\+Hub releases loader for Astro. The loader supports two configurable modes, allowing you to load public Git\+Hub releases either from a user\textquotesingle{}s commit history or a list of repositories.\hypertarget{README.md_autotoc_md8322}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md8322}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/D\ astro-\/loader-\/github-\/releases}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8323}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md8323}
+To use the Astro loader, ensure Astro version {\ttfamily \texorpdfstring{$^\wedge$}{\string^}4.14.\+0 \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} \texorpdfstring{$^\wedge$}{\string^}5.0.\+0}. For {\ttfamily \texorpdfstring{$^\wedge$}{\string^}4.14.\+0}, enable the \href{https://v4.docs.astro.build/en/reference/configuration-reference/\#experimentalcontentlayer}{\texttt{ experimental content layer}} in {\ttfamily astro.\+config.\+ts}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ experimental:\ \{}
+\DoxyCodeLine{\ \ \ \ contentLayer:\ true,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+In {\ttfamily src/content/config.\+ts} (for {\ttfamily \texorpdfstring{$^\wedge$}{\string^}4.14.\+0}) or {\ttfamily src/content.\+config.\+ts} (for {\ttfamily \texorpdfstring{$^\wedge$}{\string^}5.0.\+0}), import and configure the loader to define a new content collection\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defineCollection\ \}\ from\ "{}astro:content"{}}
+\DoxyCodeLine{import\ \{\ githubReleasesLoader\ \}\ from\ "{}astro-\/loader-\/github-\/releases"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ githubReleases\ =\ defineCollection(\{}
+\DoxyCodeLine{\ \ loader:\ githubReleasesLoader(\{}
+\DoxyCodeLine{\ \ \ \ mode:\ /*\ 'userCommit'\ or\ 'repoList'\ */,}
+\DoxyCodeLine{\ \ \ \ //\ Config\ options\ based\ on\ \`{}mode`.\ See\ below.}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ const\ collections\ =\ \{\ githubReleases\ \}}
+
+\end{DoxyCode}
+
+
+\href{https://docs.astro.build/en/guides/content-collections/\#querying-collections}{\texttt{ Query the content collection}} like any other Astro content collection to render the loaded releases\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{import\ \{\ getCollection\ \}\ from\ "{}astro:content"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ releases\ =\ await\ getCollection("{}githubReleases"{})}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{<!-\/-\/\ Entries'\ Zod\ Schema\ varies\ by\ \`{}loadMode`.\ See\ below.\ -\/-\/>}
+\DoxyCodeLine{<ul>}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ releases.map((release)\ =>\ (}
+\DoxyCodeLine{\ \ \ \ \ \ <li>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <a\ href=\{release.data.url\}>\{release.data.repoNameWithOwner\}\ -\/\ \{release.data.tagName\}</a>}
+\DoxyCodeLine{\ \ \ \ \ \ </li>}
+\DoxyCodeLine{\ \ \ \ ))}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{</ul>}
+
+\end{DoxyCode}
+
+
+{\ttfamily repo\+List} mode supports rendering release content\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{import\ \{\ getCollection\ \}\ from\ "{}astro:content"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ releases\ =\ await\ getCollection("{}githubReleases"{})}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{<!-\/-\/\ entryReturnType:\ 'byRelease'\ -\/-\/>}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ releases.map(async\ (release)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ \{\ Content\ \}\ =\ await\ render(release)}
+\DoxyCodeLine{\ \ \ \ return\ <Content\ />}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{import\ \{\ getCollection\ \}\ from\ "{}astro:content"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ repos\ =\ await\ getCollection("{}githubReleases"{})}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{<!-\/-\/\ entryReturnType:\ 'byRepository'\ -\/-\/>}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ repos.map((repo)\ =>\ (}
+\DoxyCodeLine{\ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ <p>\{repo.data.repo\}</p>}
+\DoxyCodeLine{\ \ \ \ \ \ \{repo.data.releases.map((release)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ <section\ set:html=\{release.descriptionHTML\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \})\}}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ ))}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+To update the data, trigger a site rebuild (e.\+g., using a third-\/party cron job service), as \href{https://docs.astro.build/en/reference/content-loader-reference/\#object-loaders}{\texttt{ the loader fetches data only at build time}}.\hypertarget{README.md_autotoc_md8324}{}\doxysubsection{\texorpdfstring{Configuration}{Configuration}}\label{README.md_autotoc_md8324}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option (\texorpdfstring{$\ast$}{*} required)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type (default)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option (\texorpdfstring{$\ast$}{*} required)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type (default)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-3}
+\endhead
+{\ttfamily mode}\texorpdfstring{$\ast$}{*}   &`\textquotesingle{}user\+Commit' $|$ \textquotesingle{}repo\+List\textquotesingle{}`   &Specifies loading releases from a user’s commit messages or a repository list, with mode-\/specific options and \mbox{[}entries' Zod Schema\mbox{]}(\#schema).    \\\cline{1-3}
+{\ttfamily clear\+Store}   &{\ttfamily boolean} (default\+: {\ttfamily false})   &Whether to clear the \href{https://docs.astro.build/en/reference/content-loader-reference/\#store}{\texttt{ store}} scoped to the collection before storing newly loaded data.   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md8325}{}\doxysubsubsection{\texorpdfstring{{\ttfamily user\+Commit} Mode}{{\ttfamily user\+Commit} Mode}}\label{README.md_autotoc_md8325}
+The loader uses the Git\+Hub REST API (\href{https://docs.github.com/en/rest/activity/events?apiVersion=2022-11-28\#list-public-events-for-a-user}{\texttt{ {\ttfamily GET /users/\{username\}/events/public}}}) to fetch up to 300 events from the past 90 days (with a latency of 30 seconds to 6 hours). If {\ttfamily tag\+Name\+Regex} matches, the commit will be considered a release. This mode is useful for users who want to show their recent release activities. The {\ttfamily mode\+Config} options includes\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option (\texorpdfstring{$\ast$}{*} required)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type (default)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option (\texorpdfstring{$\ast$}{*} required)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type (default)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-3}
+\endhead
+{\ttfamily username}\texorpdfstring{$\ast$}{*}   &{\ttfamily string}   &The unique username used to identify a specific Git\+Hub account.    \\\cline{1-3}
+{\ttfamily tag\+Name\+Regex}   &{\ttfamily string}（default\+: `\textquotesingle{}v?(\textbackslash{}d+\textbackslash{}.\textbackslash{}d+\textbackslash{}.\textbackslash{}d+(?\+:-\/\mbox{[}\textbackslash{}w.\mbox{]}+)?)(?\+:\textbackslash{}s$|$\$)'{\ttfamily ) \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} Regular expression for matching tag name in commit messages. The first capturing group in the regex will be used as}version\+Num{\ttfamily field. \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Odd"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}keyword{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}string{\ttfamily （default\+:}\textquotesingle{}release\textquotesingle{}`）   &The keyword to filter push events' commit messages for releases. Can be empty, meaning no filtering.    \\\cline{1-3}
+{\ttfamily branches}   &{\ttfamily string\mbox{[}\mbox{]}} (default\+: `\mbox{[}\textquotesingle{}refs/heads/main', \textquotesingle{}refs/heads/master\textquotesingle{}, \textquotesingle{}refs/heads/latest\textquotesingle{}, \textquotesingle{}refs/heads/stable\textquotesingle{}, \textquotesingle{}refs/heads/release\textquotesingle{}, \textquotesingle{}refs/heads/dev\textquotesingle{}\mbox{]}\`{})   &The branches to monitor for push events. Filters out activities from other forks based on these refs.   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md8326}{}\doxysubsubsection{\texorpdfstring{{\ttfamily repo\+List} Mode}{{\ttfamily repo\+List} Mode}}\label{README.md_autotoc_md8326}
+The loader fetches Git\+Hub releases from specified repositories via the Git\+Hub Graph\+QL API, requiring a Git\+Hub PAT with {\ttfamily repo} scope for authentication. By default, it retrieves all releases from the listed repositories, ideal for displaying data grouped by repository. The {\ttfamily mode\+Config} options includes\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option (\texorpdfstring{$\ast$}{*} required)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type (default)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Option (\texorpdfstring{$\ast$}{*} required)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Type (default)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endhead
+{\ttfamily repos}\texorpdfstring{$\ast$}{*}   &{\ttfamily string\mbox{[}\mbox{]}}   &The repositories from which to load releases, each formatted as `\textquotesingle{}owner/repo'{\ttfamily . \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}since\+Date{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}Date $|$ string{\ttfamily (If}since\+Date{\ttfamily and}months\+Back{\ttfamily are unspecified, load all) \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} The date from which to start loading releases. See supported date string formats \mbox{[}here\mbox{]}(\href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date}{\texttt{ https\+://developer.\+mozilla.\+org/en-\/\+US/docs/\+Web/\+Java\+Script/\+Reference/\+Global\+\_\+\+Objects/\+Date}}\#date\+\_\+time\+\_\+string\+\_\+format). For example\+:\texorpdfstring{$<$}{<}br\texorpdfstring{$>$}{>}}"{}2024-\/11-\/01\+T00\+:00\+:00.\+000\+Z"{}{\ttfamily \texorpdfstring{$<$}{<}br\texorpdfstring{$>$}{>}}"{}2024-\/11-\/01"{}{\ttfamily \texorpdfstring{$<$}{<}br\texorpdfstring{$>$}{>}}"{}01/11/24"{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Odd"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}months\+Back{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}number{\ttfamily (If}since\+Date{\ttfamily and}months\+Back{\ttfamily are unspecified, load all) \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} The number of recent months to load releases, including the current month. \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\+If both}months\+Back{\ttfamily and}since\+Date{\ttfamily are specified, the more recent date will be used\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}. \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}entry\+Return\+Type{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}by\+Release\textquotesingle{} $|$ \textquotesingle{}by\+Repository\textquotesingle{}{\ttfamily (default\+:}\textquotesingle{}by\+Repository\textquotesingle{}`)   &Determines whether entries are returned per repository or per individual release item. This option influences the entries' Zod Schema.    \\\cline{1-4}
+{\ttfamily github\+Token}   &{\ttfamily string} (Defaults to the {\ttfamily GITHUB\+\_\+\+TOKEN} environment variable)   &A Git\+Hub PAT with at least {\ttfamily repo} scope permissions. {\bfseries{If configured here, keep confidential and avoid public exposure}}. See \href{https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens\#creating-a-personal-access-token-classic}{\texttt{ how to create one}} and \href{https://docs.astro.build/en/guides/environment-variables/\#setting-environment-variables}{\texttt{ configure env vars in an Astro project}}.   \\\cline{1-4}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md8327}{}\doxysubsection{\texorpdfstring{Schema}{Schema}}\label{README.md_autotoc_md8327}
+The Zod schema for the entries in the loaded collection is defined below.\hypertarget{README.md_autotoc_md8328}{}\doxysubsubsection{\texorpdfstring{{\ttfamily user\+Commit} Mode}{{\ttfamily user\+Commit} Mode}}\label{README.md_autotoc_md8328}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ ReleaseByIdFromUserSchema\ =\ z.object(\{}
+\DoxyCodeLine{\ \ id:\ z.string(),}
+\DoxyCodeLine{\ \ url:\ z.string(),}
+\DoxyCodeLine{\ \ tagName:\ z.string(),}
+\DoxyCodeLine{\ \ versionNum:\ z.string(),}
+\DoxyCodeLine{\ \ repoOwner:\ z.string(),}
+\DoxyCodeLine{\ \ repoName:\ z.string(),}
+\DoxyCodeLine{\ \ repoNameWithOwner:\ z.string(),}
+\DoxyCodeLine{\ \ repoUrl:\ z.string(),}
+\DoxyCodeLine{\ \ commitMessage:\ z.string(),}
+\DoxyCodeLine{\ \ commitSha:\ z.string(),}
+\DoxyCodeLine{\ \ commitUrl:\ z.string(),}
+\DoxyCodeLine{\ \ actorLogin:\ z.string(),}
+\DoxyCodeLine{\ \ actorAvatarUrl:\ z.string(),}
+\DoxyCodeLine{\ \ isOrg:\ z.boolean(),}
+\DoxyCodeLine{\ \ orgLogin:\ z.string().optional(),}
+\DoxyCodeLine{\ \ orgAvatarUrl:\ z.string().optional(),}
+\DoxyCodeLine{\ \ createdAt:\ z.string(),}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8329}{}\doxysubsubsection{\texorpdfstring{{\ttfamily repo\+List} Mode}{{\ttfamily repo\+List} Mode}}\label{README.md_autotoc_md8329}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ entryReturnType:\ 'byRelease'}
+\DoxyCodeLine{const\ ReleaseByIdFromReposSchema\ =\ z.object(\{}
+\DoxyCodeLine{\ \ id:\ z.string(),}
+\DoxyCodeLine{\ \ url:\ z.string(),}
+\DoxyCodeLine{\ \ name:\ z.string(),}
+\DoxyCodeLine{\ \ tagName:\ z.string(),}
+\DoxyCodeLine{\ \ versionNum:\ z.string(),}
+\DoxyCodeLine{\ \ description:\ z.string(),}
+\DoxyCodeLine{\ \ descriptionHTML:\ z.string(),}
+\DoxyCodeLine{\ \ repoOwner:\ z.string(),}
+\DoxyCodeLine{\ \ repoName:\ z.string(),}
+\DoxyCodeLine{\ \ repoNameWithOwner:\ z.string(),}
+\DoxyCodeLine{\ \ repoUrl:\ z.string(),}
+\DoxyCodeLine{\ \ repoStargazerCount:\ z.number(),}
+\DoxyCodeLine{\ \ repoIsInOrganization:\ z.boolean(),}
+\DoxyCodeLine{\ \ publishedAt:\ z.string(),}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ entryReturnType:\ 'byRepository'}
+\DoxyCodeLine{const\ ReleaseByRepoFromReposSchema\ =\ z.object(\{}
+\DoxyCodeLine{\ \ repo:\ z.string(),}
+\DoxyCodeLine{\ \ releases:\ z.array(ReleaseByIdFromReposSchema),}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+Astro automatically applies these schemas to generate Type\+Script interfaces, enabling autocompletion and type-\/checking for collection queries. If you \href{https://docs.astro.build/en/guides/content-collections/\#defining-the-collection-schema}{\texttt{ customize the collection schema}}, ensure compatibility with the loader\textquotesingle{}s built-\/in Zod schema to prevent errors. For additional fields, consider opening an issue.\hypertarget{README.md_autotoc_md8330}{}\doxysubsection{\texorpdfstring{Changelog}{Changelog}}\label{README.md_autotoc_md8330}
+See \href{https://github.com/lin-stephanie/astro-loaders/blob/main/packages/astro-loader-github-releases/CHANGELOG.md}{\texttt{ CHANGELOG.\+md}} for the change history of this loader.\hypertarget{README.md_autotoc_md8331}{}\doxysubsection{\texorpdfstring{Contribution}{Contribution}}\label{README.md_autotoc_md8331}
+If you see any errors or room for improvement, feel free to open an \href{https://github.com/lin-stephanie/astro-loaders/issues}{\texttt{ issues}} or \href{https://github.com/lin-stephanie/astro-loaders/pulls}{\texttt{ pull request}} . Thank you in advance for contributing! ❤️ 

@@ -1,0 +1,479 @@
+\doxysection{node\+\_\+modules/mdast-\/util-\/to-\/markdown Directory Reference}
+\hypertarget{dir_534cbe2bd7c54baf2431083c7ad7a05a}{}\label{dir_534cbe2bd7c54baf2431083c7ad7a05a}\index{node\_modules/mdast-\/util-\/to-\/markdown Directory Reference@{node\_modules/mdast-\/util-\/to-\/markdown Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/mdast-util-to-markdown/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/mdast-util-to-markdown}{\texttt{ }} \href{https://www.npmjs.com/package/mdast-util-to-markdown}{\texttt{ }} \href{https://bundlejs.com/?q=mdast-util-to-markdown}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}}} utility that turns a syntax tree into markdown.\hypertarget{readme.md_autotoc_md22762}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22762}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}to\+Markdown(tree\mbox{[}, options\mbox{]})\`{}
+\item \`{}default\+Handlers\`{}
+\item \`{}\+Construct\+Name\`{}
+\item \`{}\+Construct\+Name\+Map\`{}
+\item \`{}\+Handle\`{}
+\item \`{}\+Handlers\`{}
+\item \`{}\+Info\`{}
+\item \`{}\+Join\`{}
+\item \doxylink{README.md_map}{\`{}\+Map\`{}}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Safe\+Config\`{}
+\item \`{}\+State\`{}
+\item \`{}\+Tracker\`{}
+\item \`{}\+Unsafe\`{}
+\end{DoxyItemize}
+\item List of extensions
+\item Syntax
+\item Syntax tree
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22763}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22763}
+This package is a utility that takes an \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}} syntax tree as input and turns it into serialized markdown.
+
+This utility is a low level project. It’s used in \href{https://github.com/remarkjs/remark/tree/main/packages/remark-stringify}{\texttt{ {\ttfamily remark-\/stringify}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md22764}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md22764}
+If you want to handle syntax trees manually, use this. For an easier time processing content, use the {\bfseries{\href{https://github.com/remarkjs/remark}{\texttt{ remark}}}} ecosystem instead.
+
+You can combine this utility with other utilities to add syntax extensions. Notable examples that deeply integrate with it are \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}}, \href{https://github.com/syntax-tree/mdast-util-mdx}{\texttt{ {\ttfamily mdast-\/util-\/mdx}}}, \href{https://github.com/syntax-tree/mdast-util-frontmatter}{\texttt{ {\ttfamily mdast-\/util-\/frontmatter}}}, \href{https://github.com/syntax-tree/mdast-util-math}{\texttt{ {\ttfamily mdast-\/util-\/math}}}, and \href{https://github.com/syntax-tree/mdast-util-directive}{\texttt{ {\ttfamily mdast-\/util-\/directive}}}.\hypertarget{readme.md_autotoc_md22765}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22765}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mdast-\/util-\/to-\/markdown}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{toMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/to-\/markdown@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{toMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/to-\/markdown@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22766}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22766}
+Say our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ @import\ \{Root\}\ from\ 'mdast'}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{toMarkdown\}\ from\ 'mdast-\/util-\/to-\/markdown'}
+\DoxyCodeLine{}
+\DoxyCodeLine{/**\ @type\ \{Root\}\ */}
+\DoxyCodeLine{const\ tree\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'blockquote',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'thematicBreak'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '-\/\ a\(\backslash\)nb\ !'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'link',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ url:\ 'example.com',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'd'\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(toMarkdown(tree))}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{>\ ***}
+\DoxyCodeLine{>}
+\DoxyCodeLine{>\ \(\backslash\)-\/\ a}
+\DoxyCodeLine{>\ b\ \(\backslash\)![d](example.com)}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: observe the properly escaped characters which would otherwise turn into a list and image respectively. \end{quote}
+\hypertarget{readme.md_autotoc_md22767}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22767}
+This package exports the identifiers \`{}default\+Handlers\`{} and \`{}to\+Markdown\`{}. There is no default export.\hypertarget{readme.md_autotoc_md22768}{}\doxysubsubsection{\texorpdfstring{{\ttfamily to\+Markdown(tree\mbox{[}, options\mbox{]})}}{{\ttfamily to\+Markdown(tree\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md22768}
+Turn an {\bfseries{\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}}} syntax tree into markdown.\hypertarget{readme.md_autotoc_md22769}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22769}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/syntax-tree/mdast\#nodes}{\texttt{ {\ttfamily Node}}}) — tree to serialize
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22770}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22770}
+Serialized markdown representing {\ttfamily tree} ({\ttfamily string}).\hypertarget{readme.md_autotoc_md22771}{}\doxysubsubsection{\texorpdfstring{{\ttfamily default\+Handlers}}{{\ttfamily default\+Handlers}}}\label{readme.md_autotoc_md22771}
+Default (Common\+Mark) handlers (\`{}\+Handlers\`{}).\hypertarget{readme.md_autotoc_md22772}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Construct\+Name}}{{\ttfamily Construct\+Name}}}\label{readme.md_autotoc_md22772}
+Construct names for things generated by {\ttfamily mdast-\/util-\/to-\/markdown} (Type\+Script type).
+
+This is an enum of strings, each being a semantic label, useful to know when serializing whether we’re for example in a double ({\ttfamily "{}$<$/tt$>$) or single (`'\`{}) quoted title.  @subparagraph autotoc\+\_\+md22773 Type  @icode\{ts\}  type Construct\+Name = Construct\+Name\+Map\mbox{[}keyof Construct\+Name\+Map\mbox{]} @endicode   @subsection autotoc\+\_\+md22774 $<$tt$>$\+Construct\+Name\+Map$<$/tt$>$  \+Interface of registered constructs (\+Type\+Script type).  @subparagraph autotoc\+\_\+md22775 Type  @icode\{ts\}  interface Construct\+Name\+Map \{ /\texorpdfstring{$\ast$}{*} see code \texorpdfstring{$\ast$}{*}/ \} @endicode   \+When working on extensions that use new constructs, extend the corresponding interface to register its name\+:  @icode\{ts\}  declare module \textquotesingle{}mdast-\/util-\/to-\/markdown\textquotesingle{} \{   interface Construct\+Name\+Map \{     // Register a new construct name (value is used, key should match it).     gfm\+Strikethrough\+: \textquotesingle{}gfm\+Strikethrough\textquotesingle{}   \} \} @endicode   @subsection autotoc\+\_\+md22776 $<$tt$>$\+Handle$<$/tt$>$  \+Handle a particular node (\+Type\+Script type).  @subparagraph autotoc\+\_\+md22777 Parameters  \texorpdfstring{$\ast$}{*} $<$tt$>$node$<$/tt$>$ ($<$tt$>$any$<$/tt$>$)   — expected mdast node \texorpdfstring{$\ast$}{*} $<$tt$>$parent$<$/tt$>$ ($<$a href="{}\href{https://github.com/syntax-tree/mdast\#nodes}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#nodes}}"{} $>$$<$tt$>$\+Node$<$/tt$>$$<$/a$>$, optional)   — parent of $<$tt$>$node$<$/tt$>$ \texorpdfstring{$\ast$}{*} $<$tt$>$state$<$/tt$>$ (@ref "{}state"{} "{}\`{}\+State\`{}"{})   — info passed around about the current state \texorpdfstring{$\ast$}{*} $<$tt$>$info$<$/tt$>$ (@ref "{}info"{} "{}\`{}\+Info\`{}"{})   — info on the surrounding of the node that is serialized  @subparagraph autotoc\+\_\+md22778 Returns  \+Serialized markdown representing $<$tt$>$node$<$/tt$>$ ($<$tt$>$string$<$/tt$>$).  @subsection autotoc\+\_\+md22779 $<$tt$>$\+Handlers$<$/tt$>$  \+Handle particular nodes (\+Type\+Script type).  \+Each key is a node type (`\+Node\mbox{[}\textquotesingle{}type'\mbox{]}$<$tt$>$), each value its corresponding handler (\mbox{[}$<$/tt$>$\+Handle\`{}\mbox{]}@ref "{}handle"{} "{}api-\/handle"{}).  @subparagraph autotoc\+\_\+md22780 Type  @icode\{ts\}  type Handlers = Record$<$\+Node\mbox{[}\textquotesingle{}type\textquotesingle{}\mbox{]}, Handle$>$ @endicode   @subsection autotoc\+\_\+md22781 $<$tt$>$\+Info$<$/tt$>$  \+Info on the surrounding of the node that is serialized (\+Type\+Script type).  @subparagraph autotoc\+\_\+md22782 Fields  \texorpdfstring{$\ast$}{*} $<$tt$>$now$<$/tt$>$ ($<$a href="{}\href{https://github.com/syntax-tree/unist\#point}{\texttt{ https\+://github.\+com/syntax-\/tree/unist\#point}}"{} $>$$<$tt$>$\+Point$<$/tt$>$$<$/a$>$)   — current point \texorpdfstring{$\ast$}{*} $<$tt$>$line\+Shift$<$/tt$>$ ($<$tt$>$number$<$/tt$>$)   — number of columns each line will be shifted by wrapping nodes \texorpdfstring{$\ast$}{*} $<$tt$>$before$<$/tt$>$ ($<$tt$>$string$<$/tt$>$)   — characters before this (guaranteed to be one, can be more) \texorpdfstring{$\ast$}{*} $<$tt$>$after$<$/tt$>$ ($<$tt$>$string$<$/tt$>$)   — characters after this (guaranteed to be one, can be more)  @subsection autotoc\+\_\+md22783 $<$tt$>$\+Join$<$/tt$>$  \+How to join two blocks (\+Type\+Script type).  “\+Blocks” are typically joined by one blank line. \+Sometimes it’s nicer to have them flush next to each other, yet other times they cannot occur together at all.  \+Join functions receive two adjacent siblings and their parent and what they return defines how many blank lines to use between them.  @subparagraph autotoc\+\_\+md22784 Parameters  \texorpdfstring{$\ast$}{*} $<$tt$>$left$<$/tt$>$ ($<$a href="{}\href{https://github.com/syntax-tree/mdast\#nodes}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#nodes}}"{} $>$$<$tt$>$\+Node$<$/tt$>$$<$/a$>$)   — first of two adjacent siblings \texorpdfstring{$\ast$}{*} $<$tt$>$right$<$/tt$>$ ($<$a href="{}\href{https://github.com/syntax-tree/mdast\#nodes}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#nodes}}"{} $>$$<$tt$>$\+Node$<$/tt$>$$<$/a$>$)   — second of two adjacent siblings \texorpdfstring{$\ast$}{*} $<$tt$>$parent$<$/tt$>$ ($<$a href="{}\href{https://github.com/syntax-tree/mdast\#nodes}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#nodes}}"{} $>$$<$tt$>$\+Node$<$/tt$>$$<$/a$>$)   — parent of the two siblings \texorpdfstring{$\ast$}{*} $<$tt$>$state$<$/tt$>$ (@ref "{}state"{} "{}\`{}\+State\`{}"{}) — info passed around about the current state}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22785}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Returns}}{{\ttfamily Returns}}}\label{readme.md_autotoc_md22785}
+{\ttfamily }
+
+{\ttfamily How many blank lines to use between the siblings ({\ttfamily boolean}, {\ttfamily number}, optional).}
+
+{\ttfamily Where {\ttfamily true} is as passing {\ttfamily 1} and {\ttfamily false} means the nodes cannot be joined by a blank line, such as two adjacent block quotes or indented code after a list, in which case a comment will be injected to break them up\+:}
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{>\ Quote\ 1}
+\DoxyCodeLine{}
+\DoxyCodeLine{<!-\/-\/-\/-\/>}
+\DoxyCodeLine{}
+\DoxyCodeLine{>\ Quote\ 2}
+
+\end{DoxyCode}
+}
+
+{\ttfamily \begin{quote}
+👉 {\bfseries{Note}}\+: abusing this feature will break markdown. One such example is when returning {\ttfamily 0} for two paragraphs, which will result in the text running together, and in the future to be seen as one paragraph. \end{quote}
+}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22786}{}\doxysubsubsection{\texorpdfstring{{\ttfamily {\ttfamily Map}}}{{\ttfamily {\ttfamily Map}}}}\label{readme.md_autotoc_md22786}
+{\ttfamily }
+
+{\ttfamily Map function to pad a single line (Type\+Script type).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22787}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Parameters}}{{\ttfamily Parameters}}}\label{readme.md_autotoc_md22787}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item {\ttfamily value} ({\ttfamily string}) — a single line of serialized markdown
+\item {\ttfamily line} ({\ttfamily number}) — line number relative to the fragment
+\item {\ttfamily blank} ({\ttfamily boolean}) — whether the line is considered blank in markdown
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22788}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Returns}}{{\ttfamily Returns}}}\label{readme.md_autotoc_md22788}
+{\ttfamily }
+
+{\ttfamily Padded line ({\ttfamily string}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22789}{}\doxysubsubsection{\texorpdfstring{{\ttfamily {\ttfamily Options}}}{{\ttfamily {\ttfamily Options}}}}\label{readme.md_autotoc_md22789}
+{\ttfamily }
+
+{\ttfamily Configuration (Type\+Script type).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22790}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily Fields}}{{\ttfamily Fields}}}\label{readme.md_autotoc_md22790}
+{\ttfamily }
+
+{\ttfamily The following fields influence how markdown is serialized.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22791}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+bullet}}}{{\ttfamily {\ttfamily options.\+bullet}}}}\label{readme.md_autotoc_md22791}
+{\ttfamily }
+
+{\ttfamily Marker to use for bullets of items in unordered lists (`'{\itshape \textquotesingle{}{\ttfamily ,}\textquotesingle{}+\textquotesingle{}{\ttfamily , or}\textquotesingle{}-\/\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}}\textquotesingle{}\`{}).}
+
+{\ttfamily There are three cases where the primary bullet cannot be used\+:}
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item when three or more list items are on their own, the last one is empty, and {\ttfamily bullet} is also a valid {\ttfamily rule}\+: {\ttfamily \texorpdfstring{$\ast$}{*} -\/ +}; this would turn into a thematic break if serialized with three primary bullets; {\ttfamily bullet\+Other} is used for the last item
+\item when a thematic break is the first child of a list item and {\ttfamily bullet} is the same character as {\ttfamily rule}\+: {\ttfamily -\/ \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}; this would turn into a single thematic break if serialized with primary bullets; {\ttfamily bullet\+Other} is used for the item
+\item when two unordered lists appear next to each other\+: {\ttfamily \texorpdfstring{$\ast$}{*} a\textbackslash{}n-\/ b}; {\ttfamily bullet\+Other} is used for such lists
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22792}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+bullet\+Other}}}{{\ttfamily {\ttfamily options.\+bullet\+Other}}}}\label{readme.md_autotoc_md22792}
+{\ttfamily }
+
+{\ttfamily Marker to use in certain cases where the primary bullet doesn’t work (`'{\itshape \textquotesingle{}{\ttfamily , }\textquotesingle{}+\textquotesingle{}{\ttfamily , or}\textquotesingle{}-\/\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}-\/\textquotesingle{}{\ttfamily when}bullet{\ttfamily is}\textquotesingle{}}\textquotesingle{}{\ttfamily ,}\textquotesingle{}\texorpdfstring{$\ast$}{*}\textquotesingle{}\`{} otherwise).}
+
+{\ttfamily Cannot be equal to {\ttfamily bullet}.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22793}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+bullet\+Ordered}}}{{\ttfamily {\ttfamily options.\+bullet\+Ordered}}}}\label{readme.md_autotoc_md22793}
+{\ttfamily }
+
+{\ttfamily Marker to use for bullets of items in ordered lists (`'.\textquotesingle{}{\ttfamily or}\textquotesingle{})\textquotesingle{}{\ttfamily , default\+: }\textquotesingle{}.\textquotesingle{}\`{}).}
+
+{\ttfamily There is one case where the primary bullet for ordered items cannot be used\+:}
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item when two ordered lists appear next to each other\+: {\ttfamily 1. a\textbackslash{}n2) b}; to solve that, `'.\textquotesingle{}{\ttfamily will be used when}bullet\+Ordered{\ttfamily is}\textquotesingle{})\textquotesingle{}{\ttfamily , and}\textquotesingle{}.\textquotesingle{}\`{} otherwise
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22794}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+close\+Atx}}}{{\ttfamily {\ttfamily options.\+close\+Atx}}}}\label{readme.md_autotoc_md22794}
+{\ttfamily }
+
+{\ttfamily Whether to add the same number of number signs ({\ttfamily \#}) at the end of an ATX heading as the opening sequence ({\ttfamily boolean}, default\+: {\ttfamily false}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22795}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+emphasis}}}{{\ttfamily {\ttfamily options.\+emphasis}}}}\label{readme.md_autotoc_md22795}
+{\ttfamily }
+
+{\ttfamily Marker to use for emphasis (`'{\itshape \textquotesingle{}{\ttfamily or}\textquotesingle{}\+\_\+\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}}\textquotesingle{}\`{}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22796}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+fence}}}{{\ttfamily {\ttfamily options.\+fence}}}}\label{readme.md_autotoc_md22796}
+{\ttfamily }
+
+{\ttfamily Marker to use for fenced code ({\ttfamily \textquotesingle{}\`{}\textquotesingle{}} or `'\texorpdfstring{$\sim$}{\string~}\textquotesingle{}{\ttfamily , default\+:}`'`'\`{}\`{}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22797}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+fences}}}{{\ttfamily {\ttfamily options.\+fences}}}}\label{readme.md_autotoc_md22797}
+{\ttfamily }
+
+{\ttfamily Whether to use fenced code always ({\ttfamily boolean}, default\+: {\ttfamily true}). The default is to use fenced code if there is a language defined, if the code is empty, or if it starts or ends in blank lines.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22798}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+increment\+List\+Marker}}}{{\ttfamily {\ttfamily options.\+increment\+List\+Marker}}}}\label{readme.md_autotoc_md22798}
+{\ttfamily }
+
+{\ttfamily Whether to increment the counter of ordered lists items ({\ttfamily boolean}, default\+: {\ttfamily true}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22799}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+list\+Item\+Indent}}}{{\ttfamily {\ttfamily options.\+list\+Item\+Indent}}}}\label{readme.md_autotoc_md22799}
+{\ttfamily }
+
+{\ttfamily How to indent the content of list items (`\textquotesingle{}mixed'{\ttfamily ,}\textquotesingle{}one\textquotesingle{}{\ttfamily , or}\textquotesingle{}tab\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}one\textquotesingle{}{\ttfamily ). Either with the size of the bullet plus one space (when}\textquotesingle{}one\textquotesingle{}{\ttfamily ), a tab stop (}\textquotesingle{}tab\textquotesingle{}{\ttfamily ), or depending on the item and its parent list (}\textquotesingle{}mixed\textquotesingle{}{\ttfamily , uses}\textquotesingle{}one\textquotesingle{}{\ttfamily  if the item and list are tight and}\textquotesingle{}tab\textquotesingle{}\`{} otherwise).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22800}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+quote}}}{{\ttfamily {\ttfamily options.\+quote}}}}\label{readme.md_autotoc_md22800}
+{\ttfamily }
+
+{\ttfamily Marker to use for titles (`'"{}\textquotesingle{}\`{} or \`{}"{}\textquotesingle{}"{}\`{}, default\+: \`{}\textquotesingle{}"{}\textquotesingle{}\`{}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22801}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+resource\+Link}}}{{\ttfamily {\ttfamily options.\+resource\+Link}}}}\label{readme.md_autotoc_md22801}
+{\ttfamily }
+
+{\ttfamily Whether to always use resource links ({\ttfamily boolean}, default\+: {\ttfamily false}). The default is to use autolinks ({\ttfamily \texorpdfstring{$<$}{<}\href{https://example.com}{\texttt{ https\+://example.\+com}}\texorpdfstring{$>$}{>}}) when possible and resource links ({\ttfamily \mbox{[}text\mbox{]}(url)}) otherwise.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22802}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+rule}}}{{\ttfamily {\ttfamily options.\+rule}}}}\label{readme.md_autotoc_md22802}
+{\ttfamily }
+
+{\ttfamily Marker to use for thematic breaks (`'{\itshape \textquotesingle{}{\ttfamily ,}\textquotesingle{}-\/\textquotesingle{}{\ttfamily , or}\textquotesingle{}\+\_\+\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}}\textquotesingle{}\`{}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22803}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+rule\+Repetition}}}{{\ttfamily {\ttfamily options.\+rule\+Repetition}}}}\label{readme.md_autotoc_md22803}
+{\ttfamily }
+
+{\ttfamily Number of markers to use for thematic breaks ({\ttfamily number}, default\+: {\ttfamily 3}, min\+: {\ttfamily 3}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22804}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+rule\+Spaces}}}{{\ttfamily {\ttfamily options.\+rule\+Spaces}}}}\label{readme.md_autotoc_md22804}
+{\ttfamily }
+
+{\ttfamily Whether to add spaces between markers in thematic breaks ({\ttfamily boolean}, default\+: {\ttfamily false}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22805}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+setext}}}{{\ttfamily {\ttfamily options.\+setext}}}}\label{readme.md_autotoc_md22805}
+{\ttfamily }
+
+{\ttfamily Whether to use setext headings when possible ({\ttfamily boolean}, default\+: {\ttfamily false}). The default is to always use ATX headings ({\ttfamily \# heading}) instead of setext headings ({\ttfamily heading\textbackslash{}n=======}). Setext headings cannot be used for empty headings or headings with a rank of three or more.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22806}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+strong}}}{{\ttfamily {\ttfamily options.\+strong}}}}\label{readme.md_autotoc_md22806}
+{\ttfamily }
+
+{\ttfamily Marker to use for strong (`'{\itshape \textquotesingle{}{\ttfamily or}\textquotesingle{}\+\_\+\textquotesingle{}{\ttfamily , default\+:}\textquotesingle{}}\textquotesingle{}\`{}).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22807}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+tight\+Definitions}}}{{\ttfamily {\ttfamily options.\+tight\+Definitions}}}}\label{readme.md_autotoc_md22807}
+{\ttfamily }
+
+{\ttfamily Whether to join definitions without a blank line ({\ttfamily boolean}, default\+: {\ttfamily false}).}
+
+{\ttfamily The default is to add blank lines between any flow (“block”) construct. Turning this option on is a shortcut for a \`{}\+Join\`{} function like so\+:}
+
+{\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ joinTightDefinitions(left,\ right)\ \{}
+\DoxyCodeLine{\ \ if\ (left.type\ ===\ 'definition'\ \&\&\ right.type\ ===\ 'definition')\ \{}
+\DoxyCodeLine{\ \ \ \ return\ 0}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22808}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+handlers}}}{{\ttfamily {\ttfamily options.\+handlers}}}}\label{readme.md_autotoc_md22808}
+{\ttfamily }
+
+{\ttfamily Handle particular nodes (\`{}\+Handlers\`{}, optional).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22809}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+join}}}{{\ttfamily {\ttfamily options.\+join}}}}\label{readme.md_autotoc_md22809}
+{\ttfamily }
+
+{\ttfamily How to join blocks (\`{}\+Array\texorpdfstring{$<$}{<}Join\texorpdfstring{$>$}{>}\`{}, optional).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22810}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+unsafe}}}{{\ttfamily {\ttfamily options.\+unsafe}}}}\label{readme.md_autotoc_md22810}
+{\ttfamily }
+
+{\ttfamily Schemas that define when characters cannot occur (\`{}\+Array\texorpdfstring{$<$}{<}Unsafe\texorpdfstring{$>$}{>}\`{}, optional).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22811}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily {\ttfamily options.\+extensions}}}{{\ttfamily {\ttfamily options.\+extensions}}}}\label{readme.md_autotoc_md22811}
+{\ttfamily }
+
+{\ttfamily List of extensions ({\ttfamily Array\texorpdfstring{$<$}{<}Options\texorpdfstring{$>$}{>}}, default\+: {\ttfamily \mbox{[}\mbox{]}}). Each extension is an object with the same interface as {\ttfamily Options} itself.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22812}{}\doxysubsubsection{\texorpdfstring{{\ttfamily {\ttfamily Safe\+Config}}}{{\ttfamily {\ttfamily Safe\+Config}}}}\label{readme.md_autotoc_md22812}
+{\ttfamily }
+
+{\ttfamily Configuration passed to {\ttfamily state.\+safe} (Type\+Script type).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22813}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Fields}}{{\ttfamily Fields}}}\label{readme.md_autotoc_md22813}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item {\ttfamily before} ({\ttfamily string}) — characters before this (guaranteed to be one, can be more)
+\item {\ttfamily after} ({\ttfamily string}) — characters after this (guaranteed to be one, can be more)
+\item {\ttfamily encode} ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, optional) — extra characters that {\itshape must} be encoded (as character references) instead of escaped (character escapes). Only ASCII punctuation will use character escapes, so you never need to pass non-\/\+ASCII-\/punctuation here
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22814}{}\doxysubsubsection{\texorpdfstring{{\ttfamily {\ttfamily State}}}{{\ttfamily {\ttfamily State}}}}\label{readme.md_autotoc_md22814}
+{\ttfamily }
+
+{\ttfamily Info passed around about the current state (Type\+Script type).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22815}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Fields}}{{\ttfamily Fields}}}\label{readme.md_autotoc_md22815}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item {\ttfamily stack} (\`{}\+Array\texorpdfstring{$<$}{<}Construct\+Name\texorpdfstring{$>$}{>}\`{}) — stack of constructs we’re in
+\item {\ttfamily index\+Stack} ({\ttfamily Array\texorpdfstring{$<$}{<}number\texorpdfstring{$>$}{>}}) — positions of child nodes in their parents
+\item {\ttfamily association\+Id} ({\ttfamily (node\+: Association) =\texorpdfstring{$>$}{>} string}) — get an identifier from an association to match it to others (see \href{https://github.com/syntax-tree/mdast\#association}{\texttt{ {\ttfamily Association}}})
+\item {\ttfamily enter} ({\ttfamily (construct\+: Construct\+Name) =\texorpdfstring{$>$}{>} () =\texorpdfstring{$>$}{>} undefined}) — enter a construct (returns a corresponding exit function) (see \`{}\+Construct\+Name\`{})
+\item {\ttfamily indent\+Lines} ({\ttfamily (value\+: string, map\+: Map) =\texorpdfstring{$>$}{>} string}) — pad serialized markdown (see \doxylink{README.md_map}{\`{}\+Map\`{}})
+\item {\ttfamily compile\+Pattern} ({\ttfamily (pattern\+: Unsafe) =\texorpdfstring{$>$}{>} Reg\+Exp}) — compile an unsafe pattern to a regex (see \`{}\+Unsafe\`{})
+\item {\ttfamily container\+Flow} ({\ttfamily (parent\+: Node, info\+: Info) =\texorpdfstring{$>$}{>} string}) — serialize flow children (see \`{}\+Info\`{})
+\item {\ttfamily container\+Phrasing} ({\ttfamily (parent\+: Node, info\+: Info) =\texorpdfstring{$>$}{>} string}) — serialize phrasing children (see \`{}\+Info\`{})
+\item {\ttfamily create\+Tracker} ({\ttfamily (info\+: Info) =\texorpdfstring{$>$}{>} Tracker}) — track positional info in the output (see \`{}\+Info\`{}, \`{}\+Tracker\`{})
+\item {\ttfamily safe} ({\ttfamily (value\+: string, config\+: Safe\+Config) =\texorpdfstring{$>$}{>} string}) — make a string safe for embedding (see \`{}\+Safe\+Config\`{})
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}) — applied user configuration
+\item {\ttfamily unsafe} (\`{}\+Array\texorpdfstring{$<$}{<}Unsafe\texorpdfstring{$>$}{>}\`{}) — applied unsafe patterns
+\item {\ttfamily join} (\`{}\+Array\texorpdfstring{$<$}{<}Join\texorpdfstring{$>$}{>}\`{}) — applied join handlers
+\item {\ttfamily handle} (\`{}\+Handle\`{}) — call the configured handler for the given node
+\item {\ttfamily handlers} (\`{}\+Handlers\`{}) — applied handlers
+\item {\ttfamily bullet\+Current} ({\ttfamily string} or {\ttfamily undefined}) — list marker currently in use
+\item {\ttfamily bullet\+Last\+Used} ({\ttfamily string} or {\ttfamily undefined}) — list marker previously in use
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22816}{}\doxysubsubsection{\texorpdfstring{{\ttfamily {\ttfamily Tracker}}}{{\ttfamily {\ttfamily Tracker}}}}\label{readme.md_autotoc_md22816}
+{\ttfamily }
+
+{\ttfamily Track positional info in the output (Type\+Script type).}
+
+{\ttfamily This info isn’t used yet but such functionality will allow line wrapping, source maps, etc.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22817}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Fields}}{{\ttfamily Fields}}}\label{readme.md_autotoc_md22817}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item {\ttfamily current} ({\ttfamily () =\texorpdfstring{$>$}{>} Info}) — get current tracked info
+\item {\ttfamily shift} ({\ttfamily (value\+: number) =\texorpdfstring{$>$}{>} undefined}) — define a relative increased line shift (the typical indent for lines)
+\item {\ttfamily move} ({\ttfamily (value\+: string) =\texorpdfstring{$>$}{>} string}) — move past some generated markdown
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22818}{}\doxysubsubsection{\texorpdfstring{{\ttfamily {\ttfamily Unsafe}}}{{\ttfamily {\ttfamily Unsafe}}}}\label{readme.md_autotoc_md22818}
+{\ttfamily }
+
+{\ttfamily Schema that defines when a character cannot occur (Type\+Script type).}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22819}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily Fields}}{{\ttfamily Fields}}}\label{readme.md_autotoc_md22819}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item {\ttfamily character} ({\ttfamily string}) — single unsafe character
+\item {\ttfamily in\+Construct} (\`{}\+Array\texorpdfstring{$<$}{<}Construct\+Name\texorpdfstring{$>$}{>}\`{}, {\ttfamily Construct\+Name}, optional) — constructs where this is bad
+\item {\ttfamily not\+In\+Construct} (\`{}\+Array\texorpdfstring{$<$}{<}Construct\+Name\texorpdfstring{$>$}{>}\`{}, {\ttfamily Construct\+Name}, optional) — constructs where this is fine again
+\item {\ttfamily before} ({\ttfamily string}, optional) — {\ttfamily character} is bad when this is before it (cannot be used together with {\ttfamily at\+Break})
+\item {\ttfamily after} ({\ttfamily string}, optional) — {\ttfamily character} is bad when this is after it
+\item {\ttfamily at\+Break} ({\ttfamily boolean}, optional) — {\ttfamily character} is bad at a break (cannot be used together with {\ttfamily before})
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22820}{}\doxysubsection{\texorpdfstring{{\ttfamily List of extensions}}{{\ttfamily List of extensions}}}\label{readme.md_autotoc_md22820}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/mdast-util-directive}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/directive}}} — directives
+\item \href{https://github.com/syntax-tree/mdast-util-frontmatter}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/frontmatter}}} — frontmatter (YAML, TOML, more)
+\item \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm}}} — GFM
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-autolink-literal}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/autolink-\/literal}}} — GFM autolink literals
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-footnote}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/footnote}}} — GFM footnotes
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-strikethrough}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/strikethrough}}} — GFM strikethrough
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-table}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/table}}} — GFM tables
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-task-list-item}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/gfm-\/task-\/list-\/item}}} — GFM task list items
+\item \href{https://github.com/syntax-tree/mdast-util-math}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/math}}} — math
+\item \href{https://github.com/syntax-tree/mdast-util-mdx}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdx}}} — MDX
+\item \href{https://github.com/syntax-tree/mdast-util-mdx-expression}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdx-\/expression}}} — MDX expressions
+\item \href{https://github.com/syntax-tree/mdast-util-mdx-jsx}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdx-\/jsx}}} — MDX JSX
+\item \href{https://github.com/syntax-tree/mdast-util-mdxjs-esm}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/mdxjs-\/esm}}} — MDX ESM
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22821}{}\doxysubsection{\texorpdfstring{{\ttfamily Syntax}}{{\ttfamily Syntax}}}\label{readme.md_autotoc_md22821}
+{\ttfamily }
+
+{\ttfamily Markdown is serialized according to Common\+Mark but care is taken to format in such a way that the resulting markdown should work with most markdown parsers. Extensions can add support for custom syntax.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22822}{}\doxysubsection{\texorpdfstring{{\ttfamily Syntax tree}}{{\ttfamily Syntax tree}}}\label{readme.md_autotoc_md22822}
+{\ttfamily }
+
+{\ttfamily The syntax tree is \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22823}{}\doxysubsection{\texorpdfstring{{\ttfamily Types}}{{\ttfamily Types}}}\label{readme.md_autotoc_md22823}
+{\ttfamily }
+
+{\ttfamily This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Construct\+Name\`{}, \`{}\+Construct\+Name\+Map\`{}, \`{}\+Handle\`{}, \`{}\+Handlers\`{}, \`{}\+Info\`{}, \`{}\+Join\`{}, \doxylink{README.md_map}{\`{}\+Map\`{}}, \doxylink{README.md_options}{\`{}\+Options\`{}}, \`{}\+Safe\+Config\`{}, \`{}\+State\`{}, and \`{}\+Unsafe\`{}.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22824}{}\doxysubsection{\texorpdfstring{{\ttfamily Compatibility}}{{\ttfamily Compatibility}}}\label{readme.md_autotoc_md22824}
+{\ttfamily }
+
+{\ttfamily Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.}
+
+{\ttfamily When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily mdast-\/util-\/to-\/markdown@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22825}{}\doxysubsection{\texorpdfstring{{\ttfamily Security}}{{\ttfamily Security}}}\label{readme.md_autotoc_md22825}
+{\ttfamily }
+
+{\ttfamily {\ttfamily mdast-\/util-\/to-\/markdown} will do its best to serialize markdown to match the syntax tree, but there are several cases where that is impossible. It’ll do its best, but complete roundtripping is impossible given that any value could be injected into the tree.}
+
+{\ttfamily As markdown is sometimes used for HTML, and improper use of HTML can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack, use of {\ttfamily mdast-\/util-\/to-\/markdown} and parsing it again later could potentially be unsafe. When parsing markdown afterwards and then going to HTML, use something like \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/sanitize}}} to make the tree safe.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22826}{}\doxysubsection{\texorpdfstring{{\ttfamily Related}}{{\ttfamily Related}}}\label{readme.md_autotoc_md22826}
+{\ttfamily }
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily syntax-\/tree/mdast-\/util-\/from-\/markdown}}} — parse markdown to mdast
+\item \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark/micromark}}} — parse markdown
+\item \href{https://github.com/remarkjs/remark}{\texttt{ {\ttfamily remarkjs/remark}}} — process markdown
+\end{DoxyItemize}}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22827}{}\doxysubsection{\texorpdfstring{{\ttfamily Contribute}}{{\ttfamily Contribute}}}\label{readme.md_autotoc_md22827}
+{\ttfamily }
+
+{\ttfamily See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.}
+
+{\ttfamily This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.}
+
+{\ttfamily }\hypertarget{readme.md_autotoc_md22828}{}\doxysubsection{\texorpdfstring{{\ttfamily License}}{{\ttfamily License}}}\label{readme.md_autotoc_md22828}
+{\ttfamily }
+
+{\ttfamily \mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} }

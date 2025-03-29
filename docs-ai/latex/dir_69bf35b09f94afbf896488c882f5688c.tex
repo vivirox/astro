@@ -1,0 +1,211 @@
+\doxysection{node\+\_\+modules/@supabase/storage-\/js Directory Reference}
+\hypertarget{dir_69bf35b09f94afbf896488c882f5688c}{}\label{dir_69bf35b09f94afbf896488c882f5688c}\index{node\_modules/"@supabase/storage-\/js Directory Reference@{node\_modules/"@supabase/storage-\/js Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+JS Client library to interact with Supabase Storage.
+
+
+\begin{DoxyItemize}
+\item Documentation\+: \href{https://supabase.io/docs/reference/javascript/storage-createbucket}{\texttt{ https\+://supabase.\+io/docs/reference/javascript/storage-\/createbucket}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6129}{}\doxysubsection{\texorpdfstring{Quick Start Guide}{Quick Start Guide}}\label{README.md_autotoc_md6129}
+\hypertarget{README.md_autotoc_md6130}{}\doxysubsubsection{\texorpdfstring{Installing the module}{Installing the module}}\label{README.md_autotoc_md6130}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @supabase/storage-\/js}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6131}{}\doxysubsubsection{\texorpdfstring{Connecting to the storage backend}{Connecting to the storage backend}}\label{README.md_autotoc_md6131}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ StorageClient\ \}\ from\ '@supabase/storage-\/js'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ STORAGE\_URL\ =\ 'https://<project\_ref>.supabase.co/storage/v1'}
+\DoxyCodeLine{const\ SERVICE\_KEY\ =\ '<service\_role>'\ //!\ service\ key,\ not\ anon\ key}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ storageClient\ =\ new\ StorageClient(STORAGE\_URL,\ \{}
+\DoxyCodeLine{\ \ apikey:\ SERVICE\_KEY,}
+\DoxyCodeLine{\ \ Authorization:\ \`{}Bearer\ \$\{SERVICE\_KEY\}`,}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md6132}{}\doxysubsubsection{\texorpdfstring{Handling resources}{Handling resources}}\label{README.md_autotoc_md6132}
+\hypertarget{README.md_autotoc_md6133}{}\doxysubsubsubsection{\texorpdfstring{Handling Storage Buckets}{Handling Storage Buckets}}\label{README.md_autotoc_md6133}
+
+\begin{DoxyItemize}
+\item Create a new Storage bucket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.createBucket(}
+\DoxyCodeLine{\ \ 'test\_bucket',\ //\ Bucket\ name\ (must\ be\ unique)}
+\DoxyCodeLine{\ \ \{\ public:\ false\ \}\ //\ Bucket\ options}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+\item Retrieve the details of an existing Storage bucket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.getBucket('test\_bucket')}
+
+\end{DoxyCode}
+
+\item Update a new Storage bucket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.updateBucket(}
+\DoxyCodeLine{\ \ 'test\_bucket',\ //\ Bucket\ name}
+\DoxyCodeLine{\ \ \{\ public:\ false\ \}\ //\ Bucket\ options}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+\item Remove all objects inside a single bucket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.emptyBucket('test\_bucket')}
+
+\end{DoxyCode}
+
+\item Delete an existing bucket (a bucket can\textquotesingle{}t be deleted with existing objects inside it)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.deleteBucket('test\_bucket')}
+
+\end{DoxyCode}
+
+\item Retrieve the details of all Storage buckets within an existing project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.listBuckets()}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6134}{}\doxysubsubsubsection{\texorpdfstring{Handling Files}{Handling Files}}\label{README.md_autotoc_md6134}
+
+\begin{DoxyItemize}
+\item Upload a file to an existing bucket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fileBody\ =\ ...\ //\ load\ your\ file\ here}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.from('bucket').upload('path/to/file',\ fileBody)}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+
+\begin{quote}
+Note\+: ~\newline
+ The path in {\ttfamily data.\+Key} is prefixed by the bucket ID and is not the value which should be passed to the {\ttfamily download} method in order to fetch the file. ~\newline
+ To fetch the file via the {\ttfamily download} method, use {\ttfamily data.\+path} and {\ttfamily data.\+bucket\+Id} as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.from('bucket').upload('/folder/file.txt',\ fileBody)}
+\DoxyCodeLine{//\ check\ for\ errors}
+\DoxyCodeLine{const\ \{\ data2,\ error2\ \}\ =\ await\ storageClient.from(data.bucketId).download(data.path)}
+
+\end{DoxyCode}
+ \end{quote}
+
+
+\begin{quote}
+Note\+: The {\ttfamily upload} method also accepts a map of optional parameters. For a complete list see the \href{https://supabase.com/docs/reference/javascript/storage-from-upload}{\texttt{ Supabase API reference}}. \end{quote}
+
+
+
+\begin{DoxyItemize}
+\item Download a file from an exisiting bucket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.from('bucket').download('path/to/file')}
+
+\end{DoxyCode}
+
+\item List all the files within a bucket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.from('bucket').list('folder')}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+
+\begin{quote}
+Note\+: The {\ttfamily list} method also accepts a map of optional parameters. For a complete list see the \href{https://supabase.com/docs/reference/javascript/storage-from-list}{\texttt{ Supabase API reference}}. \end{quote}
+
+
+
+\begin{DoxyItemize}
+\item Replace an existing file at the specified path with a new one\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fileBody\ =\ ...\ //\ load\ your\ file\ here}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient}
+\DoxyCodeLine{\ \ .from('bucket')}
+\DoxyCodeLine{\ \ .update('path/to/file',\ fileBody)}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+
+\begin{quote}
+Note\+: The {\ttfamily upload} method also accepts a map of optional parameters. For a complete list see the \href{https://supabase.com/docs/reference/javascript/storage-from-upload}{\texttt{ Supabase API reference}}. \end{quote}
+
+
+
+\begin{DoxyItemize}
+\item Move an existing file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient}
+\DoxyCodeLine{\ \ .from('bucket')}
+\DoxyCodeLine{\ \ .move('old/path/to/file',\ 'new/path/to/file')}
+
+\end{DoxyCode}
+
+\item Delete files within the same bucket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.from('bucket').remove(['path/to/file'])}
+
+\end{DoxyCode}
+
+\item Create signed URL to download file without requiring permissions\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ expireIn\ =\ 60}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient}
+\DoxyCodeLine{\ \ .from('bucket')}
+\DoxyCodeLine{\ \ .createSignedUrl('path/to/file',\ expireIn)}
+
+\end{DoxyCode}
+
+\item Retrieve URLs for assets in public buckets\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data,\ error\ \}\ =\ await\ storageClient.from('public-\/bucket').getPublicUrl('path/to/file')}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md6135}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md6135}
+We are building the features of Firebase using enterprise-\/grade, open source products. We support existing communities wherever possible, and if the products don’t exist we build them and open source them ourselves. Thanks to these sponsors who are making the OSS ecosystem better for everyone.
+
+\href{https://github.com/sponsors/supabase}{\texttt{ }} 

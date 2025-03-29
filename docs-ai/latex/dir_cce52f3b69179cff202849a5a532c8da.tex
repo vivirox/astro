@@ -1,0 +1,91 @@
+\doxysection{node\+\_\+modules/array-\/includes Directory Reference}
+\hypertarget{dir_cce52f3b69179cff202849a5a532c8da}{}\label{dir_cce52f3b69179cff202849a5a532c8da}\index{node\_modules/array-\/includes Directory Reference@{node\_modules/array-\/includes Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/es-shims/array-includes/actions}{\texttt{ }} \href{https://app.codecov.io/gh/es-shims/array-includes/}{\texttt{ }} \href{https://david-dm.org/es-shims/array-includes}{\texttt{ }} \href{https://david-dm.org/es-shims/array-includes\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=array-includes}{\texttt{ }}
+
+\href{https://npmjs.org/package/array-includes}{\texttt{ }}
+
+An ES7/\+ES2016 spec-\/compliant {\ttfamily Array.\+prototype.\+includes} shim/polyfill/replacement that works as far down as ES3.
+
+This package implements the \href{https://github.com/es-shims/api}{\texttt{ es-\/shim API}} interface. It works in an ES3-\/supported environment and complies with the proposed \href{https://262.ecma-international.org/6.0/}{\texttt{ spec}}.
+
+Because {\ttfamily Array.\+prototype.\+includes} depends on a receiver (the {\ttfamily this} value), the main export takes the array to operate on as the first argument.
+
+Engines that need this package include\+:
+\begin{DoxyItemize}
+\item IE (all versions)
+\item Safari \texorpdfstring{$<$}{<} 9
+\item Firefox \texorpdfstring{$<$}{<} 43, and 99-\/101
+\item Chrome \texorpdfstring{$<$}{<} 47
+\item Edge \texorpdfstring{$<$}{<} 14
+\item node \texorpdfstring{$<$}{<} 6
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md8074}{}\doxysubsection{\texorpdfstring{Getting started}{Getting started}}\label{README.md_autotoc_md8074}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ array-\/includes}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8075}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md8075}
+Basic usage\+: {\bfseries{includes(array, value\mbox{[}, from\+Index=0\mbox{]})}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ includes\ =\ require('array-\/includes');}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{var\ arr\ =\ [\ 'one',\ 'two'\ ];}
+\DoxyCodeLine{}
+\DoxyCodeLine{includes(arr,\ 'one');\ //\ true}
+\DoxyCodeLine{includes(arr,\ 'three');\ //\ false}
+\DoxyCodeLine{includes(arr,\ 'one',\ 1);\ //\ false}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8076}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md8076}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ arr\ =\ [}
+\DoxyCodeLine{\ \ \ \ 1,}
+\DoxyCodeLine{\ \ \ \ 'foo',}
+\DoxyCodeLine{\ \ \ \ NaN,}
+\DoxyCodeLine{\ \ \ \ -\/0}
+\DoxyCodeLine{];}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(arr.indexOf(0)\ >\ -\/1,\ true);}
+\DoxyCodeLine{assert.equal(arr.indexOf(-\/0)\ >\ -\/1,\ true);}
+\DoxyCodeLine{assert.equal(includes(arr,\ 0),\ true);}
+\DoxyCodeLine{assert.equal(includes(arr,\ -\/0),\ true);}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(arr.indexOf(NaN)\ >\ -\/1,\ false);}
+\DoxyCodeLine{assert.equal(includes(arr,\ NaN),\ true);}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(includes(arr,\ 'foo',\ 0),\ true);}
+\DoxyCodeLine{assert.equal(includes(arr,\ 'foo',\ 1),\ true);}
+\DoxyCodeLine{assert.equal(includes(arr,\ 'foo',\ 2),\ false);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ when\ Array\#includes\ is\ not\ present\ */}
+\DoxyCodeLine{delete\ Array.prototype.includes;}
+\DoxyCodeLine{var\ shimmedIncludes\ =\ includes.shim();}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(shimmedIncludes,\ includes.getPolyfill());}
+\DoxyCodeLine{assert.equal(arr.includes('foo',\ 1),\ includes(arr,\ 'foo',\ 1));}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ when\ Array\#includes\ is\ present\ */}
+\DoxyCodeLine{var\ shimmedIncludes\ =\ includes.shim();}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(shimmedIncludes,\ Array.prototype.includes);}
+\DoxyCodeLine{assert.equal(arr.includes(1,\ 'foo'),\ includes(arr,\ 1,\ 'foo'));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8077}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md8077}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

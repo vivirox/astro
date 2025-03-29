@@ -1,0 +1,322 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/sanitize Directory Reference}
+\hypertarget{dir_e657b5f0970cf06b3c6e38e9bad60708}{}\label{dir_e657b5f0970cf06b3c6e38e9bad60708}\index{node\_modules/hast-\/util-\/sanitize Directory Reference@{node\_modules/hast-\/util-\/sanitize Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-sanitize/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-sanitize}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-sanitize}{\texttt{ }} \href{https://bundlejs.com/?q=hast-util-sanitize}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/hast}{\texttt{ hast}} utility to make trees safe.\hypertarget{readme.md_autotoc_md17169}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md17169}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}default\+Schema\`{}
+\item \`{}sanitize(tree\mbox{[}, options\mbox{]})\`{}
+\item \`{}\+Schema\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17170}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md17170}
+This package is a utility that can make a tree that potentially contains dangerous user content safe for use. It defaults to what Git\+Hub does to clean unsafe markup, but you can change that.\hypertarget{readme.md_autotoc_md17171}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md17171}
+This package is needed whenever you deal with potentially dangerous user content.
+
+The plugin \href{https://github.com/rehypejs/rehype-sanitize}{\texttt{ {\ttfamily rehype-\/sanitize}}} wraps this utility to also sanitize HTML at a higher-\/level (easier) abstraction.\hypertarget{readme.md_autotoc_md17172}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md17172}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/sanitize}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{sanitize\}\ from\ 'https://esm.sh/hast-\/util-\/sanitize@5'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{sanitize\}\ from\ 'https://esm.sh/hast-\/util-\/sanitize@5?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17173}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md17173}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{sanitize\}\ from\ 'hast-\/util-\/sanitize'}
+\DoxyCodeLine{import\ \{toHtml\}\ from\ 'hast-\/util-\/to-\/html'}
+\DoxyCodeLine{import\ \{u\}\ from\ 'unist-\/builder'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ unsafe\ =\ h('div',\ \{onmouseover:\ 'alert("{}alpha"{})'\},\ [}
+\DoxyCodeLine{\ \ h(}
+\DoxyCodeLine{\ \ \ \ 'a',}
+\DoxyCodeLine{\ \ \ \ \{href:\ 'jAva\ script:alert("{}bravo"{})',\ onclick:\ 'alert("{}charlie"{})'\},}
+\DoxyCodeLine{\ \ \ \ 'delta'}
+\DoxyCodeLine{\ \ ),}
+\DoxyCodeLine{\ \ u('text',\ '\(\backslash\)n'),}
+\DoxyCodeLine{\ \ h('script',\ 'alert("{}charlie"{})'),}
+\DoxyCodeLine{\ \ u('text',\ '\(\backslash\)n'),}
+\DoxyCodeLine{\ \ h('img',\ \{src:\ 'x',\ onerror:\ 'alert("{}delta"{})'\}),}
+\DoxyCodeLine{\ \ u('text',\ '\(\backslash\)n'),}
+\DoxyCodeLine{\ \ h('iframe',\ \{src:\ 'javascript:alert("{}echo"{})'\}),}
+\DoxyCodeLine{\ \ u('text',\ '\(\backslash\)n'),}
+\DoxyCodeLine{\ \ h('math',\ h('mi',\ \{'xlink:href':\ 'data:x,<script>alert("{}foxtrot"{})</script>'\}))}
+\DoxyCodeLine{])}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ safe\ =\ sanitize(unsafe)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(toHtml(unsafe))}
+\DoxyCodeLine{console.log(toHtml(safe))}
+
+\end{DoxyCode}
+
+
+Unsafe\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ onmouseover="{}alert(\&\#x22;alpha\&\#x22;)"{}><a\ href="{}jAva\ script:alert(\&\#x22;bravo\&\#x22;)"{}\ onclick="{}alert(\&\#x22;charlie\&\#x22;)"{}>delta</a>}
+\DoxyCodeLine{<script>alert("{}charlie"{})</script>}
+\DoxyCodeLine{<img\ src="{}x"{}\ onerror="{}alert(\&\#x22;delta\&\#x22;)"{}>}
+\DoxyCodeLine{<iframe\ src="{}javascript:alert(\&\#x22;echo\&\#x22;)"{}></iframe>}
+\DoxyCodeLine{<math><mi\ xlink:href="{}data:x,<script>alert(\&\#x22;foxtrot\&\#x22;)</script>"{}></mi></math></div>}
+
+\end{DoxyCode}
+
+
+Safe\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div><a>delta</a>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<img\ src="{}x"{}>}
+\DoxyCodeLine{}
+\DoxyCodeLine{</div>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17174}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md17174}
+This package exports the identifiers \`{}default\+Schema\`{} and \`{}sanitize\`{}. There is no default export.\hypertarget{readme.md_autotoc_md17175}{}\doxysubsubsection{\texorpdfstring{{\ttfamily default\+Schema}}{{\ttfamily default\+Schema}}}\label{readme.md_autotoc_md17175}
+Default schema (\`{}\+Schema\`{}).
+
+Follows \href{https://github.com/gjtorikian/html-pipeline/blob/a2e02ac/lib/html_pipeline/sanitization_filter.rb}{\texttt{ Git\+Hub}} style sanitation.\hypertarget{readme.md_autotoc_md17176}{}\doxysubsubsection{\texorpdfstring{{\ttfamily sanitize(tree\mbox{[}, options\mbox{]})}}{{\ttfamily sanitize(tree\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md17176}
+Sanitize a tree.\hypertarget{readme.md_autotoc_md17177}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md17177}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Node}}}) — unsafe tree
+\item {\ttfamily options} (\`{}\+Schema\`{}, default\+: \`{}default\+Schema\`{}) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17178}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md17178}
+New, safe tree (\href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Node}}}).\hypertarget{readme.md_autotoc_md17179}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Schema}}{{\ttfamily Schema}}}\label{readme.md_autotoc_md17179}
+Schema that defines what nodes and properties are allowed.
+
+The default schema is \`{}default\+Schema\`{}, which follows how Git\+Hub cleans. If any top-\/level key is missing in the given schema, the corresponding value of the default schema is used.
+
+To extend the standard schema with a few changes, clone {\ttfamily default\+Schema} like so\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ deepmerge\ from\ 'deepmerge'}
+\DoxyCodeLine{import\ \{h\}\ from\ 'hastscript'}
+\DoxyCodeLine{import\ \{defaultSchema,\ sanitize\}\ from\ 'hast-\/util-\/sanitize'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ allows\ \`{}className`\ on\ all\ elements.}
+\DoxyCodeLine{const\ schema\ =\ deepmerge(defaultSchema,\ \{attributes:\ \{'*':\ ['className']\}\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ sanitize(h('div',\ \{className:\ ['foo']\}),\ schema)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \`{}tree`\ still\ has\ \`{}className`.}
+\DoxyCodeLine{console.log(tree)}
+\DoxyCodeLine{//\ \{}
+\DoxyCodeLine{//\ \ \ type:\ 'element',}
+\DoxyCodeLine{//\ \ \ tagName:\ 'div',}
+\DoxyCodeLine{//\ \ \ properties:\ \{className:\ ['foo']\},}
+\DoxyCodeLine{//\ \ \ children:\ []}
+\DoxyCodeLine{//\ \}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17180}{}\doxysubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md17180}
+\hypertarget{readme.md_autotoc_md17181}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily allow\+Comments}}{{\ttfamily allow\+Comments}}}\label{readme.md_autotoc_md17181}
+Whether to allow comment nodes ({\ttfamily boolean}, default\+: {\ttfamily false}).
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{allowComments:\ true}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17182}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily allow\+Doctypes}}{{\ttfamily allow\+Doctypes}}}\label{readme.md_autotoc_md17182}
+Whether to allow doctype nodes ({\ttfamily boolean}, default\+: {\ttfamily false}).
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{allowDoctypes:\ true}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17183}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily ancestors}}{{\ttfamily ancestors}}}\label{readme.md_autotoc_md17183}
+Map of tag names to a list of tag names which are required ancestors ({\ttfamily Record\texorpdfstring{$<$}{<}string, Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}\texorpdfstring{$>$}{>}}, default\+: {\ttfamily default\+Schema.\+ancestors}).
+
+Elements with these tag names will be ignored if they occur outside of one of their allowed parents.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ancestors:\ \{}
+\DoxyCodeLine{\ \ tbody:\ ['table'],}
+\DoxyCodeLine{\ \ //\ …}
+\DoxyCodeLine{\ \ tr:\ ['table']}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17184}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily attributes}}{{\ttfamily attributes}}}\label{readme.md_autotoc_md17184}
+Map of tag names to allowed \href{https://github.com/syntax-tree/hast\#propertyname}{\texttt{ property names}} ({\ttfamily Record\texorpdfstring{$<$}{<}string, Array\texorpdfstring{$<$}{<}\mbox{[}string, ...Array\texorpdfstring{$<$}{<}Reg\+Exp \texorpdfstring{$\vert$}{|} boolean \texorpdfstring{$\vert$}{|} number \texorpdfstring{$\vert$}{|} string\texorpdfstring{$>$}{>}\mbox{]} \texorpdfstring{$\vert$}{|} string\texorpdfstring{$>$}{>}}, default\+: {\ttfamily default\+Schema.\+attributes}).
+
+The special key `'\texorpdfstring{$\ast$}{*}\textquotesingle{}\`{} as a tag name defines property names allowed on all elements.
+
+The special value `\textquotesingle{}data\texorpdfstring{$\ast$}{*}'{\ttfamily as a property name can be used to allow all}data\`{} properties.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{attributes:\ \{}
+\DoxyCodeLine{\ \ a:\ [}
+\DoxyCodeLine{\ \ \ \ 'ariaDescribedBy',\ 'ariaLabel',\ 'ariaLabelledBy',\ /*\ …\ */,\ 'href'}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ //\ …}
+\DoxyCodeLine{\ \ '*':\ [}
+\DoxyCodeLine{\ \ \ \ 'abbr',}
+\DoxyCodeLine{\ \ \ \ 'accept',}
+\DoxyCodeLine{\ \ \ \ 'acceptCharset',}
+\DoxyCodeLine{\ \ \ \ //\ …}
+\DoxyCodeLine{\ \ \ \ 'vAlign',}
+\DoxyCodeLine{\ \ \ \ 'value',}
+\DoxyCodeLine{\ \ \ \ 'width'}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Instead of a single string in the array, which allows any property value for the field, you can use an array to allow several values. For example, `input\+: \mbox{[}\textquotesingle{}type'\mbox{]}{\ttfamily allows}type{\ttfamily set to any value on}input{\ttfamily s. But}input\+: \mbox{[}\mbox{[}\textquotesingle{}type\textquotesingle{}, \textquotesingle{}checkbox\textquotesingle{}, \textquotesingle{}radio\textquotesingle{}\mbox{]}\mbox{]}{\ttfamily allows}type{\ttfamily when set to }\textquotesingle{}checkbox\textquotesingle{}{\ttfamily or}\textquotesingle{}radio\textquotesingle{}\`{}.
+
+You can use regexes, so for example `span\+: \mbox{[}\mbox{[}\textquotesingle{}class\+Name', /\texorpdfstring{$^\wedge$}{\string^}hljs-\//\mbox{]}\mbox{]}{\ttfamily allows any class that starts with}hljs-\/{\ttfamily on}span\`{}s.
+
+When comma-\/ or space-\/separated values are used (such as {\ttfamily class\+Name}), each value in is checked individually. For example, to allow certain classes on {\ttfamily span}s for syntax highlighting, use `span\+: \mbox{[}\mbox{[}\textquotesingle{}class\+Name', \textquotesingle{}number\textquotesingle{}, \textquotesingle{}operator\textquotesingle{}, \textquotesingle{}token\textquotesingle{}\mbox{]}\mbox{]}{\ttfamily . This will allow}\textquotesingle{}number\textquotesingle{}{\ttfamily ,}\textquotesingle{}operator\textquotesingle{}{\ttfamily , and}\textquotesingle{}token\textquotesingle{}\`{} classes, but drop others.\hypertarget{readme.md_autotoc_md17185}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily clobber}}{{\ttfamily clobber}}}\label{readme.md_autotoc_md17185}
+List of \href{https://github.com/syntax-tree/hast\#propertyname}{\texttt{ {\itshape property names}}} that clobber ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, default\+: {\ttfamily default\+Schema.\+clobber}).
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{clobber:\ ['ariaDescribedBy',\ 'ariaLabelledBy',\ 'id',\ 'name']}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17186}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily clobber\+Prefix}}{{\ttfamily clobber\+Prefix}}}\label{readme.md_autotoc_md17186}
+Prefix to use before clobbering properties ({\ttfamily string}, default\+: {\ttfamily default\+Schema.\+clobber\+Prefix}).
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{clobberPrefix:\ 'user-\/content-\/'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17187}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily protocols}}{{\ttfamily protocols}}}\label{readme.md_autotoc_md17187}
+Map of \href{https://github.com/syntax-tree/hast\#propertyname}{\texttt{ {\itshape property names}}} to allowed protocols ({\ttfamily Record\texorpdfstring{$<$}{<}string, Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}\texorpdfstring{$>$}{>}}, default\+: {\ttfamily default\+Schema.\+protocols}).
+
+This defines URLs that are always allowed to have local URLs (relative to the current website, such as {\ttfamily this}, {\ttfamily \#this}, {\ttfamily /this}, or {\ttfamily ?this}), and only allowed to have remote URLs (such as {\ttfamily \href{https://example.com}{\texttt{ https\+://example.\+com}}}) if they use a known protocol.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{protocols:\ \{}
+\DoxyCodeLine{\ \ cite:\ ['http',\ 'https'],}
+\DoxyCodeLine{\ \ //\ …}
+\DoxyCodeLine{\ \ src:\ ['http',\ 'https']}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17188}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily required}}{{\ttfamily required}}}\label{readme.md_autotoc_md17188}
+Map of tag names to required \href{https://github.com/syntax-tree/hast\#propertyname}{\texttt{ {\itshape property names}}} with a default value ({\ttfamily Record\texorpdfstring{$<$}{<}string, Record\texorpdfstring{$<$}{<}string, unknown\texorpdfstring{$>$}{>}\texorpdfstring{$>$}{>}}, default\+: {\ttfamily default\+Schema.\+required}).
+
+This defines properties that must be set. If a field does not exist (after the element was made safe), these will be added with the given value.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{required:\ \{}
+\DoxyCodeLine{\ \ input:\ \{disabled:\ true,\ type:\ 'checkbox'\}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: properties are first checked based on {\ttfamily schema.\+attributes}, then on {\ttfamily schema.\+required}. That means properties could be removed by {\ttfamily attributes} and then added again with {\ttfamily required}. \end{quote}
+\hypertarget{readme.md_autotoc_md17189}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily strip}}{{\ttfamily strip}}}\label{readme.md_autotoc_md17189}
+List of tag names to strip from the tree ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, default\+: {\ttfamily default\+Schema.\+strip}).
+
+By default, unsafe elements (those not in {\ttfamily schema.\+tag\+Names}) are replaced by what they contain. This option can drop their contents.
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{strip:\ ['script']}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17190}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily tag\+Names}}{{\ttfamily tag\+Names}}}\label{readme.md_autotoc_md17190}
+List of allowed tag names ({\ttfamily Array\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}}, default\+: {\ttfamily default\+Schema.\+tag\+Names}).
+
+For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{tagNames:\ [}
+\DoxyCodeLine{\ \ 'a',}
+\DoxyCodeLine{\ \ 'b',}
+\DoxyCodeLine{\ \ //\ …}
+\DoxyCodeLine{\ \ 'ul',}
+\DoxyCodeLine{\ \ 'var'}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md17191}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md17191}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \`{}\+Schema\`{}.\hypertarget{readme.md_autotoc_md17192}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md17192}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily hast-\/util-\/sanitize@\texorpdfstring{$^\wedge$}{\string^}5}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md17193}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md17193}
+By default, {\ttfamily hast-\/util-\/sanitize} will make everything safe to use. Assuming you understand that certain attributes (including a limited set of classes) can be generated by users, and you write your CSS (and JS) accordingly. When used incorrectly, deviating from the defaults can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack.
+
+Use {\ttfamily hast-\/util-\/sanitize} after the last unsafe thing\+: everything after it could be unsafe (but is fine if you do trust it).\hypertarget{readme.md_autotoc_md17194}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md17194}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/rehypejs/rehype-sanitize}{\texttt{ {\ttfamily rehype-\/sanitize}}} — rehype plugin
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md17195}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md17195}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md17196}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md17196}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

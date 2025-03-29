@@ -1,0 +1,212 @@
+\doxysection{node\+\_\+modules/to-\/vfile/node\+\_\+modules/vfile Directory Reference}
+\hypertarget{dir_cd208209ed8ac642e660a02f27fdbc51}{}\label{dir_cd208209ed8ac642e660a02f27fdbc51}\index{node\_modules/to-\/vfile/node\_modules/vfile Directory Reference@{node\_modules/to-\/vfile/node\_modules/vfile Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\doxysubsection*{ }
+
+\href{https://github.com/vfile/vfile/actions}{\texttt{ }} \href{https://codecov.io/github/vfile/vfile}{\texttt{ }} \href{https://www.npmjs.com/package/vfile}{\texttt{ }} \href{https://bundlephobia.com/result?p=vfile}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/vfile/vfile/discussions}{\texttt{ }}
+
+{\bfseries{vfile}} is a small and browser friendly virtual file format that tracks metadata (such as a file’s {\ttfamily path} and {\ttfamily contents}) and messages.
+
+It was made specifically for {\bfseries{\href{https://github.com/unifiedjs/unified}{\texttt{ unified}}}} and generally for the common task of parsing, transforming, and serializing data, where {\ttfamily vfile} handles everything about the document being compiled. This is useful for example when building linters, compilers, static site generators, or other build tools. {\bfseries{vfile}} is part of the \href{https://unifiedjs.com}{\texttt{ unified collective}}.
+
+
+\begin{DoxyItemize}
+\item for updates, see \href{https://twitter.com/unifiedjs}{\texttt{ Twitter}}
+\item for more about us, see \href{https://unifiedjs.com}{\texttt{ {\ttfamily unifiedjs.\+com}}}
+\item for questions, see \href{https://github.com/vfile/vfile/discussions}{\texttt{ Discussions}}
+\item to help, see \doxylink{readme.md_contribute}{contribute} or sponsor below
+\end{DoxyItemize}
+
+\begin{quote}
+{\bfseries{vfile}} is different from the excellent \href{https://github.com/gulpjs/vinyl}{\texttt{ {\ttfamily vinyl}}} in that it has a smaller API, a smaller size, and focuses on messages. \end{quote}
+\hypertarget{readme.md_autotoc_md32983}{}\doxysubsubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md32983}
+
+\begin{DoxyItemize}
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}\+VFile(options?)\`{}
+\item \`{}vfile.contents\`{}
+\item \`{}vfile.cwd\`{}
+\item \`{}vfile.path\`{}
+\item \`{}vfile.basename\`{}
+\item \`{}vfile.stem\`{}
+\item \`{}vfile.extname\`{}
+\item \`{}vfile.dirname\`{}
+\item \`{}vfile.history\`{}
+\item \`{}vfile.messages\`{}
+\item \`{}vfile.data\`{}
+\item \`{}\+VFile\#to\+String(encoding?)\`{}
+\item \`{}\+VFile\#message(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})\`{}
+\item \`{}\+VFile\#info(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})\`{}
+\item \`{}\+VFile\#fail(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})\`{}
+\end{DoxyItemize}
+\item List of utilities
+\item Reporters
+\item \doxylink{readme.md_contribute}{Contribute}
+\item Sponsor
+\item Acknowledgments
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md32984}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md32984}
+\href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ vfile}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md32985}{}\doxysubsubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md32985}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ vfile\ =\ require('vfile')}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ file\ =\ vfile(\{path:\ '\string~/example.txt',\ contents:\ 'Alpha\ *braavo*\ charlie.'\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{file.path\ //\ =>\ '\string~/example.txt'}
+\DoxyCodeLine{file.dirname\ //\ =>\ '\string~'}
+\DoxyCodeLine{}
+\DoxyCodeLine{file.extname\ =\ '.md'}
+\DoxyCodeLine{}
+\DoxyCodeLine{file.basename\ //\ =>\ 'example.md'}
+\DoxyCodeLine{}
+\DoxyCodeLine{file.basename\ =\ 'index.text'}
+\DoxyCodeLine{}
+\DoxyCodeLine{file.history\ //\ =>\ ['\string~/example.txt',\ '\string~/example.md',\ '\string~/index.text']}
+\DoxyCodeLine{}
+\DoxyCodeLine{file.message('`braavo`\ is\ misspelt;\ did\ you\ mean\ \`{}bravo`?',\ \{}
+\DoxyCodeLine{\ \ line:\ 1,}
+\DoxyCodeLine{\ \ column:\ 8}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(file.messages)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\ \{\ [\string~/index.text:1:8:\ \`{}braavo`\ is\ misspelt;\ did\ you\ mean\ \`{}bravo`?]}
+\DoxyCodeLine{\ \ \ \ message:\ '`braavo`\ is\ misspelt;\ did\ you\ mean\ \`{}bravo`?',}
+\DoxyCodeLine{\ \ \ \ name:\ '\string~/index.text:1:8',}
+\DoxyCodeLine{\ \ \ \ file:\ '\string~/index.text',}
+\DoxyCodeLine{\ \ \ \ reason:\ '`braavo`\ is\ misspelt;\ did\ you\ mean\ \`{}bravo`?',}
+\DoxyCodeLine{\ \ \ \ line:\ 1,}
+\DoxyCodeLine{\ \ \ \ column:\ 8,}
+\DoxyCodeLine{\ \ \ \ location:\ \{\ start:\ [Object],\ end:\ [Object]\ \},}
+\DoxyCodeLine{\ \ \ \ ruleId:\ null,}
+\DoxyCodeLine{\ \ \ \ source:\ null,}
+\DoxyCodeLine{\ \ \ \ fatal:\ false\ \}\ ]}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md32986}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md32986}
+\hypertarget{readme.md_autotoc_md32987}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily VFile(options?)}}{{\ttfamily VFile(options?)}}}\label{readme.md_autotoc_md32987}
+Create a new virtual file. If {\ttfamily options} is {\ttfamily string} or {\ttfamily Buffer}, treats it as {\ttfamily \{contents\+: options\}}. If {\ttfamily options} is a {\ttfamily VFile}, returns it. All other options are set on the newly created {\ttfamily vfile}.
+
+Path related properties are set in the following order (least specific to most specific)\+: {\ttfamily history}, {\ttfamily path}, {\ttfamily basename}, {\ttfamily stem}, {\ttfamily extname}, {\ttfamily dirname}.
+
+It’s not possible to set either {\ttfamily dirname} or {\ttfamily extname} without setting either {\ttfamily history}, {\ttfamily path}, {\ttfamily basename}, or {\ttfamily stem} as well.\hypertarget{readme.md_autotoc_md32988}{}\doxysubsubsubsubsubsubsection{\texorpdfstring{Example}{Example}}\label{readme.md_autotoc_md32988}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{vfile()}
+\DoxyCodeLine{vfile('console.log("{}alpha"{});')}
+\DoxyCodeLine{vfile(Buffer.from('exit\ 1'))}
+\DoxyCodeLine{vfile(\{path:\ path.join(\_\_dirname,\ 'readme.md')\})}
+\DoxyCodeLine{vfile(\{stem:\ 'readme',\ extname:\ '.md',\ dirname:\ \_\_dirname\})}
+\DoxyCodeLine{vfile(\{other:\ 'properties',\ are:\ 'copied',\ ov:\ \{e:\ 'r'\}\})}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md32989}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+contents}}{{\ttfamily vfile.\+contents}}}\label{readme.md_autotoc_md32989}
+{\ttfamily Buffer}, {\ttfamily string}, {\ttfamily null} — Raw value.\hypertarget{readme.md_autotoc_md32990}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+cwd}}{{\ttfamily vfile.\+cwd}}}\label{readme.md_autotoc_md32990}
+{\ttfamily string} — Base of {\ttfamily path}. Defaults to {\ttfamily process.\+cwd()}.\hypertarget{readme.md_autotoc_md32991}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+path}}{{\ttfamily vfile.\+path}}}\label{readme.md_autotoc_md32991}
+{\ttfamily string?} — Path of {\ttfamily vfile}. Cannot be nullified.\hypertarget{readme.md_autotoc_md32992}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+basename}}{{\ttfamily vfile.\+basename}}}\label{readme.md_autotoc_md32992}
+{\ttfamily string?} — Current name (including extension) of {\ttfamily vfile}. Cannot contain path separators. Cannot be nullified either (use {\ttfamily file.\+path = file.\+dirname} instead).\hypertarget{readme.md_autotoc_md32993}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+stem}}{{\ttfamily vfile.\+stem}}}\label{readme.md_autotoc_md32993}
+{\ttfamily string?} — Name (without extension) of {\ttfamily vfile}. Cannot be nullified, and cannot contain path separators.\hypertarget{readme.md_autotoc_md32994}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+extname}}{{\ttfamily vfile.\+extname}}}\label{readme.md_autotoc_md32994}
+{\ttfamily string?} — Extension (with dot) of {\ttfamily vfile}. Cannot be set if there’s no {\ttfamily path} yet and cannot contain path separators.\hypertarget{readme.md_autotoc_md32995}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+dirname}}{{\ttfamily vfile.\+dirname}}}\label{readme.md_autotoc_md32995}
+{\ttfamily string?} — Path to parent directory of {\ttfamily vfile}. Cannot be set if there’s no {\ttfamily path} yet.\hypertarget{readme.md_autotoc_md32996}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+history}}{{\ttfamily vfile.\+history}}}\label{readme.md_autotoc_md32996}
+{\ttfamily Array.\texorpdfstring{$<$}{<}string\texorpdfstring{$>$}{>}} — List of file-\/paths the file moved between.\hypertarget{readme.md_autotoc_md32997}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+messages}}{{\ttfamily vfile.\+messages}}}\label{readme.md_autotoc_md32997}
+\`{}\+Array.\texorpdfstring{$<$}{<}VMessage\texorpdfstring{$>$}{>}\`{} — List of messages associated with the file.\hypertarget{readme.md_autotoc_md32998}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vfile.\+data}}{{\ttfamily vfile.\+data}}}\label{readme.md_autotoc_md32998}
+{\ttfamily Object} — Place to store custom information. It’s OK to store custom data directly on the {\ttfamily vfile}, moving it to {\ttfamily data} gives a {\itshape little} more privacy.\hypertarget{readme.md_autotoc_md32999}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily VFile\#to\+String(encoding?)}}{{\ttfamily VFile\#to\+String(encoding?)}}}\label{readme.md_autotoc_md32999}
+Convert contents of {\ttfamily vfile} to string. When {\ttfamily contents} is a \href{https://nodejs.org/api/buffer.html}{\texttt{ {\ttfamily Buffer}}}, {\ttfamily encoding} is a \href{https://nodejs.org/api/buffer.html\#buffer_buffers_and_character_encodings}{\texttt{ character encoding}} to understand {\ttfamily doc} as ({\ttfamily string}, default\+: `\textquotesingle{}utf8'\`{}).\hypertarget{readme.md_autotoc_md33000}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily VFile\#message(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})}}{{\ttfamily VFile\#message(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})}}}\label{readme.md_autotoc_md33000}
+Associates a message with the file, where {\ttfamily fatal} is set to {\ttfamily false}. Constructs a new \href{https://github.com/vfile/vfile-message}{\texttt{ {\ttfamily VMessage}}} and adds it to \`{}vfile.messages\`{}.\hypertarget{readme.md_autotoc_md33001}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md33001}
+\href{https://github.com/vfile/vfile-message}{\texttt{ {\ttfamily VMessage}}}.\hypertarget{readme.md_autotoc_md33002}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily VFile\#info(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})}}{{\ttfamily VFile\#info(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})}}}\label{readme.md_autotoc_md33002}
+Associates an informational message with the file, where {\ttfamily fatal} is set to {\ttfamily null}. Calls \`{}\#message()\`{} internally.\hypertarget{readme.md_autotoc_md33003}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md33003}
+\href{https://github.com/vfile/vfile-message}{\texttt{ {\ttfamily VMessage}}}.\hypertarget{readme.md_autotoc_md33004}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily VFile\#fail(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})}}{{\ttfamily VFile\#fail(reason\mbox{[}, position\mbox{]}\mbox{[}, origin\mbox{]})}}}\label{readme.md_autotoc_md33004}
+Associates a fatal message with the file, then immediately throws it. Note\+: fatal errors mean a file is no longer processable. Calls \`{}\#message()\`{} internally.\hypertarget{readme.md_autotoc_md33005}{}\doxysubsubsubsubsubsection{\texorpdfstring{Throws}{Throws}}\label{readme.md_autotoc_md33005}
+\href{https://github.com/vfile/vfile-message}{\texttt{ {\ttfamily VMessage}}}.
+
+\label{readme.md_utilities}%
+\Hypertarget{readme.md_utilities}%
+\hypertarget{readme.md_autotoc_md33006}{}\doxysubsubsection{\texorpdfstring{List of utilities}{List of utilities}}\label{readme.md_autotoc_md33006}
+The following list of projects includes tools for working with virtual files. See {\bfseries{\href{https://github.com/syntax-tree/unist\#list-of-utilities}{\texttt{ unist}}}} for projects that work with nodes.
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/dustinspecker/convert-vinyl-to-vfile}{\texttt{ {\ttfamily convert-\/vinyl-\/to-\/vfile}}} — transform from \href{https://github.com/gulpjs/vinyl}{\texttt{ Vinyl}} to vfile
+\item \href{https://github.com/vfile/to-vfile}{\texttt{ {\ttfamily to-\/vfile}}} — create a vfile from a filepath
+\item \href{https://github.com/vfile/vfile-find-down}{\texttt{ {\ttfamily vfile-\/find-\/down}}} — find files by searching the file system downwards
+\item \href{https://github.com/vfile/vfile-find-up}{\texttt{ {\ttfamily vfile-\/find-\/up}}} — find files by searching the file system upwards
+\item \href{https://github.com/shinnn/vfile-glob}{\texttt{ {\ttfamily vfile-\/glob}}} — find files by glob patterns
+\item \href{https://github.com/vfile/vfile-is}{\texttt{ {\ttfamily vfile-\/is}}} — check if a vfile passes a test
+\item \href{https://github.com/vfile/vfile-location}{\texttt{ {\ttfamily vfile-\/location}}} — convert between positional and offset locations
+\item \href{https://github.com/vfile/vfile-matter}{\texttt{ {\ttfamily vfile-\/matter}}} — parse the YAML front matter
+\item \href{https://github.com/vfile/vfile-message}{\texttt{ {\ttfamily vfile-\/message}}} — create a vfile message
+\item \href{https://github.com/shinnn/vfile-messages-to-vscode-diagnostics}{\texttt{ {\ttfamily vfile-\/messages-\/to-\/vscode-\/diagnostics}}} — transform vfile messages to VS Code diagnostics
+\item \href{https://github.com/vfile/vfile-mkdirp}{\texttt{ {\ttfamily vfile-\/mkdirp}}} — make sure the directory of a vfile exists on the file system
+\item \href{https://github.com/vfile/vfile-rename}{\texttt{ {\ttfamily vfile-\/rename}}} — rename the path parts of a vfile
+\item \href{https://github.com/vfile/vfile-sort}{\texttt{ {\ttfamily vfile-\/sort}}} — sort messages by line/column
+\item \href{https://github.com/vfile/vfile-statistics}{\texttt{ {\ttfamily vfile-\/statistics}}} — count messages per category\+: failures, warnings, etc
+\item \href{https://github.com/vfile/vfile-to-eslint}{\texttt{ {\ttfamily vfile-\/to-\/eslint}}} — convert to ESLint formatter compatible output
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md33007}{}\doxysubsubsection{\texorpdfstring{Reporters}{Reporters}}\label{readme.md_autotoc_md33007}
+The following list of projects show linting results for given virtual files. Reporters {\itshape must} accept {\ttfamily Array.\texorpdfstring{$<$}{<}VFile\texorpdfstring{$>$}{>}} as their first argument, and return {\ttfamily string}. Reporters {\itshape may} accept other values too, in which case it’s suggested to stick to {\ttfamily vfile-\/reporter}s interface.
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/vfile/vfile-reporter}{\texttt{ {\ttfamily vfile-\/reporter}}} — create a report
+\item \href{https://github.com/vfile/vfile-reporter-json}{\texttt{ {\ttfamily vfile-\/reporter-\/json}}} — create a JSON report
+\item \href{https://github.com/vfile/vfile-reporter-folder-json}{\texttt{ {\ttfamily vfile-\/reporter-\/folder-\/json}}} — create a JSON representation of vfiles
+\item \href{https://github.com/vfile/vfile-reporter-pretty}{\texttt{ {\ttfamily vfile-\/reporter-\/pretty}}} — create a pretty report
+\item \href{https://github.com/kellyselden/vfile-reporter-junit}{\texttt{ {\ttfamily vfile-\/reporter-\/junit}}} — create a j\+Unit report
+\item \href{https://github.com/Hocdoc/vfile-reporter-position}{\texttt{ {\ttfamily vfile-\/reporter-\/position}}} — create a report with content excerpts
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md33008}{}\doxysubsubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md33008}
+See \href{https://github.com/vfile/.github/blob/HEAD/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/vfile/.github}{\texttt{ {\ttfamily vfile/.github}}} for ways to get started. See \href{https://github.com/vfile/.github/blob/HEAD/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help. Ideas for new utilities and tools can be posted in \href{https://github.com/vfile/ideas}{\texttt{ {\ttfamily vfile/ideas}}}.
+
+This project has a \href{https://github.com/vfile/.github/blob/HEAD/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md33009}{}\doxysubsubsection{\texorpdfstring{Sponsor}{Sponsor}}\label{readme.md_autotoc_md33009}
+Support this effort and give back by sponsoring on \href{https://opencollective.com/unified}{\texttt{ Open\+Collective}}!
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{10}{|X[-1]}|}
+\hline
+\multicolumn{2}{|c|}{\PBS\centering \href{https://www.gatsbyjs.org}{\texttt{ Gatsby}} 🥇~\newline
+~\newline
+ \href{https://www.gatsbyjs.org}{\texttt{ }}  }&\multicolumn{2}{c|}{\PBS\centering \href{https://vercel.com}{\texttt{ Vercel}} 🥇~\newline
+~\newline
+ \href{https://vercel.com}{\texttt{ }}  }&\multicolumn{2}{c|}{\PBS\centering \href{https://www.netlify.com}{\texttt{ Netlify}}~\newline
+~\newline
+
+
+\href{https://www.netlify.com}{\texttt{ }}  }&\PBS\centering \href{https://www.holloway.com}{\texttt{ Holloway}}~\newline
+~\newline
+ \href{https://www.holloway.com}{\texttt{ }}  &\PBS\centering \href{https://themeisle.com}{\texttt{ Theme\+Isle}}~\newline
+~\newline
+ \href{https://themeisle.com}{\texttt{ }}  &\PBS\centering \href{https://boosthub.io}{\texttt{ Boost Hub}}~\newline
+~\newline
+ \href{https://boosthub.io}{\texttt{ }}  &\PBS\centering \href{https://expo.io}{\texttt{ Expo}}~\newline
+~\newline
+ \href{https://expo.io}{\texttt{ }}   \\\cline{1-10}
+\multicolumn{10}{|c|}{\PBS\centering ~\newline
+ \href{https://opencollective.com/unified}{\texttt{ {\bfseries{You?}}}} ~\newline
+~\newline
+   }\\\cline{1-10}
+\end{longtabu}
+\hypertarget{readme.md_autotoc_md33010}{}\doxysubsubsection{\texorpdfstring{Acknowledgments}{Acknowledgments}}\label{readme.md_autotoc_md33010}
+The initial release of this project was authored by \href{https://github.com/wooorm}{\texttt{ {\bfseries{@wooorm}}}}.
+
+Thanks to \href{https://github.com/contra}{\texttt{ {\bfseries{@contra}}}}, \href{https://github.com/phated}{\texttt{ {\bfseries{@phated}}}}, and others for their work on \href{https://github.com/gulpjs/vinyl}{\texttt{ Vinyl}}, which was a huge inspiration.
+
+Thanks to \href{https://github.com/brendo}{\texttt{ {\bfseries{@brendo}}}}, \href{https://github.com/shinnn}{\texttt{ {\bfseries{@shinnn}}}}, \href{https://github.com/KyleAMathews}{\texttt{ {\bfseries{@\+Kyle\+AMathews}}}}, \href{https://github.com/sindresorhus}{\texttt{ {\bfseries{@sindresorhus}}}}, and \href{https://github.com/denysdovhan}{\texttt{ {\bfseries{@denysdovhan}}}} for contributing commits since!\hypertarget{readme.md_autotoc_md33011}{}\doxysubsubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md33011}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

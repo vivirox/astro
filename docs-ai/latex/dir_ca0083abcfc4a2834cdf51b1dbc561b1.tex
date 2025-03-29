@@ -1,0 +1,101 @@
+\doxysection{node\+\_\+modules/ast-\/types-\/flow Directory Reference}
+\hypertarget{dir_ca0083abcfc4a2834cdf51b1dbc561b1}{}\label{dir_ca0083abcfc4a2834cdf51b1dbc561b1}\index{node\_modules/ast-\/types-\/flow Directory Reference@{node\_modules/ast-\/types-\/flow Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Flow types for the Javascript AST. Based off of \href{https://github.com/benjamn/ast-types}{\texttt{ benjamn/ast-\/types}}.\hypertarget{README.md_autotoc_md8200}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md8200}
+First install {\ttfamily ast-\/types-\/flow} via npm, then you can import any of the types that are exported.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ @flow\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ type\ \{Node\}\ from\ 'ast-\/types-\/flow';}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ getName(node:\ Node):\ string\ \{}
+\DoxyCodeLine{\ \ switch\ (node.type)\ \{}
+\DoxyCodeLine{\ \ \ \ case\ 'Identifier':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ node.name;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ case\ 'ClassDeclaration':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ node.id.name;\ //\ Error,\ id\ could\ be\ null.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ case\ 'FunctionDeclaration':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ node.id.name;\ //\ Fine\ if\ it's\ always\ there.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ case\ 'FunctionExpression':}
+\DoxyCodeLine{\ \ \ \ \ \ if\ (node.id)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ node.id.name;\ //\ Can\ refine\ id\ to\ make\ sure\ it\ exists.}
+\DoxyCodeLine{\ \ \ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ 'Unknown';}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ case\ 'Literal':}
+\DoxyCodeLine{\ \ \ \ \ \ return\ node.name;\ //\ Error,\ Literals\ don't\ have\ names,\ don't\ be\ silly.}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ 'Unknown';}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8201}{}\doxysubsection{\texorpdfstring{How it works}{How it works}}\label{README.md_autotoc_md8201}
+A notion of "{}extends"{} is added to the Flow syntax via comments. A transform is included that will compile the source code into useful disjoint union types based on how the different types extend each other. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Node\ =\ \{}
+\DoxyCodeLine{\ \ common:\ string,}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Foo\ =\ \{}
+\DoxyCodeLine{\ \ //\ extends\ Node}
+\DoxyCodeLine{\ \ foo:\ string,}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Bar\ =\ \{}
+\DoxyCodeLine{\ \ //\ extends\ Node}
+\DoxyCodeLine{\ \ bar:\ number,}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+Will be transformed into\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Node\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'Foo',}
+\DoxyCodeLine{\ \ \_Foo:\ void,}
+\DoxyCodeLine{\ \ common:\ string,}
+\DoxyCodeLine{\ \ foo:\ string,}
+\DoxyCodeLine{\}\ |\ \{}
+\DoxyCodeLine{\ \ type:\ 'Bar',}
+\DoxyCodeLine{\ \ \_Bar:\ void,}
+\DoxyCodeLine{\ \ common:\ string,}
+\DoxyCodeLine{\ \ bar:\ number,}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Foo\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'Foo',}
+\DoxyCodeLine{\ \ \_Foo:\ void,}
+\DoxyCodeLine{\ \ common:\ string,}
+\DoxyCodeLine{\ \ foo:\ string,}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Bar\ =\ \{}
+\DoxyCodeLine{\ \ type:\ 'Bar',}
+\DoxyCodeLine{\ \ \_Foo:\ void,}
+\DoxyCodeLine{\ \ common:\ string,}
+\DoxyCodeLine{\ \ bar:\ number,}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+A few things to note\+:
+
+
+\begin{DoxyEnumerate}
+\item The type {\ttfamily Node} would more ideally be compiled into {\ttfamily Foo \texorpdfstring{$\vert$}{|} Bar} but then the disjoint union cannot be properly refined. For now we have to duplicate the complete definitions.
+\item Each entry in a disjoint union has to be structurally unique or Flow will have an error on the definition. That is why the private {\ttfamily \+\_\+\+Foo\+: void} fields appear in the types. 
+\end{DoxyEnumerate}

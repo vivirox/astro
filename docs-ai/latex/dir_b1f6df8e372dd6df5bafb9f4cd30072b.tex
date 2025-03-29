@@ -1,0 +1,114 @@
+\doxysection{node\+\_\+modules/doctrine Directory Reference}
+\hypertarget{dir_b1f6df8e372dd6df5bafb9f4cd30072b}{}\label{dir_b1f6df8e372dd6df5bafb9f4cd30072b}\index{node\_modules/doctrine Directory Reference@{node\_modules/doctrine Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\mbox{[}!\mbox{[}NPM version\mbox{]}\mbox{[}npm-\/image\mbox{]}\mbox{]}\mbox{[}npm-\/url\mbox{]} \href{https://travis-ci.org/eslint/doctrine}{\texttt{ }} \href{https://coveralls.io/r/eslint/doctrine?branch=master}{\texttt{ }} \href{https://www.npmjs.com/package/doctrine}{\texttt{ }} \href{https://gitter.im/eslint/doctrine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge}{\texttt{ }}\hypertarget{README.md_autotoc_md12010}{}\doxysubsection{\texorpdfstring{Doctrine}{Doctrine}}\label{README.md_autotoc_md12010}
+Doctrine is a \href{http://usejsdoc.org}{\texttt{ JSDoc}} parser that parses documentation comments from Java\+Script (you need to pass in the comment, not a whole Java\+Script file).\hypertarget{README.md_autotoc_md12011}{}\doxysubsubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md12011}
+You can install Doctrine using \href{https://npmjs.com}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ doctrine\ -\/-\/save-\/dev}
+
+\end{DoxyCode}
+
+
+Doctrine can also be used in web browsers using \href{http://browserify.org}{\texttt{ Browserify}}.\hypertarget{README.md_autotoc_md12012}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md12012}
+Require doctrine inside of your Java\+Script\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ doctrine\ =\ require("{}doctrine"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12013}{}\doxysubsubsubsection{\texorpdfstring{parse()}{parse()}}\label{README.md_autotoc_md12013}
+The primary method is {\ttfamily parse()}, which accepts two arguments\+: the JSDoc comment to parse and an optional options object. The available options are\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily unwrap} -\/ set to {\ttfamily true} to delete the leading {\ttfamily /\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}, any {\ttfamily \texorpdfstring{$\ast$}{*}} that begins a line, and the trailing {\ttfamily \texorpdfstring{$\ast$}{*}/} from the source text. Default\+: {\ttfamily false}.
+\item {\ttfamily tags} -\/ an array of tags to return. When specified, Doctrine returns only tags in this array. For example, if {\ttfamily tags} is {\ttfamily \mbox{[}"{}param"{}\mbox{]}}, then only {\ttfamily @param} tags will be returned. Default\+: {\ttfamily null}.
+\item {\ttfamily recoverable} -\/ set to {\ttfamily true} to keep parsing even when syntax errors occur. Default\+: {\ttfamily false}.
+\item {\ttfamily sloppy} -\/ set to {\ttfamily true} to allow optional parameters to be specified in brackets ({\ttfamily @param \{string\} \mbox{[}foo\mbox{]}}). Default\+: {\ttfamily false}.
+\item {\ttfamily line\+Numbers} -\/ set to {\ttfamily true} to add {\ttfamily line\+Number} to each node, specifying the line on which the node is found in the source. Default\+: {\ttfamily false}.
+\item {\ttfamily range} -\/ set to {\ttfamily true} to add {\ttfamily range} to each node, specifying the start and end index of the node in the original comment. Default\+: {\ttfamily false}.
+\end{DoxyItemize}
+
+Here\textquotesingle{}s a simple example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ ast\ =\ doctrine.parse(}
+\DoxyCodeLine{\ \ \ \ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}/**"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}\ *\ This\ function\ comment\ is\ parsed\ by\ doctrine"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}\ *\ @param\ \{\{ok:String\}\}\ userName"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}*/"{}}
+\DoxyCodeLine{\ \ \ \ ].join('\(\backslash\)n'),\ \{\ unwrap:\ true\ \});}
+
+\end{DoxyCode}
+
+
+This example returns the following AST\+: \begin{DoxyVerb}{
+    "description": "This function comment is parsed by doctrine",
+    "tags": [
+        {
+            "title": "param",
+            "description": null,
+            "type": {
+                "type": "RecordType",
+                "fields": [
+                    {
+                        "type": "FieldType",
+                        "key": "ok",
+                        "value": {
+                            "type": "NameExpression",
+                            "name": "String"
+                        }
+                    }
+                ]
+            },
+            "name": "userName"
+        }
+    ]
+}
+\end{DoxyVerb}
+
+
+See the \href{http://eslint.org/doctrine/demo/}{\texttt{ demo page}} more detail.\hypertarget{README.md_autotoc_md12014}{}\doxysubsubsection{\texorpdfstring{Team}{Team}}\label{README.md_autotoc_md12014}
+These folks keep the project moving and are resources for help\+:
+
+
+\begin{DoxyItemize}
+\item Nicholas C. Zakas (\href{https://github.com/nzakas}{\texttt{ @nzakas}}) -\/ project lead
+\item Yusuke Suzuki (\href{https://github.com/constellation}{\texttt{ @constellation}}) -\/ reviewer
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md12015}{}\doxysubsubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md12015}
+Issues and pull requests will be triaged and responded to as quickly as possible. We operate under the \href{http://eslint.org/docs/developer-guide/contributing}{\texttt{ ESLint Contributor Guidelines}}, so please be sure to read them before contributing. If you\textquotesingle{}re not sure where to dig in, check out the \href{https://github.com/eslint/doctrine/issues}{\texttt{ issues}}.\hypertarget{README.md_autotoc_md12016}{}\doxysubsubsection{\texorpdfstring{Frequently Asked Questions}{Frequently Asked Questions}}\label{README.md_autotoc_md12016}
+\hypertarget{README.md_autotoc_md12017}{}\doxysubsubsubsection{\texorpdfstring{Can I pass a whole Java\+Script file to Doctrine?}{Can I pass a whole Java\+Script file to Doctrine?}}\label{README.md_autotoc_md12017}
+No. Doctrine can only parse JSDoc comments, so you\textquotesingle{}ll need to pass just the JSDoc comment to Doctrine in order to work.\hypertarget{README.md_autotoc_md12018}{}\doxysubsubsubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md12018}
+\hypertarget{README.md_autotoc_md12019}{}\doxysubsubsubsubsection{\texorpdfstring{doctrine}{doctrine}}\label{README.md_autotoc_md12019}
+Copyright JS Foundation and other contributors, \href{https://js.foundation}{\texttt{ https\+://js.\+foundation}}
+
+Licensed under the Apache License, Version 2.\+0 (the "{}\+License"{}); you may not use this file except in compliance with the License. You may obtain a copy of the License at \begin{DoxyVerb}http://www.apache.org/licenses/LICENSE-2.0
+\end{DoxyVerb}
+
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "{}\+AS IS"{} BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.\hypertarget{README.md_autotoc_md12020}{}\doxysubsubsubsubsection{\texorpdfstring{esprima}{esprima}}\label{README.md_autotoc_md12020}
+some of functions is derived from esprima
+
+Copyright (C) 2012, 2011 \href{http://ariya.ofilabs.com/about}{\texttt{ Ariya Hidayat}} (twitter\+: \href{http://twitter.com/ariyahidayat}{\texttt{ @ariyahidayat}}) and other contributors.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met\+:
+
+
+\begin{DoxyItemize}
+\item Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\end{DoxyItemize}
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "{}\+AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL $<$\+COPYRIGHT HOLDER$>$ BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\hypertarget{README.md_autotoc_md12021}{}\doxysubsubsubsubsection{\texorpdfstring{closure-\/compiler}{closure-\/compiler}}\label{README.md_autotoc_md12021}
+some of extensions is derived from closure-\/compiler
+
+Apache License Version 2.\+0, January 2004 \href{http://www.apache.org/licenses/}{\texttt{ http\+://www.\+apache.\+org/licenses/}}\hypertarget{README.md_autotoc_md12022}{}\doxysubsubsubsection{\texorpdfstring{Where to ask for help?}{Where to ask for help?}}\label{README.md_autotoc_md12022}
+Join our \href{https://gitter.im/eslint/doctrine}{\texttt{ Chatroom}} 

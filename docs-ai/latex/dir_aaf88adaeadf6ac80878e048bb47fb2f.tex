@@ -1,0 +1,113 @@
+\doxysection{node\+\_\+modules/make-\/dir Directory Reference}
+\hypertarget{dir_aaf88adaeadf6ac80878e048bb47fb2f}{}\label{dir_aaf88adaeadf6ac80878e048bb47fb2f}\index{node\_modules/make-\/dir Directory Reference@{node\_modules/make-\/dir Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Make a directory and its parents if needed -\/ Think {\ttfamily mkdir -\/p} \end{quote}
+\hypertarget{readme.md_autotoc_md22182}{}\doxysubsection{\texorpdfstring{Advantages over \href{https://github.com/substack/node-mkdirp}{\texttt{ {\ttfamily mkdirp}}}}{Advantages over \href{https://github.com/substack/node-mkdirp}{\texttt{ {\ttfamily mkdirp}}}}}\label{readme.md_autotoc_md22182}
+
+\begin{DoxyItemize}
+\item Promise API {\itshape (Async/await ready!)}
+\item Fixes many {\ttfamily mkdirp} issues\+: \href{https://github.com/substack/node-mkdirp/pull/96}{\texttt{ \#96}} \href{https://github.com/substack/node-mkdirp/issues/70}{\texttt{ \#70}} \href{https://github.com/substack/node-mkdirp/issues/66}{\texttt{ \#66}}
+\item 100\% test coverage
+\item CI-\/tested on mac\+OS, Linux, and Windows
+\item Actively maintained
+\item Doesn\textquotesingle{}t bundle a CLI
+\item Uses the native {\ttfamily fs.\+mkdir/mkdir\+Sync} \href{https://nodejs.org/dist/latest/docs/api/fs.html\#fs_fs_mkdir_path_options_callback}{\texttt{ {\ttfamily recursive} option}} in Node.\+js \texorpdfstring{$>$}{>}=10.\+12.\+0 unless overridden
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22183}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22183}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ make-\/dir}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22184}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md22184}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pwd}
+\DoxyCodeLine{/Users/sindresorhus/fun}
+\DoxyCodeLine{\$\ tree}
+\DoxyCodeLine{.}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ makeDir\ =\ require('make-\/dir');}
+\DoxyCodeLine{}
+\DoxyCodeLine{(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ path\ =\ await\ makeDir('unicorn/rainbow/cake');}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log(path);}
+\DoxyCodeLine{\ \ \ \ //=>\ '/Users/sindresorhus/fun/unicorn/rainbow/cake'}
+\DoxyCodeLine{\})();}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ tree}
+\DoxyCodeLine{.}
+\DoxyCodeLine{└──\ unicorn}
+\DoxyCodeLine{\ \ \ \ └──\ rainbow}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ └──\ cake}
+
+\end{DoxyCode}
+
+
+Multiple directories\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ makeDir\ =\ require('make-\/dir');}
+\DoxyCodeLine{}
+\DoxyCodeLine{(async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ paths\ =\ await\ Promise.all([}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ makeDir('unicorn/rainbow'),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ makeDir('foo/bar')}
+\DoxyCodeLine{\ \ \ \ ]);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log(paths);}
+\DoxyCodeLine{\ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ '/Users/sindresorhus/fun/unicorn/rainbow',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ '/Users/sindresorhus/fun/foo/bar'}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ */}
+\DoxyCodeLine{\})();}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22185}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22185}
+\hypertarget{readme.md_autotoc_md22186}{}\doxysubsubsection{\texorpdfstring{make\+Dir(path, options?)}{make\+Dir(path, options?)}}\label{readme.md_autotoc_md22186}
+Returns a {\ttfamily Promise} for the path to the created directory.\hypertarget{readme.md_autotoc_md22187}{}\doxysubsubsection{\texorpdfstring{make\+Dir.\+sync(path, options?)}{make\+Dir.\+sync(path, options?)}}\label{readme.md_autotoc_md22187}
+Returns the path to the created directory.\hypertarget{readme.md_autotoc_md22188}{}\doxysubsubsubsection{\texorpdfstring{path}{path}}\label{readme.md_autotoc_md22188}
+Type\+: {\ttfamily string}
+
+Directory to create.\hypertarget{readme.md_autotoc_md22189}{}\doxysubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md22189}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md22190}{}\doxysubsubsubsubsection{\texorpdfstring{mode}{mode}}\label{readme.md_autotoc_md22190}
+Type\+: {\ttfamily integer}\textbackslash{} Default\+: {\ttfamily 0o777}
+
+Directory \href{https://x-team.com/blog/file-system-permissions-umask-node-js/}{\texttt{ permissions}}.\hypertarget{readme.md_autotoc_md22191}{}\doxysubsubsubsubsection{\texorpdfstring{fs}{fs}}\label{readme.md_autotoc_md22191}
+Type\+: {\ttfamily object}\textbackslash{} Default\+: `require(\textquotesingle{}fs')\`{}
+
+Use a custom {\ttfamily fs} implementation. For example \href{https://github.com/isaacs/node-graceful-fs}{\texttt{ {\ttfamily graceful-\/fs}}}.
+
+Using a custom {\ttfamily fs} implementation will block the use of the native {\ttfamily recursive} option if {\ttfamily fs.\+mkdir} or {\ttfamily fs.\+mkdir\+Sync} is not the native function.\hypertarget{readme.md_autotoc_md22192}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md22192}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/make-dir-cli}{\texttt{ make-\/dir-\/cli}} -\/ CLI for this module
+\item \href{https://github.com/sindresorhus/del}{\texttt{ del}} -\/ Delete files and directories
+\item \href{https://github.com/sindresorhus/globby}{\texttt{ globby}} -\/ User-\/friendly glob matching
+\item \href{https://github.com/sindresorhus/cpy}{\texttt{ cpy}} -\/ Copy files
+\item \href{https://github.com/sindresorhus/cpy-cli}{\texttt{ cpy-\/cli}} -\/ Copy files on the command-\/line
+\item \href{https://github.com/sindresorhus/move-file}{\texttt{ move-\/file}} -\/ Move a file
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+
+
+ {\bfseries{ \href{https://tidelift.com/subscription/pkg/npm-make-dir?utm_source=npm-make-dir&utm_medium=referral&utm_campaign=readme}{\texttt{ Get professional support for this package with a Tidelift subscription}} }} ~\newline
+ \textsubscript{ Tidelift helps make open source sustainable for maintainers while giving companies~\newline
+assurances about security, maintenance, and licensing for their dependencies. }  

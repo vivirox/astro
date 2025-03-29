@@ -1,0 +1,1118 @@
+\doxysection{node\+\_\+modules/styled-\/jsx Directory Reference}
+\hypertarget{dir_07435cae1c2f77b9a7c4357e39ae4711}{}\label{dir_07435cae1c2f77b9a7c4357e39ae4711}\index{node\_modules/styled-\/jsx Directory Reference@{node\_modules/styled-\/jsx Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/vercel/styled-jsx/actions?query=branch\%3Amain}{\texttt{ }}
+
+Full, scoped and component-\/friendly CSS support for JSX (rendered on the server or the client).
+
+Code and docs are for v3 which we highly recommend you to try. Looking for styled-\/jsx v2? Switch to the \href{https://github.com/vercel/styled-jsx/tree/v2}{\texttt{ v2 branch}}.
+
+
+\begin{DoxyItemize}
+\item Getting started
+\item Configuration options
+\begin{DoxyItemize}
+\item \`{}optimize\+For\+Speed\`{}
+\item \`{}source\+Maps\`{}
+\item \`{}style\+Module\`{}
+\item \`{}vendor\+Prefixes\`{}
+\end{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_features}{Features}
+\item How It Works
+\begin{DoxyItemize}
+\item Why It Works Like This
+\end{DoxyItemize}
+\item Targeting The Root
+\item Global styles
+\begin{DoxyItemize}
+\item One-\/off global selectors
+\end{DoxyItemize}
+\item Dynamic styles
+\begin{DoxyItemize}
+\item Via interpolated dynamic props
+\item Via \`{}class\+Name\`{} toggling
+\item Via inline \`{}style\`{}
+\end{DoxyItemize}
+\item Constants
+\item Server-\/\+Side Rendering
+\item External CSS and styles outside of the component
+\begin{DoxyItemize}
+\item External styles
+\item Styles outside of components
+\item The \`{}resolve\`{} tag
+\item Styles in regular CSS files
+\end{DoxyItemize}
+\item CSS Preprocessing via Plugins
+\begin{DoxyItemize}
+\item Plugin options
+\item Example plugins
+\end{DoxyItemize}
+\item Rendering in tests
+\item \doxylink{md_node__modules_2safer-buffer_2_porting-_buffer_faq}{FAQ}
+\begin{DoxyItemize}
+\item Warning\+: unknown \`{}jsx\`{} prop on \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>} tag
+\item Can I return an array of components when using React 16?
+\item Styling third parties / child components from the parent
+\item \href{https://github.com/vercel/styled-jsx/issues/319\#issuecomment-349239326}{\texttt{ Some styles are missing in production}}
+\item Build a component library with styled-\/jsx
+\end{DoxyItemize}
+\item Syntax Highlighting
+\item ESLint
+\item Type\+Script
+\item Credits
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31555}{}\doxysubsection{\texorpdfstring{Getting started}{Getting started}}\label{readme.md_autotoc_md31555}
+Firstly, install the package\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ styled-\/jsx}
+
+\end{DoxyCode}
+
+
+Next, add {\ttfamily styled-\/jsx/babel} to {\ttfamily plugins} in your babel configuration\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}plugins"{}:\ ["{}styled-\/jsx/babel"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Now add {\ttfamily \texorpdfstring{$<$}{<}style jsx\texorpdfstring{$>$}{>}} to your code and fill it with CSS\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ <p>only\ this\ paragraph\ will\ get\ the\ style\ :)</p>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{/*\ you\ can\ include\ <Component\ />s\ here\ that\ include}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ other\ <p>s\ that\ don't\ get\ unexpected\ styles!\ */\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ p\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ red;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31556}{}\doxysubsection{\texorpdfstring{Configuration options}{Configuration options}}\label{readme.md_autotoc_md31556}
+The following are optional settings for the babel plugin.\hypertarget{readme.md_autotoc_md31557}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily optimize\+For\+Speed}}{{\ttfamily optimize\+For\+Speed}}}\label{readme.md_autotoc_md31557}
+Blazing fast and optimized CSS rules injection system based on the CSSOM APIs.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}plugins"{}:\ [["{}styled-\/jsx/babel"{},\ \{\ "{}optimizeForSpeed"{}:\ true\ \}]]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+When in production\texorpdfstring{$\ast$}{*} this mode is automatically enabled.~\newline
+ Beware that when using this option source maps cannot be generated and styles cannot be edited via the devtools.
+
+
+\begin{DoxyItemize}
+\item `process.\+env.\+NODE\+\_\+\+ENV === \textquotesingle{}production'\`{}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31558}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily source\+Maps}}{{\ttfamily source\+Maps}}}\label{readme.md_autotoc_md31558}
+Generates source maps (default\+: {\ttfamily false})\hypertarget{readme.md_autotoc_md31559}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily style\+Module}}{{\ttfamily style\+Module}}}\label{readme.md_autotoc_md31559}
+Module that the transpiled files should import (default\+: {\ttfamily styled-\/jsx/style})\hypertarget{readme.md_autotoc_md31560}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily vendor\+Prefixes}}{{\ttfamily vendor\+Prefixes}}}\label{readme.md_autotoc_md31560}
+Turn on/off automatic vendor prefixing (default\+: {\ttfamily true})\hypertarget{readme.md_autotoc_md31561}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{readme.md_autotoc_md31561}
+
+\begin{DoxyItemize}
+\item Full CSS support, no tradeoffs in power
+\item Runtime size of just {\bfseries{3kb}} (gzipped, from 12kb)
+\item Complete isolation\+: Selectors, animations, keyframes
+\item Built-\/in CSS vendor prefixing
+\item Very fast, minimal and efficient transpilation (see below)
+\item High-\/performance runtime-\/\+CSS-\/injection when not server-\/rendering
+\item Future-\/proof\+: Equivalent to server-\/renderable "{}\+Shadow CSS"{}
+\item Source maps support
+\item Dynamic styles and themes support
+\item CSS Preprocessing via Plugins
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31562}{}\doxysubsection{\texorpdfstring{Using in Next.\+js}{Using in Next.\+js}}\label{readme.md_autotoc_md31562}
+Next.\+js automatically configures {\ttfamily styled-\/jsx} with babel or swc, you don\textquotesingle{}t have to configure it manually.\hypertarget{readme.md_autotoc_md31563}{}\doxysubsection{\texorpdfstring{How It Works}{How It Works}}\label{readme.md_autotoc_md31563}
+The example above transpiles to the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \_JSXStyle\ from\ 'styled-\/jsx/style'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div\ className="{}jsx-\/123"{}>}
+\DoxyCodeLine{\ \ \ \ <p\ className="{}jsx-\/123"{}>only\ this\ paragraph\ will\ get\ the\ style\ :)</p>}
+\DoxyCodeLine{\ \ \ \ <\_JSXStyle\ id="{}123"{}>\{`p.jsx-\/123\ \{color:\ red;\}`\}</\_JSXStyle>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31564}{}\doxysubsubsection{\texorpdfstring{Why It Works Like This}{Why It Works Like This}}\label{readme.md_autotoc_md31564}
+Unique classnames give us style encapsulation and {\ttfamily \+\_\+\+JSXStyle} is heavily optimized for\+:
+
+
+\begin{DoxyItemize}
+\item Injecting styles upon render
+\item Only injecting a certain component\textquotesingle{}s style once (even if the component is included multiple times)
+\item Removing unused styles
+\item Keeping track of styles for server-\/side rendering
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31565}{}\doxysubsubsection{\texorpdfstring{Targeting The Root}{Targeting The Root}}\label{readme.md_autotoc_md31565}
+Notice that the outer {\ttfamily \texorpdfstring{$<$}{<}div\texorpdfstring{$>$}{>}} from the example above also gets a {\ttfamily jsx-\/123} classname. We do this so that you can target the "{}root"{} element, in the same manner that \href{https://www.html5rocks.com/en/tutorials/webcomponents/shadowdom-201/\#toc-style-host}{\texttt{ {\ttfamily \+:host}}} works with Shadow DOM.
+
+If you want to target {\itshape only} the host, we suggest you use a class\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div\ className="{}root"{}>}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ .root\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ green;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31566}{}\doxysubsubsection{\texorpdfstring{Global styles}{Global styles}}\label{readme.md_autotoc_md31566}
+To skip scoping entirely, you can make the global-\/ness of your styles explicit by adding {\itshape global}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ <style\ jsx\ global>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ body\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ background:\ red;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+The advantage of using this over {\ttfamily \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>}} is twofold\+: no need to use {\ttfamily dangerously\+Set\+Inner\+HTML} to avoid escaping issues with CSS and take advantage of {\ttfamily styled-\/jsx}\textquotesingle{}s de-\/duping system to avoid the global styles being inserted multiple times.\hypertarget{readme.md_autotoc_md31567}{}\doxysubsubsection{\texorpdfstring{One-\/off global selectors}{One-\/off global selectors}}\label{readme.md_autotoc_md31567}
+Sometimes it\textquotesingle{}s useful to skip selectors scoping. In order to get a one-\/off global selector we support {\ttfamily \+:global()}, inspired by \href{https://github.com/css-modules/css-modules}{\texttt{ css-\/modules}}.
+
+This is very useful in order to, for example, generate a {\itshape global class} that you can pass to 3rd-\/party components. For example, to style {\ttfamily react-\/select} which supports passing a custom class via {\ttfamily option\+Class\+Name}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Select\ from\ 'react-\/select'}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ <Select\ optionClassName="{}react-\/select"{}\ />}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ /*\ "{}div"{}\ will\ be\ prefixed,\ but\ "{}.react-\/select"{}\ won't\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ div\ :global(.react-\/select)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ red;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31568}{}\doxysubsubsection{\texorpdfstring{Dynamic styles}{Dynamic styles}}\label{readme.md_autotoc_md31568}
+To make a component\textquotesingle{}s visual representation customizable from the outside world there are three options.\hypertarget{readme.md_autotoc_md31569}{}\doxysubsubsubsection{\texorpdfstring{Via interpolated dynamic props}{Via interpolated dynamic props}}\label{readme.md_autotoc_md31569}
+Any value that comes from the component\textquotesingle{}s {\ttfamily render} method scope is treated as dynamic. This makes it possible to use {\ttfamily props} and {\ttfamily state} for example.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Button\ =\ props\ =>\ (}
+\DoxyCodeLine{\ \ <button>}
+\DoxyCodeLine{\ \ \ \ \{props.children\}}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ padding:\ \$\{'large'\ in\ props\ ?\ '50'\ :\ '20'\}px;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ background:\ \$\{props.theme.background\};}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ \#999;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ display:\ inline-\/block;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ font-\/size:\ 1em;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+New styles\textquotesingle{} injection is optimized to perform well at runtime.
+
+That said when your CSS is mostly static we recommend to split it up in static and dynamic styles and use two separate {\ttfamily style} tags so that, when changing, only the dynamic parts are recomputed/rendered.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Button\ =\ props\ =>\ (}
+\DoxyCodeLine{\ \ <button>}
+\DoxyCodeLine{\ \ \ \ \{props.children\}}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ \#999;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ display:\ inline-\/block;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ font-\/size:\ 2em;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ padding:\ \$\{'large'\ in\ props\ ?\ '50'\ :\ '20'\}px;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ background:\ \$\{props.theme.background\};}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31570}{}\doxysubsubsubsection{\texorpdfstring{Via {\ttfamily class\+Name} toggling}{Via {\ttfamily class\+Name} toggling}}\label{readme.md_autotoc_md31570}
+The second option is to pass properties that toggle class names.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Button\ =\ props\ =>\ (}
+\DoxyCodeLine{\ \ <button\ className=\{'large'\ in\ props\ \&\&\ 'large'\}>}
+\DoxyCodeLine{\ \ \ \ \{props.children\}}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ padding:\ 20px;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ background:\ \#eee;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ \#999;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ .large\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ padding:\ 50px;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Then you would use this component as either {\ttfamily \texorpdfstring{$<$}{<}Button\texorpdfstring{$>$}{>}Hi\texorpdfstring{$<$}{<}/\+Button\texorpdfstring{$>$}{>}} or {\ttfamily \texorpdfstring{$<$}{<}Button large\texorpdfstring{$>$}{>}Big\texorpdfstring{$<$}{<}/\+Button\texorpdfstring{$>$}{>}}.\hypertarget{readme.md_autotoc_md31571}{}\doxysubsubsubsection{\texorpdfstring{Via inline {\ttfamily style}}{Via inline {\ttfamily style}}}\label{readme.md_autotoc_md31571}
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}best for animations\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}
+
+Imagine that you wanted to make the padding in the button above completely customizable. You can override the CSS you configure via inline-\/styles\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Button\ =\ (\{\ padding,\ children\ \})\ =>\ (}
+\DoxyCodeLine{\ \ <button\ style=\{\{\ padding\ \}\}>}
+\DoxyCodeLine{\ \ \ \ \{children\}}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ padding:\ 20px;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ background:\ \#eee;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ \#999;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+In this example, the padding defaults to the one set in {\ttfamily \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>}} ({\ttfamily 20}), but the user can pass a custom one via {\ttfamily \texorpdfstring{$<$}{<}Button padding=\{30\}\texorpdfstring{$>$}{>}}.\hypertarget{readme.md_autotoc_md31572}{}\doxysubsubsection{\texorpdfstring{Constants}{Constants}}\label{readme.md_autotoc_md31572}
+It is possible to use constants like so\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ colors,\ spacing\ \}\ from\ '../theme'}
+\DoxyCodeLine{import\ \{\ invertColor\ \}\ from\ '../theme/utils'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Button\ =\ (\{\ children\ \})\ =>\ (}
+\DoxyCodeLine{\ \ <button>}
+\DoxyCodeLine{\ \ \ \ \{children\}}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ padding:\ \$\{spacing.medium\};}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ background:\ \$\{colors.primary\};}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ \$\{invertColor(colors.primary)\};}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Please keep in mind that constants defined outside of the component scope are treated as static styles.\hypertarget{readme.md_autotoc_md31573}{}\doxysubsection{\texorpdfstring{Server-\/\+Side Rendering}{Server-\/\+Side Rendering}}\label{readme.md_autotoc_md31573}
+{\ttfamily styled-\/jsx} v5 introduced {\ttfamily Styled\+Registry} component and {\ttfamily use\+Style\+Registry} hook to let you scope styles rendering in each SSR render to keep concurrent-\/safe.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily registry.\+styles()} will return the array of react components for style tags.
+\item {\ttfamily registry.\+flush()} can clean the existing styles in the registry, it\textquotesingle{}s optional for SSR when you have a standalone registry for each SSR render.
+\end{DoxyItemize}
+
+\begin{quote}
+Next.\+js 12 integrates with {\ttfamily styled-\/jsx} v5 and manages the registry for you. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ ReactDOM\ from\ 'react-\/dom/server'}
+\DoxyCodeLine{import\ \{\ StyleRegistry,\ useStyleRegistry\ \}\ from\ 'styled-\/jsx'}
+\DoxyCodeLine{import\ App\ from\ './app'}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Styles()\ \{}
+\DoxyCodeLine{\ \ const\ registry\ =\ useStyleRegistry()}
+\DoxyCodeLine{\ \ const\ styles\ =\ registry.styles()}
+\DoxyCodeLine{\ \ return\ <>\{styles\}</>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ (req,\ res)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ app\ =\ ReactDOM.renderToString(<App\ />)}
+\DoxyCodeLine{\ \ const\ html\ =\ ReactDOM.renderToStaticMarkup(}
+\DoxyCodeLine{\ \ \ \ <StyleRegistry>}
+\DoxyCodeLine{\ \ \ \ \ \ <html>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <head>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <Styles\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ </head>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <body>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <div\ id="{}root"{}\ dangerouslySetInnerHTML=\{\{\ \_\_html:\ app\ \}\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ </body>}
+\DoxyCodeLine{\ \ \ \ \ \ </html>}
+\DoxyCodeLine{\ \ \ \ </StyleRegistry>}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ res.end('<!doctype\ html>'\ +\ html)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+There\textquotesingle{}s also a new API {\ttfamily create\+Style\+Registry} that is introduced when you have to create a registry manually. In this way you can operate the registry yourself to extract the rendered styles ({\ttfamily registry.\+styles()}) or flush them out ({\ttfamily registry.\+flush()}).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ registry\ =\ createStyleRegistry()}
+\DoxyCodeLine{const\ styles\ =\ registry.styles()\ //\ access\ styles}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Page()\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <StyleRegistry\ registry=\{registry\}>}
+\DoxyCodeLine{\ \ \ \ \ \ <App\ />}
+\DoxyCodeLine{\ \ \ \ </StyleRegistry>}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+By default {\ttfamily \texorpdfstring{$<$}{<}Style\+Registry /\texorpdfstring{$>$}{>}} will use the {\ttfamily registry} from root top {\ttfamily Style\+Registry}, which means there\textquotesingle{}s only one {\ttfamily registry} in the react tree.
+
+It\textquotesingle{}s {\bfseries{paramount}} that you use one of these two functions so that the generated styles can be diffed when the client loads and duplicate styles are avoided.\hypertarget{readme.md_autotoc_md31574}{}\doxysubsubsection{\texorpdfstring{Content Security Policy}{Content Security Policy}}\label{readme.md_autotoc_md31574}
+Strict \href{https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP}{\texttt{ CSP}} is supported.
+
+You should generate a nonce {\bfseries{per request}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ nanoid\ from\ 'nanoid'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ nonce\ =\ Buffer.from(nanoid()).toString('base64')\ //ex:\ N2M0MDhkN2EtMmRkYi00MTExLWFhM2YtNDhkNTc4NGJhMjA3}
+
+\end{DoxyCode}
+
+
+You must then pass a nonce to {\ttfamily registry.\+styles(\{ nonce \})} {\bfseries{and}} set a {\ttfamily \texorpdfstring{$<$}{<}meta property="{}csp-\/nonce"{} content=\{nonce\} /\texorpdfstring{$>$}{>}} tag.
+
+Your CSP policy must share the same nonce as well (the header nonce needs to match the html nonce and remain unpredictable). `Content-\/\+Security-\/\+Policy\+: default-\/src \textquotesingle{}self'; style-\/src \textquotesingle{}self\textquotesingle{} \textquotesingle{}nonce-\/\+N2\+M0\+MDhk\+N2\+Et\+Mm\+Rk\+Yi00\+MTEx\+LWFh\+M2\+Yt\+NDhk\+NTc4\+NGJh\+Mj\+A3\textquotesingle{};\`{}\hypertarget{readme.md_autotoc_md31575}{}\doxysubsubsection{\texorpdfstring{External CSS and styles outside of the component}{External CSS and styles outside of the component}}\label{readme.md_autotoc_md31575}
+In styled-\/jsx styles can be defined outside of the component\textquotesingle{}s render method or in separate Java\+Script modules using the {\ttfamily styled-\/jsx/css} library. {\ttfamily styled-\/jsx/css} exports three tags that can be used to tag your styles\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily css}, the default export, to define scoped styles.
+\item {\ttfamily css.\+global} to define global styles.
+\item {\ttfamily css.\+resolve} to define scoped styles that resolve to the scoped {\ttfamily class\+Name} and a {\ttfamily styles} element.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31576}{}\doxysubsubsubsection{\texorpdfstring{External styles}{External styles}}\label{readme.md_autotoc_md31576}
+In an external file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ styles.js\ */}
+\DoxyCodeLine{import\ css\ from\ 'styled-\/jsx/css'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Scoped\ styles}
+\DoxyCodeLine{export\ const\ button\ =\ css`}
+\DoxyCodeLine{\ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ color:\ hotpink;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Global\ styles}
+\DoxyCodeLine{export\ const\ body\ =\ css.global`body\ \{\ margin:\ 0;\ \}`}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Resolved\ styles}
+\DoxyCodeLine{export\ const\ link\ =\ css.resolve`a\ \{\ color:\ green;\ \}`}
+\DoxyCodeLine{//\ link.className\ -\/>\ scoped\ className\ to\ apply\ to\ \`{}a`\ elements\ e.g.\ jsx-\/123}
+\DoxyCodeLine{//\ link.styles\ -\/>\ styles\ element\ to\ render\ inside\ of\ your\ component}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Works\ also\ with\ default\ exports}
+\DoxyCodeLine{export\ default\ css`}
+\DoxyCodeLine{\ \ div\ \{}
+\DoxyCodeLine{\ \ \ \ color:\ green;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\`{}}
+
+\end{DoxyCode}
+
+
+You can then import and use those styles\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ styles,\ \{\ button,\ body\ \}\ from\ './styles'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ <button>styled-\/jsx</button>}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{styles\}</style>}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{button\}</style>}
+\DoxyCodeLine{\ \ \ \ <style\ jsx\ global>}
+\DoxyCodeLine{\ \ \ \ \ \ \{body\}}
+\DoxyCodeLine{\ \ \ \ </style>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+N.\+B. All the tags except for \`{}resolve\`{} don\textquotesingle{}t support dynamic styles.
+
+{\ttfamily resolve} and {\ttfamily global} can also be imported individually\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolve\ \}\ from\ 'styled-\/jsx/css'}
+\DoxyCodeLine{import\ \{\ global\ \}\ from\ 'styled-\/jsx/css'}
+
+\end{DoxyCode}
+
+
+If you use Prettier we recommend you to use the default {\ttfamily css} export syntax since the tool doesn\textquotesingle{}t support named imports.\hypertarget{readme.md_autotoc_md31577}{}\doxysubsubsubsection{\texorpdfstring{Styles outside of components}{Styles outside of components}}\label{readme.md_autotoc_md31577}
+The {\ttfamily css} tag from {\ttfamily styled-\/jsx/css} can be also used to define styles in your components files but outside of the component itself. This might help with keeping {\ttfamily render} methods smaller.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ css\ from\ 'styled-\/jsx/css'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ <button>styled-\/jsx</button>}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{button\}</style>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ button\ =\ css`}
+\DoxyCodeLine{\ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ color:\ hotpink;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\`{}}
+
+\end{DoxyCode}
+
+
+Like in externals styles {\ttfamily css} doesn\textquotesingle{}t work with dynamic styles. If you have dynamic parts you might want to place them inline inside of your component using a regular {\ttfamily \texorpdfstring{$<$}{<}style jsx\texorpdfstring{$>$}{>}} element.\hypertarget{readme.md_autotoc_md31578}{}\doxysubsubsubsection{\texorpdfstring{The {\ttfamily resolve} tag}{The {\ttfamily resolve} tag}}\label{readme.md_autotoc_md31578}
+The {\ttfamily resolve} tag from {\ttfamily styled-\/jsx/css} can be used when you need to scope some CSS -\/ for example, if you need to style nested components from the parent, such as the {\ttfamily Link} component in the example below.
+
+It works by returning the generated scoped {\ttfamily class\+Name} and related {\ttfamily styles}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ Link\ from\ 'some-\/library'}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ css\ from\ 'styled-\/jsx/css'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ className,\ styles\ \}\ =\ css.resolve`}
+\DoxyCodeLine{\ \ a\ \{\ color:\ green\ \}}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ \{/*\ use\ the\ className\ */\}}
+\DoxyCodeLine{\ \ \ \ <Link\ className=\{className\}>About</Link>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{/*\ render\ the\ styles\ for\ it\ */\}}
+\DoxyCodeLine{\ \ \ \ \{styles\}}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+The {\ttfamily resolve} tag also supports dynamic styles, via template string interpolation\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ React\ from\ 'react'}
+\DoxyCodeLine{import\ css\ from\ 'styled-\/jsx/css'}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ getLinkStyles(color)\ \{}
+\DoxyCodeLine{\ \ return\ css.resolve`}
+\DoxyCodeLine{\ \ \ \ a\ \{\ color:\ \$\{color\}\ \}}
+\DoxyCodeLine{\ \ \`{}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ props\ =>\ \{}
+\DoxyCodeLine{\ \ const\ \{\ className,\ styles\ \}\ =\ getLinkStyles(props.theme.color)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ <Link\ className=\{className\}>About</Link>}
+\DoxyCodeLine{\ \ \ \ \ \ \{styles\}}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31579}{}\doxysubsubsubsection{\texorpdfstring{Using {\ttfamily resolve} as a Babel macro}{Using {\ttfamily resolve} as a Babel macro}}\label{readme.md_autotoc_md31579}
+If you can\textquotesingle{}t (or would rather not) make changes to your {\ttfamily .babelrc}, the {\ttfamily resolve} tag can be used as a Babel macro, thanks to the \href{https://github.com/kentcdodds/babel-plugin-macros}{\texttt{ {\ttfamily babel-\/plugin-\/macros}}} system.
+
+To set this up, first of all, install {\ttfamily styled-\/jsx} and {\ttfamily babel-\/plugin-\/macros}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ -\/-\/save\ styled-\/jsx}
+\DoxyCodeLine{npm\ i\ -\/-\/save-\/dev\ babel-\/plugin-\/macros}
+
+\end{DoxyCode}
+
+
+Next, add {\ttfamily babel-\/plugin-\/macros} to your Babel configuration\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}plugins"{}:\ ["{}babel-\/plugin-\/macros"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+You can then use {\ttfamily resolve} by importing it from {\ttfamily styled-\/jsx/macro}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ css\ from\ 'styled-\/jsx/macro'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ className,\ styles\ \}\ =\ css.resolve`}
+\DoxyCodeLine{\ \ a\ \{\ color:\ green\ \}}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ <Link\ className=\{className\}>About</Link>}
+\DoxyCodeLine{\ \ \ \ \{styles\}}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31580}{}\doxysubsubsubsubsection{\texorpdfstring{Usage with \href{https://create-react-app.dev}{\texttt{ {\ttfamily create-\/react-\/app}}}}{Usage with \href{https://create-react-app.dev}{\texttt{ {\ttfamily create-\/react-\/app}}}}}\label{readme.md_autotoc_md31580}
+\href{https://create-react-app.dev}{\texttt{ Create React App}} comes with {\ttfamily babel-\/plugin-\/macros} already installed, so the only thing that needs to be done is to install {\ttfamily styled-\/jsx}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ -\/-\/save\ styled-\/jsx}
+
+\end{DoxyCode}
+
+
+Then {\ttfamily resolve} can be imported from {\ttfamily styled-\/jsx/macro} and used the same way as in the example in the \href{https://github.com/vercel/styled-jsx/blob/main/readme.md\#using-resolve-as-a-babel-macro}{\texttt{ Using {\ttfamily resolve} as a Babel macro}} section above.\hypertarget{readme.md_autotoc_md31581}{}\doxysubsubsubsection{\texorpdfstring{Styles in regular CSS files}{Styles in regular CSS files}}\label{readme.md_autotoc_md31581}
+styled-\/jsx v3 comes with a webpack loader that lets you write styles in regular {\ttfamily css} files and consume them in React.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ styles\ from\ '../components/button/styles.css'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ <button>styled-\/jsx</button>}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{styles\}</style>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+To consume the styles in your component you can import them from your CSS file and render them using a {\ttfamily \texorpdfstring{$<$}{<}style jsx\texorpdfstring{$>$}{>}} tag. Remember to add the {\ttfamily global} prop if you want your styles to be global.
+
+To use this feature you need to register the loader in your webpack config file, before {\ttfamily babel-\/loader} which will then transpile the styles via {\ttfamily styled-\/jsx/babel}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{config:\ \{}
+\DoxyCodeLine{\ \ module:\ \{}
+\DoxyCodeLine{\ \ \ \ rules:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ test:\ /\(\backslash\).css\$/,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ use:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ loader:\ require('styled-\/jsx/webpack').loader,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ options:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ 'scoped'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The plugin accepts a {\ttfamily type} option to configure whether the styles should be {\ttfamily scoped}, {\ttfamily global} or {\ttfamily resolve} (see above). By default its values is set to {\ttfamily scoped}. {\ttfamily type} can also be a {\ttfamily function} which takes the {\ttfamily file\+Name} and the {\ttfamily file\+Name\+Query} that is being transpiled and must return a valid type.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ validTypes\ =\ 'scoped'\ |\ 'global'\ |\ 'resolve'}
+\DoxyCodeLine{type\ fileName\ =\ string}
+\DoxyCodeLine{type\ Options\ =\ \{|}
+\DoxyCodeLine{\ \ type:\ validTypes\ |\ ((fileName,\ options)\ =>\ validTypes)}
+\DoxyCodeLine{|\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ styles\ from\ './styles.css?type=global'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ webpack}
+\DoxyCodeLine{config:\ \{}
+\DoxyCodeLine{\ \ module:\ \{}
+\DoxyCodeLine{\ \ \ \ rules:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ test:\ /\(\backslash\).css\$/,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ use:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ loader:\ require('styled-\/jsx/webpack').loader,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ options:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ type:\ (fileName,\ options)\ =>\ options.query.type\ ||\ 'scoped'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The type can also be set per individual CSS file via CSS comment\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ @styled-\/jsx=scoped\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{button\ \{}
+\DoxyCodeLine{\ \ color:\ red;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The CSS comment option will override the one in the webpack configuration only for this specific file.\hypertarget{readme.md_autotoc_md31582}{}\doxysubsubsubsubsection{\texorpdfstring{Next.\+js}{Next.\+js}}\label{readme.md_autotoc_md31582}
+Example of {\ttfamily next.\+config.\+js} to integrate {\ttfamily styled-\/jsx/webpack}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ webpack:\ (config,\ \{\ defaultLoaders\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ config.module.rules.push(\{}
+\DoxyCodeLine{\ \ \ \ \ \ test:\ /\(\backslash\).css\$/,}
+\DoxyCodeLine{\ \ \ \ \ \ use:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ defaultLoaders.babel,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ loader:\ require('styled-\/jsx/webpack').loader,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ options:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ type:\ 'scoped'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ return\ config}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31583}{}\doxysubsection{\texorpdfstring{CSS Preprocessing via Plugins}{CSS Preprocessing via Plugins}}\label{readme.md_autotoc_md31583}
+Styles can be preprocessed via plugins.
+
+Plugins are regular Java\+Script modules that export a simple function with the following signature\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ plugin(css:\ string,\ options:\ Object):\ string}
+
+\end{DoxyCode}
+
+
+Basically they accept a CSS string in input, optionally modify it and finally return it.
+
+Plugins make it possible to use popular preprocessors like SASS, Less, Stylus, Post\+CSS or apply custom transformations to the styles at {\bfseries{compile time}}.
+
+To register a plugin add an option {\ttfamily plugins} for {\ttfamily styled-\/jsx/babel} to your {\ttfamily .babelrc}. {\ttfamily plugins} must be an array of module names or {\itshape full} paths for local plugins.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ \ \ [}
+\DoxyCodeLine{\ \ \ \ \ \ "{}styled-\/jsx/babel"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}my-\/styled-\/jsx-\/plugin-\/package"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}/full/path/to/local/plugin"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+
+{\bfseries{Instructions to integrate with Next.js}}\begin{adjustwidth}{1em}{0em}
+In order to register styled-\/jsx plugins in a Next.\+js app you need to create a custom .babelrc file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}presets"{}:\ [}
+\DoxyCodeLine{\ \ \ \ [}
+\DoxyCodeLine{\ \ \ \ \ \ "{}next/babel"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}styled-\/jsx"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}plugins"{}:\ ["{}styled-\/jsx-\/plugin-\/postcss"{}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+This is a fairly new feature so make sure that you using a version of Next.\+js that supports passing options to {\ttfamily styled-\/jsx}.
+
+\end{adjustwidth}
+~\newline
+
+
+Plugins are applied in definition order left to right before styles are scoped.
+
+In order to resolve local plugins paths you can use Node\+JS\textquotesingle{} \href{https://nodejs.org/api/globals.html\#globals_require_resolve}{\texttt{ require.\+resolve}}.
+
+N.\+B. when applying the plugins styled-\/jsx replaces template literals expressions with placeholders because otherwise CSS parsers would get invalid CSS E.\+g.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ \`{}ExprNumber`\ is\ a\ number\ */}
+\DoxyCodeLine{\%\%styled-\/jsx-\/placeholder-\/ExprNumber\%\%}
+
+\end{DoxyCode}
+
+
+{\bfseries{Plugins won\textquotesingle{}t transform expressions}} (eg. dynamic styles).
+
+When publishing a plugin you may want to add the keywords\+: {\ttfamily styled-\/jsx} and {\ttfamily styled-\/jsx-\/plugin}. We also encourage you to use the following naming convention for your plugins\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{styled-\/jsx-\/plugin-\/<your-\/plugin-\/name>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31584}{}\doxysubsubsubsection{\texorpdfstring{Plugin options}{Plugin options}}\label{readme.md_autotoc_md31584}
+Users can set plugin options by registering a plugin as an array that contains the plugin path and an options object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ \ \ [}
+\DoxyCodeLine{\ \ \ \ \ \ "{}styled-\/jsx/babel"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}plugins"{}:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ["{}my-\/styled-\/jsx-\/plugin-\/package"{},\ \{\ "{}exampleOption"{}:\ true\ \}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}sourceMaps"{}:\ true}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Each plugin receives a {\ttfamily options} object as second argument which contains the babel and user options\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{;(css,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ /*\ ...\ */}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The {\ttfamily options} object has the following shape\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ //\ user\ options\ go\ here}
+\DoxyCodeLine{\ \ //\ eg.\ exampleOption:\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ babel\ options}
+\DoxyCodeLine{\ \ babel:\ \{}
+\DoxyCodeLine{\ \ \ \ sourceMaps:\ boolean,}
+\DoxyCodeLine{\ \ \ \ vendorPrefixes:\ boolean,}
+\DoxyCodeLine{\ \ \ \ isGlobal:\ boolean,}
+\DoxyCodeLine{\ \ \ \ filename:\ ?string,\ //\ defined\ only\ when\ the\ filename\ option\ is\ passed\ to\ Babel,\ such\ as\ when\ using\ Babel\ CLI\ or\ Webpack}
+\DoxyCodeLine{\ \ \ \ location:\ \{\ //\ the\ original\ location\ of\ the\ CSS\ block\ in\ the\ JavaScript\ file}
+\DoxyCodeLine{\ \ \ \ \ \ start:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ line:\ number,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ column:\ number,}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ end:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ line:\ number,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ column:\ number,}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31585}{}\doxysubsubsubsection{\texorpdfstring{Example plugins}{Example plugins}}\label{readme.md_autotoc_md31585}
+The following plugins are proof of concepts/sample\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/giuseppeg/styled-jsx-plugin-sass}{\texttt{ styled-\/jsx-\/plugin-\/sass}}
+\item \href{https://github.com/giuseppeg/styled-jsx-plugin-postcss}{\texttt{ styled-\/jsx-\/plugin-\/postcss}}
+\item \href{https://github.com/giuseppeg/styled-jsx-plugin-stylelint}{\texttt{ styled-\/jsx-\/plugin-\/stylelint}}
+\item \href{https://github.com/erasmo-marin/styled-jsx-plugin-less}{\texttt{ styled-\/jsx-\/plugin-\/less}}
+\item \href{https://github.com/omardelarosa/styled-jsx-plugin-stylus}{\texttt{ styled-\/jsx-\/plugin-\/stylus}}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31586}{}\doxysubsection{\texorpdfstring{Rendering in tests}{Rendering in tests}}\label{readme.md_autotoc_md31586}
+If you\textquotesingle{}re using a tool such as Enzyme, you might want to avoid compiling your styles in test renders. In general, styled-\/jsx artifacts like {\ttfamily jsx-\/123} classnames and vendor prefixing are not direct concerns of your component, and they generate a lot of snapshot noise.
+
+One option is to exclude the {\ttfamily styled-\/jsx/babel} plugin from the {\ttfamily test} environment using {\ttfamily env} in your Babel config (see \href{https://babeljs.io/docs/en/options\#config-merging-options}{\texttt{ Config Merging options}}).
+
+But this can cause noise in your terminal output when rendering\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.error\ node\_modules/react-\/dom/cjs/react-\/dom.development.js:527}
+\DoxyCodeLine{\ \ \ Warning:\ Received\ \`{}true`\ for\ a\ non-\/boolean\ attribute\ \`{}jsx`.}
+
+\end{DoxyCode}
+
+
+The {\ttfamily styled-\/jsx/babel-\/test} solves this problem. It simply strips {\ttfamily jsx} attributes from all {\ttfamily \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>}} tags. Be sure to target each environment with the appropriate plugin\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}env"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}production"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}plugins"{}:\ ["{}styled-\/jsx/babel"{}]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ "{}development"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}plugins"{}:\ ["{}styled-\/jsx/babel"{}]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ "{}test"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}plugins"{}:\ ["{}styled-\/jsx/babel-\/test"{}]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31587}{}\doxysubsubsubsection{\texorpdfstring{styled-\/jsx/css in tests}{styled-\/jsx/css in tests}}\label{readme.md_autotoc_md31587}
+When using {\ttfamily styled-\/jsx/babel-\/test}, {\ttfamily styled-\/jsx/css} throws the following error\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{styled-\/jsx/css:\ if\ you\ are\ getting\ this\ error\ it\ means\ that\ your\ \`{}css`\ tagged\ template\ literals\ were\ not\ transpiled.}
+
+\end{DoxyCode}
+
+
+to solve this issue you need to mock {\ttfamily styled-\/jsx/css}. You can find a guide at the following link \href{https://kevinjalbert.com/jest-snapshots-reducing-styled-jsx-noise/}{\texttt{ https\+://kevinjalbert.\+com/jest-\/snapshots-\/reducing-\/styled-\/jsx-\/noise/}}\hypertarget{readme.md_autotoc_md31588}{}\doxysubsection{\texorpdfstring{FAQ}{FAQ}}\label{readme.md_autotoc_md31588}
+\hypertarget{readme.md_autotoc_md31589}{}\doxysubsubsection{\texorpdfstring{Warning\+: unknown {\ttfamily jsx} prop on \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>} tag}{Warning\+: unknown {\ttfamily jsx} prop on \texorpdfstring{$<$}{<}style\texorpdfstring{$>$}{>} tag}}\label{readme.md_autotoc_md31589}
+If you get this warning it means that your styles were not compiled by styled-\/jsx.
+
+Please take a look at your setup and make sure that everything is correct and that the styled-\/jsx transformation is ran by Babel.\hypertarget{readme.md_autotoc_md31590}{}\doxysubsubsection{\texorpdfstring{Can I return an array of components when using React 16?}{Can I return an array of components when using React 16?}}\label{readme.md_autotoc_md31590}
+No, this feature is not supported. However we support React Fragments, which are available in React {\ttfamily 16.\+2.\+0} and above.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ StyledImage\ =\ (\{\ src,\ alt\ =\ ''\ \})\ =>\ (}
+\DoxyCodeLine{\ \ <React.Fragment>}
+\DoxyCodeLine{\ \ \ \ <img\ src=\{src\}\ alt=\{alt\}\ />}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ img\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ max-\/width:\ 100\%;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </React.Fragment>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31591}{}\doxysubsubsection{\texorpdfstring{Styling third parties / child components from the parent}{Styling third parties / child components from the parent}}\label{readme.md_autotoc_md31591}
+When the component accepts a {\ttfamily class\+Name} (or ad-\/hoc) prop as a way to allow customizations then you can use the \`{}resolve\`{} tag from \`{}styled-\/jsx/css\`{}.
+
+When the component doesn\textquotesingle{}t accept any {\ttfamily class\+Name} or doesn\textquotesingle{}t expose any API to customize the component, then your only option is to use {\ttfamily \+:global()} styles\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ ()\ =>\ (}
+\DoxyCodeLine{\ \ <div>}
+\DoxyCodeLine{\ \ \ \ <ExternalComponent\ />}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ /*\ "{}div"{}\ will\ be\ prefixed,\ but\ "{}.nested-\/element"{}\ won't\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ div\ >\ :global(.nested-\/element)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ red;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </div>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+
+Please keep in mind that {\ttfamily \+:global()} styles will affect the entire subtree, so in many cases you may want to be careful and use the children (direct descendant) selector {\ttfamily \texorpdfstring{$>$}{>}}.\hypertarget{readme.md_autotoc_md31592}{}\doxysubsubsection{\texorpdfstring{Build a component library with styled-\/jsx}{Build a component library with styled-\/jsx}}\label{readme.md_autotoc_md31592}
+There\textquotesingle{}s an \href{https://medium.com/@tomaszmularczyk89/guide-to-building-a-react-components-library-with-rollup-and-styled-jsx-694ec66bd2}{\texttt{ article}} explaining how to bundle React components with Rollup and styled-\/jsx as an external dependency.\hypertarget{readme.md_autotoc_md31593}{}\doxysubsection{\texorpdfstring{Syntax Highlighting}{Syntax Highlighting}}\label{readme.md_autotoc_md31593}
+When working with template literals a common drawback is missing syntax highlighting. The following editors currently have support for highlighting CSS inside {\ttfamily \texorpdfstring{$<$}{<}style jsx\texorpdfstring{$>$}{>}} elements.
+
+{\itshape If you have a solution for an editor not on the list} {\bfseries{please \href{https://github.com/vercel/styled-jsx/pull/new/main}{\texttt{ open a PR}}}} {\itshape and let us now.}\hypertarget{readme.md_autotoc_md31594}{}\doxysubsubsection{\texorpdfstring{Atom}{Atom}}\label{readme.md_autotoc_md31594}
+The \href{https://github.com/gandm/language-babel}{\texttt{ {\ttfamily language-\/babel}}} package for the \href{https://atom.io/}{\texttt{ Atom editor}} has an option to \href{https://github.com/gandm/language-babel\#javascript-tagged-template-literal-grammar-extensions}{\texttt{ extend the grammar for Java\+Script tagged template literals}}.
+
+After \href{https://github.com/gandm/language-babel\#installation}{\texttt{ installing the package}} add the code below to the appropriate settings entry. In a few moments you should be blessed with proper CSS syntax highlighting. (\href{https://github.com/gandm/language-babel/issues/324}{\texttt{ source}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}(?<=<style\ jsx>\{)|(?<=<style\ jsx\ global>\{)|(?<=css)"{}:source.css.styled}
+
+\end{DoxyCode}
+
+
+\hypertarget{readme.md_autotoc_md31595}{}\doxysubsubsection{\texorpdfstring{Webstorm/\+Idea}{Webstorm/\+Idea}}\label{readme.md_autotoc_md31595}
+The IDE let you inject any language in place with {\itshape Inject language or reference} in an {\itshape Intention Actions} (default {\itshape alt+enter}). Simply perform the action in the string template and select CSS. You get full CSS highlighting and autocompletion and it will last until you close the IDE.
+
+Additionally you can use language injection comments to enable all the IDE language features indefinitely using the language comment style\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ colors,\ spacing\ \}\ from\ '../theme'}
+\DoxyCodeLine{import\ \{\ invertColor\ \}\ from\ '../theme/utils'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ Button\ =\ (\{\ children\ \})\ =>\ (}
+\DoxyCodeLine{\ \ <button>}
+\DoxyCodeLine{\ \ \ \ \{children\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{/*language=CSS*/\}}
+\DoxyCodeLine{\ \ \ \ <style\ jsx>\{`}
+\DoxyCodeLine{\ \ \ \ \ \ button\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ padding:\ \$\{spacing.medium\};}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ background:\ \$\{colors.primary\};}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ color:\ \$\{invertColor(colors.primary)\};}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \`{}\}</style>}
+\DoxyCodeLine{\ \ </button>}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31596}{}\doxysubsubsection{\texorpdfstring{Emmet}{Emmet}}\label{readme.md_autotoc_md31596}
+If you\textquotesingle{}re using Emmet you can add the following snippet to {\ttfamily \texorpdfstring{$\sim$}{\string~}/emmet/snippets-\/styledjsx.json} This will allow you to expand {\ttfamily style-\/jsx} to a styled-\/jsx block.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}html"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}snippets"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}style-\/jsx"{}:\ "{}<style\ jsx>\{`\(\backslash\)n\(\backslash\)t\$1\(\backslash\)n`\}</style>"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31597}{}\doxysubsubsection{\texorpdfstring{Syntax Highlighting \href{https://marketplace.visualstudio.com/items?itemName=Divlo.vscode-styled-jsx-syntax}{\texttt{ Visual Studio Code Extension}}}{Syntax Highlighting \href{https://marketplace.visualstudio.com/items?itemName=Divlo.vscode-styled-jsx-syntax}{\texttt{ Visual Studio Code Extension}}}}\label{readme.md_autotoc_md31597}
+Launch VS Code Quick Open (⌘+P), paste the following command, and press enter.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ext\ install\ Divlo.vscode-\/styled-\/jsx-\/syntax}
+
+\end{DoxyCode}
+
+
+If you use Stylus instead of plain CSS, install \href{https://marketplace.visualstudio.com/items?itemName=samuelroy.vscode-styled-jsx-stylus}{\texttt{ vscode-\/styled-\/jsx-\/stylus}} or paste the command below.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ext\ install\ vscode-\/styled-\/jsx-\/stylus}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31598}{}\doxysubsubsection{\texorpdfstring{Autocomplete \href{https://marketplace.visualstudio.com/items?itemName=Divlo.vscode-styled-jsx-languageserver}{\texttt{ Visual Studio Code Extension}}}{Autocomplete \href{https://marketplace.visualstudio.com/items?itemName=Divlo.vscode-styled-jsx-languageserver}{\texttt{ Visual Studio Code Extension}}}}\label{readme.md_autotoc_md31598}
+Launch VS Code Quick Open (⌘+P), paste the following command, and press enter.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ext\ install\ Divlo.vscode-\/styled-\/jsx-\/languageserver}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31599}{}\doxysubsubsection{\texorpdfstring{Vim}{Vim}}\label{readme.md_autotoc_md31599}
+Install \href{https://github.com/alampros/vim-styled-jsx}{\texttt{ vim-\/styled-\/jsx}} with your plugin manager of choice.\hypertarget{readme.md_autotoc_md31600}{}\doxysubsection{\texorpdfstring{ESLint}{ESLint}}\label{readme.md_autotoc_md31600}
+If you\textquotesingle{}re using {\ttfamily eslint-\/plugin-\/import}, the {\ttfamily css} import will generate errors, being that it\textquotesingle{}s a "{}magic"{} import (not listed in package.\+json). To avoid these, simply add the following line to your eslint configuration\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}settings"{}:\ \{"{}import/core-\/modules"{}:\ ["{}styled-\/jsx/css"{}]\ \}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md31601}{}\doxysubsection{\texorpdfstring{Type\+Script}{Type\+Script}}\label{readme.md_autotoc_md31601}
+If you\textquotesingle{}re using Type\+Script, then in order to allow {\ttfamily \texorpdfstring{$<$}{<}style jsx\texorpdfstring{$>$}{>}} tags to be properly understood by it, create a file named "{}styled-\/jsx.\+d.\+ts"{} anywhere within your project containing the following, or add this line to the top of any single existing .ts file within your project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{///\ <reference\ types="{}styled-\/jsx"{}\ />}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+If you\textquotesingle{}re using babel to transform styled-\/jsx code with Type\+Script, you need to specify {\ttfamily "{}jsx"{}\+: "{}preserve"{}} in your tsconfig.\+json to keep the original JSX and let babel parse and transform with styled-\/jsx babel plugin. \end{quote}
+\hypertarget{readme.md_autotoc_md31602}{}\doxysubsection{\texorpdfstring{Credits}{Credits}}\label{readme.md_autotoc_md31602}
+
+\begin{DoxyItemize}
+\item {\bfseries{Pedram Emrouznejad}} (\href{https://github.com/rijs/fullstack}{\texttt{ rijs}}) suggested attribute selectors over my initial class prefixing idea.
+\item {\bfseries{Sunil Pai}} (\href{https://github.com/threepointone/glamor}{\texttt{ glamor}}) inspired the use of {\ttfamily murmurhash2} (minimal and fast hashing) and an efficient style injection logic.
+\item {\bfseries{Sultan Tarimo}} built \href{https://github.com/thysultan}{\texttt{ stylis.\+js}}, a super fast and tiny CSS parser and compiler.
+\item {\bfseries{Max Stoiber}} (\href{https://github.com/styled-components}{\texttt{ styled-\/components}}) proved the value of retaining the familiarity of CSS syntax and pointed me to the very efficient \href{https://github.com/thysultan/stylis.js}{\texttt{ stylis}} compiler (which we forked to very efficiently append attribute selectors to the user\textquotesingle{}s css)
+\item {\bfseries{Yehuda Katz}} (\href{https://github.com/emberjs}{\texttt{ ember}}) convinced me on Twitter to transpile CSS as an alternative to CSS-\/in-\/\+JS.
+\item {\bfseries{Evan You}} (\href{https://github.com/vuejs}{\texttt{ vuejs}}) discussed his Vue.\+js CSS transformation with me.
+\item {\bfseries{Henry Zhu}} (\href{https://github.com/babel}{\texttt{ babel}}) helpfully pointed me to some important areas of the babel plugin API.
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md31603}{}\doxysubsection{\texorpdfstring{Authors}{Authors}}\label{readme.md_autotoc_md31603}
+
+\begin{DoxyItemize}
+\item Guillermo Rauch (\href{https://twitter.com/rauchg}{\texttt{ @rauchg}}) -\/ \href{https://vercel.com}{\texttt{ ▲\+Vercel}}
+\item Naoyuki Kanezawa (\href{https://twitter.com/nkzawa}{\texttt{ @nkzawa}}) -\/ \href{https://vercel.com}{\texttt{ ▲\+Vercel}}
+\item Giuseppe Gurgone (\href{https://twitter.com/giuseppegurgone}{\texttt{ @giuseppegurgone}}) 
+\end{DoxyItemize}

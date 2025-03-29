@@ -1,0 +1,334 @@
+\doxysection{src/docs/api Directory Reference}
+\hypertarget{dir_48c85928e94920d0db7c4affa9847b98}{}\label{dir_48c85928e94920d0db7c4affa9847b98}\index{src/docs/api Directory Reference@{src/docs/api Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_6a57f0630477f857b45215e63faadb76}{plugins}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This document provides detailed information about the public API of our MP-\/\+SPDZ Type\+Script bindings.\hypertarget{README.md_autotoc_md37011}{}\doxysubsection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{README.md_autotoc_md37011}
+
+\begin{DoxyEnumerate}
+\item JIFF Adapter
+\item Protocol Handlers
+\item Types and Interfaces
+\item \doxylink{README.md_configuration}{Configuration}
+\item Error Handling
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37012}{}\doxysubsection{\texorpdfstring{JIFF Adapter}{JIFF Adapter}}\label{README.md_autotoc_md37012}
+The JIFF adapter provides a JIFF-\/compatible interface for MP-\/\+SPDZ operations.\hypertarget{README.md_autotoc_md37013}{}\doxysubsubsection{\texorpdfstring{JIFFAdapter}{JIFFAdapter}}\label{README.md_autotoc_md37013}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ JIFFAdapter\ \{}
+\DoxyCodeLine{\ \ constructor(config:\ JIFFAdapterConfig)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Share\ Operations}
+\DoxyCodeLine{\ \ async\ share(value:\ number\ |\ bigint):\ Promise<JIFFShare>}
+\DoxyCodeLine{\ \ async\ open(share:\ JIFFShare):\ Promise<bigint>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Arithmetic\ Operations}
+\DoxyCodeLine{\ \ async\ add(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{\ \ async\ subtract(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{\ \ async\ multiply(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Comparison\ Operations}
+\DoxyCodeLine{\ \ async\ lessThan(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{\ \ async\ greaterThan(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{\ \ async\ equals(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Bitwise\ Operations}
+\DoxyCodeLine{\ \ async\ xor(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{\ \ async\ and(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{\ \ async\ or(a:\ JIFFShare,\ b:\ JIFFShare):\ Promise<JIFFShare>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37014}{}\doxysubsubsection{\texorpdfstring{JIFFAdapter\+Config}{JIFFAdapter\+Config}}\label{README.md_autotoc_md37014}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ JIFFAdapterConfig\ \{}
+\DoxyCodeLine{\ \ partyId:\ number}
+\DoxyCodeLine{\ \ numParties:\ number}
+\DoxyCodeLine{\ \ threshold:\ number}
+\DoxyCodeLine{\ \ protocol:\ MPCProtocol}
+\DoxyCodeLine{\ \ prime?:\ bigint\ //\ Optional,\ defaults\ to\ 2\string^64\ -\/\ 1}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37015}{}\doxysubsubsection{\texorpdfstring{JIFFShare}{JIFFShare}}\label{README.md_autotoc_md37015}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ JIFFShare\ \{}
+\DoxyCodeLine{\ \ value:\ number\ |\ bigint}
+\DoxyCodeLine{\ \ sender:\ number}
+\DoxyCodeLine{\ \ receivers:\ number[]}
+\DoxyCodeLine{\ \ threshold:\ number}
+\DoxyCodeLine{\ \ Zp:\ bigint}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37016}{}\doxysubsection{\texorpdfstring{Protocol Handlers}{Protocol Handlers}}\label{README.md_autotoc_md37016}
+Protocol handlers implement the core MPC functionality for each supported protocol.\hypertarget{README.md_autotoc_md37017}{}\doxysubsubsection{\texorpdfstring{Protocol\+Handler}{Protocol\+Handler}}\label{README.md_autotoc_md37017}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ ProtocolHandler\ \{}
+\DoxyCodeLine{\ \ protocol:\ MPCProtocol}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Message\ Handlers}
+\DoxyCodeLine{\ \ handleShare:\ (message:\ NetworkMessage<MPCShare>)\ =>\ Promise<void>}
+\DoxyCodeLine{\ \ handleMultiplication:\ (message:\ NetworkMessage<\{\ a:\ MPCShare,\ b:\ MPCShare\ \}>)\ =>\ Promise<MPCShare>}
+\DoxyCodeLine{\ \ handleComparison:\ (message:\ NetworkMessage<\{\ a:\ MPCShare,\ b:\ MPCShare\ \}>)\ =>\ Promise<MPCShare>}
+\DoxyCodeLine{\ \ handlePreprocessing:\ (message:\ NetworkMessage<\{\ type:\ string,\ data:\ Uint8Array\ \}>)\ =>\ Promise<void>}
+\DoxyCodeLine{\ \ handleSync:\ (message:\ NetworkMessage)\ =>\ Promise<void>}
+\DoxyCodeLine{\ \ handleProof:\ (message:\ NetworkMessage<ProofData>)\ =>\ Promise<boolean>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Validation}
+\DoxyCodeLine{\ \ validateMessage:\ (message:\ NetworkMessage)\ =>\ boolean}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37018}{}\doxysubsubsection{\texorpdfstring{Protocol-\/\+Specific Handlers}{Protocol-\/\+Specific Handlers}}\label{README.md_autotoc_md37018}
+\hypertarget{README.md_autotoc_md37019}{}\doxysubsubsubsection{\texorpdfstring{MASCOTHandler}{MASCOTHandler}}\label{README.md_autotoc_md37019}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ MASCOTHandler\ implements\ ProtocolHandler\ \{}
+\DoxyCodeLine{\ \ //\ Implements\ ProtocolHandler\ interface\ with\ MASCOT-\/specific\ logic}
+\DoxyCodeLine{\ \ //\ Provides\ malicious\ security\ with\ MAC-\/based\ verification}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37020}{}\doxysubsubsubsection{\texorpdfstring{SPDZ2k\+Handler}{SPDZ2k\+Handler}}\label{README.md_autotoc_md37020}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ SPDZ2kHandler\ implements\ ProtocolHandler\ \{}
+\DoxyCodeLine{\ \ //\ Implements\ ProtocolHandler\ interface\ with\ SPDZ2k-\/specific\ logic}
+\DoxyCodeLine{\ \ //\ Optimized\ for\ k-\/bit\ integer\ arithmetic}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37021}{}\doxysubsubsubsection{\texorpdfstring{Semi2k\+Handler}{Semi2k\+Handler}}\label{README.md_autotoc_md37021}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ Semi2kHandler\ implements\ ProtocolHandler\ \{}
+\DoxyCodeLine{\ \ //\ Implements\ ProtocolHandler\ interface\ with\ Semi2k-\/specific\ logic}
+\DoxyCodeLine{\ \ //\ Provides\ semi-\/honest\ security\ without\ MACs}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37022}{}\doxysubsection{\texorpdfstring{Types and Interfaces}{Types and Interfaces}}\label{README.md_autotoc_md37022}
+\hypertarget{README.md_autotoc_md37023}{}\doxysubsubsection{\texorpdfstring{MPCProtocol}{MPCProtocol}}\label{README.md_autotoc_md37023}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{enum\ MPCProtocol\ \{}
+\DoxyCodeLine{\ \ MASCOT\ =\ 'mascot',}
+\DoxyCodeLine{\ \ SPDZ2K\ =\ 'spdz2k',}
+\DoxyCodeLine{\ \ SEMI2K\ =\ 'semi2k'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37024}{}\doxysubsubsection{\texorpdfstring{MPCShare}{MPCShare}}\label{README.md_autotoc_md37024}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ MPCShare\ \{}
+\DoxyCodeLine{\ \ id:\ string}
+\DoxyCodeLine{\ \ partyId:\ number}
+\DoxyCodeLine{\ \ value:\ Uint8Array}
+\DoxyCodeLine{\ \ metadata:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ string}
+\DoxyCodeLine{\ \ \ \ bitLength:\ number}
+\DoxyCodeLine{\ \ \ \ verified:\ boolean}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37025}{}\doxysubsubsection{\texorpdfstring{Network\+Message}{Network\+Message}}\label{README.md_autotoc_md37025}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ NetworkMessage<T\ =\ any>\ \{}
+\DoxyCodeLine{\ \ type:\ ProtocolMessageType}
+\DoxyCodeLine{\ \ sender:\ number}
+\DoxyCodeLine{\ \ receiver?:\ number}
+\DoxyCodeLine{\ \ data:\ T}
+\DoxyCodeLine{\ \ metadata:\ MessageMetadata}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37026}{}\doxysubsubsection{\texorpdfstring{Message\+Metadata}{Message\+Metadata}}\label{README.md_autotoc_md37026}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ MessageMetadata\ \{}
+\DoxyCodeLine{\ \ timestamp:\ number}
+\DoxyCodeLine{\ \ sequence:\ number}
+\DoxyCodeLine{\ \ sessionId:\ string}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37027}{}\doxysubsubsection{\texorpdfstring{Proof\+Data}{Proof\+Data}}\label{README.md_autotoc_md37027}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ ProofData\ \{}
+\DoxyCodeLine{\ \ type:\ string}
+\DoxyCodeLine{\ \ data:\ Uint8Array}
+\DoxyCodeLine{\ \ challenge?:\ Uint8Array}
+\DoxyCodeLine{\ \ response?:\ Uint8Array}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37028}{}\doxysubsection{\texorpdfstring{Configuration}{Configuration}}\label{README.md_autotoc_md37028}
+\hypertarget{README.md_autotoc_md37029}{}\doxysubsubsection{\texorpdfstring{Test\+Config}{Test\+Config}}\label{README.md_autotoc_md37029}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ TestConfig\ \{}
+\DoxyCodeLine{\ \ protocol:\ MPCProtocol}
+\DoxyCodeLine{\ \ numParties:\ number}
+\DoxyCodeLine{\ \ basePort:\ number}
+\DoxyCodeLine{\ \ preprocessingDir:\ string}
+\DoxyCodeLine{\ \ binaryDir:\ string}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37030}{}\doxysubsection{\texorpdfstring{Error Handling}{Error Handling}}\label{README.md_autotoc_md37030}
+\hypertarget{README.md_autotoc_md37031}{}\doxysubsubsection{\texorpdfstring{MPCError}{MPCError}}\label{README.md_autotoc_md37031}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ MPCError\ extends\ Error\ \{}
+\DoxyCodeLine{\ \ constructor(type:\ MPCErrorType,\ message:\ string)}
+\DoxyCodeLine{\ \ readonly\ type:\ MPCErrorType}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37032}{}\doxysubsubsection{\texorpdfstring{MPCError\+Type}{MPCError\+Type}}\label{README.md_autotoc_md37032}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{enum\ MPCErrorType\ \{}
+\DoxyCodeLine{\ \ PROTOCOL\_ERROR\ =\ 'protocol\_error',}
+\DoxyCodeLine{\ \ NETWORK\_ERROR\ =\ 'network\_error',}
+\DoxyCodeLine{\ \ SECURITY\_ERROR\ =\ 'security\_error',}
+\DoxyCodeLine{\ \ INITIALIZATION\_ERROR\ =\ 'initialization\_error'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37033}{}\doxysubsection{\texorpdfstring{Usage Examples}{Usage Examples}}\label{README.md_autotoc_md37033}
+\hypertarget{README.md_autotoc_md37034}{}\doxysubsubsection{\texorpdfstring{Basic Share Operations}{Basic Share Operations}}\label{README.md_autotoc_md37034}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ adapter\ =\ new\ JIFFAdapter(\{}
+\DoxyCodeLine{\ \ partyId:\ 0,}
+\DoxyCodeLine{\ \ numParties:\ 3,}
+\DoxyCodeLine{\ \ threshold:\ 1,}
+\DoxyCodeLine{\ \ protocol:\ MPCProtocol.SEMI2K}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Share\ a\ value}
+\DoxyCodeLine{const\ share\ =\ await\ adapter.share(42)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Open\ a\ share}
+\DoxyCodeLine{const\ value\ =\ await\ adapter.open(share)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37035}{}\doxysubsubsection{\texorpdfstring{Arithmetic Operations}{Arithmetic Operations}}\label{README.md_autotoc_md37035}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Multiplication}
+\DoxyCodeLine{const\ a\ =\ await\ adapter.share(5)}
+\DoxyCodeLine{const\ b\ =\ await\ adapter.share(3)}
+\DoxyCodeLine{const\ product\ =\ await\ adapter.multiply(a,\ b)}
+\DoxyCodeLine{const\ result\ =\ await\ adapter.open(product)\ //\ 15}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Addition}
+\DoxyCodeLine{const\ sum\ =\ await\ adapter.add(a,\ b)}
+\DoxyCodeLine{const\ sumResult\ =\ await\ adapter.open(sum)\ //\ 8}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37036}{}\doxysubsubsection{\texorpdfstring{Comparison Operations}{Comparison Operations}}\label{README.md_autotoc_md37036}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Greater\ than}
+\DoxyCodeLine{const\ isGreater\ =\ await\ adapter.greaterThan(a,\ b)}
+\DoxyCodeLine{const\ result\ =\ await\ adapter.open(isGreater)\ //\ 1\ (true)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Equality}
+\DoxyCodeLine{const\ areEqual\ =\ await\ adapter.equals(a,\ b)}
+\DoxyCodeLine{const\ equalResult\ =\ await\ adapter.open(areEqual)\ //\ 0\ (false)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37037}{}\doxysubsection{\texorpdfstring{Error Handling2}{Error Handling2}}\label{README.md_autotoc_md37037}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ const\ share\ =\ await\ adapter.share(42)}
+\DoxyCodeLine{\ \ const\ result\ =\ await\ adapter.multiply(share,\ share)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{catch\ (error)\ \{}
+\DoxyCodeLine{\ \ if\ (error\ instanceof\ MPCError)\ \{}
+\DoxyCodeLine{\ \ \ \ switch\ (error.type)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ case\ MPCErrorType.PROTOCOL\_ERROR:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Handle\ protocol\ errors}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ break}
+\DoxyCodeLine{\ \ \ \ \ \ case\ MPCErrorType.NETWORK\_ERROR:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Handle\ network\ errors}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ break}
+\DoxyCodeLine{\ \ \ \ \ \ case\ MPCErrorType.SECURITY\_ERROR:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ Handle\ security\ violations}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ break}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md37038}{}\doxysubsection{\texorpdfstring{Performance Considerations}{Performance Considerations}}\label{README.md_autotoc_md37038}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Batch Processing}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Process\ multiple\ values\ in\ parallel}
+\DoxyCodeLine{const\ shares\ =\ await\ Promise.all(}
+\DoxyCodeLine{\ \ values.map(value\ =>\ adapter.share(value))}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+
+\item {\bfseries{Protocol Selection}}
+\begin{DoxyItemize}
+\item Use SEMI2K for best performance in semi-\/honest settings
+\item Use SPDZ2K for integer-\/heavy computations
+\item Use MASCOT when malicious security is required
+\end{DoxyItemize}
+\item {\bfseries{Memory Management}}
+\begin{DoxyItemize}
+\item Clean up shares when no longer needed
+\item Monitor memory usage during large computations
+\item Use preprocessing data efficiently
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37039}{}\doxysubsection{\texorpdfstring{Security Guidelines}{Security Guidelines}}\label{README.md_autotoc_md37039}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Protocol Selection}}
+\begin{DoxyItemize}
+\item Choose protocols based on security requirements
+\item Document security assumptions
+\item Use MASCOT for maximum security
+\end{DoxyItemize}
+\item {\bfseries{Network Security}}
+\begin{DoxyItemize}
+\item Use TLS for all connections
+\item Implement proper key management
+\item Validate all messages
+\end{DoxyItemize}
+\item {\bfseries{Error Handling}}
+\begin{DoxyItemize}
+\item Never ignore security-\/related errors
+\item Log security events appropriately
+\item Handle timeouts and failures gracefully
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md37040}{}\doxysubsection{\texorpdfstring{Further Resources}{Further Resources}}\label{README.md_autotoc_md37040}
+
+\begin{DoxyItemize}
+\item \doxylink{src_2docs_2protocols_2_r_e_a_d_m_e_8md}{Protocol Documentation}
+\item JIFF Migration Guide
+\item \href{../protocols/security/}{\texttt{ Security Analysis}}
+\item \href{../protocols/benchmarks/}{\texttt{ Performance Benchmarks}} 
+\end{DoxyItemize}

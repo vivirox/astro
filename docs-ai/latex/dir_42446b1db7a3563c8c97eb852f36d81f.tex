@@ -1,0 +1,123 @@
+\doxysection{node\+\_\+modules/object.assign Directory Reference}
+\hypertarget{dir_42446b1db7a3563c8c97eb852f36d81f}{}\label{dir_42446b1db7a3563c8c97eb852f36d81f}\index{node\_modules/object.assign Directory Reference@{node\_modules/object.assign Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/ljharb/object.assign/actions}{\texttt{ }} \href{https://app.codecov.io/gh/ljharb/object.assign/}{\texttt{ }} \href{https://david-dm.org/ljharb/object.assign}{\texttt{ }} \href{https://david-dm.org/ljharb/object.assign\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{http://npm-stat.com/charts.html?package=object.assign}{\texttt{ }}
+
+\href{https://npmjs.org/package/object.assign}{\texttt{ }}
+
+An Object.\+assign shim. Invoke its "{}shim"{} method to shim Object.\+assign if it is unavailable.
+
+This package implements the \href{https://github.com/es-shims/api}{\texttt{ es-\/shim API}} interface. It works in an ES3-\/supported environment and complies with the \href{http://www.ecma-international.org/ecma-262/6.0/\#sec-object.assign}{\texttt{ spec}}. In an ES6 environment, it will also work properly with {\ttfamily Symbol}s.
+
+Takes a minimum of 2 arguments\+: {\ttfamily target} and {\ttfamily source}. Takes a variable sized list of source arguments -\/ at least 1, as many as you want. Throws a Type\+Error if the {\ttfamily target} argument is {\ttfamily null} or {\ttfamily undefined}.
+
+Most common usage\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ assign\ =\ require('object.assign').getPolyfill();\ //\ returns\ native\ method\ if\ compliant}
+\DoxyCodeLine{\ \ \ \ /*\ or\ */}
+\DoxyCodeLine{var\ assign\ =\ require('object.assign/polyfill')();\ //\ returns\ native\ method\ if\ compliant}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md24957}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md24957}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Multiple\ sources!}
+\DoxyCodeLine{var\ target\ =\ \{\ a:\ true\ \};}
+\DoxyCodeLine{var\ source1\ =\ \{\ b:\ true\ \};}
+\DoxyCodeLine{var\ source2\ =\ \{\ c:\ true\ \};}
+\DoxyCodeLine{var\ sourceN\ =\ \{\ n:\ true\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ expected\ =\ \{}
+\DoxyCodeLine{\ \ \ \ a:\ true,}
+\DoxyCodeLine{\ \ \ \ b:\ true,}
+\DoxyCodeLine{\ \ \ \ c:\ true,}
+\DoxyCodeLine{\ \ \ \ n:\ true}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{assign(target,\ source1,\ source2,\ sourceN);}
+\DoxyCodeLine{assert.deepEqual(target,\ expected);\ //\ AWESOME!}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ target\ =\ \{}
+\DoxyCodeLine{\ \ \ \ a:\ true,}
+\DoxyCodeLine{\ \ \ \ b:\ true,}
+\DoxyCodeLine{\ \ \ \ c:\ true}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{var\ source1\ =\ \{}
+\DoxyCodeLine{\ \ \ \ c:\ false,}
+\DoxyCodeLine{\ \ \ \ d:\ false}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{var\ sourceN\ =\ \{}
+\DoxyCodeLine{\ \ \ \ e:\ false}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ assigned\ =\ assign(target,\ source1,\ sourceN);}
+\DoxyCodeLine{assert.equal(target,\ assigned);\ //\ returns\ the\ target\ object}
+\DoxyCodeLine{assert.deepEqual(assigned,\ \{}
+\DoxyCodeLine{\ \ \ \ a:\ true,}
+\DoxyCodeLine{\ \ \ \ b:\ true,}
+\DoxyCodeLine{\ \ \ \ c:\ false,}
+\DoxyCodeLine{\ \ \ \ d:\ false,}
+\DoxyCodeLine{\ \ \ \ e:\ false}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ when\ Object.assign\ is\ not\ present\ */}
+\DoxyCodeLine{delete\ Object.assign;}
+\DoxyCodeLine{var\ shimmedAssign\ =\ require('object.assign').shim();}
+\DoxyCodeLine{\ \ \ \ /*\ or\ */}
+\DoxyCodeLine{var\ shimmedAssign\ =\ require('object.assign/shim')();}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.equal(shimmedAssign,\ assign);}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ target\ =\ \{}
+\DoxyCodeLine{\ \ \ \ a:\ true,}
+\DoxyCodeLine{\ \ \ \ b:\ true,}
+\DoxyCodeLine{\ \ \ \ c:\ true}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{var\ source\ =\ \{}
+\DoxyCodeLine{\ \ \ \ c:\ false,}
+\DoxyCodeLine{\ \ \ \ d:\ false,}
+\DoxyCodeLine{\ \ \ \ e:\ false}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ assigned\ =\ assign(target,\ source);}
+\DoxyCodeLine{assert.deepEqual(Object.assign(target,\ source),\ assign(target,\ source));}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/*\ when\ Object.assign\ is\ present\ */}
+\DoxyCodeLine{var\ shimmedAssign\ =\ require('object.assign').shim();}
+\DoxyCodeLine{assert.equal(shimmedAssign,\ Object.assign);}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ target\ =\ \{}
+\DoxyCodeLine{\ \ \ \ a:\ true,}
+\DoxyCodeLine{\ \ \ \ b:\ true,}
+\DoxyCodeLine{\ \ \ \ c:\ true}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{var\ source\ =\ \{}
+\DoxyCodeLine{\ \ \ \ c:\ false,}
+\DoxyCodeLine{\ \ \ \ d:\ false,}
+\DoxyCodeLine{\ \ \ \ e:\ false}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(Object.assign(target,\ source),\ assign(target,\ source));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md24958}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md24958}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

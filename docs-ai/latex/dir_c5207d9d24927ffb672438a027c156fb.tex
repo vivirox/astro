@@ -1,0 +1,284 @@
+\doxysection{node\+\_\+modules/decimal.js Directory Reference}
+\hypertarget{dir_c5207d9d24927ffb672438a027c156fb}{}\label{dir_c5207d9d24927ffb672438a027c156fb}\index{node\_modules/decimal.js Directory Reference@{node\_modules/decimal.js Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+!\mbox{[}decimal.\+js\mbox{]}(\href{https://raw.githubusercontent.com/MikeMcl/decimal.js/gh-pages/decimaljs.png}{\texttt{ https\+://raw.\+githubusercontent.\+com/\+Mike\+Mcl/decimal.\+js/gh-\/pages/decimaljs.\+png}})
+
+An arbitrary-\/precision Decimal type for Java\+Script.
+
+\href{https://www.npmjs.com/package/decimal.js}{\texttt{ }} \href{https://www.npmjs.com/package/decimal.js}{\texttt{ }} \href{https://cdnjs.com/libraries/decimal.js}{\texttt{ }}
+
+~\newline
+\hypertarget{README.md_autotoc_md11590}{}\doxysubsubsection{\texorpdfstring{Features}{Features}}\label{README.md_autotoc_md11590}
+
+\begin{DoxyItemize}
+\item Integers and floats
+\item Simple but full-\/featured API
+\item Replicates many of the methods of Java\+Script\textquotesingle{}s {\ttfamily Number.\+prototype} and {\ttfamily Math} objects
+\item Also handles hexadecimal, binary and octal values
+\item Faster, smaller, and perhaps easier to use than Java\+Script versions of Java\textquotesingle{}s Big\+Decimal
+\item No dependencies
+\item Wide platform compatibility\+: uses Java\+Script 1.\+5 (ECMAScript 3) features only
+\item Comprehensive \href{https://mikemcl.github.io/decimal.js/}{\texttt{ documentation}} and test set
+\item Used under the hood by \href{https://github.com/josdejong/mathjs}{\texttt{ math.\+js}}
+\item Includes a Type\+Script declaration file\+: {\itshape decimal.\+d.\+ts}
+\end{DoxyItemize}
+
+
+
+The library is similar to \href{https://github.com/MikeMcl/bignumber.js/}{\texttt{ bignumber.\+js}}, but here precision is specified in terms of significant digits rather than decimal places, and all calculations are rounded to the precision (similar to Python\textquotesingle{}s decimal module) rather than just those involving division.
+
+This library also adds the trigonometric functions, among others, and supports non-\/integer powers, which makes it a significantly larger library than {\itshape bignumber.\+js} and the even smaller \href{https://github.com/MikeMcl/big.js/}{\texttt{ big.\+js}}.
+
+For a lighter version of this library without the trigonometric functions see \href{https://github.com/MikeMcl/decimal.js-light/}{\texttt{ decimal.\+js-\/light}}.\hypertarget{README.md_autotoc_md11591}{}\doxysubsubsection{\texorpdfstring{Load}{Load}}\label{README.md_autotoc_md11591}
+The library is the single Java\+Script file {\itshape decimal.\+js} or ES module {\itshape decimal.\+mjs}.
+
+Browser\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ src='path/to/decimal.js'></script>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ Decimal\ from\ './path/to/decimal.mjs';}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\href{https://nodejs.org}{\texttt{ Node.\+js}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ decimal.js}
+
+\end{DoxyCode}
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Decimal\ =\ require('decimal.js');}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ Decimal\ from\ 'decimal.js';}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{Decimal\}\ from\ 'decimal.js';}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11592}{}\doxysubsubsection{\texorpdfstring{Use}{Use}}\label{README.md_autotoc_md11592}
+{\itshape In all examples below, semicolons and {\ttfamily to\+String} calls are not shown. If a commented-\/out value is in quotes it means {\ttfamily to\+String} has been called on the preceding expression.}
+
+The library exports a single constructor function, {\ttfamily Decimal}, which expects a single argument that is a number, string or Decimal instance.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x\ =\ new\ Decimal(123.4567)}
+\DoxyCodeLine{y\ =\ new\ Decimal('123456.7e-\/3')}
+\DoxyCodeLine{z\ =\ new\ Decimal(x)}
+\DoxyCodeLine{x.equals(y)\ \&\&\ y.equals(z)\ \&\&\ x.equals(z)\ \ \ \ \ \ \ \ //\ true}
+
+\end{DoxyCode}
+
+
+If using values with more than a few digits, it is recommended to pass strings rather than numbers to avoid a potential loss of precision.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Precision\ loss\ from\ using\ numeric\ literals\ with\ more\ than\ 15\ significant\ digits.}
+\DoxyCodeLine{new\ Decimal(1.0000000000000001)\ \ \ \ \ \ \ \ \ //\ '1'}
+\DoxyCodeLine{new\ Decimal(88259496234518.57)\ \ \ \ \ \ \ \ \ \ //\ '88259496234518.56'}
+\DoxyCodeLine{new\ Decimal(99999999999999999999)\ \ \ \ \ \ \ //\ '100000000000000000000'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Precision\ loss\ from\ using\ numeric\ literals\ outside\ the\ range\ of\ Number\ values.}
+\DoxyCodeLine{new\ Decimal(2e+308)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ 'Infinity'}
+\DoxyCodeLine{new\ Decimal(1e-\/324)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '0'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Precision\ loss\ from\ the\ unexpected\ result\ of\ arithmetic\ with\ Number\ values.}
+\DoxyCodeLine{new\ Decimal(0.7\ +\ 0.1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '0.7999999999999999'}
+
+\end{DoxyCode}
+
+
+As with Java\+Script numbers, strings can contain underscores as separators to improve readability.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x\ =\ new\ Decimal('2\_147\_483\_647')}
+
+\end{DoxyCode}
+
+
+String values in binary, hexadecimal or octal notation are also accepted if the appropriate prefix is included.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x\ =\ new\ Decimal('0xff.f')\ \ \ \ \ \ \ \ \ \ \ \ //\ '255.9375'}
+\DoxyCodeLine{y\ =\ new\ Decimal('0b10101100')\ \ \ \ \ \ \ \ //\ '172'}
+\DoxyCodeLine{z\ =\ x.plus(y)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '427.9375'}
+\DoxyCodeLine{}
+\DoxyCodeLine{z.toBinary()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '0b110101011.1111'}
+\DoxyCodeLine{z.toBinary(13)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '0b1.101010111111p+8'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Using\ binary\ exponential\ notation\ to\ create\ a\ Decimal\ with\ the\ value\ of\ \`{}Number.MAX\_VALUE`.}
+\DoxyCodeLine{x\ =\ new\ Decimal('0b1.1111111111111111111111111111111111111111111111111111p+1023')}
+\DoxyCodeLine{//\ '1.7976931348623157081e+308'}
+
+\end{DoxyCode}
+
+
+Decimal instances are immutable in the sense that they are not changed by their methods.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0.3\ -\/\ 0.1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ 0.19999999999999998}
+\DoxyCodeLine{x\ =\ new\ Decimal(0.3)}
+\DoxyCodeLine{x.minus(0.1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '0.2'}
+\DoxyCodeLine{x\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '0.3'}
+
+\end{DoxyCode}
+
+
+The methods that return a Decimal can be chained.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x.dividedBy(y).plus(z).times(9).floor()}
+\DoxyCodeLine{x.times('1.23456780123456789e+9').plus(9876.5432321).dividedBy('4444562598.111772').ceil()}
+
+\end{DoxyCode}
+
+
+Many method names have a shorter alias.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x.squareRoot().dividedBy(y).toPower(3).equals(x.sqrt().div(y).pow(3))\ \ \ \ \ //\ true}
+\DoxyCodeLine{x.comparedTo(y.modulo(z).negated()\ ===\ x.cmp(y.mod(z).neg())\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ true}
+
+\end{DoxyCode}
+
+
+Most of the methods of Java\+Script\textquotesingle{}s {\ttfamily Number.\+prototype} and {\ttfamily Math} objects are replicated.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x\ =\ new\ Decimal(255.5)}
+\DoxyCodeLine{x.toExponential(5)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '2.55500e+2'}
+\DoxyCodeLine{x.toFixed(5)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '255.50000'}
+\DoxyCodeLine{x.toPrecision(5)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '255.50'}
+\DoxyCodeLine{}
+\DoxyCodeLine{Decimal.sqrt('6.98372465832e+9823')\ \ \ \ \ \ //\ '8.3568682281821340204e+4911'}
+\DoxyCodeLine{Decimal.pow(2,\ 0.0979843)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '1.0702770511687781839'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Using\ \`{}toFixed()`\ to\ avoid\ exponential\ notation:}
+\DoxyCodeLine{x\ =\ new\ Decimal('0.0000001')}
+\DoxyCodeLine{x.toString()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '1e-\/7'}
+\DoxyCodeLine{x.toFixed()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '0.0000001'}
+
+\end{DoxyCode}
+
+
+And there are {\ttfamily is\+NaN} and {\ttfamily is\+Finite} methods, as {\ttfamily NaN} and {\ttfamily Infinity} are valid {\ttfamily Decimal} values.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x\ =\ new\ Decimal(NaN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ 'NaN'}
+\DoxyCodeLine{y\ =\ new\ Decimal(Infinity)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ 'Infinity'}
+\DoxyCodeLine{x.isNaN()\ \&\&\ !y.isNaN()\ \&\&\ !x.isFinite()\ \&\&\ !y.isFinite()\ \ \ \ \ \ //\ true}
+
+\end{DoxyCode}
+
+
+There is also a {\ttfamily to\+Fraction} method with an optional {\itshape maximum denominator} argument.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{z\ =\ new\ Decimal(355)}
+\DoxyCodeLine{pi\ =\ z.dividedBy(113)\ \ \ \ \ \ \ \ //\ '3.1415929204'}
+\DoxyCodeLine{pi.toFraction()\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ [\ '7853982301',\ '2500000000'\ ]}
+\DoxyCodeLine{pi.toFraction(1000)\ \ \ \ \ \ \ \ \ \ //\ [\ '355',\ '113'\ ]}
+
+\end{DoxyCode}
+
+
+All calculations are rounded according to the number of significant digits and rounding mode specified by the {\ttfamily precision} and {\ttfamily rounding} properties of the Decimal constructor.
+
+For advanced usage, multiple Decimal constructors can be created, each with their own independent configuration which applies to all Decimal numbers created from it.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Set\ the\ precision\ and\ rounding\ of\ the\ default\ Decimal\ constructor}
+\DoxyCodeLine{Decimal.set(\{\ precision:\ 5,\ rounding:\ 4\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ another\ Decimal\ constructor,\ optionally\ passing\ in\ a\ configuration\ object}
+\DoxyCodeLine{Dec\ =\ Decimal.clone(\{\ precision:\ 9,\ rounding:\ 1\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{x\ =\ new\ Decimal(5)}
+\DoxyCodeLine{y\ =\ new\ Dec(5)}
+\DoxyCodeLine{}
+\DoxyCodeLine{x.div(3)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '1.6667'}
+\DoxyCodeLine{y.div(3)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ '1.66666666'}
+
+\end{DoxyCode}
+
+
+The value of a Decimal is stored in a floating point format in terms of its digits, exponent and sign, but these properties should be considered read-\/only.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{x\ =\ new\ Decimal(-\/12345.67);}
+\DoxyCodeLine{x.d\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ [\ 12345,\ 6700000\ ]\ \ \ \ digits\ (base\ 10000000)}
+\DoxyCodeLine{x.e\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ 4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exponent\ (base\ 10)}
+\DoxyCodeLine{x.s\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ -\/1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sign}
+
+\end{DoxyCode}
+
+
+For further information see the \href{http://mikemcl.github.io/decimal.js/}{\texttt{ API}} reference in the {\itshape doc} directory.\hypertarget{README.md_autotoc_md11593}{}\doxysubsubsection{\texorpdfstring{Test}{Test}}\label{README.md_autotoc_md11593}
+To run the tests using Node.\+js from the root directory\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ test}
+
+\end{DoxyCode}
+
+
+Each separate test module can also be executed individually, for example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ test/modules/toFraction}
+
+\end{DoxyCode}
+
+
+To run the tests in a browser, open {\itshape test/test.\+html}.\hypertarget{README.md_autotoc_md11594}{}\doxysubsubsection{\texorpdfstring{Minify}{Minify}}\label{README.md_autotoc_md11594}
+Two minification examples\+:
+
+Using \href{https://github.com/mishoo/UglifyJS}{\texttt{ uglify-\/js}} to minify the {\itshape decimal.\+js} file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ uglify-\/js\ -\/g}
+\DoxyCodeLine{uglifyjs\ decimal.js\ -\/-\/source-\/map\ url=decimal.min.js.map\ -\/c\ -\/m\ -\/o\ decimal.min.js}
+
+\end{DoxyCode}
+
+
+Using \href{https://github.com/terser/terser}{\texttt{ terser}} to minify the ES module version, {\itshape decimal.\+mjs}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ terser\ -\/g}
+\DoxyCodeLine{terser\ decimal.mjs\ -\/-\/source-\/map\ url=decimal.min.mjs.map\ -\/c\ -\/m\ -\/-\/toplevel\ -\/o\ decimal.min.mjs}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ Decimal\ from\ './decimal.min.mjs';}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11595}{}\doxysubsubsection{\texorpdfstring{Licence}{Licence}}\label{README.md_autotoc_md11595}
+\doxysectlink{md_node__modules_2decimal_8js_2_l_i_c_e_n_c_e}{The MIT Licence}{0} 

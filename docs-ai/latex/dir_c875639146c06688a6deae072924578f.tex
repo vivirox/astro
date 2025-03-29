@@ -1,0 +1,175 @@
+\doxysection{node\+\_\+modules/mri Directory Reference}
+\hypertarget{dir_c875639146c06688a6deae072924578f}{}\label{dir_c875639146c06688a6deae072924578f}\index{node\_modules/mri Directory Reference@{node\_modules/mri Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Quickly scan for CLI flags and arguments \end{quote}
+
+
+This is a fast and lightweight alternative to \href{https://github.com/substack/minimist}{\texttt{ {\ttfamily minimist}}} and \href{https://github.com/yargs/yargs-parser}{\texttt{ {\ttfamily yargs-\/parser}}}.
+
+It only exists because I find that I usually don\textquotesingle{}t need most of what {\ttfamily minimist} and {\ttfamily yargs-\/parser} have to offer. However, {\ttfamily mri} is similar {\itshape enough} that it might function as a "{}drop-\/in replacement"{} for you, too!
+
+See Comparisons for more info.\hypertarget{readme.md_autotoc_md24368}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md24368}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ -\/-\/save\ mri}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md24369}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md24369}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ demo-\/cli\ -\/-\/foo\ -\/-\/bar=baz\ -\/mtv\ -\/-\/\ hello\ world}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ mri\ =\ require('mri');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ argv\ =\ process.argv.slice(2);}
+\DoxyCodeLine{}
+\DoxyCodeLine{mri(argv);}
+\DoxyCodeLine{//=>\ \{\ \_:\ ['hello',\ 'world'],\ foo:true,\ bar:'baz',\ m:true,\ t:true,\ v:true\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{mri(argv,\ \{\ boolean:['bar']\ \});}
+\DoxyCodeLine{//=>\ \{\ \_:\ ['baz',\ 'hello',\ 'world'],\ foo:true,\ bar:true,\ m:true,\ t:true,\ v:true\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{mri(argv,\ \{}
+\DoxyCodeLine{\ \ alias:\ \{}
+\DoxyCodeLine{\ \ \ \ b:\ 'bar',}
+\DoxyCodeLine{\ \ \ \ foo:\ ['f',\ 'fuz']}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//=>\ \{\ \_:\ ['hello',\ 'world'],\ foo:true,\ f:true,\ fuz:true,\ b:'baz',\ bar:'baz',\ m:true,\ t:true,\ v:true\ \}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md24370}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md24370}
+\hypertarget{readme.md_autotoc_md24371}{}\doxysubsubsection{\texorpdfstring{mri(args, options)}{mri(args, options)}}\label{readme.md_autotoc_md24371}
+Return\+: {\ttfamily Object}\hypertarget{readme.md_autotoc_md24372}{}\doxysubsubsubsection{\texorpdfstring{args}{args}}\label{readme.md_autotoc_md24372}
+Type\+: {\ttfamily Array}~\newline
+ Default\+: {\ttfamily \mbox{[}\mbox{]}}
+
+An array of arguments to parse. For CLI usage, send {\ttfamily process.\+argv.\+slice(2)}. See \href{https://nodejs.org/docs/latest/api/process.html\#process_process_argv}{\texttt{ {\ttfamily process.\+argv}}} for info.\hypertarget{readme.md_autotoc_md24373}{}\doxysubsubsubsection{\texorpdfstring{options.\+alias}{options.\+alias}}\label{readme.md_autotoc_md24373}
+Type\+: {\ttfamily Object}~\newline
+ Default\+: {\ttfamily \{\}}
+
+An object of keys whose values are {\ttfamily String}s or {\ttfamily Array\texorpdfstring{$<$}{<}String\texorpdfstring{$>$}{>}} of aliases. These will be added to the parsed output with matching values.\hypertarget{readme.md_autotoc_md24374}{}\doxysubsubsubsection{\texorpdfstring{options.\+boolean}{options.\+boolean}}\label{readme.md_autotoc_md24374}
+Type\+: {\ttfamily Array\texorpdfstring{$\vert$}{|}\+String}~\newline
+ Default\+: {\ttfamily \mbox{[}\mbox{]}}
+
+A single key (or array of keys) that should be parsed as {\ttfamily Boolean}s.\hypertarget{readme.md_autotoc_md24375}{}\doxysubsubsubsection{\texorpdfstring{options.\+default}{options.\+default}}\label{readme.md_autotoc_md24375}
+Type\+: {\ttfamily Object}~\newline
+ Default\+: {\ttfamily \{\}}
+
+An {\ttfamily key\+:value} object of defaults. If a default is provided for a key, its type ({\ttfamily typeof}) will be used to cast parsed arguments.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mri(['-\/-\/foo',\ 'bar']);}
+\DoxyCodeLine{//=>\ \{\ \_:[],\ foo:'bar'\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{mri(['-\/-\/foo',\ 'bar'],\ \{}
+\DoxyCodeLine{\ \ default:\ \{\ foo:true,\ baz:'hello',\ bat:42\ \}}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//=>\ \{\ \_:['bar'],\ foo:true,\ baz:'hello',\ bat:42\ \}}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+{\bfseries{Note\+:}} Because {\ttfamily -\/-\/foo} has a default of {\ttfamily true}, its output is cast to a Boolean. This means that {\ttfamily foo=true}, making `\textquotesingle{}bar'{\ttfamily an extra argument (}\+\_\+{\ttfamily key). \texorpdfstring{$<$}{<}/blockquote\texorpdfstring{$>$}{>}\textbackslash{}ilinebr @subsubsection autotoc\+\_\+md24376 options.\+string Type\+:}Array\texorpdfstring{$\vert$}{|}\+String{\ttfamily \texorpdfstring{$<$}{<}br\texorpdfstring{$>$}{>} Default\+:}\mbox{[}\mbox{]}\`{}
+
+A single key (or array of keys) that should be parsed as {\ttfamily String}s.
+
+\end{quote}
+\hypertarget{readme.md_autotoc_md24377}{}\doxysubsubsubsection{\texorpdfstring{options.\+unknown}{options.\+unknown}}\label{readme.md_autotoc_md24377}
+Type\+: {\ttfamily Function}~\newline
+ Default\+: {\ttfamily undefined}
+
+Callback that is run when a parsed flag has not been defined as a known key or alias. Its only parameter is the unknown flag itself; eg {\ttfamily -\/-\/foobar} or {\ttfamily -\/f}.
+
+Once an unknown flag is encountered, parsing will terminate, regardless of your return value.
+
+\begin{quote}
+{\bfseries{Note\+:}} {\ttfamily mri} {\itshape only} checks for unknown flags if {\ttfamily options.\+unknown} {\bfseries{and}} {\ttfamily options.\+alias} are populated. Otherwise, everything will be accepted. \end{quote}
+\hypertarget{readme.md_autotoc_md24378}{}\doxysubsection{\texorpdfstring{Comparisons}{Comparisons}}\label{readme.md_autotoc_md24378}
+\hypertarget{readme.md_autotoc_md24379}{}\doxysubsubsubsection{\texorpdfstring{minimist}{minimist}}\label{readme.md_autotoc_md24379}
+
+\begin{DoxyItemize}
+\item {\ttfamily mri} is 5x faster (see benchmarks)
+\item Numerical values are cast as {\ttfamily Number}s when possible
+\begin{DoxyItemize}
+\item A key (and its aliases) will always honor {\ttfamily opts.\+boolean} or {\ttfamily opts.\+string}
+\end{DoxyItemize}
+\item Short flag groups are treated as {\ttfamily Boolean}s by default\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{minimist(['-\/abc',\ 'hello']);}
+\DoxyCodeLine{//=>\ \{\ \_:[],\ a:'',\ b:'',\ c:'hello'\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{mri(['-\/abc',\ 'hello']);}
+\DoxyCodeLine{//=>\ \{\ \_:[],\ a:true,\ b:true,\ c:'hello'\ \}}
+
+\end{DoxyCode}
+
+\item The {\ttfamily opts.\+unknown} behaves differently\+:
+\begin{DoxyItemize}
+\item Unlike {\ttfamily minimist}, {\ttfamily mri} will not continue continue parsing after encountering an unknown flag
+\end{DoxyItemize}
+\item Missing {\ttfamily options}\+:
+\begin{DoxyItemize}
+\item {\ttfamily opts.\+stop\+Early}
+\item `opts\mbox{[}'--\textquotesingle{}\mbox{]}{\ttfamily }
+\end{DoxyItemize}
+\item {\ttfamily Ignores newlines (}~\newline
+\`{}) within args (see \href{https://github.com/substack/minimist/blob/master/test/parse.js\#L69-L80}{\texttt{ test}})
+\item Ignores slash\+Breaks within args (see \href{https://github.com/substack/minimist/blob/master/test/parse.js\#L147-L157}{\texttt{ test}})
+\item Ignores dot-\/nested flags (see \href{https://github.com/substack/minimist/blob/master/test/parse.js\#L180-L197}{\texttt{ test}})
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md24380}{}\doxysubsubsubsection{\texorpdfstring{yargs-\/parser}{yargs-\/parser}}\label{readme.md_autotoc_md24380}
+
+\begin{DoxyItemize}
+\item {\ttfamily mri} is 40x faster (see benchmarks)
+\item Numerical values are cast as {\ttfamily Number}s when possible
+\begin{DoxyItemize}
+\item A key (and its aliases) will always honor {\ttfamily opts.\+boolean} or {\ttfamily opts.\+string}
+\end{DoxyItemize}
+\item Missing {\ttfamily options}\+:
+\begin{DoxyItemize}
+\item {\ttfamily opts.\+array}
+\item {\ttfamily opts.\+config}
+\item {\ttfamily opts.\+coerce}
+\item {\ttfamily opts.\+count}
+\item {\ttfamily opts.\+env\+Prefix}
+\item {\ttfamily opts.\+narg}
+\item {\ttfamily opts.\+normalize}
+\item {\ttfamily opts.\+configuration}
+\item {\ttfamily opts.\+number}
+\item `opts\mbox{[}'--\textquotesingle{}\mbox{]}{\ttfamily }
+\end{DoxyItemize}
+\item {\ttfamily Missing \mbox{[}}parser.\+detailed(){\ttfamily \mbox{]}(\href{https://github.com/yargs/yargs-parser}{\texttt{ https\+://github.\+com/yargs/yargs-\/parser}}\#requireyargs-\/parserdetailedargs-\/opts) method}
+\item {\ttfamily No \mbox{[}additional configuration\mbox{]}(\href{https://github.com/yargs/yargs-parser}{\texttt{ https\+://github.\+com/yargs/yargs-\/parser}}\#configuration) object}
+\item {\ttfamily Added \mbox{[}}options.\+unknown\`{}\mbox{]}(\#optionsunknown) feature
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md24381}{}\doxysubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{readme.md_autotoc_md24381}
+\begin{quote}
+Running Node.\+js v10.\+13.\+0 \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Load\ Times:}
+\DoxyCodeLine{\ \ nopt\ \ \ \ \ \ \ \ \ \ 3.179ms}
+\DoxyCodeLine{\ \ yargs-\/parser\ \ 2.137ms}
+\DoxyCodeLine{\ \ minimist\ \ \ \ \ \ 0.746ms}
+\DoxyCodeLine{\ \ mri\ \ \ \ \ \ \ \ \ \ \ 0.517ms}
+\DoxyCodeLine{}
+\DoxyCodeLine{Benchmark:}
+\DoxyCodeLine{\ \ minimist\ \ \ \ \ \ x\ \ \ \ 328,747\ ops/sec\ ±1.09\%\ (89\ runs\ sampled)}
+\DoxyCodeLine{\ \ mri\ \ \ \ \ \ \ \ \ \ \ x\ \ 1,622,801\ ops/sec\ ±0.94\%\ (92\ runs\ sampled)}
+\DoxyCodeLine{\ \ nopt\ \ \ \ \ \ \ \ \ \ x\ \ \ \ 888,223\ ops/sec\ ±0.22\%\ (92\ runs\ sampled)}
+\DoxyCodeLine{\ \ yargs-\/parser\ \ x\ \ \ \ \ 30,538\ ops/sec\ ±0.81\%\ (91\ runs\ sampled)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md24382}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md24382}
+MIT © \href{https://lukeed.com}{\texttt{ Luke Edwards}} 

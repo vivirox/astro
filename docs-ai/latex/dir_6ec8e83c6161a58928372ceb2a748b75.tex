@@ -1,0 +1,412 @@
+\doxysection{node\+\_\+modules/axobject-\/query Directory Reference}
+\hypertarget{dir_6ec8e83c6161a58928372ceb2a748b75}{}\label{dir_6ec8e83c6161a58928372ceb2a748b75}\index{node\_modules/axobject-\/query Directory Reference@{node\_modules/axobject-\/query Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+
+
+Approximate model of the \href{https://cs.chromium.org/chromium/src/third_party/WebKit/Source/modules/accessibility/AXObject.h}{\texttt{ Chrome AXObject}}.
+
+The project attempts to map the AXObject concepts to the \href{https://www.w3.org/TR/wai-aria-1.1/\#roles}{\texttt{ WAI-\/\+ARIA 1.\+1 Roles Model}} so that a complete representation of the semantic HTML layer, as it is exposed assistive technology, can be obtained.
+
+CDN URL\+: \href{https://unpkg.com/axobject-query}{\texttt{ https\+://unpkg.\+com/axobject-\/query}}\hypertarget{README.md_autotoc_md8843}{}\doxysubsection{\texorpdfstring{Utilities}{Utilities}}\label{README.md_autotoc_md8843}
+\hypertarget{README.md_autotoc_md8844}{}\doxysubsubsection{\texorpdfstring{AXObjects}{AXObjects}}\label{README.md_autotoc_md8844}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ AXObjects\ \}\ from\ 'axobject-\/query';}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8845}{}\doxysubsubsubsection{\texorpdfstring{Interface}{Interface}}\label{README.md_autotoc_md8845}
+These methods are available on each export from the module. The typing here in the documentation is pseudo-\/typed. Each export will have its own specific types for each method signature.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{|}
+\DoxyCodeLine{\ \ entries:\ ()\ =>\ Array<\$Item>,}
+\DoxyCodeLine{\ \ get:\ (key:\ \$Key)\ =>\ ?\$Value,}
+\DoxyCodeLine{\ \ has:\ (key:\ \$Key)\ =>\ boolean,}
+\DoxyCodeLine{\ \ keys:\ ()\ =>\ Array<\$Key>,}
+\DoxyCodeLine{\ \ values:\ ()\ =>\ Array<\$Value>,}
+\DoxyCodeLine{|\};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8846}{}\doxysubsubsection{\texorpdfstring{Concepts in the project}{Concepts in the project}}\label{README.md_autotoc_md8846}
+AXObjects are mapped to their HTML and ARIA concepts in the {\ttfamily related\+Concepts} field.
+
+The {\ttfamily type} field is a loose association of an AXObject to the {\ttfamily window}, {\ttfamily structure} and {\ttfamily widget} abstract roles in ARIA. The {\ttfamily generic} value is given to {\ttfamily Div\+Role}; it does not exist in ARIA. Divs are special in HTML in the way that they are used as generic containers. Span might have also been associated with a generic type except that there is no {\ttfamily Span\+Role} AXObject.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ [\ 'AbbrRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'AlertDialogRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'window'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'AlertRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'AnnotationRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ApplicationRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'window'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ArticleRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'AudioRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'BannerRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'BlockquoteRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'BusyIndicatorRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ButtonRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'CanvasRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'CaptionRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'CellRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'CheckBoxRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ColorWellRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ColumnHeaderRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ColumnRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ComboBoxRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ComplementaryRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ContentInfoRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DateRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DateTimeRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DefinitionRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DescriptionListDetailRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DescriptionListRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DescriptionListTermRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DetailsRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DialogRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'window'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DirectoryRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DisclosureTriangleRole',\ \{\ relatedConcepts:\ [],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DivRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'generic'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'DocumentRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'EmbeddedObjectRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'FeedRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'FigcaptionRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'FigureRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'FooterRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'FormRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'GridRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'GroupRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'HeadingRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object],\ [Object],\ [Object],\ [Object],\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'IframePresentationalRole',\ \{\ relatedConcepts:\ [],\ type:\ 'window'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'IframeRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'window'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'IgnoredRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ImageMapLinkRole',\ \{\ relatedConcepts:\ [],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ImageMapRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ImageRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'InlineTextBoxRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'InputTimeRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'LabelRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'LegendRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'LineBreakRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'LinkRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ListBoxOptionRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ListBoxRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ListItemRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ListMarkerRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ListRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'LogRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MainRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MarkRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MarqueeRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MathRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuBarRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuButtonRole',\ \{\ relatedConcepts:\ [],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuItemRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuItemCheckBoxRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuItemRadioRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuListOptionRole',\ \{\ relatedConcepts:\ [],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuListPopupRole',\ \{\ relatedConcepts:\ [],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'MeterRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'NavigationRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'NoneRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'NoteRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'OutlineRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ParagraphRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'PopUpButtonRole',\ \{\ relatedConcepts:\ [],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'PreRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'PresentationalRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ProgressIndicatorRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'RadioButtonRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'RadioGroupRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'RegionRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'RootWebAreaRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'RowHeaderRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'RowRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'RubyRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'RulerRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ScrollAreaRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ScrollBarRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SeamlessWebAreaRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SearchRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SearchBoxRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SliderRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SliderThumbRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SpinButtonRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SpinButtonPartRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SplitterRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'StaticTextRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'StatusRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SVGRootRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'SwitchRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TabGroupRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TabRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TableHeaderContainerRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TableRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TabListRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TabPanelRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TermRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TextFieldRole',\ \{\ relatedConcepts:\ [\ [Object],\ [Object],\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TimeRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TimerRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ToggleButtonRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'ToolbarRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TreeRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TreeGridRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'TreeItemRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'UserInterfaceTooltipRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'VideoRole',\ \{\ relatedConcepts:\ [\ [Object]\ ],\ type:\ 'widget'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'WebAreaRole',\ \{\ relatedConcepts:\ [],\ type:\ 'structure'\ \}\ ],}
+\DoxyCodeLine{\ \ [\ 'WindowRole',\ \{\ relatedConcepts:\ [],\ type:\ 'window'\ \}\ ],}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8847}{}\doxysubsubsection{\texorpdfstring{AXObject to Element}{AXObject to Element}}\label{README.md_autotoc_md8847}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ AXObjectElements\ \}\ from\ 'axobject-\/query';}
+
+\end{DoxyCode}
+
+
+AXObjects are mapped to their related HTML concepts, which may require attributes (in the case of inputs) to obtain the correct association.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ [\ 'AbbrRole',\ [\ \{\ name:\ 'abbr'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ArticleRole',\ [\ \{\ name:\ 'article'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'AudioRole',\ [\ \{\ name:\ 'audio'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'BlockquoteRole',\ [\ \{\ name:\ 'blockquote'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ButtonRole',\ [\ \{\ name:\ 'button'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'CanvasRole',\ [\ \{\ name:\ 'canvas'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'CaptionRole',\ [\ \{\ name:\ 'caption'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'CellRole',\ [\ \{\ name:\ 'td'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'CheckBoxRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ColorWellRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ColumnHeaderRole',\ [\ \{\ name:\ 'th'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DateRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DateTimeRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DefinitionRole',\ [\ \{\ name:\ 'dfn'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DescriptionListDetailRole',\ [\ \{\ name:\ 'dd'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DescriptionListRole',\ [\ \{\ name:\ 'dl'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DescriptionListTermRole',\ [\ \{\ name:\ 'dt'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DetailsRole',\ [\ \{\ name:\ 'details'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DialogRole',\ [\ \{\ name:\ 'dialog'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DirectoryRole',\ [\ \{\ name:\ 'dir'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DivRole',\ [\ \{\ name:\ 'div'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'EmbeddedObjectRole',\ [\ \{\ name:\ 'embed'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'FigcaptionRole',\ [\ \{\ name:\ 'figcaption'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'FigureRole',\ [\ \{\ name:\ 'figure'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'FooterRole',\ [\ \{\ name:\ 'footer'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'FormRole',\ [\ \{\ name:\ 'form'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'HeadingRole',\ [\ \{\ name:\ 'h1'\ \},\ \{\ name:\ 'h2'\ \},\ \{\ name:\ 'h3'\ \},\ \{\ name:\ 'h4'\ \},\ \{\ name:\ 'h5'\ \},\ \{\ name:\ 'h6'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'IframeRole',\ [\ \{\ name:\ 'iframe'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ImageMapRole',\ [\ \{\ name:\ 'img',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ImageRole',\ [\ \{\ name:\ 'img'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'InlineTextBoxRole',\ [\ \{\ name:\ 'input'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'InputTimeRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'LabelRole',\ [\ \{\ name:\ 'label'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'LegendRole',\ [\ \{\ name:\ 'legend'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'LineBreakRole',\ [\ \{\ name:\ 'br'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'LinkRole',\ [\ \{\ name:\ 'a',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ListBoxOptionRole',\ [\ \{\ name:\ 'option'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ListItemRole',\ [\ \{\ name:\ 'li'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ListRole',\ [\ \{\ name:\ 'ul'\ \},\ \{\ name:\ 'ol'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MainRole',\ [\ \{\ name:\ 'main'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MarkRole',\ [\ \{\ name:\ 'mark'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MarqueeRole',\ [\ \{\ name:\ 'marquee'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuItemRole',\ [\ \{\ name:\ 'menuitem'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuRole',\ [\ \{\ name:\ 'menu'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MeterRole',\ [\ \{\ name:\ 'meter'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'NavigationRole',\ [\ \{\ name:\ 'nav'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ParagraphRole',\ [\ \{\ name:\ 'p'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'PreRole',\ [\ \{\ name:\ 'pre'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ProgressIndicatorRole',\ [\ \{\ name:\ 'progress'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RadioButtonRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RowHeaderRole',\ [\ \{\ name:\ 'th',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RowRole',\ [\ \{\ name:\ 'tr'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RubyRole',\ [\ \{\ name:\ 'ruby'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SearchBoxRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SliderRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SpinButtonRole',\ [\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TableRole',\ [\ \{\ name:\ 'table'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TextFieldRole',\ [\ \{\ name:\ 'input'\ \},\ \{\ name:\ 'input',\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TimeRole',\ [\ \{\ name:\ 'time'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'VideoRole',\ [\ \{\ name:\ 'video'\ ]\ ],}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8848}{}\doxysubsubsection{\texorpdfstring{AXObject to Role}{AXObject to Role}}\label{README.md_autotoc_md8848}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ AXObjectRoles\ \}\ from\ 'axobject-\/query';}
+
+\end{DoxyCode}
+
+
+AXObjects are mapped to their related ARIA concepts..
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ [\ 'AlertDialogRole',\ [\ \{\ name:\ 'alertdialog'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'AlertRole',\ [\ \{\ name:\ 'alert'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ApplicationRole',\ [\ \{\ name:\ 'application'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ArticleRole',\ [\ \{\ name:\ 'article'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'BannerRole',\ [\ \{\ name:\ 'banner'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'BusyIndicatorRole',\ [\ \{\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ButtonRole',\ [\ \{\ name:\ 'button'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'CellRole',\ [\ \{\ name:\ 'cell'\ \},\ \{\ name:\ 'gridcell'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'CheckBoxRole',\ [\ \{\ name:\ 'checkbox'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ColumnHeaderRole',\ [\ \{\ name:\ 'columnheader'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ComboBoxRole',\ [\ \{\ name:\ 'combobox'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ComplementaryRole',\ [\ \{\ name:\ 'complementary'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ContentInfoRole',\ [\ \{\ name:\ 'structureinfo'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DialogRole',\ [\ \{\ name:\ 'dialog'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DirectoryRole',\ [\ \{\ name:\ 'directory'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'DocumentRole',\ [\ \{\ name:\ 'document'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'FeedRole',\ [\ \{\ name:\ 'feed'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'FigureRole',\ [\ \{\ name:\ 'figure'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'FormRole',\ [\ \{\ name:\ 'form'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'GridRole',\ [\ \{\ name:\ 'grid'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'GroupRole',\ [\ \{\ name:\ 'group'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'HeadingRole',\ [\ \{\ name:\ 'heading'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ImageRole',\ [\ \{\ name:\ 'img'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'LinkRole',\ [\ \{\ name:\ 'link'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ListBoxOptionRole',\ [\ \{\ name:\ 'option'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ListBoxRole',\ [\ \{\ name:\ 'listbox'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ListItemRole',\ [\ \{\ name:\ 'listitem'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ListRole',\ [\ \{\ name:\ 'list'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'LogRole',\ [\ \{\ name:\ 'log'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MainRole',\ [\ \{\ name:\ 'main'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MarqueeRole',\ [\ \{\ name:\ 'marquee'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MathRole',\ [\ \{\ name:\ 'math'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuBarRole',\ [\ \{\ name:\ 'menubar'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuItemRole',\ [\ \{\ name:\ 'menuitem'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuItemCheckBoxRole',\ [\ \{\ name:\ 'menuitemcheckbox'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuItemRadioRole',\ [\ \{\ name:\ 'menuitemradio'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'MenuRole',\ [\ \{\ name:\ 'menu'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'NavigationRole',\ [\ \{\ name:\ 'navigation'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'NoneRole',\ [\ \{\ name:\ 'none'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'NoteRole',\ [\ \{\ name:\ 'note'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'PresentationalRole',\ [\ \{\ name:\ 'presentation'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ProgressIndicatorRole',\ [\ \{\ name:\ 'progressbar'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RadioButtonRole',\ [\ \{\ name:\ 'radio'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RadioGroupRole',\ [\ \{\ name:\ 'radiogroup'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RegionRole',\ [\ \{\ name:\ 'region'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RowHeaderRole',\ [\ \{\ name:\ 'rowheader'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'RowRole',\ [\ \{\ name:\ 'row'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ScrollBarRole',\ [\ \{\ name:\ 'scrollbar'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SearchRole',\ [\ \{\ name:\ 'search'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SearchBoxRole',\ [\ \{\ name:\ 'searchbox'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SliderRole',\ [\ \{\ name:\ 'slider'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SpinButtonRole',\ [\ \{\ name:\ 'spinbutton'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SplitterRole',\ [\ \{\ name:\ 'separator'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'StatusRole',\ [\ \{\ name:\ 'status'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'SwitchRole',\ [\ \{\ name:\ 'switch'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TabGroupRole',\ [\ \{\ name:\ 'tablist'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TabRole',\ [\ \{\ name:\ 'tab'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TableRole',\ [\ \{\ name:\ 'table'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TabListRole',\ [\ \{\ name:\ 'tablist'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TabPanelRole',\ [\ \{\ name:\ 'tabpanel'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TermRole',\ [\ \{\ name:\ 'term'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TextFieldRole',\ [\ \{\ name:\ 'textbox'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TimerRole',\ [\ \{\ name:\ 'timer'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ToggleButtonRole',\ [\ \{\ attributes:\ [Object]\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'ToolbarRole',\ [\ \{\ name:\ 'toolbar'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TreeRole',\ [\ \{\ name:\ 'tree'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TreeGridRole',\ [\ \{\ name:\ 'treegrid'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'TreeItemRole',\ [\ \{\ name:\ 'treeitem'\ \}\ ]\ ],}
+\DoxyCodeLine{\ \ [\ 'UserInterfaceTooltipRole',\ [\ \{\ name:\ 'tooltip'\ \}\ ]\ ],}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8849}{}\doxysubsubsection{\texorpdfstring{Element to AXObject}{Element to AXObject}}\label{README.md_autotoc_md8849}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ elementAXObjects\ \}\ from\ 'axobject-\/query';}
+
+\end{DoxyCode}
+
+
+HTML elements are mapped to their related AXConcepts concepts.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'abbr'\ \},\ [\ 'AbbrRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'article'\ \},\ [\ 'ArticleRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'audio'\ \},\ [\ 'AudioRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'blockquote'\ \},\ [\ 'BlockquoteRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'button'\ \},\ [\ 'ButtonRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'canvas'\ \},\ [\ 'CanvasRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'caption'\ \},\ [\ 'CaptionRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'td'\ \},\ [\ 'CellRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'CheckBoxRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'ColorWellRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'th'\ \},\ [\ 'ColumnHeaderRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'DateRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'DateTimeRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'dfn'\ \},\ [\ 'DefinitionRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'dd'\ \},\ [\ 'DescriptionListDetailRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'dl'\ \},\ [\ 'DescriptionListRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'dt'\ \},\ [\ 'DescriptionListTermRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'details'\ \},\ [\ 'DetailsRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'dialog'\ \},\ [\ 'DialogRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'dir'\ \},\ [\ 'DirectoryRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'div'\ \},\ [\ 'DivRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'embed'\ \},\ [\ 'EmbeddedObjectRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'figcaption'\ \},\ [\ 'FigcaptionRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'figure'\ \},\ [\ 'FigureRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'footer'\ \},\ [\ 'FooterRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'form'\ \},\ [\ 'FormRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'h1'\ \},\ [\ 'HeadingRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'h2'\ \},\ [\ 'HeadingRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'h3'\ \},\ [\ 'HeadingRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'h4'\ \},\ [\ 'HeadingRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'h5'\ \},\ [\ 'HeadingRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'h6'\ \},\ [\ 'HeadingRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'iframe'\ \},\ [\ 'IframeRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'img',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'ImageMapRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'img'\ \},\ [\ 'ImageRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input'\ \},\ [\ 'InlineTextBoxRole',\ 'TextFieldRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'InputTimeRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'label'\ \},\ [\ 'LabelRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'legend'\ \},\ [\ 'LegendRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'br'\ \},\ [\ 'LineBreakRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'a',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'LinkRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'option'\ \},\ [\ 'ListBoxOptionRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'li'\ \},\ [\ 'ListItemRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'ul'\ \},\ [\ 'ListRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'ol'\ \},\ [\ 'ListRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'main'\ \},\ [\ 'MainRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'mark'\ \},\ [\ 'MarkRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'marquee'\ \},\ [\ 'MarqueeRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'menuitem'\ \},\ [\ 'MenuItemRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'menu'\ \},\ [\ 'MenuRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'meter'\ \},\ [\ 'MeterRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'nav'\ \},\ [\ 'NavigationRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'p'\ \},\ [\ 'ParagraphRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'pre'\ \},\ [\ 'PreRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'progress'\ \},\ [\ 'ProgressIndicatorRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'RadioButtonRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'th',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'RowHeaderRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'tr'\ \},\ [\ 'RowRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'ruby'\ \},\ [\ 'RubyRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'SearchBoxRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'SliderRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'SpinButtonRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'table'\ \},\ [\ 'TableRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input'\ \},\ [\ 'InlineTextBoxRole',\ 'TextFieldRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'input',\ attributes:\ [\ [Object]\ ]\ \},\ [\ 'TextFieldRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'time'\ \},\ [\ 'TimeRole'\ ]\ ],}
+\DoxyCodeLine{\ \ [\ \{\ name:\ 'video'\ \},\ [\ 'VideoRole'\ ]\ ],}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md8850}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md8850}
+Copyright (c) 2021 A11yance 

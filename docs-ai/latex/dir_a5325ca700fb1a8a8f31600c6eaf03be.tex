@@ -1,0 +1,32 @@
+\doxysection{node\+\_\+modules/object.fromentries Directory Reference}
+\hypertarget{dir_a5325ca700fb1a8a8f31600c6eaf03be}{}\label{dir_a5325ca700fb1a8a8f31600c6eaf03be}\index{node\_modules/object.fromentries Directory Reference@{node\_modules/object.fromentries Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/es-shims/Object.fromEntries/actions}{\texttt{ }} \href{https://app.codecov.io/gh/es-shims/Object.fromEntries/}{\texttt{ }} \href{https://david-dm.org/es-shims/Object.fromEntries}{\texttt{ }} \href{https://david-dm.org/es-shims/Object.fromEntries\#info=devDependencies}{\texttt{ }} \mbox{[}\mbox{]}\mbox{[}license-\/url\mbox{]} \href{https://npm-stat.com/charts.html?package=object.fromentries}{\texttt{ }}
+
+\href{https://npmjs.com/package/object.fromentries}{\texttt{ }}
+
+An ES spec-\/proposal-\/compliant {\ttfamily Object.\+from\+Entries} shim. Invoke its "{}shim"{} method to shim {\ttfamily Object.\+from\+Entries} if it is unavailable or noncompliant.
+
+This package implements the \href{https://github.com/es-shims/api}{\texttt{ es-\/shim API}} interface. It works in an ES3-\/supported environment and complies with the \href{https://tc39.github.io/proposal-object-from-entries/}{\texttt{ proposed spec}}.
+
+Most common usage\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ assert\ =\ require('assert');}
+\DoxyCodeLine{var\ fromEntries\ =\ require('object.fromentries');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ obj\ =\ \{\ a:\ 1,\ b:\ 2,\ c:\ 3\ \};}
+\DoxyCodeLine{var\ actual\ =\ fromEntries(Object.entries(obj));}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(obj,\ actual);}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (!Object.fromEntries)\ \{}
+\DoxyCodeLine{\ \ \ \ fromEntries.shim();}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{assert.deepEqual(Object.fromEntries(Object.entries(obj)),\ obj);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25008}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{README.md_autotoc_md25008}
+Simply clone the repo, {\ttfamily npm install}, and run {\ttfamily npm test} 

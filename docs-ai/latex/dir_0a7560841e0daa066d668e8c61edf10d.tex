@@ -1,0 +1,77 @@
+\doxysection{node\+\_\+modules/streamsearch Directory Reference}
+\hypertarget{dir_0a7560841e0daa066d668e8c61edf10d}{}\label{dir_0a7560841e0daa066d668e8c61edf10d}\index{node\_modules/streamsearch Directory Reference@{node\_modules/streamsearch Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+streamsearch is a module for \href{http://nodejs.org/}{\texttt{ node.\+js}} that allows searching a stream using the Boyer-\/\+Moore-\/\+Horspool algorithm.
+
+This module is based heavily on the Streaming Boyer-\/\+Moore-\/\+Horspool C++ implementation by Hongli Lai \href{https://github.com/FooBarWidget/boyer-moore-horspool}{\texttt{ here}}.\hypertarget{README.md_autotoc_md31292}{}\doxysubsection{\texorpdfstring{Requirements}{Requirements}}\label{README.md_autotoc_md31292}
+
+\begin{DoxyItemize}
+\item \href{http://nodejs.org/}{\texttt{ node.\+js}} -- v10.\+0.\+0 or newer
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31293}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md31293}
+\begin{DoxyVerb}npm install streamsearch
+\end{DoxyVerb}
+\hypertarget{README.md_autotoc_md31294}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md31294}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ inspect\ \}\ =\ require('util');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ StreamSearch\ =\ require('streamsearch');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ needle\ =\ Buffer.from('\(\backslash\)r\(\backslash\)n');}
+\DoxyCodeLine{const\ ss\ =\ new\ StreamSearch(needle,\ (isMatch,\ data,\ start,\ end)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (data)}
+\DoxyCodeLine{\ \ \ \ console.log('data:\ '\ +\ inspect(data.toString('latin1',\ start,\ end)));}
+\DoxyCodeLine{\ \ if\ (isMatch)}
+\DoxyCodeLine{\ \ \ \ console.log('match!');}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ chunks\ =\ [}
+\DoxyCodeLine{\ \ 'foo',}
+\DoxyCodeLine{\ \ '\ bar',}
+\DoxyCodeLine{\ \ '\(\backslash\)r',}
+\DoxyCodeLine{\ \ '\(\backslash\)n',}
+\DoxyCodeLine{\ \ 'baz,\ hello\(\backslash\)r',}
+\DoxyCodeLine{\ \ '\(\backslash\)n\ world.',}
+\DoxyCodeLine{\ \ '\(\backslash\)r\(\backslash\)n\ Node.JS\ rules!!\(\backslash\)r\(\backslash\)n\(\backslash\)r\(\backslash\)n',}
+\DoxyCodeLine{];}
+\DoxyCodeLine{for\ (const\ chunk\ of\ chunks)}
+\DoxyCodeLine{\ \ ss.push(Buffer.from(chunk));}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ output:}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ data:\ 'foo'}
+\DoxyCodeLine{//\ data:\ '\ bar'}
+\DoxyCodeLine{//\ match!}
+\DoxyCodeLine{//\ data:\ 'baz,\ hello'}
+\DoxyCodeLine{//\ match!}
+\DoxyCodeLine{//\ data:\ '\ world.'}
+\DoxyCodeLine{//\ match!}
+\DoxyCodeLine{//\ data:\ '\ Node.JS\ rules!!'}
+\DoxyCodeLine{//\ match!}
+\DoxyCodeLine{//\ data:\ ''}
+\DoxyCodeLine{//\ match!}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31295}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md31295}
+\hypertarget{README.md_autotoc_md31296}{}\doxysubsubsection{\texorpdfstring{Properties}{Properties}}\label{README.md_autotoc_md31296}
+
+\begin{DoxyItemize}
+\item {\bfseries{max\+Matches}} -\/ \texorpdfstring{$<$}{<} {\itshape integer} \texorpdfstring{$>$}{>} -\/ The maximum number of matches. Defaults to {\ttfamily Infinity}.
+\item {\bfseries{matches}} -\/ \texorpdfstring{$<$}{<} {\itshape integer} \texorpdfstring{$>$}{>} -\/ The current match count.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md31297}{}\doxysubsubsection{\texorpdfstring{Functions}{Functions}}\label{README.md_autotoc_md31297}
+
+\begin{DoxyItemize}
+\item {\bfseries{(constructor)}}(\texorpdfstring{$<$}{<} {\itshape mixed} \texorpdfstring{$>$}{>}needle, \texorpdfstring{$<$}{<} {\itshape function} \texorpdfstring{$>$}{>}callback) -\/ Creates and returns a new instance for searching for a {\itshape Buffer} or {\itshape string} {\ttfamily needle}. {\ttfamily callback} is called any time there is non-\/matching data and/or there is a needle match. {\ttfamily callback} will be called with the following arguments\+:
+\begin{DoxyEnumerate}
+\item {\ttfamily is\+Match} -\/ {\itshape boolean} -\/ Indicates whether a match has been found
+\item {\ttfamily data} -\/ {\itshape mixed} -\/ If set, this contains data that did not match the needle.
+\item {\ttfamily start} -\/ {\itshape integer} -\/ The index in {\ttfamily data} where the non-\/matching data begins (inclusive).
+\item {\ttfamily end} -\/ {\itshape integer} -\/ The index in {\ttfamily data} where the non-\/matching data ends (exclusive).
+\item {\ttfamily is\+Safe\+Data} -\/ {\itshape boolean} -\/ Indicates if it is safe to store a reference to {\ttfamily data} (e.\+g. as-\/is or via {\ttfamily data.\+slice()}) or not, as in some cases {\ttfamily data} may point to a Buffer whose contents change over time.
+\end{DoxyEnumerate}
+\item {\bfseries{destroy}}() -\/ {\itshape (void)} -\/ Emits any last remaining unmatched data that may still be buffered and then resets internal state.
+\item {\bfseries{push}}(\texorpdfstring{$<$}{<} {\itshape Buffer} \texorpdfstring{$>$}{>}chunk) -\/ {\itshape integer} -\/ Processes {\ttfamily chunk}, searching for a match. The return value is the last processed index in {\ttfamily chunk} + 1.
+\item {\bfseries{reset}}() -\/ {\itshape (void)} -\/ Resets internal state. Useful for when you wish to start searching a new/different stream for example. 
+\end{DoxyItemize}

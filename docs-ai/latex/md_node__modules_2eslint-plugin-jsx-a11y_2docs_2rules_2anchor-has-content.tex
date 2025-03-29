@@ -1,0 +1,73 @@
+\chapter{jsx-\/a11y/anchor-\/has-\/content}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content}{}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content}\index{jsx-\/a11y/anchor-\/has-\/content@{jsx-\/a11y/anchor-\/has-\/content}}
+\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13732}%
+\Hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13732}%
+
+
+💼 This rule is enabled in the following configs\+: ☑️ {\ttfamily recommended}, 🔒 {\ttfamily strict}.
+
+Enforce that anchors have content and that the content is accessible to screen readers. Accessible means that it is not hidden using the {\ttfamily aria-\/hidden} prop. Refer to the references to learn about why this is important.
+
+Alternatively, you may use the {\ttfamily title} prop or the {\ttfamily aria-\/label} prop.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13733}{}\doxysection{\texorpdfstring{Rule options}{Rule options}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13733}
+This rule takes one optional object argument of type object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}jsx-\/a11y/anchor-\/has-\/content"{}:\ [\ 2,\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}components"{}:\ [\ "{}Anchor"{}\ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}],}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+For the {\ttfamily components} option, these strings determine which JSX elements ({\bfseries{always including}} {\ttfamily \texorpdfstring{$<$}{<}a\texorpdfstring{$>$}{>}}) should be checked for having content. This is a good use case when you have a wrapper component that simply renders an {\ttfamily a} element (like in React)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Anchor.js}
+\DoxyCodeLine{const\ Anchor\ =\ props\ =>\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <a\ \{...props\}>\{\ props.children\ \}</a>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CreateAccount.js\ (for\ example)}
+\DoxyCodeLine{...}
+\DoxyCodeLine{return\ (}
+\DoxyCodeLine{\ \ <Anchor>Create\ Account</Anchor>}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13734}{}\doxysubsection{\texorpdfstring{Succeed}{Succeed}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13734}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<a>Anchor\ Content!</a>}
+\DoxyCodeLine{<a><TextWrapper\ /></a>}
+\DoxyCodeLine{<a\ dangerouslySetInnerHTML=\{\{\ \_\_html:\ 'foo'\ \}\}\ />}
+\DoxyCodeLine{<a\ title='foo'\ />}
+\DoxyCodeLine{<a\ aria-\/label='foo'\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13735}{}\doxysubsection{\texorpdfstring{Fail}{Fail}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13735}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<a\ />}
+\DoxyCodeLine{<a><TextWrapper\ aria-\/hidden\ /></a>}
+
+\end{DoxyCode}
+ \hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13736}{}\doxysection{\texorpdfstring{Accessibility guidelines}{Accessibility guidelines}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13736}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/link-purpose-in-context}{\texttt{ WCAG 2.\+4.\+4}}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/name-role-value}{\texttt{ WCAG 4.\+1.\+2}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13737}{}\doxysubsection{\texorpdfstring{Resources}{Resources}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2anchor-has-content_autotoc_md13737}
+
+\begin{DoxyItemize}
+\item \href{https://dequeuniversity.com/rules/axe/3.2/link-name}{\texttt{ axe-\/core, link-\/name}} 
+\end{DoxyItemize}

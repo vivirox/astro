@@ -1,0 +1,56 @@
+\doxysection{node\+\_\+modules/to-\/vfile/node\+\_\+modules/unist-\/util-\/stringify-\/position Directory Reference}
+\hypertarget{dir_750059120e297d925c2963718d25d493}{}\label{dir_750059120e297d925c2963718d25d493}\index{node\_modules/to-\/vfile/node\_modules/unist-\/util-\/stringify-\/position Directory Reference@{node\_modules/to-\/vfile/node\_modules/unist-\/util-\/stringify-\/position Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/syntax-tree/unist-util-stringify-position}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/unist-util-stringify-position}{\texttt{ }} \href{https://www.npmjs.com/package/unist-util-stringify-position}{\texttt{ }} \href{https://bundlephobia.com/result?p=unist-util-stringify-position}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://spectrum.chat/unified/syntax-tree}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/unist}{\texttt{ {\bfseries{unist}}}} utility to pretty print the positional information of a node.\hypertarget{readme.md_autotoc_md32947}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md32947}
+\href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ unist-\/util-\/stringify-\/position}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md32948}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md32948}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ stringify\ =\ require('unist-\/util-\/stringify-\/position')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Point}
+\DoxyCodeLine{stringify(\{line:\ 2,\ column:\ 3\})\ //\ =>\ '2:3'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Position}
+\DoxyCodeLine{stringify(\{start:\ \{line:\ 2\},\ end:\ \{line:\ 3\}\})\ //\ =>\ '2:1-\/3:1'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Node}
+\DoxyCodeLine{stringify(\{}
+\DoxyCodeLine{\ \ type:\ 'text',}
+\DoxyCodeLine{\ \ value:\ '!',}
+\DoxyCodeLine{\ \ position:\ \{}
+\DoxyCodeLine{\ \ \ \ start:\ \{line:\ 5,\ column:\ 11\},}
+\DoxyCodeLine{\ \ \ \ end:\ \{line:\ 5,\ column:\ 12\}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})\ //\ =>\ '5:11-\/5:12'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md32949}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md32949}
+\hypertarget{readme.md_autotoc_md32950}{}\doxysubsubsection{\texorpdfstring{{\ttfamily stringify\+Position(node\texorpdfstring{$\vert$}{|}position\texorpdfstring{$\vert$}{|}point)}}{{\ttfamily stringify\+Position(node\texorpdfstring{$\vert$}{|}position\texorpdfstring{$\vert$}{|}point)}}}\label{readme.md_autotoc_md32950}
+Stringify one \href{https://github.com/syntax-tree/unist\#point}{\texttt{ point}}, a \href{https://github.com/syntax-tree/unist\#position}{\texttt{ position}} (start and end \href{https://github.com/syntax-tree/unist\#point}{\texttt{ point}}s), or a node’s \href{https://github.com/syntax-tree/unist\#positional-information}{\texttt{ positional information}}.\hypertarget{readme.md_autotoc_md32951}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md32951}
+
+\begin{DoxyItemize}
+\item {\ttfamily node} (\href{https://github.com/syntax-tree/unist\#node}{\texttt{ {\ttfamily Node}}}) — Node whose `\textquotesingle{}position'{\ttfamily property to stringify \texorpdfstring{$\ast$}{*}}position{\ttfamily (\mbox{[}}Position{\ttfamily \mbox{]}\mbox{[}position\mbox{]}) — Position whose}\textquotesingle{}start\textquotesingle{}{\ttfamily and}\textquotesingle{}end\textquotesingle{}{\ttfamily points to stringify \texorpdfstring{$\ast$}{*}}point{\ttfamily (\mbox{[}}Point{\ttfamily \mbox{]}\mbox{[}point\mbox{]}) — Point whose}\textquotesingle{}line\textquotesingle{}{\ttfamily and}\textquotesingle{}column\textquotesingle{}\`{} to stringify
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md32952}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md32952}
+{\ttfamily string?} — A range {\ttfamily ls\+:cs-\/le\+:ce} (when given {\ttfamily node} or {\ttfamily position}) or a point {\ttfamily l\+:c} (when given {\ttfamily point}), where {\ttfamily l} stands for line, {\ttfamily c} for column, {\ttfamily s} for {\ttfamily start}, and {\ttfamily e} for end. An empty string (`'\textquotesingle{}{\ttfamily ) is returned if the given value is neither}node{\ttfamily , }position{\ttfamily , nor}point\`{}.\hypertarget{readme.md_autotoc_md32953}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md32953}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/unist-util-generated}{\texttt{ {\ttfamily unist-\/util-\/generated}}} — Check if a node is generated
+\item \href{https://github.com/syntax-tree/unist-util-position}{\texttt{ {\ttfamily unist-\/util-\/position}}} — Get positional info of nodes
+\item \href{https://github.com/syntax-tree/unist-util-remove-position}{\texttt{ {\ttfamily unist-\/util-\/remove-\/position}}} — Remove positional info from trees
+\item \href{https://github.com/syntax-tree/unist-util-source}{\texttt{ {\ttfamily unist-\/util-\/source}}} — Get the source of a value (node or position) in a file
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md32954}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md32954}
+See \href{https://github.com/syntax-tree/.github/blob/master/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/master/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/master/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md32955}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md32955}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

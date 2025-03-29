@@ -1,0 +1,123 @@
+\doxysection{node\+\_\+modules/iron-\/webcrypto Directory Reference}
+\hypertarget{dir_bc0423b24e29e20806ae4270d660f0ad}{}\label{dir_bc0423b24e29e20806ae4270d660f0ad}\index{node\_modules/iron-\/webcrypto Directory Reference@{node\_modules/iron-\/webcrypto Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.jsdocs.io/package/iron-webcrypto}{\texttt{ }} \href{https://www.npmjs.com/package/iron-webcrypto}{\texttt{ }} \href{https://www.npmjs.com/package/iron-webcrypto}{\texttt{ }} \href{https://deno.land/x/iron@v1.2.1/mod.ts}{\texttt{ }} \href{https://jsr.io/@brc-dd/iron}{\texttt{ }}
+
+This module is a replacement for {\ttfamily @hapi/iron}, written using standard APIs like Web Crypto and Uint8\+Array, which make this compatible with a variety of runtimes like Node.\+js, Deno, Bun, browsers, workers, and edge environments. Refer {\ttfamily @hapi/iron}\textquotesingle{}s docs on what it does and how it works.
+
+\begin{quote}
+Check out \href{https://github.com/unjs/h3}{\texttt{ {\bfseries{unjs/h3}}}} and \href{https://github.com/vvo/iron-session}{\texttt{ {\bfseries{vvo/iron-\/session}}}} to see this module in use! \end{quote}
+
+
+\DoxyHorRuler{0}
+\hypertarget{README.md_autotoc_md18248}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md18248}
+For Node.\+js and Bun, run any of the following commands depending on your package manager / runtime\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ add\ iron-\/webcrypto}
+\DoxyCodeLine{yarn\ add\ iron-\/webcrypto}
+\DoxyCodeLine{pnpm\ add\ iron-\/webcrypto}
+\DoxyCodeLine{bun\ add\ iron-\/webcrypto}
+
+\end{DoxyCode}
+
+
+You can then import it using\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ Iron\ from\ 'iron-\/webcrypto'}
+
+\end{DoxyCode}
+
+
+If using JSR, run any of the following commands depending on your package manager / runtime\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npx\ jsr\ add\ @brc-\/dd/iron}
+\DoxyCodeLine{yarn\ dlx\ jsr\ add\ @brc-\/dd/iron}
+\DoxyCodeLine{pnpm\ dlx\ jsr\ add\ @brc-\/dd/iron}
+\DoxyCodeLine{bunx\ jsr\ add\ @brc-\/dd/iron}
+\DoxyCodeLine{deno\ add\ @brc-\/dd/iron}
+
+\end{DoxyCode}
+
+
+You can then import it using\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ Iron\ from\ '@brc-\/dd/iron'}
+
+\end{DoxyCode}
+
+
+On Deno, you can also use any of the following imports\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ Iron\ from\ 'https://deno.land/x/iron@v1.2.1/mod.ts'}
+\DoxyCodeLine{import\ *\ as\ Iron\ from\ 'https://esm.sh/iron-\/webcrypto@1.2.1'}
+\DoxyCodeLine{import\ *\ as\ Iron\ from\ 'npm:iron-\/webcrypto@1.2.1'}
+
+\end{DoxyCode}
+
+
+Don\textquotesingle{}t use this module directly in the browser. While it will work, it\textquotesingle{}s not recommended to use it in client-\/side code because of the security implications.\hypertarget{README.md_autotoc_md18249}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md18249}
+Refer \href{https://hapi.dev/module/iron/}{\texttt{ {\ttfamily @hapi/iron}\textquotesingle{}s docs}}. There are certain differences.
+
+You need to pass a Web Crypto implementation as the first parameter to each function. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Iron.seal(obj,\ password,\ Iron.defaults)}
+
+\end{DoxyCode}
+
+
+becomes\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Iron.seal(\_crypto,\ obj,\ password,\ Iron.defaults)}
+
+\end{DoxyCode}
+
+
+where {\ttfamily \+\_\+crypto} is your Web Crypto implementation. Generally, this will be available in your context. For example, {\ttfamily global\+This.\+crypto} in browsers, workers, edge runtimes, Deno, Bun, and Node.\+js v19+; `require(\textquotesingle{}crypto').webcrypto{\ttfamily in Node.\+js v15+. You can directly use \mbox{[}}uncrypto{\ttfamily \mbox{]}(\href{https://github.com/unjs/uncrypto}{\texttt{ https\+://github.\+com/unjs/uncrypto}}) for this too. Also, you might need to polyfill this for older Node.\+js versions. I recommend using \mbox{[}}@peculiar/webcrypto\`{}\mbox{]}(\href{https://github.com/PeculiarVentures/webcrypto}{\texttt{ https\+://github.\+com/\+Peculiar\+Ventures/webcrypto}}) for that.
+
+There are certain other differences because of the underlying implementation using standard APIs instead of Node.\+js-\/specific ones like {\ttfamily node\+:crypto} and {\ttfamily node\+:buffer}. There might also be differences in certain error messages because of this.\hypertarget{README.md_autotoc_md18250}{}\doxysubsection{\texorpdfstring{Security Considerations}{Security Considerations}}\label{README.md_autotoc_md18250}
+{\bfseries{Users are responsible for implementing {\ttfamily iron-\/webcrypto} in a secure manner and ensuring the security of their cryptographic keys. I DO NOT guarantee the security of this module.}} So far, no security vulnerabilities have been reported, but I am no cryptography expert. Quoting \href{https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API}{\texttt{ MDN}}\+:
+
+\begin{quote}
+The Web Crypto API provides a number of low-\/level cryptographic primitives. It\textquotesingle{}s very easy to misuse them, and the pitfalls involved can be very subtle.
+
+Even assuming you use the basic cryptographic functions correctly, secure key management and overall security system design are extremely hard to get right, and are generally the domain of specialist security experts.
+
+Errors in security system design and implementation can make the security of the system completely ineffective. \end{quote}
+
+
+As a request, it would be great if someone with expertise in this field could thoroughly review the code.\hypertarget{README.md_autotoc_md18251}{}\doxysubsection{\texorpdfstring{Credits}{Credits}}\label{README.md_autotoc_md18251}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{@hapi/iron}
+\DoxyCodeLine{\ \ \ \ Copyright\ (c)\ 2012-\/2022,\ Project\ contributors}
+\DoxyCodeLine{\ \ \ \ Copyright\ (c)\ 2012-\/2020,\ Sideway\ Inc}
+\DoxyCodeLine{\ \ \ \ All\ rights\ reserved.}
+\DoxyCodeLine{\ \ \ \ https:\textcolor{comment}{//cdn.jsdelivr.net/npm/@hapi/iron@7.0.1/LICENSE.md}}
+\DoxyCodeLine{}
+\DoxyCodeLine{@smithy/util-\/base64}
+\DoxyCodeLine{\ \ \ \ Copyright\ 2018-\/2020\ Amazon.com,\ Inc.\ or\ its\ affiliates.\ All\ Rights\ Reserved.}
+\DoxyCodeLine{\ \ \ \ https:\textcolor{comment}{//cdn.jsdelivr.net/npm/@smithy/util-\/base64@2.3.0/LICENSE}}
+\DoxyCodeLine{}
+\DoxyCodeLine{@smithy/util-\/utf8}
+\DoxyCodeLine{\ \ \ \ Copyright\ 2018-\/2020\ Amazon.com,\ Inc.\ or\ its\ affiliates.\ All\ Rights\ Reserved.}
+\DoxyCodeLine{\ \ \ \ https:\textcolor{comment}{//cdn.jsdelivr.net/npm/@smithy/util-\/utf8@2.3.0/LICENSE}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md18252}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md18252}
+\href{https://cdn.jsdelivr.net/gh/brc-dd/static/sponsors.svg}{\texttt{  }} 

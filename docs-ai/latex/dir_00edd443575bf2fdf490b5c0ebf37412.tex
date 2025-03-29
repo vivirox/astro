@@ -1,0 +1,55 @@
+\doxysection{node\+\_\+modules/resolve-\/from Directory Reference}
+\hypertarget{dir_00edd443575bf2fdf490b5c0ebf37412}{}\label{dir_00edd443575bf2fdf490b5c0ebf37412}\index{node\_modules/resolve-\/from Directory Reference@{node\_modules/resolve-\/from Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Resolve the path of a module like \href{https://nodejs.org/api/globals.html\#globals_require_resolve}{\texttt{ {\ttfamily require.\+resolve()}}} but from a given path \end{quote}
+\hypertarget{readme.md_autotoc_md29378}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md29378}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ resolve-\/from}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29379}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md29379}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ resolveFrom\ =\ require('resolve-\/from');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ There\ is\ a\ file\ at\ \`{}./foo/bar.js`}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolveFrom('foo',\ './bar');}
+\DoxyCodeLine{//=>\ '/Users/sindresorhus/dev/test/foo/bar.js'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29380}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md29380}
+\hypertarget{readme.md_autotoc_md29381}{}\doxysubsubsection{\texorpdfstring{resolve\+From(from\+Directory, module\+Id)}{resolve\+From(from\+Directory, module\+Id)}}\label{readme.md_autotoc_md29381}
+Like {\ttfamily require()}, throws when the module can\textquotesingle{}t be found.\hypertarget{readme.md_autotoc_md29382}{}\doxysubsubsection{\texorpdfstring{resolve\+From.\+silent(from\+Directory, module\+Id)}{resolve\+From.\+silent(from\+Directory, module\+Id)}}\label{readme.md_autotoc_md29382}
+Returns {\ttfamily undefined} instead of throwing when the module can\textquotesingle{}t be found.\hypertarget{readme.md_autotoc_md29383}{}\doxysubsubsubsection{\texorpdfstring{from\+Directory}{from\+Directory}}\label{readme.md_autotoc_md29383}
+Type\+: {\ttfamily string}
+
+Directory to resolve from.\hypertarget{readme.md_autotoc_md29384}{}\doxysubsubsubsection{\texorpdfstring{module\+Id}{module\+Id}}\label{readme.md_autotoc_md29384}
+Type\+: {\ttfamily string}
+
+What you would use in {\ttfamily require()}.\hypertarget{readme.md_autotoc_md29385}{}\doxysubsection{\texorpdfstring{Tip}{Tip}}\label{readme.md_autotoc_md29385}
+Create a partial using a bound function if you want to resolve from the same {\ttfamily from\+Directory} multiple times\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ resolveFromFoo\ =\ resolveFrom.bind(null,\ 'foo');}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolveFromFoo('./bar');}
+\DoxyCodeLine{resolveFromFoo('./baz');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29386}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md29386}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/resolve-cwd}{\texttt{ resolve-\/cwd}} -\/ Resolve the path of a module from the current working directory
+\item \href{https://github.com/sindresorhus/import-from}{\texttt{ import-\/from}} -\/ Import a module from a given path
+\item \href{https://github.com/sindresorhus/import-cwd}{\texttt{ import-\/cwd}} -\/ Import a module from the current working directory
+\item \href{https://github.com/sindresorhus/resolve-pkg}{\texttt{ resolve-\/pkg}} -\/ Resolve the path of a package regardless of it having an entry point
+\item \href{https://github.com/sindresorhus/import-lazy}{\texttt{ import-\/lazy}} -\/ Import a module lazily
+\item \href{https://github.com/sindresorhus/resolve-global}{\texttt{ resolve-\/global}} -\/ Resolve the path of a globally installed module
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29387}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md29387}
+MIT © \href{https://sindresorhus.com}{\texttt{ Sindre Sorhus}} 

@@ -1,0 +1,461 @@
+\doxysection{node\+\_\+modules/@octokit/core Directory Reference}
+\hypertarget{dir_2a1cdc5f4bedf2d976593108075d4987}{}\label{dir_2a1cdc5f4bedf2d976593108075d4987}\index{node\_modules/"@octokit/core Directory Reference@{node\_modules/"@octokit/core Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Extendable client for Git\+Hub\textquotesingle{}s REST \& Graph\+QL APIs \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/core}{\texttt{ }} \href{https://github.com/octokit/core.js/actions?query=workflow\%3ATest+branch\%3Amain}{\texttt{ }}
+
+
+\begin{DoxyItemize}
+\item \doxylink{readme.md_usage}{Usage}
+\begin{DoxyItemize}
+\item REST API example
+\item Graph\+QL example
+\end{DoxyItemize}
+\item \doxylink{README.md_options}{Options}
+\item Defaults
+\item Authentication
+\item Logging
+\item Hooks
+\item \doxylink{README.md_plugins}{Plugins}
+\item Build your own Octokit with Plugins and Defaults
+\item \doxylink{README.md_license}{LICENSE}
+\end{DoxyItemize}
+
+If you need a minimalistic library to utilize Git\+Hub\textquotesingle{}s \href{https://developer.github.com/v3/}{\texttt{ REST API}} and \href{https://developer.github.com/v4/}{\texttt{ Graph\+QL API}} which you can extend with plugins as needed, then {\ttfamily @octokit/core} is a great starting point.
+
+If you don\textquotesingle{}t need the Plugin API then using \href{https://github.com/octokit/request.js/}{\texttt{ {\ttfamily @octokit/request}}} or \href{https://github.com/octokit/graphql.js/}{\texttt{ {\ttfamily @octokit/graphql}}} directly is a good alternative.\hypertarget{README.md_autotoc_md5214}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5214}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers }&Load {\ttfamily @octokit/core} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ Octokit\ \}\ from\ "{}https://esm.sh/@octokit/core"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node }&
+
+Install with {\ttfamily npm install @octokit/core}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit\ \}\ from\ "{}@octokit/core"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json}. See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.\hypertarget{README.md_autotoc_md5215}{}\doxysubsubsection{\texorpdfstring{REST API example}{REST API example}}\label{README.md_autotoc_md5215}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Create\ a\ personal\ access\ token\ at\ https://github.com/settings/tokens/new?scopes=repo}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{\ auth:\ \`{}personal-\/access-\/token123`\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ response\ =\ await\ octokit.request("{}GET\ /orgs/\{org\}/repos"{},\ \{}
+\DoxyCodeLine{\ \ org:\ "{}octokit"{},}
+\DoxyCodeLine{\ \ type:\ "{}private"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+See \href{https://github.com/octokit/request.js}{\texttt{ {\ttfamily @octokit/request}}} for full documentation of the {\ttfamily .request} method.\hypertarget{README.md_autotoc_md5216}{}\doxysubsubsection{\texorpdfstring{Graph\+QL example}{Graph\+QL example}}\label{README.md_autotoc_md5216}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{\ auth:\ \`{}secret123`\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ response\ =\ await\ octokit.graphql(}
+\DoxyCodeLine{\ \ \`{}query\ (\$login:\ String!)\ \{}
+\DoxyCodeLine{\ \ \ \ organization(login:\ \$login)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ repositories(privacy:\ PRIVATE)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ totalCount}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}`,}
+\DoxyCodeLine{\ \ \{\ login:\ "{}octokit"{}\ \},}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+See \href{https://github.com/octokit/graphql.js}{\texttt{ {\ttfamily @octokit/graphql}}} for full documentation of the {\ttfamily .graphql} method.\hypertarget{README.md_autotoc_md5217}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md5217}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily options.\+auth\+Strategy}  }&{\ttfamily Function{\ttfamily   }}&{\ttfamily {\ttfamily  Defaults to \href{https://github.com/octokit/auth-token.js\#readme}{\texttt{ {\ttfamily @octokit/auth-\/token}}}. See \href{\#authentication}{\texttt{ Authentication}} below for examples.   }}\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily {\ttfamily  {\ttfamily options.\+auth}  }}}&{\ttfamily {\ttfamily  {\ttfamily String} or {\ttfamily Object}  }}&{\ttfamily {\ttfamily  See \href{\#authentication}{\texttt{ Authentication}} below for examples.   }}\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily {\ttfamily  {\ttfamily options.\+base\+Url}  }}}&{\ttfamily {\ttfamily  {\ttfamily String}  }}&{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily When using with Git\+Hub Enterprise Server, set {\ttfamily options.\+base\+Url} to the root URL of the API. For example, if your Git\+Hub Enterprise Server\textquotesingle{}s hostname is {\ttfamily github.\+acme-\/inc.\+com}, then set {\ttfamily options.\+base\+Url} to {\ttfamily \href{https://github.acme-inc.com/api/v3}{\texttt{ https\+://github.\+acme-\/inc.\+com/api/v3}}}. Example}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ baseUrl:\ "{}https://github.acme-\/inc.com/api/v3"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily  }}\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily {\ttfamily  {\ttfamily options.\+previews}  }}}&{\ttfamily {\ttfamily  {\ttfamily Array of Strings}  }}&{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily Some REST API endpoints require preview headers to be set, or enable additional features. Preview headers can be set on a per-\/request basis, e.\+g.}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{octokit.request("{}POST\ /repos/\{owner\}/\{repo\}/pulls"{},\ \{}
+\DoxyCodeLine{\ \ mediaType:\ \{}
+\DoxyCodeLine{\ \ \ \ previews:\ ["{}shadow-\/cat"{}],}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ owner,}
+\DoxyCodeLine{\ \ repo,}
+\DoxyCodeLine{\ \ title:\ "{}My\ pull\ request"{},}
+\DoxyCodeLine{\ \ base:\ "{}main"{},}
+\DoxyCodeLine{\ \ head:\ "{}my-\/feature"{},}
+\DoxyCodeLine{\ \ draft:\ true,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily You can also set previews globally, by setting the {\ttfamily options.\+previews} option on the constructor. Example\+:}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ previews:\ ["{}shadow-\/cat"{}],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily  }}\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily {\ttfamily  {\ttfamily options.\+request}  }}}&{\ttfamily {\ttfamily  {\ttfamily Object}  }}&{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily Set a default request timeout ({\ttfamily options.\+request.\+timeout}) or an \href{https://nodejs.org/api/http.html\#http_class_http_agent}{\texttt{ {\ttfamily http(s).Agent}}} e.\+g. for proxy usage (Node only, {\ttfamily options.\+request.\+agent}).}}
+
+{\ttfamily {\ttfamily There are more {\ttfamily options.\+request.\texorpdfstring{$\ast$}{*}} options, see \href{https://github.com/octokit/request.js\#request}{\texttt{ {\ttfamily @octokit/request} options}}. {\ttfamily options.\+request} can also be set on a per-\/request basis.}}
+
+{\ttfamily {\ttfamily  }}\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily {\ttfamily  {\ttfamily options.\+time\+Zone}  }}}&{\ttfamily {\ttfamily  {\ttfamily String}  }}&{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily Sets the {\ttfamily Time-\/\+Zone} header which defines a timezone according to the \href{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones}{\texttt{ list of names from the Olson database}}.}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ timeZone:\ "{}America/Los\_Angeles"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily The time zone header will determine the timezone used for generating the timestamp when creating commits. See \href{https://developer.github.com/v3/\#timezones}{\texttt{ Git\+Hub\textquotesingle{}s Timezones documentation}}.}}
+
+{\ttfamily {\ttfamily  }}\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily {\ttfamily  {\ttfamily options.\+user\+Agent}  }}}&{\ttfamily {\ttfamily  {\ttfamily String}  }}&{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily A custom user agent string for your app or library. Example}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ userAgent:\ "{}my-\/app/v1.2.3"{},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily   }}\\\cline{1-3}
+\end{longtabu}
+
+
+{\ttfamily {\ttfamily }}\hypertarget{README.md_autotoc_md5218}{}\doxysubsection{\texorpdfstring{{\ttfamily {\ttfamily Defaults}}}{{\ttfamily {\ttfamily Defaults}}}}\label{README.md_autotoc_md5218}
+{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily You can create a new Octokit class with customized default options.}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MyOctokit\ =\ Octokit.defaults(\{}
+\DoxyCodeLine{\ \ auth:\ "{}personal-\/access-\/token123"{},}
+\DoxyCodeLine{\ \ baseUrl:\ "{}https://github.acme-\/inc.com/api/v3"{},}
+\DoxyCodeLine{\ \ userAgent:\ "{}my-\/app/v1.2.3"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ octokit1\ =\ new\ MyOctokit();}
+\DoxyCodeLine{const\ octokit2\ =\ new\ MyOctokit();}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily If you pass additional options to your new constructor, the options will be merged shallowly.}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MyOctokit\ =\ Octokit.defaults(\{}
+\DoxyCodeLine{\ \ foo:\ \{}
+\DoxyCodeLine{\ \ \ \ opt1:\ 1,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ octokit\ =\ new\ MyOctokit(\{}
+\DoxyCodeLine{\ \ foo:\ \{}
+\DoxyCodeLine{\ \ \ \ opt2:\ 1,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ options\ will\ be\ \{\ foo:\ \{\ opt2:\ 1\ \}\}}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily If you need a deep or conditional merge, you can pass a function instead.}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MyOctokit\ =\ Octokit.defaults((options)\ =>\ \{}
+\DoxyCodeLine{\ \ return\ \{}
+\DoxyCodeLine{\ \ \ \ foo:\ Object.assign(\{\},\ options.foo,\ \{\ opt1:\ 1\ \}),}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ octokit\ =\ new\ MyOctokit(\{}
+\DoxyCodeLine{\ \ foo:\ \{\ opt2:\ 1\ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ options\ will\ be\ \{\ foo:\ \{\ opt1:\ 1,\ opt2:\ 1\ \}\}}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily Be careful about mutating the {\ttfamily options} object in the {\ttfamily Octokit.\+defaults} callback, as it can have unforeseen consequences.}}
+
+{\ttfamily {\ttfamily }}\hypertarget{README.md_autotoc_md5219}{}\doxysubsection{\texorpdfstring{{\ttfamily {\ttfamily Authentication}}}{{\ttfamily {\ttfamily Authentication}}}}\label{README.md_autotoc_md5219}
+{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily Authentication is optional for some REST API endpoints accessing public data, but is required for Graph\+QL queries. Using authentication also increases your \href{https://developer.github.com/v3/\#rate-limiting}{\texttt{ API rate limit}}.}}
+
+{\ttfamily {\ttfamily By default, Octokit authenticates using the \href{https://github.com/octokit/auth-token.js}{\texttt{ token authentication strategy}}. Pass in a token using {\ttfamily options.\+auth}. It can be a personal access token, an OAuth token, an installation access token or a JSON Web Token for Git\+Hub App authentication. The {\ttfamily Authorization} header will be set according to the type of token.}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit\ \}\ from\ "{}@octokit/core"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ auth:\ "{}mypersonalaccesstoken123"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data\ \}\ =\ await\ octokit.request("{}/user"{});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily To use a different authentication strategy, set {\ttfamily options.\+auth\+Strategy}. A list of authentication strategies is available at \href{https://github.com/octokit/authentication-strategies.js/\#readme}{\texttt{ octokit/authentication-\/strategies.\+js}}.}}
+
+{\ttfamily {\ttfamily Example}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit\ \}\ from\ "{}@octokit/core"{};}
+\DoxyCodeLine{import\ \{\ createAppAuth\ \}\ from\ "{}@octokit/auth-\/app"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ appOctokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ authStrategy:\ createAppAuth,}
+\DoxyCodeLine{\ \ auth:\ \{}
+\DoxyCodeLine{\ \ \ \ appId:\ 123,}
+\DoxyCodeLine{\ \ \ \ privateKey:\ process.env.PRIVATE\_KEY,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data\ \}\ =\ await\ appOctokit.request("{}/app"{});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily The {\ttfamily .auth()} method returned by the current authentication strategy can be accessed at {\ttfamily octokit.\+auth()}. Example}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ token\ \}\ =\ await\ appOctokit.auth(\{}
+\DoxyCodeLine{\ \ type:\ "{}installation"{},}
+\DoxyCodeLine{\ \ installationId:\ 123,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily }}\hypertarget{README.md_autotoc_md5220}{}\doxysubsection{\texorpdfstring{{\ttfamily {\ttfamily Logging}}}{{\ttfamily {\ttfamily Logging}}}}\label{README.md_autotoc_md5220}
+{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily There are four built-\/in log methods}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyEnumerate}
+\item {\ttfamily octokit.\+log.\+debug(message\mbox{[}, additional\+Info\mbox{]})}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily octokit.\+log.\+info(message\mbox{[}, additional\+Info\mbox{]})}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily octokit.\+log.\+warn(message\mbox{[}, additional\+Info\mbox{]})}
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item {\ttfamily octokit.\+log.\+error(message\mbox{[}, additional\+Info\mbox{]})}
+\end{DoxyEnumerate}}}
+
+{\ttfamily {\ttfamily They can be configured using the \mbox{[}{\ttfamily log} client option\mbox{]}(client-\/options). By default, {\ttfamily octokit.\+log.\+debug()} and {\ttfamily octokit.\+log.\+info()} are no-\/ops, while the other two call {\ttfamily console.\+warn()} and {\ttfamily console.\+error()} respectively.}}
+
+{\ttfamily {\ttfamily This is useful if you build reusable \doxylink{README.md_plugins}{plugins}.}}
+
+{\ttfamily {\ttfamily If you would like to make the log level configurable using an environment variable or external option, we recommend the \href{https://github.com/watson/console-log-level}{\texttt{ console-\/log-\/level}} package. Example}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ consoleLogLevel\ from\ "{}console-\/log-\/level"{};}
+\DoxyCodeLine{const\ octokit\ =\ new\ Octokit(\{}
+\DoxyCodeLine{\ \ log:\ consoleLogLevel(\{\ level:\ "{}info"{}\ \}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily }}\hypertarget{README.md_autotoc_md5221}{}\doxysubsection{\texorpdfstring{{\ttfamily {\ttfamily Hooks}}}{{\ttfamily {\ttfamily Hooks}}}}\label{README.md_autotoc_md5221}
+{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily You can customize Octokit\textquotesingle{}s request lifecycle with hooks.}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{octokit.hook.before("{}request"{},\ async\ (options)\ =>\ \{}
+\DoxyCodeLine{\ \ validate(options);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{octokit.hook.after("{}request"{},\ async\ (response,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(`\$\{options.method\}\ \$\{options.url\}:\ \$\{response.status\}`);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{octokit.hook.error("{}request"{},\ async\ (error,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (error.status\ ===\ 304)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ findInCache(error.response.headers.etag);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ throw\ error;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{octokit.hook.wrap("{}request"{},\ async\ (request,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ //\ add\ logic\ before,\ after,\ catch\ errors\ or\ replace\ the\ request\ altogether}
+\DoxyCodeLine{\ \ return\ request(options);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily See \href{https://github.com/gr2m/before-after-hook\#readme}{\texttt{ before-\/after-\/hook}} for more documentation on hooks.}}
+
+{\ttfamily {\ttfamily }}\hypertarget{README.md_autotoc_md5222}{}\doxysubsection{\texorpdfstring{{\ttfamily {\ttfamily Plugins}}}{{\ttfamily {\ttfamily Plugins}}}}\label{README.md_autotoc_md5222}
+{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily Octokit’s functionality can be extended using plugins. The {\ttfamily Octokit.\+plugin()} method accepts a plugin (or many) and returns a new constructor.}}
+
+{\ttfamily {\ttfamily A plugin is a function which gets two arguments\+:}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyEnumerate}
+\item the current instance
+\item the options passed to the constructor.
+\end{DoxyEnumerate}}}
+
+{\ttfamily {\ttfamily In order to extend {\ttfamily octokit}\textquotesingle{}s API, the plugin must return an object with the new methods. Please refrain from adding methods directly to the {\ttfamily octokit} instance, especialy if you depend on keys that do not exist in {\ttfamily @octokit/core}, such as {\ttfamily octokit.\+rest}.}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ index.js}
+\DoxyCodeLine{import\ \{\ Octokit\ \}\ from\ "{}@octokit/core"{};}
+\DoxyCodeLine{import\ myPlugin\ from\ "{}./lib/my-\/plugin.js"{};}
+\DoxyCodeLine{import\ octokitPluginExample\ from\ "{}octokit-\/plugin-\/example"{};}
+\DoxyCodeLine{const\ MyOctokit\ =\ Octokit.plugin(}
+\DoxyCodeLine{\ \ myPlugin,}
+\DoxyCodeLine{\ \ octokitPluginExample}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ octokit\ =\ new\ MyOctokit(\{\ greeting:\ "{}Moin\ moin"{}\ \});}
+\DoxyCodeLine{octokit.helloWorld();\ //\ logs\ "{}Moin\ moin,\ world!"{}}
+\DoxyCodeLine{octokit.request("{}GET\ /"{});\ //\ logs\ "{}GET\ /\ -\/\ 200\ in\ 123ms"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ lib/my-\/plugin.js}
+\DoxyCodeLine{const\ plugin\ =\ (octokit,\ options\ =\ \{\ greeting:\ "{}Hello"{}\ \})\ =>\ \{}
+\DoxyCodeLine{\ \ //\ hook\ into\ the\ request\ lifecycle}
+\DoxyCodeLine{\ \ octokit.hook.wrap("{}request"{},\ async\ (request,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ time\ =\ Date.now();}
+\DoxyCodeLine{\ \ \ \ const\ response\ =\ await\ request(options);}
+\DoxyCodeLine{\ \ \ \ console.log(}
+\DoxyCodeLine{\ \ \ \ \ \ \`{}\$\{options.method\}\ \$\{options.url\}\ –\ \$\{response.status\}\ in\ \$\{Date.now()\ -\/}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ time\}ms`}
+\DoxyCodeLine{\ \ \ \ );}
+\DoxyCodeLine{\ \ \ \ return\ response;}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ add\ a\ custom\ method}
+\DoxyCodeLine{\ \ return\ \{}
+\DoxyCodeLine{\ \ \ \ helloWorld:\ ()\ =>\ console.log(`\$\{options.greeting\},\ world!`);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{export\ default\ plugin;}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily }}\hypertarget{README.md_autotoc_md5223}{}\doxysubsection{\texorpdfstring{{\ttfamily {\ttfamily Build your own Octokit with Plugins and Defaults}}}{{\ttfamily {\ttfamily Build your own Octokit with Plugins and Defaults}}}}\label{README.md_autotoc_md5223}
+{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily You can build your own Octokit class with preset default options and plugins. In fact, this is mostly how the {\ttfamily @octokit/\texorpdfstring{$<$}{<}context\texorpdfstring{$>$}{>}} modules work, such as \href{https://github.com/octokit/action.js}{\texttt{ {\ttfamily @octokit/action}}}\+:}}
+
+{\ttfamily {\ttfamily 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Octokit\ \}\ from\ "{}@octokit/core"{};}
+\DoxyCodeLine{import\ \{\ paginateRest\ \}\ from\ "{}@octokit/plugin-\/paginate-\/rest"{};}
+\DoxyCodeLine{import\ \{\ throttling\ \}\ from\ "{}@octokit/plugin-\/throttling"{};}
+\DoxyCodeLine{import\ \{\ retry\ \}\ from\ "{}@octokit/plugin-\/retry"{};}
+\DoxyCodeLine{import\ \{\ createActionAuth\ \}\ from\ "{}@octokit/auth-\/action"{};}
+\DoxyCodeLine{const\ MyActionOctokit\ =\ Octokit.plugin(}
+\DoxyCodeLine{\ \ paginateRest,}
+\DoxyCodeLine{\ \ throttling,}
+\DoxyCodeLine{\ \ retry,}
+\DoxyCodeLine{).defaults(\{}
+\DoxyCodeLine{\ \ throttle:\ \{}
+\DoxyCodeLine{\ \ \ \ onAbuseLimit:\ (retryAfter,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ onRateLimit:\ (retryAfter,\ options)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ /*\ ...\ */}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ authStrategy:\ createActionAuth,}
+\DoxyCodeLine{\ \ userAgent:\ \`{}my-\/octokit-\/action/v1.2.3`,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ octokit\ =\ new\ MyActionOctokit();}
+\DoxyCodeLine{const\ installations\ =\ await\ octokit.paginate("{}GET\ /app/installations"{});}
+
+\end{DoxyCode}
+}}
+
+{\ttfamily {\ttfamily }}\hypertarget{README.md_autotoc_md5224}{}\doxysubsection{\texorpdfstring{{\ttfamily {\ttfamily LICENSE}}}{{\ttfamily {\ttfamily LICENSE}}}}\label{README.md_autotoc_md5224}
+{\ttfamily {\ttfamily }}
+
+{\ttfamily {\ttfamily \mbox{[}MIT\mbox{]}(LICENSE) }}

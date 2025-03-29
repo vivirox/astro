@@ -1,0 +1,154 @@
+\doxysection{node\+\_\+modules/parse-\/entities Directory Reference}
+\hypertarget{dir_d4f7578f9f0de420b63fd7fe9879dce5}{}\label{dir_d4f7578f9f0de420b63fd7fe9879dce5}\index{node\_modules/parse-\/entities Directory Reference@{node\_modules/parse-\/entities Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_df379016c30401bc5bc0ab895f4cf1e6}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/wooorm/parse-entities/actions}{\texttt{ }} \href{https://codecov.io/github/wooorm/parse-entities}{\texttt{ }} \href{https://www.npmjs.com/package/parse-entities}{\texttt{ }} \href{https://bundlephobia.com/result?p=parse-entities}{\texttt{ }}
+
+Parse HTML character references.\hypertarget{readme.md_autotoc_md25554}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md25554}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}parse\+Entities(value\mbox{[}, options\mbox{]})\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md25555}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md25555}
+This is a small and powerful decoder of HTML character references (often called entities).\hypertarget{readme.md_autotoc_md25556}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md25556}
+You can use this for spec-\/compliant decoding of character references. It’s small and fast enough to do that well. You can also use this when making a linter, because there are different warnings emitted with reasons for why and positional info on where they happened.\hypertarget{readme.md_autotoc_md25557}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md25557}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 14.\+14+, 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ parse-\/entities}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{parseEntities\}\ from\ 'https://esm.sh/parse-\/entities@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{parseEntities\}\ from\ 'https://esm.sh/parse-\/entities@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25558}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md25558}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{parseEntities\}\ from\ 'parse-\/entities'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(parseEntities('alpha\ \&amp\ bravo')))}
+\DoxyCodeLine{//\ =>\ alpha\ \&\ bravo}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(parseEntities('charlie\ \&copycat;\ delta'))}
+\DoxyCodeLine{//\ =>\ charlie\ ©cat;\ delta}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(parseEntities('echo\ \&copy;\ foxtrot\ \&\#8800;\ golf\ \&\#x1D306;\ hotel'))}
+\DoxyCodeLine{//\ =>\ echo\ ©\ foxtrot\ ≠\ golf\ 𝌆\ hotel}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25559}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md25559}
+This package exports the identifier {\ttfamily parse\+Entities}. There is no default export.\hypertarget{readme.md_autotoc_md25560}{}\doxysubsubsection{\texorpdfstring{{\ttfamily parse\+Entities(value\mbox{[}, options\mbox{]})}}{{\ttfamily parse\+Entities(value\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md25560}
+Parse HTML character references.\hypertarget{readme.md_autotoc_md25561}{}\doxysubsubsubsubsection{\texorpdfstring{{\ttfamily options}}{{\ttfamily options}}}\label{readme.md_autotoc_md25561}
+Configuration (optional).\hypertarget{readme.md_autotoc_md25562}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+additional}}{{\ttfamily options.\+additional}}}\label{readme.md_autotoc_md25562}
+Additional character to accept ({\ttfamily string?}, default\+: `'\textquotesingle{}\`{}). This allows other characters, without error, when following an ampersand.\hypertarget{readme.md_autotoc_md25563}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+attribute}}{{\ttfamily options.\+attribute}}}\label{readme.md_autotoc_md25563}
+Whether to parse {\ttfamily value} as an attribute value ({\ttfamily boolean?}, default\+: {\ttfamily false}). This results in slightly different behavior.\hypertarget{readme.md_autotoc_md25564}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+non\+Terminated}}{{\ttfamily options.\+non\+Terminated}}}\label{readme.md_autotoc_md25564}
+Whether to allow nonterminated references ({\ttfamily boolean}, default\+: {\ttfamily true}). For example, {\ttfamily \&copycat} for {\ttfamily ©cat}. This behavior is compliant to the spec but can lead to unexpected results.\hypertarget{readme.md_autotoc_md25565}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+position}}{{\ttfamily options.\+position}}}\label{readme.md_autotoc_md25565}
+Starting {\ttfamily position} of {\ttfamily value} ({\ttfamily Position} or {\ttfamily Point}, optional). Useful when dealing with values nested in some sort of syntax tree. The default is\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{line:\ 1,\ column:\ 1,\ offset:\ 0\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25566}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+warning}}{{\ttfamily options.\+warning}}}\label{readme.md_autotoc_md25566}
+Error handler (\`{}\+Function?\`{}).\hypertarget{readme.md_autotoc_md25567}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+text}}{{\ttfamily options.\+text}}}\label{readme.md_autotoc_md25567}
+Text handler (\`{}\+Function?\`{}).\hypertarget{readme.md_autotoc_md25568}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+reference}}{{\ttfamily options.\+reference}}}\label{readme.md_autotoc_md25568}
+Reference handler (\`{}\+Function?\`{}).\hypertarget{readme.md_autotoc_md25569}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+warning\+Context}}{{\ttfamily options.\+warning\+Context}}}\label{readme.md_autotoc_md25569}
+Context used when calling {\ttfamily warning} (`'\texorpdfstring{$\ast$}{*}\textquotesingle{}\`{}, optional).\hypertarget{readme.md_autotoc_md25570}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+text\+Context}}{{\ttfamily options.\+text\+Context}}}\label{readme.md_autotoc_md25570}
+Context used when calling {\ttfamily text} (`'\texorpdfstring{$\ast$}{*}\textquotesingle{}\`{}, optional).\hypertarget{readme.md_autotoc_md25571}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily options.\+reference\+Context}}{{\ttfamily options.\+reference\+Context}}}\label{readme.md_autotoc_md25571}
+Context used when calling {\ttfamily reference} (`'\texorpdfstring{$\ast$}{*}\textquotesingle{}\`{}, optional)\hypertarget{readme.md_autotoc_md25572}{}\doxysubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md25572}
+{\ttfamily string} — decoded {\ttfamily value}.\hypertarget{readme.md_autotoc_md25573}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily function warning(reason, point, code)}}{{\ttfamily function warning(reason, point, code)}}}\label{readme.md_autotoc_md25573}
+Error handler.\hypertarget{readme.md_autotoc_md25574}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md25574}
+
+\begin{DoxyItemize}
+\item {\ttfamily this} ({\ttfamily \texorpdfstring{$\ast$}{*}}) — refers to {\ttfamily warning\+Context} when given to {\ttfamily parse\+Entities}
+\item {\ttfamily reason} ({\ttfamily string}) — human readable reason for emitting a parse error
+\item {\ttfamily point} (\href{https://github.com/syntax-tree/unist\#point}{\texttt{ {\ttfamily Point}}}) — place where the error occurred
+\item {\ttfamily code} ({\ttfamily number}) — machine readable code the error
+\end{DoxyItemize}
+
+The following codes are used\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Code   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Example   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Note    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Code   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Example   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Note    }\\\cline{1-3}
+\endhead
+{\ttfamily 1}   &{\ttfamily foo \&amp bar}   &Missing semicolon (named)    \\\cline{1-3}
+{\ttfamily 2}   &{\ttfamily foo \&\#123 bar}   &Missing semicolon (numeric)    \\\cline{1-3}
+{\ttfamily 3}   &{\ttfamily Foo \&bar baz}   &Empty (named)    \\\cline{1-3}
+{\ttfamily 4}   &{\ttfamily Foo \&\#}   &Empty (numeric)    \\\cline{1-3}
+{\ttfamily 5}   &{\ttfamily Foo \&bar; baz}   &Unknown (named)    \\\cline{1-3}
+{\ttfamily 6}   &{\ttfamily Foo \&\#128; baz}   &\href{https://github.com/wooorm/character-reference-invalid}{\texttt{ Disallowed reference}}    \\\cline{1-3}
+{\ttfamily 7}   &{\ttfamily Foo \&\#x\+D800; baz}   &Prohibited\+: outside permissible unicode range   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{readme.md_autotoc_md25575}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily function text(value, position)}}{{\ttfamily function text(value, position)}}}\label{readme.md_autotoc_md25575}
+Text handler.\hypertarget{readme.md_autotoc_md25576}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md25576}
+
+\begin{DoxyItemize}
+\item {\ttfamily this} ({\ttfamily \texorpdfstring{$\ast$}{*}}) — refers to {\ttfamily text\+Context} when given to {\ttfamily parse\+Entities}
+\item {\ttfamily value} ({\ttfamily string}) — string of content
+\item {\ttfamily position} (\href{https://github.com/syntax-tree/unist\#position}{\texttt{ {\ttfamily Position}}}) — place where {\ttfamily value} starts and ends
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md25577}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily function reference(value, position, source)}}{{\ttfamily function reference(value, position, source)}}}\label{readme.md_autotoc_md25577}
+Character reference handler.\hypertarget{readme.md_autotoc_md25578}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md25578}
+
+\begin{DoxyItemize}
+\item {\ttfamily this} ({\ttfamily \texorpdfstring{$\ast$}{*}}) — refers to {\ttfamily reference\+Context} when given to {\ttfamily parse\+Entities}
+\item {\ttfamily value} ({\ttfamily string}) — decoded character reference
+\item {\ttfamily position} (\href{https://github.com/syntax-tree/unist\#position}{\texttt{ {\ttfamily Position}}}) — place where {\ttfamily source} starts and ends
+\item {\ttfamily source} ({\ttfamily string}) — raw source of character reference
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md25579}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md25579}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types {\ttfamily Options}, {\ttfamily Warning\+Handler}, {\ttfamily Reference\+Handler}, and {\ttfamily Text\+Handler}.\hypertarget{readme.md_autotoc_md25580}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md25580}
+This package is at least compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 14.\+14+ and 16.\+0+. It also works in Deno and modern browsers.\hypertarget{readme.md_autotoc_md25581}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md25581}
+This package is safe\+: it matches the HTML spec to parse character references.\hypertarget{readme.md_autotoc_md25582}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md25582}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/wooorm/stringify-entities}{\texttt{ {\ttfamily wooorm/stringify-\/entities}}} — encode HTML character references
+\item \href{https://github.com/wooorm/character-entities}{\texttt{ {\ttfamily wooorm/character-\/entities}}} — info on character references
+\item \href{https://github.com/wooorm/character-entities-html4}{\texttt{ {\ttfamily wooorm/character-\/entities-\/html4}}} — info on HTML4 character references
+\item \href{https://github.com/wooorm/character-entities-legacy}{\texttt{ {\ttfamily wooorm/character-\/entities-\/legacy}}} — info on legacy character references
+\item \href{https://github.com/wooorm/character-reference-invalid}{\texttt{ {\ttfamily wooorm/character-\/reference-\/invalid}}} — info on invalid numeric character references
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md25583}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md25583}
+Yes please! See \href{https://opensource.guide/how-to-contribute/}{\texttt{ How to Contribute to Open Source}}.\hypertarget{readme.md_autotoc_md25584}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md25584}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

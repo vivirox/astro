@@ -1,0 +1,98 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/raw/node\+\_\+modules/hast-\/util-\/parse-\/selector Directory Reference}
+\hypertarget{dir_5f70024a81f410838340fd1f3cf5df99}{}\label{dir_5f70024a81f410838340fd1f3cf5df99}\index{node\_modules/hast-\/util-\/raw/node\_modules/hast-\/util-\/parse-\/selector Directory Reference@{node\_modules/hast-\/util-\/raw/node\_modules/hast-\/util-\/parse-\/selector Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-parse-selector/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-parse-selector}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-parse-selector}{\texttt{ }} \href{https://bundlephobia.com/result?p=hast-util-parse-selector}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/hast}{\texttt{ hast}} utility to create an element from a simple CSS selector.\hypertarget{readme.md_autotoc_md16861}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md16861}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}parse\+Selector(selector?\mbox{[}, default\+Tag\+Name\mbox{]})\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16862}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md16862}
+This package is a tiny utility that helps create elements.\hypertarget{readme.md_autotoc_md16863}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md16863}
+This utility is super niche. You probably want the more powerful \href{https://github.com/syntax-tree/hastscript}{\texttt{ {\ttfamily hastscript}}} or \href{https://github.com/syntax-tree/hast-util-from-selector}{\texttt{ {\ttfamily hast-\/util-\/from-\/selector}}}\hypertarget{readme.md_autotoc_md16864}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md16864}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 14.\+14+ and 16.\+0+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/parse-\/selector}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{parseSelector\}\ from\ 'https://esm.sh/hast-\/util-\/parse-\/selector@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{parseSelector\}\ from\ 'https://esm.sh/hast-\/util-\/parse-\/selector@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16865}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md16865}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{parseSelector\}\ from\ 'hast-\/util-\/parse-\/selector'}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(parseSelector('.quux\#bar.baz.qux'))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ type:\ 'element',}
+\DoxyCodeLine{\ \ tagName:\ 'div',}
+\DoxyCodeLine{\ \ properties:\ \{\ id:\ 'bar',\ className:\ [\ 'quux',\ 'baz',\ 'qux'\ ]\ \},}
+\DoxyCodeLine{\ \ children:\ []\ \}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16866}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md16866}
+This package exports the identifier \`{}parse\+Selector\`{}. There is no default export.\hypertarget{readme.md_autotoc_md16867}{}\doxysubsubsection{\texorpdfstring{{\ttfamily parse\+Selector(selector?\mbox{[}, default\+Tag\+Name\mbox{]})}}{{\ttfamily parse\+Selector(selector?\mbox{[}, default\+Tag\+Name\mbox{]})}}}\label{readme.md_autotoc_md16867}
+Create a hast element from a simple CSS selector.\hypertarget{readme.md_autotoc_md16868}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md16868}
+
+\begin{DoxyItemize}
+\item {\ttfamily selector} ({\ttfamily string}, optional) — simple CSS selector, can contain a tag name ({\ttfamily foo}), classes ({\ttfamily .bar}), and an ID ({\ttfamily \#baz}), multiple classes are allowed, uses the last ID if multiple IDs are found
+\item {\ttfamily default\+Tag\+Name} ({\ttfamily string}, default\+: `\textquotesingle{}div'{\ttfamily ) — tag name to use if}selector\`{} does not specify one
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16869}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md16869}
+Built element (\href{https://github.com/syntax-tree/hast\#element}{\texttt{ {\ttfamily Element}}}).\hypertarget{readme.md_autotoc_md16870}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md16870}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.
+
+In Type\+Script 4.\+2+, the type system can infer the tag name of literal {\ttfamily selector}s and knows that the return element has that name.\hypertarget{readme.md_autotoc_md16871}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md16871}
+Projects maintained by the unified collective are compatible with all maintained versions of Node.\+js. As of now, that is Node.\+js 14.\+14+ and 16.\+0+. Our projects sometimes work with older versions, but this is not guaranteed.\hypertarget{readme.md_autotoc_md16872}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md16872}
+Improper use of the {\ttfamily selector} or {\ttfamily default\+Tag\+Name} can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack as the value of {\ttfamily tag\+Name}, when resolving to {\ttfamily script}, injects a {\ttfamily script} element into the syntax tree.
+
+Do not use user input in {\ttfamily selector} or use \href{https://github.com/syntax-tree/hast-util-sanitize}{\texttt{ {\ttfamily hast-\/util-\/santize}}}.\hypertarget{readme.md_autotoc_md16873}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md16873}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/hast-util-from-selector}{\texttt{ {\ttfamily hast-\/util-\/from-\/selector}}} — parse complex CSS selectors to nodes
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16874}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md16874}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md16875}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md16875}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

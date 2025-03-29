@@ -1,0 +1,84 @@
+\doxysection{node\+\_\+modules/css-\/gradient-\/parser Directory Reference}
+\hypertarget{dir_642f4fbf3d2750525bb5ac2ef27bb76f}{}\label{dir_642f4fbf3d2750525bb5ac2ef27bb76f}\index{node\_modules/css-\/gradient-\/parser Directory Reference@{node\_modules/css-\/gradient-\/parser Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This lib intends to give a parser for \href{https://github.com/vercel/satori}{\texttt{ satori}} so that we can handle more gradient features\hypertarget{README.md_autotoc_md11133}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md11133}
+\hypertarget{README.md_autotoc_md11134}{}\doxysubsubsection{\texorpdfstring{{\ttfamily parse\+Linear\+Gradient}}{{\ttfamily parse\+Linear\+Gradient}}}\label{README.md_autotoc_md11134}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ LinearOrientation\ \{}
+\DoxyCodeLine{\ \ type:\ 'directional'\ |\ 'angular'}
+\DoxyCodeLine{\ \ value:\ string}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ LinearResult\ \{}
+\DoxyCodeLine{\ \ orientation:\ LinearOrientation}
+\DoxyCodeLine{\ \ repeating:\ boolean}
+\DoxyCodeLine{\ \ stops:\ ColorStop[]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11135}{}\doxysubsubsection{\texorpdfstring{{\ttfamily parse\+Radial\+Gradient}}{{\ttfamily parse\+Radial\+Gradient}}}\label{README.md_autotoc_md11135}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ ValueType\ =\ 'keyword'\ |\ 'length'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ RadialResult\ \{}
+\DoxyCodeLine{\ \ shape:\ 'circle'\ |\ 'ellipse'}
+\DoxyCodeLine{\ \ repeating:\ boolean}
+\DoxyCodeLine{\ \ size:\ \{}
+\DoxyCodeLine{\ \ \ \ type:\ ValueType}
+\DoxyCodeLine{\ \ \ \ value:\ string}
+\DoxyCodeLine{\ \ \}[]}
+\DoxyCodeLine{\ \ position:\ \{}
+\DoxyCodeLine{\ \ \ \ x:\ \{\ type:\ ValueType,\ value:\ string\ \}}
+\DoxyCodeLine{\ \ \ \ y:\ \{\ type:\ ValueType,\ value:\ string\ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ stops:\ ColorStop[]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md11136}{}\doxysubsubsection{\texorpdfstring{{\ttfamily parse\+Conic\+Gradient}}{{\ttfamily parse\+Conic\+Gradient}}}\label{README.md_autotoc_md11136}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ RectColorSpace\ =\ 'srgb'\ |\ 'srgb-\/linear'\ |\ 'lab'\ |\ 'oklab'\ |\ 'xyz'\ |\ 'xyz-\/d50'\ |\ 'xyz-\/d65'}
+\DoxyCodeLine{type\ PolarColorSpace\ =\ 'hsl'\ |\ 'hwb'\ |\ 'lch'\ |\ 'oklch'}
+\DoxyCodeLine{type\ HueInterpolationMethod\ =\ \`{}\$\{'shorter'\ |\ 'longer'\ |\ 'increasing'\ |\ 'decreasing'\}\ hue`}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ ConicGradient\ \{}
+\DoxyCodeLine{\ \ angle:\ string}
+\DoxyCodeLine{\ \ repeating:\ boolean}
+\DoxyCodeLine{\ \ position:\ string}
+\DoxyCodeLine{\ \ color?:\ Color}
+\DoxyCodeLine{\ \ stops:\ ColorStop[]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ Color\ =\ \{}
+\DoxyCodeLine{\ \ space:\ RectColorSpace\ |\ PolarColorSpace}
+\DoxyCodeLine{\ \ method?:\ HueInterpolationMethod}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item[\DoxyChecked] linear-\/gradient
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] radial-\/gradient
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] conic-\/gradient
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] repeating-\/linear-\/gradient
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] repeating-\/radial-\/gradient
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyChecked] repeating-\/conic-\/gradient
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md11137}{}\doxysubsection{\texorpdfstring{LICENSE}{LICENSE}}\label{README.md_autotoc_md11137}
+\href{./LICENSE}{\texttt{ MIT}} 

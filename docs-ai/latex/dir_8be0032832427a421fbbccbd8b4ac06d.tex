@@ -1,0 +1,48 @@
+\doxysection{node\+\_\+modules/local-\/pkg Directory Reference}
+\hypertarget{dir_8be0032832427a421fbbccbd8b4ac06d}{}\label{dir_8be0032832427a421fbbccbd8b4ac06d}\index{node\_modules/local-\/pkg Directory Reference@{node\_modules/local-\/pkg Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/local-pkg}{\texttt{ }}
+
+Get information on local packages. Works on both CJS and ESM.\hypertarget{README.md_autotoc_md21866}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md21866}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ i\ local-\/pkg}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21867}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md21867}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ getPackageInfo,}
+\DoxyCodeLine{\ \ importModule,}
+\DoxyCodeLine{\ \ isPackageExists,}
+\DoxyCodeLine{\ \ resolveModule,}
+\DoxyCodeLine{\}\ from\ 'local-\/pkg'}
+\DoxyCodeLine{}
+\DoxyCodeLine{isPackageExists('local-\/pkg')\ //\ true}
+\DoxyCodeLine{isPackageExists('foo')\ //\ false}
+\DoxyCodeLine{}
+\DoxyCodeLine{await\ getPackageInfo('local-\/pkg')}
+\DoxyCodeLine{/*\ \{}
+\DoxyCodeLine{\ *\ \ \ name:\ "{}local-\/pkg"{},}
+\DoxyCodeLine{\ *\ \ \ version:\ "{}0.1.0"{},}
+\DoxyCodeLine{\ *\ \ \ rootPath:\ "{}/path/to/node\_modules/local-\/pkg"{},}
+\DoxyCodeLine{\ *\ \ \ packageJson:\ \{}
+\DoxyCodeLine{\ *\ \ \ \ \ ...}
+\DoxyCodeLine{\ *\ \ \ \}}
+\DoxyCodeLine{\ *\ \}}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ similar\ to\ \`{}require.resolve`\ but\ works\ also\ in\ ESM}
+\DoxyCodeLine{resolveModule('local-\/pkg')}
+\DoxyCodeLine{//\ '/path/to/node\_modules/local-\/pkg/dist/index.cjs'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ similar\ to\ \`{}await\ import()`\ but\ works\ also\ in\ CJS}
+\DoxyCodeLine{const\ \{\ importModule\ \}\ =\ await\ importModule('local-\/pkg')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md21868}{}\doxysubsection{\texorpdfstring{Sponsors}{Sponsors}}\label{README.md_autotoc_md21868}
+\href{https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg}{\texttt{  }} \hypertarget{README.md_autotoc_md21869}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md21869}
+\href{./LICENSE}{\texttt{ MIT}} License © 2021 \href{https://github.com/antfu}{\texttt{ Anthony Fu}} 

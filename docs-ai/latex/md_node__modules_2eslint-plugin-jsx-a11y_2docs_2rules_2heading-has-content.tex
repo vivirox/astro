@@ -1,0 +1,76 @@
+\chapter{jsx-\/a11y/heading-\/has-\/content}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content}{}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content}\index{jsx-\/a11y/heading-\/has-\/content@{jsx-\/a11y/heading-\/has-\/content}}
+\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13800}%
+\Hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13800}%
+
+
+💼 This rule is enabled in the following configs\+: ☑️ {\ttfamily recommended}, 🔒 {\ttfamily strict}.
+
+Enforce that heading elements ({\ttfamily h1}, {\ttfamily h2}, etc.) have content and that the content is accessible to screen readers. Accessible means that it is not hidden using the {\ttfamily aria-\/hidden} prop. Refer to the references to learn about why this is important.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13801}{}\doxysection{\texorpdfstring{Rule options}{Rule options}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13801}
+This rule takes one optional object argument of type object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ "{}rules"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}jsx-\/a11y/heading-\/has-\/content"{}:\ [\ 2,\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ "{}components"{}:\ [\ "{}MyHeading"{}\ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \}],}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+For the {\ttfamily components} option, these strings determine which JSX elements ({\bfseries{always including}} {\ttfamily \texorpdfstring{$<$}{<}h1\texorpdfstring{$>$}{>}} thru {\ttfamily \texorpdfstring{$<$}{<}h6\texorpdfstring{$>$}{>}}) should be checked for having content. This is a good use case when you have a wrapper component that simply renders an {\ttfamily h1} element (like in React)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Header.js}
+\DoxyCodeLine{const\ Header\ =\ props\ =>\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <h1\ \{...props\}>\{\ props.children\ \}</h1>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CreateAccount.js\ (for\ example)}
+\DoxyCodeLine{...}
+\DoxyCodeLine{return\ (}
+\DoxyCodeLine{\ \ <Header>Create\ Account</Header>}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13802}{}\doxysubsubsection{\texorpdfstring{Bad}{Bad}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13802}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ Foo(props)\ \{}
+\DoxyCodeLine{\ \ return\ <label\ \{...props\}\ />}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13803}{}\doxysubsection{\texorpdfstring{Succeed}{Succeed}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13803}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>Heading\ Content!</h1>}
+\DoxyCodeLine{<h1><TextWrapper\ /><h1>}
+\DoxyCodeLine{<h1\ dangerouslySetInnerHTML=\{\{\ \_\_html:\ 'foo'\ \}\}\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13804}{}\doxysubsection{\texorpdfstring{Fail}{Fail}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13804}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1\ />}
+\DoxyCodeLine{<h1><TextWrapper\ aria-\/hidden\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13805}{}\doxysection{\texorpdfstring{Accessibility guidelines}{Accessibility guidelines}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13805}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/TR/UNDERSTANDING-WCAG20/navigation-mechanisms-descriptive.html}{\texttt{ WCAG 2.\+4.\+6}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13806}{}\doxysubsection{\texorpdfstring{Resources}{Resources}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2heading-has-content_autotoc_md13806}
+
+\begin{DoxyItemize}
+\item \href{https://dequeuniversity.com/rules/axe/3.2/empty-heading}{\texttt{ axe-\/core, empty-\/heading}} 
+\end{DoxyItemize}

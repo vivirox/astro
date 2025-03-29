@@ -1,0 +1,121 @@
+\doxysection{node\+\_\+modules/std-\/env Directory Reference}
+\hypertarget{dir_4a56f10ee7977f0c7dda41cd0212a26e}{}\label{dir_4a56f10ee7977f0c7dda41cd0212a26e}\index{node\_modules/std-\/env Directory Reference@{node\_modules/std-\/env Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{http://npmjs.com/package/std-env}{\texttt{ }} \href{http://npmjs.com/package/std-env}{\texttt{ }} \href{https://bundlephobia.com/result?p=std-env}{\texttt{ }}
+
+\begin{quote}
+Runtime agnostic JS utils \end{quote}
+\hypertarget{README.md_autotoc_md31269}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{README.md_autotoc_md31269}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Using\ npm}
+\DoxyCodeLine{npm\ i\ std-\/env}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Using\ pnpm}
+\DoxyCodeLine{pnpm\ i\ std-\/env}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Using\ yarn}
+\DoxyCodeLine{yarn\ add\ std-\/env}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31270}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md31270}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ ESM}
+\DoxyCodeLine{import\ \{\ env,\ isDevelopment,\ isProduction\ \}\ from\ "{}std-\/env"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ env,\ isDevelopment,\ isProduction\ \}\ =\ require("{}std-\/env"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31271}{}\doxysubsection{\texorpdfstring{Flags}{Flags}}\label{README.md_autotoc_md31271}
+
+\begin{DoxyItemize}
+\item {\ttfamily has\+TTY}
+\item {\ttfamily has\+Window}
+\item {\ttfamily is\+Debug}
+\item {\ttfamily is\+Development}
+\item {\ttfamily is\+Linux}
+\item {\ttfamily is\+Mac\+OS}
+\item {\ttfamily is\+Minimal}
+\item {\ttfamily is\+Production}
+\item {\ttfamily is\+Test}
+\item {\ttfamily is\+Windows}
+\item {\ttfamily platform}
+\item {\ttfamily is\+Color\+Supported}
+\item {\ttfamily node\+Version}
+\item {\ttfamily node\+Major\+Version}
+\end{DoxyItemize}
+
+You can read more about how each flag works from \href{./src/flags.ts}{\texttt{ ./src/flags.ts}}.\hypertarget{README.md_autotoc_md31272}{}\doxysubsection{\texorpdfstring{Provider Detection}{Provider Detection}}\label{README.md_autotoc_md31272}
+{\ttfamily std-\/env} can automatically detect the current runtime provider based on environment variables.
+
+You can use {\ttfamily is\+CI} and {\ttfamily platform} exports to detect it\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ isCI,\ provider,\ providerInfo\ \}\ from\ "{}std-\/env"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(\{}
+\DoxyCodeLine{\ \ isCI,\ //\ true}
+\DoxyCodeLine{\ \ provider,\ //\ "{}github\_actions"{}}
+\DoxyCodeLine{\ \ providerInfo,\ //\ \{\ name:\ "{}github\_actions"{},\ isCI:\ true\ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+List of well known providers can be found from \href{./src/providers.ts}{\texttt{ ./src/providers.ts}}.\hypertarget{README.md_autotoc_md31273}{}\doxysubsection{\texorpdfstring{Runtime Detection}{Runtime Detection}}\label{README.md_autotoc_md31273}
+{\ttfamily std-\/env} can automatically detect the current Java\+Script runtime based on global variables, following the \href{https://runtime-keys.proposal.wintercg.org/}{\texttt{ Winter\+CG Runtime Keys proposal}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ runtime,\ runtimeInfo\ \}\ from\ "{}std-\/env"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ "{}"{}\ |\ "{}node"{}\ |\ "{}deno"{}\ |\ "{}bun"{}\ |\ "{}workerd"{}\ ...}
+\DoxyCodeLine{console.log(runtime);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ \{\ name:\ "{}node"{}\ \}}
+\DoxyCodeLine{console.log(runtimeInfo);}
+
+\end{DoxyCode}
+
+
+You can also use individual named exports for each runtime detection\+:
+
+\begin{DoxyNote}{Note}
+When running code in Bun and Deno with Node.\+js compatibility mode, {\ttfamily is\+Node} flag will be also {\ttfamily true}, indicating running in a Node.\+js compatible runtime. ~\newline
+~\newline
+ Use {\ttfamily runtime === "{}node"{}} if you need strict check for Node.\+js runtime.
+\end{DoxyNote}
+
+\begin{DoxyItemize}
+\item {\ttfamily is\+Node}
+\item {\ttfamily is\+Bun}
+\item {\ttfamily is\+Deno}
+\item {\ttfamily is\+Netlify}
+\item {\ttfamily is\+Edge\+Light}
+\item {\ttfamily is\+Workerd}
+\item {\ttfamily is\+Fastly}
+\end{DoxyItemize}
+
+List of well known providers can be found from \href{./src/runtimes.ts}{\texttt{ ./src/runtimes.ts}}.\hypertarget{README.md_autotoc_md31274}{}\doxysubsection{\texorpdfstring{Platform-\/\+Agnostic {\ttfamily env}}{Platform-\/\+Agnostic {\ttfamily env}}}\label{README.md_autotoc_md31274}
+{\ttfamily std-\/env} provides a lightweight proxy to access environment variables in a platform agnostic way.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ env\ \}\ from\ "{}std-\/env"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31275}{}\doxysubsection{\texorpdfstring{Platform-\/\+Agnostic {\ttfamily process}}{Platform-\/\+Agnostic {\ttfamily process}}}\label{README.md_autotoc_md31275}
+{\ttfamily std-\/env} provides a lightweight proxy to access \href{https://nodejs.org/api/process.html}{\texttt{ {\ttfamily process}}} object in a platform agnostic way.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ process\ \}\ from\ "{}std-\/env"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md31276}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md31276}
+MIT 

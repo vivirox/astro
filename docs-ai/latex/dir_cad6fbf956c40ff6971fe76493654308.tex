@@ -1,0 +1,146 @@
+\doxysection{node\+\_\+modules/@humanwhocodes/retry Directory Reference}
+\hypertarget{dir_cad6fbf956c40ff6971fe76493654308}{}\label{dir_cad6fbf956c40ff6971fe76493654308}\index{node\_modules/"@humanwhocodes/retry Directory Reference@{node\_modules/"@humanwhocodes/retry Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+by \href{https://humanwhocodes.com}{\texttt{ Nicholas C. Zakas}}
+
+If you find this useful, please consider supporting my work with a \href{https://humanwhocodes.com/donate}{\texttt{ donation}} or \href{https://stars.github.com/nominate/}{\texttt{ nominate me}} for a Git\+Hub Star.\hypertarget{README.md_autotoc_md3442}{}\doxysubsection{\texorpdfstring{Description}{Description}}\label{README.md_autotoc_md3442}
+A utility for retrying failed async Java\+Script calls based on the error returned.\hypertarget{README.md_autotoc_md3443}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md3443}
+\hypertarget{README.md_autotoc_md3444}{}\doxysubsubsection{\texorpdfstring{Node.\+js}{Node.\+js}}\label{README.md_autotoc_md3444}
+Install using \href{https://npmjs.com/}{\texttt{ npm}} or \href{https://yarnpkg.com/}{\texttt{ yarn}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ @humanwhocodes/retry}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ or}
+\DoxyCodeLine{}
+\DoxyCodeLine{yarn\ add\ @humanwhocodes/retry}
+
+\end{DoxyCode}
+
+
+Import into your Node.\+js project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ CommonJS}
+\DoxyCodeLine{const\ \{\ Retrier\ \}\ =\ require("{}@humanwhocodes/retry"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ESM}
+\DoxyCodeLine{import\ \{\ Retrier\ \}\ from\ "{}@humanwhocodes/retry"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3445}{}\doxysubsubsection{\texorpdfstring{Deno}{Deno}}\label{README.md_autotoc_md3445}
+Install using \href{https://jsr.io}{\texttt{ JSR}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{deno\ add\ @humanwhocodes/retry}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#or}
+\DoxyCodeLine{}
+\DoxyCodeLine{jsr\ add\ @humanwhocodes/retry}
+
+\end{DoxyCode}
+
+
+Then import into your Deno project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Retrier\ \}\ from\ "{}@humanwhocodes/retry"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3446}{}\doxysubsubsection{\texorpdfstring{Bun}{Bun}}\label{README.md_autotoc_md3446}
+Install using this command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{bun\ add\ @humanwhocodes/retry}
+
+\end{DoxyCode}
+
+
+Import into your Bun project\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Retrier\ \}\ from\ "{}@humanwhocodes/retry"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3447}{}\doxysubsubsection{\texorpdfstring{Browser}{Browser}}\label{README.md_autotoc_md3447}
+It\textquotesingle{}s recommended to import the minified version to save bandwidth\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Retrier\ \}\ from\ "{}https://cdn.skypack.dev/@humanwhocodes/retry?min"{};}
+
+\end{DoxyCode}
+
+
+However, you can also import the unminified version for debugging purposes\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Retrier\ \}\ from\ "{}https://cdn.skypack.dev/@humanwhocodes/retry"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3448}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md3448}
+After importing, create a new instance of {\ttfamily Retrier} and specify the function to run on the error. This function should return {\ttfamily true} if you want the call retried and {\ttfamily false} if not.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ this\ instance\ will\ retry\ if\ the\ specific\ error\ code\ is\ found}
+\DoxyCodeLine{const\ retrier\ =\ new\ Retrier(error\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ return\ error.code\ ===\ "{}ENFILE"{}\ ||\ error.code\ ===\ "{}EMFILE"{};}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Then, call the {\ttfamily retry()} method around the function you\textquotesingle{}d like to retry, such as\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ "{}fs/promises"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ retrier\ =\ new\ Retrier(error\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ return\ error.code\ ===\ "{}ENFILE"{}\ ||\ error.code\ ===\ "{}EMFILE"{};}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ text\ =\ await\ retrier.retry(()\ =>\ fs.readFile("{}README.md"{},\ "{}utf8"{}));}
+
+\end{DoxyCode}
+
+
+The {\ttfamily retry()} method will either pass through the result on success or wait and retry on failure. Any error that isn\textquotesingle{}t caught by the retrier is automatically rejected so the end result is a transparent passing through of both success and failure.
+
+You can also pass an {\ttfamily Abort\+Signal} to cancel a retry\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ "{}fs/promises"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ controller\ =\ new\ AbortController();}
+\DoxyCodeLine{const\ retrier\ =\ new\ Retrier(error\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ return\ error.code\ ===\ "{}ENFILE"{}\ ||\ error.code\ ===\ "{}EMFILE"{};}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ text\ =\ await\ retrier.retry(}
+\DoxyCodeLine{\ \ \ \ ()\ =>\ fs.readFile("{}README.md"{},\ "{}utf8"{}),}
+\DoxyCodeLine{\ \ \ \ \{\ signal:\ controller.signal\ \}}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md3449}{}\doxysubsection{\texorpdfstring{Developer Setup}{Developer Setup}}\label{README.md_autotoc_md3449}
+
+\begin{DoxyEnumerate}
+\item Fork the repository
+\item Clone your fork
+\item Run {\ttfamily npm install} to setup dependencies
+\item Run {\ttfamily npm test} to run tests
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md3450}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md3450}
+Apache 2.\+0\hypertarget{README.md_autotoc_md3451}{}\doxysubsection{\texorpdfstring{Prior Art}{Prior Art}}\label{README.md_autotoc_md3451}
+This utility is inspired by, and contains code from \href{https://github.com/isaacs/node-graceful-fs}{\texttt{ {\ttfamily graceful-\/fs}}}. 

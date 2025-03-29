@@ -1,0 +1,89 @@
+\doxysection{node\+\_\+modules/micromark-\/util-\/combine-\/extensions Directory Reference}
+\hypertarget{dir_a338ca14bdab8f3fe2f18556df25de65}{}\label{dir_a338ca14bdab8f3fe2f18556df25de65}\index{node\_modules/micromark-\/util-\/combine-\/extensions Directory Reference@{node\_modules/micromark-\/util-\/combine-\/extensions Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-util-combine-extensions}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-util-combine-extensions}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} utility to combine \href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ syntax}} or \href{https://github.com/micromark/micromark\#htmlextension}{\texttt{ html}} extensions.\hypertarget{readme.md_autotoc_md23647}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23647}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}combine\+Extensions(extensions)\`{}
+\item \`{}combine\+Html\+Extensions(html\+Extensions)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23648}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23648}
+This package can merge multiple extensions into one.\hypertarget{readme.md_autotoc_md23649}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md23649}
+This package might be useful when you are making “presets”, such as \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}}.\hypertarget{readme.md_autotoc_md23650}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23650}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/util-\/combine-\/extensions}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{combineExtensions\}\ from\ 'https://esm.sh/micromark-\/util-\/combine-\/extensions@1'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{combineExtensions\}\ from\ 'https://esm.sh/micromark-\/util-\/combine-\/extensions@1?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23651}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23651}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{gfmAutolinkLiteral\}\ from\ 'micromark-\/extension-\/gfm-\/autolink-\/literal'}
+\DoxyCodeLine{import\ \{gfmStrikethrough\}\ from\ 'micromark-\/extension-\/gfm-\/strikethrough'}
+\DoxyCodeLine{import\ \{gfmTable\}\ from\ 'micromark-\/extension-\/gfm-\/table'}
+\DoxyCodeLine{import\ \{gfmTaskListItem\}\ from\ 'micromark-\/extension-\/gfm-\/task-\/list-\/item'}
+\DoxyCodeLine{import\ \{combineExtensions\}\ from\ 'micromark-\/util-\/combine-\/extensions'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ gfm\ =\ combineExtensions([gfmAutolinkLiteral,\ gfmStrikethrough(),\ gfmTable,\ gfmTaskListItem])}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23652}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23652}
+This module exports the identifiers \`{}combine\+Extensions\`{} and \`{}combine\+Html\+Extensions\`{}. There is no default export.\hypertarget{readme.md_autotoc_md23653}{}\doxysubsubsection{\texorpdfstring{{\ttfamily combine\+Extensions(extensions)}}{{\ttfamily combine\+Extensions(extensions)}}}\label{readme.md_autotoc_md23653}
+Combine multiple syntax extensions into one.\hypertarget{readme.md_autotoc_md23654}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23654}
+
+\begin{DoxyItemize}
+\item {\ttfamily extensions} ({\ttfamily Array\texorpdfstring{$<$}{<}Extension\texorpdfstring{$>$}{>}}) — list of syntax extensions
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23655}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23655}
+A single combined extension ({\ttfamily Extension}).\hypertarget{readme.md_autotoc_md23656}{}\doxysubsubsection{\texorpdfstring{{\ttfamily combine\+Html\+Extensions(html\+Extensions)}}{{\ttfamily combine\+Html\+Extensions(html\+Extensions)}}}\label{readme.md_autotoc_md23656}
+Combine multiple html extensions into one.\hypertarget{readme.md_autotoc_md23657}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23657}
+
+\begin{DoxyItemize}
+\item {\ttfamily html\+Extensions} ({\ttfamily Array\texorpdfstring{$<$}{<}Html\+Extension\texorpdfstring{$>$}{>}}) — list of HTML extensions
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23658}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23658}
+A single combined HTML extension ({\ttfamily Html\+Extension}).\hypertarget{readme.md_autotoc_md23659}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23659}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md23660}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23660}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/util-\/combine-\/extensions@2}, compatible with Node.\+js 16. This package works with {\ttfamily micromark@3}.\hypertarget{readme.md_autotoc_md23661}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23661}
+This package is safe. See \href{https://github.com/micromark/.github/blob/main/security.md}{\texttt{ {\ttfamily security.\+md}}} in \href{https://github.com/micromark/.github}{\texttt{ {\ttfamily micromark/.github}}} for how to submit a security report.\hypertarget{readme.md_autotoc_md23662}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23662}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/micromark/.github}{\texttt{ {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organisation, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23663}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23663}
+\href{https://github.com/micromark/micromark/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

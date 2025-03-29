@@ -1,0 +1,66 @@
+\doxysection{node\+\_\+modules/github-\/slugger Directory Reference}
+\hypertarget{dir_95c3d31509f1b97eda0620856ab15d1a}{}\label{dir_95c3d31509f1b97eda0620856ab15d1a}\index{node\_modules/github-\/slugger Directory Reference@{node\_modules/github-\/slugger Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://www.npmjs.com/package/github-slugger}{\texttt{ }} \href{https://github.com/Flet/github-slugger/actions}{\texttt{ }}
+
+Generate a slug just like Git\+Hub does for markdown headings. It also ensures slugs are unique in the same way Git\+Hub does it. The overall goal of this package is to emulate the way Git\+Hub handles generating markdown heading anchors as close as possible.
+
+This project is not a markdown or HTML parser\+: passing {\ttfamily alpha \texorpdfstring{$\ast$}{*}bravo\texorpdfstring{$\ast$}{*} charlie} or {\ttfamily alpha \texorpdfstring{$<$}{<}em\texorpdfstring{$>$}{>}bravo\texorpdfstring{$<$}{<}/em\texorpdfstring{$>$}{>} charlie} doesn’t work. Instead pass the plain text value of the heading\+: {\ttfamily alpha bravo charlie}.\hypertarget{README.md_autotoc_md16153}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md16153}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ github-\/slugger}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16154}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md16154}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ GithubSlugger\ from\ 'github-\/slugger'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ slugger\ =\ new\ GithubSlugger()}
+\DoxyCodeLine{}
+\DoxyCodeLine{slugger.slug('foo')}
+\DoxyCodeLine{//\ returns\ 'foo'}
+\DoxyCodeLine{}
+\DoxyCodeLine{slugger.slug('foo')}
+\DoxyCodeLine{//\ returns\ 'foo-\/1'}
+\DoxyCodeLine{}
+\DoxyCodeLine{slugger.slug('bar')}
+\DoxyCodeLine{//\ returns\ 'bar'}
+\DoxyCodeLine{}
+\DoxyCodeLine{slugger.slug('foo')}
+\DoxyCodeLine{//\ returns\ 'foo-\/2'}
+\DoxyCodeLine{}
+\DoxyCodeLine{slugger.slug('Привет\ non-\/latin\ 你好')}
+\DoxyCodeLine{//\ returns\ 'привет-\/non-\/latin-\/你好'}
+\DoxyCodeLine{}
+\DoxyCodeLine{slugger.slug('😄\ emoji')}
+\DoxyCodeLine{//\ returns\ '-\/emoji'}
+\DoxyCodeLine{}
+\DoxyCodeLine{slugger.reset()}
+\DoxyCodeLine{}
+\DoxyCodeLine{slugger.slug('foo')}
+\DoxyCodeLine{//\ returns\ 'foo'}
+
+\end{DoxyCode}
+
+
+Check \href{test/fixtures.json}{\texttt{ {\ttfamily test/fixtures.\+json}}} for more examples.
+
+If you need, you can also use the underlying implementation which does not keep track of the previously slugged strings (not recommended)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ GithubSlugger,\ \{slug\}\ from\ 'github-\/slugger'}
+\DoxyCodeLine{}
+\DoxyCodeLine{slug('foo\ bar\ baz')}
+\DoxyCodeLine{//\ returns\ 'foo-\/bar-\/baz'}
+\DoxyCodeLine{}
+\DoxyCodeLine{slug('foo\ bar\ baz')}
+\DoxyCodeLine{//\ returns\ the\ same\ slug\ 'foo-\/bar-\/baz'\ because\ it\ does\ not\ keep\ track}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md16155}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md16155}
+Contributions welcome! Please read the \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{contributing guidelines} first.\hypertarget{README.md_autotoc_md16156}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md16156}
+\mbox{[}ISC\mbox{]}(LICENSE) 

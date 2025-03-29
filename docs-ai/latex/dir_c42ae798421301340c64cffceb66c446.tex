@@ -1,0 +1,293 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/mdx-\/expression Directory Reference}
+\hypertarget{dir_c42ae798421301340c64cffceb66c446}{}\label{dir_c42ae798421301340c64cffceb66c446}\index{node\_modules/micromark-\/extension-\/mdx-\/expression Directory Reference@{node\_modules/micromark-\/extension-\/mdx-\/expression Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-mdx-expression/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-mdx-expression}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-mdx-expression}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-mdx-expression}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extension to support \href{https://mdxjs.com}{\texttt{ MDX}} expressions ({\ttfamily \{Math.\+PI\}}).\hypertarget{readme.md_autotoc_md23355}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23355}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}mdx\+Expression(options?)\`{}
+\item \doxylink{README.md_options}{Options}
+\end{DoxyItemize}
+\item Authoring
+\item Syntax
+\item Errors
+\begin{DoxyItemize}
+\item Unexpected end of file in expression, expected a corresponding closing brace for \`{}\{\`{}
+\item Unexpected lazy line in expression in container, expected line to be prefixed…
+\item Unexpected \`{}\$type\`{} in code\+: expected an object spread (\`{}\{...spread\}\`{})
+\item Unexpected extra content in spread\+: only a single spread is supported
+\item Could not parse expression with acorn
+\end{DoxyItemize}
+\item Tokens
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23356}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23356}
+This package contains an extension that adds support for the expression syntax enabled by \href{https://mdxjs.com}{\texttt{ MDX}} to \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. These extensions are used inside MDX.
+
+This package can be made aware or unaware of Java\+Script syntax. When unaware, expressions could include Rust or variables or whatnot.\hypertarget{readme.md_autotoc_md23357}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23357}
+This project is useful when you want to support expressions in markdown.
+
+You can use this extension when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. To support all MDX features, use \href{https://github.com/micromark/micromark-extension-mdxjs}{\texttt{ {\ttfamily micromark-\/extension-\/mdxjs}}} instead.
+
+When you need a syntax tree, combine this package with \href{https://github.com/syntax-tree/mdast-util-mdx-expression}{\texttt{ {\ttfamily mdast-\/util-\/mdx-\/expression}}}.
+
+All these packages are used in \href{https://mdxjs.com/packages/remark-mdx/}{\texttt{ {\ttfamily remark-\/mdx}}}, which focusses on making it easier to transform content by abstracting these internals away.
+
+When you are using \href{https://mdxjs.com}{\texttt{ {\ttfamily mdx-\/js/mdx}}}, all of this is already included.\hypertarget{readme.md_autotoc_md23358}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23358}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/mdx-\/expression}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{mdxExpression\}\ from\ 'https://esm.sh/micromark-\/extension-\/mdx-\/expression@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{mdxExpression\}\ from\ 'https://esm.sh/micromark-\/extension-\/mdx-\/expression@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23359}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23359}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{Parser\}\ from\ 'acorn'}
+\DoxyCodeLine{import\ acornJsx\ from\ 'acorn-\/jsx'}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{mdxExpression\}\ from\ 'micromark-\/extension-\/mdx-\/expression'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Unaware\ of\ JavaScript\ (“agnostic”)\ (balanced\ braces):}
+\DoxyCodeLine{const\ output\ =\ micromark('a\ \{1\ +\ 1\}\ b',\ \{extensions:\ [mdxExpression()]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Aware\ of\ JavaScript:}
+\DoxyCodeLine{micromark('a\ \{!\}\ b',\ \{extensions:\ [mdxExpression(\{acorn:\ Parser.extend(acornJsx())\})]\})}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>a\ \ b</p>}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[1:5:\ Could\ not\ parse\ expression\ with\ acorn]\ \{}
+\DoxyCodeLine{\ \ ancestors:\ undefined,}
+\DoxyCodeLine{\ \ cause:\ SyntaxError:\ Unexpected\ token}
+\DoxyCodeLine{\ \ \ \ \ \ at\ pp\$4.raise\ (file:///Users/tilde/Projects/oss/micromark-\/extension-\/mdx-\/expression/node\_modules/acorn/dist/acorn.mjs:3547:13)}
+\DoxyCodeLine{\ \ \ \ \ \ at\ pp\$9.unexpected\ (file:///Users/tilde/Projects/oss/micromark-\/extension-\/mdx-\/expression/node\_modules/acorn/dist/acorn.mjs:758:8)}
+\DoxyCodeLine{\ \ \ \ \ \ …}
+\DoxyCodeLine{\ \ \ \ pos:\ 4,}
+\DoxyCodeLine{\ \ \ \ loc:\ \{\ line:\ 1,\ column:\ 4\ \},}
+\DoxyCodeLine{\ \ \ \ raisedAt:\ 1}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ column:\ 5,}
+\DoxyCodeLine{\ \ fatal:\ undefined,}
+\DoxyCodeLine{\ \ line:\ 1,}
+\DoxyCodeLine{\ \ place:\ \{\ line:\ 1,\ column:\ 5,\ offset:\ 4\ \},}
+\DoxyCodeLine{\ \ reason:\ 'Could\ not\ parse\ expression\ with\ acorn',}
+\DoxyCodeLine{\ \ ruleId:\ 'acorn',}
+\DoxyCodeLine{\ \ source:\ 'micromark-\/extension-\/mdx-\/expression',}
+\DoxyCodeLine{\ \ url:\ 'https://github.com/micromark/micromark-\/extension-\/mdx-\/expression/tree/main/packages/micromark-\/extension-\/mdx-\/expression\#could-\/not-\/parse-\/expression-\/with-\/acorn'}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+…which is useless\+: go to a syntax tree with \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} and \href{https://github.com/syntax-tree/mdast-util-mdx-expression}{\texttt{ {\ttfamily mdast-\/util-\/mdx-\/expression}}} instead.\hypertarget{readme.md_autotoc_md23360}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23360}
+This package exports the identifier \`{}mdx\+Expression\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development module.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md23361}{}\doxysubsubsection{\texorpdfstring{{\ttfamily mdx\+Expression(options?)}}{{\ttfamily mdx\+Expression(options?)}}}\label{readme.md_autotoc_md23361}
+Create an extension for {\ttfamily micromark} to enable MDX expression syntax.\hypertarget{readme.md_autotoc_md23362}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23362}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23363}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md23363}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions} to enable MDX expression syntax (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23364}{}\doxysubsubsection{\texorpdfstring{Options}{Options}}\label{readme.md_autotoc_md23364}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md23365}{}\doxysubsubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md23365}
+
+\begin{DoxyItemize}
+\item {\ttfamily acorn} (\href{https://github.com/acornjs/acorn}{\texttt{ {\ttfamily Acorn}}}, optional) — acorn parser to use
+\item {\ttfamily acorn\+Options} (\href{https://github.com/acornjs/acorn/blob/96c721dbf89d0ccc3a8c7f39e69ef2a6a3c04dfa/acorn/dist/acorn.d.ts\#L16}{\texttt{ {\ttfamily Acorn\+Options}}}, default\+: `\{ecma\+Version\+: 2024, locations\+: true, source\+Type\+: \textquotesingle{}module'\}{\ttfamily ) — configuration for acorn; all fields except}locations{\ttfamily can be set \texorpdfstring{$\ast$}{*}}add\+Result{\ttfamily (}boolean{\ttfamily , default\+:}false{\ttfamily ) — whether to add}estree\`{} fields to tokens with results from acorn
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23366}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23366}
+When authoring markdown with Java\+Script, keep in mind that MDX is a whitespace sensitive and line-\/based language, while Java\+Script is insensitive to whitespace. This affects how markdown and Java\+Script interleave with eachother in MDX. For more info on how it works, see \href{https://mdxjs.com/docs/what-is-mdx/\#interleaving}{\texttt{ § Interleaving}} on the MDX site.\hypertarget{readme.md_autotoc_md23367}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md23367}
+This extension supports MDX both aware and unaware to Java\+Script (respectively gnostic and agnostic). Depending on whether acorn is passed, either valid Java\+Script must be used in expressions, or arbitrary text (such as Rust code or so) can be used.
+
+There are two types of expressions\+: in text (inline, span) or in flow (block). They start with {\ttfamily \{}.
+
+Depending on whether {\ttfamily acorn} is passed, expressions are either parsed in several tries until whole Java\+Script is found (as in, nested curly braces depend on JS expression nesting), or they are counted and must be balanced.
+
+Expressions end with {\ttfamily \}}.
+
+For flow (block) expressions, optionally markdown spaces ( or {\ttfamily \textbackslash{}t}) can occur after the closing brace, and finally a markdown line ending ({\ttfamily \textbackslash{}r}, {\ttfamily \textbackslash{}n}) or the end of the file must follow.
+
+While markdown typically knows no errors, for MDX it is decided to instead throw on invalid syntax.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Here\ is\ an\ expression\ in\ a\ heading:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ Hello,\ \{1\ +\ 1\}!}
+\DoxyCodeLine{}
+\DoxyCodeLine{In\ agnostic\ mode,\ balanced\ braces\ can\ occur:\ \{a\ +\ \{b\}\ +\ c\}.}
+\DoxyCodeLine{}
+\DoxyCodeLine{In\ gnostic\ mode,\ the\ value\ of\ the\ expression\ must\ be\ JavaScript,\ so}
+\DoxyCodeLine{this\ would\ fail:\ \{!\}.}
+\DoxyCodeLine{But,\ in\ gnostic\ mode,\ braces\ can\ be\ in\ comments,\ strings,\ or\ in\ other}
+\DoxyCodeLine{places:\ \{1\ /*\ \{\ */\ +\ 2\}.}
+\DoxyCodeLine{}
+\DoxyCodeLine{The\ previous\ examples\ were\ text\ (inline,\ span)\ expressions,\ they\ can}
+\DoxyCodeLine{also\ be\ flow\ (block):}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ 1\ +\ 1}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{This\ is\ incorrect,\ because\ there\ are\ further\ characters:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ 1\ +\ 1}
+\DoxyCodeLine{\}!}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{Blank\ lines\ cannot\ occur\ in\ text,\ because\ markdown\ has\ already\ split\ them\ in}
+\DoxyCodeLine{separate\ constructs,\ so\ this\ is\ incorrect:\ \{1\ +}
+\DoxyCodeLine{}
+\DoxyCodeLine{1\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{In\ flow,\ you\ can\ have\ blank\ lines:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ 1\ +}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ 2}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23368}{}\doxysubsection{\texorpdfstring{Errors}{Errors}}\label{readme.md_autotoc_md23368}
+\hypertarget{readme.md_autotoc_md23369}{}\doxysubsubsection{\texorpdfstring{Unexpected end of file in expression, expected a corresponding closing brace for {\ttfamily \{}}{Unexpected end of file in expression, expected a corresponding closing brace for {\ttfamily \{}}}\label{readme.md_autotoc_md23369}
+This error occurs if a {\ttfamily \{} was seen without a {\ttfamily \}} (source\+: {\ttfamily micromark-\/extension-\/mdx-\/expression}, rule id\+: {\ttfamily unexpected-\/eof}). For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{a\ \{\ b}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23370}{}\doxysubsubsection{\texorpdfstring{Unexpected lazy line in expression in container, expected line to be prefixed…}{Unexpected lazy line in expression in container, expected line to be prefixed…}}\label{readme.md_autotoc_md23370}
+This error occurs if a {\ttfamily \{} was seen in a container which then has lazy content (source\+: {\ttfamily micromark-\/extension-\/mdx-\/expression}, rule id\+: {\ttfamily unexpected-\/lazy}). For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{>\ \{a}
+\DoxyCodeLine{b\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23371}{}\doxysubsubsection{\texorpdfstring{Unexpected {\ttfamily \$type} in code\+: expected an object spread ({\ttfamily \{...spread\}})}{Unexpected {\ttfamily \$type} in code\+: expected an object spread ({\ttfamily \{...spread\}})}}\label{readme.md_autotoc_md23371}
+This error occurs if a spread was expected but something else was found (source\+: {\ttfamily micromark-\/extension-\/mdx-\/expression}, rule id\+: {\ttfamily non-\/spread}). For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{<a\ \{b=c\}=\{\}\ d>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23372}{}\doxysubsubsection{\texorpdfstring{Unexpected extra content in spread\+: only a single spread is supported}{Unexpected extra content in spread\+: only a single spread is supported}}\label{readme.md_autotoc_md23372}
+This error occurs if a spread was expected but more was found after it (source\+: {\ttfamily micromark-\/extension-\/mdx-\/expression}, rule id\+: {\ttfamily spread-\/extra}). For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{<a\ \{...b,c\}\ d>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23373}{}\doxysubsubsection{\texorpdfstring{Could not parse expression with acorn}{Could not parse expression with acorn}}\label{readme.md_autotoc_md23373}
+This error occurs if acorn crashes or when there is more content after a JS expression (source\+: {\ttfamily micromark-\/extension-\/mdx-\/expression}, rule id\+: {\ttfamily acorn}). For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{a\ \{"{}b"{}\ "{}c"{}\}\ d}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ -\/invalid}
+\DoxyCodeLine{a\ \{var\ b\ =\ "{}c"{}\}\ d}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23374}{}\doxysubsection{\texorpdfstring{Tokens}{Tokens}}\label{readme.md_autotoc_md23374}
+Two tokens are used, {\ttfamily mdx\+Flow\+Expression} and {\ttfamily mdx\+Text\+Expression}, to reflect flow and text expressions.
+
+They include\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily line\+Ending} for the markdown line endings {\ttfamily \textbackslash{}r}, {\ttfamily \textbackslash{}n}, and {\ttfamily \textbackslash{}r\textbackslash{}n}
+\item {\ttfamily mdx\+Flow\+Expression\+Marker} and {\ttfamily mdx\+Text\+Expression\+Marker} for the braces
+\item {\ttfamily whitespace} for markdown spaces and tabs in blank lines
+\item {\ttfamily mdx\+Flow\+Expression\+Chunk} and {\ttfamily mdx\+Text\+Expression\+Chunk} for chunks of expression content
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23375}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23375}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md23376}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23376}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/extension-\/mdx-\/expression@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.
+
+This package works with {\ttfamily micromark} version {\ttfamily 3} and later.\hypertarget{readme.md_autotoc_md23377}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23377}
+This package is safe.\hypertarget{readme.md_autotoc_md23378}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md23378}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/micromark/micromark-extension-mdxjs}{\texttt{ {\ttfamily micromark-\/extension-\/mdxjs}}} — support all MDX syntax
+\item \href{https://github.com/syntax-tree/mdast-util-mdx-expression}{\texttt{ {\ttfamily mdast-\/util-\/mdx-\/expression}}} — support MDX expressions in mdast
+\item \href{https://mdxjs.com/packages/remark-mdx/}{\texttt{ {\ttfamily remark-\/mdx}}} — support all MDX syntax in remark
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23379}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23379}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23380}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23380}
+\href{https://github.com/micromark/micromark-extension-mdx-expression/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

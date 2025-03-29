@@ -1,0 +1,310 @@
+\doxysection{node\+\_\+modules/mdast-\/util-\/directive Directory Reference}
+\hypertarget{dir_a4d9ef0e00e5bd17548bb1855be33a0c}{}\label{dir_a4d9ef0e00e5bd17548bb1855be33a0c}\index{node\_modules/mdast-\/util-\/directive Directory Reference@{node\_modules/mdast-\/util-\/directive Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/mdast-util-directive/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/mdast-util-directive}{\texttt{ }} \href{https://www.npmjs.com/package/mdast-util-directive}{\texttt{ }} \href{https://bundlejs.com/?q=mdast-util-directive}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/syntax-tree/unist/discussions}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}} extensions to parse and serialize \href{https://talk.commonmark.org/t/generic-directives-plugins-syntax/444}{\texttt{ generic directives proposal}} ({\ttfamily \+:cite\mbox{[}smith04\mbox{]}}, {\ttfamily \+::youtube\mbox{[}Video of a cat in a box\mbox{]}\{v=01ab2cd3efg\}}, and such).\hypertarget{readme.md_autotoc_md22262}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md22262}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}directive\+From\+Markdown()\`{}
+\item \`{}directive\+To\+Markdown(options?)\`{}
+\item \`{}\+Container\+Directive\`{}
+\item \`{}\+Directives\`{}
+\item \`{}\+Leaf\+Directive\`{}
+\item \`{}\+Text\+Directive\`{}
+\item \`{}\+To\+Markdown\+Options\`{}
+\end{DoxyItemize}
+\item HTML
+\item Syntax
+\item Syntax tree
+\begin{DoxyItemize}
+\item Nodes
+\item Mixin
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22263}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md22263}
+This package contains two extensions that add support for directive syntax in markdown to \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}. These extensions plug into \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} (to support parsing directives in markdown into a syntax tree) and \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} (to support serializing directives in syntax trees to markdown).\hypertarget{readme.md_autotoc_md22264}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md22264}
+Directives are one of the four ways to extend markdown\+: an arbitrary extension syntax (see \href{https://github.com/micromark/micromark\#extending-markdown}{\texttt{ Extending markdown}} in micromark’s docs for the alternatives and more info). This mechanism works well when you control the content\+: who authors it, what tools handle it, and where it’s displayed. When authors can read a guide on how to embed a tweet but are not expected to know the ins and outs of HTML or Java\+Script. Directives don’t work well if you don’t know who authors content, what tools handle it, and where it ends up. Example use cases are a docs website for a project or product, or blogging tools and static site generators.
+
+You can use these extensions when you are working with {\ttfamily mdast-\/util-\/from-\/markdown} and {\ttfamily mdast-\/util-\/to-\/markdown} already.
+
+When working with {\ttfamily mdast-\/util-\/from-\/markdown}, you must combine this package with \href{https://github.com/micromark/micromark-extension-directive}{\texttt{ {\ttfamily micromark-\/extension-\/directive}}}.
+
+When you don’t need a syntax tree, you can use \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}} directly with {\ttfamily micromark-\/extension-\/directive}.
+
+All these packages are used \href{https://github.com/remarkjs/remark-directive}{\texttt{ {\ttfamily remark-\/directive}}}, which focusses on making it easier to transform content by abstracting these internals away.
+
+This package only handles the syntax tree. For example, it does not handle how markdown is turned to HTML. You can use this with some more code to match your specific needs, to allow for anything from callouts, citations, styled blocks, forms, embeds, spoilers, etc. \href{https://unifiedjs.com/learn/recipe/tree-traversal/}{\texttt{ Traverse the tree}} to change directives to whatever you please.\hypertarget{readme.md_autotoc_md22265}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md22265}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mdast-\/util-\/directive}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{directiveFromMarkdown,\ directiveToMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/directive@3'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{directiveFromMarkdown,\ directiveToMarkdown\}\ from\ 'https://esm.sh/mdast-\/util-\/directive@3?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22266}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md22266}
+Say our document {\ttfamily example.\+md} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{A\ lovely\ language\ know\ as\ :abbr[HTML]\{title="{}HyperText\ Markup\ Language"{}\}.}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ fs\ from\ 'node:fs/promises'}
+\DoxyCodeLine{import\ \{fromMarkdown\}\ from\ 'mdast-\/util-\/from-\/markdown'}
+\DoxyCodeLine{import\ \{toMarkdown\}\ from\ 'mdast-\/util-\/to-\/markdown'}
+\DoxyCodeLine{import\ \{directive\}\ from\ 'micromark-\/extension-\/directive'}
+\DoxyCodeLine{import\ \{directiveFromMarkdown,\ directiveToMarkdown\}\ from\ 'mdast-\/util-\/directive'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ await\ fs.readFile('example.md')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ fromMarkdown(doc,\ \{}
+\DoxyCodeLine{\ \ extensions:\ [directive()],}
+\DoxyCodeLine{\ \ mdastExtensions:\ [directiveFromMarkdown()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(tree)}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ out\ =\ toMarkdown(tree,\ \{extensions:\ [directiveToMarkdown()]\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(out)}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields (positional info removed for brevity)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'root',}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ 'A\ lovely\ language\ know\ as\ '\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ type:\ 'textDirective',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ name:\ 'abbr',}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ attributes:\ \{title:\ 'HyperText\ Markup\ Language'\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'HTML'\}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{type:\ 'text',\ value:\ '.'\}}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{A\ lovely\ language\ know\ as\ :abbr[HTML]\{title="{}HyperText\ Markup\ Language"{}\}.}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22267}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md22267}
+This package exports the identifiers \`{}directive\+From\+Markdown\`{} and \`{}directive\+To\+Markdown\`{}. There is no default export.\hypertarget{readme.md_autotoc_md22268}{}\doxysubsubsection{\texorpdfstring{{\ttfamily directive\+From\+Markdown()}}{{\ttfamily directive\+From\+Markdown()}}}\label{readme.md_autotoc_md22268}
+Create an extension for \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}} to enable directives in markdown.\hypertarget{readme.md_autotoc_md22269}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22269}
+Extension for {\ttfamily mdast-\/util-\/from-\/markdown} to enable directives (\href{https://github.com/syntax-tree/mdast-util-from-markdown\#extension}{\texttt{ {\ttfamily From\+Markdown\+Extension}}}).\hypertarget{readme.md_autotoc_md22270}{}\doxysubsubsection{\texorpdfstring{{\ttfamily directive\+To\+Markdown(options?)}}{{\ttfamily directive\+To\+Markdown(options?)}}}\label{readme.md_autotoc_md22270}
+Create an extension for \href{https://github.com/syntax-tree/mdast-util-to-markdown}{\texttt{ {\ttfamily mdast-\/util-\/to-\/markdown}}} to enable directives in markdown.\hypertarget{readme.md_autotoc_md22271}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22271}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\`{}\+To\+Markdown\+Options\`{}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22272}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md22272}
+Extension for {\ttfamily mdast-\/util-\/to-\/markdown} to enable directives (\href{https://github.com/syntax-tree/mdast-util-to-markdown\#options}{\texttt{ {\ttfamily To\+Markdown\+Extension}}}).\hypertarget{readme.md_autotoc_md22273}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Container\+Directive}}{{\ttfamily Container\+Directive}}}\label{readme.md_autotoc_md22273}
+Directive in flow content (such as in the root document, or block quotes), which contains further flow content (Type\+Script type).\hypertarget{readme.md_autotoc_md22274}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22274}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{BlockContent,\ DefinitionContent,\ Parent\}\ from\ 'mdast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ ContainerDirective\ extends\ Parent\ \{}
+\DoxyCodeLine{\ \ type:\ 'containerDirective'}
+\DoxyCodeLine{\ \ name:\ string}
+\DoxyCodeLine{\ \ attributes?:\ Record<string,\ string\ |\ null\ |\ undefined>\ |\ null\ |\ undefined}
+\DoxyCodeLine{\ \ children:\ Array<BlockContent\ |\ DefinitionContent>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22275}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Directives}}{{\ttfamily Directives}}}\label{readme.md_autotoc_md22275}
+The different directive nodes (Type\+Script type).\hypertarget{readme.md_autotoc_md22276}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22276}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Directives\ =\ ContainerDirective\ |\ LeafDirective\ |\ TextDirective}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22277}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Leaf\+Directive}}{{\ttfamily Leaf\+Directive}}}\label{readme.md_autotoc_md22277}
+Directive in flow content (such as in the root document, or block quotes), which contains nothing (Type\+Script type).\hypertarget{readme.md_autotoc_md22278}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22278}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{PhrasingContent,\ Parent\}\ from\ 'mdast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ LeafDirective\ extends\ Parent\ \{}
+\DoxyCodeLine{\ \ type:\ 'leafDirective'}
+\DoxyCodeLine{\ \ name:\ string}
+\DoxyCodeLine{\ \ attributes?:\ Record<string,\ string\ |\ null\ |\ undefined>\ |\ null\ |\ undefined}
+\DoxyCodeLine{\ \ children:\ Array<PhrasingContent>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22279}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Text\+Directive}}{{\ttfamily Text\+Directive}}}\label{readme.md_autotoc_md22279}
+Directive in phrasing content (such as in paragraphs, headings) (Type\+Script type).\hypertarget{readme.md_autotoc_md22280}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md22280}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{PhrasingContent,\ Parent\}\ from\ 'mdast'}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ TextDirective\ extends\ Parent\ \{}
+\DoxyCodeLine{\ \ type:\ 'textDirective'}
+\DoxyCodeLine{\ \ name:\ string}
+\DoxyCodeLine{\ \ attributes?:\ Record<string,\ string\ |\ null\ |\ undefined>\ |\ null\ |\ undefined}
+\DoxyCodeLine{\ \ children:\ Array<PhrasingContent>}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22281}{}\doxysubsubsection{\texorpdfstring{{\ttfamily To\+Markdown\+Options}}{{\ttfamily To\+Markdown\+Options}}}\label{readme.md_autotoc_md22281}
+Configuration.\hypertarget{readme.md_autotoc_md22282}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md22282}
+
+\begin{DoxyItemize}
+\item {\ttfamily collapse\+Empty\+Attributes} ({\ttfamily boolean}, default\+: {\ttfamily true}) — collapse empty attributes\+: get {\ttfamily title} instead of {\ttfamily title="{}"{}}
+\item {\ttfamily prefer\+Shortcut} ({\ttfamily boolean}, default\+: {\ttfamily true}) — prefer {\ttfamily \#} and {\ttfamily .} shortcuts for {\ttfamily id} and {\ttfamily class}
+\item {\ttfamily prefer\+Unquoted} ({\ttfamily boolean}, default\+: {\ttfamily false}) — leave attributes unquoted if that results in less bytes
+\item {\ttfamily quote\+Smart} ({\ttfamily boolean}, default\+: {\ttfamily false}) — use the other quote if that results in less bytes
+\item {\ttfamily quote} (`'"{}\textquotesingle{}\`{} or \`{}"{}\textquotesingle{}"{}$<$tt$>$,   default\+: the \mbox{[}$<$/tt$>$quote$<$tt$>$\mbox{]}\mbox{[}quote\mbox{]} used by$<$/tt$>$mdast-\/util-\/to-\/markdown\`{} for titles)   — preferred quote to use around attribute values  @section autotoc\+\_\+md22283 HTML  \+This utility does not handle how markdown is turned to HTML. \+You can use this with some more code to match your specific needs, to allow for anything from callouts, citations, styled blocks, forms, embeds, spoilers, etc. $<$a href="{}\href{https://unifiedjs.com/learn/recipe/tree-traversal/}{\texttt{ https\+://unifiedjs.\+com/learn/recipe/tree-\/traversal/}}"{} $>$\+Traverse the tree$<$/a$>$ to change directives to whatever you please.  @section autotoc\+\_\+md22284 Syntax  \+See $<$a href="{}\href{https://github.com/micromark/micromark-extension-directive\#syntax}{\texttt{ https\+://github.\+com/micromark/micromark-\/extension-\/directive\#syntax}}"{} $>$\+Syntax in $<$tt$>$micromark-\/extension-\/directive$<$/tt$>$$<$/a$>$.  @section autotoc\+\_\+md22285 Syntax tree  \+The following interfaces are added to $<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast}}"{} $>$mdast$<$/a$>$$<$/strong$>$ by this utility.  @subsection autotoc\+\_\+md22286 Nodes  @subsubsection autotoc\+\_\+md22287 $<$tt$>$\+Text\+Directive$<$/tt$>$  @icode\{idl\}  interface Text\+Directive $<$\+: Parent \{   type\+: \textquotesingle{}text\+Directive\textquotesingle{}   children\+: \mbox{[}\+Phrasing\+Content\mbox{]} \}  \+Text\+Directive includes Directive @endicode   $<$strong$>$\+Text\+Directive$<$/strong$>$ ($<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#parent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#parent}}"{} $>$\+Parent$<$/a$>$$<$/strong$>$) is a directive. \+It can be used where $<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#phrasingcontent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#phrasingcontent}}"{} $>$phrasing$<$/a$>$$<$/strong$>$ content is expected. \+Its content model is also $<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#phrasingcontent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#phrasingcontent}}"{} $>$phrasing$<$/a$>$$<$/strong$>$ content. \+It includes the mixin $<$strong$>$@ref "{}directive"{} "{}Directive"{}$<$/strong$>$.  \+For example, the following Markdown\+:  @icode\{markdown\}  \+:name\mbox{[}\+Label\mbox{]}\{\#x.\+y.\+z key=value\} @endicode   \+Yields\+:  @icode\{js\}  \{   type\+: \textquotesingle{}text\+Directive\textquotesingle{},   name\+: \textquotesingle{}name\textquotesingle{},   attributes\+: \{id\+: \textquotesingle{}x\textquotesingle{}, class\+: \textquotesingle{}y z\textquotesingle{}, key\+: \textquotesingle{}value\textquotesingle{}\},   children\+: \mbox{[}\{type\+: \textquotesingle{}text\textquotesingle{}, value\+: \textquotesingle{}\+Label\textquotesingle{}\}\mbox{]} \} @endicode   @subsubsection autotoc\+\_\+md22288 $<$tt$>$\+Leaf\+Directive$<$/tt$>$  @icode\{idl\}  interface Leaf\+Directive $<$\+: Parent \{   type\+: \textquotesingle{}leaf\+Directive\textquotesingle{}   children\+: \mbox{[}\+Phrasing\+Content\mbox{]} \}  \+Leaf\+Directive includes Directive @endicode   $<$strong$>$\+Leaf\+Directive$<$/strong$>$ ($<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#parent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#parent}}"{} $>$\+Parent$<$/a$>$$<$/strong$>$) is a directive. \+It can be used where $<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#flowcontent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#flowcontent}}"{} $>$flow$<$/a$>$$<$/strong$>$ content is expected. \+Its content model is $<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#phrasingcontent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#phrasingcontent}}"{} $>$phrasing$<$/a$>$$<$/strong$>$ content. \+It includes the mixin $<$strong$>$@ref "{}directive"{} "{}Directive"{}$<$/strong$>$.  \+For example, the following Markdown\+:  @icode\{markdown\}  \+::youtube\mbox{[}\+Label\mbox{]}\{v=123\} @endicode   \+Yields\+:  @icode\{js\}  \{   type\+: \textquotesingle{}leaf\+Directive\textquotesingle{},   name\+: \textquotesingle{}youtube\textquotesingle{},   attributes\+: \{v\+: \textquotesingle{}123\textquotesingle{}\},   children\+: \mbox{[}\{type\+: \textquotesingle{}text\textquotesingle{}, value\+: \textquotesingle{}\+Label\textquotesingle{}\}\mbox{]} \} @endicode   @subsubsection autotoc\+\_\+md22289 $<$tt$>$\+Container\+Directive$<$/tt$>$  @icode\{idl\}  interface Container\+Directive $<$\+: Parent \{   type\+: \textquotesingle{}container\+Directive\textquotesingle{}   children\+: \mbox{[}\+Flow\+Content\mbox{]} \}  \+Container\+Directive includes Directive @endicode   $<$strong$>$\+Container\+Directive$<$/strong$>$ ($<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#parent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#parent}}"{} $>$\+Parent$<$/a$>$$<$/strong$>$) is a directive. \+It can be used where $<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#flowcontent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#flowcontent}}"{} $>$flow$<$/a$>$$<$/strong$>$ content is expected. \+Its content model is also $<$strong$>$$<$a href="{}\href{https://github.com/syntax-tree/mdast\#flowcontent}{\texttt{ https\+://github.\+com/syntax-\/tree/mdast\#flowcontent}}"{} $>$flow$<$/a$>$$<$/strong$>$ content. \+It includes the mixin $<$strong$>$@ref "{}directive"{} "{}Directive"{}
+\end{DoxyItemize}.
+
+The phrasing in the label is, when available, added as a paragraph with a {\ttfamily directive\+Label\+: true} field, as the head of its content.
+
+For example, the following Markdown\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{:::spoiler[Open\ at\ your\ own\ peril]}
+\DoxyCodeLine{He\ dies.}
+\DoxyCodeLine{:::}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'containerDirective',}
+\DoxyCodeLine{\ \ name:\ 'spoiler',}
+\DoxyCodeLine{\ \ attributes:\ \{\},}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ data:\ \{directiveLabel:\ true\},}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'Open\ at\ your\ own\ peril'\}]}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 'paragraph',}
+\DoxyCodeLine{\ \ \ \ \ \ children:\ [\{type:\ 'text',\ value:\ 'He\ dies.'\}]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22290}{}\doxysubsubsection{\texorpdfstring{Mixin}{Mixin}}\label{readme.md_autotoc_md22290}
+\hypertarget{readme.md_autotoc_md22291}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Directive}}{{\ttfamily Directive}}}\label{readme.md_autotoc_md22291}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }mixin\ Directive\ \{}
+\DoxyCodeLine{\ \ name:\ \textcolor{keywordtype}{string}}
+\DoxyCodeLine{\ \ attributes:\ Attributes?}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{interface\ }Attributes\ \{\}}
+\DoxyCodeLine{\textcolor{keyword}{typedef}\ \textcolor{keywordtype}{string}\ AttributeName}
+\DoxyCodeLine{\textcolor{keyword}{typedef}\ \textcolor{keywordtype}{string}\ AttributeValue}
+
+\end{DoxyCode}
+
+
+{\bfseries{Directive}} represents something defined by an extension.
+
+The {\ttfamily name} field must be present and represents an identifier of an extension.
+
+The {\ttfamily attributes} field represents information associated with the node. The value of the {\ttfamily attributes} field implements the {\bfseries{Attributes}} interface.
+
+In the {\bfseries{Attributes}} interface, every field must be an {\ttfamily Attribute\+Name} and every value an {\ttfamily Attribute\+Value}. The fields and values can be anything\+: there are no semantics (such as by HTML or hast).
+
+\begin{quote}
+In JSON, the value {\ttfamily null} must be treated as if the attribute was not included. In Java\+Script, both {\ttfamily null} and {\ttfamily undefined} must be similarly ignored. \end{quote}
+\hypertarget{readme.md_autotoc_md22292}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md22292}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \`{}\+Container\+Directive\`{}, \`{}\+Directives\`{}, \`{}\+Leaf\+Directive\`{}, and \`{}\+Text\+Directive\`{}.
+
+It also registers the node types with {\ttfamily @types/mdast}. If you’re working with the syntax tree, make sure to import this utility somewhere in your types, as that registers the new node types in the tree.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ @import\ \{\}\ from\ 'mdast-\/util-\/directive'}
+\DoxyCodeLine{\ *\ @import\ \{Root\}\ from\ 'mdast'}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ \{visit\}\ from\ 'unist-\/util-\/visit'}
+\DoxyCodeLine{}
+\DoxyCodeLine{/**\ @type\ \{Root\}\ */}
+\DoxyCodeLine{const\ tree\ =\ getMdastNodeSomeHow()}
+\DoxyCodeLine{}
+\DoxyCodeLine{visit(tree,\ function\ (node)\ \{}
+\DoxyCodeLine{\ \ //\ \`{}node`\ can\ now\ be\ one\ of\ the\ nodes\ for\ directives.}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md22293}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md22293}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily mdast-\/util-\/directive@\texorpdfstring{$^\wedge$}{\string^}3}, compatible with Node.\+js 16.
+
+This utility works with {\ttfamily mdast-\/util-\/from-\/markdown} version 2+ and {\ttfamily mdast-\/util-\/to-\/markdown} version 2+.\hypertarget{readme.md_autotoc_md22294}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md22294}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/remarkjs/remark-directive}{\texttt{ {\ttfamily remarkjs/remark-\/directive}}} — remark plugin to support generic directives
+\item \href{https://github.com/micromark/micromark-extension-directive}{\texttt{ {\ttfamily micromark/micromark-\/extension-\/directive}}} — micromark extension to parse directives
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md22295}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md22295}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md22296}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md22296}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

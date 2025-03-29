@@ -1,0 +1,257 @@
+\doxysection{node\+\_\+modules/remark-\/parse Directory Reference}
+\hypertarget{dir_dc5a8cee1fa275047d67140930c52f5d}{}\label{dir_dc5a8cee1fa275047d67140930c52f5d}\index{node\_modules/remark-\/parse Directory Reference@{node\_modules/remark-\/parse Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/remarkjs/remark/actions}{\texttt{ }} \href{https://codecov.io/github/remarkjs/remark}{\texttt{ }} \href{https://www.npmjs.com/package/remark-parse}{\texttt{ }} \href{https://bundlejs.com/?q=remark-parse}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/remarkjs/remark/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/remarkjs/remark}{\texttt{ remark}}}} plugin to add support for parsing from markdown.\hypertarget{readme.md_autotoc_md29201}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md29201}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}unified().use(remark\+Parse)\`{}
+\end{DoxyItemize}
+\item \doxylink{README.md_examples}{Examples}
+\begin{DoxyItemize}
+\item Example\+: support GFM and frontmatter
+\item Example\+: turning markdown into a man page
+\end{DoxyItemize}
+\item Syntax
+\item Syntax tree
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item Sponsor
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29202}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md29202}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} (\href{https://github.com/remarkjs/remark}{\texttt{ remark}}) plugin that defines how to take markdown as input and turn it into a syntax tree.
+
+See \href{https://github.com/remarkjs/remark}{\texttt{ the monorepo readme}} for info on what the remark ecosystem is.\hypertarget{readme.md_autotoc_md29203}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md29203}
+This plugin adds support to unified for parsing markdown. If you also need to serialize markdown, you can alternatively use \href{../remark/}{\texttt{ {\ttfamily remark}}}, which combines unified, this plugin, and \href{../remark-stringify/}{\texttt{ {\ttfamily remark-\/stringify}}}.
+
+If you {\itshape just} want to turn markdown into HTML (with maybe a few extensions), we recommend \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}} instead. If you don’t use plugins and want to access the syntax tree, you can directly use \href{https://github.com/syntax-tree/mdast-util-from-markdown}{\texttt{ {\ttfamily mdast-\/util-\/from-\/markdown}}}. remark focusses on making it easier to transform content by abstracting these internals away.
+
+You can combine this plugin with other plugins to add syntax extensions. Notable examples that deeply integrate with it are \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, \href{https://github.com/mdx-js/mdx/tree/main/packages/remark-mdx}{\texttt{ {\ttfamily remark-\/mdx}}}, \href{https://github.com/remarkjs/remark-frontmatter}{\texttt{ {\ttfamily remark-\/frontmatter}}}, \href{https://github.com/remarkjs/remark-math}{\texttt{ {\ttfamily remark-\/math}}}, and \href{https://github.com/remarkjs/remark-directive}{\texttt{ {\ttfamily remark-\/directive}}}. You can also use any other \href{https://github.com/remarkjs/remark\#plugin}{\texttt{ remark plugin}} after {\ttfamily remark-\/parse}.\hypertarget{readme.md_autotoc_md29204}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md29204}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ remark-\/parse}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ remarkParse\ from\ 'https://esm.sh/remark-\/parse@11'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ remarkParse\ from\ 'https://esm.sh/remark-\/parse@11?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29205}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md29205}
+Say we have the following module {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ remarkGfm\ from\ 'remark-\/gfm'}
+\DoxyCodeLine{import\ remarkParse\ from\ 'remark-\/parse'}
+\DoxyCodeLine{import\ remarkRehype\ from\ 'remark-\/rehype'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ \`{}}
+\DoxyCodeLine{\#\ Mercury}
+\DoxyCodeLine{}
+\DoxyCodeLine{**Mercury**\ is\ the\ first\ planet\ from\ the\ [Sun](https://en.wikipedia.org/wiki/Sun)}
+\DoxyCodeLine{and\ the\ smallest\ planet\ in\ the\ Solar\ System.}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(remarkParse)}
+\DoxyCodeLine{\ \ .use(remarkGfm)}
+\DoxyCodeLine{\ \ .use(remarkRehype)}
+\DoxyCodeLine{\ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ .process(doc)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+…then running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>Mercury</h1>}
+\DoxyCodeLine{<p><strong>Mercury</strong>\ is\ the\ first\ planet\ from\ the\ <a\ href="{}https://en.wikipedia.org/wiki/Sun"{}>Sun</a>}
+\DoxyCodeLine{and\ the\ smallest\ planet\ in\ the\ Solar\ System.</p>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29206}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md29206}
+This package exports no identifiers. The default export is \`{}remark\+Parse\`{}.\hypertarget{readme.md_autotoc_md29207}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unified().use(remark\+Parse)}}{{\ttfamily unified().use(remark\+Parse)}}}\label{readme.md_autotoc_md29207}
+Add support for parsing from markdown.\hypertarget{readme.md_autotoc_md29208}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md29208}
+There are no parameters.\hypertarget{readme.md_autotoc_md29209}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md29209}
+Nothing ({\ttfamily undefined}).\hypertarget{readme.md_autotoc_md29210}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md29210}
+\hypertarget{readme.md_autotoc_md29211}{}\doxysubsubsection{\texorpdfstring{Example\+: support GFM and frontmatter}{Example\+: support GFM and frontmatter}}\label{readme.md_autotoc_md29211}
+We support Common\+Mark by default. Non-\/standard markdown extensions can be enabled with plugins.
+
+This example shows how to support GFM features (autolink literals, footnotes, strikethrough, tables, tasklists) and frontmatter (YAML)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ rehypeStringify\ from\ 'rehype-\/stringify'}
+\DoxyCodeLine{import\ remarkFrontmatter\ from\ 'remark-\/frontmatter'}
+\DoxyCodeLine{import\ remarkGfm\ from\ 'remark-\/gfm'}
+\DoxyCodeLine{import\ remarkParse\ from\ 'remark-\/parse'}
+\DoxyCodeLine{import\ remarkRehype\ from\ 'remark-\/rehype'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ \`{}-\/-\/-\/}
+\DoxyCodeLine{layout:\ solar-\/system}
+\DoxyCodeLine{-\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Hi\ \string~\string~Mars\string~\string~Venus!}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(remarkParse)}
+\DoxyCodeLine{\ \ .use(remarkFrontmatter)}
+\DoxyCodeLine{\ \ .use(remarkGfm)}
+\DoxyCodeLine{\ \ .use(remarkRehype)}
+\DoxyCodeLine{\ \ .use(rehypeStringify)}
+\DoxyCodeLine{\ \ .process(doc)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<h1>Hi\ <del>Mars</del>Venus!</h1>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29212}{}\doxysubsubsection{\texorpdfstring{Example\+: turning markdown into a man page}{Example\+: turning markdown into a man page}}\label{readme.md_autotoc_md29212}
+Man pages (short for manual pages) are a way to document CLIs (example\+: type {\ttfamily man git-\/log} in your terminal). They use an old markup format called roff. There’s a remark plugin, \href{https://github.com/remarkjs/remark-man}{\texttt{ {\ttfamily remark-\/man}}}, that can serialize as roff.
+
+This example shows how to turn markdown into man pages by using unified with {\ttfamily remark-\/parse} and {\ttfamily remark-\/man}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ remarkMan\ from\ 'remark-\/man'}
+\DoxyCodeLine{import\ remarkParse\ from\ 'remark-\/parse'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ doc\ =\ \`{}}
+\DoxyCodeLine{\#\ titan(7)\ -\/-\/\ largest\ moon\ of\ saturn}
+\DoxyCodeLine{}
+\DoxyCodeLine{Titan\ is\ the\ largest\ moon…}
+\DoxyCodeLine{\`{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified().use(remarkParse).use(remarkMan).process(doc)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.TH\ "{}TITAN"{}\ "{}7"{}\ "{}September\ 2023"{}\ "{}"{}\ "{}"{}}
+\DoxyCodeLine{.SH\ "{}NAME"{}}
+\DoxyCodeLine{\(\backslash\)fBtitan\(\backslash\)fR\ -\/\ largest\ moon\ of\ saturn}
+\DoxyCodeLine{.P}
+\DoxyCodeLine{Titan\ is\ the\ largest\ moon…}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29213}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md29213}
+Markdown is parsed according to Common\+Mark. Other plugins can add support for syntax extensions. If you’re interested in extending markdown, \href{https://github.com/micromark/micromark\#extensions}{\texttt{ more information is available in micromark’s readme}}.\hypertarget{readme.md_autotoc_md29214}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md29214}
+The syntax tree used in remark is \href{https://github.com/syntax-tree/mdast}{\texttt{ mdast}}.\hypertarget{readme.md_autotoc_md29215}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md29215}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type {\ttfamily Options} (which is currently empty).\hypertarget{readme.md_autotoc_md29216}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md29216}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily remark-\/parse@\texorpdfstring{$^\wedge$}{\string^}11}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md29217}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md29217}
+As markdown can be turned into HTML and improper use of HTML can open you up to \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attacks, use of remark can be unsafe. When going to HTML, you will combine remark with {\bfseries{\href{https://github.com/rehypejs/rehype}{\texttt{ rehype}}}}, in which case you should use \href{https://github.com/rehypejs/rehype-sanitize}{\texttt{ {\ttfamily rehype-\/sanitize}}}.
+
+Use of remark plugins could also open you up to other attacks. Carefully assess each plugin and the risks involved in using them.
+
+For info on how to submit a report, see our \href{https://github.com/remarkjs/.github/blob/main/security.md}{\texttt{ security policy}}.\hypertarget{readme.md_autotoc_md29218}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md29218}
+See \href{https://github.com/remarkjs/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/remarkjs/.github}{\texttt{ {\ttfamily remarkjs/.github}}} for ways to get started. See \href{https://github.com/remarkjs/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help. Join us in \href{https://github.com/remarkjs/remark/discussions}{\texttt{ Discussions}} to chat with the community and contributors.
+
+This project has a \href{https://github.com/remarkjs/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md29219}{}\doxysubsection{\texorpdfstring{Sponsor}{Sponsor}}\label{readme.md_autotoc_md29219}
+Support this effort and give back by sponsoring on \href{https://opencollective.com/unified}{\texttt{ Open\+Collective}}!
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{10}{|X[-1]}|}
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}{\PBS\centering \href{https://vercel.com}{\texttt{ Vercel}}~\newline
+~\newline
+ \href{https://vercel.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://motif.land}{\texttt{ Motif}}~\newline
+~\newline
+ \href{https://motif.land}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.hashicorp.com}{\texttt{ Hashi\+Corp}}~\newline
+~\newline
+ \href{https://www.hashicorp.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gitbook.com}{\texttt{ Git\+Book}}~\newline
+~\newline
+ \href{https://www.gitbook.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gatsbyjs.org}{\texttt{ Gatsby}}~\newline
+~\newline
+ \href{https://www.gatsbyjs.org}{\texttt{ }}   }}\\
+&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}\\\cline{1-10}
+\end{longtabu}
+
+
+\href{https://www.netlify.com}{\texttt{ Netlify}}~\newline
+~\newline
+
+
+\href{https://www.netlify.com}{\texttt{ }}  
+
+\href{https://www.coinbase.com}{\texttt{ Coinbase}}~\newline
+~\newline
+ \href{https://www.coinbase.com}{\texttt{ }}  
+
+\href{https://themeisle.com}{\texttt{ Theme\+Isle}}~\newline
+~\newline
+ \href{https://themeisle.com}{\texttt{ }}  
+
+\href{https://expo.io}{\texttt{ Expo}}~\newline
+~\newline
+ \href{https://expo.io}{\texttt{ }}  
+
+\href{https://boostnote.io}{\texttt{ Boost Note}}~\newline
+~\newline
+ \href{https://boostnote.io}{\texttt{ }}  
+
+\href{https://markdown.space}{\texttt{ Markdown Space}}~\newline
+~\newline
+ \href{https://markdown.space}{\texttt{ }}  
+
+\href{https://www.holloway.com}{\texttt{ Holloway}}~\newline
+~\newline
+ \href{https://www.holloway.com}{\texttt{ }}  
+
+~\newline
+ \href{https://opencollective.com/unified}{\texttt{ {\bfseries{You?}}}} ~\newline
+~\newline
+   \hypertarget{readme.md_autotoc_md29220}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md29220}
+\href{https://github.com/remarkjs/remark/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

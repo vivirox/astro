@@ -1,0 +1,631 @@
+\doxysection{node\+\_\+modules/dotenv Directory Reference}
+\hypertarget{dir_b62958b0426e94a7ad2a910f0b5e3b47}{}\label{dir_b62958b0426e94a7ad2a910f0b5e3b47}\index{node\_modules/dotenv Directory Reference@{node\_modules/dotenv Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+ 🎉 announcing \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}}. {\itshape run anywhere, multi-\/environment, encrypted envs}. 
+
+~
+
+
+
+
+
+ \textsuperscript{ \href{https://github.com/sponsors/motdotla}{\texttt{ Dotenv is supported by the community.}} } 
+
+ \textsuperscript{Special thanks to\+:} ~\newline
+ ~\newline
+ \href{https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=dotenv_p_20220831}{\texttt{   {\bfseries{Warp is a blazingly fast, Rust-\/based terminal reimagined to work like a modern app.}}  \textsuperscript{Get more done in the CLI with real text editing, block-\/based output, and AI command search.}  }} ~\newline
+ \href{https://workos.com/?utm_campaign=github_repo&utm_medium=referral&utm_content=dotenv&utm_source=github}{\texttt{   {\bfseries{Your App, Enterprise Ready.}}  \textsuperscript{Add Single Sign-\/\+On, Multi-\/\+Factor Auth, and more, in minutes instead of months.}  }} \DoxyHorRuler{0}
+ \hypertarget{README.md_autotoc_md12240}{}\doxysubsection{\texorpdfstring{dotenv \href{https://www.npmjs.com/package/dotenv}{\texttt{ }}}{dotenv \href{https://www.npmjs.com/package/dotenv}{\texttt{ }}}}\label{README.md_autotoc_md12240}
+
+
+Dotenv is a zero-\/dependency module that loads environment variables from a {\ttfamily .env} file into \href{https://nodejs.org/docs/latest/api/process.html\#process_process_env}{\texttt{ {\ttfamily process.\+env}}}. Storing configuration in the environment separate from code is based on \href{https://12factor.net/config}{\texttt{ The Twelve-\/\+Factor App}} methodology.
+
+\href{https://github.com/feross/standard}{\texttt{ }} \mbox{[}\mbox{]}(LICENSE) \href{https://codecov.io/gh/motdotla/dotenv-expand}{\texttt{ }}
+
+
+\begin{DoxyItemize}
+\item 🌱 Install
+\item 🏗️ Usage (.env)
+\item 🌴 Multiple Environments 🆕
+\item 🚀 Deploying (encryption) 🆕
+\item 📚 Examples
+\item 📖 Docs
+\item ❓ FAQ
+\item \doxysectlink{md_node__modules_2dotenv_2_c_h_a_n_g_e_l_o_g}{⏱️ Changelog}{0}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md12241}{}\doxysubsubsection{\texorpdfstring{🌱 Install}{🌱 Install}}\label{README.md_autotoc_md12241}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ install\ locally\ (recommended)}
+\DoxyCodeLine{npm\ install\ dotenv\ -\/-\/save}
+
+\end{DoxyCode}
+
+
+Or installing with yarn? {\ttfamily yarn add dotenv}\hypertarget{README.md_autotoc_md12242}{}\doxysubsubsection{\texorpdfstring{🏗️ Usage}{🏗️ Usage}}\label{README.md_autotoc_md12242}
+\href{https://www.youtube.com/watch?v=YtkZR0NFd1g}{\texttt{    }}
+
+Create a {\ttfamily .env} file in the root of your project (if using a monorepo structure like {\ttfamily apps/backend/app.\+js}, put it in the root of the folder where your {\ttfamily app.\+js} process runs)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{S3\_BUCKET="{}YOURS3BUCKET"{}}
+\DoxyCodeLine{SECRET\_KEY="{}YOURSECRETKEYGOESHERE"{}}
+
+\end{DoxyCode}
+
+
+As early as possible in your application, import and configure dotenv\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config()}
+\DoxyCodeLine{console.log(process.env)\ //\ remove\ this\ after\ you've\ confirmed\ it\ is\ working}
+
+\end{DoxyCode}
+
+
+.. or using ES6?
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ 'dotenv/config'}
+
+\end{DoxyCode}
+
+
+That\textquotesingle{}s it. {\ttfamily process.\+env} now has the keys and values you defined in your {\ttfamily .env} file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config()}
+\DoxyCodeLine{//\ or\ import\ 'dotenv/config'\ if\ you're\ using\ ES6}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{s3.getBucketCors(\{Bucket:\ process.env.S3\_BUCKET\},\ function(err,\ data)\ \{\})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12243}{}\doxysubsubsubsection{\texorpdfstring{Multiline values}{Multiline values}}\label{README.md_autotoc_md12243}
+If you need multiline variables, for example private keys, those are now supported ({\ttfamily \texorpdfstring{$>$}{>}= v15.\+0.\+0}) with line breaks\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{PRIVATE\_KEY="{}-\/-\/-\/-\/-\/BEGIN\ RSA\ PRIVATE\ KEY-\/-\/-\/-\/-\/}
+\DoxyCodeLine{...}
+\DoxyCodeLine{Kh9NV...}
+\DoxyCodeLine{...}
+\DoxyCodeLine{-\/-\/-\/-\/-\/END\ RSA\ PRIVATE\ KEY-\/-\/-\/-\/-\/"{}}
+
+\end{DoxyCode}
+
+
+Alternatively, you can double quote strings and use the {\ttfamily \textbackslash{}n} character\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{PRIVATE\_KEY="{}-\/-\/-\/-\/-\/BEGIN\ RSA\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)nKh9NV...\(\backslash\)n-\/-\/-\/-\/-\/END\ RSA\ PRIVATE\ KEY-\/-\/-\/-\/-\/\(\backslash\)n"{}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12244}{}\doxysubsubsubsection{\texorpdfstring{Comments}{Comments}}\label{README.md_autotoc_md12244}
+Comments may be added to your file on their own line or inline\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ This\ is\ a\ comment}
+\DoxyCodeLine{SECRET\_KEY=YOURSECRETKEYGOESHERE\ \#\ comment}
+\DoxyCodeLine{SECRET\_HASH="{}something-\/with-\/a-\/\#-\/hash"{}}
+
+\end{DoxyCode}
+
+
+Comments begin where a {\ttfamily \#} exists, so if your value contains a {\ttfamily \#} please wrap it in quotes. This is a breaking change from {\ttfamily \texorpdfstring{$>$}{>}= v15.\+0.\+0} and on.\hypertarget{README.md_autotoc_md12245}{}\doxysubsubsubsection{\texorpdfstring{Parsing}{Parsing}}\label{README.md_autotoc_md12245}
+The engine which parses the contents of your file containing environment variables is available to use. It accepts a String or Buffer and will return an Object with the parsed keys and values.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ buf\ =\ Buffer.from('BASIC=basic')}
+\DoxyCodeLine{const\ config\ =\ dotenv.parse(buf)\ //\ will\ return\ an\ object}
+\DoxyCodeLine{console.log(typeof\ config,\ config)\ //\ object\ \{\ BASIC\ :\ 'basic'\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12246}{}\doxysubsubsubsection{\texorpdfstring{Preload}{Preload}}\label{README.md_autotoc_md12246}
+\begin{quote}
+Note\+: Consider using \href{https://github.com/dotenvx/dotenvx}{\texttt{ {\ttfamily dotenvx}}} instead of preloading. I am now doing (and recommending) so.
+
+It serves the same purpose (you do not need to require and load dotenv), adds better debugging, and works with ANY language, framework, or platform. – \href{https://github.com/motdotla}{\texttt{ motdotla}} \end{quote}
+
+
+You can use the {\ttfamily -\/-\/require} ({\ttfamily -\/r}) \href{https://nodejs.org/api/cli.html\#-r---require-module}{\texttt{ command line option}} to preload dotenv. By doing this, you do not need to require and load dotenv in your application code.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ -\/r\ dotenv/config\ your\_script.js}
+
+\end{DoxyCode}
+
+
+The configuration options below are supported as command line arguments in the format {\ttfamily dotenv\+\_\+config\+\_\+\texorpdfstring{$<$}{<}option\texorpdfstring{$>$}{>}=value}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ -\/r\ dotenv/config\ your\_script.js\ dotenv\_config\_path=/custom/path/to/.env\ dotenv\_config\_debug=true}
+
+\end{DoxyCode}
+
+
+Additionally, you can use environment variables to set configuration options. Command line arguments will precede these.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ DOTENV\_CONFIG\_<OPTION>=value\ node\ -\/r\ dotenv/config\ your\_script.js}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ DOTENV\_CONFIG\_ENCODING=latin1\ DOTENV\_CONFIG\_DEBUG=true\ node\ -\/r\ dotenv/config\ your\_script.js\ dotenv\_config\_path=/custom/path/to/.env}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12247}{}\doxysubsubsubsection{\texorpdfstring{Variable Expansion}{Variable Expansion}}\label{README.md_autotoc_md12247}
+You need to add the value of another variable in one of your variables? Use \href{https://github.com/motdotla/dotenv-expand}{\texttt{ dotenv-\/expand}}.\hypertarget{README.md_autotoc_md12248}{}\doxysubsubsubsection{\texorpdfstring{Command Substitution}{Command Substitution}}\label{README.md_autotoc_md12248}
+Use \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}} to use command substitution.
+
+Add the output of a command to one of your variables in your .env file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ .env}
+\DoxyCodeLine{DATABASE\_URL="{}postgres://\$(whoami)@localhost/my\_database"{}}
+
+\end{DoxyCode}
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ index.js}
+\DoxyCodeLine{console.log('DATABASE\_URL',\ process.env.DATABASE\_URL)}
+
+\end{DoxyCode}
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ dotenvx\ run\ -\/-\/debug\ -\/-\/\ node\ index.js}
+\DoxyCodeLine{[dotenvx@0.14.1]\ injecting\ env\ (1)\ from\ .env}
+\DoxyCodeLine{DATABASE\_URL\ postgres://yourusername@localhost/my\_database}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12249}{}\doxysubsubsubsection{\texorpdfstring{Syncing}{Syncing}}\label{README.md_autotoc_md12249}
+You need to keep {\ttfamily .env} files in sync between machines, environments, or team members? Use \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}} to encrypt your {\ttfamily .env} files and safely include them in source control. This still subscribes to the twelve-\/factor app rules by generating a decryption key separate from code.\hypertarget{README.md_autotoc_md12250}{}\doxysubsubsubsection{\texorpdfstring{Multiple Environments}{Multiple Environments}}\label{README.md_autotoc_md12250}
+Use \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}} to generate {\ttfamily .env.\+ci}, {\ttfamily .env.\+production} files, and more.\hypertarget{README.md_autotoc_md12251}{}\doxysubsubsubsection{\texorpdfstring{Deploying}{Deploying}}\label{README.md_autotoc_md12251}
+You need to deploy your secrets in a cloud-\/agnostic manner? Use \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}} to generate a private decryption key that is set on your production server.\hypertarget{README.md_autotoc_md12252}{}\doxysubsubsection{\texorpdfstring{🌴 Manage Multiple Environments}{🌴 Manage Multiple Environments}}\label{README.md_autotoc_md12252}
+Use \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}}
+
+Run any environment locally. Create a {\ttfamily .env.\+ENVIRONMENT} file and use {\ttfamily -\/-\/env-\/file} to load it. It\textquotesingle{}s straightforward, yet flexible.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ echo\ "{}HELLO=production"{}\ >\ .env.production}
+\DoxyCodeLine{\$\ echo\ "{}console.log('Hello\ '\ +\ process.env.HELLO)"{}\ >\ index.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{\$\ dotenvx\ run\ -\/-\/env-\/file=.env.production\ -\/-\/\ node\ index.js}
+\DoxyCodeLine{Hello\ production}
+\DoxyCodeLine{>\ \string^\string^}
+
+\end{DoxyCode}
+
+
+or with multiple .env files
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ echo\ "{}HELLO=local"{}\ >\ .env.local}
+\DoxyCodeLine{\$\ echo\ "{}HELLO=World"{}\ >\ .env}
+\DoxyCodeLine{\$\ echo\ "{}console.log('Hello\ '\ +\ process.env.HELLO)"{}\ >\ index.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{\$\ dotenvx\ run\ -\/-\/env-\/file=.env.local\ -\/-\/env-\/file=.env\ -\/-\/\ node\ index.js}
+\DoxyCodeLine{Hello\ local}
+
+\end{DoxyCode}
+
+
+\href{https://dotenvx.com/docs/quickstart/environments}{\texttt{ more environment examples}}\hypertarget{README.md_autotoc_md12253}{}\doxysubsubsection{\texorpdfstring{🚀 Deploying}{🚀 Deploying}}\label{README.md_autotoc_md12253}
+Use \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}}.
+
+Add encryption to your {\ttfamily .env} files with a single command. Pass the {\ttfamily -\/-\/encrypt} flag.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ dotenvx\ set\ HELLO\ Production\ -\/-\/encrypt\ -\/f\ .env.production}
+\DoxyCodeLine{\$\ echo\ "{}console.log('Hello\ '\ +\ process.env.HELLO)"{}\ >\ index.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{\$\ DOTENV\_PRIVATE\_KEY\_PRODUCTION="{}<.env.production\ private\ key>"{}\ dotenvx\ run\ -\/-\/\ node\ index.js}
+\DoxyCodeLine{[dotenvx]\ injecting\ env\ (2)\ from\ .env.production}
+\DoxyCodeLine{Hello\ Production}
+
+\end{DoxyCode}
+
+
+\href{https://github.com/dotenvx/dotenvx?tab=readme-ov-file\#encryption}{\texttt{ learn more}}\hypertarget{README.md_autotoc_md12254}{}\doxysubsubsection{\texorpdfstring{📚 Examples}{📚 Examples}}\label{README.md_autotoc_md12254}
+See \href{https://github.com/dotenv-org/examples}{\texttt{ examples}} of using dotenv with various frameworks, languages, and configurations.
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-nodejs}{\texttt{ nodejs}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-nodejs-debug}{\texttt{ nodejs (debug on)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-nodejs-override}{\texttt{ nodejs (override on)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-custom-target}{\texttt{ nodejs (process\+Env override)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-esm}{\texttt{ esm}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-esm-preload}{\texttt{ esm (preload)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-typescript}{\texttt{ typescript}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-typescript-parse}{\texttt{ typescript parse}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-typescript-config}{\texttt{ typescript config}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-webpack}{\texttt{ webpack}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-webpack2}{\texttt{ webpack (plugin)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-react}{\texttt{ react}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-react-typescript}{\texttt{ react (typescript)}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-express}{\texttt{ express}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-nestjs}{\texttt{ nestjs}}
+\item \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-fastify}{\texttt{ fastify}}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md12255}{}\doxysubsubsection{\texorpdfstring{📖 Documentation}{📖 Documentation}}\label{README.md_autotoc_md12255}
+Dotenv exposes four functions\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily config}
+\item {\ttfamily parse}
+\item {\ttfamily populate}
+\item {\ttfamily decrypt}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md12256}{}\doxysubsubsubsection{\texorpdfstring{Config}{Config}}\label{README.md_autotoc_md12256}
+{\ttfamily config} will read your {\ttfamily .env} file, parse the contents, assign it to \href{https://nodejs.org/docs/latest/api/process.html\#process_process_env}{\texttt{ {\ttfamily process.\+env}}}, and return an Object with a {\ttfamily parsed} key containing the loaded content or an {\ttfamily error} key if it failed.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ result\ =\ dotenv.config()}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (result.error)\ \{}
+\DoxyCodeLine{\ \ throw\ result.error}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(result.parsed)}
+
+\end{DoxyCode}
+
+
+You can additionally, pass options to {\ttfamily config}.\hypertarget{README.md_autotoc_md12257}{}\doxysubsubsubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md12257}
+\hypertarget{README.md_autotoc_md12258}{}\doxysubsubsubsubsubsection{\texorpdfstring{path}{path}}\label{README.md_autotoc_md12258}
+Default\+: `path.\+resolve(process.\+cwd(), '.env\textquotesingle{})\`{}
+
+Specify a custom path if your file containing environment variables is located elsewhere.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ path:\ '/custom/path/to/.env'\ \})}
+
+\end{DoxyCode}
+
+
+By default, {\ttfamily config} will look for a file called .env in the current working directory.
+
+Pass in multiple files as an array, and they will be parsed in order and combined with {\ttfamily process.\+env} (or {\ttfamily option.\+process\+Env}, if set). The first value set for a variable will win, unless the {\ttfamily options.\+override} flag is set, in which case the last value set will win. If a value already exists in {\ttfamily process.\+env} and the {\ttfamily options.\+override} flag is NOT set, no changes will be made to that value.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ path:\ ['.env.local',\ '.env']\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12259}{}\doxysubsubsubsubsubsection{\texorpdfstring{encoding}{encoding}}\label{README.md_autotoc_md12259}
+Default\+: {\ttfamily utf8}
+
+Specify the encoding of your file containing environment variables.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ encoding:\ 'latin1'\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12260}{}\doxysubsubsubsubsubsection{\texorpdfstring{debug}{debug}}\label{README.md_autotoc_md12260}
+Default\+: {\ttfamily false}
+
+Turn on logging to help debug why certain keys or values are not being set as you expect.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ debug:\ process.env.DEBUG\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12261}{}\doxysubsubsubsubsubsection{\texorpdfstring{override}{override}}\label{README.md_autotoc_md12261}
+Default\+: {\ttfamily false}
+
+Override any environment variables that have already been set on your machine with values from your .env file(s). If multiple files have been provided in {\ttfamily option.\+path} the override will also be used as each file is combined with the next. Without {\ttfamily override} being set, the first value wins. With {\ttfamily override} set the last value wins.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ override:\ true\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12262}{}\doxysubsubsubsubsubsection{\texorpdfstring{process\+Env}{process\+Env}}\label{README.md_autotoc_md12262}
+Default\+: {\ttfamily process.\+env}
+
+Specify an object to write your secrets to. Defaults to {\ttfamily process.\+env} environment variables.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ myObject\ =\ \{\}}
+\DoxyCodeLine{require('dotenv').config(\{\ processEnv:\ myObject\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(myObject)\ //\ values\ from\ .env}
+\DoxyCodeLine{console.log(process.env)\ //\ this\ was\ not\ changed\ or\ written\ to}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12263}{}\doxysubsubsubsection{\texorpdfstring{Parse}{Parse}}\label{README.md_autotoc_md12263}
+The engine which parses the contents of your file containing environment variables is available to use. It accepts a String or Buffer and will return an Object with the parsed keys and values.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ buf\ =\ Buffer.from('BASIC=basic')}
+\DoxyCodeLine{const\ config\ =\ dotenv.parse(buf)\ //\ will\ return\ an\ object}
+\DoxyCodeLine{console.log(typeof\ config,\ config)\ //\ object\ \{\ BASIC\ :\ 'basic'\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12264}{}\doxysubsubsubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md12264}
+\hypertarget{README.md_autotoc_md12265}{}\doxysubsubsubsubsubsection{\texorpdfstring{debug}{debug}}\label{README.md_autotoc_md12265}
+Default\+: {\ttfamily false}
+
+Turn on logging to help debug why certain keys or values are not being set as you expect.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ buf\ =\ Buffer.from('hello\ world')}
+\DoxyCodeLine{const\ opt\ =\ \{\ debug:\ true\ \}}
+\DoxyCodeLine{const\ config\ =\ dotenv.parse(buf,\ opt)}
+\DoxyCodeLine{//\ expect\ a\ debug\ message\ because\ the\ buffer\ is\ not\ in\ KEY=VAL\ form}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12266}{}\doxysubsubsubsection{\texorpdfstring{Populate}{Populate}}\label{README.md_autotoc_md12266}
+The engine which populates the contents of your .env file to {\ttfamily process.\+env} is available for use. It accepts a target, a source, and options. This is useful for power users who want to supply their own objects.
+
+For example, customizing the source\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ parsed\ =\ \{\ HELLO:\ 'world'\ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{dotenv.populate(process.env,\ parsed)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(process.env.HELLO)\ //\ world}
+
+\end{DoxyCode}
+
+
+For example, customizing the source AND target\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ parsed\ =\ \{\ HELLO:\ 'universe'\ \}}
+\DoxyCodeLine{const\ target\ =\ \{\ HELLO:\ 'world'\ \}\ //\ empty\ object}
+\DoxyCodeLine{}
+\DoxyCodeLine{dotenv.populate(target,\ parsed,\ \{\ override:\ true,\ debug:\ true\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(target)\ //\ \{\ HELLO:\ 'universe'\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12267}{}\doxysubsubsubsubsection{\texorpdfstring{options}{options}}\label{README.md_autotoc_md12267}
+\hypertarget{README.md_autotoc_md12268}{}\doxysubsubsubsubsubsection{\texorpdfstring{Debug}{Debug}}\label{README.md_autotoc_md12268}
+Default\+: {\ttfamily false}
+
+Turn on logging to help debug why certain keys or values are not being populated as you expect.\hypertarget{README.md_autotoc_md12269}{}\doxysubsubsubsubsubsection{\texorpdfstring{override}{override}}\label{README.md_autotoc_md12269}
+Default\+: {\ttfamily false}
+
+Override any environment variables that have already been set.\hypertarget{README.md_autotoc_md12270}{}\doxysubsubsection{\texorpdfstring{❓ FAQ}{❓ FAQ}}\label{README.md_autotoc_md12270}
+\hypertarget{README.md_autotoc_md12271}{}\doxysubsubsubsection{\texorpdfstring{Why is the {\ttfamily .env} file not loading my environment variables successfully?}{Why is the {\ttfamily .env} file not loading my environment variables successfully?}}\label{README.md_autotoc_md12271}
+Most likely your {\ttfamily .env} file is not in the correct place. \href{https://stackoverflow.com/questions/42335016/dotenv-file-is-not-loading-environment-variables}{\texttt{ See this stack overflow}}.
+
+Turn on debug mode and try again..
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ debug:\ true\ \})}
+
+\end{DoxyCode}
+
+
+You will receive a helpful error outputted to your console.\hypertarget{README.md_autotoc_md12272}{}\doxysubsubsubsection{\texorpdfstring{Should I commit my {\ttfamily .env} file?}{Should I commit my {\ttfamily .env} file?}}\label{README.md_autotoc_md12272}
+No. We {\bfseries{strongly}} recommend against committing your {\ttfamily .env} file to version control. It should only include environment-\/specific values such as database passwords or API keys. Your production database should have a different password than your development database.\hypertarget{README.md_autotoc_md12273}{}\doxysubsubsubsection{\texorpdfstring{Should I have multiple {\ttfamily .env} files?}{Should I have multiple {\ttfamily .env} files?}}\label{README.md_autotoc_md12273}
+We recommend creating one {\ttfamily .env} file per environment. Use {\ttfamily .env} for local/development, {\ttfamily .env.\+production} for production and so on. This still follows the twelve factor principles as each is attributed individually to its own environment. Avoid custom set ups that work in inheritance somehow ({\ttfamily .env.\+production} inherits values form {\ttfamily .env} for example). It is better to duplicate values if necessary across each {\ttfamily .env.\+environment} file.
+
+\begin{quote}
+In a twelve-\/factor app, env vars are granular controls, each fully orthogonal to other env vars. They are never grouped together as “environments”, but instead are independently managed for each deploy. This is a model that scales up smoothly as the app naturally expands into more deploys over its lifetime.
+
+– \href{http://12factor.net/config}{\texttt{ The Twelve-\/\+Factor App}} \end{quote}
+\hypertarget{README.md_autotoc_md12274}{}\doxysubsubsubsection{\texorpdfstring{What rules does the parsing engine follow?}{What rules does the parsing engine follow?}}\label{README.md_autotoc_md12274}
+The parsing engine currently supports the following rules\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily BASIC=basic} becomes `\{BASIC\+: \textquotesingle{}basic'\}{\ttfamily }
+\item {\ttfamily empty lines are skipped}
+\item {\ttfamily lines beginning with}\#{\ttfamily are treated as comments -\/}\#{\ttfamily marks the beginning of a comment (unless when the value is wrapped in quotes)}
+\item {\ttfamily empty values become empty strings (}EMPTY={\ttfamily becomes}\{EMPTY\+: \textquotesingle{}\textquotesingle{}\}{\ttfamily )}
+\item {\ttfamily inner quotes are maintained (think JSON) (}JSON=\{"{}foo"{}\+: "{}bar"{}\}{\ttfamily becomes}\{JSON\+:"{}\{\textbackslash{}"{}foo\textbackslash{}"{}\+: \textbackslash{}"{}bar\textbackslash{}"{}\}"{}{\ttfamily )}
+\item {\ttfamily whitespace is removed from both ends of unquoted values (see more on \mbox{[}}trim{\ttfamily \mbox{]}(\href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim}{\texttt{ https\+://developer.\+mozilla.\+org/en-\/\+US/docs/\+Web/\+Java\+Script/\+Reference/\+Global\+\_\+\+Objects/\+String/\+Trim}})) (}FOO= some value {\ttfamily becomes}\{FOO\+: \textquotesingle{}some value\textquotesingle{}\}{\ttfamily )}
+\item {\ttfamily single and double quoted values are escaped (}SINGLE\+\_\+\+QUOTE=\textquotesingle{}quoted\textquotesingle{}{\ttfamily becomes}\{SINGLE\+\_\+\+QUOTE\+: "{}quoted"{}\}{\ttfamily )}
+\item {\ttfamily single and double quoted values maintain whitespace from both ends (}FOO="{}  some value  "{}{\ttfamily becomes}\{FOO\+: \textquotesingle{} some value \textquotesingle{}\}{\ttfamily )}
+\item {\ttfamily double quoted values expand new lines (}MULTILINE="{}new\textbackslash{}nline"{}\`{} becomes
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{MULTILINE:\ 'new}
+\DoxyCodeLine{line'\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item backticks are supported ({\ttfamily BACKTICK\+\_\+\+KEY=\`{}\+This has \textquotesingle{}single\textquotesingle{} and "{}double"{} quotes inside of it.\`{}})
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md12275}{}\doxysubsubsubsection{\texorpdfstring{What happens to environment variables that were already set?}{What happens to environment variables that were already set?}}\label{README.md_autotoc_md12275}
+By default, we will never modify any environment variables that have already been set. In particular, if there is a variable in your {\ttfamily .env} file which collides with one that already exists in your environment, then that variable will be skipped.
+
+If instead, you want to override {\ttfamily process.\+env} use the {\ttfamily override} option.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config(\{\ override:\ true\ \})}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12276}{}\doxysubsubsubsection{\texorpdfstring{How come my environment variables are not showing up for React?}{How come my environment variables are not showing up for React?}}\label{README.md_autotoc_md12276}
+Your React code is run in Webpack, where the {\ttfamily fs} module or even the {\ttfamily process} global itself are not accessible out-\/of-\/the-\/box. {\ttfamily process.\+env} can only be injected through Webpack configuration.
+
+If you are using \href{https://www.npmjs.com/package/react-scripts}{\texttt{ {\ttfamily react-\/scripts}}}, which is distributed through \href{https://create-react-app.dev/}{\texttt{ {\ttfamily create-\/react-\/app}}}, it has dotenv built in but with a quirk. Preface your environment variables with {\ttfamily REACT\+\_\+\+APP\+\_\+}. See \href{https://stackoverflow.com/questions/42182577/is-it-possible-to-use-dotenv-in-a-react-project}{\texttt{ this stack overflow}} for more details.
+
+If you are using other frameworks (e.\+g. Next.\+js, Gatsby...), you need to consult their documentation for how to inject environment variables into the client.\hypertarget{README.md_autotoc_md12277}{}\doxysubsubsubsection{\texorpdfstring{Can I customize/write plugins for dotenv?}{Can I customize/write plugins for dotenv?}}\label{README.md_autotoc_md12277}
+Yes! {\ttfamily dotenv.\+config()} returns an object representing the parsed {\ttfamily .env} file. This gives you everything you need to continue setting values on {\ttfamily process.\+env}. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ dotenv\ =\ require('dotenv')}
+\DoxyCodeLine{const\ variableExpansion\ =\ require('dotenv-\/expand')}
+\DoxyCodeLine{const\ myEnv\ =\ dotenv.config()}
+\DoxyCodeLine{variableExpansion(myEnv)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12278}{}\doxysubsubsubsection{\texorpdfstring{How do I use dotenv with {\ttfamily import}?}{How do I use dotenv with {\ttfamily import}?}}\label{README.md_autotoc_md12278}
+Simply..
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ index.mjs\ (ESM)}
+\DoxyCodeLine{import\ 'dotenv/config'\ //\ see\ https://github.com/motdotla/dotenv\#how-\/do-\/i-\/use-\/dotenv-\/with-\/import}
+\DoxyCodeLine{import\ express\ from\ 'express'}
+
+\end{DoxyCode}
+
+
+A little background..
+
+\begin{quote}
+When you run a module containing an {\ttfamily import} declaration, the modules it imports are loaded first, then each module body is executed in a depth-\/first traversal of the dependency graph, avoiding cycles by skipping anything already executed.
+
+– \href{https://hacks.mozilla.org/2015/08/es6-in-depth-modules/}{\texttt{ ES6 In Depth\+: Modules}} \end{quote}
+
+
+What does this mean in plain language? It means you would think the following would work but it won\textquotesingle{}t.
+
+{\ttfamily error\+Reporter.\+mjs}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Client\ \}\ from\ 'best-\/error-\/reporting-\/service'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ new\ Client(process.env.API\_KEY)}
+
+\end{DoxyCode}
+ {\ttfamily index.\+mjs}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Note:\ this\ is\ INCORRECT\ and\ will\ not\ work}
+\DoxyCodeLine{import\ *\ as\ dotenv\ from\ 'dotenv'}
+\DoxyCodeLine{dotenv.config()}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ errorReporter\ from\ './errorReporter.mjs'}
+\DoxyCodeLine{errorReporter.report(new\ Error('documented\ example'))}
+
+\end{DoxyCode}
+
+
+{\ttfamily process.\+env.\+API\+\_\+\+KEY} will be blank.
+
+Instead, {\ttfamily index.\+mjs} should be written as..
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ 'dotenv/config'}
+\DoxyCodeLine{}
+\DoxyCodeLine{import\ errorReporter\ from\ './errorReporter.mjs'}
+\DoxyCodeLine{errorReporter.report(new\ Error('documented\ example'))}
+
+\end{DoxyCode}
+
+
+Does that make sense? It\textquotesingle{}s a bit unintuitive, but it is how importing of ES6 modules work. Here is a \href{https://github.com/dotenv-org/examples/tree/master/usage/dotenv-es6-import-pitfall}{\texttt{ working example of this pitfall}}.
+
+There are two alternatives to this approach\+:
+
+
+\begin{DoxyEnumerate}
+\item Preload dotenv\+: {\ttfamily node -\/-\/require dotenv/config index.\+js} ({\itshape Note\+: you do not need to {\ttfamily import} dotenv with this approach})
+\item Create a separate file that will execute {\ttfamily config} first as outlined in \href{https://github.com/motdotla/dotenv/issues/133\#issuecomment-255298822}{\texttt{ this comment on \#133}}
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md12279}{}\doxysubsubsubsection{\texorpdfstring{Why am I getting the error `Module not found\+: Error\+: Can\textquotesingle{}t resolve \textquotesingle{}crypto\texorpdfstring{$\vert$}{|}os\texorpdfstring{$\vert$}{|}path'\`{}?}{Why am I getting the error `Module not found\+: Error\+: Can\textquotesingle{}t resolve \textquotesingle{}crypto\texorpdfstring{$\vert$}{|}os\texorpdfstring{$\vert$}{|}path'\`{}?}}\label{README.md_autotoc_md12279}
+You are using dotenv on the front-\/end and have not included a polyfill. Webpack \texorpdfstring{$<$}{<} 5 used to include these for you. Do the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ node-\/polyfill-\/webpack-\/plugin}
+
+\end{DoxyCode}
+
+
+Configure your {\ttfamily webpack.\+config.\+js} to something like the following.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('dotenv').config()}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ path\ =\ require('path');}
+\DoxyCodeLine{const\ webpack\ =\ require('webpack')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ NodePolyfillPlugin\ =\ require('node-\/polyfill-\/webpack-\/plugin')}
+\DoxyCodeLine{}
+\DoxyCodeLine{module.exports\ =\ \{}
+\DoxyCodeLine{\ \ mode:\ 'development',}
+\DoxyCodeLine{\ \ entry:\ './src/index.ts',}
+\DoxyCodeLine{\ \ output:\ \{}
+\DoxyCodeLine{\ \ \ \ filename:\ 'bundle.js',}
+\DoxyCodeLine{\ \ \ \ path:\ path.resolve(\_\_dirname,\ 'dist'),}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ plugins:\ [}
+\DoxyCodeLine{\ \ \ \ new\ NodePolyfillPlugin(),}
+\DoxyCodeLine{\ \ \ \ new\ webpack.DefinePlugin(\{}
+\DoxyCodeLine{\ \ \ \ \ \ 'process.env':\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ HELLO:\ JSON.stringify(process.env.HELLO)}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}),}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+Alternatively, just use \href{https://github.com/mrsteele/dotenv-webpack}{\texttt{ dotenv-\/webpack}} which does this and more behind the scenes for you.\hypertarget{README.md_autotoc_md12280}{}\doxysubsubsubsection{\texorpdfstring{What about variable expansion?}{What about variable expansion?}}\label{README.md_autotoc_md12280}
+Try \href{https://github.com/motdotla/dotenv-expand}{\texttt{ dotenv-\/expand}}\hypertarget{README.md_autotoc_md12281}{}\doxysubsubsubsection{\texorpdfstring{What about syncing and securing .env files?}{What about syncing and securing .env files?}}\label{README.md_autotoc_md12281}
+Use \href{https://github.com/dotenvx/dotenvx}{\texttt{ dotenvx}}\hypertarget{README.md_autotoc_md12282}{}\doxysubsubsubsection{\texorpdfstring{What if I accidentally commit my {\ttfamily .env} file to code?}{What if I accidentally commit my {\ttfamily .env} file to code?}}\label{README.md_autotoc_md12282}
+Remove it, \href{https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository}{\texttt{ remove git history}} and then install the \href{https://github.com/dotenvx/dotenvx\#pre-commit}{\texttt{ git pre-\/commit hook}} to prevent this from ever happening again.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{brew\ install\ dotenvx/brew/dotenvx}
+\DoxyCodeLine{dotenvx\ precommit\ -\/-\/install}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12283}{}\doxysubsubsubsection{\texorpdfstring{How can I prevent committing my {\ttfamily .env} file to a Docker build?}{How can I prevent committing my {\ttfamily .env} file to a Docker build?}}\label{README.md_autotoc_md12283}
+Use the \href{https://dotenvx.com/docs/features/prebuild}{\texttt{ docker prebuild hook}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Dockerfile}
+\DoxyCodeLine{...}
+\DoxyCodeLine{RUN\ curl\ -\/fsS\ https://dotenvx.sh/\ |\ sh}
+\DoxyCodeLine{...}
+\DoxyCodeLine{RUN\ dotenvx\ prebuild}
+\DoxyCodeLine{CMD\ ["{}dotenvx"{},\ "{}run"{},\ "{}-\/-\/"{},\ "{}node"{},\ "{}index.js"{}]}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12284}{}\doxysubsubsection{\texorpdfstring{Contributing Guide}{Contributing Guide}}\label{README.md_autotoc_md12284}
+See \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{CONTRIBUTING.md}\hypertarget{README.md_autotoc_md12285}{}\doxysubsubsection{\texorpdfstring{CHANGELOG}{CHANGELOG}}\label{README.md_autotoc_md12285}
+See \doxysectlink{md_node__modules_2dotenv_2_c_h_a_n_g_e_l_o_g}{CHANGELOG.md}{0}\hypertarget{README.md_autotoc_md12286}{}\doxysubsubsection{\texorpdfstring{Who\textquotesingle{}s using dotenv?}{Who\textquotesingle{}s using dotenv?}}\label{README.md_autotoc_md12286}
+\href{https://www.npmjs.com/browse/depended/dotenv}{\texttt{ These npm modules depend on it.}}
+
+Projects that expand it often use the \href{https://www.npmjs.com/search?q=keywords:dotenv}{\texttt{ keyword "{}dotenv"{} on npm}}. 

@@ -1,0 +1,99 @@
+\doxysection{node\+\_\+modules/sharp Directory Reference}
+\hypertarget{dir_210a90c71021070285e77d6f5cf90415}{}\label{dir_210a90c71021070285e77d6f5cf90415}\index{node\_modules/sharp Directory Reference@{node\_modules/sharp Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_2e16562067b47f15fc10ea94130492f2}{src}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+The typical use case for this high speed Node-\/\+API module is to convert large images in common formats to smaller, web-\/friendly JPEG, PNG, WebP, GIF and AVIF images of varying dimensions.
+
+It can be used with all Java\+Script runtimes that provide support for Node-\/\+API v9, including Node.\+js (\texorpdfstring{$^\wedge$}{\string^}18.17.\+0 or \texorpdfstring{$>$}{>}= 20.\+3.\+0), Deno and Bun.
+
+Resizing an image is typically 4x-\/5x faster than using the quickest Image\+Magick and Graphics\+Magick settings due to its use of \href{https://github.com/libvips/libvips}{\texttt{ libvips}}.
+
+Colour spaces, embedded ICC profiles and alpha transparency channels are all handled correctly. Lanczos resampling ensures quality is not sacrificed for speed.
+
+As well as image resizing, operations such as rotation, extraction, compositing and gamma correction are available.
+
+Most modern mac\+OS, Windows and Linux systems do not require any additional install or runtime dependencies.\hypertarget{README.md_autotoc_md30627}{}\doxysubsection{\texorpdfstring{Documentation}{Documentation}}\label{README.md_autotoc_md30627}
+Visit \href{https://sharp.pixelplumbing.com/}{\texttt{ sharp.\+pixelplumbing.\+com}} for complete \href{https://sharp.pixelplumbing.com/install}{\texttt{ installation instructions}}, \href{https://sharp.pixelplumbing.com/api-constructor}{\texttt{ API documentation}}, \href{https://sharp.pixelplumbing.com/performance}{\texttt{ benchmark tests}} and \href{https://sharp.pixelplumbing.com/changelog}{\texttt{ changelog}}.\hypertarget{README.md_autotoc_md30628}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{README.md_autotoc_md30628}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ sharp}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ sharp\ =\ require('sharp');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30629}{}\doxysubsubsection{\texorpdfstring{Callback}{Callback}}\label{README.md_autotoc_md30629}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sharp(inputBuffer)}
+\DoxyCodeLine{\ \ .resize(320,\ 240)}
+\DoxyCodeLine{\ \ .toFile('output.webp',\ (err,\ info)\ =>\ \{\ ...\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30630}{}\doxysubsubsection{\texorpdfstring{Promise}{Promise}}\label{README.md_autotoc_md30630}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sharp('input.jpg')}
+\DoxyCodeLine{\ \ .rotate()}
+\DoxyCodeLine{\ \ .resize(200)}
+\DoxyCodeLine{\ \ .jpeg(\{\ mozjpeg:\ true\ \})}
+\DoxyCodeLine{\ \ .toBuffer()}
+\DoxyCodeLine{\ \ .then(\ data\ =>\ \{\ ...\ \})}
+\DoxyCodeLine{\ \ .catch(\ err\ =>\ \{\ ...\ \});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30631}{}\doxysubsubsection{\texorpdfstring{Async/await}{Async/await}}\label{README.md_autotoc_md30631}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ semiTransparentRedPng\ =\ await\ sharp(\{}
+\DoxyCodeLine{\ \ create:\ \{}
+\DoxyCodeLine{\ \ \ \ width:\ 48,}
+\DoxyCodeLine{\ \ \ \ height:\ 48,}
+\DoxyCodeLine{\ \ \ \ channels:\ 4,}
+\DoxyCodeLine{\ \ \ \ background:\ \{\ r:\ 255,\ g:\ 0,\ b:\ 0,\ alpha:\ 0.5\ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{\ \ .png()}
+\DoxyCodeLine{\ \ .toBuffer();}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30632}{}\doxysubsubsection{\texorpdfstring{Stream}{Stream}}\label{README.md_autotoc_md30632}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ roundedCorners\ =\ Buffer.from(}
+\DoxyCodeLine{\ \ '<svg><rect\ x="{}0"{}\ y="{}0"{}\ width="{}200"{}\ height="{}200"{}\ rx="{}50"{}\ ry="{}50"{}/></svg>'}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ roundedCornerResizer\ =}
+\DoxyCodeLine{\ \ sharp()}
+\DoxyCodeLine{\ \ \ \ .resize(200,\ 200)}
+\DoxyCodeLine{\ \ \ \ .composite([\{}
+\DoxyCodeLine{\ \ \ \ \ \ input:\ roundedCorners,}
+\DoxyCodeLine{\ \ \ \ \ \ blend:\ 'dest-\/in'}
+\DoxyCodeLine{\ \ \ \ \}])}
+\DoxyCodeLine{\ \ \ \ .png();}
+\DoxyCodeLine{}
+\DoxyCodeLine{readableStream}
+\DoxyCodeLine{\ \ .pipe(roundedCornerResizer)}
+\DoxyCodeLine{\ \ .pipe(writableStream);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30633}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md30633}
+A \href{https://github.com/lovell/sharp/blob/main/.github/CONTRIBUTING.md}{\texttt{ guide for contributors}} covers reporting bugs, requesting features and submitting code changes.\hypertarget{README.md_autotoc_md30634}{}\doxysubsection{\texorpdfstring{Licensing}{Licensing}}\label{README.md_autotoc_md30634}
+Copyright 2013 Lovell Fuller and others.
+
+Licensed under the Apache License, Version 2.\+0 (the "{}\+License"{}); you may not use this file except in compliance with the License. You may obtain a copy of the License at \href{https://www.apache.org/licenses/LICENSE-2.0}{\texttt{ https\+://www.\+apache.\+org/licenses/\+LICENSE-\/2.\+0}}
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "{}\+AS IS"{} BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. 

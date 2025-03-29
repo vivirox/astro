@@ -1,0 +1,178 @@
+\doxysection{node\+\_\+modules/yocto-\/spinner Directory Reference}
+\hypertarget{dir_4728187f184846098fd1750db5cbef33}{}\label{dir_4728187f184846098fd1750db5cbef33}\index{node\_modules/yocto-\/spinner Directory Reference@{node\_modules/yocto-\/spinner Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\doxysubsection*{ }
+
+\href{https://packagephobia.com/result?p=yocto-spinner}{\texttt{ }} 
+
+\begin{quote}
+Tiny terminal spinner \end{quote}
+\hypertarget{readme.md_autotoc_md36264}{}\doxysubsubsection{\texorpdfstring{Features}{Features}}\label{readme.md_autotoc_md36264}
+
+\begin{DoxyItemize}
+\item Tiny and fast
+\item Customizable text and color options
+\item Customizable spinner animations
+\item Only one tiny dependency
+\item Supports both Unicode and non-\/\+Unicode environments
+\item Gracefully handles process signals (e.\+g., {\ttfamily SIGINT}, {\ttfamily SIGTERM})
+\item Can display different status symbols (info, success, warning, error)
+\item Works well in CI environments
+\end{DoxyItemize}
+
+{\itshape Check out \href{https://github.com/sindresorhus/ora}{\texttt{ {\ttfamily ora}}} for more features.}
+
+~\newline
+ 
+
+~\newline
+  ~\newline
+ 
+
+~\newline
+\hypertarget{readme.md_autotoc_md36265}{}\doxysubsubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md36265}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ yocto-\/spinner}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36266}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md36266}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ yoctoSpinner\ from\ 'yocto-\/spinner';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ spinner\ =\ yoctoSpinner(\{text:\ 'Loading…'\}).start();}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ spinner.success('Success!');}
+\DoxyCodeLine{\},\ 2000);}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36267}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md36267}
+\hypertarget{readme.md_autotoc_md36268}{}\doxysubsubsubsection{\texorpdfstring{yocto\+Spinner(options?)}{yocto\+Spinner(options?)}}\label{readme.md_autotoc_md36268}
+Creates a new spinner instance.\hypertarget{readme.md_autotoc_md36269}{}\doxysubsubsubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md36269}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md36270}{}\doxysubsubsubsubsubsection{\texorpdfstring{text}{text}}\label{readme.md_autotoc_md36270}
+Type\+: {\ttfamily string}\textbackslash{} Default\+: `'\textquotesingle{}\`{}
+
+The text to display next to the spinner.\hypertarget{readme.md_autotoc_md36271}{}\doxysubsubsubsubsubsection{\texorpdfstring{spinner}{spinner}}\label{readme.md_autotoc_md36271}
+Type\+: {\ttfamily object}\textbackslash{} Default\+: 
+
+Customize the spinner animation with a custom set of frames and interval.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ frames:\ ['-\/',\ '\(\backslash\)\(\backslash\)',\ '|',\ '/'],}
+\DoxyCodeLine{\ \ \ \ interval:\ 100,}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Pass in any spinner from \href{https://github.com/sindresorhus/cli-spinners}{\texttt{ {\ttfamily cli-\/spinners}}}.\hypertarget{readme.md_autotoc_md36272}{}\doxysubsubsubsubsubsection{\texorpdfstring{color}{color}}\label{readme.md_autotoc_md36272}
+Type\+: {\ttfamily string}\textbackslash{} Default\+: `\textquotesingle{}cyan'{\ttfamily \textbackslash{} Values\+:}\textquotesingle{}black\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}red\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}green\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}yellow\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}blue\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}magenta\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}cyan\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}white\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}gray\textquotesingle{}\`{}
+
+The color of the spinner.\hypertarget{readme.md_autotoc_md36273}{}\doxysubsubsubsubsubsection{\texorpdfstring{stream}{stream}}\label{readme.md_autotoc_md36273}
+Type\+: {\ttfamily stream.\+Writable}\textbackslash{} Default\+: {\ttfamily process.\+stderr}
+
+The stream to which the spinner is written.\hypertarget{readme.md_autotoc_md36274}{}\doxysubsubsubsection{\texorpdfstring{Instance methods}{Instance methods}}\label{readme.md_autotoc_md36274}
+\hypertarget{readme.md_autotoc_md36275}{}\doxysubsubsubsubsection{\texorpdfstring{.start(text?)}{.start(text?)}}\label{readme.md_autotoc_md36275}
+Starts the spinner.
+
+Returns the instance.
+
+Optionally, updates the text\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{spinner.start('Loading…');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36276}{}\doxysubsubsubsubsection{\texorpdfstring{.stop(final\+Text?)}{.stop(final\+Text?)}}\label{readme.md_autotoc_md36276}
+Stops the spinner.
+
+Returns the instance.
+
+Optionally displays a final message.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{spinner.stop('Stopped.');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36277}{}\doxysubsubsubsubsection{\texorpdfstring{.success(text?)}{.success(text?)}}\label{readme.md_autotoc_md36277}
+Stops the spinner and displays a success symbol with the message.
+
+Returns the instance.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{spinner.success('Success!');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36278}{}\doxysubsubsubsubsection{\texorpdfstring{.error(text?)}{.error(text?)}}\label{readme.md_autotoc_md36278}
+Stops the spinner and displays an error symbol with the message.
+
+Returns the instance.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{spinner.error('Error!');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36279}{}\doxysubsubsubsubsection{\texorpdfstring{.warning(text?)}{.warning(text?)}}\label{readme.md_autotoc_md36279}
+Stops the spinner and displays a warning symbol with the message.
+
+Returns the instance.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{spinner.warning('Warning!');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36280}{}\doxysubsubsubsubsection{\texorpdfstring{.clear()}{.clear()}}\label{readme.md_autotoc_md36280}
+Clears the spinner.
+
+Returns the instance.\hypertarget{readme.md_autotoc_md36281}{}\doxysubsubsubsubsection{\texorpdfstring{.info(text?)}{.info(text?)}}\label{readme.md_autotoc_md36281}
+Stops the spinner and displays an info symbol with the message.
+
+Returns the instance.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{spinner.info('Info.');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36282}{}\doxysubsubsubsubsection{\texorpdfstring{.text \textsuperscript{get/set}}{.text \textsuperscript{get/set}}}\label{readme.md_autotoc_md36282}
+Change the text displayed next to the spinner.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{spinner.text\ =\ 'New\ text';}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36283}{}\doxysubsubsubsubsection{\texorpdfstring{.color \textsuperscript{get/set}}{.color \textsuperscript{get/set}}}\label{readme.md_autotoc_md36283}
+Change the spinner color.\hypertarget{readme.md_autotoc_md36284}{}\doxysubsubsubsubsection{\texorpdfstring{.is\+Spinning \textsuperscript{get}}{.is\+Spinning \textsuperscript{get}}}\label{readme.md_autotoc_md36284}
+Returns whether the spinner is currently spinning.\hypertarget{readme.md_autotoc_md36285}{}\doxysubsubsection{\texorpdfstring{FAQ}{FAQ}}\label{readme.md_autotoc_md36285}
+\hypertarget{readme.md_autotoc_md36286}{}\doxysubsubsubsection{\texorpdfstring{How do I change the color of the text?}{How do I change the color of the text?}}\label{readme.md_autotoc_md36286}
+Use \href{https://github.com/sindresorhus/yoctocolors}{\texttt{ {\ttfamily yoctocolors}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ yoctoSpinner\ from\ 'yocto-\/spinner';}
+\DoxyCodeLine{import\ \{red\}\ from\ 'yoctocolors';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ spinner\ =\ yoctoSpinner(\{text:\ \`{}Loading\ \$\{red('unicorns')\}`\}).start();}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md36287}{}\doxysubsubsubsection{\texorpdfstring{Why does the spinner freeze?}{Why does the spinner freeze?}}\label{readme.md_autotoc_md36287}
+Java\+Script is single-\/threaded, so any synchronous operations will block the spinner\textquotesingle{}s animation. To avoid this, prefer using asynchronous operations.\hypertarget{readme.md_autotoc_md36288}{}\doxysubsubsection{\texorpdfstring{Comparison with \href{https://github.com/sindresorhus/ora}{\texttt{ {\ttfamily ora}}}}{Comparison with \href{https://github.com/sindresorhus/ora}{\texttt{ {\ttfamily ora}}}}}\label{readme.md_autotoc_md36288}
+Ora offers more options, greater customizability, \href{https://github.com/sindresorhus/ora?tab=readme-ov-file\#orapromiseaction-options}{\texttt{ promise handling}}, and better Unicode detection. It’s a more mature and feature-\/rich package that handles more edge cases but comes with additional dependencies and a larger size. In contrast, this package is smaller, simpler, and optimized for minimal overhead, making it ideal for lightweight projects where dependency size is important. However, Ora is generally the better choice for most use cases.\hypertarget{readme.md_autotoc_md36289}{}\doxysubsubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md36289}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/ora}{\texttt{ ora}} -\/ Comprehensive terminal spinner
+\item \href{https://github.com/sindresorhus/yoctocolors}{\texttt{ yoctocolors}} -\/ Tiny terminal coloring
+\item \href{https://github.com/sindresorhus/nano-spawn}{\texttt{ nano-\/spawn}} -\/ Tiny process execution for humans 
+\end{DoxyItemize}

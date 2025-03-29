@@ -1,0 +1,389 @@
+\doxysection{node\+\_\+modules/@octokit/auth-\/oauth-\/device Directory Reference}
+\hypertarget{dir_1993ac1b64485daf467ed83ba18e626e}{}\label{dir_1993ac1b64485daf467ed83ba18e626e}\index{node\_modules/"@octokit/auth-\/oauth-\/device Directory Reference@{node\_modules/"@octokit/auth-\/oauth-\/device Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Git\+Hub OAuth Device authentication strategy for Java\+Script \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/auth-oauth-device}{\texttt{ }} \href{https://github.com/octokit/auth-oauth-device.js/actions?query=workflow\%3ATest+branch\%3Amain}{\texttt{ }}
+
+{\ttfamily @octokit/auth-\/oauth-\/device} is implementing one of \href{https://docs.github.com/en/developers/apps/authorizing-oauth-apps\#device-flow}{\texttt{ Git\+Hub’s OAuth Device Flow}}.
+
+
+\begin{DoxyItemize}
+\item \doxylink{readme.md_usage}{Usage}
+\begin{DoxyItemize}
+\item For OAuth Apps
+\item For Git\+Hub Apps
+\end{DoxyItemize}
+\item \`{}create\+OAuth\+Device\+Auth(options)\`{}
+\item \`{}auth(options)\`{}
+\item Authentication object
+\begin{DoxyItemize}
+\item OAuth APP user authentication
+\item Git\+Hub APP user authentication with expiring tokens disabled
+\item Git\+Hub APP user authentication with expiring tokens enabled
+\end{DoxyItemize}
+\item \`{}auth.hook(request, route, parameters)\`{} or \`{}auth.hook(request, options)\`{}
+\item \doxylink{readme.md_types}{Types}
+\item How it works
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_contributing}{Contributing}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md5160}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5160}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ 
+
+Browsers
+
+}&
+
+Load {\ttfamily @octokit/auth-\/oauth-\/device} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{\ createOAuthDeviceAuth\ \}\ from\ "{}https://esm.sh/@octokit/auth-\/oauth-\/device"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ 
+
+Node
+
+}&
+
+Install with {\ttfamily npm install @octokit/core @octokit/auth-\/oauth-\/device}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ createOAuthDeviceAuth\ \}\ from\ "{}@octokit/auth-\/oauth-\/device"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+\begin{DoxyImportant}{Important}
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json} by setting {\ttfamily "{}module\+Resolution"{}\+: "{}node16"{}, "{}module"{}\+: "{}node16"{}}. ~\newline
+~\newline
+ See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.~\newline
+ See this \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ helpful guide on transitioning to ESM}} from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}}
+\end{DoxyImportant}
+\hypertarget{README.md_autotoc_md5161}{}\doxysubsubsection{\texorpdfstring{For OAuth Apps}{For OAuth Apps}}\label{README.md_autotoc_md5161}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ auth\ =\ createOAuthDeviceAuth(\{}
+\DoxyCodeLine{\ \ clientType:\ "{}oauth-\/app"{},}
+\DoxyCodeLine{\ \ clientId:\ "{}1234567890abcdef1234"{},}
+\DoxyCodeLine{\ \ scopes:\ ["{}public\_repo"{}],}
+\DoxyCodeLine{\ \ onVerification(verification)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ verification\ example}
+\DoxyCodeLine{\ \ \ \ //\ \{}
+\DoxyCodeLine{\ \ \ \ //\ \ \ device\_code:\ "{}3584d83530557fdd1f46af8289938c8ef79f9dc5"{},}
+\DoxyCodeLine{\ \ \ \ //\ \ \ user\_code:\ "{}WDJB-\/MJHT"{},}
+\DoxyCodeLine{\ \ \ \ //\ \ \ verification\_uri:\ "{}https://github.com/login/device"{},}
+\DoxyCodeLine{\ \ \ \ //\ \ \ expires\_in:\ 900,}
+\DoxyCodeLine{\ \ \ \ //\ \ \ interval:\ 5,}
+\DoxyCodeLine{\ \ \ \ //\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log("{}Open\ \%s"{},\ verification.verification\_uri);}
+\DoxyCodeLine{\ \ \ \ console.log("{}Enter\ code:\ \%s"{},\ verification.user\_code);}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tokenAuthentication\ =\ await\ auth(\{}
+\DoxyCodeLine{\ \ type:\ "{}oauth"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ resolves\ with}
+\DoxyCodeLine{//\ \{}
+\DoxyCodeLine{//\ \ \ type:\ "{}token"{},}
+\DoxyCodeLine{//\ \ \ tokenType:\ "{}oauth"{},}
+\DoxyCodeLine{//\ \ \ clientType:\ "{}oauth-\/app"{},}
+\DoxyCodeLine{//\ \ \ clientId:\ "{}1234567890abcdef1234"{},}
+\DoxyCodeLine{//\ \ \ token:\ "{}..."{},\ /*\ the\ created\ oauth\ token\ */}
+\DoxyCodeLine{//\ \ \ scopes:\ []\ /*\ depend\ on\ request\ scopes\ by\ OAuth\ app\ */}
+\DoxyCodeLine{//\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5162}{}\doxysubsubsection{\texorpdfstring{For Git\+Hub Apps}{For Git\+Hub Apps}}\label{README.md_autotoc_md5162}
+Git\+Hub Apps do not support {\ttfamily scopes}. Client IDs of Git\+Hub Apps have a {\ttfamily lv1.} prefix. If the Git\+Hub App has expiring user tokens enabled, the resulting {\ttfamily authentication} object has extra properties related to expiration and refreshing the token.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ auth\ =\ createOAuthDeviceAuth(\{}
+\DoxyCodeLine{\ \ clientType:\ "{}github-\/app"{},}
+\DoxyCodeLine{\ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{\ \ onVerification(verification)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ verification\ example}
+\DoxyCodeLine{\ \ \ \ //\ \{}
+\DoxyCodeLine{\ \ \ \ //\ \ \ device\_code:\ "{}3584d83530557fdd1f46af8289938c8ef79f9dc5"{},}
+\DoxyCodeLine{\ \ \ \ //\ \ \ user\_code:\ "{}WDJB-\/MJHT"{},}
+\DoxyCodeLine{\ \ \ \ //\ \ \ verification\_uri:\ "{}https://github.com/login/device"{},}
+\DoxyCodeLine{\ \ \ \ //\ \ \ expires\_in:\ 900,}
+\DoxyCodeLine{\ \ \ \ //\ \ \ interval:\ 5,}
+\DoxyCodeLine{\ \ \ \ //\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log("{}Open\ \%s"{},\ verification.verification\_uri);}
+\DoxyCodeLine{\ \ \ \ console.log("{}Enter\ code:\ \%s"{},\ verification.user\_code);}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tokenAuthentication\ =\ await\ auth(\{}
+\DoxyCodeLine{\ \ type:\ "{}oauth"{},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ resolves\ with}
+\DoxyCodeLine{//\ \{}
+\DoxyCodeLine{//\ \ \ type:\ "{}token"{},}
+\DoxyCodeLine{//\ \ \ tokenType:\ "{}oauth"{},}
+\DoxyCodeLine{//\ \ \ clientType:\ "{}github-\/app"{},}
+\DoxyCodeLine{//\ \ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{//\ \ \ token:\ "{}..."{},\ /*\ the\ created\ oauth\ token\ */}
+\DoxyCodeLine{//\ \}}
+\DoxyCodeLine{//\ or\ if\ expiring\ user\ tokens\ are\ enabled}
+\DoxyCodeLine{//\ \{}
+\DoxyCodeLine{//\ \ \ type:\ "{}token"{},}
+\DoxyCodeLine{//\ \ \ tokenType:\ "{}oauth"{},}
+\DoxyCodeLine{//\ \ \ clientType:\ "{}github-\/app"{},}
+\DoxyCodeLine{//\ \ \ clientId:\ "{}lv1.1234567890abcdef"{},}
+\DoxyCodeLine{//\ \ \ token:\ "{}..."{},\ /*\ the\ created\ oauth\ token\ */}
+\DoxyCodeLine{//\ \ \ refreshToken:\ "{}..."{},}
+\DoxyCodeLine{//\ \ \ expiresAt:\ "{}2022-\/01-\/01T08:00:0.000Z"{},}
+\DoxyCodeLine{//\ \ \ refreshTokenExpiresAt:\ "{}2021-\/07-\/01T00:00:0.000Z"{},}
+\DoxyCodeLine{//\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5163}{}\doxysubsection{\texorpdfstring{{\ttfamily create\+OAuth\+Device\+Auth(options)}}{{\ttfamily create\+OAuth\+Device\+Auth(options)}}}\label{README.md_autotoc_md5163}
+The {\ttfamily create\+OAuth\+Device\+Auth} method accepts a single {\ttfamily options} parameter
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required}}. Find your OAuth app’s {\ttfamily Client ID} in your account’s developer settings.   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily on\+Verification}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily function}  }&{\bfseries{Required}}. A function that is called once the device and user codes were retrieved
+
+The {\ttfamily on\+Verification()} callback can be used to pause until the user completes step 2, which might result in a better user experience.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ auth\ =\ createOAuthDeviceAuth(\{}
+\DoxyCodeLine{\ \ clientId:\ "{}1234567890abcdef1234"{},}
+\DoxyCodeLine{\ \ onVerification(verification)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log("{}Open\ \%s"{},\ verification.verification\_uri);}
+\DoxyCodeLine{\ \ \ \ console.log("{}Enter\ code:\ \%s"{},\ verification.user\_code);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ await\ prompt("{}press\ enter\ when\ you\ are\ ready\ to\ continue"{});}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&
+
+Must be either {\ttfamily oauth-\/app} or {\ttfamily github-\/app}. Defaults to {\ttfamily oauth-\/app}.
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily request}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily function}  }&You can pass in your own \href{https://github.com/octokit/request.js}{\texttt{ {\ttfamily @octokit/request}}} instance. For usage with enterprise, set {\ttfamily base\+Url} to the API root endpoint. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ request\ \}\ from\ "{}@octokit/request"{};}
+\DoxyCodeLine{createOAuthDeviceAuth(\{}
+\DoxyCodeLine{\ \ clientId:\ "{}1234567890abcdef1234"{},}
+\DoxyCodeLine{\ \ clientSecret:\ "{}secret"{},}
+\DoxyCodeLine{\ \ request:\ request.defaults(\{}
+\DoxyCodeLine{\ \ \ \ baseUrl:\ "{}https://ghe.my-\/company.com/api/v3"{},}
+\DoxyCodeLine{\ \ \}),}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily scopes}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily array of strings}  }&
+
+Only relevant if {\ttfamily client\+Type} is set to {\ttfamily "{}oauth-\/app"{}}.
+
+Array of scope names enabled for the token. Defaults to {\ttfamily \mbox{[}\mbox{]}}. See \href{https://docs.github.com/en/developers/apps/scopes-for-oauth-apps\#available-scopes}{\texttt{ available scopes}}.
+
+\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5164}{}\doxysubsection{\texorpdfstring{{\ttfamily auth(options)}}{{\ttfamily auth(options)}}}\label{README.md_autotoc_md5164}
+The async {\ttfamily auth()} method returned by {\ttfamily create\+OAuth\+Device\+Auth(options)} accepts the following options
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\bfseries{Required.}} Must be set to {\ttfamily "{}oauth"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily scopes}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily array of strings}  }&
+
+Only relevant if the {\ttfamily client\+Type} strategy options was set to {\ttfamily "{}oauth-\/app"{}}
+
+Array of scope names enabled for the token. Defaults to what was set in the strategy options. See \href{https://docs.github.com/en/developers/apps/scopes-for-oauth-apps\#available-scopes}{\texttt{ available scopes}}
+
+\\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily refresh}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily boolean}  }&
+
+Defaults to {\ttfamily false}. When set to {\ttfamily false}, calling {\ttfamily auth(options)} will resolve with a token that was previously created for the same scopes if it exists. If set to {\ttfamily true} a new token will always be created.
+
+\\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5165}{}\doxysubsection{\texorpdfstring{Authentication object}{Authentication object}}\label{README.md_autotoc_md5165}
+The async {\ttfamily auth(options)} method resolves to one of three possible objects
+
+
+\begin{DoxyEnumerate}
+\item OAuth APP user authentication
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Git\+Hub APP user authentication with expiring tokens disabled
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Git\+Hub APP user authentication with expiring tokens enabled
+\end{DoxyEnumerate}
+
+The differences are
+
+
+\begin{DoxyEnumerate}
+\item {\ttfamily scopes} is only present for OAuth Apps
+\item {\ttfamily refresh\+Token}, {\ttfamily expires\+At}, {\ttfamily refresh\+Token\+Expires\+At} are only present for Git\+Hub Apps, and only if token expiration is enabled
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md5166}{}\doxysubsubsection{\texorpdfstring{OAuth APP user authentication}{OAuth APP user authentication}}\label{README.md_autotoc_md5166}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}token"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}oauth"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}github-\/app"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The app\textquotesingle{}s {\ttfamily Client ID}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The personal access token   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily scopes}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily array of strings}  }&array of scope names enabled for the token    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5167}{}\doxysubsubsection{\texorpdfstring{Git\+Hub APP user authentication with expiring tokens disabled}{Git\+Hub APP user authentication with expiring tokens disabled}}\label{README.md_autotoc_md5167}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}token"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}oauth"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}github-\/app"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The app\textquotesingle{}s {\ttfamily Client ID}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The personal access token    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5168}{}\doxysubsubsection{\texorpdfstring{Git\+Hub APP user authentication with expiring tokens enabled}{Git\+Hub APP user authentication with expiring tokens enabled}}\label{README.md_autotoc_md5168}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ name  }&\cellcolor{\tableheadbgcolor}\textbf{ type  }&\cellcolor{\tableheadbgcolor}\textbf{ description     }\\\cline{1-3}
+\endhead
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}token"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}oauth"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Type}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&{\ttfamily "{}github-\/app"{}}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily client\+Id}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The app\textquotesingle{}s {\ttfamily Client ID}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The user access token   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily refresh\+Token}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&The refresh token   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily expires\+At}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&Date timestamp in \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString}{\texttt{ ISO 8601}} standard. Example\+: {\ttfamily 2022-\/01-\/01T08\+:00\+:0.\+000Z}   \\\cline{1-3}
+\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily refresh\+Token\+Expires\+At}  }&\cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily string}  }&Date timestamp in \href{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString}{\texttt{ ISO 8601}} standard. Example\+: {\ttfamily 2021-\/07-\/01T00\+:00\+:0.\+000Z}    \\\cline{1-3}
+\end{longtabu}
+\hypertarget{README.md_autotoc_md5169}{}\doxysubsection{\texorpdfstring{{\ttfamily auth.\+hook(request, route, parameters)} or {\ttfamily auth.\+hook(request, options)}}{{\ttfamily auth.\+hook(request, route, parameters)} or {\ttfamily auth.\+hook(request, options)}}}\label{README.md_autotoc_md5169}
+{\ttfamily auth.\+hook()} hooks directly into the request life cycle. It amends the request to authenticate correctly based on the request URL.
+
+The {\ttfamily request} option is an instance of \href{https://github.com/octokit/request.js\#readme}{\texttt{ {\ttfamily @octokit/request}}}. The {\ttfamily route}/{\ttfamily options} parameters are the same as for the \href{https://github.com/octokit/request.js\#request}{\texttt{ {\ttfamily request()} method}}.
+
+{\ttfamily auth.\+hook()} can be called directly to send an authenticated request
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ data:\ user\ \}\ =\ await\ auth.hook(request,\ "{}GET\ /user"{});}
+
+\end{DoxyCode}
+
+
+Or it can be passed as option to \href{https://github.com/octokit/request.js\#request}{\texttt{ {\ttfamily request()}}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ requestWithAuth\ =\ request.defaults(\{}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ hook:\ auth.hook,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ data:\ user\ \}\ =\ await\ requestWithAuth("{}GET\ /user"{});}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5170}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{README.md_autotoc_md5170}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ OAuthAppStrategyOptions,}
+\DoxyCodeLine{\ \ OAuthAppAuthOptions,}
+\DoxyCodeLine{\ \ OAuthAppAuthentication,}
+\DoxyCodeLine{\ \ GitHubAppStrategyOptions,}
+\DoxyCodeLine{\ \ GitHubAppAuthOptions,}
+\DoxyCodeLine{\ \ GitHubAppAuthentication,}
+\DoxyCodeLine{\ \ GitHubAppAuthenticationWithExpiration,}
+\DoxyCodeLine{\}\ from\ "{}@octokit/auth-\/oauth-\/device"{};}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5171}{}\doxysubsection{\texorpdfstring{How it works}{How it works}}\label{README.md_autotoc_md5171}
+Git\+Hub\textquotesingle{}s OAuth Device flow is different from the web flow in two ways
+
+
+\begin{DoxyEnumerate}
+\item It does not require a URL redirect, which makes it great for devices and CLI apps
+\item It does not require the OAuth client secret, which means there is no user-\/owned server component required.
+\end{DoxyEnumerate}
+
+The flow has 3 parts (see \href{https://docs.github.com/en/developers/apps/authorizing-oauth-apps\#device-flow}{\texttt{ Git\+Hub documentation}})
+
+
+\begin{DoxyEnumerate}
+\item {\ttfamily @octokit/auth-\/oauth-\/device} requests a device and user code
+\item Then the user has to open \href{https://github.com/login/device}{\texttt{ https\+://github.\+com/login/device}} (or it\textquotesingle{}s Git\+Hub Enterprise Server equivalent) and enter the user code
+\item While the user enters the code, {\ttfamily @octokit/auth-\/oauth-\/device} is sending requests in the background to retrieve the OAuth access token. Once the user completed step 2, the request will succeed and the token will be returned
+\end{DoxyEnumerate}\hypertarget{README.md_autotoc_md5172}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{README.md_autotoc_md5172}
+See \doxylink{zod-to-json-schema_2_c_o_n_t_r_i_b_u_t_i_n_g_8md}{CONTRIBUTING.md}\hypertarget{README.md_autotoc_md5173}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md5173}
+\mbox{[}MIT\mbox{]}(LICENSE) 

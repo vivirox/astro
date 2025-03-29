@@ -1,0 +1,213 @@
+\doxysection{node\+\_\+modules/hast-\/util-\/from-\/parse5 Directory Reference}
+\hypertarget{dir_aba3280c6009eaf992588c7939f2025c}{}\label{dir_aba3280c6009eaf992588c7939f2025c}\index{node\_modules/hast-\/util-\/from-\/parse5 Directory Reference@{node\_modules/hast-\/util-\/from-\/parse5 Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_9b5d0bae923ed414e7d27659c8e8fe2e}{node\+\_\+modules}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/syntax-tree/hast-util-from-parse5/actions}{\texttt{ }} \href{https://codecov.io/github/syntax-tree/hast-util-from-parse5}{\texttt{ }} \href{https://www.npmjs.com/package/hast-util-from-parse5}{\texttt{ }} \href{https://bundlejs.com/?q=hast-util-from-parse5}{\texttt{ }}
+
+\href{https://github.com/syntax-tree/hast}{\texttt{ hast}} utility to transform from the \href{https://github.com/inikulin/parse5}{\texttt{ {\ttfamily parse5}}} AST.\hypertarget{readme.md_autotoc_md16675}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md16675}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}from\+Parse5(tree\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\item \`{}\+Space\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16676}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md16676}
+This package is a utility that can turn a parse5 tree into a hast tree.\hypertarget{readme.md_autotoc_md16677}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md16677}
+You can use this package when using {\ttfamily parse5} as an HTML parser and wanting to work with hast.
+
+The utility \href{https://github.com/syntax-tree/hast-util-to-parse5}{\texttt{ {\ttfamily hast-\/util-\/to-\/parse5}}} does the inverse of this utility. It generates {\ttfamily parse5}s AST again.
+
+The utility \href{https://github.com/syntax-tree/hast-util-from-html}{\texttt{ {\ttfamily hast-\/util-\/from-\/html}}} wraps this utility and {\ttfamily parse5} to both parse HTML and generate hast from it.\hypertarget{readme.md_autotoc_md16678}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md16678}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ hast-\/util-\/from-\/parse5}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{fromParse5\}\ from\ "{}https://esm.sh/hast-\/util-\/from-\/parse5@8"{}}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{fromParse5\}\ from\ "{}https://esm.sh/hast-\/util-\/from-\/parse5@8?bundle"{}}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16679}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md16679}
+Say our document {\ttfamily example.\+html} contains\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<!doctype\ html><title>Hello!</title><h1\ id="{}world"{}>World!<!-\/-\/after-\/-\/>}
+
+\end{DoxyCode}
+
+
+…and our module {\ttfamily example.\+js} looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{fromParse5\}\ from\ 'hast-\/util-\/from-\/parse5'}
+\DoxyCodeLine{import\ \{parse\}\ from\ 'parse5'}
+\DoxyCodeLine{import\ \{read\}\ from\ 'to-\/vfile'}
+\DoxyCodeLine{import\ \{inspect\}\ from\ 'unist-\/util-\/inspect'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ read('example.html')}
+\DoxyCodeLine{const\ p5ast\ =\ parse(String(file),\ \{sourceCodeLocationInfo:\ true\})}
+\DoxyCodeLine{const\ hast\ =\ fromParse5(p5ast,\ \{file\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(inspect(hast))}
+
+\end{DoxyCode}
+
+
+…now running {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{root[2]\ (1:1-\/2:1,\ 0-\/70)}
+\DoxyCodeLine{│\ data:\ \{"{}quirksMode"{}:false\}}
+\DoxyCodeLine{├─0\ doctype\ (1:1-\/1:16,\ 0-\/15)}
+\DoxyCodeLine{└─1\ element<html>[2]}
+\DoxyCodeLine{\ \ \ \ │\ properties:\ \{\}}
+\DoxyCodeLine{\ \ \ \ ├─0\ element<head>[1]}
+\DoxyCodeLine{\ \ \ \ │\ \ \ │\ properties:\ \{\}}
+\DoxyCodeLine{\ \ \ \ │\ \ \ └─0\ element<title>[1]\ (1:16-\/1:37,\ 15-\/36)}
+\DoxyCodeLine{\ \ \ \ │\ \ \ \ \ \ \ │\ properties:\ \{\}}
+\DoxyCodeLine{\ \ \ \ │\ \ \ \ \ \ \ └─0\ text\ "{}Hello!"{}\ (1:23-\/1:29,\ 22-\/28)}
+\DoxyCodeLine{\ \ \ \ └─1\ element<body>[1]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ │\ properties:\ \{\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ └─0\ element<h1>[3]\ (1:37-\/2:1,\ 36-\/70)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ │\ properties:\ \{"{}id"{}:"{}world"{}\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ├─0\ text\ "{}World!"{}\ (1:52-\/1:58,\ 51-\/57)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ├─1\ comment\ "{}after"{}\ (1:58-\/1:70,\ 57-\/69)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ └─2\ text\ "{}\(\backslash\)n"{}\ (1:70-\/2:1,\ 69-\/70)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16680}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md16680}
+This package exports the identifier \`{}from\+Parse5\`{}. There is no default export.\hypertarget{readme.md_autotoc_md16681}{}\doxysubsubsection{\texorpdfstring{{\ttfamily from\+Parse5(tree\mbox{[}, options\mbox{]})}}{{\ttfamily from\+Parse5(tree\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md16681}
+Transform a {\ttfamily parse5} AST to hast.\hypertarget{readme.md_autotoc_md16682}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md16682}
+
+\begin{DoxyItemize}
+\item {\ttfamily tree} (\href{https://github.com/inikulin/parse5/blob/master/packages/parse5/lib/tree-adapters/default.ts}{\texttt{ {\ttfamily Parse5\+Node}}}) — {\ttfamily parse5} tree to transform
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16683}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md16683}
+hast tree (\href{https://github.com/syntax-tree/hast\#nodes}{\texttt{ {\ttfamily Hast\+Node}}}).\hypertarget{readme.md_autotoc_md16684}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md16684}
+Configuration (Type\+Script type).\hypertarget{readme.md_autotoc_md16685}{}\doxysubsubsubsubsection{\texorpdfstring{Fields}{Fields}}\label{readme.md_autotoc_md16685}
+\hypertarget{readme.md_autotoc_md16686}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily file}}{{\ttfamily file}}}\label{readme.md_autotoc_md16686}
+File used to add positional info to nodes (\href{https://github.com/vfile/vfile}{\texttt{ {\ttfamily VFile}}}, optional).
+
+If given, the file should represent the original HTML source.\hypertarget{readme.md_autotoc_md16687}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily space}}{{\ttfamily space}}}\label{readme.md_autotoc_md16687}
+Which space the document is in (\`{}\+Space\`{}, default\+: `\textquotesingle{}html'\`{}).
+
+When an {\ttfamily \texorpdfstring{$<$}{<}svg\texorpdfstring{$>$}{>}} element is found in the HTML space, this package already automatically switches to and from the SVG space when entering and exiting it.\hypertarget{readme.md_autotoc_md16688}{}\doxysubsubsubsubsubsection{\texorpdfstring{{\ttfamily verbose}}{{\ttfamily verbose}}}\label{readme.md_autotoc_md16688}
+Whether to add extra positional info about starting tags, closing tags, and attributes to elements ({\ttfamily boolean}, default\+: {\ttfamily false}).
+
+\begin{quote}
+👉 {\bfseries{Note}}\+: only used when {\ttfamily file} is given. \end{quote}
+
+
+For the following HTML\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<img\ src="{}http://example.com/fav.ico"{}\ alt="{}foo"{}\ title="{}bar"{}>}
+
+\end{DoxyCode}
+
+
+The verbose info would looks as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ type:\ 'element',}
+\DoxyCodeLine{\ \ tagName:\ 'img',}
+\DoxyCodeLine{\ \ properties:\ \{src:\ 'http://example.com/fav.ico',\ alt:\ 'foo',\ title:\ 'bar'\},}
+\DoxyCodeLine{\ \ children:\ [],}
+\DoxyCodeLine{\ \ data:\ \{}
+\DoxyCodeLine{\ \ \ \ position:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ opening:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ start:\ \{line:\ 1,\ column:\ 1,\ offset:\ 0\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ end:\ \{line:\ 1,\ column:\ 61,\ offset:\ 60\}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ closing:\ null,}
+\DoxyCodeLine{\ \ \ \ \ \ properties:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ src:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ start:\ \{line:\ 1,\ column:\ 6,\ offset:\ 5\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ end:\ \{line:\ 1,\ column:\ 38,\ offset:\ 37\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ alt:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ start:\ \{line:\ 1,\ column:\ 39,\ offset:\ 38\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ end:\ \{line:\ 1,\ column:\ 48,\ offset:\ 47\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ title:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ start:\ \{line:\ 1,\ column:\ 49,\ offset:\ 48\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ end:\ \{line:\ 1,\ column:\ 60,\ offset:\ 59\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ position:\ \{}
+\DoxyCodeLine{\ \ \ \ start:\ \{line:\ 1,\ column:\ 1,\ offset:\ 0\},}
+\DoxyCodeLine{\ \ \ \ end:\ \{line:\ 1,\ column:\ 61,\ offset:\ 60\}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16689}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Space}}{{\ttfamily Space}}}\label{readme.md_autotoc_md16689}
+Namespace (Type\+Script type).\hypertarget{readme.md_autotoc_md16690}{}\doxysubsubsubsubsubsection{\texorpdfstring{Type}{Type}}\label{readme.md_autotoc_md16690}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{type\ Space\ =\ 'html'\ |\ 'svg'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16691}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md16691}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional types \doxylink{README.md_options}{\`{}\+Options\`{}} and \`{}\+Space\`{}.\hypertarget{readme.md_autotoc_md16692}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md16692}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily hast-\/util-\/from-\/parse5@8}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md16693}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md16693}
+Use of {\ttfamily hast-\/util-\/from-\/parse5} can open you up to a \href{https://en.wikipedia.org/wiki/Cross-site_scripting}{\texttt{ cross-\/site scripting (XSS)}} attack if Parse5’s AST is unsafe.\hypertarget{readme.md_autotoc_md16694}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md16694}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/syntax-tree/hast-util-to-parse5}{\texttt{ {\ttfamily hast-\/util-\/to-\/parse5}}} — transform hast to Parse5’s AST
+\item \href{https://github.com/syntax-tree/hast-util-to-nlcst}{\texttt{ {\ttfamily hast-\/util-\/to-\/nlcst}}} — transform hast to nlcst
+\item \href{https://github.com/syntax-tree/hast-util-to-mdast}{\texttt{ {\ttfamily hast-\/util-\/to-\/mdast}}} — transform hast to mdast
+\item \href{https://github.com/syntax-tree/hast-util-to-xast}{\texttt{ {\ttfamily hast-\/util-\/to-\/xast}}} — transform hast to xast
+\item \href{https://github.com/syntax-tree/mdast-util-to-hast}{\texttt{ {\ttfamily mdast-\/util-\/to-\/hast}}} — transform mdast to hast
+\item \href{https://github.com/syntax-tree/mdast-util-to-nlcst}{\texttt{ {\ttfamily mdast-\/util-\/to-\/nlcst}}} — transform mdast to nlcst
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md16695}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md16695}
+See \href{https://github.com/syntax-tree/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/syntax-tree/.github}{\texttt{ {\ttfamily syntax-\/tree/.github}}} for ways to get started. See \href{https://github.com/syntax-tree/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md16696}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md16696}
+\mbox{[}MIT\mbox{]}\mbox{[}file-\/license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

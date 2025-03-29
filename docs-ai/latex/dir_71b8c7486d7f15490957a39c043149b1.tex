@@ -1,0 +1,473 @@
+\doxysection{node\+\_\+modules/resolve.exports Directory Reference}
+\hypertarget{dir_71b8c7486d7f15490957a39c043149b1}{}\label{dir_71b8c7486d7f15490957a39c043149b1}\index{node\_modules/resolve.exports Directory Reference@{node\_modules/resolve.exports Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+A tiny (952b), correct, general-\/purpose, and configurable {\ttfamily "{}exports"{}} and {\ttfamily "{}imports"{}} resolver without file-\/system reliance \end{quote}
+
+
+{\itshape {\bfseries{Why?}}}
+
+Hopefully, this module may serve as a reference point (and/or be used directly) so that the varying tools and bundlers within the ecosystem can share a common approach with one another {\bfseries{as well as}} with the native Node.\+js implementation.
+
+With the push for ESM, we must be {\itshape very} careful and avoid fragmentation. If we, as a community, begin propagating different {\itshape dialects} of the resolution algorithm, then we\textquotesingle{}re headed for deep trouble. It will make supporting (and using) {\ttfamily "{}exports"{}} nearly impossible, which may force its abandonment and along with it, its benefits.
+
+Let\textquotesingle{}s have nice things.\hypertarget{readme.md_autotoc_md29412}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md29412}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ resolve.exports}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29413}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md29413}
+\begin{quote}
+Please see \href{/test}{\texttt{ {\ttfamily /test/}}} for examples. \end{quote}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ resolve\ from\ 'resolve.exports';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ package.json\ contents}
+\DoxyCodeLine{const\ pkg\ =\ \{}
+\DoxyCodeLine{\ \ "{}name"{}:\ "{}foobar"{},}
+\DoxyCodeLine{\ \ "{}module"{}:\ "{}dist/module.mjs"{},}
+\DoxyCodeLine{\ \ "{}main"{}:\ "{}dist/require.js"{},}
+\DoxyCodeLine{\ \ "{}imports"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}\#hash"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}import"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}browser"{}:\ "{}./hash/web.mjs"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}node"{}:\ "{}./hash/node.mjs"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}default"{}:\ "{}./hash/detect.js"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}exports"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}."{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}import"{}:\ "{}./dist/module.mjs"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}require"{}:\ "{}./dist/require.js"{}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ "{}./lite"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}worker"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}browser"{}:\ "{}./lite/worker.browser.js"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}node"{}:\ "{}./lite/worker.node.js"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}import"{}:\ "{}./lite/module.mjs"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}require"{}:\ "{}./lite/require.js"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ -\/-\/-\/}
+\DoxyCodeLine{//\ Exports}
+\DoxyCodeLine{//\ -\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ entry:\ "{}foobar"{}\ ===\ "{}."{}\ ===\ default}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{},\ "{}import"{},\ "{}node"{}]}
+\DoxyCodeLine{resolve.exports(pkg);}
+\DoxyCodeLine{resolve.exports(pkg,\ '.');}
+\DoxyCodeLine{resolve.exports(pkg,\ 'foobar');}
+\DoxyCodeLine{//=>\ ["{}./dist/module.mjs"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ entry:\ "{}foobar/lite"{}\ ===\ "{}./lite"{}}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{},\ "{}import"{},\ "{}node"{}]}
+\DoxyCodeLine{resolve.exports(pkg,\ 'foobar/lite');}
+\DoxyCodeLine{resolve.exports(pkg,\ './lite');}
+\DoxyCodeLine{//=>\ ["{}./lite/module.mjs"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Enable\ \`{}require`\ condition}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{},\ "{}require"{},\ "{}node"{}]}
+\DoxyCodeLine{resolve.exports(pkg,\ 'foobar',\ \{\ require:\ true\ \});\ //=>\ ["{}./dist/require.js"{}]}
+\DoxyCodeLine{resolve.exports(pkg,\ './lite',\ \{\ require:\ true\ \});\ //=>\ ["{}./lite/require.js"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Throws\ "{}Missing\ <entry>\ specifier\ in\ <name>\ package"{}\ Error}
+\DoxyCodeLine{resolve.exports(pkg,\ 'foobar/hello');}
+\DoxyCodeLine{resolve.exports(pkg,\ './hello/world');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Add\ custom\ condition(s)}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{},\ "{}worker"{},\ "{}import"{},\ "{}node"{}]}
+\DoxyCodeLine{resolve.exports(pkg,\ 'foobar/lite',\ \{}
+\DoxyCodeLine{\ \ conditions:\ ['worker']}
+\DoxyCodeLine{\});\ //=>\ ["{}./lite/worker.node.js"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Toggle\ "{}browser"{}\ condition}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{},\ "{}worker"{},\ "{}import"{},\ "{}browser"{}]}
+\DoxyCodeLine{resolve.exports(pkg,\ 'foobar/lite',\ \{}
+\DoxyCodeLine{\ \ conditions:\ ['worker'],}
+\DoxyCodeLine{\ \ browser:\ true}
+\DoxyCodeLine{\});\ //=>\ ["{}./lite/worker.browser.js"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Disable\ non-\/"{}default"{}\ condition\ activate}
+\DoxyCodeLine{//\ NOTE:\ breaks\ from\ Node.js\ default\ behavior}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{},\ "{}custom"{}]}
+\DoxyCodeLine{resolve.exports(pkg,\ 'foobar/lite',\ \{}
+\DoxyCodeLine{\ \ conditions:\ ['custom'],}
+\DoxyCodeLine{\ \ unsafe:\ true,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//=>\ Error:\ No\ known\ conditions\ for\ "{}./lite"{}\ specifier\ in\ "{}foobar"{}\ package}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ -\/-\/-\/}
+\DoxyCodeLine{//\ Imports}
+\DoxyCodeLine{//\ -\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{},\ "{}import"{},\ "{}node"{}]}
+\DoxyCodeLine{resolve.imports(pkg,\ '\#hash');}
+\DoxyCodeLine{resolve.imports(pkg,\ 'foobar/\#hash');}
+\DoxyCodeLine{//=>\ ["{}./hash/node.mjs"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{},\ "{}import"{},\ "{}browser"{}]}
+\DoxyCodeLine{resolve.imports(pkg,\ '\#hash',\ \{\ browser:\ true\ \});}
+\DoxyCodeLine{resolve.imports(pkg,\ 'foobar/\#hash');}
+\DoxyCodeLine{//=>\ ["{}./hash/web.mjs"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ conditions:\ ["{}default"{}]}
+\DoxyCodeLine{resolve.imports(pkg,\ '\#hash',\ \{\ unsafe:\ true\ \});}
+\DoxyCodeLine{resolve.imports(pkg,\ 'foobar/\#hash');}
+\DoxyCodeLine{//=>\ ["{}./hash/detect.mjs"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.imports(pkg,\ '\#hello/world');}
+\DoxyCodeLine{resolve.imports(pkg,\ 'foobar/\#hello/world');}
+\DoxyCodeLine{//=>\ Error:\ Missing\ "{}\#hello/world"{}\ specifier\ in\ "{}foobar"{}\ package}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ -\/-\/-\/}
+\DoxyCodeLine{//\ Legacy}
+\DoxyCodeLine{//\ -\/-\/-\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ prefer\ "{}module"{}\ >\ "{}main"{}\ (default)}
+\DoxyCodeLine{resolve.legacy(pkg);\ //=>\ "{}dist/module.mjs"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ customize\ fields\ order}
+\DoxyCodeLine{resolve.legacy(pkg,\ \{}
+\DoxyCodeLine{\ \ fields:\ ['main',\ 'module']}
+\DoxyCodeLine{\});\ //=>\ "{}dist/require.js"{}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29414}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md29414}
+The \`{}resolve()\`{}, \`{}exports()\`{}, and \`{}imports()\`{} functions share similar API signatures\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ function\ resolve(pkg:\ Package,\ entry?:\ string,\ options?:\ Options):\ string[]\ |\ undefined;}
+\DoxyCodeLine{export\ function\ exports(pkg:\ Package,\ entry?:\ string,\ options?:\ Options):\ string[]\ |\ undefined;}
+\DoxyCodeLine{export\ function\ imports(pkg:\ Package,\ target:\ string,\ options?:\ Options):\ string[]\ |\ undefined;}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \string^\ not\ optional!}
+
+\end{DoxyCode}
+
+
+All three\+:
+\begin{DoxyItemize}
+\item accept a {\ttfamily package.\+json} file\textquotesingle{}s contents as a JSON object
+\item accept a target/entry identifier
+\item may accept an \doxylink{README.md_options}{Options} object
+\item return {\ttfamily string\mbox{[}\mbox{]}}, {\ttfamily string}, or {\ttfamily undefined}
+\end{DoxyItemize}
+
+The only difference is that {\ttfamily imports()} must accept a target identifier as there can be no inferred default.
+
+See below for further API descriptions.
+
+\begin{quote}
+{\bfseries{Note\+:}} There is also a Legacy Resolver API \end{quote}
+
+
+\DoxyHorRuler{0}
+\hypertarget{readme.md_autotoc_md29416}{}\doxysubsubsection{\texorpdfstring{resolve(pkg, entry?, options?)}{resolve(pkg, entry?, options?)}}\label{readme.md_autotoc_md29416}
+Returns\+: {\ttfamily string\mbox{[}\mbox{]}} or {\ttfamily undefined}
+
+A convenience helper which automatically reroutes to \`{}exports()\`{} or \`{}imports()\`{} depending on the {\ttfamily entry} value.
+
+When unspecified, {\ttfamily entry} defaults to the {\ttfamily "{}."{}} identifier, which means that {\ttfamily exports()} will be invoked.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ r\ from\ 'resolve.exports';}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ pkg\ =\ \{}
+\DoxyCodeLine{\ \ name:\ 'foobar',}
+\DoxyCodeLine{\ \ //\ ...}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{r.resolve(pkg);}
+\DoxyCodeLine{//\string~>\ r.exports(pkg,\ '.');}
+\DoxyCodeLine{}
+\DoxyCodeLine{r.resolve(pkg,\ 'foobar');}
+\DoxyCodeLine{//\string~>\ r.exports(pkg,\ '.');}
+\DoxyCodeLine{}
+\DoxyCodeLine{r.resolve(pkg,\ 'foobar/subpath');}
+\DoxyCodeLine{//\string~>\ r.exports(pkg,\ './subpath');}
+\DoxyCodeLine{}
+\DoxyCodeLine{r.resolve(pkg,\ '\#hash/md5');}
+\DoxyCodeLine{//\string~>\ r.imports(pkg,\ '\#hash/md5');}
+\DoxyCodeLine{}
+\DoxyCodeLine{r.resolve(pkg,\ 'foobar/\#hash/md5');}
+\DoxyCodeLine{//\string~>\ r.imports(pkg,\ '\#hash/md5');}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29417}{}\doxysubsubsection{\texorpdfstring{exports(pkg, entry?, options?)}{exports(pkg, entry?, options?)}}\label{readme.md_autotoc_md29417}
+Returns\+: {\ttfamily string\mbox{[}\mbox{]}} or {\ttfamily undefined}
+
+Traverse the {\ttfamily "{}exports"{}} within the contents of a {\ttfamily package.\+json} file. ~\newline
+ If the contents {\itshape does not} contain an {\ttfamily "{}exports"{}} map, then {\ttfamily undefined} will be returned.
+
+Successful resolutions will always result in a {\ttfamily string} or {\ttfamily string\mbox{[}\mbox{]}} value. This will be the value of the resolved mapping itself – which means that the output is a relative file path.
+
+This function may throw an Error if\+:
+
+
+\begin{DoxyItemize}
+\item the requested {\ttfamily entry} cannot be resolved (aka, not defined in the {\ttfamily "{}exports"{}} map)
+\item an {\ttfamily entry} {\itshape is} defined but no known conditions were matched (see \`{}options.conditions\`{})
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29418}{}\doxysubsubsubsection{\texorpdfstring{pkg}{pkg}}\label{readme.md_autotoc_md29418}
+Type\+: {\ttfamily object} ~\newline
+ Required\+: {\ttfamily true}
+
+The {\ttfamily package.\+json} contents.\hypertarget{readme.md_autotoc_md29419}{}\doxysubsubsubsection{\texorpdfstring{entry}{entry}}\label{readme.md_autotoc_md29419}
+Type\+: {\ttfamily string} ~\newline
+ Required\+: {\ttfamily false} ~\newline
+ Default\+: {\ttfamily .} (aka, root)
+
+The desired target entry, or the original {\ttfamily import} path.
+
+When {\ttfamily entry} {\itshape is not} a relative path (aka, does not start with `'.\textquotesingle{}{\ttfamily ), then}entry{\ttfamily is given the}\textquotesingle{}./\textquotesingle{}\`{} prefix.
+
+When {\ttfamily entry} begins with the package name (determined via the {\ttfamily pkg.\+name} value), then {\ttfamily entry} is truncated and made relative.
+
+When {\ttfamily entry} is already relative, it is accepted as is.
+
+{\itshape {\bfseries{Examples}}}
+
+Assume we have a module named "{}foobar"{} and whose {\ttfamily pkg} contains {\ttfamily "{}name"{}\+: "{}foobar"{}}.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily entry} value   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ treated as   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ reason    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ {\ttfamily entry} value   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ treated as   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ reason    }\\\cline{1-3}
+\endhead
+{\ttfamily null} / {\ttfamily undefined}   &`'.\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} default \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}.\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}.\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} value was relative \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Odd"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}foobar\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}.\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} value was}pkg.\+name{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}foobar/lite\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}./lite\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} value had}pkg.\+name{\ttfamily prefix \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Odd"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}./lite\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}./lite\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} value was relative \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}/tr\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}tr class="{}markdown\+Table\+Row\+Even"{}\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}lite\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>}}\textquotesingle{}./lite\textquotesingle{}{\ttfamily \textbackslash{}ilinebr \texorpdfstring{$<$}{<}/td\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}td class="{}markdown\+Table\+Body\+None"{}\texorpdfstring{$>$}{>} value was not relative \& did not have}pkg.\+name\`{} prefix   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{readme.md_autotoc_md29420}{}\doxysubsubsection{\texorpdfstring{imports(pkg, target, options?)}{imports(pkg, target, options?)}}\label{readme.md_autotoc_md29420}
+Returns\+: {\ttfamily string\mbox{[}\mbox{]}} or {\ttfamily undefined}
+
+Traverse the {\ttfamily "{}imports"{}} within the contents of a {\ttfamily package.\+json} file. ~\newline
+ If the contents {\itshape does not} contain an {\ttfamily "{}imports"{}} map, then {\ttfamily undefined} will be returned.
+
+Successful resolutions will always result in a {\ttfamily string} or {\ttfamily string\mbox{[}\mbox{]}} value. This will be the value of the resolved mapping itself – which means that the output is a relative file path.
+
+This function may throw an Error if\+:
+
+
+\begin{DoxyItemize}
+\item the requested {\ttfamily target} cannot be resolved (aka, not defined in the {\ttfamily "{}imports"{}} map)
+\item an {\ttfamily target} {\itshape is} defined but no known conditions were matched (see \`{}options.conditions\`{})
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29421}{}\doxysubsubsubsection{\texorpdfstring{pkg}{pkg}}\label{readme.md_autotoc_md29421}
+Type\+: {\ttfamily object} ~\newline
+ Required\+: {\ttfamily true}
+
+The {\ttfamily package.\+json} contents.\hypertarget{readme.md_autotoc_md29422}{}\doxysubsubsubsection{\texorpdfstring{target}{target}}\label{readme.md_autotoc_md29422}
+Type\+: {\ttfamily string} ~\newline
+ Required\+: {\ttfamily true}
+
+The target import identifier; for example, {\ttfamily \#hash} or {\ttfamily \#hash/md5}.
+
+Import specifiers {\itshape must} begin with the {\ttfamily \#} character, as required by the resolution specification. However, if {\ttfamily target} begins with the package name (determined by the {\ttfamily pkg.\+name} value), then {\ttfamily resolve.\+exports} will trim it from the {\ttfamily target} identifier. For example, {\ttfamily "{}foobar/\#hash/md5"{}} will be treated as {\ttfamily "{}\#hash/md5"{}} for the {\ttfamily "{}foobar"{}} package.\hypertarget{readme.md_autotoc_md29423}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{readme.md_autotoc_md29423}
+The \`{}resolve()\`{}, \`{}imports()\`{}, and \`{}exports()\`{} functions share these options. All properties are optional and you are not required to pass an {\ttfamily options} argument.
+
+Collectively, the {\ttfamily options} are used to assemble a list of \href{https://nodejs.org/docs/latest-v18.x/api/packages.html\#conditional-exports}{\texttt{ conditions}} that should be activated while resolving your target(s).
+
+\begin{quote}
+{\bfseries{Note\+:}} Although the Node.\+js documentation primarily showcases conditions alongside {\ttfamily "{}exports"{}} usage, they also apply to {\ttfamily "{}imports"{}} maps too. {\itshape (\href{https://nodejs.org/docs/latest-v18.x/api/packages.html\#subpath-imports}{\texttt{ example}})} \end{quote}
+\hypertarget{readme.md_autotoc_md29424}{}\doxysubsubsubsection{\texorpdfstring{options.\+require}{options.\+require}}\label{readme.md_autotoc_md29424}
+Type\+: {\ttfamily boolean} ~\newline
+ Default\+: {\ttfamily false}
+
+When truthy, the {\ttfamily "{}require"{}} field is added to the list of allowed/known conditions. ~\newline
+ Otherwise the {\ttfamily "{}import"{}} field is added instead.\hypertarget{readme.md_autotoc_md29425}{}\doxysubsubsubsection{\texorpdfstring{options.\+browser}{options.\+browser}}\label{readme.md_autotoc_md29425}
+Type\+: {\ttfamily boolean} ~\newline
+ Default\+: {\ttfamily false}
+
+When truthy, the {\ttfamily "{}browser"{}} field is added to the list of allowed/known conditions. ~\newline
+ Otherwise the {\ttfamily "{}node"{}} field is added instead.\hypertarget{readme.md_autotoc_md29426}{}\doxysubsubsubsection{\texorpdfstring{options.\+conditions}{options.\+conditions}}\label{readme.md_autotoc_md29426}
+Type\+: {\ttfamily string\mbox{[}\mbox{]}} ~\newline
+ Default\+: {\ttfamily \mbox{[}\mbox{]}}
+
+A list of additional/custom conditions that should be accepted when seen.
+
+\begin{quote}
+{\bfseries{Important\+:}} The order specified within {\ttfamily options.\+conditions} does not matter. ~\newline
+The matching order/priority is {\bfseries{always}} determined by the {\ttfamily "{}exports"{}} map\textquotesingle{}s key order. \end{quote}
+
+
+For example, you may choose to accept a {\ttfamily "{}production"{}} condition in certain environments. Given the following {\ttfamily pkg} content\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ pkg\ =\ \{}
+\DoxyCodeLine{\ \ //\ package.json\ ...}
+\DoxyCodeLine{\ \ "{}exports"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}worker"{}:\ "{}./\$worker.js"{},}
+\DoxyCodeLine{\ \ \ \ "{}require"{}:\ "{}./\$require.js"{},}
+\DoxyCodeLine{\ \ \ \ "{}production"{}:\ "{}./\$production.js"{},}
+\DoxyCodeLine{\ \ \ \ "{}import"{}:\ "{}./\$import.mjs"{},}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.exports(pkg,\ '.');}
+\DoxyCodeLine{//\ Conditions:\ ["{}default"{},\ "{}import"{},\ "{}node"{}]}
+\DoxyCodeLine{//=>\ ["{}./\$import.mjs"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.exports(pkg,\ '.',\ \{}
+\DoxyCodeLine{\ \ conditions:\ ['production']}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ Conditions:\ ["{}default"{},\ "{}production"{},\ "{}import"{},\ "{}node"{}]}
+\DoxyCodeLine{//=>\ ["{}./\$production.js"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.exports(pkg,\ '.',\ \{}
+\DoxyCodeLine{\ \ conditions:\ ['production'],}
+\DoxyCodeLine{\ \ require:\ true,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ Conditions:\ ["{}default"{},\ "{}production"{},\ "{}require"{},\ "{}node"{}]}
+\DoxyCodeLine{//=>\ ["{}./\$require.js"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.exports(pkg,\ '.',\ \{}
+\DoxyCodeLine{\ \ conditions:\ ['production',\ 'worker'],}
+\DoxyCodeLine{\ \ require:\ true,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ Conditions:\ ["{}default"{},\ "{}production"{},\ "{}worker"{},\ "{}require"{},\ "{}node"{}]}
+\DoxyCodeLine{//=>\ ["{}./\$worker.js"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.exports(pkg,\ '.',\ \{}
+\DoxyCodeLine{\ \ conditions:\ ['production',\ 'worker']}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ Conditions:\ ["{}default"{},\ "{}production"{},\ "{}worker"{},\ "{}import"{},\ "{}node"{}]}
+\DoxyCodeLine{//=>\ ["{}./\$worker.js"{}]}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29427}{}\doxysubsubsubsection{\texorpdfstring{options.\+unsafe}{options.\+unsafe}}\label{readme.md_autotoc_md29427}
+Type\+: {\ttfamily boolean} ~\newline
+ Default\+: {\ttfamily false}
+
+\begin{quote}
+{\bfseries{Important\+:}} You probably do not want this option! ~\newline
+It will break out of Node\textquotesingle{}s default resolution conditions. \end{quote}
+
+
+When enabled, this option will ignore {\bfseries{all other options}} except \`{}options.conditions\`{}. This is because, when enabled, {\ttfamily options.\+unsafe} {\bfseries{does not}} assume or provide any default conditions except the {\ttfamily "{}default"{}} condition.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{resolve.exports(pkg,\ '.');}
+\DoxyCodeLine{//=>\ Conditions:\ ["{}default"{},\ "{}import"{},\ "{}node"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.exports(pkg,\ '.',\ \{\ unsafe:\ true\ \});}
+\DoxyCodeLine{//=>\ Conditions:\ ["{}default"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.exports(pkg,\ '.',\ \{\ unsafe:\ true,\ require:\ true,\ browser:\ true\ \});}
+\DoxyCodeLine{//=>\ Conditions:\ ["{}default"{}]}
+
+\end{DoxyCode}
+
+
+In other words, this means that trying to use {\ttfamily options.\+require} or {\ttfamily options.\+browser} alongside {\ttfamily options.\+unsafe} will have no effect. In order to enable these conditions, you must provide them manually into the {\ttfamily options.\+conditions} list\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{resolve.exports(pkg,\ '.',\ \{}
+\DoxyCodeLine{\ \ unsafe:\ true,}
+\DoxyCodeLine{\ \ conditions:\ ["{}require"{}]}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//=>\ Conditions:\ ["{}default"{},\ "{}require"{}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{resolve.exports(pkg,\ '.',\ \{}
+\DoxyCodeLine{\ \ unsafe:\ true,}
+\DoxyCodeLine{\ \ conditions:\ ["{}browser"{},\ "{}require"{},\ "{}custom123"{}]}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//=>\ Conditions:\ ["{}default"{},\ "{}browser"{},\ "{}require"{},\ "{}custom123"{}]}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29428}{}\doxysubsection{\texorpdfstring{Legacy Resolver}{Legacy Resolver}}\label{readme.md_autotoc_md29428}
+Also included is a "{}legacy"{} method for resolving non-\/{\ttfamily "{}exports"{}} package fields. This may be used as a fallback method when for when no {\ttfamily "{}exports"{}} mapping is defined. In other words, it\textquotesingle{}s completely optional (and tree-\/shakeable).\hypertarget{readme.md_autotoc_md29429}{}\doxysubsubsection{\texorpdfstring{legacy(pkg, options?)}{legacy(pkg, options?)}}\label{readme.md_autotoc_md29429}
+Returns\+: {\ttfamily string} or {\ttfamily undefined}
+
+You may customize the field priority via \`{}options.fields\`{}.
+
+When a field is found, its value is returned {\itshape as written}. ~\newline
+ When no fields were found, {\ttfamily undefined} is returned. If you wish to mimic Node.\+js behavior, you can assume this means `\textquotesingle{}index.\+js'\`{} – but this module does not make that assumption for you.\hypertarget{readme.md_autotoc_md29430}{}\doxysubsubsubsection{\texorpdfstring{options.\+browser}{options.\+browser}}\label{readme.md_autotoc_md29430}
+Type\+: {\ttfamily boolean} or {\ttfamily string} ~\newline
+ Default\+: {\ttfamily false}
+
+When truthy, ensures that the `\textquotesingle{}browser'{\ttfamily field is part of the acceptable}fields\`{} list.
+
+\begin{quote}
+{\bfseries{Important\+:}} If your custom \`{}options.fields\`{} value includes `\textquotesingle{}browser'{\ttfamily , then \+\_\+your\+\_\+ order is respected. \texorpdfstring{$<$}{<}br\texorpdfstring{$>$}{>}Otherwise, when truthy,}options.\+browser{\ttfamily will move}\textquotesingle{}browser\textquotesingle{}{\ttfamily to the front of the list, making it the top priority. \texorpdfstring{$<$}{<}/blockquote\texorpdfstring{$>$}{>}\textbackslash{}ilinebr When}true{\ttfamily and}"{}browser"{}{\ttfamily is an object, then}legacy(){\ttfamily will return the the entire}"{}browser"{}\`{} object.
+
+You may also pass a string value, which will be treated as an import/file path. When this is the case and {\ttfamily "{}browser"{}} is an object, then {\ttfamily legacy()} may return\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily false} – if the package author decided a file should be ignored; or
+\item your {\ttfamily options.\+browser} string value – but made relative, if not already
+\end{DoxyItemize}
+
+\begin{quote}
+See the \href{https://github.com/defunctzombie/package-browser-field-spec}{\texttt{ \`{}"{}browser"{} field specification}} for more information. \end{quote}
+
+
+\end{quote}
+\hypertarget{readme.md_autotoc_md29431}{}\doxysubsubsubsection{\texorpdfstring{options.\+fields}{options.\+fields}}\label{readme.md_autotoc_md29431}
+Type\+: {\ttfamily string\mbox{[}\mbox{]}} ~\newline
+ Default\+: `\mbox{[}\textquotesingle{}module', \textquotesingle{}main\textquotesingle{}\mbox{]}\`{}
+
+A list of fields to accept. The order of the array determines the priority/importance of each field, with the most important fields at the beginning of the list.
+
+By default, the {\ttfamily legacy()} method will accept any {\ttfamily "{}module"{}} and/or "{}main"{} fields if they are defined. However, if both fields are defined, then "{}module"{} will be returned.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ legacy\ \}\ from\ 'resolve.exports';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ package.json}
+\DoxyCodeLine{const\ pkg\ =\ \{}
+\DoxyCodeLine{\ \ "{}name"{}:\ "{}..."{},}
+\DoxyCodeLine{\ \ "{}worker"{}:\ "{}worker.js"{},}
+\DoxyCodeLine{\ \ "{}module"{}:\ "{}module.mjs"{},}
+\DoxyCodeLine{\ \ "{}browser"{}:\ "{}browser.js"{},}
+\DoxyCodeLine{\ \ "{}main"{}:\ "{}main.js"{},}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{legacy(pkg);}
+\DoxyCodeLine{//\ fields\ =\ [module,\ main]}
+\DoxyCodeLine{//=>\ "{}module.mjs"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{legacy(pkg,\ \{\ browser:\ true\ \});}
+\DoxyCodeLine{//\ fields\ =\ [browser,\ module,\ main]}
+\DoxyCodeLine{//=>\ "{}browser.mjs"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{legacy(pkg,\ \{}
+\DoxyCodeLine{\ \ fields:\ ['missing',\ 'worker',\ 'module',\ 'main']}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ fields\ =\ [missing,\ worker,\ module,\ main]}
+\DoxyCodeLine{//=>\ "{}worker.js"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{legacy(pkg,\ \{}
+\DoxyCodeLine{\ \ fields:\ ['missing',\ 'worker',\ 'module',\ 'main'],}
+\DoxyCodeLine{\ \ browser:\ true,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ fields\ =\ [browser,\ missing,\ worker,\ module,\ main]}
+\DoxyCodeLine{//=>\ "{}browser.js"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{legacy(pkg,\ \{}
+\DoxyCodeLine{\ \ fields:\ ['module',\ 'browser',\ 'main'],}
+\DoxyCodeLine{\ \ browser:\ true,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{//\ fields\ =\ [module,\ browser,\ main]}
+\DoxyCodeLine{//=>\ "{}module.mjs"{}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29432}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md29432}
+MIT © \href{https://lukeed.com}{\texttt{ Luke Edwards}} 

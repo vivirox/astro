@@ -1,0 +1,171 @@
+\doxysection{node\+\_\+modules/pako Directory Reference}
+\hypertarget{dir_d6ea7937af11125ffe31b4b251c41ae3}{}\label{dir_d6ea7937af11125ffe31b4b251c41ae3}\index{node\_modules/pako Directory Reference@{node\_modules/pako Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://travis-ci.org/nodeca/pako}{\texttt{ }} \href{https://www.npmjs.org/package/pako}{\texttt{ }}
+
+{\bfseries{Why pako is cool\+:}}
+
+
+\begin{DoxyItemize}
+\item Almost as fast in modern JS engines as C implementation (see benchmarks).
+\item Works in browsers, you can browserify any separate component.
+\item Chunking support for big blobs.
+\item Results are binary equal to well known \href{http://www.zlib.net/}{\texttt{ zlib}} (now v1.\+2.\+8 ported).
+\end{DoxyItemize}
+
+This project was done to understand how fast JS can be and is it necessary to develop native C modules for CPU-\/intensive tasks. Enjoy the result!
+
+{\bfseries{Famous projects, using pako\+:}}
+
+
+\begin{DoxyItemize}
+\item \href{http://browserify.org/}{\texttt{ browserify}} (via \href{https://github.com/devongovett/browserify-zlib}{\texttt{ browserify-\/zlib}})
+\item \href{http://stuk.github.io/jszip/}{\texttt{ JSZip}}
+\item \href{https://github.com/nodeca/mincer}{\texttt{ mincer}}
+\item \href{https://github.com/creationix/js-git}{\texttt{ JS-\/\+Git}} and \href{https://chrome.google.com/webstore/detail/tedit-development-environ/ooekdijbnbbjdfjocaiflnjgoohnblgf}{\texttt{ Tedit}} by \href{https://github.com/creationix}{\texttt{ @creatronix}}
+\end{DoxyItemize}
+
+{\bfseries{Benchmarks\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ v0.10.26,\ 1mb\ sample:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ deflate-\/dankogai\ x\ 4.73\ ops/sec\ ±0.82\%\ (15\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ deflate-\/gildas\ x\ 4.58\ ops/sec\ ±2.33\%\ (15\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ deflate-\/imaya\ x\ 3.22\ ops/sec\ ±3.95\%\ (12\ runs\ sampled)}
+\DoxyCodeLine{\ !\ deflate-\/pako\ x\ 6.99\ ops/sec\ ±0.51\%\ (21\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ deflate-\/pako-\/string\ x\ 5.89\ ops/sec\ ±0.77\%\ (18\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ deflate-\/pako-\/untyped\ x\ 4.39\ ops/sec\ ±1.58\%\ (14\ runs\ sampled)}
+\DoxyCodeLine{\ *\ deflate-\/zlib\ x\ 14.71\ ops/sec\ ±4.23\%\ (59\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ inflate-\/dankogai\ x\ 32.16\ ops/sec\ ±0.13\%\ (56\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ inflate-\/imaya\ x\ 30.35\ ops/sec\ ±0.92\%\ (53\ runs\ sampled)}
+\DoxyCodeLine{\ !\ inflate-\/pako\ x\ 69.89\ ops/sec\ ±1.46\%\ (71\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ inflate-\/pako-\/string\ x\ 19.22\ ops/sec\ ±1.86\%\ (49\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ inflate-\/pako-\/untyped\ x\ 17.19\ ops/sec\ ±0.85\%\ (32\ runs\ sampled)}
+\DoxyCodeLine{\ *\ inflate-\/zlib\ x\ 70.03\ ops/sec\ ±1.64\%\ (81\ runs\ sampled)}
+\DoxyCodeLine{}
+\DoxyCodeLine{node\ v0.11.12,\ 1mb\ sample:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ deflate-\/dankogai\ x\ 5.60\ ops/sec\ ±0.49\%\ (17\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ deflate-\/gildas\ x\ 5.06\ ops/sec\ ±6.00\%\ (16\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ deflate-\/imaya\ x\ 3.52\ ops/sec\ ±3.71\%\ (13\ runs\ sampled)}
+\DoxyCodeLine{\ !\ deflate-\/pako\ x\ 11.52\ ops/sec\ ±0.22\%\ (32\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ deflate-\/pako-\/string\ x\ 9.53\ ops/sec\ ±1.12\%\ (27\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ deflate-\/pako-\/untyped\ x\ 5.44\ ops/sec\ ±0.72\%\ (17\ runs\ sampled)}
+\DoxyCodeLine{\ *\ deflate-\/zlib\ x\ 14.05\ ops/sec\ ±3.34\%\ (63\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ inflate-\/dankogai\ x\ 42.19\ ops/sec\ ±0.09\%\ (56\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ inflate-\/imaya\ x\ 79.68\ ops/sec\ ±1.07\%\ (68\ runs\ sampled)}
+\DoxyCodeLine{\ !\ inflate-\/pako\ x\ 97.52\ ops/sec\ ±0.83\%\ (80\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ inflate-\/pako-\/string\ x\ 45.19\ ops/sec\ ±1.69\%\ (57\ runs\ sampled)}
+\DoxyCodeLine{\ \ \ inflate-\/pako-\/untyped\ x\ 24.35\ ops/sec\ ±2.59\%\ (40\ runs\ sampled)}
+\DoxyCodeLine{\ *\ inflate-\/zlib\ x\ 60.32\ ops/sec\ ±1.36\%\ (69\ runs\ sampled)}
+
+\end{DoxyCode}
+
+
+zlib\textquotesingle{}s test is partialy afferted by marshling (that make sense for inflate only). You can change deflate level to 0 in benchmark source, to investigate details. For deflate level 6 results can be considered as correct.
+
+{\bfseries{Install\+:}}
+
+node.\+js\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ pako}
+
+\end{DoxyCode}
+
+
+browser\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{bower\ install\ pako}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25511}{}\doxysubsection{\texorpdfstring{Example \& API}{Example \& API}}\label{README.md_autotoc_md25511}
+Full docs -\/ \href{http://nodeca.github.io/pako/}{\texttt{ http\+://nodeca.\+github.\+io/pako/}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pako\ =\ require('pako');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Deflate}
+\DoxyCodeLine{//}
+\DoxyCodeLine{var\ input\ =\ new\ Uint8Array();}
+\DoxyCodeLine{//...\ fill\ input\ data\ here}
+\DoxyCodeLine{var\ output\ =\ pako.deflate(input);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Inflate\ (simple\ wrapper\ can\ throw\ exception\ on\ broken\ stream)}
+\DoxyCodeLine{//}
+\DoxyCodeLine{var\ compressed\ =\ new\ Uint8Array();}
+\DoxyCodeLine{//...\ fill\ data\ to\ uncompress\ here}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ var\ result\ =\ pako.inflate(compressed);}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ console.log(err);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ Alternate\ interface\ for\ chunking\ \&\ without\ exceptions}
+\DoxyCodeLine{//}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ inflator\ =\ new\ pako.Inflate();}
+\DoxyCodeLine{}
+\DoxyCodeLine{inflator.push(chunk1,\ false);}
+\DoxyCodeLine{inflator.push(chunk2,\ false);}
+\DoxyCodeLine{...}
+\DoxyCodeLine{inflator.push(chunkN,\ true);\ //\ true\ -\/>\ last\ chunk}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (inflator.err)\ \{}
+\DoxyCodeLine{\ \ console.log(inflator.msg);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ output\ =\ inflator.result;}
+
+\end{DoxyCode}
+
+
+Sometime you can wish to work with strings. For example, to send big objects as json to server. Pako detects input data type. You can force output to be string with option `\{ to\+: \textquotesingle{}string' \}\`{}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pako\ =\ require('pako');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ test\ =\ \{\ my:\ 'super',\ puper:\ [456,\ 567],\ awesome:\ 'pako'\ \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ binaryString\ =\ pako.deflate(JSON.stringify(test),\ \{\ to:\ 'string'\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//}
+\DoxyCodeLine{//\ Here\ you\ can\ do\ base64\ encode,\ make\ xhr\ requests\ and\ so\ on.}
+\DoxyCodeLine{//}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ restored\ =\ JSON.parse(pako.inflate(binaryString,\ \{\ to:\ 'string'\ \}));}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md25512}{}\doxysubsection{\texorpdfstring{Notes}{Notes}}\label{README.md_autotoc_md25512}
+Pako does not contain some specific zlib functions\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{deflate}} -\/ methods {\ttfamily deflate\+Copy}, {\ttfamily deflate\+Bound}, {\ttfamily deflate\+Params}, {\ttfamily deflate\+Pending}, {\ttfamily deflate\+Prime}, {\ttfamily deflate\+Tune}.
+\item {\bfseries{inflate}} -\/ methods {\ttfamily inflate\+Copy}, {\ttfamily inflate\+Mark}, {\ttfamily inflate\+Prime}, {\ttfamily inflate\+Get\+Dictionary}, {\ttfamily inflate\+Sync}, {\ttfamily inflate\+Sync\+Point}, {\ttfamily inflate\+Undermine}.
+\item High level inflate/deflate wrappers (classes) may not support some flush modes. Those should work\+: Z\+\_\+\+NO\+\_\+\+FLUSH, Z\+\_\+\+FINISH, Z\+\_\+\+SYNC\+\_\+\+FLUSH.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25513}{}\doxysubsection{\texorpdfstring{Authors}{Authors}}\label{README.md_autotoc_md25513}
+
+\begin{DoxyItemize}
+\item Andrey Tupitsin \href{https://github.com/andr83}{\texttt{ @anrd83}}
+\item Vitaly Puzrin \href{https://github.com/puzrin}{\texttt{ @puzrin}}
+\end{DoxyItemize}
+
+Personal thanks to\+:
+
+
+\begin{DoxyItemize}
+\item Vyacheslav Egorov (\href{https://github.com/mraleph}{\texttt{ @mraleph}}) for his awesome tutorials about optimising JS code for v8, \href{http://mrale.ph/irhydra/}{\texttt{ IRHydra}} tool and his advices.
+\item David Duponchel (\href{https://github.com/dduponchel}{\texttt{ @dduponchel}}) for help with testing.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md25514}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md25514}
+MIT 

@@ -1,0 +1,66 @@
+\doxysection{node\+\_\+modules/get-\/east-\/asian-\/width Directory Reference}
+\hypertarget{dir_723f9541268f462a090e04a8fa654db0}{}\label{dir_723f9541268f462a090e04a8fa654db0}\index{node\_modules/get-\/east-\/asian-\/width Directory Reference@{node\_modules/get-\/east-\/asian-\/width Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Determine the \href{https://unicode.org/reports/tr11/}{\texttt{ East Asian Width}} of a Unicode character \end{quote}
+
+
+\begin{quote}
+East Asian Width categorizes Unicode characters based on their occupied space in East Asian typography, which helps in text layout and alignment, particularly in languages like Japanese, Chinese, and Korean. \end{quote}
+
+
+Unlike other similar packages, this package uses the latest Unicode data (which changes each year).\hypertarget{readme.md_autotoc_md16039}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md16039}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ get-\/east-\/asian-\/width}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16040}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{readme.md_autotoc_md16040}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{eastAsianWidth,\ eastAsianWidthType\}\ from\ 'get-\/east-\/asian-\/width';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ codePoint\ =\ '字'.codePointAt(0);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(eastAsianWidth(codePoint));}
+\DoxyCodeLine{//=>\ 2}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(eastAsianWidthType(codePoint));}
+\DoxyCodeLine{//=>\ 'wide'}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md16041}{}\doxysubsection{\texorpdfstring{{\ttfamily east\+Asian\+Width(code\+Point\+: number, options?\+: object)\+: 1 \texorpdfstring{$\vert$}{|} 2}}{{\ttfamily east\+Asian\+Width(code\+Point\+: number, options?\+: object)\+: 1 \texorpdfstring{$\vert$}{|} 2}}}\label{readme.md_autotoc_md16041}
+Returns the width as a number for the given code point.\hypertarget{readme.md_autotoc_md16042}{}\doxysubsubsection{\texorpdfstring{options}{options}}\label{readme.md_autotoc_md16042}
+Type\+: {\ttfamily object}\hypertarget{readme.md_autotoc_md16043}{}\doxysubsubsubsection{\texorpdfstring{ambiguous\+As\+Wide}{ambiguous\+As\+Wide}}\label{readme.md_autotoc_md16043}
+Type\+: {\ttfamily boolean}\textbackslash{} Default\+: {\ttfamily false}
+
+Whether to treat an `\textquotesingle{}ambiguous'\`{} character as wide.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{eastAsianWidth\}\ from\ 'get-\/east-\/asian-\/width';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ codePoint\ =\ '⛣'.codePointAt(0);}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(eastAsianWidth(codePoint));}
+\DoxyCodeLine{//=>\ 1}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(eastAsianWidth(codePoint,\ \{ambiguousAsWide:\ true\}));}
+\DoxyCodeLine{//=>\ 2}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+Ambiguous characters behave like wide or narrow characters depending on the context (language tag, script identification, associated font, source of data, or explicit markup; all can provide the context). {\bfseries{If the context cannot be established reliably, they should be treated as narrow characters by default.}}
+\begin{DoxyItemize}
+\item \href{http://www.unicode.org/reports/tr11/}{\texttt{ http\+://www.\+unicode.\+org/reports/tr11/}} 
+\end{DoxyItemize}\end{quote}
+\hypertarget{readme.md_autotoc_md16044}{}\doxysubsection{\texorpdfstring{`east\+Asian\+Width\+Type(code\+Point\+: number)\+: \textquotesingle{}fullwidth' \texorpdfstring{$\vert$}{|} \textquotesingle{}halfwidth\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}wide\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}narrow\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}neutral\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}ambiguous\textquotesingle{}\`{}}{`east\+Asian\+Width\+Type(code\+Point\+: number)\+: \textquotesingle{}fullwidth' \texorpdfstring{$\vert$}{|} \textquotesingle{}halfwidth\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}wide\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}narrow\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}neutral\textquotesingle{} \texorpdfstring{$\vert$}{|} \textquotesingle{}ambiguous\textquotesingle{}\`{}}}\label{readme.md_autotoc_md16044}
+Returns the type of “\+East Asian Width” for the given code point.\hypertarget{readme.md_autotoc_md16045}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md16045}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/sindresorhus/string-width}{\texttt{ string-\/width}} -\/ Get the visual width of a string 
+\end{DoxyItemize}

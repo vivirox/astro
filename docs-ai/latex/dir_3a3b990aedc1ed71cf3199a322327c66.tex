@@ -1,0 +1,45 @@
+\doxysection{node\+\_\+modules/await-\/lock Directory Reference}
+\hypertarget{dir_3a3b990aedc1ed71cf3199a322327c66}{}\label{dir_3a3b990aedc1ed71cf3199a322327c66}\index{node\_modules/await-\/lock Directory Reference@{node\_modules/await-\/lock Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+Mutex locks for async functions
+
+\href{https://nodei.co/npm/await-lock/}{\texttt{ }}\hypertarget{README.md_autotoc_md8600}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md8600}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ AwaitLock\ from\ 'await-\/lock';}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ lock\ =\ new\ AwaitLock();}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ runSerialTaskAsync()\ \{}
+\DoxyCodeLine{\ \ await\ lock.acquireAsync();}
+\DoxyCodeLine{\ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ //\ IMPORTANT:\ Do\ not\ return\ a\ promise\ from\ here\ because\ the\ finally\ clause}
+\DoxyCodeLine{\ \ \ \ //\ may\ run\ before\ the\ promise\ settles,\ and\ the\ catch\ clause\ will\ not\ run\ if}
+\DoxyCodeLine{\ \ \ \ //\ the\ promise\ is\ rejected}
+\DoxyCodeLine{\ \ \}\ finally\ \{}
+\DoxyCodeLine{\ \ \ \ lock.release();}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+You can also use Await\+Lock with \href{https://github.com/tj/co}{\texttt{ co}} and generator functions.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ AwaitLock\ from\ 'await-\/lock';}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ runSerialTaskAsync\ =\ co.wrap(function*()\ \{}
+\DoxyCodeLine{\ \ yield\ lock.acquireAsync();}
+\DoxyCodeLine{\ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Run\ async\ code\ in\ the\ critical\ section}
+\DoxyCodeLine{\ \ \}\ finally\ \{}
+\DoxyCodeLine{\ \ \ \ lock.release();}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

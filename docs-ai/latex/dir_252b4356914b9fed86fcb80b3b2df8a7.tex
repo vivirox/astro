@@ -1,0 +1,110 @@
+\doxysection{node\+\_\+modules/solid-\/swr-\/store Directory Reference}
+\hypertarget{dir_252b4356914b9fed86fcb80b3b2df8a7}{}\label{dir_252b4356914b9fed86fcb80b3b2df8a7}\index{node\_modules/solid-\/swr-\/store Directory Reference@{node\_modules/solid-\/swr-\/store Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Solid\+JS bindings for {\ttfamily swr-\/store} \end{quote}
+
+
+\href{https://www.npmjs.com/package/solid-swr-store}{\texttt{ }} \href{https://github.com/airbnb/javascript}{\texttt{ }}\href{https://codesandbox.io/s/github/LXSMNSYC/swr-store/tree/main/examples/solid-swr-store}{\texttt{ }}\hypertarget{README.md_autotoc_md30968}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md30968}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/save\ swr-\/store\ solid-\/swr-\/store}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{yarn\ add\ swr-\/store\ solid-\/swr-\/store}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30969}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md30969}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Suspense\ \}\ from\ 'solid-\/js';}
+\DoxyCodeLine{import\ \{\ createSWRStore\ \}\ from\ 'swr-\/store';}
+\DoxyCodeLine{import\ \{\ useSWRStore,\ useSWRStoreSuspenselesss\ \}\ from\ 'solid-\/swr-\/store';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ API\ =\ 'https://dog.ceo/api/breed/';}
+\DoxyCodeLine{const\ API\_SUFFIX\ =\ '/images/random';}
+\DoxyCodeLine{}
+\DoxyCodeLine{interface\ APIResult\ \{}
+\DoxyCodeLine{\ \ message:\ string;}
+\DoxyCodeLine{\ \ status:\ string;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ dogAPI\ =\ createSWRStore<APIResult,\ [string]>(\{}
+\DoxyCodeLine{\ \ key:\ (breed:\ string)\ =>\ breed,}
+\DoxyCodeLine{\ \ get:\ async\ (breed:\ string)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ response\ =\ await\ fetch(`\$\{API\}\$\{breed\}\$\{API\_SUFFIX\}`);}
+\DoxyCodeLine{\ \ \ \ return\ (await\ response.json())\ as\ APIResult;}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ revalidateOnFocus:\ true,}
+\DoxyCodeLine{\ \ revalidateOnNetwork:\ true,}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ DogImage():\ JSX.Element\ \{}
+\DoxyCodeLine{\ \ const\ data\ =\ useSWRStore(dogAPI,\ ['shiba']);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ <img\ src=\{data().message\}\ alt=\{data().message\}\ />;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ DogImageSuspenseless():\ JSX.Element\ \{}
+\DoxyCodeLine{\ \ const\ data\ =\ useSWRStoreSuspenseless(dogAPI,\ ['shiba']);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ const\ current\ =\ data();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ if\ (current.status\ ===\ 'pending')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ <h1>Loading...</h1>;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ if\ (current.status\ ===\ 'failure')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ <h1>Something\ went\ wrong.</h1>}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ return\ <img\ src=\{current.data.message\}\ alt=\{current.data.message\}\ />;}
+\DoxyCodeLine{\ \ \};}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Trigger():\ JSX.Element\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <button}
+\DoxyCodeLine{\ \ \ \ \ \ type="{}button"{}}
+\DoxyCodeLine{\ \ \ \ \ \ onClick=\{()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ dogAPI.trigger(['shiba']);}
+\DoxyCodeLine{\ \ \ \ \ \ \}\}}
+\DoxyCodeLine{\ \ \ \ >}
+\DoxyCodeLine{\ \ \ \ \ \ Trigger}
+\DoxyCodeLine{\ \ \ \ </button>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ function\ App():\ JSX.Element\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <>}
+\DoxyCodeLine{\ \ \ \ \ \ <Trigger\ />}
+\DoxyCodeLine{\ \ \ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Suspense\ fallback=\{<h1>Loading...</h1>\}>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ <DogImage\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ </Suspense>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <DogImageSuspenseless\ />}
+\DoxyCodeLine{\ \ \ \ \ \ </div>}
+\DoxyCodeLine{\ \ \ \ </>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md30970}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md30970}
+\hypertarget{README.md_autotoc_md30971}{}\doxysubsubsection{\texorpdfstring{{\ttfamily use\+SWRStore(store, args, options)}}{{\ttfamily use\+SWRStore(store, args, options)}}}\label{README.md_autotoc_md30971}
+Subscribes to an SWR store, passing {\ttfamily args}, which are received by the corresponding store for data-\/fetching and cache updates.
+
+{\ttfamily options} has the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily initial\+Data}\+: Allows lazy hydration when reading the store. If the store does not have cache, {\ttfamily initial\+Data} hydrates the cache and attempts a revalidation. If no {\ttfamily initial\+Data} is provided, defaults to store\textquotesingle{}s {\ttfamily options.\+initial\+Data}.
+\item {\ttfamily should\+Revalidate}\+: If {\ttfamily true}, goes through the revalidation process when reading through the cache. Defaults to {\ttfamily true}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md30972}{}\doxysubsubsection{\texorpdfstring{{\ttfamily use\+SWRStore\+Suspenseless(store, args, options)}}{{\ttfamily use\+SWRStore\+Suspenseless(store, args, options)}}}\label{README.md_autotoc_md30972}
+Has the same API as {\ttfamily use\+SWRStore} except that it doesn\textquotesingle{}t suspend the reading component.\hypertarget{README.md_autotoc_md30973}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md30973}
+MIT © \href{https://github.com/lxsmnsyc}{\texttt{ lxsmnsyc}} 

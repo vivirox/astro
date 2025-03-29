@@ -1,0 +1,101 @@
+\doxysection{node\+\_\+modules/@antfu/install-\/pkg/node\+\_\+modules/package-\/manager-\/detector Directory Reference}
+\hypertarget{dir_7a7c4579bf8526da71d7fbd1804e13c4}{}\label{dir_7a7c4579bf8526da71d7fbd1804e13c4}\index{node\_modules/"@antfu/install-\/pkg/node\_modules/package-\/manager-\/detector Directory Reference@{node\_modules/"@antfu/install-\/pkg/node\_modules/package-\/manager-\/detector Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://npmjs.com/package/package-manager-detector}{\texttt{ }} \href{https://npmjs.com/package/package-manager-detector}{\texttt{ }} \href{https://www.jsdocs.io/package/package-manager-detector}{\texttt{ }} \href{https://github.com/antfu-collective/package-manager-detector/blob/main/LICENSE}{\texttt{ }}
+
+Package manager detector is based on lock files and the {\ttfamily package\+Manager} field in the current project\textquotesingle{}s {\ttfamily package.\+json} file.
+
+It will detect your {\ttfamily yarn.\+lock} / {\ttfamily pnpm-\/lock.\+yaml} / {\ttfamily package-\/lock.\+json} / {\ttfamily bun.\+lock} / {\ttfamily bun.\+lockb} / {\ttfamily deno.\+lock} to know the current package manager and use the {\ttfamily package\+Manager} field in your {\ttfamily package.\+json} if present.\hypertarget{README.md_autotoc_md134}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{README.md_autotoc_md134}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ pnpm}
+\DoxyCodeLine{pnpm\ add\ package-\/manager-\/detector}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ npm}
+\DoxyCodeLine{npm\ i\ package-\/manager-\/detector}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ yarn}
+\DoxyCodeLine{yarn\ add\ package-\/manager-\/detector}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md135}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md135}
+\hypertarget{README.md_autotoc_md136}{}\doxysubsubsection{\texorpdfstring{ESM}{ESM}}\label{README.md_autotoc_md136}
+To check the file system for which package manager is used\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ detect\ \}\ from\ 'package-\/manager-\/detector/detect'}
+
+\end{DoxyCode}
+
+
+or sync version\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ detectSync\ \}\ from\ 'package-\/manager-\/detector/detect'}
+
+\end{DoxyCode}
+
+
+or to get the currently running package manager\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ getUserAgent\ \}\ from\ 'package-\/manager-\/detector/detect'}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md137}{}\doxysubsubsection{\texorpdfstring{Common\+JS}{Common\+JS}}\label{README.md_autotoc_md137}
+To check the file system for which package manager is used\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ detect\ \}\ =\ require('package-\/manager-\/detector/detect')}
+
+\end{DoxyCode}
+
+
+or sync version\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ detectSync\ \}\ =\ require('package-\/manager-\/detector/detect')}
+
+\end{DoxyCode}
+
+
+or to get the currently running package manager\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ getUserAgent\ \}\ =\ require('package-\/manager-\/detector/detect')}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md138}{}\doxysubsection{\texorpdfstring{Agents and Commands}{Agents and Commands}}\label{README.md_autotoc_md138}
+This package includes package manager agents and their corresponding commands for\+:
+
+
+\begin{DoxyItemize}
+\item `\textquotesingle{}agent'{\ttfamily -\/ run the package manager with no arguments -\/}\textquotesingle{}install\textquotesingle{}{\ttfamily -\/ install dependencies -\/}\textquotesingle{}frozen\textquotesingle{}{\ttfamily -\/ install dependencies using frozen lockfile -\/}\textquotesingle{}add\textquotesingle{}{\ttfamily -\/ add dependencies -\/}\textquotesingle{}uninstall\textquotesingle{}{\ttfamily -\/ remove dependencies -\/}\textquotesingle{}global\textquotesingle{}{\ttfamily -\/ install global packages -\/}\textquotesingle{}global\+\_\+uninstall\textquotesingle{}{\ttfamily -\/ remove global packages -\/}\textquotesingle{}upgrade\textquotesingle{}{\ttfamily -\/ upgrade dependencies -\/}\textquotesingle{}upgrade-\/interactive\textquotesingle{}{\ttfamily -\/ upgrade dependencies interactively\+: not available for}npm{\ttfamily and}bun{\ttfamily  -\/}\textquotesingle{}execute\textquotesingle{}{\ttfamily -\/ download \& execute binary scripts -\/}\textquotesingle{}execute-\/local\textquotesingle{}{\ttfamily -\/ execute binary scripts (from package locally installed) -\/}\textquotesingle{}run\textquotesingle{}{\ttfamily -\/ run}package.\+json\`{} scripts
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md139}{}\doxysubsubsection{\texorpdfstring{Using Agents and Commands}{Using Agents and Commands}}\label{README.md_autotoc_md139}
+A {\ttfamily resolve\+Command} function is provided to resolve the command for a specific agent.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ resolveCommand\ \}\ from\ 'package-\/manager-\/detector/commands'}
+\DoxyCodeLine{import\ \{\ detect\ \}\ from\ 'package-\/manager-\/detector/detect'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ pm\ =\ await\ detect()}
+\DoxyCodeLine{if\ (!pm)}
+\DoxyCodeLine{\ \ throw\ new\ Error('Could\ not\ detect\ package\ manager')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ \{\ command,\ args\ \}\ =\ resolveCommand(pm.agent,\ 'add',\ ['@antfu/ni'])\ //\ \{\ command:\ 'pnpm',\ args:\ ['add',\ '@antfu/ni']\ \}}
+\DoxyCodeLine{console.log(`Detected\ the\ \$\{pm.agent\}\ package\ manager.\ You\ can\ run\ a\ install\ with\ \$\{command\}\ \$\{args.join('\ ')\}`)}
+
+\end{DoxyCode}
+
+
+You can check the source code or the \href{https://www.jsdocs.io/package/package-manager-detector}{\texttt{ JSDocs}} for more information.\hypertarget{README.md_autotoc_md140}{}\doxysubsection{\texorpdfstring{License}{License}}\label{README.md_autotoc_md140}
+\href{./LICENSE}{\texttt{ MIT}} License © 2020-\/PRESENT \href{https://github.com/antfu}{\texttt{ Anthony Fu}} 

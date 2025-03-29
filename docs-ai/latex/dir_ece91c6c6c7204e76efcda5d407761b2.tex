@@ -1,0 +1,76 @@
+\doxysection{node\+\_\+modules/emoji-\/regex-\/xs Directory Reference}
+\hypertarget{dir_ece91c6c6c7204e76efcda5d407761b2}{}\label{dir_ece91c6c6c7204e76efcda5d407761b2}\index{node\_modules/emoji-\/regex-\/xs Directory Reference@{node\_modules/emoji-\/regex-\/xs Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+This is a drop-\/in replacement for the \href{https://github.com/mathiasbynens/emoji-regex}{\texttt{ {\ttfamily emoji-\/regex}}} package that shares its API and passes all of its emoji tests, but reduces its uncompressed size by more than 97\% (from \texorpdfstring{$\sim$}{\string~}13 KB to 0.\+3 KB). As a tradeoff for the smaller size, it relies on the regex {\ttfamily u} flag which requires Node.\+js 10+ or a browser from 2016 or later.
+
+There are two additional small differences\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily emoji-\/regex-\/xs} uses whatever version of Unicode that your browser or environment supports natively to determine the base list of emoji, whereas specific versions of {\ttfamily emoji-\/regex} are tied to specific Unicode versions.
+\item {\ttfamily emoji-\/regex-\/xs}, due to its use of a general pattern, matches some additional emoji that are supported on some but not all platforms, like \href{https://emojipedia.org/women-wrestling-light-skin-tone\#designs}{\texttt{ women wrestling\+: light skin tone}} and \href{https://emojipedia.org/flag-for-texas-ustx\#designs}{\texttt{ flag for Texas}}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md12417}{}\doxysubsection{\texorpdfstring{Install and use}{Install and use}}\label{README.md_autotoc_md12417}
+Via npm\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ emoji-\/regex-\/xs}
+
+\end{DoxyCode}
+
+
+In Node.\+js\+:~\newline
+ (This is copied from {\ttfamily emoji-\/regex} to show that it works the same.)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ emojiRegex\ =\ require('emoji-\/regex-\/xs');}
+\DoxyCodeLine{//\ Or:\ import\ emojiRegex\ from\ 'emoji-\/regex-\/xs';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Note:\ because\ the\ regular\ expression\ has\ the\ global\ flag\ set,\ this\ module}
+\DoxyCodeLine{//\ exports\ a\ function\ that\ returns\ the\ regex\ rather\ than\ exporting\ the\ regular}
+\DoxyCodeLine{//\ expression\ itself,\ to\ make\ it\ impossible\ to\ (accidentally)\ mutate\ the}
+\DoxyCodeLine{//\ original\ regular\ expression.}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ text\ =\ \`{}}
+\DoxyCodeLine{\(\backslash\)u\{231A\}:\ ⌚\ default\ emoji\ presentation\ character\ (Emoji\_Presentation)}
+\DoxyCodeLine{\(\backslash\)u\{2194\}\(\backslash\)u\{FE0F\}:\ ↔️\ default\ text\ presentation\ character\ rendered\ as\ emoji}
+\DoxyCodeLine{\(\backslash\)u\{1F469\}:\ 👩\ emoji\ modifier\ base\ (Emoji\_Modifier\_Base)}
+\DoxyCodeLine{\(\backslash\)u\{1F469\}\(\backslash\)u\{1F3FF\}:\ 👩🏿\ emoji\ modifier\ base\ followed\ by\ a\ modifier}
+\DoxyCodeLine{\`{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ regex\ =\ emojiRegex();}
+\DoxyCodeLine{for\ (const\ match\ of\ text.matchAll(regex))\ \{}
+\DoxyCodeLine{\ \ const\ emoji\ =\ match[0];}
+\DoxyCodeLine{\ \ console.log(`Matched\ sequence\ \$\{emoji\}\ —\ code\ points:\ \$\{[...emoji].length\}`);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Console output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Matched\ sequence\ ⌚\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ ⌚\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ ↔️\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ ↔️\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ 👩\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ 👩\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ 👩🏿\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ 👩🏿\ —\ code\ points:\ 2}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md12418}{}\doxysubsection{\texorpdfstring{More details about emoji, Unicode properties, and regexes}{More details about emoji, Unicode properties, and regexes}}\label{README.md_autotoc_md12418}
+Emoji are complicated. Or more specifically, how they\textquotesingle{}re defined in the Unicode Standard is complicated. So writing a regex that matches all/only emoji is also complicated. For starters, individual emoji can be made up of between one and {\itshape many} Unicode code points, and there are a variety of different sequence patterns. There are also a variety of Unicode symbols, dingbats, etc. that are not emoji, that we don\textquotesingle{}t want to match.
+
+Given the complexity, many libraries that roll their own emoji regex get it very wrong, e.\+g. by matching emoji fragments that split off some of their attributes, or by matching things like digits (0, 1, 2, …), \#, \texorpdfstring{$\ast$}{*}, or certain invisible characters. These characters are obviously not emoji, but they\textquotesingle{}re matched by naive patterns because they might {\itshape become} emoji when followed by various combining characters. Or they might be special characters used in some emoji sequences while not being emoji on their own.
+
+ES2018 added support for matching Unicode properties in regular expressions with {\ttfamily \textbackslash{}p\{…\}}, so you might think this problem is now trivial, given that the list of supported properties includes {\ttfamily Emoji}, {\ttfamily Emoji\+\_\+\+Presentation}, {\ttfamily Emoji\+\_\+\+Modifier}, {\ttfamily Emoji\+\_\+\+Modifier\+\_\+\+Base}, {\ttfamily Emoji\+\_\+\+Component}, and {\ttfamily Extended\+\_\+\+Pictographic}. But no. On their own, none of these are what you want.
+
+ES2024 added support for matching multicharacter Unicode {\itshape properties of strings} with {\ttfamily \textbackslash{}p\{…\}}, so you might think one of the new properties {\ttfamily Basic\+\_\+\+Emoji}, {\ttfamily Emoji\+\_\+\+Keycap\+\_\+\+Sequence}, {\ttfamily RGI\+\_\+\+Emoji\+\_\+\+Modifier\+\_\+\+Sequence}, {\ttfamily RGI\+\_\+\+Emoji\+\_\+\+Flag\+\_\+\+Sequence}, {\ttfamily RGI\+\_\+\+Emoji\+\_\+\+Tag\+\_\+\+Sequence}, {\ttfamily RGI\+\_\+\+Emoji\+\_\+\+ZWJ\+\_\+\+Sequence}, or {\ttfamily RGI\+\_\+\+Emoji} will do the trick. Well, kind of. {\ttfamily RGI\+\_\+\+Emoji} indeed seems like what we want, but unfortunately, some common-\/sense and broadly-\/supported emoji are not officially in the "{}\+RGI"{} (Recommended for General Interchange) list. And even more frustratingly, some emoji are commonly used in an underqualified or overqualified way (by including or excluding certain invisible Unicode markers) that prevents them from being matched by {\ttfamily RGI\+\_\+\+Emoji}. For example, the i\+OS emoji keyboard overqualifies certain emoji. So we need something that matches everything in {\ttfamily RGI\+\_\+\+Emoji}, and more. Additionally, {\ttfamily \textbackslash{}p\{RGI\+\_\+\+Emoji\}} relies on flag {\ttfamily v} which is only supported by 2023-\/era browsers and Node.\+js 20+.
+
+All of this is why the extremely popular {\ttfamily emoji-\/regex} package exists. It does a great job of accurately matching most common-\/sense emoji. But to do so, it uses a gigantic (\texorpdfstring{$\sim$}{\string~}13 KB uncompressed) regex that hard codes a list of Unicode code points that are tied to a specific Unicode version. Conversely, {\ttfamily emoji-\/regex-\/xs} uses a general pattern that continues to be highly accurate in matching all/only emoji, but uses only \texorpdfstring{$\sim$}{\string~}0.3 KB to do so. It follows {\ttfamily emoji-\/regex}\textquotesingle{}s API and reuses its tests, so it can be swapped-\/in as a replacement. 

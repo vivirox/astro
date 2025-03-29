@@ -1,0 +1,159 @@
+\doxysection{node\+\_\+modules/retext Directory Reference}
+\hypertarget{dir_096a335724b5646c56eee319adcf1167}{}\label{dir_096a335724b5646c56eee319adcf1167}\index{node\_modules/retext Directory Reference@{node\_modules/retext Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/retextjs/retext/actions}{\texttt{ }} \href{https://codecov.io/github/retextjs/retext}{\texttt{ }} \href{https://www.npmjs.com/package/retext}{\texttt{ }} \href{https://bundlejs.com/?q=retext}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/retextjs/retext/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/unifiedjs/unified}{\texttt{ unified}}}} processor to add support for parsing and serializing Latin-\/script natural language.\hypertarget{readme.md_autotoc_md29519}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md29519}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}retext()\`{}
+\end{DoxyItemize}
+\item Syntax tree
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item \doxylink{readme.md_contribute}{Contribute}
+\item Sponsor
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md29520}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md29520}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} processor with support for parsing Latin-\/script natural language as input and serializing it as output by using unified with \href{https://github.com/retextjs/retext/tree/main/packages/retext-latin}{\texttt{ {\ttfamily retext-\/latin}}} and \href{https://github.com/retextjs/retext/tree/main/packages/retext-stringify}{\texttt{ {\ttfamily retext-\/stringify}}}.
+
+See \href{https://github.com/retextjs/retext}{\texttt{ the monorepo readme}} for info on what the retext ecosystem is.\hypertarget{readme.md_autotoc_md29521}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md29521}
+You can use this package when you want to use unified, have Latin-\/script as input, and as output. This package is a shortcut for {\ttfamily unified().use(retext\+Latin).use(retext\+Stringify)}. When the input isn’t Latin-\/script or is English or Dutch (meaning you don’t need {\ttfamily retext-\/latin}), it’s recommended to use {\ttfamily unified} directly.\hypertarget{readme.md_autotoc_md29522}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md29522}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ retext}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{retext\}\ from\ 'https://esm.sh/retext@9'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{retext\}\ from\ 'https://esm.sh/retext@9?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29523}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md29523}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{retext\}\ from\ 'retext'}
+\DoxyCodeLine{import\ retextEmoji\ from\ 'retext-\/emoji'}
+\DoxyCodeLine{import\ retextProfanities\ from\ 'retext-\/profanities'}
+\DoxyCodeLine{import\ \{reporter\}\ from\ 'vfile-\/reporter'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ retext()}
+\DoxyCodeLine{\ \ .use(retextEmoji,\ \{convert:\ 'encode'\})}
+\DoxyCodeLine{\ \ .use(retextProfanities)}
+\DoxyCodeLine{\ \ .process('He’s\ set\ on\ beating\ your\ butt\ for\ sheriff!\ :cop:')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+\DoxyCodeLine{console.error(reporter(file))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{He’s\ set\ on\ beating\ your\ butt\ \textcolor{keywordflow}{for}\ sheriff!\ 👮}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1:26-\/1:30\ warning\ Be\ careful\ with\ \`{}butt\`{},\ it’s\ profane\ in\ some\ cases\ butt\ retext-\/profanities}
+\DoxyCodeLine{}
+\DoxyCodeLine{⚠\ 1\ warning}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md29524}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md29524}
+This package exports the identifier \`{}retext\`{}. There is no default export.\hypertarget{readme.md_autotoc_md29525}{}\doxysubsubsection{\texorpdfstring{{\ttfamily retext()}}{{\ttfamily retext()}}}\label{readme.md_autotoc_md29525}
+Create a new unified processor that already uses \href{https://github.com/retextjs/retext/tree/main/packages/retext-latin}{\texttt{ {\ttfamily retext-\/latin}}} and \href{https://github.com/retextjs/retext/tree/main/packages/retext-stringify}{\texttt{ {\ttfamily retext-\/stringify}}}.
+
+You can add more plugins with {\ttfamily use}. See \href{https://github.com/unifiedjs/unified}{\texttt{ {\ttfamily unified}}} for more information.\hypertarget{readme.md_autotoc_md29526}{}\doxysubsection{\texorpdfstring{Syntax tree}{Syntax tree}}\label{readme.md_autotoc_md29526}
+The syntax tree used in retext is \href{https://github.com/syntax-tree/nlcst}{\texttt{ nlcst}}.\hypertarget{readme.md_autotoc_md29527}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md29527}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md29528}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md29528}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily retext@\texorpdfstring{$^\wedge$}{\string^}9}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md29529}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md29529}
+See \href{https://github.com/retextjs/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md}}} in \href{https://github.com/retextjs/.github}{\texttt{ {\ttfamily retextjs/.github}}} for ways to get started. See \href{https://github.com/retextjs/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/retextjs/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md29530}{}\doxysubsection{\texorpdfstring{Sponsor}{Sponsor}}\label{readme.md_autotoc_md29530}
+Support this effort and give back by sponsoring on \href{https://opencollective.com/unified}{\texttt{ Open\+Collective}}!
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{10}{|X[-1]}|}
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}{\PBS\centering \href{https://vercel.com}{\texttt{ Vercel}}~\newline
+~\newline
+ \href{https://vercel.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://motif.land}{\texttt{ Motif}}~\newline
+~\newline
+ \href{https://motif.land}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.hashicorp.com}{\texttt{ Hashi\+Corp}}~\newline
+~\newline
+ \href{https://www.hashicorp.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gitbook.com}{\texttt{ Git\+Book}}~\newline
+~\newline
+ \href{https://www.gitbook.com}{\texttt{ }}  }}&\multicolumn{2}{c|}{\multirow{2}{*}{\PBS\centering \href{https://www.gatsbyjs.org}{\texttt{ Gatsby}}~\newline
+~\newline
+ \href{https://www.gatsbyjs.org}{\texttt{ }}   }}\\
+&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}&\multicolumn{2}{}|}{}\\\cline{1-10}
+\end{longtabu}
+
+
+\href{https://www.netlify.com}{\texttt{ Netlify}}~\newline
+~\newline
+
+
+\href{https://www.netlify.com}{\texttt{ }}  
+
+\href{https://www.coinbase.com}{\texttt{ Coinbase}}~\newline
+~\newline
+ \href{https://www.coinbase.com}{\texttt{ }}  
+
+\href{https://themeisle.com}{\texttt{ Theme\+Isle}}~\newline
+~\newline
+ \href{https://themeisle.com}{\texttt{ }}  
+
+\href{https://expo.io}{\texttt{ Expo}}~\newline
+~\newline
+ \href{https://expo.io}{\texttt{ }}  
+
+\href{https://boostnote.io}{\texttt{ Boost Note}}~\newline
+~\newline
+ \href{https://boostnote.io}{\texttt{ }}  
+
+\href{https://markdown.space}{\texttt{ Markdown Space}}~\newline
+~\newline
+ \href{https://markdown.space}{\texttt{ }}  
+
+\href{https://www.holloway.com}{\texttt{ Holloway}}~\newline
+~\newline
+ \href{https://www.holloway.com}{\texttt{ }}  
+
+~\newline
+ \href{https://opencollective.com/unified}{\texttt{ {\bfseries{You?}}}} ~\newline
+~\newline
+   \hypertarget{readme.md_autotoc_md29531}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md29531}
+\href{https://github.com/retextjs/retext/blob/main/license}{\texttt{ MIT}} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

@@ -1,0 +1,1497 @@
+\chapter{\texorpdfstring{$<$}{<}tt\texorpdfstring{$>$}{>}react-\/router\texorpdfstring{$<$}{<}/tt\texorpdfstring{$>$}{>}}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g}{}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g}\index{$<$tt$>$react-\/router$<$/tt$>$@{$<$tt$>$react-\/router$<$/tt$>$}}
+\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26935}%
+\Hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26935}%
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26936}{}\doxysection{\texorpdfstring{7.\+4.\+0}{7.\+4.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26936}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26937}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26937}
+
+\begin{DoxyItemize}
+\item Fix root loader data on initial load redirects in SPA mode (\href{https://github.com/remix-run/react-router/pull/13222}{\texttt{ \#13222}})
+\item Load ancestor pathless/index routes in lazy route discovery for upwards non-\/eager-\/discoery routing (\href{https://github.com/remix-run/react-router/pull/13203}{\texttt{ \#13203}})
+\item Fix {\ttfamily should\+Revalidate} behavior for {\ttfamily client\+Loader}-\/only routes in {\ttfamily ssr\+:true} apps (\href{https://github.com/remix-run/react-router/pull/13221}{\texttt{ \#13221}})
+\item UNSTABLE\+: Fix {\ttfamily Request\+Handler} {\ttfamily load\+Context} parameter type when middleware is enabled (\href{https://github.com/remix-run/react-router/pull/13204}{\texttt{ \#13204}})
+\item UNSTABLE\+: Update {\ttfamily Route.\+unstable\+\_\+\+Middleware\+Function} to have a return value of {\ttfamily Response \texorpdfstring{$\vert$}{|} undefined} instead of {\ttfamily Response \texorpdfstring{$\vert$}{|} void} becaue you should not return anything if you aren\textquotesingle{}t returning the {\ttfamily Response} (\href{https://github.com/remix-run/react-router/pull/13199}{\texttt{ \#13199}})
+\item UNSTABLE(\+BREAKING)\+: If a middleware throws an error, ensure we only bubble the error itself via {\ttfamily next()} and are no longer leaking the {\ttfamily Middleware\+Error} implementation detail (\href{https://github.com/remix-run/react-router/pull/13180}{\texttt{ \#13180}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26938}{}\doxysection{\texorpdfstring{7.\+3.\+0}{7.\+3.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26938}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26939}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26939}
+
+\begin{DoxyItemize}
+\item Add {\ttfamily fetcher\+Key} as a parameter to {\ttfamily patch\+Routes\+On\+Navigation} (\href{https://github.com/remix-run/react-router/pull/13061}{\texttt{ \#13061}})
+\begin{DoxyItemize}
+\item In framework mode, Lazy Route Discovery will now detect manifest version mismatches after a new deploy
+\item On navigations to undiscovered routes, this mismatch will trigger a document reload of the destination path
+\item On {\ttfamily fetcher} calls to undiscovered routes, this mismatch will trigger a document reload of the current path
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26940}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26940}
+
+\begin{DoxyItemize}
+\item Skip resource route flow in dev server in SPA mode (\href{https://github.com/remix-run/react-router/pull/13113}{\texttt{ \#13113}})
+\item Support middleware on routes (unstable) (\href{https://github.com/remix-run/react-router/pull/12941}{\texttt{ \#12941}})
+
+Middleware is implemented behind a {\ttfamily future.\+unstable\+\_\+middleware} flag. To enable, you must enable the flag and the types in your {\ttfamily react-\/router-\/config.\+ts} file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ type\ \{\ Config\ \}\ from\ "{}@react-\/router/dev/config"{};}
+\DoxyCodeLine{import\ type\ \{\ Future\ \}\ from\ "{}react-\/router"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{declare\ module\ "{}react-\/router"{}\ \{}
+\DoxyCodeLine{\ \ interface\ Future\ \{}
+\DoxyCodeLine{\ \ \ \ unstable\_middleware:\ true;\ //\ 👈\ Enable\ middleware\ types}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ \{}
+\DoxyCodeLine{\ \ future:\ \{}
+\DoxyCodeLine{\ \ \ \ unstable\_middleware:\ true,\ //\ 👈\ Enable\ middleware}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}\ satisfies\ Config;}
+
+\end{DoxyCode}
+
+
+⚠️ Middleware is unstable and should not be adopted in production. There is at least one known de-\/optimization in route module loading for {\ttfamily client\+Middleware} that we will be addressing this before a stable release.
+
+⚠️ Enabling middleware contains a breaking change to the {\ttfamily context} parameter passed to your {\ttfamily loader}/{\ttfamily action} functions -\/ see below for more information.
+
+Once enabled, routes can define an array of middleware functions that will run sequentially before route handlers run. These functions accept the same parameters as {\ttfamily loader}/{\ttfamily action} plus an additional {\ttfamily next} parameter to run the remaining data pipeline. This allows middlewares to perform logic before and after handlers execute.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Framework\ mode}
+\DoxyCodeLine{export\ const\ unstable\_middleware\ =\ [serverLogger,\ serverAuth];\ //\ server}
+\DoxyCodeLine{export\ const\ unstable\_clientMiddleware\ =\ [clientLogger];\ //\ client}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Library\ mode}
+\DoxyCodeLine{const\ routes\ =\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ path:\ "{}/"{},}
+\DoxyCodeLine{\ \ \ \ //\ Middlewares\ are\ client-\/side\ for\ library\ mode\ SPA's}
+\DoxyCodeLine{\ \ \ \ unstable\_middleware:\ [clientLogger,\ clientAuth],}
+\DoxyCodeLine{\ \ \ \ loader:\ rootLoader,}
+\DoxyCodeLine{\ \ \ \ Component:\ Root,}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{];}
+
+\end{DoxyCode}
+
+
+Here\textquotesingle{}s a simple example of a client-\/side logging middleware that can be placed on the root route\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ clientLogger:\ Route.unstable\_ClientMiddlewareFunction\ =\ async\ (}
+\DoxyCodeLine{\ \ \{\ request\ \},}
+\DoxyCodeLine{\ \ next}
+\DoxyCodeLine{)\ =>\ \{}
+\DoxyCodeLine{\ \ let\ start\ =\ performance.now();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Run\ the\ remaining\ middlewares\ and\ all\ route\ loaders}
+\DoxyCodeLine{\ \ await\ next();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ let\ duration\ =\ performance.now()\ -\/\ start;}
+\DoxyCodeLine{\ \ console.log(`Navigated\ to\ \$\{request.url\}\ (\$\{duration\}ms)`);}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+Note that in the above example, the {\ttfamily next}/{\ttfamily middleware} functions don\textquotesingle{}t return anything. This is by design as on the client there is no "{}response"{} to send over the network like there would be for middlewares running on the server. The data is all handled behind the scenes by the stateful {\ttfamily router}.
+
+For a server-\/side middleware, the {\ttfamily next} function will return the HTTP {\ttfamily Response} that React Router will be sending across the wire, thus giving you a chance to make changes as needed. You may throw a new response to short circuit and respond immediately, or you may return a new or altered response to override the default returned by {\ttfamily next()}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ serverLogger:\ Route.unstable\_MiddlewareFunction\ =\ async\ (}
+\DoxyCodeLine{\ \ \{\ request,\ params,\ context\ \},}
+\DoxyCodeLine{\ \ next}
+\DoxyCodeLine{)\ =>\ \{}
+\DoxyCodeLine{\ \ let\ start\ =\ performance.now();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ 👇\ Grab\ the\ response\ here}
+\DoxyCodeLine{\ \ let\ res\ =\ await\ next();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ let\ duration\ =\ performance.now()\ -\/\ start;}
+\DoxyCodeLine{\ \ console.log(`Navigated\ to\ \$\{request.url\}\ (\$\{duration\}ms)`);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ 👇\ And\ return\ it\ here\ (optional\ if\ you\ don't\ modify\ the\ response)}
+\DoxyCodeLine{\ \ return\ res;}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+You can throw a {\ttfamily redirect} from a middleware to short circuit any remaining processing\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ sessionContext\ \}\ from\ "{}../context"{};}
+\DoxyCodeLine{const\ serverAuth:\ Route.unstable\_MiddlewareFunction\ =\ (}
+\DoxyCodeLine{\ \ \{\ request,\ params,\ context\ \},}
+\DoxyCodeLine{\ \ next}
+\DoxyCodeLine{)\ =>\ \{}
+\DoxyCodeLine{\ \ let\ session\ =\ context.get(sessionContext);}
+\DoxyCodeLine{\ \ let\ user\ =\ session.get("{}user"{});}
+\DoxyCodeLine{\ \ if\ (!user)\ \{}
+\DoxyCodeLine{\ \ \ \ session.set("{}returnTo"{},\ request.url);}
+\DoxyCodeLine{\ \ \ \ throw\ redirect("{}/login"{},\ 302);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+{\itshape Note that in cases like this where you don\textquotesingle{}t need to do any post-\/processing you don\textquotesingle{}t need to call the {\ttfamily next} function or return a {\ttfamily Response}.}
+
+Here\textquotesingle{}s another example of using a server middleware to detect 404s and check the CMS for a redirect\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ redirects:\ Route.unstable\_MiddlewareFunction\ =\ async\ (\{}
+\DoxyCodeLine{\ \ request,}
+\DoxyCodeLine{\ \ next,}
+\DoxyCodeLine{\})\ =>\ \{}
+\DoxyCodeLine{\ \ //\ attempt\ to\ handle\ the\ request}
+\DoxyCodeLine{\ \ let\ res\ =\ await\ next();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ if\ it's\ a\ 404,\ check\ the\ CMS\ for\ a\ redirect,\ do\ it\ last}
+\DoxyCodeLine{\ \ //\ because\ it's\ expensive}
+\DoxyCodeLine{\ \ if\ (res.status\ ===\ 404)\ \{}
+\DoxyCodeLine{\ \ \ \ let\ cmsRedirect\ =\ await\ checkCMSRedirects(request.url);}
+\DoxyCodeLine{\ \ \ \ if\ (cmsRedirect)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ throw\ redirect(cmsRedirect,\ 302);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ res;}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+{\bfseries{{\ttfamily context} parameter}}
+
+When middleware is enabled, your application will use a different type of {\ttfamily context} parameter in your loaders and actions to provide better type safety. Instead of {\ttfamily App\+Load\+Context}, {\ttfamily context} will now be an instance of {\ttfamily Context\+Provider} that you can use with type-\/safe contexts (similar to {\ttfamily React.\+create\+Context})\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ unstable\_createContext\ \}\ from\ "{}react-\/router"{};}
+\DoxyCodeLine{import\ \{\ Route\ \}\ from\ "{}./+types/root"{};}
+\DoxyCodeLine{import\ type\ \{\ Session\ \}\ from\ "{}./sessions.server"{};}
+\DoxyCodeLine{import\ \{\ getSession\ \}\ from\ "{}./sessions.server"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ sessionContext\ =\ unstable\_createContext<Session>();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ sessionMiddleware:\ Route.unstable\_MiddlewareFunction\ =\ (\{}
+\DoxyCodeLine{\ \ context,}
+\DoxyCodeLine{\ \ request,}
+\DoxyCodeLine{\})\ =>\ \{}
+\DoxyCodeLine{\ \ let\ session\ =\ await\ getSession(request);}
+\DoxyCodeLine{\ \ context.set(sessionContext,\ session);}
+\DoxyCodeLine{\ \ //\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \string^\ must\ be\ of\ type\ Session}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ...\ then\ in\ some\ downstream\ middleware}
+\DoxyCodeLine{const\ loggerMiddleware:\ Route.unstable\_MiddlewareFunction\ =\ (\{}
+\DoxyCodeLine{\ \ context,}
+\DoxyCodeLine{\ \ request,}
+\DoxyCodeLine{\})\ =>\ \{}
+\DoxyCodeLine{\ \ let\ session\ =\ context.get(sessionContext);}
+\DoxyCodeLine{\ \ //\ \ \string^\ typeof\ Session}
+\DoxyCodeLine{\ \ console.log(session.get("{}userId"{}),\ request.method,\ request.url);}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ...\ or\ some\ downstream\ loader}
+\DoxyCodeLine{export\ function\ loader(\{\ context\ \}:\ Route.LoaderArgs)\ \{}
+\DoxyCodeLine{\ \ let\ session\ =\ context.get(sessionContext);}
+\DoxyCodeLine{\ \ let\ profile\ =\ await\ getProfile(session.get("{}userId"{}));}
+\DoxyCodeLine{\ \ return\ \{\ profile\ \};}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you are using a custom server with a {\ttfamily get\+Load\+Context} function, the return value for initial context values passed from the server adapter layer is no longer an object and should now return an {\ttfamily unstable\+\_\+\+Initial\+Context} ({\ttfamily Map\texorpdfstring{$<$}{<}Router\+Context, unknown\texorpdfstring{$>$}{>}})\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ adapterContext\ =\ unstable\_createContext<MyAdapterContext>();}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ getLoadContext(req,\ res):\ unstable\_InitialContext\ \{}
+\DoxyCodeLine{\ \ let\ map\ =\ new\ Map();}
+\DoxyCodeLine{\ \ map.set(adapterContext,\ getAdapterContext(req));}
+\DoxyCodeLine{\ \ return\ map;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+\item Fix types for loader\+Data and action\+Data that contained {\ttfamily Record}s (\href{https://github.com/remix-run/react-router/pull/13139}{\texttt{ \#13139}})
+
+UNSTABLE(\+BREAKING)\+:
+
+{\ttfamily unstable\+\_\+\+Serializes\+To} added a way to register custom serialization types in Single Fetch for other library and framework authors like Apollo. It was implemented with branded type whose branded property that was made optional so that casting arbitrary values was easy\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ without\ the\ brand\ being\ marked\ as\ optional}
+\DoxyCodeLine{let\ x1\ =\ 42\ as\ unknown\ as\ unstable\_SerializesTo<number>;}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \ \ \string^\string^\string^\string^\string^\string^\string^\string^\string^\string^}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ with\ the\ brand\ being\ marked\ as\ optional}
+\DoxyCodeLine{let\ x2\ =\ 42\ as\ unstable\_SerializesTo<number>;}
+
+\end{DoxyCode}
+
+
+However, this broke type inference in {\ttfamily loader\+Data} and {\ttfamily action\+Data} for any {\ttfamily Record} types as those would now (incorrectly) match {\ttfamily unstable\+\_\+\+Serializes\+To}. This affected all users, not just those that depended on {\ttfamily unstable\+\_\+\+Serializes\+To}. To fix this, the branded property of {\ttfamily unstable\+\_\+\+Serializes\+To} is marked as required instead of optional.
+
+For library and framework authors using {\ttfamily unstable\+\_\+\+Serializes\+To}, you may need to add {\ttfamily as unknown} casts before casting to {\ttfamily unstable\+\_\+\+Serializes\+To}.
+\item \mbox{[}REMOVE\mbox{]} Remove middleware depth logic and always call middlware for all matches (\href{https://github.com/remix-run/react-router/pull/13172}{\texttt{ \#13172}})
+\item Fix single fetch {\ttfamily \+\_\+root.\+data} requests when a {\ttfamily basename} is used (\href{https://github.com/remix-run/react-router/pull/12898}{\texttt{ \#12898}})
+\item Add {\ttfamily context} support to client side data routers (unstable) (\href{https://github.com/remix-run/react-router/pull/12941}{\texttt{ \#12941}})
+
+Your application {\ttfamily loader} and {\ttfamily action} functions on the client will now receive a {\ttfamily context} parameter. This is an instance of {\ttfamily unstable\+\_\+\+Router\+Context\+Provider} that you use with type-\/safe contexts (similar to {\ttfamily React.\+create\+Context}) and is most useful with the corresponding {\ttfamily middleware}/{\ttfamily client\+Middleware} API\textquotesingle{}s\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ unstable\_createContext\ \}\ from\ "{}react-\/router"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{type\ User\ =\ \{}
+\DoxyCodeLine{\ \ /*...*/}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ userContext\ =\ unstable\_createContext<User>();}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ sessionMiddleware(\{\ context\ \})\ \{}
+\DoxyCodeLine{\ \ let\ user\ =\ await\ getUser();}
+\DoxyCodeLine{\ \ context.set(userContext,\ user);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ...\ then\ in\ some\ downstream\ loader}
+\DoxyCodeLine{function\ loader(\{\ context\ \})\ \{}
+\DoxyCodeLine{\ \ let\ user\ =\ context.get(userContext);}
+\DoxyCodeLine{\ \ let\ profile\ =\ await\ getProfile(user.id);}
+\DoxyCodeLine{\ \ return\ \{\ profile\ \};}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Similar to server-\/side requests, a fresh {\ttfamily context} will be created per navigation (or {\ttfamily fetcher} call). If you have initial data you\textquotesingle{}d like to populate in the context for every request, you can provide an {\ttfamily unstable\+\_\+get\+Context} function at the root of your app\+:
+\begin{DoxyItemize}
+\item Library mode -\/ {\ttfamily create\+Browser\+Router(routes, \{ unstable\+\_\+get\+Context \})}
+\item Framework mode -\/ {\ttfamily \texorpdfstring{$<$}{<}Hydrated\+Router unstable\+\_\+get\+Context\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+
+This function should return an value of type {\ttfamily unstable\+\_\+\+Initial\+Context} which is a {\ttfamily Map\texorpdfstring{$<$}{<}unstable\+\_\+\+Router\+Context, unknown\texorpdfstring{$>$}{>}} of context\textquotesingle{}s and initial values\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ loggerContext\ =\ unstable\_createContext<(...args:\ unknown[])\ =>\ void>();}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ logger(...args:\ unknown[])\ \{}
+\DoxyCodeLine{\ \ console.log(new\ Date.toISOString(),\ ...args);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ unstable\_getContext()\ \{}
+\DoxyCodeLine{\ \ let\ map\ =\ new\ Map();}
+\DoxyCodeLine{\ \ map.set(loggerContext,\ logger);}
+\DoxyCodeLine{\ \ return\ map;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26941}{}\doxysection{\texorpdfstring{7.\+2.\+0}{7.\+2.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26941}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26942}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26942}
+
+\begin{DoxyItemize}
+\item New type-\/safe {\ttfamily href} utility that guarantees links point to actual paths in your app (\href{https://github.com/remix-run/react-router/pull/13012}{\texttt{ \#13012}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ href\ \}\ from\ "{}react-\/router"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ function\ Component()\ \{}
+\DoxyCodeLine{\ \ const\ link\ =\ href("{}/blog/:slug"{},\ \{\ slug:\ "{}my-\/first-\/post"{}\ \});}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <main>}
+\DoxyCodeLine{\ \ \ \ \ \ <Link\ to=\{href("{}/products/:id"{},\ \{\ id:\ "{}asdf"{}\ \})\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ <NavLink\ to=\{href("{}/:lang?/about"{},\ \{\ lang:\ "{}en"{}\ \})\}\ />}
+\DoxyCodeLine{\ \ \ \ </main>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26943}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26943}
+
+\begin{DoxyItemize}
+\item Fix typegen for repeated params (\href{https://github.com/remix-run/react-router/pull/13012}{\texttt{ \#13012}})
+
+In React Router, path parameters are keyed by their name. So for a path pattern like {\ttfamily /a/\+:id/b/\+:id?/c/\+:id}, the last {\ttfamily \+:id} will set the value for {\ttfamily id} in {\ttfamily use\+Params} and the {\ttfamily params} prop. For example, {\ttfamily /a/1/b/2/c/3} will result in the value {\ttfamily \{ id\+: 3 \}} at runtime.
+
+Previously, generated types for params incorrectly modeled repeated params with an array. So {\ttfamily /a/1/b/2/c/3} generated a type like {\ttfamily \{ id\+: \mbox{[}1,2,3\mbox{]} \}}.
+
+To be consistent with runtime behavior, the generated types now correctly model the "{}last one wins"{} semantics of path parameters. So {\ttfamily /a/1/b/2/c/3} now generates a type like {\ttfamily \{ id\+: 3 \}}.
+\item Don\textquotesingle{}t apply Single Fetch revalidation de-\/optimization when in SPA mode since there is no server HTTP request (\href{https://github.com/remix-run/react-router/pull/12948}{\texttt{ \#12948}})
+\item Properly handle revalidations to across a prerender/\+SPA boundary (\href{https://github.com/remix-run/react-router/pull/13021}{\texttt{ \#13021}})
+\begin{DoxyItemize}
+\item In "{}hybrid"{} applications where some routes are pre-\/rendered and some are served from a SPA fallback, we need to avoid making {\ttfamily .data} requests if the path wasn\textquotesingle{}t pre-\/rendered because the request will 404
+\item We don\textquotesingle{}t know all the pre-\/rendered paths client-\/side, however\+:
+\begin{DoxyItemize}
+\item All {\ttfamily loader} data in {\ttfamily ssr\+:false} mode is static because it\textquotesingle{}s generated at build time
+\item A route must use a {\ttfamily client\+Loader} to do anything dynamic
+\item Therefore, if a route only has a {\ttfamily loader} and not a {\ttfamily client\+Loader}, we disable revalidation by default because there is no new data to retrieve
+\item We short circuit and skip single fetch {\ttfamily .data} request logic if there are no server loaders with {\ttfamily should\+Load=true} in our single fetch {\ttfamily data\+Strategy}
+\item This ensures that the route doesn\textquotesingle{}t cause a {\ttfamily .data} request that would 404 after a submission
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item Error at build time in {\ttfamily ssr\+:false} + {\ttfamily prerender} apps for the edge case scenario of\+: (\href{https://github.com/remix-run/react-router/pull/13021}{\texttt{ \#13021}})
+\begin{DoxyItemize}
+\item A parent route has only a {\ttfamily loader} (does not have a {\ttfamily client\+Loader})
+\item The parent route is pre-\/rendered
+\item The parent route has children routes which are not prerendered
+\item This means that when the child paths are loaded via the SPA fallback, the parent won\textquotesingle{}t have any {\ttfamily loader\+Data} because there is no server on which to run the {\ttfamily loader}
+\item This can be resolved by either adding a parent {\ttfamily client\+Loader} or pre-\/rendering the child paths
+\item If you add a {\ttfamily client\+Loader}, calling the {\ttfamily server\+Loader()} on non-\/prerendered paths will throw a 404
+\end{DoxyItemize}
+\item Add unstable support for splitting route modules in framework mode via {\ttfamily future.\+unstable\+\_\+split\+Route\+Modules} (\href{https://github.com/remix-run/react-router/pull/11871}{\texttt{ \#11871}})
+\item Add {\ttfamily unstable\+\_\+\+Serializes\+To} brand type for library authors to register types serializable by React Router\textquotesingle{}s streaming format ({\ttfamily turbo-\/stream}) (\href{https://github.com/remix-run/react-router/commit/ab5b05b02f99f062edb3c536c392197c88eb6c77}{\texttt{ {\ttfamily ab5b05b02}}})
+\item Align dev server behavior with static file server behavior when {\ttfamily ssr\+:false} is set (\href{https://github.com/remix-run/react-router/pull/12948}{\texttt{ \#12948}})
+\begin{DoxyItemize}
+\item When no {\ttfamily prerender} config exists, only SSR down to the root {\ttfamily Hydrate\+Fallback} (SPA Mode)
+\item When a {\ttfamily prerender} config exists but the current path is not prerendered, only SSR down to the root {\ttfamily Hydrate\+Fallback} (SPA Fallback)
+\item Return a 404 on {\ttfamily .data} requests to non-\/pre-\/rendered paths
+\end{DoxyItemize}
+\item Improve prefetch performance of CSS side effects in framework mode (\href{https://github.com/remix-run/react-router/pull/12889}{\texttt{ \#12889}})
+\item Disable Lazy Route Discovery for all {\ttfamily ssr\+:false} apps and not just "{}\+SPA Mode"{} because there is no runtime server to serve the search-\/param-\/configured {\ttfamily \+\_\+\+\_\+manifest} requests (\href{https://github.com/remix-run/react-router/pull/12894}{\texttt{ \#12894}})
+\begin{DoxyItemize}
+\item We previously only disabled this for "{}\+SPA Mode"{} which is {\ttfamily ssr\+:false} and no {\ttfamily prerender} config but we realized it should apply to all {\ttfamily ssr\+:false} apps, including those prerendering multiple pages
+\item In those {\ttfamily prerender} scenarios we would prerender the {\ttfamily /\+\_\+\+\_\+manifest} file assuming the static file server would serve it but that makes some unneccesary assumptions about the static file server behaviors
+\end{DoxyItemize}
+\item Properly handle interrupted manifest requests in lazy route discovery (\href{https://github.com/remix-run/react-router/pull/12915}{\texttt{ \#12915}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26944}{}\doxysection{\texorpdfstring{7.\+1.\+5}{7.\+1.\+5}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26944}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26945}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26945}
+
+\begin{DoxyItemize}
+\item Fix regression introduced in {\ttfamily 7.\+1.\+4} via \href{https://github.com/remix-run/react-router/pull/12800}{\texttt{ \#12800}} that caused issues navigating to hash routes inside splat routes for applications using Lazy Route Discovery ({\ttfamily patch\+Routes\+On\+Navigation}) (\href{https://github.com/remix-run/react-router/pull/12927}{\texttt{ \#12927}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26946}{}\doxysection{\texorpdfstring{7.\+1.\+4}{7.\+1.\+4}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26946}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26947}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26947}
+
+\begin{DoxyItemize}
+\item Internal reorg to clean up some duplicated route module types (\href{https://github.com/remix-run/react-router/pull/12799}{\texttt{ \#12799}})
+\item Properly handle status codes that cannot have a body in single fetch responses (204, etc.) (\href{https://github.com/remix-run/react-router/pull/12760}{\texttt{ \#12760}})
+\item Stop erroring on resource routes that return raw strings/objects and instead serialize them as {\ttfamily text/plain} or {\ttfamily application/json} responses (\href{https://github.com/remix-run/react-router/pull/12848}{\texttt{ \#12848}})
+\begin{DoxyItemize}
+\item This only applies when accessed as a resource route without the {\ttfamily .data} extension
+\item When accessed from a Single Fetch {\ttfamily .data} request, they will still be encoded via {\ttfamily turbo-\/stream}
+\end{DoxyItemize}
+\item Optimize Lazy Route Discovery path discovery to favor a single {\ttfamily query\+Selector\+All} call at the {\ttfamily body} level instead of many calls at the sub-\/tree level (\href{https://github.com/remix-run/react-router/pull/12731}{\texttt{ \#12731}})
+\item Properly bubble headers as {\ttfamily error\+Headers} when throwing a {\ttfamily data()} result (\href{https://github.com/remix-run/react-router/pull/12846}{\texttt{ \#12846}})
+\begin{DoxyItemize}
+\item Avoid duplication of {\ttfamily Set-\/\+Cookie} headers could be duplicated if also returned from {\ttfamily headers}
+\end{DoxyItemize}
+\item Optimize route matching by skipping redundant {\ttfamily match\+Routes} calls when possible (\href{https://github.com/remix-run/react-router/pull/12800}{\texttt{ \#12800}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26948}{}\doxysection{\texorpdfstring{7.\+1.\+3}{7.\+1.\+3}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26948}
+{\itshape No changes}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26949}{}\doxysection{\texorpdfstring{7.\+1.\+2}{7.\+1.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26949}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26950}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26950}
+
+\begin{DoxyItemize}
+\item Fix issue with fetcher data cleanup in the data layer on fetcher unmount (\href{https://github.com/remix-run/react-router/pull/12681}{\texttt{ \#12681}})
+\item Do not rely on {\ttfamily symbol} for filtering out {\ttfamily redirect} responses from loader data (\href{https://github.com/remix-run/react-router/pull/12694}{\texttt{ \#12694}})
+
+Previously, some projects were getting type checking errors like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{error\ TS4058:\ Return\ type\ of\ exported\ function\ has\ or\ is\ using\ name\ 'redirectSymbol'\ from\ external\ module\ "{}node\_modules/..."{}\ but\ cannot\ be\ named.}
+
+\end{DoxyCode}
+
+
+Now that {\ttfamily symbol}s are not used for the {\ttfamily redirect} response type, these errors should no longer be present.
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26951}{}\doxysection{\texorpdfstring{7.\+1.\+1}{7.\+1.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26951}
+{\itshape No changes}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26952}{}\doxysection{\texorpdfstring{7.\+1.\+0}{7.\+1.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26952}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26953}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26953}
+
+\begin{DoxyItemize}
+\item Throw unwrapped single fetch redirect to align with pre-\/single fetch behavior (\href{https://github.com/remix-run/react-router/pull/12506}{\texttt{ \#12506}})
+\item Ignore redirects when inferring loader data types (\href{https://github.com/remix-run/react-router/pull/12527}{\texttt{ \#12527}})
+\item Remove {\ttfamily \texorpdfstring{$<$}{<}Link prefetch\texorpdfstring{$>$}{>}} warning which suffers from false positives in a lazy route discovery world (\href{https://github.com/remix-run/react-router/pull/12485}{\texttt{ \#12485}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26954}{}\doxysection{\texorpdfstring{7.\+0.\+2}{7.\+0.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26954}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26955}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26955}
+
+\begin{DoxyItemize}
+\item temporarily only use one build in export map so packages can have a peer dependency on react router (\href{https://github.com/remix-run/react-router/pull/12437}{\texttt{ \#12437}})
+\item Generate wide {\ttfamily matches} and {\ttfamily params} types for current route and child routes (\href{https://github.com/remix-run/react-router/pull/12397}{\texttt{ \#12397}})
+
+At runtime, {\ttfamily matches} includes child route matches and {\ttfamily params} include child route path parameters. But previously, we only generated types for parent routes in {\ttfamily matches}; for {\ttfamily params}, we only considered the parent routes and the current route. To align our generated types more closely to the runtime behavior, we now generate more permissive, wider types when accessing child route information.
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26956}{}\doxysection{\texorpdfstring{7.\+0.\+1}{7.\+0.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26956}
+{\itshape No changes}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26957}{}\doxysection{\texorpdfstring{7.\+0.\+0}{7.\+0.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26957}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26958}{}\doxysubsection{\texorpdfstring{Major Changes}{Major Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26958}
+
+\begin{DoxyItemize}
+\item Remove the original {\ttfamily defer} implementation in favor of using raw promises via single fetch and {\ttfamily turbo-\/stream}. This removes these exports from React Router\+: (\href{https://github.com/remix-run/react-router/pull/11744}{\texttt{ \#11744}})
+\begin{DoxyItemize}
+\item {\ttfamily defer}
+\item {\ttfamily Aborted\+Deferred\+Error}
+\item {\ttfamily type Typed\+Deferred\+Data}
+\item {\ttfamily UNSAFE\+\_\+\+Deferred\+Data}
+\item {\ttfamily UNSAFE\+\_\+\+DEFERRED\+\_\+\+SYMBOL},
+\end{DoxyItemize}
+\item -\/ Collapse {\ttfamily @remix-\/run/router} into {\ttfamily react-\/router} (\href{https://github.com/remix-run/react-router/pull/11505}{\texttt{ \#11505}})
+\begin{DoxyItemize}
+\item Collapse {\ttfamily react-\/router-\/dom} into {\ttfamily react-\/router}
+\item Collapse {\ttfamily @remix-\/run/server-\/runtime} into {\ttfamily react-\/router}
+\item Collapse {\ttfamily @remix-\/run/testing} into {\ttfamily react-\/router}
+\end{DoxyItemize}
+\item Remove single\+\_\+fetch future flag. (\href{https://github.com/remix-run/react-router/pull/11522}{\texttt{ \#11522}})
+\item Drop support for Node 16, React Router SSR now requires Node 18 or higher (\href{https://github.com/remix-run/react-router/pull/11391}{\texttt{ \#11391}})
+\item Remove {\ttfamily future.\+v7\+\_\+start\+Transition} flag (\href{https://github.com/remix-run/react-router/pull/11696}{\texttt{ \#11696}})
+\item -\/ Expose the underlying router promises from the following APIs for compsition in React 19 APIs\+: (\href{https://github.com/remix-run/react-router/pull/11521}{\texttt{ \#11521}})
+\begin{DoxyItemize}
+\item {\ttfamily use\+Navigate()}
+\item {\ttfamily use\+Submit}
+\item {\ttfamily use\+Fetcher().load}
+\item {\ttfamily use\+Fetcher().submit}
+\item {\ttfamily use\+Revalidator.\+revalidate}
+\end{DoxyItemize}
+\item Remove {\ttfamily future.\+v7\+\_\+normalize\+Form\+Method} future flag (\href{https://github.com/remix-run/react-router/pull/11697}{\texttt{ \#11697}})
+\item For Remix consumers migrating to React Router, the {\ttfamily crypto} global from the \href{https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API}{\texttt{ Web Crypto API}} is now required when using cookie and session APIs. This means that the following APIs are provided from {\ttfamily react-\/router} rather than platform-\/specific packages\+: (\href{https://github.com/remix-run/react-router/pull/11837}{\texttt{ \#11837}})
+\begin{DoxyItemize}
+\item {\ttfamily create\+Cookie}
+\item {\ttfamily create\+Cookie\+Session\+Storage}
+\item {\ttfamily create\+Memory\+Session\+Storage}
+\item {\ttfamily create\+Session\+Storage}
+\end{DoxyItemize}
+
+For consumers running older versions of Node, the {\ttfamily install\+Globals} function from {\ttfamily @remix-\/run/node} has been updated to define {\ttfamily global\+This.\+crypto}, using \href{https://nodejs.org/api/webcrypto.html}{\texttt{ Node\textquotesingle{}s `require(\textquotesingle{}node\+:crypto').webcrypto\`{} implementation.}}
+
+Since platform-\/specific packages no longer need to implement this API, the following low-\/level APIs have been removed\+:
+\begin{DoxyItemize}
+\item {\ttfamily create\+Cookie\+Factory}
+\item {\ttfamily create\+Session\+Storage\+Factory}
+\item {\ttfamily create\+Cookie\+Session\+Storage\+Factory}
+\item {\ttfamily create\+Memory\+Session\+Storage\+Factory}
+\end{DoxyItemize}
+\item Imports/\+Exports cleanup (\href{https://github.com/remix-run/react-router/pull/11840}{\texttt{ \#11840}})
+\begin{DoxyItemize}
+\item Removed the following exports that were previously public API from {\ttfamily @remix-\/run/router}
+\begin{DoxyItemize}
+\item types
+\begin{DoxyItemize}
+\item {\ttfamily Agnostic\+Data\+Index\+Route\+Object}
+\item {\ttfamily Agnostic\+Data\+Non\+Index\+Route\+Object}
+\item {\ttfamily Agnostic\+Data\+Route\+Match}
+\item {\ttfamily Agnostic\+Data\+Route\+Object}
+\item {\ttfamily Agnostic\+Index\+Route\+Object}
+\item {\ttfamily Agnostic\+Non\+Index\+Route\+Object}
+\item {\ttfamily Agnostic\+Route\+Match}
+\item {\ttfamily Agnostic\+Route\+Object}
+\item {\ttfamily Tracked\+Promise}
+\item {\ttfamily unstable\+\_\+\+Agnostic\+Patch\+Routes\+On\+Miss\+Function}
+\item {\ttfamily Action} -\/\texorpdfstring{$>$}{>} exported as {\ttfamily Navigation\+Type} via {\ttfamily react-\/router}
+\item {\ttfamily Router} exported as {\ttfamily Data\+Router} to differentiate from RR\textquotesingle{}s {\ttfamily \texorpdfstring{$<$}{<}Router\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+\item API
+\begin{DoxyItemize}
+\item {\ttfamily get\+To\+Pathname} ({\ttfamily @private})
+\item {\ttfamily join\+Paths} ({\ttfamily @private})
+\item {\ttfamily normalize\+Pathname} ({\ttfamily @private})
+\item {\ttfamily resolve\+To} ({\ttfamily @private})
+\item {\ttfamily strip\+Basename} ({\ttfamily @private})
+\item {\ttfamily create\+Browser\+History} -\/\texorpdfstring{$>$}{>} in favor of {\ttfamily create\+Browser\+Router}
+\item {\ttfamily create\+Hash\+History} -\/\texorpdfstring{$>$}{>} in favor of {\ttfamily create\+Hash\+Router}
+\item {\ttfamily create\+Memory\+History} -\/\texorpdfstring{$>$}{>} in favor of {\ttfamily create\+Memory\+Router}
+\item {\ttfamily create\+Router}
+\item {\ttfamily create\+Static\+Handler} -\/\texorpdfstring{$>$}{>} in favor of wrapper {\ttfamily create\+Static\+Handler} in RR Dom
+\item {\ttfamily get\+Static\+Context\+From\+Error}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item Removed the following exports that were previously public API from {\ttfamily react-\/router}
+\begin{DoxyItemize}
+\item {\ttfamily Hash}
+\item {\ttfamily Pathname}
+\item {\ttfamily Search}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item update minimum node version to 18 (\href{https://github.com/remix-run/react-router/pull/11690}{\texttt{ \#11690}})
+\item Remove {\ttfamily future.\+v7\+\_\+prepend\+Basename} from the ionternalized {\ttfamily @remix-\/run/router} package (\href{https://github.com/remix-run/react-router/pull/11726}{\texttt{ \#11726}})
+\item Migrate Remix type generics to React Router (\href{https://github.com/remix-run/react-router/pull/12180}{\texttt{ \#12180}})
+\begin{DoxyItemize}
+\item These generics are provided for Remix v2 migration purposes
+\item These generics and the APIs they exist on should be considered informally deprecated in favor of the new {\ttfamily Route.\texorpdfstring{$\ast$}{*}} types
+\item Anyone migrating from React Router v6 should probably not leverage these new generics and should migrate straight to the {\ttfamily Route.\texorpdfstring{$\ast$}{*}} types
+\item For React Router v6 users, these generics are new and should not impact your app, with one exception
+\begin{DoxyItemize}
+\item {\ttfamily use\+Fetcher} previously had an optional generic (used primarily by Remix v2) that expected the data type
+\item This has been updated in v7 to expect the type of the function that generates the data (i.\+e., {\ttfamily typeof loader}/{\ttfamily typeof action})
+\item Therefore, you should update your usages\+:
+\begin{DoxyItemize}
+\item ❌ {\ttfamily use\+Fetcher\texorpdfstring{$<$}{<}Loader\+Data\texorpdfstring{$>$}{>}()}
+\item ✅ {\ttfamily use\+Fetcher\texorpdfstring{$<$}{<}typeof loader\texorpdfstring{$>$}{>}()}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item Remove {\ttfamily future.\+v7\+\_\+throw\+Abort\+Reason} from internalized {\ttfamily @remix-\/run/router} package (\href{https://github.com/remix-run/react-router/pull/11728}{\texttt{ \#11728}})
+\item Add {\ttfamily exports} field to all packages (\href{https://github.com/remix-run/react-router/pull/11675}{\texttt{ \#11675}})
+\item node package no longer re-\/exports from react-\/router (\href{https://github.com/remix-run/react-router/pull/11702}{\texttt{ \#11702}})
+\item renamed Remix\+Context to Framework\+Context (\href{https://github.com/remix-run/react-router/pull/11705}{\texttt{ \#11705}})
+\item updates the minimum React version to 18 (\href{https://github.com/remix-run/react-router/pull/11689}{\texttt{ \#11689}})
+\item Prefetch\+Page\+Descriptor replaced by Page\+Link\+Descriptor (\href{https://github.com/remix-run/react-router/pull/11960}{\texttt{ \#11960}})
+\item -\/ Consolidate types previously duplicated across {\ttfamily @remix-\/run/router}, {\ttfamily @remix-\/run/server-\/runtime}, and {\ttfamily @remix-\/run/react} now that they all live in {\ttfamily react-\/router} (\href{https://github.com/remix-run/react-router/pull/12177}{\texttt{ \#12177}})
+\begin{DoxyItemize}
+\item Examples\+: {\ttfamily Loader\+Function}, {\ttfamily Loader\+Function\+Args}, {\ttfamily Action\+Function}, {\ttfamily Action\+Function\+Args}, {\ttfamily Data\+Function\+Args}, {\ttfamily Route\+Manifest}, {\ttfamily Links\+Function}, {\ttfamily Route}, {\ttfamily Entry\+Route}
+\item The {\ttfamily Route\+Manifest} type used by the "{}remix"{} code is now slightly stricter because it is using the former {\ttfamily @remix-\/run/router} {\ttfamily Route\+Manifest}
+\begin{DoxyItemize}
+\item {\ttfamily Record\texorpdfstring{$<$}{<}string, Route\texorpdfstring{$>$}{>} -\/\texorpdfstring{$>$}{>} Record\texorpdfstring{$<$}{<}string, Route \texorpdfstring{$\vert$}{|} undefined\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+\item Removed {\ttfamily App\+Data} type in favor of inlining {\ttfamily unknown} in the few locations it was used
+\item Removed {\ttfamily Server\+Runtime\+Meta\texorpdfstring{$\ast$}{*}} types in favor of the {\ttfamily Meta\texorpdfstring{$\ast$}{*}} types they were duplicated from
+\end{DoxyItemize}
+\item -\/ Remove the {\ttfamily future.\+v7\+\_\+partial\+Hydration} flag (\href{https://github.com/remix-run/react-router/pull/11725}{\texttt{ \#11725}})
+\begin{DoxyItemize}
+\item This also removes the {\ttfamily \texorpdfstring{$<$}{<}Router\+Provider fallback\+Element\texorpdfstring{$>$}{>}} prop
+\begin{DoxyItemize}
+\item To migrate, move the {\ttfamily fallback\+Element} to a {\ttfamily hydrate\+Fallback\+Element}/{\ttfamily Hydrate\+Fallback} on your root route
+\end{DoxyItemize}
+\item Also worth nothing there is a related breaking changer with this future flag\+:
+\begin{DoxyItemize}
+\item Without {\ttfamily future.\+v7\+\_\+partial\+Hydration} (when using {\ttfamily fallback\+Element}), {\ttfamily state.\+navigation} was populated during the initial load
+\item With {\ttfamily future.\+v7\+\_\+partial\+Hydration}, {\ttfamily state.\+navigation} remains in an {\ttfamily "{}idle"{}} state during the initial load
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item Remove {\ttfamily v7\+\_\+relative\+Splat\+Path} future flag (\href{https://github.com/remix-run/react-router/pull/11695}{\texttt{ \#11695}})
+\item Drop support for Node 18, update minimum Node vestion to 20 (\href{https://github.com/remix-run/react-router/pull/12171}{\texttt{ \#12171}})
+\begin{DoxyItemize}
+\item Remove {\ttfamily install\+Globals()} as this should no longer be necessary
+\end{DoxyItemize}
+\item Remove remaining future flags (\href{https://github.com/remix-run/react-router/pull/11820}{\texttt{ \#11820}})
+\begin{DoxyItemize}
+\item React Router {\ttfamily v7\+\_\+skip\+Action\+Error\+Revalidation}
+\item Remix {\ttfamily v3\+\_\+fetcher\+Persist}, {\ttfamily v3\+\_\+relative\+Splat\+Path}, {\ttfamily v3\+\_\+throw\+Abort\+Reason}
+\end{DoxyItemize}
+\item rename create\+Remix\+Stub to create\+Routes\+Stub (\href{https://github.com/remix-run/react-router/pull/11692}{\texttt{ \#11692}})
+\item Remove {\ttfamily @remix-\/run/router} deprecated {\ttfamily detect\+Error\+Boundary} option in favor of {\ttfamily map\+Route\+Properties} (\href{https://github.com/remix-run/react-router/pull/11751}{\texttt{ \#11751}})
+\item Add {\ttfamily react-\/router/dom} subpath export to properly enable {\ttfamily react-\/dom} as an optional {\ttfamily peer\+Dependency} (\href{https://github.com/remix-run/react-router/pull/11851}{\texttt{ \#11851}})
+\begin{DoxyItemize}
+\item This ensures that we don\textquotesingle{}t blindly {\ttfamily import React\+DOM from "{}react-\/dom"{}} in {\ttfamily \texorpdfstring{$<$}{<}Router\+Provider\texorpdfstring{$>$}{>}} in order to access {\ttfamily React\+DOM.\+flush\+Sync()}, since that would break {\ttfamily create\+Memory\+Router} use cases in non-\/\+DOM environments
+\item DOM environments should import from {\ttfamily react-\/router/dom} to get the proper component that makes {\ttfamily React\+DOM.\+flush\+Sync()} available\+:
+\begin{DoxyItemize}
+\item If you are using the Vite plugin, use this in your {\ttfamily entry.\+client.\+tsx}\+:
+\begin{DoxyItemize}
+\item `import \{ Hydrated\+Router \} from \textquotesingle{}react-\/router/dom'{\ttfamily }
+\end{DoxyItemize}
+\item {\ttfamily If you are not using the Vite plugin and are manually calling}create\+Browser\+Router{\ttfamily /}create\+Hash\+Router{\ttfamily \+: -\/}import \{ Router\+Provider \} from "{}react-\/router/dom"{}\`{}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item Remove {\ttfamily future.\+v7\+\_\+fetcher\+Persist} flag (\href{https://github.com/remix-run/react-router/pull/11731}{\texttt{ \#11731}})
+\item Update {\ttfamily cookie} dependency to {\ttfamily \texorpdfstring{$^\wedge$}{\string^}1.0.\+1} -\/ please see the \href{https://github.com/jshttp/cookie/releases}{\texttt{ release notes}} for any breaking changes (\href{https://github.com/remix-run/react-router/pull/12172}{\texttt{ \#12172}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26959}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26959}
+
+\begin{DoxyItemize}
+\item -\/ Add support for {\ttfamily prerender} config in the React Router vite plugin, to support existing SSG use-\/cases (\href{https://github.com/remix-run/react-router/pull/11539}{\texttt{ \#11539}})
+\begin{DoxyItemize}
+\item You can use the {\ttfamily prerender} config to pre-\/render your {\ttfamily .html} and {\ttfamily .data} files at build time and then serve them statically at runtime (either from a running server or a CDN)
+\item {\ttfamily prerender} can either be an array of string paths, or a function (sync or async) that returns an array of strings so that you can dynamically generate the paths by talking to your CMS, etc.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ react-\/router.config.ts}
+\DoxyCodeLine{import\ type\ \{\ Config\ \}\ from\ "{}@react-\/router/dev/config"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ \{}
+\DoxyCodeLine{\ \ async\ prerender()\ \{}
+\DoxyCodeLine{\ \ \ \ let\ slugs\ =\ await\ fakeGetSlugsFromCms();}
+\DoxyCodeLine{\ \ \ \ //\ Prerender\ these\ paths\ into\ \`{}.html`\ files\ at\ build\ time,\ and\ \`{}.data`}
+\DoxyCodeLine{\ \ \ \ //\ files\ if\ they\ have\ loaders}
+\DoxyCodeLine{\ \ \ \ return\ ["{}/"{},\ "{}/about"{},\ ...slugs.map((slug)\ =>\ \`{}/product/\$\{slug\}`)];}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\}\ satisfies\ Config;}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ fakeGetSlugsFromCms()\ \{}
+\DoxyCodeLine{\ \ await\ new\ Promise((r)\ =>\ setTimeout(r,\ 1000));}
+\DoxyCodeLine{\ \ return\ ["{}shirt"{},\ "{}hat"{}];}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+\item Params, loader data, and action data as props for route component exports (\href{https://github.com/remix-run/react-router/pull/11961}{\texttt{ \#11961}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ default\ function\ Component(\{\ params,\ loaderData,\ actionData\ \})\ \{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ HydrateFallback(\{\ params\ \})\ \{\}}
+\DoxyCodeLine{export\ function\ ErrorBoundary(\{\ params,\ loaderData,\ actionData\ \})\ \{\}}
+
+\end{DoxyCode}
+
+\item Remove duplicate {\ttfamily Router\+Provider} impliementations (\href{https://github.com/remix-run/react-router/pull/11679}{\texttt{ \#11679}})
+\item \#\#\# Typesafety improvements (\href{https://github.com/remix-run/react-router/pull/12019}{\texttt{ \#12019}})
+
+React Router now generates types for each of your route modules. You can access those types by importing them from {\ttfamily ./+types.\texorpdfstring{$<$}{<}route filename without extension\texorpdfstring{$>$}{>}}. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ app/routes/product.tsx}
+\DoxyCodeLine{import\ type\ *\ as\ Route\ from\ "{}./+types.product"{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ function\ loader(\{\ params\ \}:\ Route.LoaderArgs)\ \{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ function\ Component(\{\ loaderData\ \}:\ Route.ComponentProps)\ \{\}}
+
+\end{DoxyCode}
+
+
+This initial implementation targets type inference for\+:
+\begin{DoxyItemize}
+\item {\ttfamily Params} \+: Path parameters from your routing config in {\ttfamily routes.\+ts} including file-\/based routing
+\item {\ttfamily Loader\+Data} \+: Loader data from {\ttfamily loader} and/or {\ttfamily client\+Loader} within your route module
+\item {\ttfamily Action\+Data} \+: Action data from {\ttfamily action} and/or {\ttfamily client\+Action} within your route module
+\end{DoxyItemize}
+
+In the future, we plan to add types for the rest of the route module exports\+: {\ttfamily meta}, {\ttfamily links}, {\ttfamily headers}, {\ttfamily should\+Revalidate}, etc. We also plan to generate types for typesafe {\ttfamily Link}s\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<Link\ to="{}/products/:id"{}\ params=\{\{\ id:\ 1\ \}\}\ />}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ \string^\string^\string^\string^\string^\string^\string^\string^\string^\string^\string^\string^\string^\ \ \ \ \ \ \ \ \ \ \string^\string^\string^\string^\string^\string^\string^\string^\string^}
+\DoxyCodeLine{//\ typesafe\ \`{}to`\ and\ \`{}params`\ based\ on\ the\ available\ routes\ in\ your\ app}
+
+\end{DoxyCode}
+
+
+Check out our docs for more\+:
+\begin{DoxyItemize}
+\item \href{https://reactrouter.com/dev/guides/explanation/type-safety}{\texttt{ {\itshape Explanations \texorpdfstring{$>$}{>} Type Safety}}}
+\item \href{https://reactrouter.com/dev/guides/how-to/setting-up-type-safety}{\texttt{ {\itshape How-\/\+To \texorpdfstring{$>$}{>} Setting up type safety}}}
+\end{DoxyItemize}
+\item Stabilize {\ttfamily unstable\+\_\+data\+Strategy} (\href{https://github.com/remix-run/react-router/pull/11969}{\texttt{ \#11969}})
+\item Stabilize {\ttfamily unstable\+\_\+patch\+Routes\+On\+Navigation} (\href{https://github.com/remix-run/react-router/pull/11970}{\texttt{ \#11970}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26960}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26960}
+
+\begin{DoxyItemize}
+\item No changes (\href{https://github.com/remix-run/react-router/commit/506329c4e2e7aba9837cbfa44df6103b49423745}{\texttt{ {\ttfamily 506329c4e}}})
+\item chore\+: re-\/enable development warnings through a {\ttfamily development} exports condition. (\href{https://github.com/remix-run/react-router/pull/12269}{\texttt{ \#12269}})
+\item Remove unstable upload handler. (\href{https://github.com/remix-run/react-router/pull/12015}{\texttt{ \#12015}})
+\item Remove unneeded dependency on @web3-\/storage/multipart-\/parser (\href{https://github.com/remix-run/react-router/pull/12274}{\texttt{ \#12274}})
+\item Fix redirects returned from loaders/actions using {\ttfamily data()} (\href{https://github.com/remix-run/react-router/pull/12021}{\texttt{ \#12021}})
+\item fix(react-\/router)\+: (v7) fix static prerender of non-\/ascii characters (\href{https://github.com/remix-run/react-router/pull/12161}{\texttt{ \#12161}})
+\item Replace {\ttfamily substr} with {\ttfamily substring} (\href{https://github.com/remix-run/react-router/pull/12080}{\texttt{ \#12080}})
+\item Remove the deprecated {\ttfamily json} utility (\href{https://github.com/remix-run/react-router/pull/12146}{\texttt{ \#12146}})
+\begin{DoxyItemize}
+\item You can use \href{https://developer.mozilla.org/en-US/docs/Web/API/Response/json_static}{\texttt{ {\ttfamily Response.\+json}}} if you still need to construct JSON responses in your app
+\end{DoxyItemize}
+\item Remove unneeded dependency on source-\/map (\href{https://github.com/remix-run/react-router/pull/12275}{\texttt{ \#12275}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26961}{}\doxysection{\texorpdfstring{6.\+28.\+0}{6.\+28.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26961}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26962}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26962}
+
+\begin{DoxyItemize}
+\item -\/ Log deprecation warnings for v7 flags (\href{https://github.com/remix-run/react-router/pull/11750}{\texttt{ \#11750}})
+\begin{DoxyItemize}
+\item Add deprecation warnings to {\ttfamily json}/{\ttfamily defer} in favor of returning raw objects
+\begin{DoxyItemize}
+\item These methods will be removed in React Router v7
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26963}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26963}
+
+\begin{DoxyItemize}
+\item Update JSDoc URLs for new website structure (add /v6/ segment) (\href{https://github.com/remix-run/react-router/pull/12141}{\texttt{ \#12141}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+21.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26964}{}\doxysection{\texorpdfstring{6.\+27.\+0}{6.\+27.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26964}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26965}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26965}
+
+\begin{DoxyItemize}
+\item Stabilize {\ttfamily unstable\+\_\+patch\+Routes\+On\+Navigation} (\href{https://github.com/remix-run/react-router/pull/11973}{\texttt{ \#11973}})
+\begin{DoxyItemize}
+\item Add new {\ttfamily Patch\+Routes\+On\+Navigation\+Function\+Args} type for convenience (\href{https://github.com/remix-run/react-router/pull/11967}{\texttt{ \#11967}})
+\end{DoxyItemize}
+\item Stabilize {\ttfamily unstable\+\_\+data\+Strategy} (\href{https://github.com/remix-run/react-router/pull/11974}{\texttt{ \#11974}})
+\item Stabilize the {\ttfamily unstable\+\_\+flush\+Sync} option for navigations and fetchers (\href{https://github.com/remix-run/react-router/pull/11989}{\texttt{ \#11989}})
+\item Stabilize the {\ttfamily unstable\+\_\+view\+Transition} option for navigations and the corresponding {\ttfamily unstable\+\_\+use\+View\+Transition\+State} hook (\href{https://github.com/remix-run/react-router/pull/11989}{\texttt{ \#11989}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26966}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26966}
+
+\begin{DoxyItemize}
+\item Fix bug when submitting to the current contextual route (parent route with an index child) when an {\ttfamily ?index} param already exists from a prior submission (\href{https://github.com/remix-run/react-router/pull/12003}{\texttt{ \#12003}})
+\item Fix {\ttfamily use\+Form\+Action} bug -\/ when removing {\ttfamily ?index} param it would not keep other non-\/\+Remix {\ttfamily index} params (\href{https://github.com/remix-run/react-router/pull/12003}{\texttt{ \#12003}})
+\item Fix types for {\ttfamily Route\+Object} within {\ttfamily Patch\+Routes\+On\+Navigation\+Function}\textquotesingle{}s {\ttfamily patch} method so it doesn\textquotesingle{}t expect agnostic route objects passed to {\ttfamily patch} (\href{https://github.com/remix-run/react-router/pull/11967}{\texttt{ \#11967}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+20.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26967}{}\doxysection{\texorpdfstring{6.\+26.\+2}{6.\+26.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26967}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26968}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26968}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+19.\+2}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26969}{}\doxysection{\texorpdfstring{6.\+26.\+1}{6.\+26.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26969}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26970}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26970}
+
+\begin{DoxyItemize}
+\item Rename {\ttfamily unstable\+\_\+patch\+Routes\+On\+Miss} to {\ttfamily unstable\+\_\+patch\+Routes\+On\+Navigation} to match new behavior (\href{https://github.com/remix-run/react-router/pull/11888}{\texttt{ \#11888}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+19.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26971}{}\doxysection{\texorpdfstring{6.\+26.\+0}{6.\+26.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26971}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26972}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26972}
+
+\begin{DoxyItemize}
+\item Add a new {\ttfamily replace(url, init?)} alternative to {\ttfamily redirect(url, init?)} that performs a {\ttfamily history.\+replace\+State} instead of a {\ttfamily history.\+push\+State} on client-\/side navigation redirects (\href{https://github.com/remix-run/react-router/pull/11811}{\texttt{ \#11811}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26973}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26973}
+
+\begin{DoxyItemize}
+\item Fix initial hydration behavior when using {\ttfamily future.\+v7\+\_\+partial\+Hydration} along with {\ttfamily unstable\+\_\+patch\+Routes\+On\+Miss} (\href{https://github.com/remix-run/react-router/pull/11838}{\texttt{ \#11838}})
+\begin{DoxyItemize}
+\item During initial hydration, {\ttfamily router.\+state.\+matches} will now include any partial matches so that we can render ancestor {\ttfamily Hydrate\+Fallback} components
+\end{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+19.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26974}{}\doxysection{\texorpdfstring{6.\+25.\+1}{6.\+25.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26974}
+No significant changes to this package were made in this release. \href{https://github.com/remix-run/react-router/blob/main/CHANGELOG.md}{\texttt{ See the repo {\ttfamily CHANGELOG.\+md}}} for an overview of all changes in v6.\+25.\+1.\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26975}{}\doxysection{\texorpdfstring{6.\+25.\+0}{6.\+25.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26975}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26976}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26976}
+
+\begin{DoxyItemize}
+\item Stabilize {\ttfamily future.\+unstable\+\_\+skip\+Action\+Error\+Revalidation} as {\ttfamily future.\+v7\+\_\+skip\+Action\+Error\+Revalidation} (\href{https://github.com/remix-run/react-router/pull/11769}{\texttt{ \#11769}})
+\begin{DoxyItemize}
+\item When this flag is enabled, actions will not automatically trigger a revalidation if they return/throw a {\ttfamily Response} with a {\ttfamily 4xx}/{\ttfamily 5xx} status code
+\item You may still opt-\/into revalidation via {\ttfamily should\+Revalidate}
+\item This also changes {\ttfamily should\+Revalidate}\textquotesingle{}s {\ttfamily unstable\+\_\+action\+Status} parameter to {\ttfamily action\+Status}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26977}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26977}
+
+\begin{DoxyItemize}
+\item Fix regression and properly decode paths inside {\ttfamily use\+Match} so matches/params reflect decoded params (\href{https://github.com/remix-run/react-router/pull/11789}{\texttt{ \#11789}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+18.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26978}{}\doxysection{\texorpdfstring{6.\+24.\+1}{6.\+24.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26978}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26979}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26979}
+
+\begin{DoxyItemize}
+\item When using {\ttfamily future.\+v7\+\_\+relative\+Splat\+Path}, properly resolve relative paths in splat routes that are children of pathless routes (\href{https://github.com/remix-run/react-router/pull/11633}{\texttt{ \#11633}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+17.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26980}{}\doxysection{\texorpdfstring{6.\+24.\+0}{6.\+24.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26980}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26981}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26981}
+
+\begin{DoxyItemize}
+\item Add support for Lazy Route Discovery (a.\+k.\+a. Fog of War) (\href{https://github.com/remix-run/react-router/pull/11626}{\texttt{ \#11626}})
+\begin{DoxyItemize}
+\item RFC\+: \href{https://github.com/remix-run/react-router/discussions/11113}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/discussions/11113}}
+\item {\ttfamily unstable\+\_\+patch\+Routes\+On\+Miss} docs\+: \href{https://reactrouter.com/v6/routers/create-browser-router}{\texttt{ https\+://reactrouter.\+com/v6/routers/create-\/browser-\/router}}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26982}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26982}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+17.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26983}{}\doxysection{\texorpdfstring{6.\+23.\+1}{6.\+23.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26983}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26984}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26984}
+
+\begin{DoxyItemize}
+\item allow undefined to be resolved with {\ttfamily \texorpdfstring{$<$}{<}Await\texorpdfstring{$>$}{>}} (\href{https://github.com/remix-run/react-router/pull/11513}{\texttt{ \#11513}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+16.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26985}{}\doxysection{\texorpdfstring{6.\+23.\+0}{6.\+23.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26985}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26986}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26986}
+
+\begin{DoxyItemize}
+\item Add a new {\ttfamily unstable\+\_\+data\+Strategy} configuration option (\href{https://github.com/remix-run/react-router/pull/11098}{\texttt{ \#11098}})
+\begin{DoxyItemize}
+\item This option allows Data Router applications to take control over the approach for executing route loaders and actions
+\item The default implementation is today\textquotesingle{}s behavior, to fetch all loaders in parallel, but this option allows users to implement more advanced data flows including Remix single-\/fetch, middleware/context APIs, automatic loader caching, and more
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26987}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26987}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+16.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26988}{}\doxysection{\texorpdfstring{6.\+22.\+3}{6.\+22.\+3}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26988}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26989}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26989}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+15.\+3}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26990}{}\doxysection{\texorpdfstring{6.\+22.\+2}{6.\+22.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26990}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26991}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26991}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+15.\+2}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26992}{}\doxysection{\texorpdfstring{6.\+22.\+1}{6.\+22.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26992}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26993}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26993}
+
+\begin{DoxyItemize}
+\item Fix encoding/decoding issues with pre-\/encoded dynamic parameter values (\href{https://github.com/remix-run/react-router/pull/11199}{\texttt{ \#11199}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+15.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26994}{}\doxysection{\texorpdfstring{6.\+22.\+0}{6.\+22.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26994}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26995}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26995}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+15.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26996}{}\doxysection{\texorpdfstring{6.\+21.\+3}{6.\+21.\+3}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26996}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26997}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26997}
+
+\begin{DoxyItemize}
+\item Remove leftover {\ttfamily unstable\+\_\+} prefix from {\ttfamily Blocker}/{\ttfamily Blocker\+Function} types (\href{https://github.com/remix-run/react-router/pull/11187}{\texttt{ \#11187}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26998}{}\doxysection{\texorpdfstring{6.\+21.\+2}{6.\+21.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26998}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26999}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md26999}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+14.\+2}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27000}{}\doxysection{\texorpdfstring{6.\+21.\+1}{6.\+21.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27000}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27001}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27001}
+
+\begin{DoxyItemize}
+\item Fix bug with {\ttfamily route.\+lazy} not working correctly on initial SPA load when {\ttfamily v7\+\_\+partial\+Hydration} is specified (\href{https://github.com/remix-run/react-router/pull/11121}{\texttt{ \#11121}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+14.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27002}{}\doxysection{\texorpdfstring{6.\+21.\+0}{6.\+21.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27002}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27003}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27003}
+
+\begin{DoxyItemize}
+\item Add a new {\ttfamily future.\+v7\+\_\+relative\+Splat\+Path} flag to implement a breaking bug fix to relative routing when inside a splat route. (\href{https://github.com/remix-run/react-router/pull/11087}{\texttt{ \#11087}})
+
+This fix was originally added in \href{https://github.com/remix-run/react-router/issues/10983}{\texttt{ \#10983}} and was later reverted in \href{https://github.com/remix-run/react-router/pull/11078}{\texttt{ \#11078}} because it was determined that a large number of existing applications were relying on the buggy behavior (see \href{https://github.com/remix-run/react-router/issues/11052}{\texttt{ \#11052}})
+
+{\bfseries{The Bug}} The buggy behavior is that without this flag, the default behavior when resolving relative paths is to {\itshape ignore} any splat ({\ttfamily \texorpdfstring{$\ast$}{*}}) portion of the current route path.
+
+{\bfseries{The Background}} This decision was originally made thinking that it would make the concept of nested different sections of your apps in {\ttfamily \texorpdfstring{$<$}{<}Routes\texorpdfstring{$>$}{>}} easier if relative routing would {\itshape replace} the current splat\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<BrowserRouter>}
+\DoxyCodeLine{\ \ <Routes>}
+\DoxyCodeLine{\ \ \ \ <Route\ path="{}/"{}\ element=\{<Home\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ <Route\ path="{}dashboard/*"{}\ element=\{<Dashboard\ />\}\ />}
+\DoxyCodeLine{\ \ </Routes>}
+\DoxyCodeLine{</BrowserRouter>}
+
+\end{DoxyCode}
+
+
+Any paths like {\ttfamily /dashboard}, {\ttfamily /dashboard/team}, {\ttfamily /dashboard/projects} will match the {\ttfamily Dashboard} route. The dashboard component itself can then render nested {\ttfamily \texorpdfstring{$<$}{<}Routes\texorpdfstring{$>$}{>}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ Dashboard()\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ <h2>Dashboard</h2>}
+\DoxyCodeLine{\ \ \ \ \ \ <nav>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Link\ to="{}/"{}>Dashboard\ Home</Link>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Link\ to="{}team"{}>Team</Link>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Link\ to="{}projects"{}>Projects</Link>}
+\DoxyCodeLine{\ \ \ \ \ \ </nav>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ <Routes>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Route\ path="{}/"{}\ element=\{<DashboardHome\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Route\ path="{}team"{}\ element=\{<DashboardTeam\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Route\ path="{}projects"{}\ element=\{<DashboardProjects\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ </Routes>}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Now, all links and route paths are relative to the router above them. This makes code splitting and compartmentalizing your app really easy. You could render the {\ttfamily Dashboard} as its own independent app, or embed it into your large app without making any changes to it.
+
+{\bfseries{The Problem}}
+
+The problem is that this concept of ignoring part of a path breaks a lot of other assumptions in React Router -\/ namely that {\ttfamily "{}."{}} always means the current location pathname for that route. When we ignore the splat portion, we start getting invalid paths when using {\ttfamily "{}."{}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ If\ we\ are\ on\ URL\ /dashboard/team,\ and\ we\ want\ to\ link\ to\ /dashboard/team:}
+\DoxyCodeLine{function\ DashboardTeam()\ \{}
+\DoxyCodeLine{\ \ //\ ❌\ This\ is\ broken\ and\ results\ in\ <a\ href="{}/dashboard"{}>}
+\DoxyCodeLine{\ \ return\ <Link\ to="{}."{}>A\ broken\ link\ to\ the\ Current\ URL</Link>;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ ✅\ This\ is\ fixed\ but\ super\ unintuitive\ since\ we're\ already\ at\ /dashboard/team!}
+\DoxyCodeLine{\ \ return\ <Link\ to="{}./team"{}>A\ broken\ link\ to\ the\ Current\ URL</Link>;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+We\textquotesingle{}ve also introduced an issue that we can no longer move our {\ttfamily Dashboard\+Team} component around our route hierarchy easily -\/ since it behaves differently if we\textquotesingle{}re underneath a non-\/splat route, such as {\ttfamily /dashboard/\+:widget}. Now, our {\ttfamily "{}."{}} links will, properly point to ourself {\itshape inclusive of the dynamic param value} so behavior will break from it\textquotesingle{}s corresponding usage in a {\ttfamily /dashboard/\texorpdfstring{$\ast$}{*}} route.
+
+Even worse, consider a nested splat route configuration\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<BrowserRouter>}
+\DoxyCodeLine{\ \ <Routes>}
+\DoxyCodeLine{\ \ \ \ <Route\ path="{}dashboard"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ <Route\ path="{}*"{}\ element=\{<Dashboard\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ </Route>}
+\DoxyCodeLine{\ \ </Routes>}
+\DoxyCodeLine{</BrowserRouter>}
+
+\end{DoxyCode}
+
+
+Now, a {\ttfamily \texorpdfstring{$<$}{<}Link to="{}."{}\texorpdfstring{$>$}{>}} and a {\ttfamily \texorpdfstring{$<$}{<}Link to="{}.."{}\texorpdfstring{$>$}{>}} inside the {\ttfamily Dashboard} component go to the same place! That is definitely not correct!
+
+Another common issue arose in Data Routers (and Remix) where any {\ttfamily \texorpdfstring{$<$}{<}Form\texorpdfstring{$>$}{>}} should post to it\textquotesingle{}s own route {\ttfamily action} if you the user doesn\textquotesingle{}t specify a form action\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ router\ =\ createBrowserRouter(\{}
+\DoxyCodeLine{\ \ path:\ "{}/dashboard"{},}
+\DoxyCodeLine{\ \ children:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ path:\ "{}*"{},}
+\DoxyCodeLine{\ \ \ \ \ \ action:\ dashboardAction,}
+\DoxyCodeLine{\ \ \ \ \ \ Component()\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ ❌\ This\ form\ is\ broken!\ \ It\ throws\ a\ 405\ error\ when\ it\ submits\ because}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ it\ tries\ to\ submit\ to\ /dashboard\ (without\ the\ splat\ value)\ and\ the\ parent}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ \`{}/dashboard`\ route\ doesn't\ have\ an\ action}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ <Form\ method="{}post"{}>...</Form>;}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+This is just a compounded issue from the above because the default location for a {\ttfamily Form} to submit to is itself ({\ttfamily "{}."{}}) -\/ and if we ignore the splat portion, that now resolves to the parent route.
+
+{\bfseries{The Solution}} If you are leveraging this behavior, it\textquotesingle{}s recommended to enable the future flag, move your splat to it\textquotesingle{}s own route, and leverage {\ttfamily ../} for any links to "{}sibling"{} pages\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<BrowserRouter>}
+\DoxyCodeLine{\ \ <Routes>}
+\DoxyCodeLine{\ \ \ \ <Route\ path="{}dashboard"{}>}
+\DoxyCodeLine{\ \ \ \ \ \ <Route\ index\ path="{}*"{}\ element=\{<Dashboard\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ </Route>}
+\DoxyCodeLine{\ \ </Routes>}
+\DoxyCodeLine{</BrowserRouter>}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Dashboard()\ \{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <div>}
+\DoxyCodeLine{\ \ \ \ \ \ <h2>Dashboard</h2>}
+\DoxyCodeLine{\ \ \ \ \ \ <nav>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Link\ to="{}.."{}>Dashboard\ Home</Link>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Link\ to="{}../team"{}>Team</Link>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Link\ to="{}../projects"{}>Projects</Link>}
+\DoxyCodeLine{\ \ \ \ \ \ </nav>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ <Routes>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Route\ path="{}/"{}\ element=\{<DashboardHome\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Route\ path="{}team"{}\ element=\{<DashboardTeam\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ <Route\ path="{}projects"{}\ element=\{<DashboardProjects\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ \ \ </Router>}
+\DoxyCodeLine{\ \ \ \ </div>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+This way, {\ttfamily .} means "{}the full current pathname for my route"{} in all cases (including static, dynamic, and splat routes) and {\ttfamily ..} always means "{}my parents pathname"{}.
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27004}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27004}
+
+\begin{DoxyItemize}
+\item Properly handle falsy error values in Error\+Boundary\textquotesingle{}s (\href{https://github.com/remix-run/react-router/pull/11071}{\texttt{ \#11071}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+14.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27005}{}\doxysection{\texorpdfstring{6.\+20.\+1}{6.\+20.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27005}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27006}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27006}
+
+\begin{DoxyItemize}
+\item Revert the {\ttfamily use\+Resolved\+Path} fix for splat routes due to a large number of applications that were relying on the buggy behavior (see \href{https://github.com/remix-run/react-router/issues/11052\#issuecomment-1836589329}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/issues/11052\#issuecomment-\/1836589329}}). We plan to re-\/introduce this fix behind a future flag in the next minor version. (\href{https://github.com/remix-run/react-router/pull/11078}{\texttt{ \#11078}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+13.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27007}{}\doxysection{\texorpdfstring{6.\+20.\+0}{6.\+20.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27007}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27008}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27008}
+
+\begin{DoxyItemize}
+\item Export the {\ttfamily Path\+Param} type from the public API (\href{https://github.com/remix-run/react-router/pull/10719}{\texttt{ \#10719}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27009}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27009}
+
+\begin{DoxyItemize}
+\item Fix bug with {\ttfamily resolve\+To} in splat routes (\href{https://github.com/remix-run/react-router/pull/11045}{\texttt{ \#11045}})
+\begin{DoxyItemize}
+\item This is a follow up to \href{https://github.com/remix-run/react-router/pull/10983}{\texttt{ \#10983}} to handle the few other code paths using {\ttfamily get\+Path\+Contributing\+Matches}
+\item This removes the {\ttfamily UNSAFE\+\_\+get\+Path\+Contributing\+Matches} export from {\ttfamily @remix-\/run/router} since we no longer need this in the {\ttfamily react-\/router}/{\ttfamily react-\/router-\/dom} layers
+\end{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+13.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27010}{}\doxysection{\texorpdfstring{6.\+19.\+0}{6.\+19.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27010}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27011}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27011}
+
+\begin{DoxyItemize}
+\item Add {\ttfamily unstable\+\_\+flush\+Sync} option to {\ttfamily use\+Navigate}/{\ttfamily use\+Sumbit}/{\ttfamily fetcher.\+load}/{\ttfamily fetcher.\+submit} to opt-\/out of {\ttfamily React.\+start\+Transition} and into {\ttfamily React\+DOM.\+flush\+Sync} for state updates (\href{https://github.com/remix-run/react-router/pull/11005}{\texttt{ \#11005}})
+\item Remove the {\ttfamily unstable\+\_\+} prefix from the \href{https://reactrouter.com/v6/hooks/use-blocker}{\texttt{ {\ttfamily use\+Blocker}}} hook as it\textquotesingle{}s been in use for enough time that we are confident in the API. We do not plan to remove the prefix from {\ttfamily unstable\+\_\+use\+Prompt} due to differences in how browsers handle {\ttfamily window.\+confirm} that prevent React Router from guaranteeing consistent/correct behavior. (\href{https://github.com/remix-run/react-router/pull/10991}{\texttt{ \#10991}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27012}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27012}
+
+\begin{DoxyItemize}
+\item Fix {\ttfamily use\+Action\+Data} so it returns proper contextual action data and not {\itshape any} action data in the tree (\href{https://github.com/remix-run/react-router/pull/11023}{\texttt{ \#11023}})
+\item Fix bug in {\ttfamily use\+Resolved\+Path} that would cause {\ttfamily use\+Resolved\+Path("{}."{})} in a splat route to lose the splat portion of the URL path. (\href{https://github.com/remix-run/react-router/pull/10983}{\texttt{ \#10983}})
+\begin{DoxyItemize}
+\item ⚠️ This fixes a quite long-\/standing bug specifically for {\ttfamily "{}."{}} paths inside a splat route which incorrectly dropped the splat portion of the URL. If you are relative routing via {\ttfamily "{}."{}} inside a splat route in your application you should double check that your logic is not relying on this buggy behavior and update accordingly.
+\end{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+12.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27013}{}\doxysection{\texorpdfstring{6.\+18.\+0}{6.\+18.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27013}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27014}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27014}
+
+\begin{DoxyItemize}
+\item Fix the {\ttfamily future} prop on {\ttfamily Browser\+Router}, {\ttfamily Hash\+Router} and {\ttfamily Memory\+Router} so that it accepts a {\ttfamily Partial\texorpdfstring{$<$}{<}Future\+Config\texorpdfstring{$>$}{>}} instead of requiring all flags to be included. (\href{https://github.com/remix-run/react-router/pull/10962}{\texttt{ \#10962}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+11.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27015}{}\doxysection{\texorpdfstring{6.\+17.\+0}{6.\+17.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27015}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27016}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27016}
+
+\begin{DoxyItemize}
+\item Fix {\ttfamily Router\+Provider} {\ttfamily future} prop type to be a {\ttfamily Partial\texorpdfstring{$<$}{<}Future\+Config\texorpdfstring{$>$}{>}} so that not all flags must be specified (\href{https://github.com/remix-run/react-router/pull/10900}{\texttt{ \#10900}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+10.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27017}{}\doxysection{\texorpdfstring{6.\+16.\+0}{6.\+16.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27017}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27018}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27018}
+
+\begin{DoxyItemize}
+\item In order to move towards stricter Type\+Script support in the future, we\textquotesingle{}re aiming to replace current usages of {\ttfamily any} with {\ttfamily unknown} on exposed typings for user-\/provided data. To do this in Remix v2 without introducing breaking changes in React Router v6, we have added generics to a number of shared types. These continue to default to {\ttfamily any} in React Router and are overridden with {\ttfamily unknown} in Remix. In React Router v7 we plan to move these to {\ttfamily unknown} as a breaking change. (\href{https://github.com/remix-run/react-router/pull/10843}{\texttt{ \#10843}})
+\begin{DoxyItemize}
+\item {\ttfamily Location} now accepts a generic for the {\ttfamily location.\+state} value
+\item {\ttfamily Action\+Function\+Args}/{\ttfamily Action\+Function}/{\ttfamily Loader\+Function\+Args}/{\ttfamily Loader\+Function} now accept a generic for the {\ttfamily context} parameter (only used in SSR usages via {\ttfamily create\+Static\+Handler})
+\item The return type of {\ttfamily use\+Matches} (now exported as {\ttfamily UIMatch}) accepts generics for {\ttfamily match.\+data} and {\ttfamily match.\+handle} -\/ both of which were already set to {\ttfamily unknown}
+\end{DoxyItemize}
+\item Move the {\ttfamily @private} class export {\ttfamily Error\+Response} to an {\ttfamily UNSAFE\+\_\+\+Error\+Response\+Impl} export since it is an implementation detail and there should be no construction of {\ttfamily Error\+Response} instances in userland. This frees us up to export a {\ttfamily type Error\+Response} which correlates to an instance of the class via {\ttfamily Instance\+Type}. Userland code should only ever be using {\ttfamily Error\+Response} as a type and should be type-\/narrowing via {\ttfamily is\+Route\+Error\+Response}. (\href{https://github.com/remix-run/react-router/pull/10811}{\texttt{ \#10811}})
+\item Export {\ttfamily Should\+Revalidate\+Function\+Args} interface (\href{https://github.com/remix-run/react-router/pull/10797}{\texttt{ \#10797}})
+\item Removed private/internal APIs only required for the Remix v1 backwards compatibility layer and no longer needed in Remix v2 ({\ttfamily \+\_\+is\+Fetch\+Action\+Redirect}, {\ttfamily \+\_\+has\+Fetcher\+Done\+Anything}) (\href{https://github.com/remix-run/react-router/pull/10715}{\texttt{ \#10715}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27019}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27019}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+9.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27020}{}\doxysection{\texorpdfstring{6.\+15.\+0}{6.\+15.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27020}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27021}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27021}
+
+\begin{DoxyItemize}
+\item Add\textquotesingle{}s a new {\ttfamily redirect\+Document()} function which allows users to specify that a redirect from a {\ttfamily loader}/{\ttfamily action} should trigger a document reload (via {\ttfamily window.\+location}) instead of attempting to navigate to the redirected location via React Router (\href{https://github.com/remix-run/react-router/pull/10705}{\texttt{ \#10705}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27022}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27022}
+
+\begin{DoxyItemize}
+\item Ensure {\ttfamily use\+Revalidator} is referentially stable across re-\/renders if revalidations are not actively occurring (\href{https://github.com/remix-run/react-router/pull/10707}{\texttt{ \#10707}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+8.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27023}{}\doxysection{\texorpdfstring{6.\+14.\+2}{6.\+14.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27023}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27024}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27024}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+7.\+2}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27025}{}\doxysection{\texorpdfstring{6.\+14.\+1}{6.\+14.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27025}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27026}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27026}
+
+\begin{DoxyItemize}
+\item Fix loop in {\ttfamily unstable\+\_\+use\+Blocker} when used with an unstable blocker function (\href{https://github.com/remix-run/react-router/pull/10652}{\texttt{ \#10652}})
+\item Fix issues with reused blockers on subsequent navigations (\href{https://github.com/remix-run/react-router/pull/10656}{\texttt{ \#10656}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+7.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27027}{}\doxysection{\texorpdfstring{6.\+14.\+0}{6.\+14.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27027}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27028}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27028}
+
+\begin{DoxyItemize}
+\item Strip {\ttfamily basename} from locations provided to {\ttfamily unstable\+\_\+use\+Blocker} functions to match {\ttfamily use\+Location} (\href{https://github.com/remix-run/react-router/pull/10573}{\texttt{ \#10573}})
+\item Fix {\ttfamily generate\+Path} when passed a numeric {\ttfamily 0} value parameter (\href{https://github.com/remix-run/react-router/pull/10612}{\texttt{ \#10612}})
+\item Fix {\ttfamily unstable\+\_\+use\+Blocker} key issues in {\ttfamily Strict\+Mode} (\href{https://github.com/remix-run/react-router/pull/10573}{\texttt{ \#10573}})
+\item Fix {\ttfamily tsc -\/-\/skip\+Lib\+Check\+:false} issues on React 17 (\href{https://github.com/remix-run/react-router/pull/10622}{\texttt{ \#10622}})
+\item Upgrade {\ttfamily typescript} to 5.\+1 (\href{https://github.com/remix-run/react-router/pull/10581}{\texttt{ \#10581}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+7.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27029}{}\doxysection{\texorpdfstring{6.\+13.\+0}{6.\+13.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27029}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27030}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27030}
+
+\begin{DoxyItemize}
+\item Move \href{https://react.dev/reference/react/startTransition}{\texttt{ {\ttfamily React.\+start\+Transition}}} usage behind a \href{https://reactrouter.com/v6/guides/api-development-strategy}{\texttt{ future flag}} to avoid issues with existing incompatible {\ttfamily Suspense} usages. We recommend folks adopting this flag to be better compatible with React concurrent mode, but if you run into issues you can continue without the use of {\ttfamily start\+Transition} until v7. Issues usually boils down to creating net-\/new promises during the render cycle, so if you run into issues you should either lift your promise creation out of the render cycle or put it behind a {\ttfamily use\+Memo}. (\href{https://github.com/remix-run/react-router/pull/10596}{\texttt{ \#10596}})
+
+Existing behavior will no longer include {\ttfamily React.\+start\+Transition}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<BrowserRouter>}
+\DoxyCodeLine{\ \ <Routes>\{/*...*/\}</Routes>}
+\DoxyCodeLine{</BrowserRouter>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<RouterProvider\ router=\{router\}\ />}
+
+\end{DoxyCode}
+
+
+If you wish to enable {\ttfamily React.\+start\+Transition}, pass the future flag to your component\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<BrowserRouter\ future=\{\{\ v7\_startTransition:\ true\ \}\}>}
+\DoxyCodeLine{\ \ <Routes>\{/*...*/\}</Routes>}
+\DoxyCodeLine{</BrowserRouter>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<RouterProvider\ router=\{router\}\ future=\{\{\ v7\_startTransition:\ true\ \}\}/>}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27031}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27031}
+
+\begin{DoxyItemize}
+\item Work around webpack/terser {\ttfamily React.\+start\+Transition} minification bug in production mode (\href{https://github.com/remix-run/react-router/pull/10588}{\texttt{ \#10588}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27032}{}\doxysection{\texorpdfstring{6.\+12.\+1}{6.\+12.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27032}
+\begin{quote}
+\mbox{[}!\+WARNING\mbox{]} Please use version {\ttfamily 6.\+13.\+0} or later instead of {\ttfamily 6.\+12.\+1}. This version suffers from a {\ttfamily webpack}/{\ttfamily terser} minification issue resulting in invalid minified code in your resulting production bundles which can cause issues in your application. See \href{https://github.com/remix-run/react-router/issues/10579}{\texttt{ \#10579}} for more details. \end{quote}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27033}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27033}
+
+\begin{DoxyItemize}
+\item Adjust feature detection of {\ttfamily React.\+start\+Transition} to fix webpack + react 17 compilation error (\href{https://github.com/remix-run/react-router/pull/10569}{\texttt{ \#10569}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27034}{}\doxysection{\texorpdfstring{6.\+12.\+0}{6.\+12.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27034}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27035}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27035}
+
+\begin{DoxyItemize}
+\item Wrap internal router state updates with {\ttfamily React.\+start\+Transition} if it exists (\href{https://github.com/remix-run/react-router/pull/10438}{\texttt{ \#10438}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27036}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27036}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+6.\+3}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27037}{}\doxysection{\texorpdfstring{6.\+11.\+2}{6.\+11.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27037}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27038}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27038}
+
+\begin{DoxyItemize}
+\item Fix {\ttfamily basename} duplication in descendant {\ttfamily \texorpdfstring{$<$}{<}Routes\texorpdfstring{$>$}{>}} inside a {\ttfamily \texorpdfstring{$<$}{<}Router\+Provider\texorpdfstring{$>$}{>}} (\href{https://github.com/remix-run/react-router/pull/10492}{\texttt{ \#10492}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+6.\+2}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27039}{}\doxysection{\texorpdfstring{6.\+11.\+1}{6.\+11.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27039}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27040}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27040}
+
+\begin{DoxyItemize}
+\item Fix usage of {\ttfamily Component} API within descendant {\ttfamily \texorpdfstring{$<$}{<}Routes\texorpdfstring{$>$}{>}} (\href{https://github.com/remix-run/react-router/pull/10434}{\texttt{ \#10434}})
+\item Fix bug when calling {\ttfamily use\+Navigate} from {\ttfamily \texorpdfstring{$<$}{<}Routes\texorpdfstring{$>$}{>}} inside a {\ttfamily \texorpdfstring{$<$}{<}Router\+Provider\texorpdfstring{$>$}{>}} (\href{https://github.com/remix-run/react-router/pull/10432}{\texttt{ \#10432}})
+\item Fix usage of {\ttfamily \texorpdfstring{$<$}{<}Navigate\texorpdfstring{$>$}{>}} in strict mode when using a data router (\href{https://github.com/remix-run/react-router/pull/10435}{\texttt{ \#10435}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+6.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27041}{}\doxysection{\texorpdfstring{6.\+11.\+0}{6.\+11.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27041}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27042}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27042}
+
+\begin{DoxyItemize}
+\item Log loader/action errors to the console in dev for easier stack trace evaluation (\href{https://github.com/remix-run/react-router/pull/10286}{\texttt{ \#10286}})
+\item Fix bug preventing rendering of descendant {\ttfamily \texorpdfstring{$<$}{<}Routes\texorpdfstring{$>$}{>}} when {\ttfamily Router\+Provider} errors existed (\href{https://github.com/remix-run/react-router/pull/10374}{\texttt{ \#10374}})
+\item Fix inadvertent re-\/renders when using {\ttfamily Component} instead of {\ttfamily element} on a route definition (\href{https://github.com/remix-run/react-router/pull/10287}{\texttt{ \#10287}})
+\item Fix detection of {\ttfamily use\+Navigate} in the render cycle by setting the {\ttfamily active\+Ref} in a layout effect, allowing the {\ttfamily navigate} function to be passed to child components and called in a {\ttfamily use\+Effect} there. (\href{https://github.com/remix-run/react-router/pull/10394}{\texttt{ \#10394}})
+\item Switched from {\ttfamily use\+Sync\+External\+Store} to {\ttfamily use\+State} for internal {\ttfamily @remix-\/run/router} router state syncing in {\ttfamily \texorpdfstring{$<$}{<}Router\+Provider\texorpdfstring{$>$}{>}}. We found some \href{https://codesandbox.io/s/use-sync-external-store-loop-9g7b81}{\texttt{ subtle bugs}} where router state updates got propagated {\itshape before} other normal {\ttfamily use\+State} updates, which could lead to footguns in {\ttfamily use\+Effect} calls. (\href{https://github.com/remix-run/react-router/pull/10377}{\texttt{ \#10377}}, \href{https://github.com/remix-run/react-router/pull/10409}{\texttt{ \#10409}})
+\item Allow {\ttfamily use\+Revalidator()} to resolve a loader-\/driven error boundary scenario (\href{https://github.com/remix-run/react-router/pull/10369}{\texttt{ \#10369}})
+\item Avoid unnecessary unsubscribe/resubscribes on router state changes (\href{https://github.com/remix-run/react-router/pull/10409}{\texttt{ \#10409}})
+\item When using a {\ttfamily Router\+Provider}, {\ttfamily use\+Navigate}/{\ttfamily use\+Submit}/{\ttfamily fetcher.\+submit} are now stable across location changes, since we can handle relative routing via the {\ttfamily @remix-\/run/router} instance and get rid of our dependence on {\ttfamily use\+Location()}. When using {\ttfamily Browser\+Router}, these hooks remain unstable across location changes because they still rely on {\ttfamily use\+Location()}. (\href{https://github.com/remix-run/react-router/pull/10336}{\texttt{ \#10336}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+6.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27043}{}\doxysection{\texorpdfstring{6.\+10.\+0}{6.\+10.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27043}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27044}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27044}
+
+\begin{DoxyItemize}
+\item Added support for \href{https://reactrouter.com/v6/guides/api-development-strategy}{\texttt{ {\bfseries{Future Flags}}}} in React Router. The first flag being introduced is {\ttfamily future.\+v7\+\_\+normalize\+Form\+Method} which will normalize the exposed {\ttfamily use\+Navigation()/use\+Fetcher()} {\ttfamily form\+Method} fields as uppercase HTTP methods to align with the {\ttfamily fetch()} behavior. (\href{https://github.com/remix-run/react-router/pull/10207}{\texttt{ \#10207}})
+\begin{DoxyItemize}
+\item When {\ttfamily future.\+v7\+\_\+normalize\+Form\+Method === false} (default v6 behavior),
+\begin{DoxyItemize}
+\item {\ttfamily use\+Navigation().form\+Method} is lowercase
+\item {\ttfamily use\+Fetcher().form\+Method} is lowercase
+\end{DoxyItemize}
+\item When {\ttfamily future.\+v7\+\_\+normalize\+Form\+Method === true}\+:
+\begin{DoxyItemize}
+\item {\ttfamily use\+Navigation().form\+Method} is uppercase
+\item {\ttfamily use\+Fetcher().form\+Method} is uppercase
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27045}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27045}
+
+\begin{DoxyItemize}
+\item Fix route ID generation when using Fragments in {\ttfamily create\+Routes\+From\+Elements} (\href{https://github.com/remix-run/react-router/pull/10193}{\texttt{ \#10193}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+5.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27046}{}\doxysection{\texorpdfstring{6.\+9.\+0}{6.\+9.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27046}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27047}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27047}
+
+\begin{DoxyItemize}
+\item React Router now supports an alternative way to define your route {\ttfamily element} and {\ttfamily error\+Element} fields as React Components instead of React Elements. You can instead pass a React Component to the new {\ttfamily Component} and {\ttfamily Error\+Boundary} fields if you choose. There is no functional difference between the two, so use whichever approach you prefer 😀. You shouldn\textquotesingle{}t be defining both, but if you do {\ttfamily Component}/{\ttfamily Error\+Boundary} will "{}win"{}. (\href{https://github.com/remix-run/react-router/pull/10045}{\texttt{ \#10045}})
+
+{\bfseries{Example JSON Syntax}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Both\ of\ these\ work\ the\ same:}
+\DoxyCodeLine{const\ elementRoutes\ =\ [\{}
+\DoxyCodeLine{\ \ path:\ '/',}
+\DoxyCodeLine{\ \ element:\ <Home\ />,}
+\DoxyCodeLine{\ \ errorElement:\ <HomeError\ />,}
+\DoxyCodeLine{\}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ componentRoutes\ =\ [\{}
+\DoxyCodeLine{\ \ path:\ '/',}
+\DoxyCodeLine{\ \ Component:\ Home,}
+\DoxyCodeLine{\ \ ErrorBoundary:\ HomeError,}
+\DoxyCodeLine{\}]}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Home()\ \{\ ...\ \}}
+\DoxyCodeLine{function\ HomeError()\ \{\ ...\ \}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Example JSX Syntax}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Both\ of\ these\ work\ the\ same:}
+\DoxyCodeLine{const\ elementRoutes\ =\ createRoutesFromElements(}
+\DoxyCodeLine{\ \ <Route\ path='/'\ element=\{<Home\ />\}\ errorElement=\{<HomeError\ />\ \}\ />}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ componentRoutes\ =\ createRoutesFromElements(}
+\DoxyCodeLine{\ \ <Route\ path='/'\ Component=\{Home\}\ ErrorBoundary=\{HomeError\}\ />}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ Home()\ \{\ ...\ \}}
+\DoxyCodeLine{function\ HomeError()\ \{\ ...\ \}}
+
+\end{DoxyCode}
+
+\item {\bfseries{Introducing Lazy Route Modules!}} (\href{https://github.com/remix-run/react-router/pull/10045}{\texttt{ \#10045}})
+
+In order to keep your application bundles small and support code-\/splitting of your routes, we\textquotesingle{}ve introduced a new {\ttfamily lazy()} route property. This is an async function that resolves the non-\/route-\/matching portions of your route definition ({\ttfamily loader}, {\ttfamily action}, {\ttfamily element}/{\ttfamily Component}, {\ttfamily error\+Element}/{\ttfamily Error\+Boundary}, {\ttfamily should\+Revalidate}, {\ttfamily handle}).
+
+Lazy routes are resolved on initial load and during the {\ttfamily loading} or {\ttfamily submitting} phase of a navigation or fetcher call. You cannot lazily define route-\/matching properties ({\ttfamily path}, {\ttfamily index}, {\ttfamily children}) since we only execute your lazy route functions after we\textquotesingle{}ve matched known routes.
+
+Your {\ttfamily lazy} functions will typically return the result of a dynamic import.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ In\ this\ example,\ we\ assume\ most\ folks\ land\ on\ the\ homepage\ so\ we\ include\ that}
+\DoxyCodeLine{//\ in\ our\ critical-\/path\ bundle,\ but\ then\ we\ lazily\ load\ modules\ for\ /a\ and\ /b\ so}
+\DoxyCodeLine{//\ they\ don't\ load\ until\ the\ user\ navigates\ to\ those\ routes}
+\DoxyCodeLine{let\ routes\ =\ createRoutesFromElements(}
+\DoxyCodeLine{\ \ <Route\ path="{}/"{}\ element=\{<Layout\ />\}>}
+\DoxyCodeLine{\ \ \ \ <Route\ index\ element=\{<Home\ />\}\ />}
+\DoxyCodeLine{\ \ \ \ <Route\ path="{}a"{}\ lazy=\{()\ =>\ import("{}./a"{})\}\ />}
+\DoxyCodeLine{\ \ \ \ <Route\ path="{}b"{}\ lazy=\{()\ =>\ import("{}./b"{})\}\ />}
+\DoxyCodeLine{\ \ </Route>}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+
+
+Then in your lazy route modules, export the properties you want defined for the route\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ async\ function\ loader(\{\ request\ \})\ \{}
+\DoxyCodeLine{\ \ let\ data\ =\ await\ fetchData(request);}
+\DoxyCodeLine{\ \ return\ json(data);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Export\ a\ \`{}Component`\ directly\ instead\ of\ needing\ to\ create\ a\ React\ Element\ from\ it}
+\DoxyCodeLine{export\ function\ Component()\ \{}
+\DoxyCodeLine{\ \ let\ data\ =\ useLoaderData();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ return\ (}
+\DoxyCodeLine{\ \ \ \ <>}
+\DoxyCodeLine{\ \ \ \ \ \ <h1>You\ made\ it!</h1>}
+\DoxyCodeLine{\ \ \ \ \ \ <p>\{data\}</p>}
+\DoxyCodeLine{\ \ \ \ </>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Export\ an\ \`{}ErrorBoundary`\ directly\ instead\ of\ needing\ to\ create\ a\ React\ Element\ from\ it}
+\DoxyCodeLine{export\ function\ ErrorBoundary()\ \{}
+\DoxyCodeLine{\ \ let\ error\ =\ useRouteError();}
+\DoxyCodeLine{\ \ return\ isRouteErrorResponse(error)\ ?\ (}
+\DoxyCodeLine{\ \ \ \ <h1>}
+\DoxyCodeLine{\ \ \ \ \ \ \{error.status\}\ \{error.statusText\}}
+\DoxyCodeLine{\ \ \ \ </h1>}
+\DoxyCodeLine{\ \ )\ :\ (}
+\DoxyCodeLine{\ \ \ \ <h1>\{error.message\ ||\ error\}</h1>}
+\DoxyCodeLine{\ \ );}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+An example of this in action can be found in the \href{https://github.com/remix-run/react-router/tree/main/examples/lazy-loading-router-provider}{\texttt{ {\ttfamily examples/lazy-\/loading-\/router-\/provider}}} directory of the repository.
+
+🙌 Huge thanks to @rossipedia for the \href{https://github.com/remix-run/react-router/discussions/9826}{\texttt{ Initial Proposal}} and \href{https://github.com/remix-run/react-router/pull/9830}{\texttt{ POC Implementation}}.
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+4.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27048}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27048}
+
+\begin{DoxyItemize}
+\item Fix {\ttfamily generate\+Path} incorrectly applying parameters in some cases (\href{https://github.com/remix-run/react-router/pull/10078}{\texttt{ \#10078}})
+\item Improve memoization for context providers to avoid unnecessary re-\/renders (\href{https://github.com/remix-run/react-router/pull/9983}{\texttt{ \#9983}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27049}{}\doxysection{\texorpdfstring{6.\+8.\+2}{6.\+8.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27049}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27050}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27050}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+3.\+3}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27051}{}\doxysection{\texorpdfstring{6.\+8.\+1}{6.\+8.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27051}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27052}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27052}
+
+\begin{DoxyItemize}
+\item Remove inaccurate console warning for POP navigations and update active blocker logic (\href{https://github.com/remix-run/react-router/pull/10030}{\texttt{ \#10030}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+3.\+2}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27053}{}\doxysection{\texorpdfstring{6.\+8.\+0}{6.\+8.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27053}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27054}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27054}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+3.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27055}{}\doxysection{\texorpdfstring{6.\+7.\+0}{6.\+7.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27055}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27056}{}\doxysubsection{\texorpdfstring{Minor Changes}{Minor Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27056}
+
+\begin{DoxyItemize}
+\item Add {\ttfamily unstable\+\_\+use\+Blocker} hook for blocking navigations within the app\textquotesingle{}s location origin (\href{https://github.com/remix-run/react-router/pull/9709}{\texttt{ \#9709}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27057}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27057}
+
+\begin{DoxyItemize}
+\item Fix {\ttfamily generate\+Path} when optional params are present (\href{https://github.com/remix-run/react-router/pull/9764}{\texttt{ \#9764}})
+\item Update {\ttfamily \texorpdfstring{$<$}{<}Await\texorpdfstring{$>$}{>}} to accept {\ttfamily React\+Node} as children function return result (\href{https://github.com/remix-run/react-router/pull/9896}{\texttt{ \#9896}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+3.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27058}{}\doxysection{\texorpdfstring{6.\+6.\+2}{6.\+6.\+2}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27058}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27059}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27059}
+
+\begin{DoxyItemize}
+\item Ensure {\ttfamily use\+Id} consistency during SSR (\href{https://github.com/remix-run/react-router/pull/9805}{\texttt{ \#9805}})
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27060}{}\doxysection{\texorpdfstring{6.\+6.\+1}{6.\+6.\+1}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27060}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27061}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27061}
+
+\begin{DoxyItemize}
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+2.\+1}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27062}{}\doxysection{\texorpdfstring{6.\+6.\+0}{6.\+6.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27062}
+\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27063}{}\doxysubsection{\texorpdfstring{Patch Changes}{Patch Changes}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27063}
+
+\begin{DoxyItemize}
+\item Prevent {\ttfamily use\+Loader\+Data} usage in {\ttfamily error\+Element} (\href{https://github.com/remix-run/react-router/pull/9735}{\texttt{ \#9735}})
+\item Updated dependencies\+:
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+2.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27064}{}\doxysection{\texorpdfstring{6.\+5.\+0}{6.\+5.\+0}}\label{md_node__modules_2react-router_2_c_h_a_n_g_e_l_o_g_autotoc_md27064}
+This release introduces support for \href{https://github.com/remix-run/react-router/issues/9546}{\texttt{ Optional Route Segments}}. Now, adding a {\ttfamily ?} to the end of any path segment will make that entire segment optional. This works for both static segments and dynamic parameters.
+
+{\bfseries{Optional Params Examples}}
+
+
+\begin{DoxyItemize}
+\item {\ttfamily \texorpdfstring{$<$}{<}Route path="{}\+:lang?/about$>$$<$/tt$>$ will match\+:   -\/ $<$tt$>$/\+:lang/about$<$/tt$>$   -\/ $<$tt$>$/about$<$/tt$>$ -\/ $<$tt$>$\textbackslash{}$<$\+Route path="{}/multistep/\+:widget1?/widget2?/widget3?"{}\textbackslash{}$>$$<$/tt$>$ will match\+:   -\/ $<$tt$>$/multistep$<$/tt$>$   -\/ $<$tt$>$/multistep/\+:widget1$<$/tt$>$   -\/ $<$tt$>$/multistep/\+:widget1/\+:widget2$<$/tt$>$   -\/ $<$tt$>$/multistep/\+:widget1/\+:widget2/\+:widget3$<$/tt$>$  $<$strong$>$\+Optional Static Segment Example$<$/strong$>$  -\/ $<$tt$>$\textbackslash{}$<$\+Route path="{}/home?"{}\textbackslash{}$>$$<$/tt$>$ will match\+:   -\/ $<$tt$>$/$<$/tt$>$   -\/ $<$tt$>$/home$<$/tt$>$ -\/ $<$tt$>$\textbackslash{}$<$\+Route path="{}/fr?/about"{}\textbackslash{}$>$$<$/tt$>$ will match\+:   -\/ $<$tt$>$/about$<$/tt$>$   -\/ $<$tt$>$/fr/about$<$/tt$>$  @subsection autotoc\+\_\+md27065 Minor Changes  -\/ Allows optional routes and optional static segments ($<$a href="{}\href{https://github.com/remix-run/react-router/pull/9650}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/pull/9650}}"{} $>$\#9650$<$/a$>$)  @subsection autotoc\+\_\+md27066 Patch Changes  -\/ Stop incorrectly matching on partial named parameters, i.\+e. $<$tt$>$\textbackslash{}$<$\+Route path="{}prefix-\/\+:param"{}\textbackslash{}$>$$<$/tt$>$, to align with how splat parameters work. If you were previously relying on this behavior then it\textquotesingle{}s recommended to extract the static portion of the path at the $<$tt$>$use\+Params$<$/tt$>$ call site\+: ($<$a href="{}\href{https://github.com/remix-run/react-router/pull/9506}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/pull/9506}}"{} $>$\#9506$<$/a$>$)  @icode\{jsx\}  // Old behavior at URL /prefix-\/123 $<$\+Route path="{}prefix-\/\+:id"{} element=\{$<$\+Comp /$>$ \}$>$  function Comp() \{   let params = use\+Params(); // \{ id\+: \textquotesingle{}123\textquotesingle{} \}   let id = params.\+id; // "{}123"{}   ... \}  // New behavior at URL /prefix-\/123 $<$\+Route path="{}\+:id"{} element=\{$<$\+Comp /$>$ \}$>$  function Comp() \{   let params = use\+Params(); // \{ id\+: \textquotesingle{}prefix-\/123\textquotesingle{} \}   let id = params.\+id.\+replace(/\texorpdfstring{$^\wedge$}{\string^}prefix-\//, \textquotesingle{}\textquotesingle{}); // "{}123"{}   ... \} @endicode   -\/ Updated dependencies\+:   -\/ $<$tt$>$\textbackslash{}@remix-\/run/router\textbackslash{}@1.\+1.\+0$<$/tt$>$  @section autotoc\+\_\+md27067 6.\+4.\+5  @subsection autotoc\+\_\+md27068 Patch Changes  -\/ Updated dependencies\+:   -\/ $<$tt$>$\textbackslash{}@remix-\/run/router\textbackslash{}@1.\+0.\+5$<$/tt$>$  @section autotoc\+\_\+md27069 6.\+4.\+4  @subsection autotoc\+\_\+md27070 Patch Changes  -\/ Updated dependencies\+:   -\/ $<$tt$>$\textbackslash{}@remix-\/run/router\textbackslash{}@1.\+0.\+4$<$/tt$>$  @section autotoc\+\_\+md27071 6.\+4.\+3  @subsection autotoc\+\_\+md27072 Patch Changes  -\/ $<$tt$>$use\+Routes$<$/tt$>$ should be able to return $<$tt$>$null$<$/tt$>$ when passing $<$tt$>$location\+Arg$<$/tt$>$ ($<$a href="{}\href{https://github.com/remix-run/react-router/pull/9485}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/pull/9485}}"{} $>$\#9485$<$/a$>$) -\/ fix $<$tt$>$initial\+Entries$<$/tt$>$ type in $<$tt$>$create\+Memory\+Router$<$/tt$>$ ($<$a href="{}\href{https://github.com/remix-run/react-router/pull/9498}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/pull/9498}}"{} $>$\#9498$<$/a$>$) -\/ Updated dependencies\+:   -\/ $<$tt$>$\textbackslash{}@remix-\/run/router\textbackslash{}@1.\+0.\+3$<$/tt$>$  @section autotoc\+\_\+md27073 6.\+4.\+2  @subsection autotoc\+\_\+md27074 Patch Changes  -\/ Fix $<$tt$>$\+Index\+Route\+Object$<$/tt$>$ and $<$tt$>$\+Non\+Index\+Route\+Object$<$/tt$>$ types to make $<$tt$>$has\+Error\+Element$<$/tt$>$ optional ($<$a href="{}\href{https://github.com/remix-run/react-router/pull/9394}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/pull/9394}}"{} $>$\#9394$<$/a$>$) -\/ Enhance console error messages for invalid usage of data router hooks ($<$a href="{}\href{https://github.com/remix-run/react-router/pull/9311}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/pull/9311}}"{} $>$\#9311$<$/a$>$) -\/ If an index route has children, it will result in a runtime error. We have strengthened our $<$tt$>$\+Route\+Object$<$/tt$>$/$<$tt$>$\+Route\+Props$<$/tt$>$ types to surface the error in Type\+Script. ($<$a href="{}\href{https://github.com/remix-run/react-router/pull/9366}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/pull/9366}}"{} $>$\#9366$<$/a$>$) -\/ Updated dependencies\+:   -\/ $<$tt$>$\textbackslash{}@remix-\/run/router\textbackslash{}@1.\+0.\+2$<$/tt$>$  @section autotoc\+\_\+md27075 6.\+4.\+1  @subsection autotoc\+\_\+md27076 Patch Changes  -\/ Preserve state from $<$tt$>$initial\+Entries$<$/tt$>$ ($<$a href="{}\href{https://github.com/remix-run/react-router/pull/9288}{\texttt{ https\+://github.\+com/remix-\/run/react-\/router/pull/9288}}"{} $>$\#9288$<$/a$>$) -\/ Updated dependencies\+:   -\/ $<$tt$>$\textbackslash{}@remix-\/run/router\textbackslash{}@1.\+0.\+1$<$/tt$>$  @section autotoc\+\_\+md27077 6.\+4.\+0  \+Whoa this is a big one! $<$tt$>$6.\+4.\+0$<$/tt$>$ brings all the data loading and mutation APIs over from Remix. Here\textquotesingle{}s a quick high level overview, but it\textquotesingle{}s recommended you go check out the $<$a href="{}\href{https://reactrouter.com}{\texttt{ https\+://reactrouter.\+com}}"{} $>$docs$<$/a$>$, especially the $<$a href="{}\href{https://reactrouter.com/en/6.4.0/start/overview}{\texttt{ https\+://reactrouter.\+com/en/6.\+4.\+0/start/overview}}"{} $>$feature overview$<$/a$>$ and the $<$a href="{}\href{https://reactrouter.com/en/6.4.0/start/tutorial}{\texttt{ https\+://reactrouter.\+com/en/6.\+4.\+0/start/tutorial}}"{} \texorpdfstring{$>$}{>}tutorial.}
+\end{DoxyItemize}
+
+{\ttfamily {\bfseries{New APIs}}}
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item Create your router with {\ttfamily create\+Memory\+Router}
+\item Render your router with {\ttfamily \texorpdfstring{$<$}{<}Router\+Provider\texorpdfstring{$>$}{>}}
+\item Load data with a Route {\ttfamily loader} and mutate with a Route {\ttfamily action}
+\item Handle errors with Route {\ttfamily error\+Element}
+\item Defer non-\/critical data with {\ttfamily defer} and {\ttfamily Await}
+\end{DoxyItemize}}
+
+{\ttfamily {\bfseries{Bug Fixes}}}
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item Path resolution is now trailing slash agnostic (\#8861)
+\item {\ttfamily use\+Location} returns the scoped location inside a {\ttfamily \texorpdfstring{$<$}{<}Routes location\texorpdfstring{$>$}{>}} component (\#9094)
+\end{DoxyItemize}}
+
+{\ttfamily {\bfseries{Updated Dependencies}}}
+
+{\ttfamily 
+\begin{DoxyItemize}
+\item {\ttfamily @remix-\/run/router@1.\+0.\+0} 
+\end{DoxyItemize}}

@@ -1,0 +1,39 @@
+\chapter{jsx-\/a11y/no-\/onchange}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange}{}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange}\index{jsx-\/a11y/no-\/onchange@{jsx-\/a11y/no-\/onchange}}
+\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13933}%
+\Hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13933}%
+
+
+❌ This rule is deprecated.
+
+⚠️ {\bfseries{Deprecated\+:}} This rule is based on reports of behavior of \href{https://www.quirksmode.org/dom/events/change.html\#t05}{\texttt{ old browsers (eg. IE 10 and below)}}. In the meantime, this behavior has been corrected, both in newer versions of browsers as well as \href{https://bugzilla.mozilla.org/show_bug.cgi?id=969068\#c2}{\texttt{ in the DOM spec}}.
+
+Enforce usage of {\ttfamily on\+Blur} over/in parallel with {\ttfamily on\+Change} on select menu elements for accessibility. {\ttfamily on\+Blur} {\bfseries{should}} be used instead of {\ttfamily on\+Change}, unless absolutely necessary and it causes no negative consequences for keyboard only or screen reader users. {\ttfamily on\+Blur} is a more declarative action by the user\+: for instance in a dropdown, using the arrow keys to toggle between options will trigger the {\ttfamily on\+Change} event in some browsers. Regardless, when a change of context results from an {\ttfamily on\+Blur} event or an {\ttfamily on\+Change} event, the user should be notified of the change unless it occurs below the currently focused element.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13934}{}\doxysection{\texorpdfstring{Rule details}{Rule details}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13934}
+This rule takes no arguments.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13935}{}\doxysubsection{\texorpdfstring{Succeed}{Succeed}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13935}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<select\ onBlur=\{updateModel\}>}
+\DoxyCodeLine{\ \ <option/>}
+\DoxyCodeLine{</select>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<select>}
+\DoxyCodeLine{\ \ <option\ onBlur=\{handleOnBlur\}\ onChange=\{handleOnChange\}\ />}
+\DoxyCodeLine{</select>}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13936}{}\doxysubsection{\texorpdfstring{Fail}{Fail}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13936}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<select\ onChange=\{updateModel\}\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13937}{}\doxysection{\texorpdfstring{Accessibility guidelines}{Accessibility guidelines}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13937}
+
+\begin{DoxyItemize}
+\item \href{https://www.w3.org/WAI/WCAG21/Understanding/on-input}{\texttt{ WCAG 3.\+2.\+2}}
+\end{DoxyItemize}\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13938}{}\doxysubsection{\texorpdfstring{Resources}{Resources}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-onchange_autotoc_md13938}
+
+\begin{DoxyItemize}
+\item \href{https://web.archive.org/web/20191207202425/http://cita.disability.uiuc.edu/html-best-practices/auto/onchange.php}{\texttt{ on\+Change Event Accessibility Issues}}
+\item \href{https://www.themaninblue.com/writing/perspective/2004/10/19/}{\texttt{ on\+Change Select Menu}} 
+\end{DoxyItemize}

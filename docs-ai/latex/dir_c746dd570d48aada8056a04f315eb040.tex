@@ -1,0 +1,136 @@
+\doxysection{node\+\_\+modules/rimraf Directory Reference}
+\hypertarget{dir_c746dd570d48aada8056a04f315eb040}{}\label{dir_c746dd570d48aada8056a04f315eb040}\index{node\_modules/rimraf Directory Reference@{node\_modules/rimraf Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{[}UNIX command\mbox{]}(\href{http://en.wikipedia.org/wiki/Rm_(Unix)}{\texttt{ http\+://en.\+wikipedia.\+org/wiki/\+Rm\+\_\+(\+Unix)}}) \`{}rm -\/rf\`{} for node in a cross-\/platform implementation.
+
+Install with {\ttfamily npm install rimraf}.\hypertarget{README.md_autotoc_md29555}{}\doxysubsubsection{\texorpdfstring{Major Changes}{Major Changes}}\label{README.md_autotoc_md29555}
+\hypertarget{README.md_autotoc_md29556}{}\doxysubsubsubsection{\texorpdfstring{v4 to v5}{v4 to v5}}\label{README.md_autotoc_md29556}
+
+\begin{DoxyItemize}
+\item There is no default export anymore. Import the functions directly using, e.\+g., `import \{ rimraf\+Sync \} from \textquotesingle{}rimraf'\`{}.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md29557}{}\doxysubsubsubsection{\texorpdfstring{v3 to v4}{v3 to v4}}\label{README.md_autotoc_md29557}
+
+\begin{DoxyItemize}
+\item The function returns a {\ttfamily Promise} instead of taking a callback.
+\item Globbing requires the {\ttfamily -\/-\/glob} CLI option or {\ttfamily glob} option property to be set. (Removed in 4.\+0 and 4.\+1, opt-\/in support added in 4.\+2.)
+\item Functions take arrays of paths, as well as a single path.
+\item Native implementation used by default when available, except on Windows, where this implementation is faster and more reliable.
+\item New implementation on Windows, falling back to "{}move then   remove"{} strategy when exponential backoff for {\ttfamily EBUSY} fails to resolve the situation.
+\item Simplified implementation on POSIX, since the Windows affordances are not necessary there.
+\item As of 4.\+3, return/resolve value is boolean instead of undefined.
+\end{DoxyItemize}\hypertarget{README.md_autotoc_md29558}{}\doxysubsubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md29558}
+Hybrid module, load either with {\ttfamily import} or {\ttfamily require()}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ 'rimraf'\ export\ is\ the\ one\ you\ probably\ want,\ but\ other}
+\DoxyCodeLine{//\ strategies\ exported\ as\ well.}
+\DoxyCodeLine{import\ \{\ rimraf,\ rimrafSync,\ native,\ nativeSync\ \}\ from\ 'rimraf'}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{const\ \{\ rimraf,\ rimrafSync,\ native,\ nativeSync\ \}\ =\ require('rimraf')}
+
+\end{DoxyCode}
+
+
+All removal functions return a boolean indicating that all entries were successfully removed.
+
+The only case in which this will not return {\ttfamily true} is if something was omitted from the removal via a {\ttfamily filter} option.\hypertarget{README.md_autotoc_md29559}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf(f, \mbox{[}opts\mbox{]}) -\/\texorpdfstring{$>$}{>} Promise}}{{\ttfamily rimraf(f, \mbox{[}opts\mbox{]}) -\/\texorpdfstring{$>$}{>} Promise}}}\label{README.md_autotoc_md29559}
+This first parameter is a path or array of paths. The second argument is an options object.
+
+Options\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily preserve\+Root}\+: If set to boolean {\ttfamily false}, then allow the recursive removal of the root directory. Otherwise, this is not allowed.
+\item {\ttfamily tmp}\+: Windows only. Temp folder to place files and folders for the "{}move then remove"{} fallback. Must be on the same physical device as the path being deleted. Defaults to {\ttfamily os.\+tmpdir()} when that is on the same drive letter as the path being deleted, or {\ttfamily \$\{drive\}\+:\textbackslash{}temp} if present, or {\ttfamily \$\{drive\}\+:\textbackslash{}} if not.
+\item {\ttfamily max\+Retries}\+: Windows and Native only. Maximum number of retry attempts in case of {\ttfamily EBUSY}, {\ttfamily EMFILE}, and {\ttfamily ENFILE} errors. Default {\ttfamily 10} for Windows implementation, {\ttfamily 0} for Native implementation.
+\item {\ttfamily backoff}\+: Windows only. Rate of exponential backoff for async removal in case of {\ttfamily EBUSY}, {\ttfamily EMFILE}, and {\ttfamily ENFILE} errors. Should be a number greater than 1. Default {\ttfamily 1.\+2}
+\item {\ttfamily max\+Backoff}\+: Windows only. Maximum total backoff time in ms to attempt asynchronous retries in case of {\ttfamily EBUSY}, {\ttfamily EMFILE}, and {\ttfamily ENFILE} errors. Default {\ttfamily 200}. With the default {\ttfamily 1.\+2} backoff rate, this results in 14 retries, with the final retry being delayed 33ms.
+\item {\ttfamily retry\+Delay}\+: Native only. Time to wait between retries, using linear backoff. Default {\ttfamily 100}.
+\item {\ttfamily signal} Pass in an Abort\+Signal to cancel the directory removal. This is useful when removing large folder structures, if you\textquotesingle{}d like to limit the time spent.
+
+Using a {\ttfamily signal} option prevents the use of Node\textquotesingle{}s built-\/in {\ttfamily fs.\+rm} because that implementation does not support abort signals.
+\item {\ttfamily glob} Boolean flag to treat path as glob pattern, or an object specifying \href{https://github.com/isaacs/node-glob}{\texttt{ {\ttfamily glob} options}}.
+\item {\ttfamily filter} Method that returns a boolean indicating whether that path should be deleted. With async {\ttfamily rimraf} methods, this may return a Promise that resolves to a boolean. (Since Promises are truthy, returning a Promise from a sync filter is the same as just not filtering anything.)
+
+The first argument to the filter is the path string. The second argument is either a {\ttfamily Dirent} or {\ttfamily Stats} object for that path. (The first path explored will be a {\ttfamily Stats}, the rest will be {\ttfamily Dirent}.)
+
+If a filter method is provided, it will {\itshape only} remove entries if the filter returns (or resolves to) a truthy value. Omitting a directory will still allow its children to be removed, unless they are also filtered out, but any parents of a filtered entry will not be removed, since the directory will not be empty in that case.
+
+Using a filter method prevents the use of Node\textquotesingle{}s built-\/in {\ttfamily fs.\+rm} because that implementation does not support filtering.
+\end{DoxyItemize}
+
+Any other options are provided to the native Node.\+js {\ttfamily fs.\+rm} implementation when that is used.
+
+This will attempt to choose the best implementation, based on the Node.\+js version and {\ttfamily process.\+platform}. To force a specific implementation, use one of the other functions provided.\hypertarget{README.md_autotoc_md29560}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+sync(f, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+rimraf\+Sync(f, \mbox{[}opts\mbox{]})}}{{\ttfamily rimraf.\+sync(f, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+rimraf\+Sync(f, \mbox{[}opts\mbox{]})}}}\label{README.md_autotoc_md29560}
+Synchronous form of {\ttfamily rimraf()}
+
+Note that, unlike many file system operations, the synchronous form will typically be significantly {\itshape slower} than the async form, because recursive deletion is extremely parallelizable.\hypertarget{README.md_autotoc_md29561}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+native(f, \mbox{[}opts\mbox{]})}}{{\ttfamily rimraf.\+native(f, \mbox{[}opts\mbox{]})}}}\label{README.md_autotoc_md29561}
+Uses the built-\/in {\ttfamily fs.\+rm} implementation that Node.\+js provides. This is used by default on Node.\+js versions greater than or equal to {\ttfamily 14.\+14.\+0}.\hypertarget{README.md_autotoc_md29562}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+native.\+sync(f, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+native\+Sync(f, \mbox{[}opts\mbox{]})}}{{\ttfamily rimraf.\+native.\+sync(f, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+native\+Sync(f, \mbox{[}opts\mbox{]})}}}\label{README.md_autotoc_md29562}
+Synchronous form of {\ttfamily rimraf.\+native}\hypertarget{README.md_autotoc_md29563}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+manual(f, \mbox{[}opts\mbox{]})}}{{\ttfamily rimraf.\+manual(f, \mbox{[}opts\mbox{]})}}}\label{README.md_autotoc_md29563}
+Use the Java\+Script implementation appropriate for your operating system.\hypertarget{README.md_autotoc_md29564}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+manual.\+sync(f, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+manual\+Sync(f, opts)}}{{\ttfamily rimraf.\+manual.\+sync(f, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+manual\+Sync(f, opts)}}}\label{README.md_autotoc_md29564}
+Synchronous form of {\ttfamily rimraf.\+manual()}\hypertarget{README.md_autotoc_md29565}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+windows(f, \mbox{[}opts\mbox{]})}}{{\ttfamily rimraf.\+windows(f, \mbox{[}opts\mbox{]})}}}\label{README.md_autotoc_md29565}
+Java\+Script implementation of file removal appropriate for Windows platforms. Works around {\ttfamily unlink} and {\ttfamily rmdir} not being atomic operations, and {\ttfamily EPERM} when deleting files with certain permission modes.
+
+First deletes all non-\/directory files within the tree, and then removes all directories, which should ideally be empty by that time. When an {\ttfamily ENOTEMPTY} is raised in the second pass, falls back to the {\ttfamily rimraf.\+move\+Remove} strategy as needed.\hypertarget{README.md_autotoc_md29566}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+windows.\+sync(path, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+windows\+Sync(path, \mbox{[}opts\mbox{]})}}{{\ttfamily rimraf.\+windows.\+sync(path, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+windows\+Sync(path, \mbox{[}opts\mbox{]})}}}\label{README.md_autotoc_md29566}
+Synchronous form of {\ttfamily rimraf.\+windows()}\hypertarget{README.md_autotoc_md29567}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+move\+Remove(path, \mbox{[}opts\mbox{]})}}{{\ttfamily rimraf.\+move\+Remove(path, \mbox{[}opts\mbox{]})}}}\label{README.md_autotoc_md29567}
+Moves all files and folders to the parent directory of {\ttfamily path} with a temporary filename prior to attempting to remove them.
+
+Note that, in cases where the operation fails, this {\itshape may} leave files lying around in the parent directory with names like {\ttfamily .file-\/basename.\+txt.\+0.\+123412341}. Until the Windows kernel provides a way to perform atomic {\ttfamily unlink} and {\ttfamily rmdir} operations, this is, unfortunately, unavoidable.
+
+To move files to a different temporary directory other than the parent, provide {\ttfamily opts.\+tmp}. Note that this {\itshape must} be on the same physical device as the folder being deleted, or else the operation will fail.
+
+This is the slowest strategy, but most reliable on Windows platforms. Used as a last-\/ditch fallback by {\ttfamily rimraf.\+windows()}.\hypertarget{README.md_autotoc_md29568}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily rimraf.\+move\+Remove.\+sync(path, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+move\+Remove\+Sync(path, \mbox{[}opts\mbox{]})}}{{\ttfamily rimraf.\+move\+Remove.\+sync(path, \mbox{[}opts\mbox{]})} ~\newline
+ {\ttfamily rimraf.\+move\+Remove\+Sync(path, \mbox{[}opts\mbox{]})}}}\label{README.md_autotoc_md29568}
+Synchronous form of {\ttfamily rimraf.\+move\+Remove()}\hypertarget{README.md_autotoc_md29569}{}\doxysubsubsubsection{\texorpdfstring{Command Line Interface}{Command Line Interface}}\label{README.md_autotoc_md29569}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{rimraf\ version\ 4.3.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{Usage:\ rimraf\ <path>\ [<path>\ ...]}
+\DoxyCodeLine{Deletes\ all\ files\ and\ folders\ at\ "{}path"{},\ recursively.}
+\DoxyCodeLine{}
+\DoxyCodeLine{Options:}
+\DoxyCodeLine{\ \ -\/-\/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Treat\ all\ subsequent\ arguments\ as\ paths}
+\DoxyCodeLine{\ \ -\/h\ -\/-\/help\ \ \ \ \ \ \ \ \ \ \ \ Display\ this\ usage\ info}
+\DoxyCodeLine{\ \ -\/-\/preserve-\/root\ \ \ \ \ \ Do\ not\ remove\ '/'\ recursively\ (default)}
+\DoxyCodeLine{\ \ -\/-\/no-\/preserve-\/root\ \ \ Do\ not\ treat\ '/'\ specially}
+\DoxyCodeLine{\ \ -\/G\ -\/-\/no-\/glob\ \ \ \ \ \ \ \ \ Treat\ arguments\ as\ literal\ paths,\ not\ globs\ (default)}
+\DoxyCodeLine{\ \ -\/g\ -\/-\/glob\ \ \ \ \ \ \ \ \ \ \ \ Treat\ arguments\ as\ glob\ patterns}
+\DoxyCodeLine{\ \ -\/v\ -\/-\/verbose\ \ \ \ \ \ \ \ \ Be\ verbose\ when\ deleting\ files,\ showing\ them\ as}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ they\ are\ removed.\ Not\ compatible\ with\ -\/-\/impl=native}
+\DoxyCodeLine{\ \ -\/V\ -\/-\/no-\/verbose\ \ \ \ \ \ Be\ silent\ when\ deleting\ files,\ showing\ nothing\ as}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ they\ are\ removed\ (default)}
+\DoxyCodeLine{\ \ -\/i\ -\/-\/interactive\ \ \ \ \ Ask\ for\ confirmation\ before\ deleting\ anything}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Not\ compatible\ with\ -\/-\/impl=native}
+\DoxyCodeLine{\ \ -\/I\ -\/-\/no-\/interactive\ \ Do\ not\ ask\ for\ confirmation\ before\ deleting}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ -\/-\/impl=<type>\ \ \ \ \ \ \ \ Specify\ the\ implementation\ to\ use:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rimraf:\ choose\ the\ best\ option\ (default)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ native:\ the\ built-\/in\ implementation\ in\ Node.js}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ manual:\ the\ platform-\/specific\ JS\ implementation}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ posix:\ the\ Posix\ JS\ implementation}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ windows:\ the\ Windows\ JS\ implementation\ (falls\ back\ to}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ move-\/remove\ on\ ENOTEMPTY)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ move-\/remove:\ a\ slow\ reliable\ Windows\ fallback}
+\DoxyCodeLine{}
+\DoxyCodeLine{Implementation-\/specific\ options:}
+\DoxyCodeLine{\ \ -\/-\/tmp=<path>\ \ \ \ \ \ \ \ Temp\ file\ folder\ for\ 'move-\/remove'\ implementation}
+\DoxyCodeLine{\ \ -\/-\/max-\/retries=<n>\ \ \ maxRetries\ for\ 'native'\ and\ 'windows'\ implementations}
+\DoxyCodeLine{\ \ -\/-\/retry-\/delay=<n>\ \ \ retryDelay\ for\ 'native'\ implementation,\ default\ 100}
+\DoxyCodeLine{\ \ -\/-\/backoff=<n>\ \ \ \ \ \ \ Exponential\ backoff\ factor\ for\ retries\ (default:\ 1.2)}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md29570}{}\doxysubsubsection{\texorpdfstring{mkdirp}{mkdirp}}\label{README.md_autotoc_md29570}
+If you need to {\itshape create} a directory recursively, check out \href{https://github.com/isaacs/node-mkdirp}{\texttt{ mkdirp}}. 

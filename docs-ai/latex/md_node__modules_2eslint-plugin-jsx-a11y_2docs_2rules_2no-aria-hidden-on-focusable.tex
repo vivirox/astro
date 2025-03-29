@@ -1,0 +1,38 @@
+\chapter{jsx-\/a11y/no-\/aria-\/hidden-\/on-\/focusable}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable}{}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable}\index{jsx-\/a11y/no-\/aria-\/hidden-\/on-\/focusable@{jsx-\/a11y/no-\/aria-\/hidden-\/on-\/focusable}}
+\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13879}%
+\Hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13879}%
+
+
+Enforce that {\ttfamily aria-\/hidden="{}true"{}} is not set on focusable elements.
+
+{\ttfamily aria-\/hidden="{}true"{}} can be used to hide purely decorative content from screen reader users. An element with {\ttfamily aria-\/hidden="{}true"{}} that can also be reached by keyboard can lead to confusion or unexpected behavior for screen reader users. Avoid using {\ttfamily aria-\/hidden="{}true"{}} on focusable elements.\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13880}{}\doxysection{\texorpdfstring{Rule details}{Rule details}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13880}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13881}{}\doxysubsection{\texorpdfstring{Succeed}{Succeed}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13881}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ aria-\/hidden="{}true"{}\ />}
+\DoxyCodeLine{<img\ aria-\/hidden="{}true"{}\ />}
+\DoxyCodeLine{<a\ aria-\/hidden="{}false"{}\ href="{}\#"{}\ />}
+\DoxyCodeLine{<button\ aria-\/hidden="{}true"{}\ tabIndex="{}-\/1"{}\ />\ //\ \`{}tabIndex=-\/1`\ removes\ the\ element\ from\ sequential\ focus\ navigation\ so\ we\ don't\ flag\ it.}
+\DoxyCodeLine{<a\ href="{}/"{}\ />}
+\DoxyCodeLine{<div\ aria-\/hidden="{}true"{}><a\ href="{}\#"{}></a></div>\ //\ This\ is\ also\ bad\ but\ will\ not\ be\ handled\ by\ this\ rule.}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13882}{}\doxysubsection{\texorpdfstring{Fail}{Fail}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13882}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<div\ aria-\/hidden="{}true"{}\ tabIndex="{}0"{}\ />}
+\DoxyCodeLine{<input\ aria-\/hidden="{}true"{}\ />}
+\DoxyCodeLine{<a\ href="{}/"{}\ aria-\/hidden="{}true"{}\ />}
+\DoxyCodeLine{<button\ aria-\/hidden="{}true"{}\ />}
+\DoxyCodeLine{<textarea\ aria-\/hidden="{}true"{}\ />}
+
+\end{DoxyCode}
+\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13883}{}\doxysection{\texorpdfstring{Accessibility guidelines}{Accessibility guidelines}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13883}
+General best practice (reference resources)\hypertarget{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13884}{}\doxysubsection{\texorpdfstring{Resources}{Resources}}\label{md_node__modules_2eslint-plugin-jsx-a11y_2docs_2rules_2no-aria-hidden-on-focusable_autotoc_md13884}
+
+\begin{DoxyItemize}
+\item \href{https://dequeuniversity.com/rules/axe/html/4.4/aria-hidden-focus}{\texttt{ aria-\/hidden elements do not contain focusable elements}}
+\item \href{https://www.w3.org/WAI/standards-guidelines/act/rules/6cfa84/proposed/}{\texttt{ Element with aria-\/hidden has no content in sequential focus navigation}}
+\item \href{https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-hidden}{\texttt{ MDN aria-\/hidden}} 
+\end{DoxyItemize}

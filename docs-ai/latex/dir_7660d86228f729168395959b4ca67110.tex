@@ -1,0 +1,96 @@
+\doxysection{node\+\_\+modules/@octokit/request-\/error Directory Reference}
+\hypertarget{dir_7660d86228f729168395959b4ca67110}{}\label{dir_7660d86228f729168395959b4ca67110}\index{node\_modules/"@octokit/request-\/error Directory Reference@{node\_modules/"@octokit/request-\/error Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\begin{quote}
+Error class for Octokit request errors \end{quote}
+
+
+\href{https://www.npmjs.com/package/@octokit/request-error}{\texttt{ }} \href{https://github.com/octokit/request-error.js/actions?query=workflow\%3ATest}{\texttt{ }}\hypertarget{README.md_autotoc_md5351}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md5351}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Browsers }&Load {\ttfamily @octokit/request-\/error} directly from \href{https://esm.sh}{\texttt{ esm.\+sh}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{import\ \{\ RequestError\ \}\ from\ "{}https://esm.sh/@octokit/request-\/error"{};}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\cellcolor{\tableheadbgcolor}\textbf{ Node }&
+
+Install with {\ttfamily npm install @octokit/request-\/error}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ RequestError\ \}\ from\ "{}@octokit/request-\/error"{};}
+
+\end{DoxyCode}
+
+
+\\\cline{1-2}
+\end{longtabu}
+
+
+\begin{DoxyImportant}{Important}
+As we use \href{https://nodejs.org/api/packages.html\#conditional-exports}{\texttt{ conditional exports}}, you will need to adapt your {\ttfamily tsconfig.\+json} by setting {\ttfamily "{}module\+Resolution"{}\+: "{}node16"{}, "{}module"{}\+: "{}node16"{}}. ~\newline
+~\newline
+ See the Type\+Script docs on \href{https://www.typescriptlang.org/docs/handbook/modules/reference.html\#packagejson-exports}{\texttt{ package.\+json "{}exports"{}}}.~\newline
+ See this \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ helpful guide on transitioning to ESM}} from \href{https://github.com/sindresorhus}{\texttt{ @sindresorhus}}
+\end{DoxyImportant}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ error\ =\ new\ RequestError("{}Oops"{},\ 500,\ \{}
+\DoxyCodeLine{\ \ request:\ \{}
+\DoxyCodeLine{\ \ \ \ method:\ "{}POST"{},}
+\DoxyCodeLine{\ \ \ \ url:\ "{}https://api.github.com/foo"{},}
+\DoxyCodeLine{\ \ \ \ body:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ bar:\ "{}baz"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ authorization:\ "{}token\ secret123"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ response:\ \{}
+\DoxyCodeLine{\ \ \ \ status:\ 500,}
+\DoxyCodeLine{\ \ \ \ url:\ "{}https://api.github.com/foo"{},}
+\DoxyCodeLine{\ \ \ \ headers:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}x-\/github-\/request-\/id"{}:\ "{}1:2:3:4"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ data:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ foo:\ "{}bar"{},}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{error.message;\ //\ Oops}
+\DoxyCodeLine{error.status;\ //\ 500}
+\DoxyCodeLine{error.request;\ //\ \{\ method,\ url,\ headers,\ body\ \}}
+\DoxyCodeLine{error.response;\ //\ \{\ url,\ status,\ headers,\ data\ \}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5352}{}\doxysubsubsection{\texorpdfstring{Usage with Octokit}{Usage with Octokit}}\label{README.md_autotoc_md5352}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ //\ your\ code\ here\ that\ sends\ at\ least\ one\ Octokit\ request}
+\DoxyCodeLine{\ \ await\ octokit.request("{}GET\ /"{});}
+\DoxyCodeLine{\}\ catch\ (error)\ \{}
+\DoxyCodeLine{\ \ //\ Octokit\ errors\ always\ have\ a\ \`{}error.status`\ property\ which\ is\ the\ http\ response\ code}
+\DoxyCodeLine{\ \ if\ (error.status)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ handle\ Octokit\ error}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ //\ handle\ all\ other\ errors}
+\DoxyCodeLine{\ \ \ \ throw\ error;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md5353}{}\doxysubsection{\texorpdfstring{LICENSE}{LICENSE}}\label{README.md_autotoc_md5353}
+\mbox{[}MIT\mbox{]}(LICENSE) 

@@ -1,0 +1,125 @@
+\doxysection{node\+\_\+modules/parse-\/latin Directory Reference}
+\hypertarget{dir_801684389fd6b6a53219fdb860ffe62d}{}\label{dir_801684389fd6b6a53219fdb860ffe62d}\index{node\_modules/parse-\/latin Directory Reference@{node\_modules/parse-\/latin Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/wooorm/parse-latin/actions}{\texttt{ }} \href{https://codecov.io/github/wooorm/parse-latin}{\texttt{ }} \href{https://www.npmjs.com/package/parse-latin}{\texttt{ }} \href{https://bundlejs.com/?q=parse-latin}{\texttt{ }}
+
+Natural language parser, for Latin-\/script languages, that produces \href{https://github.com/syntax-tree/nlcst}{\texttt{ nlcst}}.\hypertarget{readme.md_autotoc_md25617}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md25617}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}\+Parse\+Latin()\`{}
+\end{DoxyItemize}
+\item Algorithm
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md25618}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md25618}
+This package exposes a parser that takes Latin-\/script natural language and produces a syntax tree.\hypertarget{readme.md_autotoc_md25619}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md25619}
+If you want to handle natural language as syntax trees manually, use this.
+
+Alternatively, you can use the retext plugin \href{https://github.com/retextjs/retext/tree/main/packages/retext-latin}{\texttt{ {\ttfamily retext-\/latin}}}, which wraps this project to also parse natural language at a higher-\/level (easier) abstraction.
+
+Whether Old-\/\+English (“þā gewearþ þǣm hlāforde and þǣm hȳrigmannum wiþ ānum penninge”), Icelandic (“\+Hvað er að frétta”), French (“\+Où sont les toilettes?”), this project does a good job at tokenizing it.
+
+For English and Dutch, you can instead use \href{https://github.com/wooorm/parse-english}{\texttt{ {\ttfamily parse-\/english}}} and \href{https://github.com/wooorm/parse-dutch}{\texttt{ {\ttfamily parse-\/dutch}}}.
+
+You can somewhat use this for Latin-\/like scripts, such as Cyrillic (“привет”), Georgian (“გამარჯობა”), Armenian (“Բարեւ”), and such.\hypertarget{readme.md_autotoc_md25620}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md25620}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ parse-\/latin}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{ParseLatin\}\ from\ 'https://esm.sh/parse-\/latin@7'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{ParseLatin\}\ from\ 'https://esm.sh/parse-\/latin@7?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25621}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md25621}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{ParseLatin\}\ from\ 'parse-\/latin'}
+\DoxyCodeLine{import\ \{inspect\}\ from\ 'unist-\/util-\/inspect'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ tree\ =\ new\ ParseLatin().parse('A\ simple\ sentence.')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(inspect(tree))}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{RootNode[1]\ (1:1-\/1:19,\ 0-\/18)}
+\DoxyCodeLine{└─0\ ParagraphNode[1]\ (1:1-\/1:19,\ 0-\/18)}
+\DoxyCodeLine{\ \ \ \ └─0\ SentenceNode[6]\ (1:1-\/1:19,\ 0-\/18)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ├─0\ WordNode[1]\ (1:1-\/1:2,\ 0-\/1)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ │\ \ \ └─0\ TextNode\ \textcolor{stringliteral}{"{}A"{}}\ (1:1-\/1:2,\ 0-\/1)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ├─1\ WhiteSpaceNode\ \textcolor{stringliteral}{"{}\ "{}}\ (1:2-\/1:3,\ 1-\/2)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ├─2\ WordNode[1]\ (1:3-\/1:9,\ 2-\/8)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ │\ \ \ └─0\ TextNode\ \textcolor{stringliteral}{"{}simple"{}}\ (1:3-\/1:9,\ 2-\/8)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ├─3\ WhiteSpaceNode\ \textcolor{stringliteral}{"{}\ "{}}\ (1:9-\/1:10,\ 8-\/9)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ├─4\ WordNode[1]\ (1:10-\/1:18,\ 9-\/17)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ │\ \ \ └─0\ TextNode\ \textcolor{stringliteral}{"{}sentence"{}}\ (1:10-\/1:18,\ 9-\/17)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ └─5\ PunctuationNode\ \textcolor{stringliteral}{"{}."{}}\ (1:18-\/1:19,\ 17-\/18)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md25622}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md25622}
+This package exports the identifier \`{}\+Parse\+Latin\`{}. There is no default export.\hypertarget{readme.md_autotoc_md25623}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Parse\+Latin()}}{{\ttfamily Parse\+Latin()}}}\label{readme.md_autotoc_md25623}
+Create a new parser.\hypertarget{readme.md_autotoc_md25624}{}\doxysubsubsubsection{\texorpdfstring{{\ttfamily Parse\+Latin\#parse(value)}}{{\ttfamily Parse\+Latin\#parse(value)}}}\label{readme.md_autotoc_md25624}
+Turn natural language into a syntax tree.\hypertarget{readme.md_autotoc_md25625}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md25625}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} ({\ttfamily string}, optional) — value to parse
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md25626}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md25626}
+Tree (\href{https://github.com/syntax-tree/nlcst\#root}{\texttt{ {\ttfamily Root\+Node}}}).\hypertarget{readme.md_autotoc_md25627}{}\doxysubsection{\texorpdfstring{Algorithm}{Algorithm}}\label{readme.md_autotoc_md25627}
+\begin{quote}
+👉 {\bfseries{Note}}\+: The easiest way to see how {\ttfamily parse-\/latin} parses, is by using the \href{https://wooorm.com/parse-latin/}{\texttt{ online parser demo}}, which shows the syntax tree corresponding to the typed text. \end{quote}
+
+
+{\ttfamily parse-\/latin} splits text into white space, punctuation, symbol, and word tokens\+:
+
+
+\begin{DoxyItemize}
+\item “word” is one or more unicode letters or numbers
+\item “white space” is one or more unicode white space characters
+\item “punctuation” is one or more unicode punctuation characters
+\item “symbol” is one or more of anything else
+\end{DoxyItemize}
+
+Then, it manipulates and merges those tokens into a syntax tree, adding sentences and paragraphs where needed.
+
+
+\begin{DoxyItemize}
+\item some punctuation marks are part of the word they occur in, such as {\ttfamily non-\/profit}, {\ttfamily she’s}, {\ttfamily G.\+I.}, {\ttfamily 11\+:00}, {\ttfamily N/A}, {\ttfamily \&c}, {\ttfamily nineteenth-\/ and…}
+\item some periods do not mark a sentence end, such as {\ttfamily 1.}, {\ttfamily e.\+g.}, {\ttfamily id.}
+\item although periods, question marks, and exclamation marks (sometimes) end a sentence, that end might not occur directly after the mark, such as {\ttfamily .)}, {\ttfamily ."{}$<$/tt$>$ \texorpdfstring{$\ast$}{*}   …and many more exceptions  @section autotoc\+\_\+md25628 Types  \+This package is fully typed with $<$a href="{}\href{https://www.typescriptlang.org}{\texttt{ https\+://www.\+typescriptlang.\+org}}"{} $>$\+Type\+Script$<$/a$>$. \+It exports no additional types.  @section autotoc\+\_\+md25629 Compatibility  \+Projects maintained by me are compatible with maintained versions of Node.\+js.  \+When I cut a new major release, I drop support for unmaintained versions of \+Node. \+This means I try to keep the current release line, $<$tt$>$parse-\/latin\textbackslash{}@\texorpdfstring{$^\wedge$}{\string^}7$<$/tt$>$, compatible with Node.\+js 16.  @section autotoc\+\_\+md25630 Security  \+This package is safe.  @section autotoc\+\_\+md25631 Related  \texorpdfstring{$\ast$}{*}   $<$a href="{}\href{https://github.com/wooorm/parse-english}{\texttt{ https\+://github.\+com/wooorm/parse-\/english}}"{} $>$$<$tt$>$parse-\/english$<$/tt$>$$<$/a$>$     — English (natural language) parser \texorpdfstring{$\ast$}{*}   $<$a href="{}\href{https://github.com/wooorm/parse-dutch}{\texttt{ https\+://github.\+com/wooorm/parse-\/dutch}}"{} $>$$<$tt$>$parse-\/dutch$<$/tt$>$$<$/a$>$     — Dutch (natural language) parser  @section autotoc\+\_\+md25632 Contribute  \+Yes please! \+See $<$a href="{}\href{https://opensource.guide/how-to-contribute/}{\texttt{ https\+://opensource.\+guide/how-\/to-\/contribute/}}"{} $>$\+How to Contribute to Open Source$<$/a$>$.  @section autotoc\+\_\+md25633 License  \mbox{[}\+MIT\mbox{]}\mbox{[}license\mbox{]} © $<$a href="{}\href{https://wooorm.com}{\texttt{ https\+://wooorm.\+com}}"{} \texorpdfstring{$>$}{>}Titus Wormer }
+\end{DoxyItemize}

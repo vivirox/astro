@@ -1,0 +1,99 @@
+\chapter{Setting Up Python in Cursor}
+\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p}{}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p}\index{Setting Up Python in Cursor@{Setting Up Python in Cursor}}
+\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38435}%
+\Hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38435}%
+
+
+This guide explains how to properly configure Cursor to use a specific Python interpreter, particularly when working with conda environments.\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38436}{}\doxysection{\texorpdfstring{The Problem}{The Problem}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38436}
+Cursor is an Electron-\/based application that bundles its own Python interpreter. This can cause conflicts when you want to use a different Python interpreter, such as one from a conda environment. The main issues are\+:
+
+
+\begin{DoxyEnumerate}
+\item Cursor sets environment variables like {\ttfamily PYTHONHOME} and {\ttfamily PYTHONPATH} that point to its bundled Python
+\item These environment variables override your system\textquotesingle{}s Python configuration
+\item This can cause Python scripts to fail with errors like `Module\+Not\+Found\+Error\+: No module named \textquotesingle{}encodings'\`{}
+\end{DoxyEnumerate}\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38437}{}\doxysection{\texorpdfstring{The Solution}{The Solution}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38437}
+We\textquotesingle{}ll create a wrapper script that clears these environment variables before running your preferred Python interpreter.\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38438}{}\doxysection{\texorpdfstring{Step 1\+: Create a Python Wrapper Script}{Step 1\+: Create a Python Wrapper Script}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38438}
+Create a file at {\ttfamily \texorpdfstring{$\sim$}{\string~}/.local/bin/cursor-\/python-\/wrapper} with the following content\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#!/bin/bash}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Clear\ Python\ environment\ variables\ that\ might\ be\ set\ by\ Cursor}
+\DoxyCodeLine{unset\ PYTHONHOME}
+\DoxyCodeLine{unset\ PYTHONPATH}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Run\ the\ Python\ interpreter\ with\ the\ remaining\ arguments}
+\DoxyCodeLine{exec\ /home/vivi/miniconda3/envs/devin/bin/python3.12\ "{}\$@"{}}
+
+\end{DoxyCode}
+
+
+Replace {\ttfamily /home/vivi/miniconda3/envs/devin/bin/python3.12} with the path to your preferred Python interpreter.\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38439}{}\doxysection{\texorpdfstring{Step 2\+: Make the Script Executable}{Step 2\+: Make the Script Executable}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38439}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{chmod\ +x\ \string~/.local/bin/cursor-\/python-\/wrapper}
+
+\end{DoxyCode}
+\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38440}{}\doxysection{\texorpdfstring{Step 3\+: Add the Script to Your PATH}{Step 3\+: Add the Script to Your PATH}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38440}
+Add the following line to your {\ttfamily \texorpdfstring{$\sim$}{\string~}/.bashrc} or {\ttfamily \texorpdfstring{$\sim$}{\string~}/.zshrc} file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ PATH="{}\$HOME/.local/bin:\$PATH"{}}
+
+\end{DoxyCode}
+
+
+Then reload your shell configuration\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{source\ \string~/.bashrc\ \ \#\ or\ source\ \string~/.zshrc}
+
+\end{DoxyCode}
+\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38441}{}\doxysection{\texorpdfstring{Step 4\+: Configure Cursor to Use the Wrapper Script}{Step 4\+: Configure Cursor to Use the Wrapper Script}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38441}
+
+\begin{DoxyEnumerate}
+\item Open Cursor
+\item Go to Settings (File \texorpdfstring{$>$}{>} Preferences \texorpdfstring{$>$}{>} Settings)
+\item Search for "{}python.\+default\+Interpreter\+Path"{}
+\item Set it to {\ttfamily /home/vivi/.local/bin/cursor-\/python-\/wrapper}
+\item Also set "{}python.\+terminal.\+activate\+Environment"{} to {\ttfamily true}
+\end{DoxyEnumerate}\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38442}{}\doxysection{\texorpdfstring{Step 5\+: Restart Cursor}{Step 5\+: Restart Cursor}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38442}
+Close and reopen Cursor for the changes to take effect.\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38443}{}\doxysection{\texorpdfstring{Verification}{Verification}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38443}
+You can verify that the Python interpreter is working correctly by creating a test script\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\textcolor{keyword}{import}\ platform}
+\DoxyCodeLine{}
+\DoxyCodeLine{print(f\textcolor{stringliteral}{"{}Python\ version:\ \{sys.version\}"{}})}
+\DoxyCodeLine{print(f\textcolor{stringliteral}{"{}Python\ executable:\ \{sys.executable\}"{}})}
+\DoxyCodeLine{print(f\textcolor{stringliteral}{"{}Platform:\ \{platform.platform()\}"{}})}
+\DoxyCodeLine{print(f\textcolor{stringliteral}{"{}PYTHONHOME:\ \{os.environ.get('PYTHONHOME',\ 'Not\ set')\}"{}})}
+\DoxyCodeLine{print(f\textcolor{stringliteral}{"{}PYTHONPATH:\ \{os.environ.get('PYTHONPATH',\ 'Not\ set')\}"{}})}
+
+\end{DoxyCode}
+
+
+Run this script in Cursor\textquotesingle{}s terminal, and you should see output showing your preferred Python interpreter is being used, and the environment variables are not set.\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38444}{}\doxysection{\texorpdfstring{Troubleshooting}{Troubleshooting}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38444}
+If you\textquotesingle{}re still having issues\+:
+
+
+\begin{DoxyEnumerate}
+\item Make sure the wrapper script is executable
+\item Check that the path to your Python interpreter is correct
+\item Verify that {\ttfamily \texorpdfstring{$\sim$}{\string~}/.local/bin} is in your PATH
+\item Restart Cursor after making changes
+\item Try running the wrapper script directly from the terminal to see if it works
+\end{DoxyEnumerate}\hypertarget{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38445}{}\doxysection{\texorpdfstring{Additional Notes}{Additional Notes}}\label{md_tools_2_c_u_r_s_o_r___p_y_t_h_o_n___s_e_t_u_p_autotoc_md38445}
+
+\begin{DoxyItemize}
+\item This solution works for any Python interpreter, not just conda environments
+\item You can modify the wrapper script to include additional environment setup if needed
+\item If you update your Python environment, you may need to update the path in the wrapper script 
+\end{DoxyItemize}

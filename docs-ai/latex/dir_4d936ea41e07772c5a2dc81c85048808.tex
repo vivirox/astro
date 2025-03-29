@@ -1,0 +1,81 @@
+\doxysection{node\+\_\+modules/bser Directory Reference}
+\hypertarget{dir_4d936ea41e07772c5a2dc81c85048808}{}\label{dir_4d936ea41e07772c5a2dc81c85048808}\index{node\_modules/bser Directory Reference@{node\_modules/bser Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+BSER is a binary serialization scheme that can be used as an alternative to JSON. BSER uses a framed encoding that makes it simpler to use to stream a sequence of encoded values.
+
+It is intended to be used for local-\/\+IPC only and strings are represented as binary with no specific encoding; this matches the convention employed by most operating system filename storage.
+
+For more details about the serialization scheme see \href{https://facebook.github.io/watchman/docs/bser.html}{\texttt{ Watchman\textquotesingle{}s docs}}.\hypertarget{README.md_autotoc_md9635}{}\doxysubsection{\texorpdfstring{API}{API}}\label{README.md_autotoc_md9635}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ bser\ =\ require('bser');}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9636}{}\doxysubsubsection{\texorpdfstring{bser.\+load\+From\+Buffer}{bser.\+load\+From\+Buffer}}\label{README.md_autotoc_md9636}
+The is the synchronous decoder; given an input string or buffer, decodes a single value and returns it. Throws an error if the input is invalid.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ obj\ =\ bser.loadFromBuffer(buf);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9637}{}\doxysubsubsection{\texorpdfstring{bser.\+dump\+To\+Buffer}{bser.\+dump\+To\+Buffer}}\label{README.md_autotoc_md9637}
+Synchronously encodes a value as BSER.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ encoded\ =\ bser.dumpToBuffer(['hello']);}
+\DoxyCodeLine{console.log(bser.loadFromBuffer(encoded));\ //\ ['hello']}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9638}{}\doxysubsubsection{\texorpdfstring{Bunser\+Buf}{Bunser\+Buf}}\label{README.md_autotoc_md9638}
+The asynchronous decoder API is implemented in the Bunser\+Buf object. You may incrementally append data to this object and it will emit the decoded values via its {\ttfamily value} event.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ bunser\ =\ new\ bser.BunserBuf();}
+\DoxyCodeLine{}
+\DoxyCodeLine{bunser.on('value',\ function(obj)\ \{}
+\DoxyCodeLine{\ \ console.log(obj);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Then in your socket {\ttfamily data} event\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{bunser.append(buf);}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md9639}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{README.md_autotoc_md9639}
+Read BSER from socket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ bunser\ =\ new\ bser.BunserBuf();}
+\DoxyCodeLine{}
+\DoxyCodeLine{bunser.on('value',\ function(obj)\ \{}
+\DoxyCodeLine{\ \ console.log('data\ from\ socket',\ obj);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ socket\ =\ net.connect('/socket');}
+\DoxyCodeLine{}
+\DoxyCodeLine{socket.on('data',\ function(buf)\ \{}
+\DoxyCodeLine{\ \ bunser.append(buf);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Write BSER to socket\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{socket.write(bser.dumpToBuffer(obj));}
+
+\end{DoxyCode}
+ 

@@ -1,0 +1,106 @@
+\doxysection{node\+\_\+modules/recma-\/build-\/jsx Directory Reference}
+\hypertarget{dir_a73a30d36ca039f4fd0623b407ed93d5}{}\label{dir_a73a30d36ca039f4fd0623b407ed93d5}\index{node\_modules/recma-\/build-\/jsx Directory Reference@{node\_modules/recma-\/build-\/jsx Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/mdx-js/recma/actions}{\texttt{ }} \href{https://codecov.io/github/mdx-js/recma}{\texttt{ }} \href{https://www.npmjs.com/package/recma-build-jsx}{\texttt{ }} \href{https://bundlejs.com/?q=recma-build-jsx}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/mdx-js/mdx/discussions}{\texttt{ }}
+
+{\bfseries{\href{https://github.com/mdx-js/recma}{\texttt{ recma}}}} plugin to add support for turning JSX ({\ttfamily \texorpdfstring{$<$}{<}x /\texorpdfstring{$>$}{>}}) into Java\+Script (`React.\+create\+Element(\textquotesingle{}x', \{\}){\ttfamily or}\+\_\+jsx(\textquotesingle{}x\textquotesingle{}, \{\})\`{}).\hypertarget{readme.md_autotoc_md27937}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md27937}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}unified().use(recma\+Build\+Jsx\mbox{[}, options\mbox{]})\`{}
+\item \doxylink{README.md_options}{\`{}\+Options\`{}}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md27938}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md27938}
+This package is a \href{https://github.com/unifiedjs/unified}{\texttt{ unified}} (\href{https://github.com/mdx-js/recma}{\texttt{ recma}}) that can turn JSX into Java\+Script.\hypertarget{readme.md_autotoc_md27939}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md27939}
+Use this when preparing JSX for evaluation. JSX cannot be evaluated without being transformed first.
+
+If you don’t use plugins and access syntax trees manually, you can directly use \href{https://github.com/syntax-tree/estree-util-build-jsx}{\texttt{ {\ttfamily estree-\/util-\/build-\/jsx}}}, which is used inside this plugin. recma focusses on making it easier to transform code by abstracting such internals away.\hypertarget{readme.md_autotoc_md27940}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md27940}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ recma-\/build-\/jsx}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ recmaBuildJsx\ from\ 'https://esm.sh/recma-\/build-\/jsx@1'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ recmaBuildJsx\ from\ 'https://esm.sh/recma-\/build-\/jsx@1?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md27941}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md27941}
+Say we have the following module {\ttfamily example.\+js}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ recmaBuildJsx\ from\ 'recma-\/build-\/jsx'}
+\DoxyCodeLine{import\ recmaJsx\ from\ 'recma-\/jsx'}
+\DoxyCodeLine{import\ recmaParse\ from\ 'recma-\/parse'}
+\DoxyCodeLine{import\ recmaStringify\ from\ 'recma-\/stringify'}
+\DoxyCodeLine{import\ \{unified\}\ from\ 'unified'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ file\ =\ await\ unified()}
+\DoxyCodeLine{\ \ .use(recmaParse)}
+\DoxyCodeLine{\ \ .use(recmaJsx)}
+\DoxyCodeLine{\ \ .use(recmaBuildJsx)}
+\DoxyCodeLine{\ \ .use(recmaStringify)}
+\DoxyCodeLine{\ \ .process('console.log(<em>Hi!</em>)')}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(String(file))}
+
+\end{DoxyCode}
+
+
+…running that with {\ttfamily node example.\+js} yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{console.log(React.createElement("{}em"{},\ null,\ "{}Hi!"{}));}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md27942}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md27942}
+This package exports no identifiers. The default export is \`{}recma\+Build\+Jsx\`{}.\hypertarget{readme.md_autotoc_md27943}{}\doxysubsubsection{\texorpdfstring{{\ttfamily unified().use(recma\+Build\+Jsx\mbox{[}, options\mbox{]})}}{{\ttfamily unified().use(recma\+Build\+Jsx\mbox{[}, options\mbox{]})}}}\label{readme.md_autotoc_md27943}
+Plugin to build JSX.\hypertarget{readme.md_autotoc_md27944}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md27944}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} (\doxylink{README.md_options}{\`{}\+Options\`{}}, optional) — configuration
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md27945}{}\doxysubsubsubsubsubsection{\texorpdfstring{Returns}{Returns}}\label{readme.md_autotoc_md27945}
+Transform (\href{https://github.com/unifiedjs/unified\#transformer}{\texttt{ {\ttfamily Transformer}}}).\hypertarget{readme.md_autotoc_md27946}{}\doxysubsubsection{\texorpdfstring{{\ttfamily Options}}{{\ttfamily Options}}}\label{readme.md_autotoc_md27946}
+Configuration (Type\+Script type).
+
+Same as \href{https://github.com/syntax-tree/estree-util-build-jsx\#options}{\texttt{ {\ttfamily Options}}} from {\ttfamily estree-\/util-\/build-\/jsx}. Passing {\ttfamily file\+Path} is not supported as it is handled for you.\hypertarget{readme.md_autotoc_md27947}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md27947}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports the additional type \doxylink{README.md_options}{\`{}\+Options\`{}}.\hypertarget{readme.md_autotoc_md27948}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md27948}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily recma-\/build-\/jsx@1}, compatible with Node.\+js 16.\hypertarget{readme.md_autotoc_md27949}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md27949}
+As {\bfseries{recma}} works on JS and evaluating JS is unsafe, use of recma can also be unsafe. Do not evaluate unsafe code.\hypertarget{readme.md_autotoc_md27950}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md27950}
+See \href{https://mdxjs.com/community/contribute/}{\texttt{ § Contribute}} on our site for ways to get started. See \href{https://mdxjs.com/community/support/}{\texttt{ § Support}} for ways to get help.
+
+This project has a \href{https://github.com/mdx-js/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md27951}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md27951}
+\mbox{[}MIT\mbox{]}\mbox{[}file-\/license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 

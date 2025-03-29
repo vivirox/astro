@@ -1,0 +1,87 @@
+\doxysection{node\+\_\+modules/vite-\/tsconfig-\/paths Directory Reference}
+\hypertarget{dir_8ad6c5e1aeeba8d83e471da20d5c16c2}{}\label{dir_8ad6c5e1aeeba8d83e471da20d5c16c2}\index{node\_modules/vite-\/tsconfig-\/paths Directory Reference@{node\_modules/vite-\/tsconfig-\/paths Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+👋 Check out \mbox{[}Radashi\mbox{]}(\href{https://github.com/radashi-org/radashi}{\texttt{ https\+://github.\+com/radashi-\/org/radashi}}), my latest endeavor.
+
+\href{https://github.com/radashi-org/radashi}{\texttt{ }}
+
+\DoxyHorRuler{0}
+
+
+~\hypertarget{README.md_autotoc_md34954}{}\doxysubsection{\texorpdfstring{vite-\/tsconfig-\/paths}{vite-\/tsconfig-\/paths}}\label{README.md_autotoc_md34954}
+\href{https://www.npmjs.com/package/vite-tsconfig-paths}{\texttt{ }} \href{https://github.com/prettier/prettier}{\texttt{ }}
+
+Give \href{https://github.com/vitejs/vite}{\texttt{ {\ttfamily vite}}} the ability to resolve imports using Type\+Script\textquotesingle{}s path mapping.\hypertarget{README.md_autotoc_md34955}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{README.md_autotoc_md34955}
+
+\begin{DoxyEnumerate}
+\item Install as dev dependency
+\item Ensure the project either has {\ttfamily "{}type"{}\+: "{}module"{}} set or that the Vite config is renamed to {\ttfamily vite.\+config.\+mjs} / {\ttfamily vite.\+config.\+mts} depending on whether Type\+Script is used
+\item Inject {\ttfamily vite-\/tsconfig-\/paths} in the Vite config
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ defineConfig\ \}\ from\ 'vite'}
+\DoxyCodeLine{import\ tsconfigPaths\ from\ 'vite-\/tsconfig-\/paths'}
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ default\ defineConfig(\{}
+\DoxyCodeLine{\ \ plugins:\ [tsconfigPaths()],}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+\item (optional) ⚠️ To enable path resolution in non-\/\+Type\+Script modules (e.\+g. {\ttfamily .vue}, {\ttfamily .svelte}, {\ttfamily .mdx}), you must set the {\ttfamily allow\+Js} option to true in your {\ttfamily tsconfig.\+json} file. If that doesn\textquotesingle{}t work, you might need to enable {\ttfamily loose\+: true} to resolve all files. Note that, due to a Vite limitation, CSS files (and CSS dialects) cannot be resolved with this plugin (see \href{https://github.com/aleclarson/vite-tsconfig-paths/issues/30}{\texttt{ \#30}}).
+\end{DoxyEnumerate}
+
+{\bfseries{Note\+:}} You need to restart Vite when you update your {\ttfamily paths} mappings. This is being tracked in \href{https://github.com/aleclarson/vite-tsconfig-paths/issues/17}{\texttt{ \#17}} (contributions welcome).\hypertarget{README.md_autotoc_md34956}{}\doxysubsubsubsection{\texorpdfstring{Options}{Options}}\label{README.md_autotoc_md34956}
+
+\begin{DoxyItemize}
+\item {\ttfamily root\+: string} ~\newline
+ The directory to search for {\ttfamily tsconfig.\+json} files.
+
+The default value of this option depends on whether {\ttfamily projects} is defined. If it is, then the \href{https://vitejs.dev/config/shared-options.html\#root}{\texttt{ Vite project root}} is used. Otherwise, Vite\textquotesingle{}s \href{https://vitejs.dev/guide/api-javascript.html\#searchforworkspaceroot}{\texttt{ {\ttfamily search\+For\+Workspace\+Root}}} function is used.
+\item {\ttfamily projects\+: string\mbox{[}\mbox{]}} ~\newline
+ If you have an esoteric setup, you {\itshape might} need this option to specify where your tsconfig files are located. The paths within are relative to the {\ttfamily root} option.
+
+If defined, the {\ttfamily root} directory won\textquotesingle{}t be searched for tsconfig files. You should {\bfseries{always}} try using just the {\ttfamily root} option first, because this option is more brittle.
+\item {\ttfamily loose\+: boolean} ~\newline
+ Disable strictness that limits path resolution to Type\+Script and Java\+Script importers.
+
+Useful if you want imports in Vue templates to be resolved, but don\textquotesingle{}t want to use {\ttfamily allow\+Js} in your tsconfig, for example.
+
+In other words, when {\ttfamily loose\+: true} is used, any file that gets transpiled into Java\+Script will have its imports resolved by this plugin.
+\item {\ttfamily parse\+Native\+: boolean} ~\newline
+ Enable use of the \href{https://github.com/dominikg/tsconfck/blob/main/docs/api.md\#parsenative}{\texttt{ {\ttfamily tsconfck.\+parse\+Native}}} function, which delegates the loading of tsconfig files to the Type\+Script compiler. You\textquotesingle{}ll probably never need this, but I added it just in case.
+
+⚠️ This option can slow down Vite\textquotesingle{}s startup time by as much as 600ms, due to the size of the Type\+Script compiler. Only use it when necessary.
+\item {\ttfamily ignore\+Config\+Errors\+: boolean} ~\newline
+ When true, parsing errors encountered while loading tsconfig files will be ignored. This is useful if you have a monorepo with multiple tsconfig files, and you don\textquotesingle{}t want to see errors for the ones that aren\textquotesingle{}t relevant to the current project.
+\item {\ttfamily skip\+: (dir\+: string) =\texorpdfstring{$>$}{>} boolean} ~\newline
+ A function that determines which directories to skip when searching for tsconfig.\+json files. While {\ttfamily .git} and {\ttfamily node\+\_\+modules} directories are always skipped, this option allows you to skip additional directories, which is useful in large monorepos to improve performance.
+\end{DoxyItemize}
+
+~\hypertarget{README.md_autotoc_md34957}{}\doxysubsubsubsection{\texorpdfstring{allow\+Js}{allow\+Js}}\label{README.md_autotoc_md34957}
+If your tsconfig file has {\ttfamily "{}allow\+Js"{}\+: true} in it, path resolution will be expanded beyond Type\+Script importers. The following extensions will have their imports resolved by this plugin\+: {\ttfamily .vue}, {\ttfamily .svelte}, {\ttfamily .mdx}, {\ttfamily .mjs}, {\ttfamily .js}, {\ttfamily .jsx}
+
+~\hypertarget{README.md_autotoc_md34958}{}\doxysubsubsubsection{\texorpdfstring{base\+Url}{base\+Url}}\label{README.md_autotoc_md34958}
+If the {\ttfamily base\+Url} is defined, it gets prepended to all bare imports, and its resolution will take precedence over node\+\_\+modules. This is also how Type\+Script does it.
+
+Say the {\ttfamily base\+Url} is {\ttfamily ../root} and you import {\ttfamily react}. This plugin will use {\ttfamily ../root/react} if it exists. If not found, then {\ttfamily react} is resolved normally. The {\ttfamily base\+Url} is relative to the project root (where {\ttfamily tsconfig.\+json} lives).
+
+~\hypertarget{README.md_autotoc_md34959}{}\doxysubsubsubsection{\texorpdfstring{include/exclude}{include/exclude}}\label{README.md_autotoc_md34959}
+The {\ttfamily include} and {\ttfamily exclude} tsconfig options are respected.
+
+Internally, \href{https://github.com/terkelg/globrex}{\texttt{ globrex}} is used for glob matching.
+
+~\hypertarget{README.md_autotoc_md34960}{}\doxysubsubsubsection{\texorpdfstring{Troubleshooting}{Troubleshooting}}\label{README.md_autotoc_md34960}
+The {\ttfamily DEBUG} environment variable can be used to figure out why this plugin isn\textquotesingle{}t working as you may have expected.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{DEBUG=vite-\/tsconfig-\/paths\ yarn\ vite}
+
+\end{DoxyCode}
+
+
+Also, check out the \href{https://github.com/aleclarson/vite-tsconfig-paths/wiki/Troubleshooting}{\texttt{ Troubleshooting}} wiki page for more guidance. 

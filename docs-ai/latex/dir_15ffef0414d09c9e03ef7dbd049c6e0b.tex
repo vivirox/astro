@@ -1,0 +1,117 @@
+\doxysection{node\+\_\+modules/micromark-\/factory-\/title Directory Reference}
+\hypertarget{dir_15ffef0414d09c9e03ef7dbd049c6e0b}{}\label{dir_15ffef0414d09c9e03ef7dbd049c6e0b}\index{node\_modules/micromark-\/factory-\/title Directory Reference@{node\_modules/micromark-\/factory-\/title Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-factory-title}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-factory-title}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} factory to parse markdown titles (found in resources, definitions).\hypertarget{readme.md_autotoc_md23535}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23535}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When should I use this?
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}factory\+Title(…)\`{}
+\end{DoxyItemize}
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23536}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23536}
+This package exposes states to parse titles.\hypertarget{readme.md_autotoc_md23537}{}\doxysubsection{\texorpdfstring{When should I use this?}{When should I use this?}}\label{readme.md_autotoc_md23537}
+This package is useful when you are making your own micromark extensions.\hypertarget{readme.md_autotoc_md23538}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23538}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/factory-\/title}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{factorySpace\}\ from\ 'https://esm.sh/micromark-\/factory-\/title@1'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{factorySpace\}\ from\ 'https://esm.sh/micromark-\/factory-\/title@1?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23539}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23539}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{factoryTitle\}\ from\ 'micromark-\/factory-\/title'}
+\DoxyCodeLine{import\ \{codes,\ types\}\ from\ 'micromark-\/util-\/symbol'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ A\ micromark\ tokenizer\ that\ uses\ the\ factory:}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ @this\ \{TokenizeContext\}}
+\DoxyCodeLine{\ *\ \ \ Context.}
+\DoxyCodeLine{\ *\ @type\ \{Tokenizer\}}
+\DoxyCodeLine{\ */}
+\DoxyCodeLine{function\ tokenizeDefinition(effects,\ ok,\ nok)\ \{}
+\DoxyCodeLine{\ \ return\ start}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ …}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ /**\ @type\ \{State\}\ */}
+\DoxyCodeLine{\ \ function\ before(code)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (}
+\DoxyCodeLine{\ \ \ \ \ \ code\ ===\ codes.quotationMark\ ||}
+\DoxyCodeLine{\ \ \ \ \ \ code\ ===\ codes.apostrophe\ ||}
+\DoxyCodeLine{\ \ \ \ \ \ code\ ===\ codes.leftParenthesis}
+\DoxyCodeLine{\ \ \ \ )\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ factoryTitle(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ effects,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ factorySpace(effects,\ after,\ types.whitespace),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ nok,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ types.definitionTitle,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ types.definitionTitleMarker,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ types.definitionTitleString}
+\DoxyCodeLine{\ \ \ \ \ \ )(code)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ return\ nok(code)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ …}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23540}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23540}
+This module exports the identifier \`{}factory\+Title\`{}. There is no default export.\hypertarget{readme.md_autotoc_md23541}{}\doxysubsubsection{\texorpdfstring{{\ttfamily factory\+Title(…)}}{{\ttfamily factory\+Title(…)}}}\label{readme.md_autotoc_md23541}
+Parse titles.\hypertarget{readme.md_autotoc_md23542}{}\doxysubsubsubsubsubsection{\texorpdfstring{Examples}{Examples}}\label{readme.md_autotoc_md23542}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}a"{}}
+\DoxyCodeLine{'b'}
+\DoxyCodeLine{(c)}
+\DoxyCodeLine{"{}a}
+\DoxyCodeLine{b"{}}
+\DoxyCodeLine{'a}
+\DoxyCodeLine{\ \ \ \ b'}
+\DoxyCodeLine{(a\(\backslash\))b)}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23543}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23543}
+
+\begin{DoxyItemize}
+\item {\ttfamily effects} ({\ttfamily Effects}) — context
+\item {\ttfamily ok} ({\ttfamily State}) — state switched to when successful
+\item {\ttfamily nok} ({\ttfamily State}) — state switched to when unsuccessful
+\item {\ttfamily type} ({\ttfamily string}) — type of the whole title ({\ttfamily "{}a"{}}, `\textquotesingle{}b'{\ttfamily ,}(c){\ttfamily ) \texorpdfstring{$\ast$}{*}}marker\+Type{\ttfamily (}string{\ttfamily ) — type for the markers (}"{}$<$tt$>$,$<$/tt$>$\textquotesingle{}$<$tt$>$,$<$/tt$>$($<$tt$>$, and$<$/tt$>$)$<$tt$>$) \texorpdfstring{$\ast$}{*}$<$/tt$>$string\+Type$<$tt$>$($<$/tt$>$string$<$tt$>$)   — type for the value ($<$/tt$>$a\`{})  @subparagraph autotoc\+\_\+md23544 Returns  \+Start state ($<$tt$>$\+State$<$/tt$>$).  @section autotoc\+\_\+md23545 Types  \+This package is fully typed with $<$a href="{}\href{https://www.typescriptlang.org}{\texttt{ https\+://www.\+typescriptlang.\+org}}"{} $>$\+Type\+Script$<$/a$>$. \+It exports no additional types.  @section autotoc\+\_\+md23546 Compatibility  \+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.  \+When we cut a new major release, we drop support for unmaintained versions of \+Node. \+This means we try to keep the current release line, $<$tt$>$micromark-\/factory-\/title\textbackslash{}@2$<$/tt$>$, compatible with Node.\+js 16. \+This package works with $<$tt$>$micromark\textbackslash{}@3$<$/tt$>$.  @section autotoc\+\_\+md23547 Security  \+This package is safe. \+See $<$a href="{}\href{https://github.com/micromark/.github/blob/main/security.md}{\texttt{ https\+://github.\+com/micromark/.\+github/blob/main/security.\+md}}"{} $>$$<$tt$>$security.\+md$<$/tt$>$$<$/a$>$ in $<$a href="{}\href{https://github.com/micromark/.github}{\texttt{ https\+://github.\+com/micromark/.\+github}}"{} $>$$<$tt$>$micromark/.\+github$<$/tt$>$$<$/a$>$ for how to submit a security report.  @section autotoc\+\_\+md23548 Contribute  \+See $<$a href="{}\href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ https\+://github.\+com/micromark/.\+github/blob/main/contributing.\+md}}"{} $>$$<$tt$>$contributing.\+md$<$/tt$>$$<$/a$>$ in $<$a href="{}\href{https://github.com/micromark/.github}{\texttt{ https\+://github.\+com/micromark/.\+github}}"{} $>$$<$tt$>$micromark/.\+github$<$/tt$>$$<$/a$>$ for ways to get started. \+See $<$a href="{}\href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ https\+://github.\+com/micromark/.\+github/blob/main/support.\+md}}"{} $>$$<$tt$>$support.\+md$<$/tt$>$$<$/a$>$ for ways to get help.  \+This project has a $<$a href="{}\href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ https\+://github.\+com/micromark/.\+github/blob/main/code-\/of-\/conduct.\+md}}"{} $>$code of conduct$<$/a$>$. \+By interacting with this repository, organisation, or community you agree to abide by its terms.  @section autotoc\+\_\+md23549 License  $<$a href="{}\href{https://github.com/micromark/micromark/blob/main/license}{\texttt{ https\+://github.\+com/micromark/micromark/blob/main/license}}"{} $>$\+MIT$<$/a$>$ © $<$a href="{}\href{https://wooorm.com}{\texttt{ https\+://wooorm.\+com}}"{} \texorpdfstring{$>$}{>}Titus Wormer
+\end{DoxyItemize}

@@ -1,0 +1,249 @@
+\doxysection{node\+\_\+modules/micromark-\/extension-\/gfm-\/autolink-\/literal Directory Reference}
+\hypertarget{dir_bdcee2deae270cdb1bc12db41a4c0102}{}\label{dir_bdcee2deae270cdb1bc12db41a4c0102}\index{node\_modules/micromark-\/extension-\/gfm-\/autolink-\/literal Directory Reference@{node\_modules/micromark-\/extension-\/gfm-\/autolink-\/literal Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\href{https://github.com/micromark/micromark-extension-gfm-autolink-literal/actions}{\texttt{ }} \href{https://codecov.io/github/micromark/micromark-extension-gfm-autolink-literal}{\texttt{ }} \href{https://www.npmjs.com/package/micromark-extension-gfm-autolink-literal}{\texttt{ }} \href{https://bundlejs.com/?q=micromark-extension-gfm-autolink-literal}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://opencollective.com/unified}{\texttt{ }} \href{https://github.com/micromark/micromark/discussions}{\texttt{ }}
+
+\href{https://github.com/micromark/micromark}{\texttt{ micromark}} extensions to support GFM \href{https://github.github.com/gfm/\#autolinks-extension-}{\texttt{ literal autolinks}}.\hypertarget{readme.md_autotoc_md23159}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{readme.md_autotoc_md23159}
+
+\begin{DoxyItemize}
+\item What is this?
+\item When to use this
+\item Install
+\item Use
+\item \doxylink{README.md_api}{API}
+\begin{DoxyItemize}
+\item \`{}gfm\+Autolink\+Literal()\`{}
+\item \`{}gfm\+Autolink\+Literal\+Html()\`{}
+\end{DoxyItemize}
+\item \doxylink{md_node__modules_2chai_2_c_o_n_t_r_i_b_u_t_i_n_g_bugs}{Bugs}
+\item Authoring
+\item HTML
+\item CSS
+\item Syntax
+\item \doxylink{readme.md_types}{Types}
+\item Compatibility
+\item Security
+\item Related
+\item \doxylink{readme.md_contribute}{Contribute}
+\item \doxylink{README.md_license}{License}
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23160}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{readme.md_autotoc_md23160}
+This package contains extensions that add support for the extra autolink syntax enabled by GFM to \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}.
+
+Git\+Hub employs different algorithms to autolink\+: one at parse time and one at transform time (similar to how @mentions are done at transform time). This difference can be observed because character references and escapes are handled differently. But also because issues/\+PRs/comments omit (perhaps by accident?) the second algorithm for {\ttfamily www.}, {\ttfamily \href{http://}{\texttt{ http\+://}}}, and {\ttfamily \href{https://}{\texttt{ https\+://}}} links (but not for email links).
+
+As this is a syntax extension, it focuses on the first algorithm. The second algorithm is performed by \href{https://github.com/syntax-tree/mdast-util-gfm-autolink-literal}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/autolink-\/literal}}}. The {\ttfamily html} part of this micromark extension does not operate on an AST and hence can’t perform the second algorithm.
+
+The implementation of autolink literal on github.\+com is currently buggy. The bugs have been reported on \href{https://github.com/github/cmark-gfm}{\texttt{ {\ttfamily cmark-\/gfm}}}. This micromark extension matches github.\+com except for its bugs.\hypertarget{readme.md_autotoc_md23161}{}\doxysubsection{\texorpdfstring{When to use this}{When to use this}}\label{readme.md_autotoc_md23161}
+This project is useful when you want to support autolink literals in markdown.
+
+You can use these extensions when you are working with \href{https://github.com/micromark/micromark}{\texttt{ {\ttfamily micromark}}}. To support all GFM features, use \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} instead.
+
+When you need a syntax tree, combine this package with \href{https://github.com/syntax-tree/mdast-util-gfm-autolink-literal}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/autolink-\/literal}}}.
+
+All these packages are used in \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}}, which focusses on making it easier to transform content by abstracting these internals away.\hypertarget{readme.md_autotoc_md23162}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{readme.md_autotoc_md23162}
+This package is \href{https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c}{\texttt{ ESM only}}. In Node.\+js (version 16+), install with \href{https://docs.npmjs.com/cli/install}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ micromark-\/extension-\/gfm-\/autolink-\/literal}
+
+\end{DoxyCode}
+
+
+In Deno with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{gfmAutolinkLiteral,\ gfmAutolinkLiteralHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/autolink-\/literal@2'}
+
+\end{DoxyCode}
+
+
+In browsers with \href{https://esm.sh}{\texttt{ {\ttfamily esm.\+sh}}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}module"{}>}
+\DoxyCodeLine{\ \ import\ \{gfmAutolinkLiteral,\ gfmAutolinkLiteralHtml\}\ from\ 'https://esm.sh/micromark-\/extension-\/gfm-\/autolink-\/literal@2?bundle'}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23163}{}\doxysubsection{\texorpdfstring{Use}{Use}}\label{readme.md_autotoc_md23163}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{micromark\}\ from\ 'micromark'}
+\DoxyCodeLine{import\ \{}
+\DoxyCodeLine{\ \ gfmAutolinkLiteral,}
+\DoxyCodeLine{\ \ gfmAutolinkLiteralHtml}
+\DoxyCodeLine{\}\ from\ 'micromark-\/extension-\/gfm-\/autolink-\/literal'}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ output\ =\ micromark('Just\ a\ URL:\ www.example.com.',\ \{}
+\DoxyCodeLine{\ \ extensions:\ [gfmAutolinkLiteral()],}
+\DoxyCodeLine{\ \ htmlExtensions:\ [gfmAutolinkLiteralHtml()]}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(output)}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p>Just\ a\ URL:\ <a\ href="{}http://www.example.com"{}>www.example.com</a>.</p>}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23164}{}\doxysubsection{\texorpdfstring{API}{API}}\label{readme.md_autotoc_md23164}
+This package exports the identifiers \`{}gfm\+Autolink\+Literal\`{} and \`{}gfm\+Autolink\+Literal\+Html\`{}. There is no default export.
+
+The export map supports the \href{https://nodejs.org/api/packages.html\#packages_resolving_user_conditions}{\texttt{ {\ttfamily development} condition}}. Run {\ttfamily node -\/-\/conditions development module.\+js} to get instrumented dev code. Without this condition, production code is loaded.\hypertarget{readme.md_autotoc_md23165}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Autolink\+Literal()}}{{\ttfamily gfm\+Autolink\+Literal()}}}\label{readme.md_autotoc_md23165}
+Create an extension for {\ttfamily micromark} to support Git\+Hub autolink literal syntax.\hypertarget{readme.md_autotoc_md23166}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23166}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily extensions} to enable GFM autolink literal syntax (\href{https://github.com/micromark/micromark\#syntaxextension}{\texttt{ {\ttfamily Extension}}}).\hypertarget{readme.md_autotoc_md23167}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gfm\+Autolink\+Literal\+Html()}}{{\ttfamily gfm\+Autolink\+Literal\+Html()}}}\label{readme.md_autotoc_md23167}
+Create an HTML extension for {\ttfamily micromark} to support Git\+Hub autolink literal when serializing to HTML.\hypertarget{readme.md_autotoc_md23168}{}\doxysubsubsubsubsubsection{\texorpdfstring{Parameters}{Parameters}}\label{readme.md_autotoc_md23168}
+Extension for {\ttfamily micromark} that can be passed in {\ttfamily html\+Extensions} to support Git\+Hub autolink literal when serializing to HTML (\href{https://github.com/micromark/micromark\#htmlextension}{\texttt{ {\ttfamily Html\+Extension}}}).\hypertarget{readme.md_autotoc_md23169}{}\doxysubsection{\texorpdfstring{Bugs}{Bugs}}\label{readme.md_autotoc_md23169}
+Git\+Hub’s own algorithm to parse autolink literals contains three bugs. A smaller bug is left unfixed in this project for consistency. Two main bugs are not present in this project. The issues relating to autolink literals are\+:
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/github/cmark-gfm/issues/278}{\texttt{ GFM autolink extension ({\ttfamily www.}, {\ttfamily https?\+://} parts)\+: links don’t work when after bracket}}\textbackslash{} fixed here ✅
+\item \href{https://github.com/github/cmark-gfm/issues/280}{\texttt{ GFM autolink extension ({\ttfamily www.} part)\+: uppercase does not match on issues/\+PRs/comments}}\textbackslash{} fixed here ✅
+\item \href{https://github.com/github/cmark-gfm/issues/279}{\texttt{ GFM autolink extension ({\ttfamily www.} part)\+: the word {\ttfamily www} matches}}\textbackslash{} present here for consistency
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23170}{}\doxysubsection{\texorpdfstring{Authoring}{Authoring}}\label{readme.md_autotoc_md23170}
+It is recommended to use labels, either with a resource or a definition, instead of autolink literals, as those allow relative URLs and descriptive text to explain the URL in prose.\hypertarget{readme.md_autotoc_md23171}{}\doxysubsection{\texorpdfstring{HTML}{HTML}}\label{readme.md_autotoc_md23171}
+GFM autolink literals relate to the {\ttfamily \texorpdfstring{$<$}{<}a\texorpdfstring{$>$}{>}} element in HTML. See \href{https://html.spec.whatwg.org/multipage/text-level-semantics.html\#the-a-element}{\texttt{ {\itshape § 4.\+5.\+1 The {\ttfamily a} element}}} in the HTML spec for more info. When an email autolink is used, the string {\ttfamily mailto\+:} is prepended when generating the {\ttfamily href} attribute of the hyperlink. When a www autolink is used, the string {\ttfamily \href{http://}{\texttt{ http\+://}}} is prepended.\hypertarget{readme.md_autotoc_md23172}{}\doxysubsection{\texorpdfstring{CSS}{CSS}}\label{readme.md_autotoc_md23172}
+As hyperlinks are the fundamental thing that makes the web, you will most definitely have CSS for {\ttfamily a} elements already. The same CSS can be used for autolink literals, too.
+
+Git\+Hub itself does not apply interesting CSS to autolink literals. For any link, it currently (June 2022) \href{https://github.com/sindresorhus/github-markdown-css}{\texttt{ uses}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{a\ \{}
+\DoxyCodeLine{\ \ background-\/color:\ transparent;}
+\DoxyCodeLine{\ \ color:\ \#58a6ff;}
+\DoxyCodeLine{\ \ text-\/decoration:\ none;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{a:active,}
+\DoxyCodeLine{a:hover\ \{}
+\DoxyCodeLine{\ \ outline-\/width:\ 0;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{a:hover\ \{}
+\DoxyCodeLine{\ \ text-\/decoration:\ underline;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{a:not([href])\ \{}
+\DoxyCodeLine{\ \ color:\ inherit;}
+\DoxyCodeLine{\ \ text-\/decoration:\ none;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{readme.md_autotoc_md23173}{}\doxysubsection{\texorpdfstring{Syntax}{Syntax}}\label{readme.md_autotoc_md23173}
+Autolink literals form with, roughly, the following BNF\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{gfm\_autolink\_literal\ ::=\ gfm\_protocol\_autolink\ |\ gfm\_www\_autolink\ |\ gfm\_email\_autolink}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Restriction:\ the\ code\ before\ must\ be\ \`{}www\_autolink\_before`.}
+\DoxyCodeLine{;\ Restriction:\ the\ code\ after\ \`{}.`\ must\ not\ be\ eof.}
+\DoxyCodeLine{www\_autolink\ ::=\ 3('w'\ |\ 'W')\ '.'\ [domain\ [path]]}
+\DoxyCodeLine{www\_autolink\_before\ ::=\ eof\ |\ eol\ |\ space\_or\_tab\ |\ '('\ |\ '*'\ |\ '\_'\ |\ '['\ |\ ']'\ |\ '\string~'}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Restriction:\ the\ code\ before\ must\ be\ \`{}http\_autolink\_before`.}
+\DoxyCodeLine{;\ Restriction:\ the\ code\ after\ the\ protocol\ must\ be\ \`{}http\_autolink\_protocol\_after`.}
+\DoxyCodeLine{http\_autolink\ ::=\ ('h'\ |\ 'H')\ 2('t'\ |\ 'T')\ ('p'\ |\ 'P')\ ['s'\ |\ 'S']\ ':'\ 2'/'\ domain\ [path]}
+\DoxyCodeLine{http\_autolink\_before\ ::=\ byte\ -\/\ ascii\_alpha}
+\DoxyCodeLine{http\_autolink\_protocol\_after\ ::=\ byte\ -\/\ eof\ -\/\ eol\ -\/\ ascii\_control\ -\/\ unicode\_whitespace\ -\/\ ode\_punctuation}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Restriction:\ the\ code\ before\ must\ be\ \`{}email\_autolink\_before`.}
+\DoxyCodeLine{;\ Restriction:\ \`{}ascii\_digit`\ may\ not\ occur\ in\ the\ last\ label\ part\ of\ the\ label.}
+\DoxyCodeLine{email\_autolink\ ::=\ 1*('+'\ |\ '-\/'\ |\ '.'\ |\ '\_'\ |\ ascii\_alphanumeric)\ '@'\ 1*(1*label\_segment\ l\_dot\_cont)\ 1*label\_segment}
+\DoxyCodeLine{email\_autolink\_before\ ::=\ byte\ -\/\ ascii\_alpha\ -\/\ '/'}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Restriction:\ \`{}\_`\ may\ not\ occur\ in\ the\ last\ two\ domain\ parts.}
+\DoxyCodeLine{domain\ ::=\ 1*(url\_ampt\_cont\ |\ domain\_punct\_cont\ |\ '-\/'\ |\ byte\ -\/\ eof\ -\/\ ascii\_control\ -\/\ ode\_whitespace\ -\/\ unicode\_punctuation)}
+\DoxyCodeLine{;\ Restriction:\ must\ not\ be\ followed\ by\ \`{}punct`.}
+\DoxyCodeLine{domain\_punct\_cont\ ::=\ '.'\ |\ '\_'}
+\DoxyCodeLine{;\ Restriction:\ must\ not\ be\ followed\ by\ \`{}char-\/ref`.}
+\DoxyCodeLine{url\_ampt\_cont\ ::=\ '\&'}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ Restriction:\ a\ counter\ \`{}balance\ =\ 0`\ is\ increased\ for\ every\ \`{}(`,\ and\ decreased\ for\ every\ \`{})`.}
+\DoxyCodeLine{;\ Restriction:\ \`{})`\ must\ not\ be\ \`{}paren\_at\_end`.}
+\DoxyCodeLine{path\ ::=\ 1*(url\_ampt\_cont\ |\ path\_punctuation\_cont\ |\ '('\ |\ ')'\ |\ byte\ -\/\ eof\ -\/\ eol\ -\/\ space\_or\_tab)}
+\DoxyCodeLine{;\ Restriction:\ must\ not\ be\ followed\ by\ \`{}punct`.}
+\DoxyCodeLine{path\_punctuation\_cont\ ::=\ trailing\_punctuation\ -\/\ '<'}
+\DoxyCodeLine{;\ Restriction:\ must\ be\ followed\ by\ \`{}punct`\ and\ \`{}balance`\ must\ be\ less\ than\ \`{}0`.}
+\DoxyCodeLine{paren\_at\_end\ ::=\ ')'}
+\DoxyCodeLine{}
+\DoxyCodeLine{label\_segment\ ::=\ label\_dash\_underscore\_cont\ |\ ascii\_alpha\ |\ ascii\_digit}
+\DoxyCodeLine{;\ Restriction:\ if\ followed\ by\ \`{}punct`,\ the\ whole\ email\ autolink\ is\ invalid.}
+\DoxyCodeLine{label\_dash\_underscore\_cont\ ::=\ '-\/'\ |\ '\_'}
+\DoxyCodeLine{;\ Restriction:\ must\ not\ be\ followed\ by\ \`{}punct`.}
+\DoxyCodeLine{label\_dot\_cont\ ::=\ '.'}
+\DoxyCodeLine{}
+\DoxyCodeLine{punct\ ::=\ *trailing\_punctuation\ (\ byte\ -\/\ eof\ -\/\ eol\ -\/\ space\_or\_tab\ -\/\ '<'\ )}
+\DoxyCodeLine{char\_ref\ ::=\ *ascii\_alpha\ ';'\ path\_end}
+\DoxyCodeLine{trailing\_punctuation\ ::=\ '!'\ |\ '"{}'\ |\ '\(\backslash\)''\ |\ ')'\ |\ '*'\ |\ ','\ |\ '.'\ |\ ':'\ |\ ';'\ |\ '<'\ |\ '?'\ |\ '\_'\ |\ '\string~'}
+
+\end{DoxyCode}
+
+
+The grammar for GFM autolink literal is very relaxed\+: basically anything except for whitespace is allowed after a prefix. To use whitespace characters and otherwise impossible characters, in URLs, you can use percent encoding\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{https://example.com/alpha\%20bravo}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p><a\ href="{}https://example.com/alpha\%20bravo"{}>https://example.com/alpha\%20bravo</a></p>}
+
+\end{DoxyCode}
+
+
+There are several cases where incorrect encoding of URLs would, in other languages, result in a parse error. In markdown, there are no errors, and URLs are normalized. In addition, many characters are percent encoded (\href{https://github.com/micromark/micromark/tree/main/packages/micromark-util-sanitize-uri}{\texttt{ {\ttfamily sanitize\+Uri}}}). For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{www.a👍b\%}
+
+\end{DoxyCode}
+
+
+Yields\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<p><a\ href="{}http://www.a\%F0\%9F\%91\%8Db\%25"{}>www.a👍b\%</a></p>}
+
+\end{DoxyCode}
+
+
+There is a big difference between how www and protocol literals work compared to how email literals work. The first two are done when parsing, and work like anything else in markdown. But email literals are handled afterwards\+: when everything is parsed, we look back at the events to figure out if there were email addresses. This particularly affects how they interleave with character escapes and character references.\hypertarget{readme.md_autotoc_md23174}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{readme.md_autotoc_md23174}
+This package is fully typed with \href{https://www.typescriptlang.org}{\texttt{ Type\+Script}}. It exports no additional types.\hypertarget{readme.md_autotoc_md23175}{}\doxysubsection{\texorpdfstring{Compatibility}{Compatibility}}\label{readme.md_autotoc_md23175}
+Projects maintained by the unified collective are compatible with maintained versions of Node.\+js.
+
+When we cut a new major release, we drop support for unmaintained versions of Node. This means we try to keep the current release line, {\ttfamily micromark-\/extension-\/gfm-\/autolink-\/literal@\texorpdfstring{$^\wedge$}{\string^}2}, compatible with Node.\+js 16.
+
+This package works with {\ttfamily micromark} version {\ttfamily 3} and later.\hypertarget{readme.md_autotoc_md23176}{}\doxysubsection{\texorpdfstring{Security}{Security}}\label{readme.md_autotoc_md23176}
+This package is safe. Unlike other links in Common\+Mark, which allow arbitrary protocols, this construct always produces safe links.\hypertarget{readme.md_autotoc_md23177}{}\doxysubsection{\texorpdfstring{Related}{Related}}\label{readme.md_autotoc_md23177}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/micromark/micromark-extension-gfm}{\texttt{ {\ttfamily micromark-\/extension-\/gfm}}} — support all of GFM
+\item \href{https://github.com/syntax-tree/mdast-util-gfm-autolink-literal}{\texttt{ {\ttfamily mdast-\/util-\/gfm-\/autolink-\/literal}}} — support all of GFM in mdast
+\item \href{https://github.com/syntax-tree/mdast-util-gfm}{\texttt{ {\ttfamily mdast-\/util-\/gfm}}} — support all of GFM in mdast
+\item \href{https://github.com/remarkjs/remark-gfm}{\texttt{ {\ttfamily remark-\/gfm}}} — support all of GFM in remark
+\end{DoxyItemize}\hypertarget{readme.md_autotoc_md23178}{}\doxysubsection{\texorpdfstring{Contribute}{Contribute}}\label{readme.md_autotoc_md23178}
+See \href{https://github.com/micromark/.github/blob/main/contributing.md}{\texttt{ {\ttfamily contributing.\+md} in {\ttfamily micromark/.github}}} for ways to get started. See \href{https://github.com/micromark/.github/blob/main/support.md}{\texttt{ {\ttfamily support.\+md}}} for ways to get help.
+
+This project has a \href{https://github.com/micromark/.github/blob/main/code-of-conduct.md}{\texttt{ code of conduct}}. By interacting with this repository, organization, or community you agree to abide by its terms.\hypertarget{readme.md_autotoc_md23179}{}\doxysubsection{\texorpdfstring{License}{License}}\label{readme.md_autotoc_md23179}
+\mbox{[}MIT\mbox{]}\mbox{[}license\mbox{]} © \href{https://wooorm.com}{\texttt{ Titus Wormer}} 
