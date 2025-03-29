@@ -10,6 +10,7 @@
 [![Made with Astro](https://img.shields.io/badge/Made%20with-Astro-ff5d01.svg)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6.svg)](https://www.typescriptlang.org/)
 [![HIPAA Compliant](https://img.shields.io/badge/HIPAA-Compliant-green.svg)](SECURITY.md)
+[![Powered by Convex](https://img.shields.io/badge/Powered%20by-Convex-blue.svg)](https://convex.dev)
 
 [Website](https://gradiantascent.com) •
 [Documentation](https://docs.gradiantascent.com) •
@@ -123,3 +124,12 @@ intelligence.
 [Security](https://gradiantascent.com/security)
 
 </div>
+
+## 🚀 Technical Stack
+
+- **Frontend:** Astro, React, TypeScript, Tailwind CSS
+- **State Management:** Jotai, Zustand
+- **Data & Backend:** Convex, Supabase, Redis
+- **AI & ML:** TensorFlow.js, langchain
+- **Security:** End-to-end encryption, HIPAA compliance
+- **Analytics:** Custom dashboards, Recharts

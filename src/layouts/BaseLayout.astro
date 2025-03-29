@@ -24,6 +24,7 @@ import ToTopButton from '@/components/widgets/ToTopButton.astro'
 import Backdrop from '@/components/base/Backdrop.astro'
 import BrowserInfo from '@/components/utils/BrowserInfo.astro'
 import Monitoring from '@/components/Monitoring.astro'
+import ThemeSwitch from '@/components/widgets/ThemeSwitch.astro'
 
 import { UI, FEATURES } from '@/config'
 
@@ -41,8 +42,7 @@ interface Props {
   lastModDate?: string
 }
 
-const { bgType, title, description, ogImage, pubDate, lastModDate } =
-  Astro.props
+const { bgType, title, description, ogImage, pubDate, lastModDate } = Astro.props
 
 let style: Record<string, string> = {}
 
@@ -60,6 +60,7 @@ if (hasCustomCursor) style['--external-link-cursor'] = cursorType
 
 // Safely get current path without accessing headers directly
 const currentPath = Astro.url.pathname
+const isHomePage = currentPath === '/' || currentPath === ''
 
 // Instead of accessing headers, set default values or use alternatives
 // This removes all possible header usage in prerendered pages
@@ -104,30 +105,46 @@ const pageData = {
 
     <!-- Inline critical font styles to prevent FOUT -->
     <style is:inline>
-      /* Ensure proper font loading */
+      :root {
+        --c-bg: #fff;
+        --c-scrollbar: #eee;
+        --c-scrollbar-hover: #bbb;
+        --c-text: #222;
+        --c-text-light: #444;
+        --c-text-lighter: #777;
+        --c-border: rgba(125, 125, 125, 0.3);
+        --c-selection: rgba(125, 125, 255, 0.2);
+      }
+
+      .dark {
+        --c-bg: #050505;
+        --c-scrollbar: #111;
+        --c-scrollbar-hover: #222;
+        --c-text: #f3f3f3;
+        --c-text-light: #ddd;
+        --c-text-lighter: #aaa;
+        --c-border: rgba(125, 125, 125, 0.2);
+        --c-selection: rgba(125, 125, 255, 0.3);
+      }
+
+      html {
+        background-color: var(--c-bg);
+      }
+
       body {
-        font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        max-width: 100vw;
-        overflow-x: hidden;
-      }
-
-      code, pre, kbd, samp {
-        font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      }
-
-      /* Ensure content is centered */
-      #main {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color: var(--c-text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 16px;
+        line-height: 1.5;
+        margin: 0;
         width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2.5rem 1.75rem;
+        min-height: 100vh;
       }
 
-      /* Fix scrollbar issues */
-      html, body {
-        scroll-behavior: smooth;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+      ::selection {
+        background: var(--c-selection);
       }
     </style>
   </head>
@@ -144,6 +161,11 @@ const pageData = {
     <!-- Background -->
     {bgType && <Background type={bgType} />}
 
+    <!-- Theme switch -->
+    <div class="absolute top-4 right-4 z-10">
+      <ThemeSwitch />
+    </div>
+
     <!-- Main -->
     <Link
       href="#main"
@@ -152,7 +174,7 @@ const pageData = {
       Skip to content
     </Link>
     <NavBar />
-    <main id="main" class="mx-auto w-full max-w-6xl px-7 py-10">
+    <main id="main" class="mx-auto w-full max-w-3xl px-4 py-4">
       <slot />
       {
         currentPath !== '/' && (
@@ -164,8 +186,8 @@ const pageData = {
         )
       }
     </main>
-    <Footer />
-    <ToTopButton />
+    {currentPath !== '/' && <Footer />}
+    {currentPath !== '/' && <ToTopButton />}
 
     <!-- Panel Backdrop (on mobile) -->
     <Backdrop />
@@ -196,6 +218,18 @@ const pageData = {
       document.fonts.ready.then(() => {
         document.documentElement.classList.add('fonts-loaded');
       });
+    </script>
+
+    <script>
+      // Check for dark mode preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      document.documentElement.classList.toggle('dark', prefersDark)
+      
+      // Handle theme changes
+      document.addEventListener('themeChanged', (e) => {
+        const isDark = e.detail.theme === 'dark'
+        document.documentElement.classList.toggle('dark', isDark)
+      })
     </script>
   </body>
 </html>

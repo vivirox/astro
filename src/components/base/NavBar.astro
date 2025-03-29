@@ -13,155 +13,176 @@ const { navBarLayout, internalNavs, socialLinks } = UI
 const { left, right, mergeOnMobile } = navBarLayout
 
 validateNavBarLayout(navBarLayout)
+
+// Check if we're on the homepage
+const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === ''
 ---
 
-<header
-  class={`flex items-center gap-6 p-8 ${mergeOnMobile ? 'lt-md:px-7' : 'lt-md:(px-6 gap-3)'}`}
->
-  <LogoButton />
-  <nav
-    class={`flex items-center gap-4.8 w-full lt-md:justify-end
-    ${left.length !== 0 ? (right.length !== 0 ? 'justify-between' : '') : 'justify-end'}`}
-    aria-label="Main menu"
+{!isHomePage && (
+  <header
+    class={`flex items-center gap-6 p-8 navbar-wrapper ${mergeOnMobile ? 'lt-md:px-7' : 'lt-md:(px-6 gap-3)'}`}
   >
-    {
-      mergeOnMobile ? (
-        <>
-          {left.length !== 0 && (
-            <div class="grid grid-flow-col gap-4.8 print:op-0">
-              {left.map((key) =>
-                key === 'searchButton' ? (
-                  <SearchSwitch />
-                ) : key === 'themeButton' ? (
-                  <ThemeSwitch />
-                ) : key === 'rssLink' ? (
-                  <RssLink class="lt-md:hidden" />
-                ) : key === 'internalNavs' ? (
+    <LogoButton />
+    <nav
+      class={`flex items-center gap-4.8 w-full lt-md:justify-end nav-container
+      ${left.length !== 0 ? (right.length !== 0 ? 'justify-between' : '') : 'justify-end'}`}
+      aria-label="Main menu"
+    >
+      {
+        mergeOnMobile ? (
+          <>
+            {left.length !== 0 && (
+              <div class="grid grid-flow-col gap-4.8 print:op-0">
+                {left.map((key) =>
+                  key === 'searchButton' ? (
+                    <SearchSwitch />
+                  ) : key === 'themeButton' ? (
+                    <ThemeSwitch />
+                  ) : key === 'rssLink' ? (
+                    <RssLink class="lt-md:hidden" />
+                  ) : key === 'internalNavs' ? (
+                    internalNavs.map((item) => (
+                      <NavItem type="internal" {item} {mergeOnMobile} />
+                    ))
+                  ) : (
+                    socialLinks.map((item) => (
+                      <NavItem type="social" {item} {mergeOnMobile} />
+                    ))
+                  ),
+                )}
+              </div>
+            )}
+            {right.length !== 0 && (
+              <div
+                class={`grid grid-flow-col gap-4.8 print:op-0
+                ${!right.includes('themeButton') && !right.includes('searchButton') && 'lt-md:hidden'}`}
+              >
+                {right.map((key) =>
+                  key === 'searchButton' ? (
+                    <SearchSwitch />
+                  ) : key === 'themeButton' ? (
+                    <ThemeSwitch />
+                  ) : key === 'rssLink' ? (
+                    <RssLink class="lt-md:hidden" />
+                  ) : key === 'internalNavs' ? (
+                    internalNavs.map((item) => (
+                      <NavItem type="internal" {item} {mergeOnMobile} />
+                    ))
+                  ) : (
+                    socialLinks.map((item) => (
+                      <NavItem type="social" {item} {mergeOnMobile} />
+                    ))
+                  ),
+                )}
+              </div>
+            )}
+            <NavSwitch>
+              <Fragment slot="text">
+                {internalNavs.length !== 0 &&
                   internalNavs.map((item) => (
-                    <NavItem type="internal" {item} {mergeOnMobile} />
-                  ))
-                ) : (
+                    <NavItem
+                      type="internal"
+                      {item}
+                      {mergeOnMobile}
+                      mobileItemType="text"
+                    />
+                  ))}
+                {socialLinks.length !== 0 &&
                   socialLinks.map((item) => (
-                    <NavItem type="social" {item} {mergeOnMobile} />
-                  ))
-                ),
-              )}
-            </div>
-          )}
-          {right.length !== 0 && (
-            <div
-              class={`grid grid-flow-col gap-4.8 print:op-0
-              ${!right.includes('themeButton') && !right.includes('searchButton') && 'lt-md:hidden'}`}
-            >
-              {right.map((key) =>
-                key === 'searchButton' ? (
-                  <SearchSwitch />
-                ) : key === 'themeButton' ? (
-                  <ThemeSwitch />
-                ) : key === 'rssLink' ? (
-                  <RssLink class="lt-md:hidden" />
-                ) : key === 'internalNavs' ? (
+                    <NavItem
+                      type="social"
+                      {item}
+                      {mergeOnMobile}
+                      mobileItemType="text"
+                    />
+                  ))}
+              </Fragment>
+              <Fragment slot="icon">
+                {internalNavs.length !== 0 &&
                   internalNavs.map((item) => (
-                    <NavItem type="internal" {item} {mergeOnMobile} />
-                  ))
-                ) : (
+                    <NavItem
+                      type="internal"
+                      {item}
+                      {mergeOnMobile}
+                      mobileItemType="icon"
+                    />
+                  ))}
+                {socialLinks.length !== 0 &&
                   socialLinks.map((item) => (
-                    <NavItem type="social" {item} {mergeOnMobile} />
-                  ))
-                ),
-              )}
-            </div>
-          )}
-          <NavSwitch>
-            <Fragment slot="text">
-              {internalNavs.length !== 0 &&
-                internalNavs.map((item) => (
-                  <NavItem
-                    type="internal"
-                    {item}
-                    {mergeOnMobile}
-                    mobileItemType="text"
-                  />
-                ))}
-              {socialLinks.length !== 0 &&
-                socialLinks.map((item) => (
-                  <NavItem
-                    type="social"
-                    {item}
-                    {mergeOnMobile}
-                    mobileItemType="text"
-                  />
-                ))}
-            </Fragment>
-            <Fragment slot="icon">
-              {internalNavs.length !== 0 &&
-                internalNavs.map((item) => (
-                  <NavItem
-                    type="internal"
-                    {item}
-                    {mergeOnMobile}
-                    mobileItemType="icon"
-                  />
-                ))}
-              {socialLinks.length !== 0 &&
-                socialLinks.map((item) => (
-                  <NavItem
-                    type="social"
-                    {item}
-                    {mergeOnMobile}
-                    mobileItemType="icon"
-                  />
-                ))}
-              <RssLink />
-            </Fragment>
-          </NavSwitch>
-        </>
-      ) : (
-        <>
-          {left.length !== 0 && (
-            <div class="grid grid-flow-col gap-4.8 lt-md:(gap-3) print:op-0 ">
-              {navBarLayout.left.map((key) =>
-                key === 'searchButton' ? (
-                  <SearchSwitch />
-                ) : key === 'themeButton' ? (
-                  <ThemeSwitch />
-                ) : key === 'rssLink' ? (
-                  <RssLink />
-                ) : key === 'internalNavs' ? (
-                  internalNavs.map((item) => (
-                    <NavItem type="internal" {item} {mergeOnMobile} />
-                  ))
-                ) : (
-                  socialLinks.map((item) => (
-                    <NavItem type="social" {item} {mergeOnMobile} />
-                  ))
-                ),
-              )}
-            </div>
-          )}
-          {right.length !== 0 && (
-            <div class="grid grid-flow-col gap-4.8 lt-md:(gap-3) print:op-0">
-              {navBarLayout.right.map((key) =>
-                key === 'searchButton' ? (
-                  <SearchSwitch />
-                ) : key === 'themeButton' ? (
-                  <ThemeSwitch />
-                ) : key === 'rssLink' ? (
-                  <RssLink />
-                ) : key === 'internalNavs' ? (
-                  internalNavs.map((item) => (
-                    <NavItem type="internal" {item} {mergeOnMobile} />
-                  ))
-                ) : (
-                  socialLinks.map((item) => (
-                    <NavItem type="social" {item} {mergeOnMobile} />
-                  ))
-                ),
-              )}
-            </div>
-          )}
-        </>
-      )
-    }
-  </nav>
-</header>
+                    <NavItem
+                      type="social"
+                      {item}
+                      {mergeOnMobile}
+                      mobileItemType="icon"
+                    />
+                  ))}
+                <RssLink />
+              </Fragment>
+            </NavSwitch>
+          </>
+        ) : (
+          <>
+            {left.length !== 0 && (
+              <div class="grid grid-flow-col gap-4.8 lt-md:(gap-3) print:op-0 ">
+                {navBarLayout.left.map((key) =>
+                  key === 'searchButton' ? (
+                    <SearchSwitch />
+                  ) : key === 'themeButton' ? (
+                    <ThemeSwitch />
+                  ) : key === 'rssLink' ? (
+                    <RssLink />
+                  ) : key === 'internalNavs' ? (
+                    internalNavs.map((item) => (
+                      <NavItem type="internal" {item} {mergeOnMobile} />
+                    ))
+                  ) : (
+                    socialLinks.map((item) => (
+                      <NavItem type="social" {item} {mergeOnMobile} />
+                    ))
+                  ),
+                )}
+              </div>
+            )}
+            {right.length !== 0 && (
+              <div class="grid grid-flow-col gap-4.8 lt-md:(gap-3) print:op-0">
+                {navBarLayout.right.map((key) =>
+                  key === 'searchButton' ? (
+                    <SearchSwitch />
+                  ) : key === 'themeButton' ? (
+                    <ThemeSwitch />
+                  ) : key === 'rssLink' ? (
+                    <RssLink />
+                  ) : key === 'internalNavs' ? (
+                    internalNavs.map((item) => (
+                      <NavItem type="internal" {item} {mergeOnMobile} />
+                    ))
+                  ) : (
+                    socialLinks.map((item) => (
+                      <NavItem type="social" {item} {mergeOnMobile} />
+                    ))
+                  ),
+                )}
+              </div>
+            )}
+          </>
+        )
+      }
+    </nav>
+  </header>
+)}
+
+{isHomePage && (
+  <header class="flex items-center justify-end p-6 navbar-wrapper-home">
+    <ThemeSwitch />
+  </header>
+)}
+
+<style>
+  .navbar-wrapper-home {
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+  }
+</style>

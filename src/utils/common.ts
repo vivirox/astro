@@ -1,5 +1,5 @@
 import type { VNode } from 'vue'
-import type { NavBarLayout } from './types'
+import type { NavBarLayout } from '../types'
 import type { ProjectGroupsSchema } from '~/content/schema'
 import { promises as fs } from 'node:fs'
 import { join } from 'node:path'
@@ -126,8 +126,9 @@ export function unescapeHTML(node: VNode): VNode {
  * Validate navbar layout
  */
 export function validateNavBarLayout(layout: NavBarLayout) {
+  const totalItems = layout.left.length + layout.right.length
   return {
-    isValid: layout.length > 0 && layout.length <= 3,
-    message: layout.length > 3 ? 'Maximum 3 items allowed' : '',
+    isValid: totalItems > 0 && totalItems <= 5,
+    message: totalItems > 5 ? 'Maximum 5 items allowed in total' : '',
   }
 }

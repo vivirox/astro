@@ -116,6 +116,11 @@ export class SearchClient {
       },
     }
 
+    // Skip index initialization in server context
+    if (typeof window === 'undefined') {
+      return
+    }
+
     // Initialize FlexSearch document index
     this.index = new Document({
       document: {
@@ -136,7 +141,9 @@ export class SearchClient {
 
     for (const doc of documents) {
       this.documents.set(doc.id, doc)
-      this.index.add(doc)
+      if (typeof window !== 'undefined' && this.index) {
+        this.index.add(doc)
+      }
     }
   }
 
@@ -149,7 +156,9 @@ export class SearchClient {
 
     for (const id of idArray) {
       this.documents.delete(id)
-      this.index.remove(id)
+      if (typeof window !== 'undefined' && this.index) {
+        this.index.remove(id)
+      }
     }
   }
 
@@ -167,6 +176,12 @@ export class SearchClient {
    */
   clear(): void {
     this.documents.clear()
+
+    // Skip recreating index in server context
+    if (typeof window === 'undefined') {
+      return
+    }
+
     // Create a new index since FlexSearch doesn't have a clear method
     this.index = new Document({
       document: {
@@ -186,6 +201,11 @@ export class SearchClient {
    */
   search(query: string, options: Partial<SearchOptions> = {}): SearchResult[] {
     if (!query || query.trim() === '') {
+      return []
+    }
+
+    // Not available in server context
+    if (typeof window === 'undefined' || !this.index) {
       return []
     }
 
@@ -270,7 +290,11 @@ export class SearchClient {
 }
 
 // Create and export a single search client instance
-export const searchClient = new SearchClient()
+// Only initialize in browser context to avoid "Document is not a constructor" error
+export const searchClient =
+  typeof window !== 'undefined'
+    ? new SearchClient()
+    : (null as unknown as SearchClient)
 
 // Make it available on the window object when running in browser
 if (typeof window !== 'undefined') {

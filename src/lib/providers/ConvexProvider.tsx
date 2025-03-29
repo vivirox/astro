@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { getEnvVar } from '@/lib/utils/env'
+import { getEnv } from '@/config/env.config'
 import {
   ConvexProvider as BaseConvexProvider,
   ConvexReactClient,
@@ -8,7 +8,7 @@ import {
 /**
  * Configuration for the Convex client
  */
-const convex = new ConvexReactClient(getEnvVar('CONVEX_URL'))
+const convex = new ConvexReactClient(getEnv().CONVEX_URL || '')
 
 interface ConvexProviderProps {
   children: ReactNode

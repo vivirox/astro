@@ -53,6 +53,9 @@ const envSchema = z.object({
   VITE_LITLYX_PROJECT_ID: z.string().optional(),
   VITE_LITLYX_API_KEY: z.string().optional(),
 
+  // Convex
+  CONVEX_URL: z.string().url().optional(),
+
   // Email
   EMAIL_FROM: z.string().email().optional(),
   RESEND_API_KEY: z.string().optional(),
@@ -103,8 +106,13 @@ let cachedEnv: z.infer<typeof envSchema>
  */
 export function getEnv(): z.infer<typeof envSchema> {
   if (!cachedEnv) {
+    // Astro runs in both server and client environments
+    // Use import.meta.env in browser context
+    const envSource =
+      typeof process !== 'undefined' ? process.env : import.meta.env
+
     // Only parse the environment once
-    cachedEnv = envSchema.parse(process.env)
+    cachedEnv = envSchema.parse(envSource)
   }
   return cachedEnv
 }
@@ -162,6 +170,10 @@ export const config = {
     axiomToken: (): string | undefined => getEnv().AXIOM_TOKEN,
     litlyxProjectId: (): string | undefined => getEnv().VITE_LITLYX_PROJECT_ID,
     litlyxApiKey: (): string | undefined => getEnv().VITE_LITLYX_API_KEY,
+  },
+
+  convex: {
+    url: (): string | undefined => getEnv().CONVEX_URL,
   },
 
   email: {

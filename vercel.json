@@ -7,11 +7,7 @@
   "framework": "astro",
   "functions": {
     "dist/server/entry.mjs": {
-      "memory": 1024,
-      "maxDuration": 60
-    },
-    "api/**/*": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs20.x"
     }
   },
   "routes": [
@@ -53,23 +49,5 @@
       "path": "/api/cron/database-backup",
       "schedule": "0 2 * * *"
     }
-  ],
-  "env": {
-    "PUBLIC_SUPABASE_URL": "@public_supabase_url",
-    "PUBLIC_SUPABASE_ANON_KEY": "@public_supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
-    "UPSTASH_REDIS_REST_URL": "@upstash_redis_rest_url",
-    "UPSTASH_REDIS_REST_TOKEN": "@upstash_redis_rest_token",
-    "NODE_ENV": "production"
-  },
-  "build": {
-    "env": {
-      "PUBLIC_SUPABASE_URL": "@public_supabase_url",
-      "PUBLIC_SUPABASE_ANON_KEY": "@public_supabase_anon_key",
-      "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
-      "UPSTASH_REDIS_REST_URL": "@upstash_redis_rest_url",
-      "UPSTASH_REDIS_REST_TOKEN": "@upstash_redis_rest_token",
-      "NODE_ENV": "production"
-    }
-  }
+  ]
 }

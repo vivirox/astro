@@ -3,8 +3,8 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import StandardLayout from '~/layouts/StandardLayout.astro'
 
-// Set prerender to true for static generation
-export const prerender = true
+// Add prerender directive to generate static HTML during build
+export const prerender = false
 
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection('blog', ({ data }) => {
@@ -57,7 +57,7 @@ const description = `Articles tagged with #${tag} - Explore insights and guides 
         {
           posts.map((post) => (
             <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md">
-              <a href={`/blog/${post.slug}`}>
+              <a href={`/blog/${post.id}`}>
                 <img
                   src={
                     post.data.ogImage && typeof post.data.ogImage === 'string'
@@ -69,7 +69,7 @@ const description = `Articles tagged with #${tag} - Explore insights and guides 
                 />
               </a>
               <div class="p-6">
-                <a href={`/blog/${post.slug}`} class="block mt-2">
+                <a href={`/blog/${post.id}`} class="block mt-2">
                   <h3 class="text-xl font-semibold hover:text-blue-600 dark:hover:text-blue-400">
                     {post.data.title}
                   </h3>

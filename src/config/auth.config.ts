@@ -69,6 +69,7 @@ export const authConfig: AuthConfig = {
     accessToken: 'sb-access-token',
     refreshToken: 'sb-refresh-token',
     path: '/',
+    domain: undefined,
     secure: true,
     httpOnly: true,
     sameSite: 'lax',

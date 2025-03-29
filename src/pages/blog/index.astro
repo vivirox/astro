@@ -1,11 +1,12 @@
 ---
 import { getCollection } from 'astro:content'
-import Layout from '../../layouts/Layout.astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import type { CollectionEntry } from 'astro:content'
 
 // Add prerender directive to generate static HTML during build
-export const prerender = true
+export const prerender = false
 
-const posts = await getCollection('blog')
+const posts = await getCollection('blog') as CollectionEntry<'blog'>[]
 posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 
 const formatDate = (date: string | number | Date) => {
@@ -17,38 +18,65 @@ const formatDate = (date: string | number | Date) => {
 }
 ---
 
-<Layout title="Blog | Gradiant">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-4xl font-bold mb-8">Blog</h1>
+<BaseLayout title="Blog | Gradiant" bgType="plum">
+  <main class="mx-auto max-w-3xl px-4 py-10">
+    <div class="flex flex-col">
+      <div class="mb-8 flex flex-col items-center">
+        <h1 class="text-4xl font-bold mb-6">Blog</h1>
 
-    <div class="grid gap-8 md:grid-cols-2">
-      {
-        posts.map((post) => (
-          <article class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-            <a href={`/blog/${post.slug}`} class="block p-6">
-              <h2 class="text-2xl font-semibold mb-2">{post.data.title}</h2>
-              <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                {formatDate(post.data.pubDate)}
-              </p>
-              <p class="mb-4">{post.data.description}</p>
-              <span class="text-primary-600 dark:text-primary-400 font-medium">
-                Read more →
-              </span>
-            </a>
-          </article>
-        ))
-      }
+        <div class="flex items-center justify-between w-full max-w-xs mb-4">
+          <nav class="flex gap-4">
+            <a href="/" class="text-gray-700 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400">Home</a>
+            <a href="/projects" class="text-gray-700 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400">Projects</a>
+            <a href="/highlights" class="text-gray-700 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400">Highlights</a>
+            <a href="/changelog" class="text-gray-700 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400">Changelog</a>
+          </nav>
+          <button aria-label="Search" class="p-1 text-gray-700 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid gap-8">
+        {
+          posts.map((post) => (
+            <article class="border border-gray-200 dark:border-gray-800 rounded-lg p-6 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900">
+              <a href={`/blog/${post.id}`} class="block">
+                <h2 class="text-2xl font-semibold mb-2">{post.data.title}</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                  {formatDate(post.data.pubDate)}
+                </p>
+                <p class="mb-4">{post.data.description}</p>
+                <span class="text-primary-600 dark:text-primary-400 font-medium inline-flex items-center">
+                  Read more <span class="ml-1">→</span>
+                </span>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+
+      <footer class="mt-16 border-t border-gray-200 dark:border-gray-800 pt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+        <p>© 2025 Vivi Ornitier | Powered by <a href="https://astro.build" target="_blank" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Astro</a> <a href="https://github.com/antfu/antfu.me" target="_blank" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">AntfuStyle Theme</a></p>
+      </footer>
     </div>
   </main>
-</Layout>
+</BaseLayout>
 
 <style>
-  /* Add hover effect to blog cards */
-  .blog-card {
-    transition: transform 0.2s ease-in-out;
+  /* Add hover transition to post cards */
+  article {
+    transition: background-color 0.2s ease, transform 0.2s ease;
   }
 
-  .blog-card:hover {
-    transform: translateY(-5px);
+  article:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Add hover transition to nav links */
+  nav a {
+    transition: color 0.2s ease;
   }
 </style>
