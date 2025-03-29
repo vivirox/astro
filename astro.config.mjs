@@ -78,43 +78,6 @@ export default defineConfig({
     // 1. Creates a dummy pagefind.js file to prevent runtime errors
     // 2. Removes any pagefind artifacts that might be created
     // This should be fixed in a future version of @astrojs/vercel
-    
-    // HIPAA-compliant security headers
-    headers: [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains; preload'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block'
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin'
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:; font-src 'self'; object-src 'none'; media-src 'self'; form-action 'self'; frame-ancestors 'none'"
-          }
-        ]
-      }
-    ]
   }),
   server: {
     port: process.env.PORT ? Number.parseInt(process.env.PORT) : 3000,
