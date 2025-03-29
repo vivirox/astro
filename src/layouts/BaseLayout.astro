@@ -1,18 +1,9 @@
 ---
-/// <reference path="../types/astro.d.ts" />
-// import '@unocss/reset/tailwind.css'
+import '@unocss/reset/tailwind.css'
 import '@/styles/main.css'
 import '@/styles/prose.css'
 import '@/styles/markdown.css'
 import '@/styles/page.css'
-
-// Explicitly import font styles
-import '@fontsource/inter/400.css'
-import '@fontsource/inter/600.css'
-import '@fontsource/inter/800.css'
-import '@fontsource/dm-mono/400.css'
-import '@fontsource/dm-mono/500.css'
-import '@fontsource/roboto-condensed/400.css'
 
 import Head from '@/components/base/Head.astro'
 import Background from '@/components/backgrounds/Background.astro'
@@ -22,16 +13,10 @@ import BackLink from '@/components/widgets/BackLink.astro'
 import Footer from '@/components/base/Footer.astro'
 import ToTopButton from '@/components/widgets/ToTopButton.astro'
 import Backdrop from '@/components/base/Backdrop.astro'
-import BrowserInfo from '@/components/utils/BrowserInfo.astro'
-import Monitoring from '@/components/Monitoring.astro'
-import ThemeSwitch from '@/components/widgets/ThemeSwitch.astro'
 
 import { UI, FEATURES } from '@/config'
 
 import type { BgType } from '@/types'
-
-// Import global JSX declarations to fix TypeScript errors
-import '../types/astro-jsx.d.ts'
 
 interface Props {
   title?: string
@@ -42,7 +27,7 @@ interface Props {
   lastModDate?: string
 }
 
-const { bgType, title, description, ogImage, pubDate, lastModDate } = Astro.props
+const { bgType } = Astro.props
 
 let style: Record<string, string> = {}
 
@@ -57,96 +42,18 @@ const {
 const hasCustomCursor =
   newTab && cursorType.length > 0 && cursorType !== 'pointer'
 if (hasCustomCursor) style['--external-link-cursor'] = cursorType
-
-// Safely get current path without accessing headers directly
-const currentPath = Astro.url.pathname
-const isHomePage = currentPath === '/' || currentPath === ''
-
-// Instead of accessing headers, set default values or use alternatives
-// This removes all possible header usage in prerendered pages
-const locals = {
-  isSSR: false,
-  isPrerendered: true,
-  userPreferences: {
-    darkMode: false,
-    language: 'en-US',
-    userAgent: '',
-    isMobile: false,
-  },
-}
-
-// Set page data for client-side usage
-const pageData = {
-  isSSR: false,
-  isPrerendered: true,
-  darkMode: false,
-  language: 'en-US',
-  userAgent: '',
-  path: currentPath,
-  isMobile: false,
-}
 ---
 
 <!doctype html>
-<html lang="en" data-ssr={locals.isSSR} data-prerendered={locals.isPrerendered}>
+<html lang="en">
   <head>
-    <Head {title} {description} {ogImage} {pubDate} {lastModDate} />
-    <script
-      src="https://cdn.peasy.so/peasy.js"
-      data-website-id="01jq3eyvd9by7mkcx6dq4a77n3"
-      async></script>
-    <Monitoring />
-
-    <!-- Pass page data to client-side scripts -->
-    <script define:vars={{ pageData }}>
-      // Make page data available to all client scripts
-      window.pageData = pageData
-    </script>
-
-    <!-- Inline critical font styles to prevent FOUT -->
-    <style is:inline>
-      :root {
-        --c-bg: #fff;
-        --c-scrollbar: #eee;
-        --c-scrollbar-hover: #bbb;
-        --c-text: #222;
-        --c-text-light: #444;
-        --c-text-lighter: #777;
-        --c-border: rgba(125, 125, 125, 0.3);
-        --c-selection: rgba(125, 125, 255, 0.2);
-      }
-
-      .dark {
-        --c-bg: #050505;
-        --c-scrollbar: #111;
-        --c-scrollbar-hover: #222;
-        --c-text: #f3f3f3;
-        --c-text-light: #ddd;
-        --c-text-lighter: #aaa;
-        --c-border: rgba(125, 125, 125, 0.2);
-        --c-selection: rgba(125, 125, 255, 0.3);
-      }
-
-      html {
-        background-color: var(--c-bg);
-      }
-
-      body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        color: var(--c-text);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        font-size: 16px;
-        line-height: 1.5;
-        margin: 0;
-        width: 100%;
-        min-height: 100vh;
-      }
-
-      ::selection {
-        background: var(--c-selection);
-      }
-    </style>
+    <Head
+      title={Astro.props.title}
+      description={Astro.props.description}
+      ogImage={Astro.props.ogImage}
+      pubDate={Astro.props.pubDate}
+      lastModDate={Astro.props.lastModDate}
+    />
   </head>
 
   <body
@@ -155,16 +62,8 @@ const pageData = {
     style={Object.keys(style).length !== 0 ? style : undefined}
     data-no-sliding={!enableSlideEnterAnim ? true : undefined}
   >
-    <!-- Browser Info component - uses client-side detection instead of headers -->
-    <BrowserInfo />
-
     <!-- Background -->
     {bgType && <Background type={bgType} />}
-
-    <!-- Theme switch -->
-    <div class="absolute top-4 right-4 z-10">
-      <ThemeSwitch />
-    </div>
 
     <!-- Main -->
     <Link
@@ -174,10 +73,10 @@ const pageData = {
       Skip to content
     </Link>
     <NavBar />
-    <main id="main" class="mx-auto w-full max-w-3xl px-4 py-4">
+    <main id="main" class="px-7 py-10">
       <slot />
       {
-        currentPath !== '/' && (
+        Astro.url.pathname !== '/' && (
           <footer class="slide-enter animate-delay-1000! prose mx-auto mt-8 print:hidden">
             <slot name="share" />
             <br />
@@ -186,8 +85,8 @@ const pageData = {
         )
       }
     </main>
-    {currentPath !== '/' && <Footer />}
-    {currentPath !== '/' && <ToTopButton />}
+    <Footer />
+    <ToTopButton />
 
     <!-- Panel Backdrop (on mobile) -->
     <Backdrop />
@@ -212,23 +111,6 @@ const pageData = {
       document.addEventListener('astro:page-load', () => {
         zoom.detach()
         zoom.attach('.prose img:not(.no-zoom):not(a img)')
-      })
-
-      /* Force font reflow if needed */
-      document.fonts.ready.then(() => {
-        document.documentElement.classList.add('fonts-loaded');
-      });
-    </script>
-
-    <script>
-      // Check for dark mode preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      document.documentElement.classList.toggle('dark', prefersDark)
-      
-      // Handle theme changes
-      document.addEventListener('themeChanged', (e) => {
-        const isDark = e.detail.theme === 'dark'
-        document.documentElement.classList.toggle('dark', isDark)
       })
     </script>
   </body>
