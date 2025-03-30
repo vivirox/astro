@@ -4,73 +4,84 @@ import { execSync } from 'node:child_process'
 import { existsSync, writeFileSync } from 'node:fs'
 import * as path from 'node:path'
 import process from 'node:process'
+import fs from 'fs'
 
 /**
  * Script that completely disables pagefind and ensures flexsearch is used
  */
 
 const DIST_DIR = path.join(process.cwd(), 'dist')
-const VERCEL_OUTPUT_DIR = path.join(process.cwd(), '.vercel/output')
+const CLIENT_DIR = path.join(DIST_DIR, 'client')
+const VERCEL_OUTPUT = path.join(process.cwd(), '.vercel/output/static')
+const PAGEFIND_DIR = path.join(VERCEL_OUTPUT, 'pagefind')
 
 console.log('🔍 Running search cleanup and pagefind mitigation...')
 
-// Make sure the dist directory exists
-if (!existsSync(DIST_DIR)) {
-  console.error('❌ Error: dist directory not found. Run build first.')
-  process.exit(1)
+// Check if FlexSearch was successful
+const flexSearchIndex = path.join(CLIENT_DIR, '_search-index.js')
+const flexSearchExists = fs.existsSync(flexSearchIndex)
+
+console.log(
+  flexSearchExists
+    ? '✅ Search index was generated during build with FlexSearch'
+    : '⚠️ FlexSearch index not found. Search may not work correctly.',
+)
+
+// Create pagefind dummy to prevent runtime errors
+console.log('🧹 Checking Vercel output directory for pagefind artifacts...')
+
+// Create directories if they don't exist
+const createDirIfNeeded = (dir: string) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true })
+    console.log(`📁 Created directory ${path.relative(process.cwd(), dir)}`)
+  }
 }
 
-try {
-  // FlexSearch is integrated directly in the Astro build process
-  console.log('✅ Search index was generated during build with FlexSearch')
+// Create Vercel output directory if it doesn't exist
+if (fs.existsSync(VERCEL_OUTPUT)) {
+  createDirIfNeeded(PAGEFIND_DIR)
 
-  // Clean up any old search artifacts
-  if (existsSync(path.join(DIST_DIR, 'pagefind'))) {
-    console.log('🧹 Cleaning up pagefind artifacts in dist...')
-    execSync('npx del-cli "dist/pagefind"', { stdio: 'inherit' })
-    console.log('✅ Pagefind artifacts removed from dist')
-  }
-
-  // Also check and clean up Vercel output directory if it exists
-  if (existsSync(VERCEL_OUTPUT_DIR)) {
-    console.log('🧹 Checking Vercel output directory for pagefind artifacts...')
-
-    // Clean up pagefind in static assets
-    if (existsSync(path.join(VERCEL_OUTPUT_DIR, 'static/pagefind'))) {
-      execSync('npx del-cli ".vercel/output/static/pagefind"', {
-        stdio: 'inherit',
-      })
-      console.log('✅ Pagefind artifacts removed from Vercel static output')
-    }
-
-    // Create a dummy pagefind.js file to prevent errors
-    const dummyPagefindContent = `
-// This is a dummy file to prevent pagefind errors
-// The actual search functionality uses flexsearch
-console.log('Search is powered by flexsearch, not pagefind');
-export default {
-  init: () => console.log('Using flexsearch instead'),
-  search: () => ({ results: [] }),
-  options: () => Promise.resolve()
+  // Create dummy pagefind.js
+  const pagefindJsPath = path.join(PAGEFIND_DIR, 'pagefind.js')
+  const dummyPagfindJs = `
+// Dummy pagefind implementation to prevent errors
+window.pagefind = {
+  init: () => Promise.resolve({
+    search: () => Promise.resolve({ results: [] }),
+    searchIndex: {},
+    filters: {},
+    empty: true,
+    loading: false,
+    error: null
+  }),
+  search: () => Promise.resolve({ results: [] }),
+  filters: () => Promise.resolve([])
 };
-window.pagefind = window.pagefind || {};
-    `
+console.log("⚠️ Using dummy pagefind implementation. Search using FlexSearch instead.");
+`
 
-    const staticDir = path.join(VERCEL_OUTPUT_DIR, 'static')
-    if (existsSync(staticDir)) {
-      // Create pagefind directory and file to prevent 404 errors
-      const pagefindDir = path.join(staticDir, 'pagefind')
-      if (!existsSync(pagefindDir)) {
-        execSync(`mkdir -p ${pagefindDir}`, { stdio: 'inherit' })
-      }
+  fs.writeFileSync(pagefindJsPath, dummyPagfindJs)
+  console.log('✅ Created dummy pagefind.js to prevent errors')
 
-      writeFileSync(path.join(pagefindDir, 'pagefind.js'), dummyPagefindContent)
-      console.log('✅ Created dummy pagefind.js to prevent errors')
-    }
-  }
+  // Create dummy ui.js
+  const uiJsPath = path.join(PAGEFIND_DIR, 'ui.js')
+  fs.writeFileSync(uiJsPath, '// Dummy pagefind UI')
 
-  console.log('✅ Search processing completed successfully')
-} catch (error) {
-  console.error('❌ Error during search cleanup:', error)
-  console.log('⚠️ Site will build but search functionality may be limited')
+  // Create dummy metadata.json
+  const metadataPath = path.join(PAGEFIND_DIR, 'metadata.json')
+  fs.writeFileSync(
+    metadataPath,
+    JSON.stringify({
+      version: 'mock-version',
+      pageCount: 0,
+      filters: [],
+    }),
+  )
+} else {
+  console.log(
+    '⚠️ Vercel output directory not found. Skipping pagefind mitigation.',
+  )
 }
+
+console.log('✅ Search processing completed successfully')

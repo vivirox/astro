@@ -1,6 +1,6 @@
 ---
 title: 'Redis Service'
-description: 'Core Redis service implementation details'
+description: 'Core Redis service implementation details and usage examples'
 pubDate: 2025-03-25
 share: true
 toc: true
@@ -18,19 +18,21 @@ import {
   LinkCard,
 } from '@astrojs/starlight/components'
 
-# Redis Service Documentation
+## Redis Service Documentation
 
-## Overview
+### Overview
 
-The Redis service provides a robust, type-safe interface for interacting with Redis in the Gradiant application. It includes connection pooling, automatic reconnection, health monitoring, and comprehensive error handling.
+The Redis service provides a robust, type-safe interface for interacting with Redis
+in the Gradiant application. It includes connection pooling, automatic reconnection,
+health monitoring, and comprehensive error handling.
 
-## Installation
+### Installation
 
 ```bash
 pnpm add ioredis
 ```
 
-## Configuration
+### Configuration
 
 The Redis service can be configured using the `RedisServiceConfig` interface:
 
@@ -60,9 +62,9 @@ const defaultConfig = {
 }
 ```
 
-## Basic Usage
+### Basic Usage
 
-### Initialization
+#### Initialization
 
 ```typescript
 import { RedisService } from '@/lib/services/redis'
@@ -74,7 +76,7 @@ const redis = new RedisService({
 await redis.connect()
 ```
 
-### Key-Value Operations
+#### Key-Value Operations
 
 ```typescript
 // Set a value
@@ -96,7 +98,7 @@ const exists = await redis.exists('user:123')
 const ttl = await redis.ttl('session:123')
 ```
 
-### Set Operations
+#### Set Operations
 
 ```typescript
 // Add to a set
@@ -109,14 +111,14 @@ await redis.srem('users:active', 'user:123')
 const activeUsers = await redis.smembers('users:active')
 ```
 
-### Counter Operations
+#### Counter Operations
 
 ```typescript
 // Increment a counter
 const newValue = await redis.incr('visits:counter')
 ```
 
-### Health Checks
+#### Health Checks
 
 ```typescript
 // Check Redis health
@@ -126,7 +128,7 @@ const isHealthy = await redis.isHealthy()
 const stats = await redis.getPoolStats()
 ```
 
-## Error Handling
+### Error Handling
 
 The service uses a custom `RedisServiceError` class with specific error codes:
 
@@ -161,7 +163,7 @@ try {
 }
 ```
 
-## Best Practices
+### Best Practices
 
 1. Connection Management
 
@@ -186,7 +188,7 @@ try {
    - Implement proper access controls
    - Sanitize data before storage
 
-## Environment Variables
+### Environment Variables
 
 Required environment variables:
 

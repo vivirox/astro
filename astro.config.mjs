@@ -72,7 +72,7 @@ export default defineConfig({
   adapter: vercel({
     analytics: true,
     imageService: true,
-    runtime: 'nodejs20.x',
+    runtime: 'nodejs18.x',
     // KNOWN ISSUE: The Vercel adapter tries to run pagefind during build even when using flexsearch
     // We've implemented a workaround in scripts/cleanup-search.ts that:
     // 1. Creates a dummy pagefind.js file to prevent runtime errors

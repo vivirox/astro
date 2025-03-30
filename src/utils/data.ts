@@ -200,7 +200,7 @@ export function processVersion(
 /**
  * Processes Bluesky posts and converts them into `CardItemData` interface.
  */
-export function processBlueskyPosttts(data: HighlightEntry[]): CardItemData[] {
+export function processBlueskyPosts(data: HighlightEntry[]): CardItemData[] {
   const cards: CardItemData[] = []
 
   for (const item of data) {

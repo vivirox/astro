@@ -1,12 +1,15 @@
-import type { IndexOptions, SearchOptions } from 'flexsearch'
-import type { Document as FlexDocument } from 'flexsearch'
+// Define minimal types for flexsearch
+interface IndexOptions {
+  tokenize?: string
+  cache?: number
+  context?: boolean
+}
 
-let Document: typeof FlexDocument
-
-// Only import Document on the client side
-if (typeof window !== 'undefined') {
-  const flexsearch = await import('flexsearch')
-  Document = flexsearch.Document
+interface SearchOptions {
+  limit?: number
+  suggest?: boolean
+  fuzzy?: number
+  enrich?: boolean
 }
 
 // Define search document structure
@@ -17,6 +20,50 @@ export interface SearchDocument {
   url: string
   tags?: string[]
   category?: string
+}
+
+// Define a minimal Document interface based on usage
+interface FlexDocument {
+  add(doc: any): void
+  remove(id: string | number): void
+  search(query: string, options?: SearchOptions): any[]
+}
+
+// Document constructor type
+type DocumentConstructor = new (options: any) => FlexDocument
+
+// Reference to Document class
+let Document: DocumentConstructor
+
+// Only import Document on the client side
+if (typeof window !== 'undefined') {
+  try {
+    // Import flexsearch modules
+    const flexsearch = await import('flexsearch')
+
+    // Try different ways to access Document class
+    Document =
+      (flexsearch as any).Document || (flexsearch as any).default?.Document
+
+    // Fallback to alternate import path if needed
+    if (!Document) {
+      const documentModule = await import('flexsearch/dist/module/document')
+      Document = (documentModule as any).default
+    }
+  } catch (error) {
+    console.error('Error loading flexsearch:', error)
+    // Create a dummy Document class as fallback
+    Document = class DummyDocument {
+      constructor() {
+        console.warn('Using dummy search implementation')
+      }
+      add() {}
+      remove() {}
+      search() {
+        return []
+      }
+    } as any
+  }
 }
 
 // Define search result structure
@@ -69,8 +116,8 @@ const DEFAULT_CONFIG: SearchConfig = {
   },
 }
 
-// Search client interface
-export interface SearchClient {
+// Interface for search functionality
+export interface ISearchClient {
   search: (query: string) => SearchDocument[]
   importDocuments: (documents: SearchDocument[]) => void
 }
@@ -78,7 +125,7 @@ export interface SearchClient {
 // Declare global types to access via Window
 declare global {
   interface Window {
-    searchClient: SearchClient
+    searchClient: ISearchClient
     searchIndex: SearchDocument[]
     initSearch?: () => void
   }
@@ -88,8 +135,8 @@ declare global {
  * FlexSearch client-side search implementation
  * Provides high-performance, privacy-focused search functionality
  */
-export class SearchClient {
-  private index: Document<SearchDocument>
+export class SearchClient implements ISearchClient {
+  private index: any // Use any for the Document instance
   private documents: Map<string | number, SearchDocument> = new Map()
   private config: SearchConfig
 
@@ -294,7 +341,7 @@ export class SearchClient {
 export const searchClient =
   typeof window !== 'undefined'
     ? new SearchClient()
-    : (null as unknown as SearchClient)
+    : (null as unknown as ISearchClient)
 
 // Make it available on the window object when running in browser
 if (typeof window !== 'undefined') {

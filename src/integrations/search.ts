@@ -43,7 +43,7 @@ export default function flexsearchIntegration(
         injectScript(
           'page',
           `
-          import { searchClient } from '@lib/search';
+          import { searchClient } from '../src/lib/search';
           window.searchClient = searchClient;
         `,
         )

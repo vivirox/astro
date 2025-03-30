@@ -5,36 +5,42 @@
   "devCommand": "pnpm run dev",
   "installCommand": "pnpm install",
   "framework": "astro",
-  "functions": {
-    "dist/server/entry.mjs": {
-      "runtime": "nodejs20.x"
+  "headers": [
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)\\.css$",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "content-type",
+          "value": "text/css"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
-  },
-  "routes": [
-    {
-      "src": "/_astro/(.*)",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      },
-      "continue": true
-    },
-    {
-      "src": "/assets/(.*)\\.css$",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable",
-        "content-type": "text/css"
-      },
-      "continue": true
-    },
-    {
-      "src": "/assets/(.*)",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      },
-      "continue": true
-    },
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "dist/server/entry.mjs" }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" },
+    { "source": "/(.*)", "destination": "/dist/server/entry.mjs" }
   ],
   "crons": [
     {

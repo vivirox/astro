@@ -1,28 +1,27 @@
 ---
-import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import StandardLayout from '~/layouts/StandardLayout.astro'
 import Toc from '~/components/toc/Toc.astro'
 import ShareLink from '~/components/widgets/ShareLink.astro'
 import Warning from '~/components/base/Warning.astro'
 import { formatDate } from '~/utils/datetime'
-import { getFilteredPosts } from '~/utils/post'
 import { FEATURES } from '~/config'
 
 // Add prerender directive
 export const prerender = true
 
 export async function getStaticPaths() {
-  const posts = (await getFilteredPosts('blog')) as CollectionEntry<'blog'>[]
+  const posts = await getCollection('blog')
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: { post },
   }))
 }
 
-const { post } = Astro.props as { post: CollectionEntry<'blog'> }
+const { post } = Astro.props
 const { data: frontmatter } = post
-const { Content, headings } = await post.render()
+const { Content, headings } = await render(post)
 const { share, toc } = FEATURES
 
 const pubDate = frontmatter.pubDate.toISOString()

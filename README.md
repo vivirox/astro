@@ -133,3 +133,57 @@ intelligence.
 - **AI & ML:** TensorFlow.js, langchain
 - **Security:** End-to-end encryption, HIPAA compliance
 - **Analytics:** Custom dashboards, Recharts
+
+## 🛠️ Development Setup
+
+### Environment Requirements
+
+- **Node.js:** v18.x (required for compatibility with Vercel deployment)
+- **Package Manager:** pnpm 10.x+ (required)
+
+### Getting Started
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/gradiant.git
+   cd gradiant
+   ```
+
+2. **Setup the environment**
+   ```bash
+   # Install dependencies
+   pnpm install
+
+   # Setup environment (fixes common issues)
+   pnpm run setup:env
+   ```
+
+3. **Start development server**
+   ```bash
+   pnpm dev
+   ```
+
+4. **Build for production**
+   ```bash
+   pnpm build
+   ```
+
+### Troubleshooting
+
+If you encounter any issues during development or build:
+
+1. **Run diagnostics**
+   ```bash
+   pnpm run diagnostics
+   ```
+
+2. **Node.js version issues**
+   If you're using nvm, you can easily switch to the required version:
+   ```bash
+   nvm use
+   ```
+
+3. **Search functionality issues**
+   The project uses FlexSearch (v0.7.31) for client-side search. Pagefind is not
+   currently supported on macOS arm64 platforms, so we've implemented a workaround
+   that creates dummy Pagefind files to prevent errors.

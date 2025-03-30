@@ -13,11 +13,11 @@ RUN npm install -g pnpm@$PNPM_VERSION
 # Install packages needed to build node modules (while still root)
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    build-essential=12.9 \
-    node-gyp=9.4.0 \
-    pkg-config=1.8.1 \
-    python-is-python3=3.10.0-2 \
-    curl=7.88.1-10 && \
+    build-essential=12.* \
+    node-gyp=* \
+    pkg-config=* \
+    python-is-python3=* \
+    curl=* && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

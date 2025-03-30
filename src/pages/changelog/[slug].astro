@@ -1,6 +1,5 @@
 ---
-import type { CollectionEntry } from 'astro:content'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import StandardLayout from '~/layouts/StandardLayout.astro'
 import Toc from '~/components/toc/Toc.astro'
@@ -20,8 +19,8 @@ interface Frontmatter {
   share?: boolean
 }
 
-// Set prerender to false to avoid headers issues
-export const prerender = false
+// Set prerender to true to generate static pages at build time
+export const prerender = true
 
 export async function getStaticPaths() {
   const posts = await getCollection('changelog')
@@ -31,9 +30,9 @@ export async function getStaticPaths() {
   }))
 }
 
-const { post } = Astro.props as { post: CollectionEntry<'changelog'> }
-const { data: frontmatter } = post as { data: Frontmatter }
-const { Content, headings } = await post.render()
+const { post } = Astro.props
+const { data: frontmatter } = post
+const { Content, headings } = await render(post)
 const { share, toc } = FEATURES
 
 // Format dates

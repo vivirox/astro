@@ -6,7 +6,7 @@
   "packageManager": "pnpm@10.7.0",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   },
   "scripts": {
     "astro": "astro",
@@ -63,7 +63,10 @@
     "deploy:stop": "tsx scripts/stop-deploy.ts",
     "deploy:rollback": "tsx scripts/rollback.ts",
     "analyze": "ANALYZE=true npm run build",
-    "eslint:dump": "eslint --print-config ./index.js > eslint-dump.js"
+    "eslint:dump": "eslint --print-config ./index.js > eslint-dump.js",
+    "postinstall": "node scripts/check-env.js",
+    "setup:env": "tsx scripts/setup-env.ts",
+    "diagnostics": "tsx scripts/diagnostics.ts"
   },
   "dependencies": {
     "@astrojs/react": "3.0.10",

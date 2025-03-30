@@ -1,8 +1,10 @@
 import type { RedisServiceConfig, IRedisService } from './types'
 import { EventEmitter } from 'node:events'
-import { logger } from '@/lib/logger'
+import { getLogger } from '~/lib/logging'
 import Redis from 'ioredis'
 import { RedisErrorCode, RedisServiceError } from './types'
+
+const logger = getLogger()
 
 /**
  * Redis service implementation with connection pooling and health checks
@@ -21,8 +23,8 @@ export class RedisService extends EventEmitter implements IRedisService {
     this.validateConfig(config)
     this.config = {
       maxRetries: 3,
-      retryTimeout: 1000,
-      poolSize: 10,
+      retryDelay: 1000,
+      maxConnections: 10,
       ...config,
     }
   }
@@ -56,7 +58,7 @@ export class RedisService extends EventEmitter implements IRedisService {
 
       // Set up event handlers
       this.client.on('error', (error) => {
-        logger.error('Redis error:', error)
+        logger.error('Redis error:', { error: String(error) })
       })
 
       this.client.on('connect', () => {
@@ -120,6 +122,20 @@ export class RedisService extends EventEmitter implements IRedisService {
     return this.client
   }
 
+  private createClient(): Redis {
+    return new Redis(this.config.url, {
+      keyPrefix: this.config.keyPrefix,
+      maxRetriesPerRequest: this.config.maxRetries,
+      retryStrategy: (times: number) => {
+        if (times > (this.config.maxRetries || 3)) {
+          return null
+        }
+        return this.config.retryDelay || 100
+      },
+      connectTimeout: this.config.connectTimeout,
+    })
+  }
+
   private startHealthCheck(): void {
     if (this.healthCheckInterval) {
       clearInterval(this.healthCheckInterval)
@@ -129,7 +145,7 @@ export class RedisService extends EventEmitter implements IRedisService {
       try {
         await this.isHealthy()
       } catch (error) {
-        logger.error('Health check failed:', error)
+        logger.error('Health check failed:', { error: String(error) })
       }
     }, this.config.healthCheckInterval || 5000)
   }
@@ -341,6 +357,17 @@ export class RedisService extends EventEmitter implements IRedisService {
 
   async publish(channel: string, message: string): Promise<number> {
     try {
+      if (!this.client) {
+        await this.connect()
+      }
+
+      if (!this.client) {
+        throw new RedisServiceError(
+          RedisErrorCode.CONNECTION_FAILED,
+          'Redis client is not initialized',
+        )
+      }
+
       return await this.client.publish(channel, message)
     } catch (error) {
       throw new RedisServiceError(

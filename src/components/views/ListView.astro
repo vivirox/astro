@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry } from 'astro:content'
+import { getCollection, getEntry, render } from 'astro:content'
 
 import Categorizer from '~/components/base/Categorizer.astro'
 import ListItem from '~/components/views/ListItem.astro'
@@ -8,7 +8,6 @@ import Warning from '~/components/base/Warning.astro'
 
 import { FEATURES } from '~/config'
 import { isSameYear, getYear } from '~/utils/datetime'
-import { getFilteredPosts, getSortedPosts } from '~/utils/post'
 
 import type {
   CollectionEntry,
@@ -31,15 +30,13 @@ const tocEnabled = Array.isArray(toc) && toc[0] && pageToc
 let years: string[] = []
 
 /* Posts */
-let blogItems: CollectionEntry<'blog' | 'changelog'>[] = []
-let sortedBlogItems: CollectionEntry<'blog' | 'changelog'>[] = []
+let blogItems: CollectionEntry<PostCollectionType>[] = []
+let sortedBlogItems: CollectionEntry<PostCollectionType>[] = []
 
 if (collectionType === 'blog' || collectionType === 'changelog') {
   const postType =
     collectionType === 'blog' ? 'blog' : ('docs' as PostCollectionType)
-  blogItems = (await getFilteredPosts(postType)) as CollectionEntry<
-    'blog' | 'changelog'
-  >[]
+  blogItems = await getCollection(postType)
   sortedBlogItems = blogItems.sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   )
@@ -84,24 +81,37 @@ if (collectionType === 'streams') {
   }
 }
 
+// Define the feed item type based on config.ts
+interface FeedItem {
+  title: string;
+  link: string;
+  pubDate: string;
+  description?: string;
+  author?: string;
+}
+
 /* Feeds */
 let feedItems: CollectionEntry<'feeds'>[] = []
-let sortedFeedItems: CollectionEntry<'feeds'>[] = []
+let sortedFeedItems: FeedItem[] = []
 
 if (collectionType === 'feeds') {
   feedItems = await getCollection('feeds')
 
-  sortedFeedItems = feedItems.sort((a, b) => {
-    if (!a.data.pubdate || !b.data.pubdate)
-      throw new Error("Feed item is missing 'pubdate' field.")
+  // Access the data correctly - the feed collection returns an array in the first item's data
+  const feedsData = feedItems.length > 0 ? feedItems[0].data as FeedItem[] : []
 
-    return b.data.pubdate.valueOf() - a.data.pubdate.valueOf()
+  // Sort the feed data (which is an array)
+  sortedFeedItems = [...feedsData].sort((a, b) => {
+    if (!a.pubDate || !b.pubDate)
+      throw new Error("Feed item is missing 'pubDate' field.")
+
+    return new Date(b.pubDate).valueOf() - new Date(a.pubDate).valueOf()
   })
 
   if (tocEnabled) {
     const yearsSet = new Set<number>()
     sortedFeedItems.forEach((item) => {
-      const year = getYear(item.data.pubdate as Date)
+      const year = getYear(new Date(item.pubDate))
       yearsSet.add(year)
     })
 
@@ -128,8 +138,8 @@ const warningHTML = `The '${collectionType}' collection type does no
       ) : (
         sortedBlogItems.map(async (item, idx) => {
           const data = item.data
-          const slug = (item as any).slug
-          const rendered = await (item as any).render()
+          const slug = item.id
+          const rendered = await render(item)
           const remarkPluginFrontmatter = rendered.remarkPluginFrontmatter
 
           const minutesRead =
@@ -155,14 +165,14 @@ const warningHTML = `The '${collectionType}' collection type does no
               <ListItem
                 {idx}
                 {collectionType}
-                redirect={'redirect' in data ? data.redirect : undefined}
+                redirect={'redirect' in data ? (data.redirect as string) : undefined}
                 postSlug={slug}
                 title={data.title}
-                video={'video' in data ? data.video : undefined}
-                radio={'radio' in data ? data.radio : undefined}
+                video={'video' in data ? (data.video as boolean) : undefined}
+                radio={'radio' in data ? (data.radio as boolean) : undefined}
                 date={data.pubDate}
                 {minutesRead}
-                platform={'platform' in data ? data.platform : undefined}
+                platform={'platform' in data ? (data.platform as string) : undefined}
               />
             </>
           )
@@ -216,34 +226,29 @@ const warningHTML = `The '${collectionType}' collection type does no
         <div class="py-2 op-50">nothing here yet</div>
       ) : (
         sortedFeedItems.map((item, idx) => {
-          const { data } = item
-          if (!data.link)
-            throw new Error(
-              `Feed item with id '${item.id}' is missing 'link' field.`,
-            )
-          if (!data.title)
-            throw new Error(
-              `Feed item with id '${item.id}' is missing 'title' field.`,
-            )
+          if (!item.link)
+            throw new Error(`Feed item is missing 'link' field.`)
+          if (!item.title)
+            throw new Error(`Feed item is missing 'title' field.`)
 
           return (
             <>
-              {!isSameYear(
-                item.data.pubdate as Date,
-                sortedFeedItems[idx - 1]?.data.pubdate as Date,
+              {idx > 0 && !isSameYear(
+                new Date(item.pubDate),
+                new Date(sortedFeedItems[idx - 1]?.pubDate),
               ) && (
                 <Categorizer
                   {idx}
                   needId={tocEnabled}
-                  text={getYear(item.data.pubdate as Date).toString()}
+                  text={getYear(new Date(item.pubDate)).toString()}
                 />
               )}
               <ListItem
                 {idx}
                 {collectionType}
-                redirect={item.data.link as string}
-                title={item.data.title as string}
-                date={item.data.pubdate as Date | string}
+                redirect={item.link}
+                title={item.title}
+                date={item.pubDate}
               />
             </>
           )
