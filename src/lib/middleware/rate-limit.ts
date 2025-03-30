@@ -66,7 +66,7 @@ export class RateLimiter {
   }
 
   constructor(defaultLimit = 30, windowMs = 60 * 1000) {
-    this.defaultLimit = defaultLimi
+    this.defaultLimit = defaultLimit
     this.windowMs = windowMs
   }
 
@@ -88,8 +88,8 @@ export class RateLimiter {
 
     const entry = this.storage.get(storageKey)
     // Use path-specific limits if provided, otherwise use default
-    const limi =
-      pathSpecificLimits?.[role] || this.userLimits[role] || this.defaultLimi
+    const limit =
+      pathSpecificLimits?.[role] || this.userLimits[role] || this.defaultLimit
     const windowMs = customWindowMs || this.windowMs
 
     // If no entry exists or the entry has expired, create a new one
@@ -99,7 +99,7 @@ export class RateLimiter {
       return { allowed: true, limit, remaining: limit - 1, reset: resetTime }
     }
 
-    // Check if the entry has reached its limi
+    // Check if the entry has reached its limit
     if (entry.count >= limit) {
       return { allowed: false, limit, remaining: 0, reset: entry.resetTime }
     }
