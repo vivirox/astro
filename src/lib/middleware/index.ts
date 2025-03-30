@@ -3,6 +3,7 @@ import { sequence } from 'astro:middleware'
 import { auditLoggingMiddleware } from './audit-logging'
 import { corsMiddleware } from './cors'
 import { csrfMiddleware } from './csrf'
+import { errorHandlingMiddleware } from './error-handling'
 import { loggingMiddleware } from './logging'
 import { rateLimitMiddleware } from './rate-limit'
 
@@ -57,25 +58,37 @@ const securityHeadersMiddleware: MiddlewareHandler = async (
   _context: APIContext,
   next: MiddlewareNext,
 ) => {
-  // Process the request firs
+  // Process the request first
   const response = await next()
 
-  // Add security headers
-  response?.headers.set('X-Content-Type-Options', 'nosniff')
-  response?.headers.set('X-Frame-Options', 'DENY')
-  response?.headers.set('X-XSS-Protection', '1; mode=block')
-  response?.headers.set(
+  if (!response) return response
+
+  // Prevent browsers from interpreting files as a different MIME type
+  response.headers.set('X-Content-Type-Options', 'nosniff')
+  
+  // Prevent your page from being framed by other sites
+  response.headers.set('X-Frame-Options', 'DENY')
+  
+  // Enable browser XSS filtering
+  response.headers.set('X-XSS-Protection', '1; mode=block')
+  
+  // Enforce HTTPS connection
+  response.headers.set(
     'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains',
+    'max-age=31536000; includeSubDomains; preload'
   )
-  response?.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-  response?.headers.set(
+  
+  // Control how much referrer information is sent
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  
+  // Restrict which browser features can be used
+  response.headers.set(
     'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=()',
+    'camera=(), microphone=(), geolocation=(), interest-cohort=()'
   )
 
   // Set Content-Security-Policy
-  response?.headers.set(
+  response.headers.set(
     'Content-Security-Policy',
     "default-src 'self'; " +
       "script-src 'self' 'unsafe-inline'; " +
@@ -85,8 +98,12 @@ const securityHeadersMiddleware: MiddlewareHandler = async (
       "font-src 'self'; " +
       "frame-src 'none'; " +
       "object-src 'none'; " +
-      "base-uri 'self';",
+      "base-uri 'self';"
   )
+  
+  // Remove server information headers
+  response.headers.delete('Server')
+  response.headers.delete('X-Powered-By')
 
   return response
 }
@@ -97,11 +114,24 @@ export interface ExtendedMiddleware extends MiddlewareHandler {
 
 /**
  * Combined middleware sequence that applies our middleware in the correct order
+ * 
+ * Order is important:
+ * 1. Error handling wraps everything
+ * 2. Logging is early to log all requests
+ * 3. Security headers are applied to all responses
+ * 4. CORS headers are applied next
+ * 5. Rate limiting protects against abuse
+ * 6. CSRF protection for form submissions
+ * 7. Audit logging for security compliance
+ * 8. Content type headers ensure proper MIME types
  */
 export const middlewareSequence = sequence(
+  errorHandlingMiddleware,
   loggingMiddleware,
-  corsMiddleware,
-  csrfMiddleware,
   securityHeadersMiddleware,
+  corsMiddleware,
+  rateLimitMiddleware,
+  csrfMiddleware,
+  auditLoggingMiddleware,
   contentTypeMiddleware,
 )

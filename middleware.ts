@@ -32,41 +32,62 @@ export const onRequest = defineMiddleware(async (context, next) => {
     '/highlights',
   ]
 
-  // Static assets and public paths don't need auth
-  const isPublicPath = publicPaths.some(
-    (publicPath) => path === publicPath || path.startsWith(publicPath + '/'),
-  )
-  const isAssetPath = path.match(
-    /\.(css|js|json|svg|png|jpg|jpeg|webp|woff|woff2|ico|gif)$/i,
-  )
+  try {
+    // Static assets and public paths don't need auth
+    const isPublicPath = publicPaths.some(
+      (publicPath) => path === publicPath || path.startsWith(publicPath + '/'),
+    )
+    const isAssetPath = path.match(
+      /\.(css|js|json|svg|png|jpg|jpeg|webp|woff|woff2|ico|gif)$/i,
+    )
 
-  // Allow public paths and assets without auth
-  if (isPublicPath || isAssetPath) {
-    const response = await next()
+    // Allow public paths and assets without auth
+    if (isPublicPath || isAssetPath) {
+      const response = await next()
 
-    // Add content types for assets
-    if (response) {
-      setContentTypeHeaders(path, response)
-      // Add security headers to all responses
-      setSecurityHeaders(response)
+      // Add content types for assets
+      if (response) {
+        setContentTypeHeaders(path, response)
+        // Add security headers to all responses
+        setSecurityHeaders(response)
+      }
+
+      return response
     }
 
+    // Process the request
+    const response = await next()
+
+    // No response means something went wrong or a redirect happened
+    if (!response) return response
+
+    // Set correct content types for assets
+    setContentTypeHeaders(path, response)
+    
+    // Add security headers to all responses
+    setSecurityHeaders(response)
+
     return response
+  } catch (error) {
+    // Log the error but don't expose details in the response
+    console.error('Middleware error:', error)
+    
+    // For API requests, return a sanitized JSON error
+    if (path.startsWith('/api/')) {
+      const errorResponse = new Response(
+        JSON.stringify({
+          error: 'server_error',
+          message: 'An unexpected error occurred',
+        }),
+        { status: 500 }
+      )
+      setSecurityHeaders(errorResponse)
+      return errorResponse
+    }
+    
+    // For other requests, redirect to error page
+    return context.redirect('/custom-404')
   }
-
-  // Process the request
-  const response = await next()
-
-  // No response means something went wrong or a redirect happened
-  if (!response) return response
-
-  // Set correct content types for assets
-  setContentTypeHeaders(path, response)
-  
-  // Add security headers to all responses
-  setSecurityHeaders(response)
-
-  return response
 })
 
 /**
@@ -105,6 +126,10 @@ function setSecurityHeaders(response: Response) {
     "form-action 'self'; " +
     "frame-ancestors 'none'"
   )
+  
+  // Remove server information headers to prevent information disclosure
+  response.headers.delete('Server')
+  response.headers.delete('X-Powered-By')
 }
 
 // Helper to set content type headers
