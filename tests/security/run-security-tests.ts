@@ -102,7 +102,7 @@ const reportFile = path.join(
 /**
  * Run a test suite
  */
-async function runTestSuite(suite: TestSuite): Promise<any> {
+async function runTestSuite(suite: TestSuite): Promise<TestResultOutput> {
   return new Promise((resolve, reject) => {
     const startTime = performance.now();
     
@@ -154,7 +154,7 @@ async function runTestSuite(suite: TestSuite): Promise<any> {
 /**
  * Generate HTML report
  */
-function generateReport(results: any[]): string {
+function generateReport(results: TestResultOutput[]): string {
   const template = `
 <!DOCTYPE html>
 <html lang="en">
@@ -439,10 +439,10 @@ function generateReport(results: any[]): string {
 /**
  * Run all tests and generate report
  */
-async function runTests() {
+async function runTests(): Promise<void> {
   console.log('Starting AI security tests...');
   
-  const results = [];
+  const results: TestResultOutput[] = [];
   
   for (const suite of testSuites) {
     // Run the test and capture results
