@@ -60,6 +60,7 @@ export class RateLimiter {
 
   constructor(defaultLimit = 30, windowMs = 60 * 1000) {
     this.defaultLimit = defaultLimit
+    this.defaultLimit = defaultLimit
     this.windowMs = windowMs
     this.userLimits = {
       admin: 60,
