@@ -1,7 +1,7 @@
 ---
 import ChatLayout from '../../layouts/ChatLayout.astro'
 import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester'
-import AIChat from '../../components/AIChat'
+import AIChat from '../../components/AIChat.astro'
 import { LOADING_SIZES, SEVERITY_STYLES } from '../../constants/testing'
 import type { CompatibilityIssue, TestSections } from '../../types/testing'
 
@@ -13,6 +13,11 @@ const TEST_SECTIONS: TestSections = {
   aiChat: {
     title: 'AI Chat Component Test',
     component: AIChat,
+    props: {
+      title: "AI Chat Test",
+      description: "This is a test of the AI Chat component for browser compatibility.",
+      showModelSelector: true
+    },
     instructions: [
       'Verify that the chat interface loads correctly',
       'Test keyboard navigation (Tab, Enter, Arrow keys)',
@@ -61,7 +66,12 @@ const TEST_SECTIONS: TestSections = {
               </>
             )}
             <div class="component-container">
-              {section.component && <section.component client:load />}
+              {key === 'browserInfo' && <section.component client:load />}
+              {key === 'aiChat' && <AIChat
+                title={section.props?.title}
+                description={section.props?.description}
+                showModelSelector={section.props?.showModelSelector}
+              />}
               {key === 'loadingIndicator' && (
                 <div class="loading-indicators-test">
                   {Object.entries(LOADING_SIZES).map(([size, dimensions]) => (

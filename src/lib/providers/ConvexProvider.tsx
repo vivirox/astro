@@ -50,4 +50,5 @@ export function withConvex<T extends object>(
 }
 
 // Export the client for direct usage if needed
-export { convex }
+// Export the client for direct usage if needed
+export { convex, ConvexReactClient }

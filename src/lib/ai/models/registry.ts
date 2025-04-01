@@ -1,4 +1,4 @@
-import type { AIModel } from './ai-types'
+import type { AIModel } from './types'
 
 /**
  * AI Model Registry

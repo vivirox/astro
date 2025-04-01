@@ -1,55 +1,64 @@
 import type { APIRoute } from 'astro'
-import { AdminPermission, AdminService } from '../../../lib/admin'
-import { adminGuard } from '../../../lib/admin/middleware'
-import { getLogger } from '../../../lib/logging'
-
-interface AdminLocals {
-  admin: {
-    userId: string
-    isAdmin: boolean
-    hasPermission: boolean
-  }
-}
-
-// Initialize logger
-const logger = getLogger()
+import { api } from '@/convex/_generated/api'
+import { useConvexClient } from '@/lib/convex'
 
 /**
  * API endpoint for fetching system metrics (admin only)
  * GET /api/admin/metrics
  */
-export const GET: APIRoute = async (context) => {
-  // Apply admin middleware to check for admin status and required permission
-  const middlewareResponse = await adminGuard(AdminPermission.VIEW_METRICS)(
-    context,
-  )
-  if (middlewareResponse) {
-    return middlewareResponse
-  }
-
+export const GET: APIRoute = async () => {
   try {
-    // Get admin user ID from middleware context
-    const { userId } = (context.locals as AdminLocals).admin
+    const client = useConvexClient()
 
-    // Get admin service
-    const adminService = AdminService.getInstance()
+    // Fetch metrics from Convex
+    const [
+      activeUsers,
+      activeSessions,
+      avgResponseTime,
+      systemLoad,
+      storageUsed,
+      messagesSent,
+      activeSecurityLevel,
+    ] = await Promise.all([
+      client.query(api.metrics.getActiveUsers),
+      client.query(api.metrics.getActiveSessions),
+      client.query(api.metrics.getAverageResponseTime),
+      client.query(api.metrics.getSystemLoad),
+      client.query(api.metrics.getStorageUsed),
+      client.query(api.metrics.getMessagesSent),
+      client.query(api.metrics.getActiveSecurityLevel),
+    ])
 
-    // Get system metrics
-    const metrics = await adminService.getSystemMetrics()
-
-    // Log access for audi
-    logger.info(`Admin user ${userId} accessed system metrics`)
-
-    // Return metrics
-    return new Response(JSON.stringify({ success: true, metrics }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  } catch {
-    logger.error('Error fetching admin metrics')
-    return new Response(JSON.stringify({ error: 'Failed to fetch metrics' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return new Response(
+      JSON.stringify({
+        activeUsers,
+        activeSessions,
+        avgResponseTime,
+        systemLoad,
+        storageUsed,
+        messagesSent,
+        activeSecurityLevel,
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  } catch (error) {
+    console.error('Error fetching metrics:', error)
+    return new Response(
+      JSON.stringify({
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : String(error),
+      }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
   }
 }

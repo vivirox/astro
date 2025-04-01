@@ -1,0 +1,10 @@
+---
+import type { HeaderProps } from './HeaderReact';
+import HeaderReact from './HeaderReact';
+
+type Props = Pick<HeaderProps, 'showThemeToggle' | 'showUserMenu'>;
+
+const { showThemeToggle = true, showUserMenu = true } = Astro.props;
+---
+
+<HeaderReact client:load {showThemeToggle} {showUserMenu} />

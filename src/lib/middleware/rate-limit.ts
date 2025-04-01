@@ -1,6 +1,7 @@
 import { defineMiddleware } from 'astro:middleware'
 import { getSession } from '../auth/session'
 import { getLogger } from '../logging'
+import { redis } from '../redis'
 
 // Initialize logger
 const logger = getLogger()
@@ -49,81 +50,96 @@ const rateLimitConfigs: RateLimitConfig[] = [
   },
 ]
 
-// Simple in-memory rate limiter implementation
-// In production, this should be replaced with a Redis-based solution
+/**
+ * Redis-based rate limiter implementation
+ */
 export class RateLimiter {
-  private storage: Map<string, { count: number; resetTime: number }> = new Map<
-    string,
-    { count: number; resetTime: number }
-  >()
-
   private readonly defaultLimit: number
   private readonly windowMs: number
-  private readonly userLimits: Record<string, number> = {
-    admin: 60, // 60 requests per minute for admins
-    user: 30, // 30 requests per minute for regular users
-    anonymous: 15, // 15 requests per minute for unauthenticated users
-  }
+  private readonly userLimits: Record<string, number>
 
   constructor(defaultLimit = 30, windowMs = 60 * 1000) {
-    this.defaultLimit = defaultLimi
+    this.defaultLimit = defaultLimit
     this.windowMs = windowMs
+    this.userLimits = {
+      admin: 60,
+      therapist: 40,
+      user: 30,
+      anonymous: 15,
+    }
   }
 
   /**
    * Check if a request from the specified identifier is rate limited
    */
-  public check(
+  public async check(
     identifier: string,
     role = 'anonymous',
     pathSpecificLimits?: Record<string, number>,
     customWindowMs?: number,
-  ): { allowed: boolean; limit: number; remaining: number; reset: number } {
+  ): Promise<{
+    allowed: boolean
+    limit: number
+    remaining: number
+    reset: number
+  }> {
     const now = Date.now()
-    // Create a compound key that includes the path information
-    const hasPathSpecificLimits = !!pathSpecificLimits
-    const storageKey = hasPathSpecificLimits
-      ? `${identifier}:path_specific`
-      : identifier
-
-    const entry = this.storage.get(storageKey)
-    // Use path-specific limits if provided, otherwise use default
-    const limi =
-      pathSpecificLimits?.[role] || this.userLimits[role] || this.defaultLimi
     const windowMs = customWindowMs || this.windowMs
+    const limit =
+      pathSpecificLimits?.[role] || this.userLimits[role] || this.defaultLimit
 
-    // If no entry exists or the entry has expired, create a new one
-    if (!entry || entry.resetTime <= now) {
-      const resetTime = now + windowMs
-      this.storage.set(storageKey, { count: 1, resetTime })
-      return { allowed: true, limit, remaining: limit - 1, reset: resetTime }
-    }
+    // Create Redis key with path and role information
+    const key = `ratelimit:${identifier}:${role}`
 
-    // Check if the entry has reached its limi
-    if (entry.count >= limit) {
-      return { allowed: false, limit, remaining: 0, reset: entry.resetTime }
-    }
+    try {
+      // Use Redis transaction to ensure atomic operations
+      const multi = redis.multi()
 
-    // Increment the count
-    entry.count += 1
-    this.storage.set(storageKey, entry)
+      // Get current count and expiry
+      multi.get(key)
+      multi.ttl(key)
 
-    return {
-      allowed: true,
-      limit,
-      remaining: limit - entry.count,
-      reset: entry.resetTime,
-    }
-  }
+      const [countStr, ttl] = await multi.exec()
+      const count = parseInt((countStr as string) || '0', 10)
 
-  /**
-   * Clean up expired entries
-   */
-  public cleanup(): void {
-    const now = Date.now()
-    for (const [identifier, entry] of this.storage.entries()) {
-      if (entry.resetTime <= now) {
-        this.storage.delete(identifier)
+      // If key doesn't exist or has expired, create new entry
+      if (ttl < 0) {
+        await redis.setex(key, Math.ceil(windowMs / 1000), '1')
+        return {
+          allowed: true,
+          limit,
+          remaining: limit - 1,
+          reset: now + windowMs,
+        }
+      }
+
+      // Check if limit exceeded
+      if (count >= limit) {
+        return {
+          allowed: false,
+          limit,
+          remaining: 0,
+          reset: now + ttl * 1000,
+        }
+      }
+
+      // Increment counter
+      await redis.incr(key)
+
+      return {
+        allowed: true,
+        limit,
+        remaining: limit - (count + 1),
+        reset: now + ttl * 1000,
+      }
+    } catch (error) {
+      logger.error('Redis rate limit error:', error)
+      // Fail open - allow request in case of Redis errors
+      return {
+        allowed: true,
+        limit,
+        remaining: 1,
+        reset: now + windowMs,
       }
     }
   }
@@ -132,10 +148,36 @@ export class RateLimiter {
 // Create a rate limiter instance
 const rateLimiter = new RateLimiter()
 
-// Schedule cleanup to run every minute
-setInterval(() => {
-  rateLimiter.cleanup()
-}, 60 * 1000)
+// Export the rate limit function for use in API routes
+export async function rateLimit(request: Request, role = 'anonymous') {
+  const url = new URL(request.url)
+  const path = url.pathname
+
+  // Find the matching rate limit configuration
+  const config = findMatchingConfig(path)
+
+  if (!config) {
+    // No specific configuration found, allow the request
+    return { allowed: true }
+  }
+
+  // Get client identifier - prefer user ID or IP address
+  let identifier =
+    request.headers.get('x-forwarded-for') ||
+    request.headers.get('cf-connecting-ip') ||
+    'anonymous'
+
+  // Create a composite identifier that includes the API path type
+  const compositeIdentifier = `${identifier}:${config.path}`
+
+  // Check rate limit
+  return rateLimiter.check(
+    compositeIdentifier,
+    role,
+    config.limits,
+    config.windowMs,
+  )
+}
 
 /**
  * Find the matching rate limit configuration for a given path
@@ -194,22 +236,24 @@ export const rateLimitMiddleware = defineMiddleware(
     // Create a composite identifier that includes the API path type
     const compositeIdentifier = `${identifier}:${config.path}`
 
-    // Check rate limi
-    const { allowed, limit, remaining, reset } = rateLimiter.check(
+    // Check rate limit
+    const { allowed, limit, remaining, reset } = await rateLimiter.check(
       compositeIdentifier,
       role,
       config.limits,
       config.windowMs,
     )
 
-    if (!allowed) {
-      logger.warn('Rate limit exceeded', {
-        path,
-        identifier,
-        role,
-        limit,
-      })
+    // Get response from next middleware
+    const response = await next()
 
+    // Add rate limit headers
+    response.headers.set('X-RateLimit-Limit', limit.toString())
+    response.headers.set('X-RateLimit-Remaining', remaining.toString())
+    response.headers.set('X-RateLimit-Reset', reset.toString())
+
+    // If rate limit exceeded, return 429 Too Many Requests
+    if (!allowed) {
       return new Response(
         JSON.stringify({
           error: 'Too Many Requests',
@@ -228,17 +272,6 @@ export const rateLimitMiddleware = defineMiddleware(
       )
     }
 
-    // Process the request
-    const response = await next()
-
-    // Add rate limit headers to the response
-    response?.headers.set('X-RateLimit-Limit', limit.toString())
-    response?.headers.set('X-RateLimit-Remaining', remaining.toString())
-    response?.headers.set('X-RateLimit-Reset', reset.toString())
-
     return response
   },
 )
-
-// Export the instance for direct use in API routes
-export const rateLimit = rateLimiter

@@ -1,8 +1,6 @@
-export { Footer } from './Footer'
-export type { FooterProps } from './Footer'
-export { Header } from './Header'
-export type { HeaderProps } from './Header'
-export { Layout } from './Layout'
-export type { LayoutProps } from './Layout'
-export { Navigation } from './Navigation'
+export { default as Footer } from './Footer.astro'
+
+export { default as HeaderReact } from './HeaderReact'
+export type { HeaderProps } from './HeaderReact'
+export { default as Navigation } from './Navigation'
 export type { NavigationItem, NavigationProps } from './Navigation'

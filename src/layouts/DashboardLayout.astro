@@ -1,5 +1,11 @@
 ---
 import '@/styles/global.css'
+import { ClientRouter } from 'astro:transitions'
+import Header from '@/components/layout/Header.astro'
+import Footer from '@/components/layout/Footer.astro'
+import Sidebar from '@/components/layout/Sidebar.astro'
+import Head from '@/components/base/Head.astro'
+import ErrorBoundary from '@/components/base/ErrorBoundary.astro'
 
 interface Props {
   title?: string
@@ -11,6 +17,7 @@ interface Props {
   showSocialLinks?: boolean
   showSidebar?: boolean
   contentClassName?: string
+  metaImage?: string
 }
 
 const {
@@ -23,255 +30,80 @@ const {
   showSocialLinks = true,
   showSidebar = true,
   contentClassName = '',
+  metaImage = '/og-image.png'
 } = Astro.props
 ---
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+  <Head
+    {title}
+    {description}
+    ogImage={metaImage}
+  />
+  <body class="h-screen-min bg-light dark:bg-dark">
+    <ClientRouter />
 
-    <!-- Social media meta tags -->
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
-    <meta name="twitter:card" content="summary_large_image" />
-  </head>
-  <body class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    {
-      showHeader && (
-        <header class="fixed z-30 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-          <div class="px-3 py-3 lg:px-5 lg:pl-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center justify-start">
-                <button
-                  type="button"
-                  id="sidebarToggleBtn"
-                  class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                >
-                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fill-rule="evenodd"
-                      d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </button>
-                <a href="/" class="flex ml-2 md:mr-24">
-                  <img src="/favicon.svg" class="h-8 mr-3" alt="Logo" />
-                  <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                    Gradiant
-                  </span>
-                </a>
-              </div>
-              <div class="flex items-center">
-                <div class="flex items-center ml-3">
-                  {showThemeToggle && (
-                    <button
-                      id="themeToggle"
-                      class="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
-                    >
-                      <svg
-                        class="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                      </svg>
-                    </button>
-                  )}
-                  {showUserMenu && (
-                    <div class="relative ml-3">
-                      <button
-                        type="button"
-                        id="userMenuBtn"
-                        class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                        aria-expanded="false"
-                      >
-                        <img
-                          class="w-8 h-8 rounded-full"
-                          src="/avatar-placeholder.png"
-                          alt="user photo"
-                        />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+    <ErrorBoundary>
+      {showHeader && (
+        <Header {showThemeToggle} {showUserMenu} />
+      )}
+
+      <div class="flex min-h-screen flex-col lg:flex-row overflow-hidden">
+        {showSidebar && <Sidebar />}
+
+        <main
+          class:list={[
+            "relative h-full w-full overflow-y-auto bg-light dark:bg-dark transition-colors duration-200",
+            showSidebar && "lg:ml-64",
+            contentClassName
+          ]}
+        >
+          <div class="container mx-auto px-4 pt-20 pb-4 min-h-[calc(100vh-theme(spacing.20))]">
+            <slot />
           </div>
-        </header>
-      )
-    }
 
-    <div class="flex overflow-hidden">
-      {
-        showSidebar && (
-          <aside
-            id="sidebar"
-            class="fixed top-0 left-0 z-20 w-64 h-full pt-16 pb-4 overflow-y-auto transition-transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:translate-x-0"
-          >
-            <div class="px-3 py-4">
-              <ul class="space-y-2">
-                <li>
-                  <a
-                    href="/dashboard"
-                    class="flex items-center p-2 text-base rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <svg
-                      class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
-                      <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
-                    </svg>
-                    <span class="ml-3">Dashboard</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/mental-health-chat"
-                    class="flex items-center p-2 text-base rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <svg
-                      class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
-                      <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
-                    </svg>
-                    <span class="ml-3">Mental Health Chat</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/simulator"
-                    class="flex items-center p-2 text-base rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <svg
-                      class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-                    </svg>
-                    <span class="ml-3">Simulator</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </aside>
-        )
-      }
-
-      <main
-        class={`relative h-full w-full overflow-y-auto bg-gray-50 dark:bg-gray-900 ${showSidebar ? 'lg:ml-64' : ''} ${contentClassName}`}
-      >
-        <div class="px-4 pt-20 pb-4">
-          <slot />
-        </div>
-
-        {
-          showFooter && (
-            <footer class="mt-auto p-4 bg-white shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-              <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-                © {new Date().getFullYear()} Gradiant Therapy. All Rights
-                Reserved.
-              </span>
-              {showSocialLinks && (
-                <div class="flex space-x-6 sm:justify-center">
-                  <a
-                    href="#"
-                    class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
-                  >
-                    <span class="sr-only">Twitter</span>
-                    <svg
-                      class="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                    </svg>
-                  </a>
-                  <a
-                    href="#"
-                    class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
-                  >
-                    <span class="sr-only">GitHub</span>
-                    <svg
-                      class="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              )}
-            </footer>
-          )
-        }
-      </main>
-    </div>
+          {showFooter && (
+            <Footer showSocialLinks={showSocialLinks} className="mt-auto" />
+          )}
+        </main>
+      </div>
+    </ErrorBoundary>
   </body>
 </html>
 
-<script>
-  // Handle mobile sidebar toggle
-  const sidebarToggleBtn = document.getElementById('sidebarToggleBtn')
-  const sidebar = document.getElementById('sidebar')
-
-  if (sidebarToggleBtn && sidebar) {
-    sidebarToggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('-translate-x-full')
-    })
-  }
-
-  // Handle theme toggle
-  const themeToggle = document.getElementById('themeToggle')
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark')
-
-      // Save theme preference
-      const isDark = document.documentElement.classList.contains('dark')
-      localStorage.setItem('theme', isDark ? 'dark' : 'light')
-    })
-
-    // Check for saved theme preference
-    if (
-      localStorage.getItem('theme') === 'dark' ||
-      (!localStorage.getItem('theme') &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }
-</script>
-
 <style is:global>
+  :root {
+    --font-fallback: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+    --font-body: system-ui, var(--font-fallback);
+    --theme-bg: #ffffff;
+    --theme-bg-dark: #1a1a1a;
+    --theme-text: #1a1a1a;
+    --theme-text-dark: #ffffff;
+  }
+
   html {
-    font-family: system-ui, sans-serif;
-    background-color: #f6f6f6;
+    font-family: var(--font-body);
+    background-color: var(--theme-bg);
+    color: var(--theme-text);
+    transition: background-color 0.2s ease-in-out;
   }
 
   html.dark {
     color-scheme: dark;
+    background-color: var(--theme-bg-dark);
+    color: var(--theme-text-dark);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background: hsl(var(--primary-500));
+    color: white;
   }
 </style>

@@ -3,7 +3,7 @@ import { AnalyticsType, fheAnalytics } from '@/lib/fhe/analytics'
 import { EncryptionMode } from '@/lib/fhe/exports'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import AnalyticsDashboard from '../AnalyticsDashboard'
+import AnalyticsDashboardReact from '../AnalyticsDashboardReact'
 
 // Mock dependencies
 vi.mock('@/lib/fhe', () => ({
@@ -108,14 +108,14 @@ describe('analyticsDashboard', () => {
 
   it('renders without crashing', async () => {
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
     expect(screen.getByText('Therapy Analytics')).toBeInTheDocument()
   })
 
   it('shows loading state during initialization', async () => {
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
     expect(
       screen.getByText('Initializing FHE analytics...'),
@@ -124,21 +124,23 @@ describe('analyticsDashboard', () => {
 
   it('shows privacy warning when encryption is disabled', async () => {
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} encryptionEnabled={false} />)
+      render(
+        <AnalyticsDashboardReact {...defaultProps} encryptionEnabled={false} />,
+      )
     })
     expect(screen.getByText(/Privacy Notice/)).toBeInTheDocument()
   })
 
   it('shows FHE badge when security level is maximum', async () => {
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
     expect(screen.getByText('FHE Secured')).toBeInTheDocument()
   })
 
   it('initializes FHE with correct configuration', async () => {
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
     expect(fheService.initialize).toHaveBeenCalledWith({
       mode: 'fhe',
@@ -149,7 +151,7 @@ describe('analyticsDashboard', () => {
 
   it('loads analytics data after initialization', async () => {
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
     await waitFor(() => {
       expect(fheAnalytics.createAnalyticsDashboard).toHaveBeenCalled()
@@ -158,7 +160,7 @@ describe('analyticsDashboard', () => {
 
   it('handles analytics tabs correctly', async () => {
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
 
     await waitFor(() => {
@@ -180,7 +182,7 @@ describe('analyticsDashboard', () => {
 
   it('handles refresh button click', async () => {
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
 
     await waitFor(() => {
@@ -204,7 +206,7 @@ describe('analyticsDashboard', () => {
     )
 
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
 
     await waitFor(() => {
@@ -223,7 +225,7 @@ describe('analyticsDashboard', () => {
   })
 
   it('updates analytics on message changes', async () => {
-    const { rerender } = render(<AnalyticsDashboard {...defaultProps} />)
+    const { rerender } = render(<AnalyticsDashboardReact {...defaultProps} />)
 
     await waitFor(() => {
       expect(fheAnalytics.createAnalyticsDashboard).toHaveBeenCalledTimes(1)
@@ -240,7 +242,9 @@ describe('analyticsDashboard', () => {
       },
     ]
     await act(async () => {
-      rerender(<AnalyticsDashboard {...defaultProps} messages={newMessages} />)
+      rerender(
+        <AnalyticsDashboardReact {...defaultProps} messages={newMessages} />,
+      )
     })
 
     await waitFor(() => {
@@ -251,7 +255,7 @@ describe('analyticsDashboard', () => {
   it('handles auto-refresh correctly', async () => {
     vi.useFakeTimers()
     await act(async () => {
-      render(<AnalyticsDashboard {...defaultProps} />)
+      render(<AnalyticsDashboardReact {...defaultProps} />)
     })
 
     await waitFor(() => {
@@ -270,7 +274,7 @@ describe('analyticsDashboard', () => {
   describe('visualization Components', () => {
     beforeEach(async () => {
       await act(async () => {
-        render(<AnalyticsDashboard {...defaultProps} />)
+        render(<AnalyticsDashboardReact {...defaultProps} />)
       })
       await waitFor(() => {
         expect(

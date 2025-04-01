@@ -468,10 +468,22 @@ export interface Ui {
 
   /**
    * Controls the layout of the navigation bar.
-   *
-   * Used in `src/components/base/NavBar.astro`.
    */
   navBarLayout: NavBarLayout
+
+  /**
+   * Navigation configuration.
+   */
+  nav: {
+    /**
+     * Position of the navigation bar.
+     */
+    position: 'fixed' | 'sticky' | 'static'
+    /**
+     * Whether to apply glassmorphism effect to the navigation bar.
+     */
+    glassmorphism: boolean
+  }
 
   /**
    * Enables and configures for tabs within a tabbed layout.
@@ -502,6 +514,16 @@ export interface Ui {
    * and `src/layouts/BaseLayout.astro`.
    */
   externalLink: ExternalLink
+
+  /**
+   * Theme configuration for the UI.
+   */
+  theme: {
+    /**
+     * Whether to show theme toggle icons.
+     */
+    toggleIcon: boolean
+  }
 }
 
 /* FEATURES */

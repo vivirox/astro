@@ -366,3 +366,51 @@ export function createSearchDocument(
     category,
   }
 }
+
+import FlexSearch from 'flexsearch'
+import type { CollectionEntry } from 'astro:content'
+
+interface SearchablePost {
+  id: string
+  title: string
+  description: string
+  content: string
+  slug: string
+}
+
+class BlogSearch {
+  private index: FlexSearch.Index
+  private posts: Map<string, SearchablePost>
+
+  constructor() {
+    this.index = new FlexSearch.Index({
+      preset: 'match',
+      tokenize: 'forward',
+      cache: true,
+    })
+    this.posts = new Map()
+  }
+
+  addPost(post: CollectionEntry<'blog'>, content: string) {
+    const searchablePost: SearchablePost = {
+      id: post.id,
+      title: post.data.title,
+      description: post.data.description,
+      content,
+      slug: post.slug,
+    }
+    this.posts.set(post.id, searchablePost)
+    this.index.add(
+      post.id,
+      `${post.data.title} ${post.data.description} ${content}`,
+    )
+  }
+
+  search(query: string): SearchablePost[] {
+    if (!query) return []
+    const results = this.index.search(query) as string[]
+    return results.map((id) => this.posts.get(id)!).filter(Boolean)
+  }
+}
+
+export const blogSearch = new BlogSearch()

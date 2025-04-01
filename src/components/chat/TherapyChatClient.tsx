@@ -7,7 +7,7 @@ import { useChat } from '@/hooks/useChat'
 import { useSecurity } from '@/hooks/useSecurity'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { useEffect, useRef, useState } from 'react'
-import AnalyticsDashboard from './AnalyticsDashboard'
+import AnalyticsDashboardReact from './AnalyticsDashboardReact'
 import { ChatInput } from './ChatInput'
 import { ChatMessage } from './ChatMessage'
 import { ScenarioSelector } from './ScenarioSelector'
@@ -184,7 +184,7 @@ export function TherapyChatClient() {
       {/* Analytics dashboard */}
       {showAnalytics && (
         <div className="mb-4">
-          <AnalyticsDashboard
+          <AnalyticsDashboardReact
             messages={messages}
             securityLevel={securityLevel}
             encryptionEnabled={encryptionEnabled}

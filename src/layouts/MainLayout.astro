@@ -1,12 +1,20 @@
 ---
-// Title and description are used in the template
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
 const {
-  title = 'Gradiant',
-  description = 'Gradiant - Secure AI Therapy Platform',
-} = Astro.props
+  title,
+  description = "Gradiant - Advanced Healthcare Analytics Platform"
+} = Astro.props;
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,115 +22,15 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#0891b2" />
-
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-
-    <!-- PWA manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <ClientRouter />
   </head>
-  <body class="min-h-screen bg-background text-foreground">
-    <header class="bg-primary text-white shadow-sm">
-      <div
-        class="container mx-auto px-4 py-4 flex justify-between items-center"
-      >
-        <a href="/" class="text-xl font-bold">Gradiant</a>
-
-        <nav class="hidden md:flex gap-6">
-          <a href="/" class="hover:text-white/90">Home</a>
-          <a href="/dashboard" class="hover:text-white/90">Dashboard</a>
-          <a href="/profile" class="hover:text-white/90">Profile</a>
-        </nav>
-
-        <div class="flex items-center gap-4">
-          <a
-            href="/login"
-            class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-md"
-          >
-            Sign In
-          </a>
-        </div>
-      </div>
-    </header>
-
-    <slot />
-
-    <footer class="bg-gray-50 border-t border-gray-200 py-8 mt-16">
-      <div class="container mx-auto px-4">
-        <div class="flex flex-col md:flex-row justify-between">
-          <div class="mb-6 md:mb-0">
-            <h2 class="text-xl font-bold text-primary mb-2">Gradiant</h2>
-            <p class="text-sm text-gray-600 max-w-md">
-              Secure AI therapy platform with advanced encryption and privacy.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
-            <div>
-              <h3 class="text-sm font-semibold mb-3">Platform</h3>
-              <ul class="space-y-2 text-sm">
-                <li>
-                  <a href="/" class="text-gray-600 hover:text-primary">Home</a>
-                </li>
-                <li>
-                  <a href="/dashboard" class="text-gray-600 hover:text-primary"
-                    >Dashboard</a>
-                </li>
-                <li>
-                  <a href="/profile" class="text-gray-600 hover:text-primary"
-                    >Profile</a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 class="text-sm font-semibold mb-3">Resources</h3>
-              <ul class="space-y-2 text-sm">
-                <li>
-                  <a href="/about" class="text-gray-600 hover:text-primary"
-                    >About Us</a>
-                </li>
-                <li>
-                  <a href="/contact" class="text-gray-600 hover:text-primary"
-                    >Contact</a>
-                </li>
-                <li>
-                  <a href="/faq" class="text-gray-600 hover:text-primary"
-                    >FAQ</a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 class="text-sm font-semibold mb-3">Legal</h3>
-              <ul class="space-y-2 text-sm">
-                <li>
-                  <a href="/privacy" class="text-gray-600 hover:text-primary"
-                    >Privacy Policy</a>
-                </li>
-                <li>
-                  <a href="/terms" class="text-gray-600 hover:text-primary"
-                    >Terms of Service</a>
-                </li>
-                <li>
-                  <a href="/security" class="text-gray-600 hover:text-primary"
-                    >Security</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-600">
-          <p>
-            &copy; {new Date().getFullYear()} Gradiant. All rights reserved.
-          </p>
-        </div>
-      </div>
-    </footer>
+  <body class="h-screen-min bg-background font-sans">
+    <div class="relative flex h-screen-min flex-col">
+      <Header />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <Footer />
+    </div>
   </body>
 </html>

@@ -1,0 +1,68 @@
+---
+interface Props {
+  fallback?: string
+}
+
+const { fallback = 'Something went wrong. Please try refreshing the page.' } = Astro.props
+---
+
+<script>
+  class ErrorBoundary extends HTMLElement {
+    private state: { hasError: boolean }
+
+    constructor() {
+      super()
+      this.state = { hasError: false }
+    }
+
+    static get observedAttributes() {
+      return ['data-fallback']
+    }
+
+    connectedCallback() {
+      window.addEventListener('error', this.handleError.bind(this))
+      window.addEventListener('unhandledrejection', this.handleError.bind(this))
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener('error', this.handleError.bind(this))
+      window.removeEventListener('unhandledrejection', this.handleError.bind(this))
+    }
+
+    handleError(event: Event) {
+      event.preventDefault()
+      this.state.hasError = true
+      this.render()
+    }
+
+    render() {
+      if (this.state.hasError) {
+        const fallback = this.getAttribute('data-fallback')
+        this.innerHTML = `
+          <div class="flex min-h-[50vh] flex-col items-center justify-center text-center p-4">
+            <h2 class="text-2xl font-bold mb-4">Oops!</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">${fallback}</p>
+            <button
+              onclick="window.location.reload()"
+              class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
+            >
+              Refresh Page
+            </button>
+          </div>
+        `
+      }
+    }
+  }
+
+  customElements.define('error-boundary', ErrorBoundary)
+</script>
+
+<error-boundary data-fallback={fallback}>
+  <slot />
+</error-boundary>
+
+<style>
+  error-boundary {
+    display: contents;
+  }
+</style>

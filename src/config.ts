@@ -61,6 +61,10 @@ export const UI: Ui = {
       icon: 'i-ri-twitter-x-fill',
     },
   ],
+  nav: {
+    position: 'sticky',
+    glassmorphism: true,
+  },
   navBarLayout: {
     left: [],
     right: [
@@ -101,6 +105,9 @@ export const UI: Ui = {
     newTab: false,
     cursorType: '',
     showNewTabIcon: false,
+  },
+  theme: {
+    toggleIcon: true,
   },
 }
 

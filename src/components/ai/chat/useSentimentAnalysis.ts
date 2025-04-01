@@ -67,7 +67,7 @@ export function useSentimentAnalysis({
         }
 
         // Parse response
-        const data = (await response.json()) as SentimentResul
+        const data = (await response.json()) as SentimentResult
         setResult(data)
 
         // Call onComplete callback

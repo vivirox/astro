@@ -6,7 +6,7 @@
  */
 
 const nodeMajorVersion = parseInt(process.versions.node.split('.')[0], 10);
-const requiredNodeVersion = 18;
+const requiredNodeVersion = 20;
 const platform = process.platform;
 const arch = process.arch;
 

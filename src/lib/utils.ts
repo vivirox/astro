@@ -1,5 +1,4 @@
-import type { ClassValue } from 'clsx'
-import { clsx } from 'clsx'
+import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 /**
@@ -49,4 +48,12 @@ export function getDateKey(
     default:
       return date.toISOString().split('T')[0] // Default to daily
   }
+}
+
+export const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 }

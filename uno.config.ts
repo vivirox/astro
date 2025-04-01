@@ -68,6 +68,9 @@ export default defineConfig({
       github: '#24292e', // GitHub color
       google: '#ea4335', // Google color
     },
+    spacing: {
+      '20': '5rem', // Adding the missing spacing.20 value (80px)
+    },
   },
 
   // Custom rules

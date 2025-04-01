@@ -10,9 +10,9 @@ const { entry } = Astro.props
 const {
   title: postTitle,
   description,
-  ogImage,
+  image,
   pubDate,
-  minutesRead,
+  readingTime,
 } = entry.data
 
 const formattedDate = new Date(pubDate)
@@ -27,14 +27,14 @@ const formatDate = (date: Date) => {
 }
 ---
 
-<BaseLayout title={postTitle} {description} {ogImage}>
+<BaseLayout title={postTitle} {description} ogImage={image?.url}>
   <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
       {
-        ogImage && typeof ogImage === 'string' && (
+        image?.url && (
           <img
-            src={ogImage}
-            alt={postTitle}
+            src={image.url}
+            alt={image.alt}
             class="w-full h-[400px] object-cover rounded-xl mb-6"
           />
         )
@@ -47,10 +47,10 @@ const formatDate = (date: Date) => {
           >{formatDate(formattedDate)}</time
         >
         {
-          minutesRead && minutesRead > 0 && (
+          readingTime && readingTime > 0 && (
             <>
               <span class="mx-2">•</span>
-              <span>{minutesRead} min read</span>
+              <span>{readingTime} min read</span>
             </>
           )
         }
@@ -82,7 +82,7 @@ const formatDate = (date: Date) => {
         </a>
 
         {
-          entry.data.share !== false && (
+          !entry.data.draft && (
             <div class="flex space-x-4">
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(postTitle)}&url=${encodeURIComponent(Astro.url.href)}`}

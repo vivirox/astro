@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { fheService } from '@/lib/fhe'
 import { FHEOperation } from '@/lib/fhe/types'
 import { useEffect, useState } from 'react'
-import { Badge } from '../ui/badge'
+import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
@@ -18,8 +18,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '../ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+} from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 /**
  * FHE Demo Component for demonstrating Fully Homomorphic Encryption capabilities

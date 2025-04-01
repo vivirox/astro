@@ -13,6 +13,7 @@ export interface TestSection {
   title: string
   component?: ComponentType<any>
   instructions?: string[]
+  props?: Record<string, any>
 }
 
 export type TestSections = {

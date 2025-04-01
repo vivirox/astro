@@ -19,21 +19,33 @@ const pages = defineCollection({
   schema: pageSchema,
 })
 
-const blog = defineCollection({
-  loader: glob({
-    pattern: '**/*.{md,mdx}',
-    base: './src/content/blog',
-  }),
+const blogCollection = defineCollection({
+  type: 'content',
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    pubDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-    ogImage: z.union([z.string(), z.boolean()]).optional(),
-    toc: z.boolean().optional(),
-    share: z.boolean().optional(),
-    tags: z.array(z.string()).optional(),
-    minutesRead: z.number().optional(),
+    pubDate: z.date(),
+    updatedDate: z.date().optional(),
+    author: z.string(),
+    image: z
+      .object({
+        url: z.string(),
+        alt: z.string(),
+      })
+      .optional(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+    featured: z.boolean().default(false),
+    // Estimated reading time in minutes
+    readingTime: z.number().optional(),
+    // Category for the blog post
+    category: z
+      .enum(['Technical', 'Research', 'Case Study', 'Tutorial', 'News'])
+      .optional(),
+    // External canonical URL if this is a republished post
+    canonicalUrl: z.string().url().optional(),
+    // Make slug optional - it will be derived from the filename if not provided
+    slug: z.string().optional(),
   }),
 })
 
@@ -112,7 +124,7 @@ const highlights = defineCollection({
 
 export const collections = {
   pages,
-  blog,
+  blog: blogCollection,
   docs,
   projects,
   changelog,

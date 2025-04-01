@@ -1,74 +1,39 @@
 ---
-import { getCollection, render } from 'astro:content'
-import BaseLayout from '~/layouts/BaseLayout.astro'
-import StandardLayout from '~/layouts/StandardLayout.astro'
-import Toc from '~/components/toc/Toc.astro'
-import ShareLink from '~/components/widgets/ShareLink.astro'
-import Warning from '~/components/base/Warning.astro'
-import { formatDate } from '~/utils/datetime'
-import { FEATURES } from '~/config'
-
-// Add prerender directive
-export const prerender = true
+import { getCollection, type CollectionEntry, render } from 'astro:content'
+import BlogPostLayout from '@/layouts/BlogPostLayout.astro'
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog')
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
+  return posts.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
   }))
 }
 
-const { post } = Astro.props
-const { data: frontmatter } = post
-const { Content, headings } = await render(post)
-const { share, toc } = FEATURES
+interface Props {
+  entry: CollectionEntry<'blog'>
+}
 
-const pubDate = frontmatter.pubDate.toISOString()
-const updatedDate = frontmatter.updatedDate?.toISOString()
+const { entry } = Astro.props
+const { Content } = await render(entry)
 
-/* Warning message */
-const warningHTML = `This article is not published yet.
-Please check back later.`
+// Get related posts (same category or tags)
+const allPosts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true
+})
+
+const relatedPosts = allPosts
+  .filter(p =>
+    p.id !== entry.id && // Not the current post
+    (
+      p.data.category === entry.data.category || // Same category
+      p.data.tags?.some(tag => entry.data.tags?.includes(tag)) // Shared tags
+    )
+  )
+  .sort(() => Math.random() - 0.5) // Randomize
+  .slice(0, 3) // Get up to 3 related posts
 ---
 
-<BaseLayout
-  title={frontmatter.title}
-  description={frontmatter.description}
-  ogImage={frontmatter.ogImage}
-  {pubDate}
-  lastModDate={updatedDate}
->
-  <StandardLayout title={frontmatter.title}>
-    <div slot="head">
-      {
-        frontmatter.pubDate && (
-          <p class="mt--6! op-50">
-            <time datetime={pubDate}>{formatDate(pubDate)}</time>
-            {updatedDate && (
-              <time datetime={updatedDate}>
-                | Updated: {formatDate(updatedDate)}
-              </time>
-            )}
-          </p>
-        )
-      }
-      {
-        new Date(frontmatter.pubDate) > new Date() && (
-          <Warning rawHTMLString={warningHTML} />
-        )
-      }
-    </div>
-    <div slot="article">
-      {Array.isArray(toc) && toc[0] && frontmatter.toc && <Toc {headings} />}
-      <Content />
-    </div>
-  </StandardLayout>
-  <div slot="share">
-    {
-      Array.isArray(share) && share[0] && frontmatter.share && (
-        <ShareLink config={share[1]} />
-      )
-    }
-  </div>
-</BaseLayout>
+<BlogPostLayout entry={entry}>
+  <Content />
+</BlogPostLayout>

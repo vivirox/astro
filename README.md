@@ -187,3 +187,148 @@ If you encounter any issues during development or build:
    The project uses FlexSearch (v0.7.31) for client-side search. Pagefind is not
    currently supported on macOS arm64 platforms, so we've implemented a workaround
    that creates dummy Pagefind files to prevent errors.
+
+# Project Astro
+
+A modern, high-performance application built with Astro, React, and Convex.
+
+## Project Status
+
+The project is currently in the process of migrating from a pure React application to a hybrid Astro/React architecture. This transition aims to improve performance, SEO, and developer experience while maintaining the interactive capabilities of React where needed.
+
+- **Overall Progress**: 88% Complete
+- **Documentation**: [Conversion Plan](./astro-conversion-plan.mdx), [Troubleshooting Guide](./TROUBLESHOOTING.md)
+
+## Key Features
+
+- **Hybrid Rendering**: Static content is rendered at build time, while interactive components use partial hydration
+- **Convex Integration**: Real-time data synchronization with Convex backend
+- **Component Library**: Comprehensive set of UI components built with Astro and React
+- **Admin Dashboard**: Analytics and monitoring dashboards for administrators
+- **Blog System**: Content collections-based blog with tag filtering and search
+- **Security System**: Real-time security event monitoring and filtering
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 16+
+- pnpm 7+
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourorganization/project-astro.git
+
+# Navigate to the project directory
+cd project-astro
+
+# Install dependencies
+pnpm install
+
+# Start the development server
+pnpm dev
+```
+
+The application will be available at `http://localhost:3000`.
+
+### Build
+
+```bash
+# Standard build (uses build-clean.js to handle null byte issues)
+pnpm build
+
+# Original Astro build (may fail with null byte errors)
+pnpm build:regular
+```
+
+The built application will be in the `dist` directory.
+
+#### Build Process Notes
+
+The project uses a custom build script (`build-clean.js`) to handle null byte issues with certain Astro components. This script:
+
+1. Temporarily replaces problematic components with placeholders
+2. Runs the Astro build command
+3. Restores the original components after the build
+
+For more details, see the [Troubleshooting Guide](./TROUBLESHOOTING.md).
+
+## Project Structure
+
+```
+project-astro/
+├── convex/             # Convex backend configuration and functions
+├── docs/               # Documentation
+├── public/             # Static assets
+├── src/
+│   ├── components/     # UI components
+│   │   ├── admin/      # Admin-specific components
+│   │   ├── base/       # Base components
+│   │   ├── security/   # Security-related components
+│   │   └── ui/         # Reusable UI components
+│   ├── content/        # Content collections
+│   ├── layouts/        # Page layouts
+│   ├── lib/            # Utility functions and libraries
+│   ├── pages/          # Astro pages
+│   ├── styles/         # Global styles
+│   └── test/           # Test utilities
+└── astro.config.mjs    # Astro configuration
+```
+
+## Development
+
+### Component Development
+
+Components are divided into two categories:
+
+1. **Astro Components** (`.astro`): Used for static or minimally interactive components
+2. **React Components** (`.tsx`): Used for highly interactive components
+
+For guidance on when to use each and how to convert from React to Astro, see our [React to Astro Conversion Guide](./docs/react-to-astro-conversion.md).
+
+### Testing
+
+We use Vitest for testing components. For details on how to test Astro components, see our [Component Testing Guide](./docs/component-testing.md).
+
+To run tests:
+
+```bash
+pnpm test
+```
+
+For watch mode:
+
+```bash
+pnpm test:watch
+```
+
+### Convex Integration
+
+This project uses Convex for backend functionality. To start the Convex development server:
+
+```bash
+pnpm convex dev
+```
+
+## Documentation
+
+- [Astro Conversion Plan](./astro-conversion-plan.mdx)
+- [Component Testing Guide](./docs/component-testing.md)
+- [React to Astro Conversion Guide](./docs/react-to-astro-conversion.md)
+- [API Documentation](./docs/api.md)
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+Please ensure all tests pass before submitting a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

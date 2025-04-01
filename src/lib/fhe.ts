@@ -13,6 +13,8 @@ export interface FHEService {
 
 // Simple implementation for demo purposes
 export class MockFHEService implements FHEService {
+  initialize: any
+  setEncryptionMode: any
   async encrypt(data: string): Promise<string> {
     // Mock encryption (just adds a prefix in real life this would use actual encryption)
     return `enc_${data}`

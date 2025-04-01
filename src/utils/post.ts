@@ -12,7 +12,7 @@ export interface PostData {
   updatedDate?: Date
   tags?: string[]
   author?: string
-  minutesRead?: number
+  readingTime?: number
   draft?: boolean
 }
 

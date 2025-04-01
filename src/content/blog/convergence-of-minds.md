@@ -1,8 +1,9 @@
 ---
-title: Convergence of Minds
-description: "The intersection of artificial intelligence and mental health care stands at a fascinating crossroads, poised to revolutionize how we understand, treat, and support psychological wellbeing."
-pubDate: 2025-03-01
+title: The Convergence of Minds - How AI and Human Psychology Shape Each Other
+description: "Exploring the reciprocal relationship between artificial intelligence and human psychology in 2025"
+pubDate: 2025-03-15
 lastModDate: 2025-03-22
+author: "Dr. Emily Chen"
 toc: true
 share: true
 ogImage: true
