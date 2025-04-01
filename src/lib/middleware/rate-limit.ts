@@ -133,8 +133,8 @@ export class RateLimiter {
         remaining: limit - (count + 1),
         reset: now + ttl * 1000,
       }
-    } catch (error) {
-      logger.error('Redis rate limit error:', error)
+    } catch (error: unknown) {
+      logger.error('Redis rate limit error:', error as Record<string, unknown>)
       // Fail open - allow request in case of Redis errors
       return {
         allowed: true,
@@ -230,8 +230,11 @@ export const rateLimitMiddleware = defineMiddleware(
         identifier = session.user.id
         role = session.user.role || 'user'
       }
-    } catch (error) {
-      logger.warn('Error getting session for rate limiting:', error)
+    } catch (error: unknown) {
+      logger.warn(
+        'Error getting session for rate limiting:',
+        error as Record<string, unknown>,
+      )
     }
 
     // Create a composite identifier that includes the API path type
