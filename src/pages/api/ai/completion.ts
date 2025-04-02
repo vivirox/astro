@@ -91,6 +91,8 @@ export const POST: APIRoute = async ({ request }) => {
           error: validationError.error,
           details: JSON.stringify(validationError.details),
           status: 'error',
+          ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+          userAgent: request.headers.get('user-agent') || 'unknown',
         } as AuditMetadata,
       })
 
@@ -98,6 +100,7 @@ export const POST: APIRoute = async ({ request }) => {
         status: validationError.status,
         headers: {
           'Content-Type': 'application/json',
+          'X-Content-Type-Options': 'nosniff',
         },
       })
     }
@@ -107,18 +110,119 @@ export const POST: APIRoute = async ({ request }) => {
     const maxAllowedSize = 1024 * 50 // 50KB limit
 
     if (totalInputSize > maxAllowedSize) {
+      // Create audit log for payload size violation
+      await createAuditLog({
+        id: crypto.randomUUID(),
+        timestamp: new Date(),
+        userId: session?.user?.id || 'anonymous',
+        action: 'ai.completion.payload_size_exceeded',
+        resource: { id: 'ai-completion', type: 'ai' },
+        metadata: {
+          payloadSize: totalInputSize,
+          maxAllowedSize: maxAllowedSize,
+          status: 'error',
+          ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+          userAgent: request.headers.get('user-agent') || 'unknown',
+        } as AuditMetadata,
+      })
+
       return new Response(
         JSON.stringify({
           error: 'Payload too large',
           message: 'The request payload exceeds the maximum allowed size',
+          code: 'PAYLOAD_TOO_LARGE',
         }),
         {
           status: 413,
           headers: {
             'Content-Type': 'application/json',
+            'X-Content-Type-Options': 'nosniff',
           },
         },
       )
+    }
+    
+    // Enhanced security: Sanitize and validate message content
+    if (data?.messages && Array.isArray(data.messages)) {
+      // Check for potentially malicious content in messages
+      const suspiciousPatterns = [
+        /(?:<script|<\/script>|javascript:)/i,        // XSS attempts
+        /['"].*?(?:OR|AND|WHERE|SELECT|INSERT|DELETE|UPDATE|DROP|UNION|INTO|EXEC|--).*/i, // SQL injection
+        /<([a-z][a-z0-9]*)[^>]*on(blur|click|change|dblclick|focus|keydown|keypress|keyup|load|mousedown|mousemove|mouseout|mouseover|mouseup|resize|scroll|submit|unload)=[^>]*>/i, // Event handlers
+      ];
+      
+      for (const message of data.messages) {
+        const content = message.content?.toString() || '';
+        
+        // Check for suspicious patterns
+        for (const pattern of suspiciousPatterns) {
+          if (pattern.test(content)) {
+            // Create audit log for malicious content detection
+            await createAuditLog({
+              id: crypto.randomUUID(),
+              timestamp: new Date(),
+              userId: session?.user?.id || 'anonymous',
+              action: 'ai.completion.malicious_content_detected',
+              resource: { id: 'ai-completion', type: 'ai' },
+              metadata: {
+                pattern: pattern.toString(),
+                contentSample: content.slice(0, 100),
+                status: 'blocked',
+                ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+                userAgent: request.headers.get('user-agent') || 'unknown',
+              } as AuditMetadata,
+            });
+            
+            return new Response(
+              JSON.stringify({
+                error: 'Input validation failed',
+                message: 'Potentially malicious content detected in message',
+                code: 'MALICIOUS_CONTENT',
+              }),
+              {
+                status: 400,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Content-Type-Options': 'nosniff',
+                },
+              }
+            );
+          }
+        }
+        
+        // Maximum individual message length check
+        if (content.length > 4000) {
+          await createAuditLog({
+            id: crypto.randomUUID(),
+            timestamp: new Date(),
+            userId: session?.user?.id || 'anonymous',
+            action: 'ai.completion.message_too_long',
+            resource: { id: 'ai-completion', type: 'ai' },
+            metadata: {
+              messageLength: content.length,
+              maxAllowedLength: 4000,
+              status: 'blocked',
+              ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+              userAgent: request.headers.get('user-agent') || 'unknown',
+            } as AuditMetadata,
+          });
+          
+          return new Response(
+            JSON.stringify({
+              error: 'Input validation failed',
+              message: 'Message content exceeds maximum allowed length',
+              code: 'MESSAGE_TOO_LONG',
+            }),
+            {
+              status: 400,
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Content-Type-Options': 'nosniff',
+              },
+            }
+          );
+        }
+      }
     }
 
     // Create AI service
