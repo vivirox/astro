@@ -11,11 +11,11 @@ Our API implements rate limiting to prevent abuse and ensure fair usage of resou
 Different rate limits apply based on user roles:
 
 | Role      | General API | AI Endpoints | Auth Endpoints |
-|-----------|-------------|--------------|----------------|
-| Admin     | 300/min     | 120/min      | 30/min        |
-| Therapist | 200/min     | 80/min       | 30/min        |
-| User      | 100/min     | 40/min       | 20/min        |
-| Anonymous | 30/min      | 10/min       | 5/min         |
+| --------- | ----------- | ------------ | -------------- |
+| Admin     | 300/min     | 120/min      | 30/min         |
+| Therapist | 200/min     | 80/min       | 30/min         |
+| User      | 100/min     | 40/min       | 20/min         |
+| Anonymous | 30/min      | 10/min       | 5/min          |
 
 ### Rate Limit Headers
 
@@ -34,6 +34,7 @@ Our API implements strict CORS policies to ensure secure cross-origin communicat
 ### Development Environment
 
 Allowed origins in development:
+
 - `http://localhost:3000`
 - `http://localhost:8080`
 - `http://localhost:4321` (Astro dev server)
@@ -41,6 +42,7 @@ Allowed origins in development:
 ### Production Environment
 
 Allowed origins in production:
+
 - `https://app.yourdomain.com`
 - `https://api.yourdomain.com`
 - `https://admin.yourdomain.com`
@@ -51,6 +53,7 @@ Allowed origins in production:
 The following headers are supported:
 
 #### Allowed Headers
+
 - `Content-Type`
 - `Authorization`
 - `Accept`
@@ -58,6 +61,7 @@ The following headers are supported:
 - `X-Request-ID`
 
 #### Exposed Headers
+
 - `X-RateLimit-Limit`
 - `X-RateLimit-Remaining`
 - `X-RateLimit-Reset`
@@ -111,12 +115,14 @@ All API responses include the following security headers:
 ## Monitoring and Logging
 
 All security-related events are logged, including:
+
 - Unauthorized CORS attempts
 - Rate limit violations
 - Authentication failures
 - Server errors
 
 Logs include relevant context such as:
+
 - Request path
 - HTTP method
 - Origin

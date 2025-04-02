@@ -60,3 +60,31 @@ interface Window {
   // Function to initialize search
   initSearch?: () => void
 }
+
+// Define module for astro:transitions
+declare module 'astro:transitions' {
+  import type { AstroIntegration } from 'astro'
+  export const ViewTransitions: any
+  export function fade(options?: { duration?: string | number }): any
+  export function slide(options?: { duration?: string | number }): any
+}
+
+// Fix TypeScript errors related to HTML elements in Astro files
+declare namespace astroHTML.JSX {
+  interface HTMLAttributes {
+    class?: string
+    children?: any
+  }
+
+  interface HtmlHTMLAttributes extends HTMLAttributes {
+    lang?: string
+  }
+
+  interface AnchorHTMLAttributes extends HTMLAttributes {
+    href?: string
+    rel?: string
+    target?: string
+    class?: string
+    children?: any
+  }
+}

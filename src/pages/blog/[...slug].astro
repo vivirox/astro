@@ -23,17 +23,16 @@ const allPosts = await getCollection('blog', ({ data }) => {
 })
 
 const relatedPosts = allPosts
-  .filter(p =>
-    p.id !== entry.id && // Not the current post
-    (
-      p.data.category === entry.data.category || // Same category
-      p.data.tags?.some(tag => entry.data.tags?.includes(tag)) // Shared tags
-    )
+  .filter(
+    (p) =>
+      p.id !== entry.id && // Not the current post
+      (p.data.category === entry.data.category || // Same category
+        p.data.tags?.some((tag) => entry.data.tags?.includes(tag))), // Shared tags
   )
   .sort(() => Math.random() - 0.5) // Randomize
   .slice(0, 3) // Get up to 3 related posts
 ---
 
-<BlogPostLayout entry={entry}>
+<BlogPostLayout {entry}>
   <Content />
 </BlogPostLayout>

@@ -188,15 +188,17 @@ If you encounter any issues during development or build:
    currently supported on macOS arm64 platforms, so we've implemented a workaround
    that creates dummy Pagefind files to prevent errors.
 
-# Project Astro
+## Project Astro
 
 A modern, high-performance application built with Astro, React, and Convex.
 
 ## Project Status
 
-The project is currently in the process of migrating from a pure React application to a hybrid Astro/React architecture. This transition aims to improve performance, SEO, and developer experience while maintaining the interactive capabilities of React where needed.
+The project is currently in the process of migrating from a pure React application to a hybrid
+Astro/React architecture. This transition aims to improve performance, SEO, and developer experience
+while maintaining the interactive capabilities of React where needed.
 
-- **Overall Progress**: 88% Complete
+- **Overall Progress**: 89% Complete
 - **Documentation**: [Conversion Plan](./astro-conversion-plan.mdx), [Troubleshooting Guide](./TROUBLESHOOTING.md)
 
 ## Key Features
@@ -205,10 +207,47 @@ The project is currently in the process of migrating from a pure React applicati
 - **Convex Integration**: Real-time data synchronization with Convex backend
 - **Component Library**: Comprehensive set of UI components built with Astro and React
 - **Admin Dashboard**: Analytics and monitoring dashboards for administrators
+- **Documentation System**: Comprehensive documentation with automatic table of contents and responsive design
 - **Blog System**: Content collections-based blog with tag filtering and search
 - **Security System**: Real-time security event monitoring and filtering
 
-## Getting Started
+## Layout Components
+
+The project includes several layout components for different use cases:
+
+- **MainLayout**: Base layout for the main site with header, footer, and ViewTransitions integration
+- **DashboardLayout**: Layout for authenticated user dashboard pages with sidebar navigation
+- **BlogLayout**: Specialized layout for blog posts with metadata and social sharing
+- **DocumentationLayout**: Layout for documentation pages with automatic table of contents generation and
+  responsive sidebar
+
+### Documentation Layout
+
+The `DocumentationLayout.astro` component provides a specialized layout for documentation pages with:
+
+- Automatic table of contents generation from page headings
+- Responsive sidebar that collapses on mobile
+- Enhanced styling for documentation content (code blocks, blockquotes, tables, etc.)
+- Support for custom MDX components (Cards, Steps, Notes, etc.)
+- Light/dark mode toggle integrated into the sidebar
+- Previous/next page navigation
+- Support for frontmatter metadata
+
+```astro
+---
+import DocumentationLayout from '@/layouts/DocumentationLayout.astro';
+---
+
+<DocumentationLayout
+  title="API Reference"
+  description="Complete API documentation for our platform"
+>
+  <h1>API Reference</h1>
+  <!-- Documentation content goes here -->
+</DocumentationLayout>
+```
+
+## Getting Started 2
 
 ### Prerequisites
 
@@ -247,7 +286,8 @@ The built application will be in the `dist` directory.
 
 #### Build Process Notes
 
-The project uses a custom build script (`build-clean.js`) to handle null byte issues with certain Astro components. This script:
+The project uses a custom build script (`build-clean.js`) to handle null byte issues with certain Astro
+components. This script:
 
 1. Temporarily replaces problematic components with placeholders
 2. Runs the Astro build command
@@ -257,7 +297,7 @@ For more details, see the [Troubleshooting Guide](./TROUBLESHOOTING.md).
 
 ## Project Structure
 
-```
+```mermaid
 project-astro/
 ├── convex/             # Convex backend configuration and functions
 ├── docs/               # Documentation

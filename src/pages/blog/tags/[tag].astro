@@ -6,15 +6,15 @@ import BlogLayout from '@/layouts/BlogLayout.astro'
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft)
-  const tags = [...new Set(posts.flatMap(post => post.data.tags))]
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags))]
 
-  return tags.map(tag => ({
+  return tags.map((tag) => ({
     params: { tag },
     props: {
       posts: posts
-        .filter(post => post.data.tags.includes(tag))
-        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-    }
+        .filter((post) => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
   }))
 }
 
@@ -42,46 +42,48 @@ const { posts } = Astro.props as Props
     </header>
 
     <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-      {posts.map(post => (
-        <article class="group">
-          {post.data.image && (
-            <img
-              src={post.data.image.url}
-              alt={post.data.image.alt}
-              class="w-full h-48 object-cover rounded-lg mb-4"
-            />
-          )}
-          <h2 class="text-xl font-semibold mb-2 group-hover:text-primary">
-            <a href={`/blog/${post.slug}`}>{post.data.title}</a>
-          </h2>
-          <p class="text-muted-foreground mb-2">{post.data.description}</p>
-          <div class="flex items-center text-sm text-muted-foreground">
-            <time datetime={post.data.pubDate.toISOString()}>
-              {formatDate(post.data.pubDate)}
-            </time>
-            {post.data.readingTime && (
-              <>
-                <span class="mx-2">•</span>
-                <span>{post.data.readingTime} min read</span>
-              </>
+      {
+        posts.map((post) => (
+          <article class="group">
+            {post.data.image && (
+              <img
+                src={post.data.image.url}
+                alt={post.data.image.alt}
+                class="w-full h-48 object-cover rounded-lg mb-4"
+              />
             )}
-          </div>
-          <div class="flex flex-wrap gap-2 mt-3">
-            {post.data.tags.map(t => (
-              <a
-                href={`/blog/tags/${t}`}
-                class={`text-xs px-2 py-1 rounded-full transition-colors ${
-                  t === tag
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted hover:bg-muted/80'
-                }`}
-              >
-                {t}
-              </a>
-            ))}
-          </div>
-        </article>
-      ))}
+            <h2 class="text-xl font-semibold mb-2 group-hover:text-primary">
+              <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+            </h2>
+            <p class="text-muted-foreground mb-2">{post.data.description}</p>
+            <div class="flex items-center text-sm text-muted-foreground">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {formatDate(post.data.pubDate)}
+              </time>
+              {post.data.readingTime && (
+                <>
+                  <span class="mx-2">•</span>
+                  <span>{post.data.readingTime} min read</span>
+                </>
+              )}
+            </div>
+            <div class="flex flex-wrap gap-2 mt-3">
+              {post.data.tags.map((t) => (
+                <a
+                  href={`/blog/tags/${t}`}
+                  class={`text-xs px-2 py-1 rounded-full transition-colors ${
+                    t === tag
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted hover:bg-muted/80'
+                  }`}
+                >
+                  {t}
+                </a>
+              ))}
+            </div>
+          </article>
+        ))
+      }
     </div>
   </div>
 </BlogLayout>

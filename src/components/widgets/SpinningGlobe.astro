@@ -13,9 +13,19 @@
 <script>
   // Dynamically import Three.js only when needed
   const initGlobe = async () => {
-    const { Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry,
-      Float32BufferAttribute, PointsMaterial, Points, Color,
-      SphereGeometry, MeshBasicMaterial, Mesh } = await import('three')
+    const {
+      Scene,
+      PerspectiveCamera,
+      WebGLRenderer,
+      BufferGeometry,
+      Float32BufferAttribute,
+      PointsMaterial,
+      Points,
+      Color,
+      SphereGeometry,
+      MeshBasicMaterial,
+      Mesh,
+    } = await import('three')
     const canvas = document.getElementById('globe-canvas')
     if (!(canvas instanceof HTMLCanvasElement)) return
 
@@ -65,10 +75,7 @@
       'position',
       new Float32BufferAttribute(positions, 3),
     )
-    dotGeometry.setAttribute(
-      'color',
-      new Float32BufferAttribute(colors, 3),
-    )
+    dotGeometry.setAttribute('color', new Float32BufferAttribute(colors, 3))
 
     // Create material and points
     const dotMaterial = new PointsMaterial({

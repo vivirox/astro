@@ -34,27 +34,27 @@ export const POST: APIRoute = async ({ request }) => {
         },
       })
     }
-    
+
     // Apply rate limiting based on user role
     const role = session.user.role || 'user'
     const { allowed, limit, remaining, reset } = rateLimit.check(
       `${session.user.id}:/api/ai/completion`,
       role,
       {
-        admin: 120,    // 120 requests per minute for admins
+        admin: 120, // 120 requests per minute for admins
         therapist: 80, // 80 requests per minute for therapists
-        user: 40,      // 40 requests per minute for regular users
-        anonymous: 10  // 10 requests per minute for unauthenticated users
+        user: 40, // 40 requests per minute for regular users
+        anonymous: 10, // 10 requests per minute for unauthenticated users
       },
-      60 * 1000 // 1 minute window
+      60 * 1000, // 1 minute window
     )
-    
+
     if (!allowed) {
       logger.warn('Rate limit exceeded for AI completion', {
         userId: session.user.id,
-        role: role
+        role: role,
       })
-      
+
       return new Response(
         JSON.stringify({
           error: 'Too Many Requests',
@@ -69,7 +69,7 @@ export const POST: APIRoute = async ({ request }) => {
             'X-RateLimit-Reset': reset.toString(),
             'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
           },
-        }
+        },
       )
     }
 

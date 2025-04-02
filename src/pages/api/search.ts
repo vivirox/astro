@@ -5,7 +5,9 @@ import { blogSearch } from '@/lib/search'
 let isIndexed = false
 
 async function indexPosts() {
-  if (isIndexed) return
+  if (isIndexed) {
+    return
+  }
 
   const posts = await getCollection('blog')
   for (const post of posts) {
@@ -16,24 +18,16 @@ async function indexPosts() {
   isIndexed = true
 }
 
-export const GET: APIRoute = async ({ url }) => {
-  const query = url.searchParams.get('q')
-  if (!query) {
-    return new Response(JSON.stringify({ results: [] }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-  }
+// Redirect to the versioned API endpoint
+export const GET: APIRoute = async ({ url, request }) => {
+  const newUrl = new URL(url)
+  newUrl.pathname = '/api/v1/search' + newUrl.pathname.substring('/api/search'.length)
 
-  await indexPosts()
-  const results = blogSearch.search(query)
-
-  return new Response(JSON.stringify({ results }), {
-    status: 200,
+  return new Response(null, {
+    status: 307, // Temporary redirect
     headers: {
-      'Content-Type': 'application/json',
+      'Location': newUrl.toString(),
+      'X-API-Deprecation-Warning': 'This endpoint is deprecated. Please use /api/v1/search instead.',
     },
   })
 }

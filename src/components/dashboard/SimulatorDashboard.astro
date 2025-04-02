@@ -1,0 +1,51 @@
+---
+/**
+ * SimulatorDashboard.astro
+ * Astro wrapper component for the therapeutic practice simulator dashboard
+ * 
+ * This component wraps the React-based SimulatorDashboardReact component
+ * to provide a consistent interface while maintaining interactive features.
+ */
+
+// Import the React component
+import SimulatorDashboardReact from './SimulatorDashboardReact';
+
+// Define props for the Astro component
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+// Default values for props
+const { 
+  title = "Therapeutic Practice Simulator", 
+  description = "Interactive simulator for practicing therapeutic techniques in a safe environment"
+} = Astro.props;
+---
+
+<div class="simulator-dashboard-wrapper">
+  {title && <h1 class="sr-only">{title}</h1>}
+  {description && <p class="sr-only">{description}</p>}
+  
+  <!-- The React component needs client:load directive for full interactivity -->
+  <SimulatorDashboardReact client:load />
+</div>
+
+<style>
+  .simulator-dashboard-wrapper {
+    width: 100%;
+    position: relative;
+  }
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+</style> 

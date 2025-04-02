@@ -44,12 +44,12 @@ interface PerformanceMetrics {
   }
 }
 
-interface PerformanceDashboardProps {
+export interface PerformanceDashboardProps {
   aiService: AIServiceProps
   refreshInterval?: number // in milliseconds
 }
 
-export default function PerformanceDashboard({
+export function PerformanceDashboardReact({
   aiService,
   refreshInterval = 10000,
 }: PerformanceDashboardProps) {

@@ -1,10 +1,10 @@
 ---
-import { getLogger } from '@/lib/logging';
-import { getSystemMetrics, type SystemMetrics } from '@/lib/api/admin';
+import { getLogger } from '@/lib/logging'
+import { getSystemMetrics, type SystemMetrics } from '@/lib/api/admin'
 import { initDashboardUpdates } from '@/lib/admin/dashboard-updater'
 
 // Initialize logger
-const logger = getLogger();
+const logger = getLogger()
 
 // Initialize with default values
 const defaultMetrics: SystemMetrics = {
@@ -17,28 +17,30 @@ const defaultMetrics: SystemMetrics = {
   avgResponseTime: 0,
   systemLoad: 0,
   storageUsed: '0 GB',
-  activeSecurityLevel: 'standard'
-};
+  activeSecurityLevel: 'standard',
+}
 
-let metrics: SystemMetrics = defaultMetrics;
-let error: string | null = null;
+let metrics: SystemMetrics = defaultMetrics
+let error: string | null = null
 
 try {
-  metrics = await getSystemMetrics();
+  metrics = await getSystemMetrics()
 } catch (err) {
   logger.error('Error fetching metrics:', {
     error: err instanceof Error ? err.message : String(err),
-    stack: err instanceof Error ? err.stack : undefined
-  });
-  error = 'Failed to load system metrics';
+    stack: err instanceof Error ? err.stack : undefined,
+  })
+  error = 'Failed to load system metrics'
 }
 
 // Calculate width percentages
-const storageUsedPercent = metrics.storageUsed ?
-  Math.min(parseInt(metrics.storageUsed) / 10, 100) : 0;
+const storageUsedPercent = metrics.storageUsed
+  ? Math.min(parseInt(metrics.storageUsed) / 10, 100)
+  : 0
 
-const messagesSentPercent = metrics.messagesSent ?
-  Math.min(metrics.messagesSent / 100, 100) : 0;
+const messagesSentPercent = metrics.messagesSent
+  ? Math.min(metrics.messagesSent / 100, 100)
+  : 0
 ---
 
 <div class="p-6 space-y-8">
@@ -47,7 +49,11 @@ const messagesSentPercent = metrics.messagesSent ?
     <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
       System Dashboard
     </h2>
-    <div id="error-message" class="hidden text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/20 px-4 py-2 rounded-lg"></div>
+    <div
+      id="error-message"
+      class="hidden text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/20 px-4 py-2 rounded-lg"
+    >
+    </div>
   </div>
 
   <!-- Security Status -->
@@ -56,7 +62,9 @@ const messagesSentPercent = metrics.messagesSent ?
       Security Status
     </h3>
     <div class="flex items-center space-x-4">
-      <span class="text-gray-600 dark:text-gray-300">Active Security Level:</span>
+      <span class="text-gray-600 dark:text-gray-300"
+        >Active Security Level:</span
+      >
       <span id="security-level-value" class="font-medium">Loading...</span>
     </div>
   </div>
@@ -69,7 +77,10 @@ const messagesSentPercent = metrics.messagesSent ?
         Active Users
       </h4>
       <div class="mt-2 flex items-baseline">
-        <span id="active-users-value" class="text-3xl font-semibold text-gray-900 dark:text-white">
+        <span
+          id="active-users-value"
+          class="text-3xl font-semibold text-gray-900 dark:text-white"
+        >
           0
         </span>
       </div>
@@ -81,7 +92,10 @@ const messagesSentPercent = metrics.messagesSent ?
         Active Sessions
       </h4>
       <div class="mt-2 flex items-baseline">
-        <span id="active-sessions-value" class="text-3xl font-semibold text-gray-900 dark:text-white">
+        <span
+          id="active-sessions-value"
+          class="text-3xl font-semibold text-gray-900 dark:text-white"
+        >
           0
         </span>
       </div>
@@ -93,7 +107,10 @@ const messagesSentPercent = metrics.messagesSent ?
         Average Response Time
       </h4>
       <div class="mt-2 flex items-baseline">
-        <span id="avg-response-time-value" class="text-3xl font-semibold text-gray-900 dark:text-white">
+        <span
+          id="avg-response-time-value"
+          class="text-3xl font-semibold text-gray-900 dark:text-white"
+        >
           0ms
         </span>
       </div>
@@ -105,7 +122,10 @@ const messagesSentPercent = metrics.messagesSent ?
         System Load
       </h4>
       <div class="mt-2 flex items-baseline">
-        <span id="system-load-value" class="text-3xl font-semibold text-gray-900 dark:text-white">
+        <span
+          id="system-load-value"
+          class="text-3xl font-semibold text-gray-900 dark:text-white"
+        >
           0%
         </span>
       </div>
@@ -118,7 +138,10 @@ const messagesSentPercent = metrics.messagesSent ?
       </h4>
       <div class="mt-2">
         <div class="flex items-baseline mb-2">
-          <span id="storage-used-value" class="text-3xl font-semibold text-gray-900 dark:text-white">
+          <span
+            id="storage-used-value"
+            class="text-3xl font-semibold text-gray-900 dark:text-white"
+          >
             0GB
           </span>
         </div>
@@ -127,7 +150,8 @@ const messagesSentPercent = metrics.messagesSent ?
             id="storage-bar"
             class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full"
             style="width: 0%"
-          ></div>
+          >
+          </div>
         </div>
       </div>
     </div>
@@ -139,7 +163,10 @@ const messagesSentPercent = metrics.messagesSent ?
       </h4>
       <div class="mt-2">
         <div class="flex items-baseline mb-2">
-          <span id="messages-sent-value" class="text-3xl font-semibold text-gray-900 dark:text-white">
+          <span
+            id="messages-sent-value"
+            class="text-3xl font-semibold text-gray-900 dark:text-white"
+          >
             0
           </span>
         </div>
@@ -148,7 +175,8 @@ const messagesSentPercent = metrics.messagesSent ?
             id="messages-bar"
             class="bg-green-600 dark:bg-green-500 h-2 rounded-full"
             style="width: 0%"
-          ></div>
+          >
+          </div>
         </div>
       </div>
     </div>

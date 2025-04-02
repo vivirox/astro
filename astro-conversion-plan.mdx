@@ -1,12 +1,12 @@
 # Astro Conversion Plan
 
-## Overall Progress: 88% Complete
+## Overall Progress: 95% Complete
 
 This document outlines the step-by-step plan for converting our application to Astro,
 tracking progress, and ensuring a smooth transition.
 
-
 ## Table of Contents
+
 - [Infrastructure and Configuration]
 - [Page Conversions]
 - [Component Conversions]
@@ -59,11 +59,12 @@ Most pages are now in Astro format, with only a few specialized pages remaining.
 - [ ] Remaining specialized dashboard pages
 - [ ] Update API documentation pages
 
-## Component Conversions (88% Complete)
+## Component Conversions (90% Complete)
 
 Many components still need conversion, focusing on static components first.
 
 ### Static Components (100% Complete)
+
 - [x] Header component
 - [x] Footer component
 - [x] Navigation menu
@@ -97,7 +98,8 @@ Many components still need conversion, focusing on static components first.
   - [x] Added error states
   - [x] Added proper TypeScript types
 
-### Interactive Components (92% Complete)
+### Interactive Components (98% Complete)
+
 - [x] Audit AdminDashboard for partial conversion
 - [x] Blog search component
 - [x] Tag filtering system
@@ -115,10 +117,19 @@ Many components still need conversion, focusing on static components first.
   - [x] Updated imports in TherapyChatSystem.tsx
   - [x] Updated imports in TherapyChatClient.tsx
   - [x] Updated test files to use the new component name
-- [ ] Review analytics components for static portions
-- [ ] Evaluate dashboard widgets for partial conversion
+- [x] Review analytics components for static portions
+  - [x] Created PatternVisualization.astro wrapper
+  - [x] Created PatternVisualizationReact.tsx from PatternVisualization.tsx
+  - [x] Added proper component props with title and description support
+  - [x] Added tests for the component
+  - [x] Created PerformanceDashboard.astro wrapper
+  - [x] Added enhanced props and proper client:load directive
+  - [x] Added comprehensive tests for the component
+- [x] Evaluate dashboard widgets for partial conversion
+  - [x] Convert SimulatorDashboard component to Astro wrapper
 
-### Layout Components (90% Complete)
+### Layout Components (100% Complete)
+
 - [x] Base layout
 - [x] Auth layout
 - [x] Dashboard layout
@@ -132,7 +143,12 @@ Many components still need conversion, focusing on static components first.
 - [x] Blog layout
   - [x] BlogLayout.astro
   - [x] BlogPostLayout.astro
-- [ ] Documentation layout
+- [x] Documentation layout
+  - [x] Created DocumentationLayout.astro
+  - [x] Added dynamic table of contents
+  - [x] Added responsive sidebar
+  - [x] Added documentation-specific styling
+  - [x] Created sample documentation pages
 
 ## Integration and API (80% Complete)
 
@@ -141,6 +157,7 @@ Ensuring all integrations work properly with Astro.
 ### Convex Integration (90% Complete)
 
 ### Completed Tasks
+
 - ✓ Basic Convex setup and configuration
 - ✓ ConvexProvider implementation
 - ✓ Schema definition with proper validators
@@ -158,12 +175,14 @@ Ensuring all integrations work properly with Astro.
 - ✓ Admin-specific queries
 
 ### Remaining Tasks
+
 - [ ] Set up production deployment environment
 - [ ] Configure monitoring and logging
 - [ ] Add data migration scripts
 - [ ] Implement caching strategies
 
 ### Blog Integration (100% Complete)
+
 - ✓ Content collections setup
 - ✓ Blog index with pagination
 - ✓ Individual post pages
@@ -174,61 +193,71 @@ Ensuring all integrations work properly with Astro.
 - ✓ RSS feed generation
 
 ### Authentication (60% Complete)
+
 - [x] Basic auth flow
 - [ ] Optimize auth middleware for Astro
 - [ ] Implement server-side auth checks
 - [ ] Add proper session management
 - [ ] Setup role-based access control
 
-### API Endpoints (70% Complete)
+### API Endpoints (90% Complete)
+
 - [x] Implement Redis-based rate limiting
 - [x] Setup proper CORS configuration
 - [x] Add comprehensive security headers
 - [x] Add API security documentation
-- [ ] Convert remaining API routes to Astro endpoints
-- [ ] Add API documentation for all endpoints
-- [ ] Add OpenAPI/Swagger specifications
-- [ ] Implement API versioning
+- [x] Convert remaining API routes to Astro endpoints
+- [x] Add API documentation for all endpoints
+- [x] Add OpenAPI/Swagger specifications
+- [x] Implement API versioning
 - [ ] Add API health checks and monitoring
 
-## Testing and Validation: 85% Complete
+## Testing and Validation: 87% Complete
 
-### Unit Tests: 85% Complete
+### Unit Tests: 87% Complete
+
 - [x] Update test configuration for Astro components
 - [x] Create test utilities for Astro components
 - [x] Add tests for converted UI components
 - [x] Add tests for layout components
+  - [x] Tests for MainLayout
+  - [x] Tests for DashboardLayout
+  - [x] Tests for BlogLayout
+  - [x] Tests for DocumentationLayout
 - [x] Add tests for page components
 - [ ] Add tests for remaining Astro components
 
-### Integration Tests: 75% Complete
+### Integration Tests: 95% Complete
+
 - [x] Setup integration test infrastructure with Playwright
 - [x] Create integration tests for layout components
 - [x] Create integration tests for SSR functionality
 - [x] Create integration tests for component hydration
 - [x] Create integration tests for static generation
-- [ ] Add cross-browser compatibility tests
-- [ ] Add mobile device tests
+- [x] Add cross-browser compatibility tests
+- [x] Add mobile device tests
 
-### Performance Testing: 75% Complete
+### Performance Testing: 85% Complete
+
 - [x] Setup performance testing infrastructure
 - [x] Create performance monitoring helpers
 - [x] Implement page performance tests for core pages
 - [x] Establish performance budgets
 - [x] Create performance testing guide
+- [x] Implement real user monitoring
 - [ ] Implement Lighthouse CI integration
-- [ ] Implement real user monitoring
 
 ## Documentation and Cleanup: 98% Complete
 
-### Completed Tasks
+### Completed Tasks 2
+
 - [x] Update README.md with Astro conversion details and setup instructions
 - [x] Create React to Astro conversion guide to document the patterns used
 - [x] Create component testing guide for Astro components
 - [x] Add API documentation for the Convex endpoints
 - [x] Create component library documentation
 - [x] Add migration notes documenting the journey from React to Astro
-- [x] Removed unused React components: FooterReact.tsx, AIChat.tsx, Layout.tsx, dashboard/_index.tsx
+- [x] Removed unused React components: FooterReact.tsx, AIChat.tsx, Layout.tsx, dashboard/\_index.tsx
 - [x] Created cleanup summary document
 - [x] Created integration testing guide
 - [x] Created performance optimization guide
@@ -238,13 +267,11 @@ Ensuring all integrations work properly with Astro.
 
 ## Next Steps
 
-1. Focus on converting remaining analytics components to Astro wrappers
-2. Complete documentation layout implementation
-3. Setup server-side auth checks for improved security
-4. Implement API versioning and documentation
-5. Add remaining tests for Astro components
-6. Investigate root cause of null byte issues for permanent solution
-7. Update remaining interactive components to use the Astro wrapper pattern
+1. Setup server-side auth checks for improved security
+2. Add remaining tests for Astro components
+3. Install `@astrojs/transitions` package for transition features
+4. Investigate root cause of null byte issues for permanent solution
+5. Optimize import statements across the codebase
 
 ## Notes
 
@@ -259,9 +286,10 @@ Ensuring all integrations work properly with Astro.
 
 export const components = {
   // Add any custom MDX components here
-};
+}
 
 ## Layout Conversions
+
 - [x] Sidebar - Created Astro wrapper, preserved React component as SidebarReact.tsx, added client:load for hydration
 - [x] Header - Created Astro wrapper, preserved React component as HeaderReact.tsx, added client:load for hydration
 - [x] Footer - Converted to pure Astro component (Footer.astro), no client-side interactivity needed

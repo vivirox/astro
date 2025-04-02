@@ -1,15 +1,15 @@
 ---
-import AnalyticsDashboardReact from './AnalyticsDashboardReact';
-import type { SecurityLevel } from '@/hooks/useSecurity';
-import type { Message } from '@/types/chat';
+import AnalyticsDashboardReact from './AnalyticsDashboardReact'
+import type { SecurityLevel } from '@/hooks/useSecurity'
+import type { Message } from '@/types/chat'
 
 export interface Props {
-  messages: Message[];
-  securityLevel: SecurityLevel;
-  encryptionEnabled: boolean;
-  scenario: string;
-  title?: string;
-  description?: string;
+  messages: Message[]
+  securityLevel: SecurityLevel
+  encryptionEnabled: boolean
+  scenario: string
+  title?: string
+  description?: string
 }
 
 const {
@@ -19,27 +19,19 @@ const {
   scenario,
   title = 'Analytics Dashboard',
   description = 'Real-time analytics for therapeutic conversation analysis.',
-} = Astro.props;
+} = Astro.props
 ---
 
 <div class="w-full transition-colors duration-300">
-  {title && (
-    <h2 class="text-lg font-medium mb-2 text-purple-300">
-      {title}
-    </h2>
-  )}
-  {description && (
-    <p class="mb-4 text-sm text-purple-300/70">
-      {description}
-    </p>
-  )}
+  {title && <h2 class="text-lg font-medium mb-2 text-purple-300">{title}</h2>}
+  {description && <p class="mb-4 text-sm text-purple-300/70">{description}</p>}
 
   <AnalyticsDashboardReact
     client:load
-    messages={messages}
-    securityLevel={securityLevel}
-    encryptionEnabled={encryptionEnabled}
-    scenario={scenario}
+    {messages}
+    {securityLevel}
+    {encryptionEnabled}
+    {scenario}
   />
 </div>
 
@@ -50,8 +42,9 @@ const {
   }
 
   .transition-colors {
-    transition: background-color var(--transition-duration) ease-in-out,
-                color var(--transition-duration) ease-in-out,
-                border-color var(--transition-duration) ease-in-out;
+    transition:
+      background-color var(--transition-duration) ease-in-out,
+      color var(--transition-duration) ease-in-out,
+      border-color var(--transition-duration) ease-in-out;
   }
 </style>

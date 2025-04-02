@@ -1,0 +1,312 @@
+---
+import { ClientRouter } from 'astro:transitions'
+import BaseHead from '@/components/base/Head.astro'
+import Header from '@/components/layout/Header.astro'
+import Footer from '@/components/layout/Footer.astro'
+import ThemeToggle from '@/components/ui/ThemeToggle.astro'
+
+interface Props {
+  title: string
+  description?: string
+  image?: string
+  canonicalURL?: string
+  frontmatter?: {
+    title: string
+    description?: string
+    image?: string
+    pubDate?: Date
+    author?: string
+    tags?: string[]
+  }
+}
+
+// Use frontmatter if available, otherwise use props
+const {
+  frontmatter,
+  title: propTitle,
+  description: propDescription = 'Documentation',
+  image: propImage = '/logo/docs-image.png',
+  canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+} = Astro.props
+
+const title = frontmatter?.title || propTitle
+const description = frontmatter?.description || propDescription
+const image = frontmatter?.image || propImage
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <BaseHead {title} {description} ogImage={image} />
+    <ClientRouter />
+
+    <!-- Documentation-specific styles -->
+    <style is:global>
+      /* Enhanced styling for documentation content */
+      .docs-content {
+        @apply max-w-4xl mx-auto;
+      }
+
+      .docs-content h1 {
+        @apply text-4xl font-bold mb-6 mt-8;
+      }
+
+      .docs-content h2 {
+        @apply text-3xl font-semibold mb-4 mt-8 border-b pb-2;
+      }
+
+      .docs-content h3 {
+        @apply text-2xl font-medium mb-3 mt-6;
+      }
+
+      .docs-content h4 {
+        @apply text-xl font-medium mb-2 mt-5;
+      }
+
+      .docs-content p {
+        @apply my-4 leading-relaxed;
+      }
+
+      .docs-content ul,
+      .docs-content ol {
+        @apply my-4 ml-6;
+      }
+
+      .docs-content li {
+        @apply mb-2;
+      }
+
+      .docs-content a:not(.btn) {
+        @apply text-primary underline hover:text-primary-dark transition-colors;
+      }
+
+      .docs-content blockquote {
+        @apply border-l-4 border-primary pl-4 py-1 my-4 bg-muted/50 rounded;
+      }
+
+      .docs-content pre {
+        @apply p-4 rounded-lg my-6 overflow-x-auto;
+      }
+
+      .docs-content code {
+        @apply px-1.5 py-0.5 rounded bg-muted font-mono text-sm;
+      }
+
+      .docs-content pre code {
+        @apply p-0 bg-transparent;
+      }
+
+      .docs-content table {
+        @apply w-full border-collapse my-6;
+      }
+
+      .docs-content th,
+      .docs-content td {
+        @apply border p-2;
+      }
+
+      .docs-content th {
+        @apply bg-muted font-medium;
+      }
+
+      /* Custom components styling */
+      .card-group {
+        @apply grid gap-4 my-6;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .card {
+        @apply p-6 rounded-lg border bg-card shadow-sm hover:shadow-md transition-shadow;
+      }
+
+      .card-title {
+        @apply text-xl font-semibold mb-2 flex items-center gap-2;
+      }
+
+      .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary;
+      }
+
+      .steps {
+        @apply ml-0 list-none;
+      }
+
+      .steps > li {
+        @apply relative pl-10 pb-8 border-l border-muted ml-6 last:border-l-0 last:pb-0;
+      }
+
+      .steps > li::before {
+        @apply absolute left-[-0.5rem] top-0 flex items-center justify-center w-8 h-8 rounded-full text-white bg-primary text-sm font-bold;
+        content: counter(step);
+        counter-increment: step;
+      }
+
+      /* Light/dark mode adjustments */
+      html.dark .docs-content blockquote {
+        @apply bg-muted/20;
+      }
+
+      html.dark .docs-content th {
+        @apply bg-muted/80;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen bg-background font-sans antialiased">
+    <Header />
+
+    <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+      <!-- Sidebar for navigation -->
+      <aside class="md:w-64 shrink-0">
+        <div class="sticky top-24">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="font-bold text-lg">Documentation</h3>
+            <ThemeToggle />
+          </div>
+
+          <nav class="space-y-1">
+            <a
+              href="/docs"
+              class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              >Home</a
+            >
+            <a
+              href="/docs/api"
+              class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              >API Reference</a
+            >
+            <a
+              href="/docs/components"
+              class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              >Components</a
+            >
+            <a
+              href="/docs/security"
+              class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              >Security</a
+            >
+            <a
+              href="/docs/guides"
+              class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              >Guides</a
+            >
+          </nav>
+
+          <!-- On this page navigation (generated from headings) -->
+          <div class="mt-8">
+            <h4 class="font-semibold text-sm mb-3 text-muted-foreground">
+              ON THIS PAGE
+            </h4>
+            <div class="text-sm space-y-1" id="on-this-page">
+              <!-- This will be populated by JS -->
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="flex-1">
+        <article
+          class="prose prose-lg dark:prose-invert max-w-none docs-content"
+        >
+          <!-- Documentation title and metadata -->
+          <header class="mb-8">
+            <h1 class="text-4xl font-bold mb-4">{title}</h1>
+            <p class="text-muted-foreground">{description}</p>
+          </header>
+
+          <!-- Documentation content -->
+          <div>
+            <slot />
+          </div>
+
+          <!-- Footer navigation -->
+          <div class="mt-16 pt-8 border-t flex justify-between">
+            <a
+              href="#"
+              class="text-sm flex items-center gap-1 hover:text-primary transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clip-rule="evenodd"></path>
+              </svg>
+              Previous Page
+            </a>
+            <a
+              href="#"
+              class="text-sm flex items-center gap-1 hover:text-primary transition-colors"
+            >
+              Next Page
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </a>
+          </div>
+        </article>
+      </main>
+    </div>
+
+    <Footer />
+
+    <script>
+      // Generate table of contents from headings
+      document.addEventListener('astro:page-load', () => {
+        const headings = document.querySelectorAll(
+          '.docs-content h2, .docs-content h3',
+        )
+        const tocContainer = document.getElementById('on-this-page')
+
+        if (tocContainer) {
+          tocContainer.innerHTML = ''
+
+          headings.forEach((heading) => {
+            if (!heading.id) {
+              // Generate ID if not present
+              const headingText = heading.textContent || ''
+              heading.id = headingText
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+            }
+
+            const link = document.createElement('a')
+            link.href = `#${heading.id}`
+            link.textContent = heading.textContent || ''
+            link.className =
+              heading.tagName === 'H2'
+                ? 'block py-1 hover:text-primary transition-colors'
+                : 'block py-1 pl-4 text-muted-foreground hover:text-primary transition-colors'
+
+            link.addEventListener('click', (e) => {
+              e.preventDefault()
+              const targetElement = document.querySelector(`#${heading.id}`)
+              if (targetElement) {
+                targetElement.scrollIntoView({
+                  behavior: 'smooth',
+                })
+              }
+            })
+
+            tocContainer.appendChild(link)
+          })
+        }
+      })
+    </script>
+  </body>
+</html>
+

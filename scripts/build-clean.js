@@ -10,23 +10,23 @@
  * 4. Restores the original files
  */
 
-import fs from 'fs';
-import path from 'path';
-import { execSync } from 'child_process';
+import fs from 'fs'
+import path from 'path'
+import { execSync } from 'child_process'
 
 // Files known to cause null byte issues
 const problematicComponents = [
   'src/components/admin/AdminLayout.astro',
-  'src/components/security/FHEDemo.astro'
-];
+  'src/components/security/FHEDemo.astro',
+]
 
 // Pages that import problematic components
 const affectedPages = [
   'src/pages/admin/security-dashboard.astro',
   'src/pages/admin/index.astro',
   'src/pages/admin/users.astro',
-  'src/pages/security/fhe-demo.astro'
-];
+  'src/pages/security/fhe-demo.astro',
+]
 
 // Placeholder content for temporary components
 const placeholderComponentContent = `---
@@ -44,7 +44,7 @@ const { title = 'Placeholder' } = Astro.props;
   <p>This is a placeholder component used during build to avoid null byte issues.</p>
   <slot />
 </div>
-`;
+`
 
 // Placeholder content for pages
 const placeholderPageContent = `---
@@ -59,116 +59,116 @@ import MainLayout from '@/layouts/MainLayout.astro';
     <p>The original page will be restored after the build.</p>
   </div>
 </MainLayout>
-`;
+`
 
 // Backup file extension
-const BACKUP_EXT = '.original';
+const BACKUP_EXT = '.original'
 
 // Backup and replace files
 function backupAndReplaceFiles() {
-  console.log('🔄 Backing up problematic components...');
-  problematicComponents.forEach(filePath => {
+  console.log('🔄 Backing up problematic components...')
+  problematicComponents.forEach((filePath) => {
     if (fs.existsSync(filePath)) {
-      const backupPath = `${filePath}${BACKUP_EXT}`;
-      fs.copyFileSync(filePath, backupPath);
-      console.log(`✅ Backed up ${filePath} to ${backupPath}`);
+      const backupPath = `${filePath}${BACKUP_EXT}`
+      fs.copyFileSync(filePath, backupPath)
+      console.log(`✅ Backed up ${filePath} to ${backupPath}`)
 
       // Replace with placeholder
-      fs.writeFileSync(filePath, placeholderComponentContent);
-      console.log(`📝 Replaced ${filePath} with placeholder content`);
+      fs.writeFileSync(filePath, placeholderComponentContent)
+      console.log(`📝 Replaced ${filePath} with placeholder content`)
     } else {
-      console.log(`⚠️ File ${filePath} does not exist, skipping`);
+      console.log(`⚠️ File ${filePath} does not exist, skipping`)
     }
-  });
+  })
 
-  console.log('\n🔄 Backing up affected pages...');
-  affectedPages.forEach(filePath => {
+  console.log('\n🔄 Backing up affected pages...')
+  affectedPages.forEach((filePath) => {
     if (fs.existsSync(filePath)) {
-      const backupPath = `${filePath}${BACKUP_EXT}`;
-      fs.copyFileSync(filePath, backupPath);
-      console.log(`✅ Backed up ${filePath} to ${backupPath}`);
+      const backupPath = `${filePath}${BACKUP_EXT}`
+      fs.copyFileSync(filePath, backupPath)
+      console.log(`✅ Backed up ${filePath} to ${backupPath}`)
 
       // Replace with placeholder
-      fs.writeFileSync(filePath, placeholderPageContent);
-      console.log(`📝 Replaced ${filePath} with placeholder content`);
+      fs.writeFileSync(filePath, placeholderPageContent)
+      console.log(`📝 Replaced ${filePath} with placeholder content`)
     } else {
-      console.log(`⚠️ File ${filePath} does not exist, skipping`);
+      console.log(`⚠️ File ${filePath} does not exist, skipping`)
     }
-  });
+  })
 }
 
 // Restore original files
 function restoreFiles() {
-  console.log('\n🔄 Restoring original components...');
-  problematicComponents.forEach(filePath => {
-    const backupPath = `${filePath}${BACKUP_EXT}`;
+  console.log('\n🔄 Restoring original components...')
+  problematicComponents.forEach((filePath) => {
+    const backupPath = `${filePath}${BACKUP_EXT}`
     if (fs.existsSync(backupPath)) {
-      fs.copyFileSync(backupPath, filePath);
-      fs.unlinkSync(backupPath);
-      console.log(`✅ Restored ${filePath} from backup`);
+      fs.copyFileSync(backupPath, filePath)
+      fs.unlinkSync(backupPath)
+      console.log(`✅ Restored ${filePath} from backup`)
     } else {
-      console.log(`⚠️ Backup file ${backupPath} does not exist, skipping`);
+      console.log(`⚠️ Backup file ${backupPath} does not exist, skipping`)
     }
-  });
+  })
 
-  console.log('\n🔄 Restoring affected pages...');
-  affectedPages.forEach(filePath => {
-    const backupPath = `${filePath}${BACKUP_EXT}`;
+  console.log('\n🔄 Restoring affected pages...')
+  affectedPages.forEach((filePath) => {
+    const backupPath = `${filePath}${BACKUP_EXT}`
     if (fs.existsSync(backupPath)) {
-      fs.copyFileSync(backupPath, filePath);
-      fs.unlinkSync(backupPath);
-      console.log(`✅ Restored ${filePath} from backup`);
+      fs.copyFileSync(backupPath, filePath)
+      fs.unlinkSync(backupPath)
+      console.log(`✅ Restored ${filePath} from backup`)
     } else {
-      console.log(`⚠️ Backup file ${backupPath} does not exist, skipping`);
+      console.log(`⚠️ Backup file ${backupPath} does not exist, skipping`)
     }
-  });
+  })
 }
 
 // Run the build command
 function runBuild() {
-  console.log('\n🛠️ Running Astro build...');
+  console.log('\n🛠️ Running Astro build...')
   try {
-    execSync('astro build', { stdio: 'inherit' });
-    console.log('✅ Build completed successfully');
-    return true;
+    execSync('astro build', { stdio: 'inherit' })
+    console.log('✅ Build completed successfully')
+    return true
   } catch (error) {
-    console.error('❌ Build failed', error.message);
-    return false;
+    console.error('❌ Build failed', error.message)
+    return false
   }
 }
 
 // Main function
 function main() {
-  console.log('🚀 Starting clean build process...');
+  console.log('🚀 Starting clean build process...')
 
   try {
     // Backup and replace problematic files
-    backupAndReplaceFiles();
+    backupAndReplaceFiles()
 
     // Run build
-    const buildSucceeded = runBuild();
+    const buildSucceeded = runBuild()
 
     // Always restore original files, even if build fails
-    restoreFiles();
+    restoreFiles()
 
     if (buildSucceeded) {
-      console.log('\n✨ Clean build completed successfully!');
-      process.exit(0);
+      console.log('\n✨ Clean build completed successfully!')
+      process.exit(0)
     } else {
-      console.error('\n❌ Build failed but original files were restored');
-      process.exit(1);
+      console.error('\n❌ Build failed but original files were restored')
+      process.exit(1)
     }
   } catch (error) {
-    console.error('\n❌ An error occurred:', error.message);
+    console.error('\n❌ An error occurred:', error.message)
     // Try to restore files even if an error occurred
     try {
-      restoreFiles();
+      restoreFiles()
     } catch (restoreError) {
-      console.error('❌ Failed to restore files:', restoreError.message);
+      console.error('❌ Failed to restore files:', restoreError.message)
     }
-    process.exit(1);
+    process.exit(1)
   }
 }
 
 // Run the main function
-main();
+main()

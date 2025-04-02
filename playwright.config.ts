@@ -1,14 +1,14 @@
-import { devices } from '@playwright/test'
-import type { PlaywrightTestConfig } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test'
 import 'dotenv/config'
 
 /**
- * See https://playwright.dev/docs/test-configuration.
+ * Playwright configuration for browser testing
+ * @see https://playwright.dev/docs/test-configuration
  */
-const config: PlaywrightTestConfig = {
-  testDir: './tests',
+export default defineConfig({
+  testDir: './src/tests',
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 30000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -26,21 +26,24 @@ const config: PlaywrightTestConfig = {
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { outputFolder: 'playwright-report' }],
-    ['json', { outputFile: 'playwright-report/test-results.json' }],
+    ['html', { outputFolder: 'test-results/html-report' }],
+    ['list'],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:4321',
+    baseURL: process.env.TEST_BASE_URL || 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
 
     /* Take screenshot on test failure */
     screenshot: 'only-on-failure',
+
+    /* Record video on test failure */
+    video: 'on-first-retry',
   },
 
   /* Configure projects for major browsers */
@@ -97,10 +100,12 @@ const config: PlaywrightTestConfig = {
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm dev',
-    port: 4321,
+    command: 'npm run dev',
+    port: 3000,
     reuseExistingServer: !process.env.CI,
+    timeout: 60000,
   },
-}
 
-export default config
+  /* Output test results and artifacts */
+  outputDir: 'test-results',
+})

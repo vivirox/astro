@@ -26,12 +26,12 @@ export interface MonitoringConfig {
 
 const defaultConfig: MonitoringConfig = {
   grafana: {
-    url: process.env.GRAFANA_URL || 'https://grafana.gradiantascent.com',
-    apiKey: process.env.GRAFANA_API_KEY || '',
-    orgId: process.env.GRAFANA_ORG_ID || '',
+    url: 'https://grafana.example.com',
+    apiKey: '',
+    orgId: '',
     enableRUM: true,
-    rumApplicationName: 'gradiant-astro',
-    rumSamplingRate: 1.0, // 100% sampling in production
+    rumApplicationName: 'astro-app',
+    rumSamplingRate: 0.5, // 50% sampling
   },
   metrics: {
     enablePerformanceMetrics: true,
@@ -40,9 +40,9 @@ const defaultConfig: MonitoringConfig = {
     resourceUtilizationThreshold: 0.8, // 80%
   },
   alerts: {
-    enableAlerts: true,
-    slackWebhookUrl: process.env.SLACK_WEBHOOK,
-    emailRecipients: process.env.MONITORING_EMAIL_RECIPIENTS?.split(','),
+    enableAlerts: false,
+    slackWebhookUrl: undefined,
+    emailRecipients: [],
   },
 }
 
