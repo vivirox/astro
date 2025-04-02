@@ -144,86 +144,228 @@ interface ApiContextWithUser extends Record<string, unknown> {
 
 /**
  * API middleware for protecting API routes
+ * Enhanced security version with additional validation and token checks
  */
 export async function apiAuthGuard(
   request: Request,
   context: Record<string, unknown>,
 ): Promise<Response | undefined> {
+  // Get request URL and path
+  const url = new URL(request.url);
+  const path = url.pathname;
+  
+  // Extract client information for auditing and security checks
+  const clientIp = 
+    request.headers.get('x-forwarded-for') ||
+    request.headers.get('x-real-ip') ||
+    'unknown';
+  const userAgent = request.headers.get('user-agent') || 'unknown';
+  
   // Check for Authorization header (Bearer token)
-  const authHeader = request.headers.get('Authorization')
+  const authHeader = request.headers.get('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     await createResourceAuditLog(
       'api_access_denied',
       'system',
-      createResource(new URL(request.url).pathname, 'api'),
+      createResource(path, 'api'),
       {
         reason: 'missing_token',
-        ipAddress:
-          request.headers.get('x-forwarded-for') ||
-          request.headers.get('x-real-ip') ||
-          'unknown',
-        userAgent: request.headers.get('user-agent') || 'unknown',
+        ipAddress: clientIp,
+        userAgent: userAgent,
         method: request.method,
-        path: new URL(request.url).pathname,
+        path: path,
+        timestamp: new Date().toISOString(),
       } as AuditMetadata,
-    )
+    );
 
     return new Response(
-      JSON.stringify({ error: 'Missing or invalid authorization header' }),
-      { status: 401 },
-    )
+      JSON.stringify({ 
+        error: 'Authentication required', 
+        message: 'Missing or invalid authorization header',
+        code: 'AUTH_REQUIRED'
+      }),
+      { 
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Content-Type-Options': 'nosniff',
+        }
+      },
+    );
   }
 
-  // Extract token and verify
-  const token = authHeader.split(' ')[1]
-  const { data, error } = await fetch(
-    `${authConfig.redirects.authRequired}/verify`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-    },
-  ).then((rest) => rest.json())
-
-  if (error || !data?.user) {
+  // Extract token and prevent token tampering
+  const token = authHeader.split(' ')[1].trim();
+  
+  // Validate token format to prevent attacks
+  const tokenRegex = /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=]*$/;
+  if (!token || !tokenRegex.test(token)) {
     await createResourceAuditLog(
       'api_access_denied',
       'system',
-      createResource(new URL(request.url).pathname, 'api'),
+      createResource(path, 'api'),
       {
-        reason: 'invalid_token',
-        ipAddress:
-          request.headers.get('x-forwarded-for') ||
-          request.headers.get('x-real-ip') ||
-          'unknown',
-        userAgent: request.headers.get('user-agent') || 'unknown',
+        reason: 'malformed_token',
+        ipAddress: clientIp,
+        userAgent: userAgent,
         method: request.method,
-        path: new URL(request.url).pathname,
+        path: path,
+        timestamp: new Date().toISOString(),
       } as AuditMetadata,
-    )
+    );
 
-    return new Response(JSON.stringify({ error: 'Invalid token' }), {
-      status: 401,
-    })
+    return new Response(
+      JSON.stringify({ 
+        error: 'Authentication failed', 
+        message: 'Malformed token',
+        code: 'INVALID_TOKEN_FORMAT'
+      }),
+      { 
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Content-Type-Options': 'nosniff',
+        }
+      },
+    );
   }
 
-  // Set the user data in context
-  context.user = data.user as AuthUser
+  try {
+    // Verify token with auth service
+    const verifyResponse = await fetch(
+      `${authConfig.redirects.authRequired}/verify`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      },
+    );
 
-  // Log the successful authentication
-  await createResourceAuditLog(
-    'api_authenticated',
-    data.user.id,
-    createResource(new URL(request.url).pathname, 'api'),
-    {
-      method: request.method,
-      path: new URL(request.url).pathname,
-    } as AuditMetadata,
-  )
+    // Ensure response is OK before parsing
+    if (!verifyResponse.ok) {
+      throw new Error(`Auth verification failed with status: ${verifyResponse.status}`);
+    }
 
-  return undefined
+    const { data, error } = await verifyResponse.json();
+
+    if (error || !data?.user) {
+      await createResourceAuditLog(
+        'api_access_denied',
+        'system',
+        createResource(path, 'api'),
+        {
+          reason: 'invalid_token',
+          ipAddress: clientIp,
+          userAgent: userAgent,
+          method: request.method,
+          path: path,
+          error: error?.message || 'Token verification failed',
+          timestamp: new Date().toISOString(),
+        } as AuditMetadata,
+      );
+
+      return new Response(
+        JSON.stringify({ 
+          error: 'Authentication failed', 
+          message: 'Invalid or expired token',
+          code: 'INVALID_TOKEN'
+        }),
+        { 
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Content-Type-Options': 'nosniff',
+          }
+        },
+      );
+    }
+
+    // Verify user has required fields
+    const user = data.user as AuthUser;
+    if (!user.id || !user.role) {
+      await createResourceAuditLog(
+        'api_access_denied',
+        'system',
+        createResource(path, 'api'),
+        {
+          reason: 'invalid_user_data',
+          ipAddress: clientIp,
+          userAgent: userAgent,
+          method: request.method,
+          path: path,
+          timestamp: new Date().toISOString(),
+        } as AuditMetadata,
+      );
+
+      return new Response(
+        JSON.stringify({ 
+          error: 'Authentication failed', 
+          message: 'Invalid user data in token',
+          code: 'INVALID_USER_DATA'
+        }),
+        { 
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Content-Type-Options': 'nosniff',
+          }
+        },
+      );
+    }
+
+    // Set the user data in context
+    context.user = user;
+
+    // Log the successful authentication
+    await createResourceAuditLog(
+      'api_authenticated',
+      user.id,
+      createResource(path, 'api'),
+      {
+        method: request.method,
+        path: path,
+        userRole: user.role,
+        timestamp: new Date().toISOString(),
+      } as AuditMetadata,
+    );
+
+    return undefined;
+  } catch (error) {
+    // Handle unexpected errors during authentication
+    const typedError = error instanceof Error ? error : new Error(String(error));
+    
+    await createResourceAuditLog(
+      'api_authentication_error',
+      'system',
+      createResource(path, 'api'),
+      {
+        reason: 'auth_service_error',
+        ipAddress: clientIp,
+        userAgent: userAgent,
+        method: request.method,
+        path: path,
+        error: typedError.message,
+        timestamp: new Date().toISOString(),
+      } as AuditMetadata,
+    );
+
+    return new Response(
+      JSON.stringify({ 
+        error: 'Authentication service error', 
+        message: 'An error occurred during authentication',
+        code: 'AUTH_SERVICE_ERROR'
+      }),
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Content-Type-Options': 'nosniff',
+        }
+      },
+    );
+  }
 }
 
 /**

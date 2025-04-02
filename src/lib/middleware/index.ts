@@ -52,41 +52,79 @@ const contentTypeMiddleware: MiddlewareHandler = async (
 /**
  * Apply security headers to all responses
  * Based on best practices and penetration testing results
+ * Enhanced for HIPAA compliance and security scan requirements
  */
 const securityHeadersMiddleware: MiddlewareHandler = async (
-  _context: APIContext,
+  context: APIContext,
   next: MiddlewareNext,
 ) => {
-  // Process the request firs
+  // Process the request first
   const response = await next()
+  
+  if (!response) return response
 
-  // Add security headers
-  response?.headers.set('X-Content-Type-Options', 'nosniff')
-  response?.headers.set('X-Frame-Options', 'DENY')
-  response?.headers.set('X-XSS-Protection', '1; mode=block')
-  response?.headers.set(
+  // Basic security headers
+  response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('X-Frame-Options', 'DENY')
+  response.headers.set('X-XSS-Protection', '1; mode=block')
+  response.headers.set(
     'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains',
+    'max-age=31536000; includeSubDomains; preload',
   )
-  response?.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-  response?.headers.set(
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  
+  // Enhanced permissions policy to limit access to sensitive features
+  response.headers.set(
     'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=()',
+    'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), accelerometer=(), gyroscope=(), document-domain=(), interest-cohort=()',
   )
+  
+  // Enhanced security headers for HIPAA compliance
+  response.headers.set('X-Permitted-Cross-Domain-Policies', 'none')
+  response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp')
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-origin')
 
-  // Set Content-Security-Policy
-  response?.headers.set(
-    'Content-Security-Policy',
-    "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline'; " +
+  // Check if it's an API request
+  const url = new URL(context.request.url)
+  const isApiRequest = url.pathname.startsWith('/api/')
+  
+  // Set Content-Security-Policy based on request type
+  if (isApiRequest) {
+    // More restrictive policy for API endpoints
+    response.headers.set(
+      'Content-Security-Policy',
+      "default-src 'none'; " +
+      "script-src 'none'; " +
+      "connect-src 'self'; " +
+      "img-src 'none'; " +
+      "style-src 'none'; " +
+      "font-src 'none'; " +
+      "frame-src 'none'; " +
+      "object-src 'none'; " +
+      "base-uri 'none'; " +
+      "form-action 'none'; " +
+      "frame-ancestors 'none'; " +
+      "upgrade-insecure-requests;"
+    )
+  } else {
+    // Standard CSP for regular pages with enhanced security
+    response.headers.set(
+      'Content-Security-Policy',
+      "default-src 'self'; " +
+      "script-src 'self'; " +
       "connect-src 'self' https://api.together.xyz; " +
       "img-src 'self' data: blob:; " +
-      "style-src 'self' 'unsafe-inline'; " +
+      "style-src 'self'; " +
       "font-src 'self'; " +
       "frame-src 'none'; " +
       "object-src 'none'; " +
-      "base-uri 'self';",
-  )
+      "base-uri 'self'; " +
+      "form-action 'self'; " +
+      "frame-ancestors 'none'; " +
+      "upgrade-insecure-requests;"
+    )
+  }
 
   return response
 }
