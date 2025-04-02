@@ -105,7 +105,9 @@ const securityHeadersMiddleware: MiddlewareHandler = async (
       "base-uri 'none'; " +
       "form-action 'none'; " +
       "frame-ancestors 'none'; " +
-      "upgrade-insecure-requests;"
+      "upgrade-insecure-requests; " +
+      "report-uri /api/security/csp-report; " +
+      "report-to csp-endpoint"
     )
   } else {
     // Standard CSP for regular pages with enhanced security
@@ -122,9 +124,24 @@ const securityHeadersMiddleware: MiddlewareHandler = async (
       "base-uri 'self'; " +
       "form-action 'self'; " +
       "frame-ancestors 'none'; " +
-      "upgrade-insecure-requests;"
+      "upgrade-insecure-requests; " +
+      "report-uri /api/security/csp-report; " +
+      "report-to csp-endpoint"
     )
   }
+  
+  // Add Report-To header for CSP violation reporting (modern browsers)
+  response.headers.set(
+    'Report-To',
+    JSON.stringify({
+      'group': 'csp-endpoint',
+      'max_age': 10886400,
+      'endpoints': [
+        { 'url': '/api/security/csp-report' }
+      ],
+      'include_subdomains': true
+    })
+  )
 
   return response
 }
