@@ -1,4 +1,5 @@
-import type { AIMessage, AIStreamChunk } from '../../../lib/ai'
+import type { AIMessage } from '../../../lib/ai/index'
+import type { AIStreamChunk } from '../../../lib/ai/models/ai-types'
 import { useCallback, useState } from 'react'
 
 interface UseChatCompletionOptions {
@@ -17,6 +18,32 @@ interface UseChatCompletionResult {
   error: string | null
   sendMessage: (message: string) => Promise<void>
   resetChat: () => void
+  retryLastMessage: () => Promise<void>
+}
+
+/**
+ * Checks if an error is retryable
+ * 
+ * @param error - The error to check
+ * @returns true if the error is retryable (network issue, 5xx server error)
+ */
+function isRetryableError(error: unknown): boolean {
+  // Network errors are retryable
+  if (error instanceof TypeError && error.message.includes('network')) {
+    return true
+  }
+  
+  // Server errors (5xx) are retryable
+  if (error instanceof Error && 'status' in error && typeof error.status === 'number') {
+    return error.status >= 500 && error.status < 600
+  }
+
+  // Response errors with 5xx status
+  if (error instanceof Error && error.message.includes('50')) {
+    return true
+  }
+
+  return false
 }
 
 /**
@@ -34,147 +61,183 @@ export function useChatCompletion({
   const [messages, setMessages] = useState<AIMessage[]>(initialMessages)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [lastUserMessage, setLastUserMessage] = useState<string | null>(null)
 
   // Reset chat to initial state
   const resetChat = useCallback(() => {
     setMessages(initialMessages)
     setIsLoading(false)
     setError(null)
+    setLastUserMessage(null)
   }, [initialMessages])
 
   // Send a message to the AI API
   const sendMessage = useCallback(
     async (message: string) => {
-      if (!message.trim() || isLoading) return
-
-      // Add user message to chat
-      const userMessage: AIMessage = {
-        role: 'user',
-        content: message,
-        name: '',
+      if (!message.trim() || isLoading) {
+        return
       }
-      setMessages((prev) => [...prev, userMessage])
+
+      setLastUserMessage(message)
       setIsLoading(true)
       setError(null)
 
-      try {
-        // Prepare request body
-        const requestBody = {
-          model,
-          messages: [...messages, userMessage],
-          temperature,
-          maxTokens,
-          stream: true,
-        }
+      // Implement retry logic with exponential backoff
+      const MAX_RETRIES = 3;
+      let retries = 0;
+      let success = false;
 
-        // Send request to API
-        const response = await fetch(apiEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
-        })
+      while (retries < MAX_RETRIES && !success) {
+        try {
+          // Add user message to chat
+          const userMessage: AIMessage = {
+            role: 'user',
+            content: message,
+            name: '',
+          }
+          setMessages((prev) => [...prev, userMessage])
 
-        if (!response?.ok) {
-          const errorData = await response?.json()
-          throw new Error(errorData.error || 'Failed to get AI response')
-        }
+          // Prepare request body
+          const requestBody = {
+            model,
+            messages: [...messages, userMessage],
+            temperature,
+            maxTokens,
+            stream: true,
+          }
 
-        // Handle streaming response
-        const reader = response?.body?.getReader()
-        if (!reader) {
-          throw new Error('Response body is null')
-        }
+          // Send request to API
+          // Add timeout and AbortController to prevent hanging requests
+          const abortController = new AbortController();
+          const timeoutId = setTimeout(() => abortController.abort(), 30000); // 30-second timeout
 
-        let assistantMessage = ''
-        const decoder = new TextDecoder('utf-8')
+          const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            signal: abortController.signal
+          });
 
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
+          // Clear timeout after response
+          clearTimeout(timeoutId);
 
-          // Decode chunk
-          const chunk = decoder.decode(value)
-          const lines = chunk
-            .split('\n')
-            .filter((line) => line.trim() !== '')
-            .map((line) => line.replace(/^data: /, '').trim())
+          if (!response?.ok) {
+            const errorData = await response?.json()
+            throw new Error(errorData.error || `Failed to get AI response: ${response?.status}`)
+          }
 
-          for (const line of lines) {
-            if (line === '[DONE]') break
+          // Handle streaming response
+          const reader = response?.body?.getReader()
+          if (!reader) {
+            throw new Error('Response body is null')
+          }
 
-            try {
-              const data = JSON.parse(line) as AIStreamChunk
-              const content = data?.choices?.[0]?.delta?.content
+          let assistantMessage = ''
+          const decoder = new TextDecoder('utf-8')
 
-              if (content) {
-                assistantMessage += content
+          while (true) {
+            const { done, value } = await reader.read()
+            
+            if (done) {
+              break
+            }
 
-                // Update messages with current content
-                setMessages((prev) => {
-                  const newMessages = [...prev]
-                  const lastMessage = newMessages[newMessages.length - 1]
+            // Decode chunk
+            const chunk = decoder.decode(value)
+            const lines = chunk
+              .split('\n')
+              .filter(line => line.trim() !== '')
+              .map(line => line.replace(/^data: /, '').trim())
 
-                  if (lastMessage.role === 'assistant') {
-                    // Update existing assistant message
-                    newMessages[newMessages.length - 1] = {
-                      ...lastMessage,
-                      content: assistantMessage,
-                    }
-                  } else {
-                    // Add new assistant message
-                    newMessages.push({
-                      role: 'assistant',
-                      content: assistantMessage,
-                      name: '',
-                    })
-                  }
-
-                  return newMessages
-                })
-              }
-
-              if (data?.choices?.[0]?.finishReason === 'stop') {
-                // Streaming is complete
+            for (const line of lines) {
+              if (line === '[DONE]') {
                 break
               }
-            } catch {
-              // Skip invalid JSON
+
+              try {
+                const data = JSON.parse(line) as AIStreamChunk
+                const content = data?.choices?.[0]?.delta?.content
+
+                if (content) {
+                  assistantMessage += content
+
+                  // Update messages with current content
+                  setMessages((prev) => {
+                    const newMessages = [...prev]
+                    const lastMessage = newMessages[newMessages.length - 1]
+
+                    if (lastMessage.role === 'assistant') {
+                      // Update existing assistant message
+                      newMessages[newMessages.length - 1] = {
+                        ...lastMessage,
+                        content: assistantMessage,
+                      }
+                    } else {
+                      // Add new assistant message
+                      newMessages.push({
+                        role: 'assistant',
+                        content: assistantMessage,
+                        name: '',
+                      })
+                    }
+
+                    return newMessages
+                  })
+                }
+
+                if (data?.choices?.[0]?.finishReason === 'stop') {
+                  break
+                }
+              } catch (err) {
+                // Skip invalid JSON
+              }
             }
           }
-        }
 
-        // Add final assistant message if not already added
-        setMessages((prev) => {
-          const lastMessage = prev[prev.length - 1]
-          if (
-            lastMessage.role === 'assistant' &&
-            lastMessage.content === assistantMessage
-          ) {
-            return prev
+          // Add final assistant message if not already added
+          setMessages((prev) => {
+            const lastMessage = prev[prev.length - 1]
+            if (
+              lastMessage.role === 'assistant' &&
+              lastMessage.content === assistantMessage
+            ) {
+              return prev
+            }
+            return [
+              ...prev,
+              { role: 'assistant', content: assistantMessage, name: '' },
+            ]
+          })
+
+          // Call onComplete callback
+          if (onComplete) {
+            onComplete(assistantMessage)
           }
-          return [
-            ...prev,
-            { role: 'assistant', content: assistantMessage, name: '' },
-          ]
-        })
 
-        // Call onComplete callback
-        if (onComplete) {
-          onComplete(assistantMessage)
-        }
-      } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : 'An unknown error occurred'
-        setError(errorMessage)
+          success = true
+        } catch (err) {
+          if (retries === MAX_RETRIES - 1 || !isRetryableError(err)) {
+            const errorMessage =
+              err instanceof Error ? err.message : 'An unknown error occurred'
+            setError(errorMessage)
 
-        // Call onError callback
-        if (onError && err instanceof Error) {
-          onError(err)
+            // Call onError callback
+            if (onError && err instanceof Error) {
+              onError(err)
+            }
+            throw err
+          }
+
+          retries++
+          // Exponential backoff
+          await new Promise(resolve => setTimeout(resolve, 2 ** retries * 300))
+        } finally {
+          if (success || retries === MAX_RETRIES) {
+            setIsLoading(false)
+          }
         }
-      } finally {
-        setIsLoading(false)
       }
     },
     [
@@ -186,8 +249,16 @@ export function useChatCompletion({
       apiEndpoint,
       onError,
       onComplete,
-    ],
+    ]
   )
+
+  // Function to retry the last message
+  const retryLastMessage = useCallback(async () => {
+    if (lastUserMessage) {
+      setError(null)
+      await sendMessage(lastUserMessage)
+    }
+  }, [lastUserMessage, sendMessage])
 
   return {
     messages,
@@ -195,5 +266,6 @@ export function useChatCompletion({
     error,
     sendMessage,
     resetChat,
+    retryLastMessage,
   }
 }

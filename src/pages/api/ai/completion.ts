@@ -1,8 +1,6 @@
 import type { AIMessage } from '@/lib/ai/models/types'
 import type { AuditMetadata } from '@/lib/audit/log'
-import type { APIRoute } from 'astro'
 import type { SessionData } from '../../../lib/auth/session'
-import { ReadableStream } from 'node:stream/web'
 import { createAuditLog } from '@/lib/audit/log'
 import { handleApiError } from '../../../lib/ai/error-handling'
 import { createTogetherAIService } from '../../../lib/ai/services/together'
@@ -14,6 +12,14 @@ import { getLogger } from '../../../lib/logging'
 
 // Initialize logger
 const logger = getLogger()
+
+export interface AstroAPIContext {
+  request: Request;
+  params: Record<string, string>;
+  props: Record<string, unknown>;
+}
+
+export type APIRoute = (context: AstroAPIContext) => Promise<Response> | Response;
 
 /**
  * API route for AI chat completions
@@ -163,34 +169,72 @@ export const POST: APIRoute = async ({ request }) => {
 
       // Create a readable stream for the response
       const readableStream = new ReadableStream({
-        start(controller) {
+        async start(controller) {
           try {
-            // Send the response as a single chunk for now
-            controller.enqueue(
-              new TextEncoder().encode(
-                `data: ${JSON.stringify({ content: response.content, model: response.model })}\n\n`,
-              ),
+            const stream = await aiService.createStreamingChatCompletion(
+              formattedMessages,
+              {
+                model: data?.model,
+                temperature: data?.temperature,
+                maxTokens: data?.max_tokens,
+              }
             )
-            controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'))
-            controller.close()
+
+            // Handle the async generator stream
+            try {
+              for await (const chunk of stream) {
+                controller.enqueue(
+                  new TextEncoder().encode(
+                    `data: ${JSON.stringify({
+                      choices: [{ delta: { content: chunk.content } }],
+                    })}\n\n`
+                  )
+                )
+              }
+              
+              // Stream completed successfully
+              controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'))
+              controller.close()
+            } catch (streamError) {
+              console.error('Stream processing error:', streamError)
+              controller.error(streamError)
+
+              // Log streaming error
+              await createAuditLog({
+                id: crypto.randomUUID(),
+                timestamp: new Date(),
+                userId: session?.user?.id || 'anonymous',
+                action: 'ai.completion.stream_error',
+                resource: { id: 'ai-completion', type: 'ai' },
+                metadata: {
+                  error: streamError instanceof Error ? streamError.message : String(streamError),
+                  status: 'error',
+                },
+              })
+            }
           } catch (error) {
-            console.error('Error in streaming response:', error)
+            console.error('Error creating streaming completion:', error)
             controller.error(error)
 
             // Create audit log for streaming error
-            createAuditLog({
+            await createAuditLog({
               id: crypto.randomUUID(),
               timestamp: new Date(),
               userId: session?.user?.id || 'anonymous',
               action: 'ai.completion.stream_error',
               resource: { id: 'ai-completion', type: 'ai' },
               metadata: {
-                error: error instanceof Error ? error?.message : String(error),
+                error: error instanceof Error ? error.message : String(error),
                 status: 'error',
               },
             })
           }
         },
+
+        cancel() {
+          // Handle stream cancellation
+          console.log('Stream cancelled by client')
+        }
       })
 
       return new Response(readableStream as unknown as BodyInit, {

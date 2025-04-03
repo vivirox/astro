@@ -1,4 +1,6 @@
-import type { AIMessage } from '../../../lib/ai/index'
+'use client'
+
+import type { AIMessage } from '../../../lib/ai'
 import { useEffect, useRef } from 'react'
 import { ChatInput } from './ChatInput'
 import { ChatMessage } from './ChatMessage'
@@ -11,6 +13,7 @@ export interface ChatContainerProps {
   className?: string
   inputPlaceholder?: string
   disabled?: boolean
+  onRetry?: () => void
 }
 
 /**
@@ -24,6 +27,7 @@ export function ChatContainer({
   className = '',
   inputPlaceholder,
   disabled = false,
+  onRetry,
 }: ChatContainerProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -55,11 +59,18 @@ export function ChatContainer({
             )}
 
             {error && (
-              <ChatMessage
-                message={{ role: 'assistant', content: '', name: 'assistant' }}
-                isError={true}
-                errorMessage={error}
-              />
+              <div className="error-container p-4 bg-red-50 border border-red-200 rounded-md my-4">
+                <p className="font-medium text-red-700">Failed to send message</p>
+                <p className="text-red-600 text-sm mb-2">{error}</p>
+                {onRetry && (
+                  <button 
+                    onClick={onRetry} 
+                    className="text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded"
+                  >
+                    Retry
+                  </button>
+                )}
+              </div>
             )}
 
             <div ref={messagesEndRef} />
