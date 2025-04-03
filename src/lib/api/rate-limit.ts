@@ -6,8 +6,8 @@ import { generateHash } from '../crypto/hash'
 // Initialize logger
 const logger = getLogger()
 
-// Create our limiter instance
-const enhancedRateLimiter = createEnhancedRateLimiter()
+// Create our limiter instance with default settings
+const enhancedRateLimiter = createEnhancedRateLimiter(30, 60 * 1000)
 
 /**
  * Applies rate limiting to an API request
