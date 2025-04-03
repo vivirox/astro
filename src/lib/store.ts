@@ -1,4 +1,5 @@
 import type { AIService } from './ai/models/ai-types'
+import type { FHEService } from './fhe'
 import { create } from 'zustand'
 import { createMentalHealthChat } from './chat/mentalHealthChat'
 import { devtools } from 'zustand/middleware'
@@ -12,6 +13,9 @@ interface StoreState {
 
   // AI service
   aiService: AIService
+
+  // FHE Service
+  fheService: FHEService | null
 
   // Mental Health Chat
   mentalHealthChat: ReturnType<typeof createMentalHealthChat> | null
@@ -41,6 +45,7 @@ export const useStore = create<StoreState>()(
         encryptionEnabled: true,
         fheInitialized: false,
         aiService: null as unknown as AIService,
+        fheService: null,
         mentalHealthChat: null,
         mentalHealthAnalysisEnabled: true,
         expertGuidanceEnabled: true,
@@ -53,10 +58,13 @@ export const useStore = create<StoreState>()(
         setAIService: (service) => set({ aiService: service }),
         initializeMentalHealthChat: () => {
           if (get().fheService) {
-            const mentalHealthChat = createMentalHealthChat(get().fheService, {
-              enableAnalysis: get().mentalHealthAnalysisEnabled,
-              useExpertGuidance: get().expertGuidanceEnabled,
-            })
+            const mentalHealthChat = createMentalHealthChat(
+              get().fheService as FHEService,
+              {
+                enableAnalysis: get().mentalHealthAnalysisEnabled,
+                useExpertGuidance: get().expertGuidanceEnabled,
+              },
+            )
             set({ mentalHealthChat })
             return mentalHealthChat
           }

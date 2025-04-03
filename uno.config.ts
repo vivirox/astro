@@ -90,7 +90,7 @@ export default defineConfig({
     [
       /^(\w+)-transition(?:-(\d+))?$/,
       (match) =>
-        `transition-${match[1] === 'op' ? 'opacity' : match[1]} duration-${match[2] ? match[2] : '300'} ease-in-out`,
+        `transition-${match[1] === 'op' ? 'opacity' : match[1]} duration-${match[2] || '300'} ease-in-out`,
     ],
     [
       /^shadow-custom_(-?\d+)_(-?\d+)_(-?\d+)_(-?\d+)$/,

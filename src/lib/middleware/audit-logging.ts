@@ -207,7 +207,7 @@ export const auditLoggingMiddleware = defineMiddleware(
     const startTime = performance.now()
     const url = new URL(request.url)
     const path = url.pathname
-    const method = request.method
+    const { method } = request
 
     // Skip excluded paths
     if (pathMatchesPatterns(path, config.excludePaths)) {
@@ -292,7 +292,7 @@ export const auditLoggingMiddleware = defineMiddleware(
       metadata.responseStatusText = response.statusText
     }
 
-    if (config.logResponseTiming) {
+    if (response && config.logResponseTiming) {
       metadata.duration = Math.round(duration)
       metadata.durationUnit = 'ms'
     }

@@ -1,5 +1,5 @@
 ---
-import { ClientRouter } from 'astro:transitions'
+import { ClientRouter, slide } from 'astro:transitions'
 import BaseHead from '@/components/base/Head.astro'
 import Header from '@/components/layout/Header.astro'
 import Footer from '@/components/layout/Footer.astro'
@@ -157,7 +157,7 @@ const image = frontmatter?.image || propImage
 
     <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
       <!-- Sidebar for navigation -->
-      <aside class="md:w-64 shrink-0">
+      <aside class="md:w-64 shrink-0" transition:persist>
         <div class="sticky top-24">
           <div class="flex justify-between items-center mb-6">
             <h3 class="font-bold text-lg">Documentation</h3>
@@ -168,26 +168,31 @@ const image = frontmatter?.image || propImage
             <a
               href="/docs"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              transition:animate="slide"
               >Home</a
             >
             <a
               href="/docs/api"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              transition:animate="slide"
               >API Reference</a
             >
             <a
               href="/docs/components"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              transition:animate="slide"
               >Components</a
             >
             <a
               href="/docs/security"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              transition:animate="slide"
               >Security</a
             >
             <a
               href="/docs/guides"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
+              transition:animate="slide"
               >Guides</a
             >
           </nav>
@@ -205,14 +210,14 @@ const image = frontmatter?.image || propImage
       </aside>
 
       <!-- Main content -->
-      <main class="flex-1">
+      <main class="flex-1" transition:animate="slide">
         <article
           class="prose prose-lg dark:prose-invert max-w-none docs-content"
         >
           <!-- Documentation title and metadata -->
           <header class="mb-8">
-            <h1 class="text-4xl font-bold mb-4">{title}</h1>
-            <p class="text-muted-foreground">{description}</p>
+            <h1 class="text-4xl font-bold mb-4" transition:name="doc-title">{title}</h1>
+            <p class="text-muted-foreground" transition:name="doc-desc">{description}</p>
           </header>
 
           <!-- Documentation content -->
@@ -221,7 +226,7 @@ const image = frontmatter?.image || propImage
           </div>
 
           <!-- Footer navigation -->
-          <div class="mt-16 pt-8 border-t flex justify-between">
+          <div class="mt-16 pt-8 border-t flex justify-between" transition:animate="slide">
             <a
               href="#"
               class="text-sm flex items-center gap-1 hover:text-primary transition-colors"

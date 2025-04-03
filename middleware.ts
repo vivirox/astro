@@ -12,6 +12,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // List of all public paths that don't require authentication
   const publicPaths = [
     '/',
+    '/dashboard',
     '/login',
     '/register',
     '/about',
@@ -58,7 +59,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const response = await next()
 
   // No response means something went wrong or a redirect happened
-  if (!response) return response
+  if (!response) {
+    return response
+  }
 
   // Set correct content types for assets
   setContentTypeHeaders(path, response)

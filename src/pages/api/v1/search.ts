@@ -5,7 +5,9 @@ import { blogSearch } from '@/lib/search'
 let isIndexed = false
 
 async function indexPosts() {
-  if (isIndexed) return
+  if (isIndexed) {
+    return
+  }
 
   const posts = await getCollection('blog')
   for (const post of posts) {
@@ -19,29 +21,35 @@ async function indexPosts() {
 export const GET: APIRoute = async ({ url }) => {
   const query = url.searchParams.get('q')
   if (!query) {
-    return new Response(JSON.stringify({ 
-      version: "v1",
-      results: [] 
-    }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Version': 'v1',
+    return new Response(
+      JSON.stringify({
+        version: 'v1',
+        results: [],
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Version': 'v1',
+        },
       },
-    })
+    )
   }
 
   await indexPosts()
   const results = blogSearch.search(query)
 
-  return new Response(JSON.stringify({ 
-    version: "v1",
-    results 
-  }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-Version': 'v1',
+  return new Response(
+    JSON.stringify({
+      version: 'v1',
+      results,
+    }),
+    {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Version': 'v1',
+      },
     },
-  })
-} 
+  )
+}

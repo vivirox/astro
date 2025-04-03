@@ -1,6 +1,7 @@
 ---
 import { UI, SITE } from '../../config'
 import ThemeToggle from './ThemeToggle.astro'
+import { slide } from 'astro:transitions'
 
 interface Props {
   class?: string
@@ -33,11 +34,11 @@ const menuItems = Object.entries(SITE.menu).map(
 )
 ---
 
-<nav class={navClasses}>
+<nav class={navClasses} transition:persist>
   <div class="container mx-auto px-4 flex justify-between items-center">
-    <a href="/" class="text-xl font-bold flex items-center gap-2">
-      <img src="/favicon.svg" alt="Logo" class="w-8 h-8" />
-      <span>{SITE.name}</span>
+    <a href="/" class="text-xl font-bold flex items-center gap-2" transition:animate="slide">
+      <img src="/favicon.svg" alt="Logo" class="w-8 h-8" transition:name="logo" />
+      <span transition:name="site-name">{SITE.name}</span>
     </a>
 
     <div class="hidden md:flex items-center gap-6">
@@ -46,6 +47,7 @@ const menuItems = Object.entries(SITE.menu).map(
           <a
             href={item.link}
             class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            transition:animate="slide"
           >
             {item.text}
           </a>
@@ -53,7 +55,7 @@ const menuItems = Object.entries(SITE.menu).map(
       }
     </div>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4" transition:animate="slide">
       <ThemeToggle />
       <button id="mobile-menu-toggle" class="md:hidden">
         <span class="sr-only">Menu</span>
@@ -84,6 +86,7 @@ const menuItems = Object.entries(SITE.menu).map(
           <a
             href={item.link}
             class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            transition:animate="slide"
           >
             {item.text}
           </a>

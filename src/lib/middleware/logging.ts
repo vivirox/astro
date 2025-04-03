@@ -15,7 +15,7 @@ export const loggingMiddleware = defineMiddleware(async ({ request }, next) => {
   const logger = getLogger({ prefix: requestId })
 
   // Basic request information
-  const method = request.method
+  const { method } = request
   const url = new URL(request.url)
   const path = url.pathname
   const userAgent = request.headers.get('user-agent') || 'unknown'

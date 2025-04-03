@@ -23,6 +23,9 @@ export default defineConfig({
           items: [{ label: 'WebSocket', link: '/docs/websocket' }],
         },
       ],
+      // Disable Starlight's default 404 page to avoid conflicts
+      customCss: ['./src/styles/custom.css'],
+      disable404Route: true,
     }),
     react(),
     mdx(),
@@ -73,6 +76,8 @@ export default defineConfig({
     analytics: true,
     imageService: true,
     runtime: 'nodejs18.x',
+    // Specify static error pages
+    errorPage: 'custom-404.astro',
     // KNOWN ISSUE: The Vercel adapter tries to run pagefind during build even when using flexsearch
     // We've implemented a workaround in scripts/cleanup-search.ts that:
     // 1. Creates a dummy pagefind.js file to prevent runtime errors

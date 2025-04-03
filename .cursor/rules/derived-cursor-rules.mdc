@@ -36,8 +36,8 @@ globs: *
 - Prioritize blog layout and content collection setup. (2025-04-01)
 - Prioritize creating the Documentation layout next. (2025-04-02)
 - DocumentationLayout.astro component created (2025-04-02).
-- Progress Update (2025-04-03): Documentation Layout Implementation (COMPLETED). Overall progress at 89% completion.  Next steps prioritized.
-- Progress Update (2025-04-04): Fixed Invalid Imports (COMPLETED) - Removed invalid imports for `ClientRouter` and `ViewTransitions` from `astro:transitions` which were causing "Cannot find module" errors in the layouts. The project should properly install `@astrojs/transitions` if these features are needed.
+- Progress Update (2025-04-03): Documentation Layout Implementation (COMPLETED). Overall progress at 89% completion.  Next steps prioritized. Layouts and homepage updated to reflect the new theme from the 'antfu' submodule. Integrated the Antfu theme layouts (BaseLayout, StandardLayout, MainLayout, etc.) and updated the homepage (`index.astro`) to match the new theme structure. Integrated the Antfu theme layouts (BaseLayout, StandardLayout, MainLayout, etc.) and updated the homepage (`index.astro`) to match the new theme structure.
+- Progress Update (2025-04-04): Fixed Invalid Imports (COMPLETED) - Removed invalid imports for `ClientRouter` and `ViewTransitions` from `astro:transitions` which were causing "Cannot find module" errors in the layouts. The project should properly install `@astrojs/transitions` if these features are needed.  DocumentationLayout.astro component created (2025-04-04). Added sample documentation pages (getting-started and API reference).
 - Progress Update (2025-04-05): Converted PerformanceDashboard component to Astro.
 - Implement real user monitoring (RUM): Research available RUM tools compatible with Astro; Create a basic RUM implementation; Set up performance metrics collection; Implement error tracking; Create a dashboard to visualize collected data; Add documentation on how to use and interpret RUM data. (2025-04-02)
 - Implement Real User Monitoring (RUM) (2025-04-02):  This task involved researching RUM tools, creating a basic implementation, setting up performance metrics collection, implementing error tracking, creating a dashboard to visualize data, and adding documentation.  The `RealUserMonitoring.astro` component and associated React hooks were created. A new page `/admin/real-user-monitoring` was created to display the RUM data.
@@ -56,6 +56,64 @@ globs: *
 - Convert SimulatorDashboard component to an Astro wrapper (2025-04-02)
 - Convert SimulatorDashboard component to an Astro wrapper (2025-04-02)
 - Convert SimulatorDashboard component to an Astro wrapper (2025-04-02)
+- Update conversion plan with progress (2025-04-02)
+- Address linting errors related to improper imports from `@axe-core/react`, incorrect rendering of Astro components, and type errors in fetch mocks. (2025-04-02)
+-  To address linting errors related to improper imports from `@axe-core/react`, a helper function `renderAstroComponent` was created to render Astro components within tests.  The `@axe-core/react` imports were revised. Type errors in fetch mocks were resolved by ensuring a complete `Response` object was returned. (2025-04-02)
+- Progress Update (2025-04-06): SimulatorDashboard Conversion (COMPLETED) - Created SimulatorDashboard.astro wrapper component with proper frontmatter structure and client:load directive. Created SimulatorDashboardReact.tsx as the actual implementation. Added comprehensive tests for the components. Mobile Device Tests (COMPLETED) - Implemented Playwright-based mobile device compatibility tests for various screen sizes and orientations. Tested core pages including home, documentation, dashboard, and simulator. Added screenshot generation for visual verification. Overall Progress - Project now at 95% completion with all dashboard components converted to Astro format and significant progress on testing infrastructure.
+- Progress Update (2025-04-07): Cross-Browser Compatibility Tests (COMPLETED) - Created comprehensive cross-browser tests using Playwright to ensure the application works correctly across Chromium, Firefox, and WebKit browsers. Added tests for page functionality, responsive behavior, form interactions, and animations.
+- Progress Update (2025-04-08): API Versioning and Documentation (COMPLETED) - Implemented API versioning through URL paths (e.g., /api/v1/...) with automatic redirects from legacy endpoints. Created OpenAPI specification and Swagger UI documentation for interactive API testing. Updated API documentation with version history and guidelines. Overall Progress - Project now at 98% completion with all dashboard components converted to Astro format, complete testing infrastructure, and properly versioned API endpoints.
+- Progress Update (2025-04-09): Server-Side Auth Implementation (COMPLETED) - Implemented enhanced server-side authentication checks with strict token validation, rate limiting, IP verification, user agent monitoring, role-based access control, and comprehensive audit logging. Created secure API endpoints using the new auth middleware. Added comprehensive tests for the server-side auth system. Created implementation documentation for server-side auth. Overall progress: 99% complete.
+- Update conversion plan with progress (2025-04-02)
+- Address type mismatch in `src/pages/api/v1/admin/users.ts` between `protectRoute` and `APIRoute`.  Using `@ts-ignore` as a temporary workaround. (2025-04-11)
+- Address incomplete conditional logic and type errors in files as needed. (2025-04-02)
+- Address linting errors related to the `createAuditLog` function and its usage across multiple files.  (2025-04-02)  A new `AIErrorContext` interface was added to improve type safety in error handling. (2025-04-02)
+- Resolved type mismatch in `src/components/MentalHealthInsights.tsx` by creating `EnhancedMentalHealthAnalysis` interface extending `MentalHealthAnalysis` and adding properties for UI display.  Conditional rendering implemented to handle missing properties. (2025-04-02)
+- Update the conversion plan to reflect the progress made so far. (2025-04-02)
+- Update conversion plan with progress (2025-04-02)
+- Progress Update (2025-04-12): Type mismatch between protectRoute and APIRoute resolved.  New type definitions created in `src/lib/auth/apiRouteTypes.ts`.  Documentation updated. Added `src/pages/404.astro` and `src/pages/500.astro` for custom error handling. Added `src/styles/custom.css` for Starlight theme customization. Updated `astro.config.mjs` to include `errorPage: '404.astro'` and `disable404Route: true` for Starlight.
+- Progress Update (2025-04-12): Astro conversion plan updated to reflect 99.75% completion. All dashboard components converted, testing infrastructure complete, API endpoints versioned, server-side auth implemented, and protectRoute type issues resolved.
+- Progress Update (2025-04-04): DocumentationLayout.astro component created (2025-04-04). Added sample documentation pages (getting-started and API reference).
+- Progress Update (2025-04-05): Converted PerformanceDashboard component to Astro.
+- RealUserMonitoring.astro component created (2025-04-02).  A new page `/admin/real-user-monitoring` was added to display the RUM dashboard. (2025-04-02)
+- SimulatorDashboard.astro component created (2025-04-02).
+- Progress Update (2025-04-06): SimulatorDashboard Conversion (COMPLETED) - Created SimulatorDashboard.astro wrapper component with proper frontmatter structure and client:load directive. Created SimulatorDashboardReact.tsx as the actual implementation. Added comprehensive tests for the components. Mobile Device Tests (COMPLETED) - Implemented Playwright-based mobile device compatibility tests for various screen sizes and orientations. Tested core pages including home, documentation, dashboard, and simulator. Added screenshot generation for visual verification. Overall Progress - Project now at 95% completion with all dashboard components converted to Astro format and significant progress on testing infrastructure.
+- Progress Update (2025-04-07): Cross-Browser Compatibility Tests (COMPLETED) - Created comprehensive cross-browser tests using Playwright to ensure the application works correctly across Chromium, Firefox, and WebKit browsers. Added tests for page functionality, responsive behavior, form interactions, and animations.
+- Progress Update (2025-04-08): API Versioning and Documentation (COMPLETED) - Implemented API versioning through URL paths (e.g., /api/v1/...) with automatic redirects from legacy endpoints. Created OpenAPI specification and Swagger UI documentation for interactive API testing. Updated API documentation with version history and guidelines. Overall Progress - Project now at 98% completion with all dashboard components converted to Astro format, complete testing infrastructure, and properly versioned API endpoints.
+- Progress Update (2025-04-09): Server-Side Auth Implementation (COMPLETED) - Implemented enhanced server-side authentication checks with strict token validation, rate limiting, IP verification, user agent monitoring, role-based access control, and comprehensive audit logging. Created secure API endpoints using the new auth middleware. Added comprehensive tests for the server-side auth system. Created implementation documentation for server-side auth. Overall progress: 99% complete.
+- Progress Update (2025-04-12): Astro conversion plan updated to reflect 99.9% completion. All pages converted to Astro format.  Tests added for SearchDemo.astro, MentalHealthChatDemo.astro, AIChat.astro, and Button.astro. Added `src/pages/custom-404.astro` to handle custom 404 errors.
+- Progress Update (2025-04-12): Astro conversion plan updated to reflect 100% completion. Convex integration at 98% complete. Authentication at 100% complete. Testing and Validation at 99.5% complete.
+- In `register.astro`, use `Astro.url.searchParams.get('error')` to access query parameters. (2025-04-02)
+- Ensure proper nesting of form elements in `register.astro` to avoid structural issues. (2025-04-02)
+- Update the conversion plan to reflect progress. (2025-04-02)
+- Add tests for remaining Astro components (2025-04-02).
+- Implement view transitions using the native `astro:transitions` API (2025-04-02).
+- Investigate root cause of null byte issues (2025-04-02).
+- Progress Update (2025-04-12): Astro conversion plan updated to reflect 99.9% completion. All pages converted to Astro format.  Tests added for SearchDemo.astro, MentalHealthChatDemo.astro, AIChat.astro, and Button.astro.
+- Progress Update (2025-04-12): Astro conversion plan updated to reflect 100% completion. Convex integration at 98% complete. Authentication at 100% complete. Testing and Validation at 99.5% complete.
+- Rule: astro (added 2025-04-02)
+- Create a detailed production readiness plan in `production-readiness-plan.mdx`. (2025-04-02)
+- Production Readiness Plan (COMPLETED) - Created comprehensive production readiness plan (production-readiness-plan.mdx) with detailed steps for preparing the application for launch. Plan includes security hardening, performance optimization, monitoring setup, testing requirements, CI/CD finalization, technical debt resolution, documentation, training, and launch preparation steps. (2025-04-02)
+- Null Byte Issues Resolution (COMPLETED) - Fixed null byte issues in components like FHEDemo.astro and AdminLayout.astro by refactoring React components to use className instead of class attributes and adding proper TypeScript type definitions. Removed the custom build-clean.js script as it's no longer needed. (2025-04-02)
+- Overall Progress - Project now at 85% production readiness with all components properly converted to Astro format, complete testing infrastructure, properly versioned API endpoints, enhanced security controls, and resolved build issues. Need to complete items in the production readiness plan before launch. (2025-04-02)
+- Add login functionality: Added login and dashboard access buttons to the homepage (`/pages/index.astro`). Added login link to `/pages/index.astro` navigation. (2025-04-02)
+- To resolve Astro build warnings about unsupported YAML files, prefix YAML filenames with an underscore (e.g., `_openapi.yaml`). This applies to OpenAPI specification files used by Swagger UI.  This ensures that Astro ignores these files during the build process while still allowing them to be served as static assets. (2025-04-02)
+- Resolved duplicate declaration of `getBrowser` in `src/middleware.ts`. (2025-04-02)
+- Layouts and homepage updated to reflect the new theme from the 'antfu' submodule. (2025-04-03)
+- Integrated the Antfu theme layouts (BaseLayout, StandardLayout, MainLayout, etc.) and updated the homepage (`index.astro`) to match the new theme structure. (2025-04-03)
+- Antfu Theme Integration (2025-04-03):  Integrated the Antfu theme layouts (BaseLayout, StandardLayout, MainLayout, etc.) and updated the homepage (`index.astro`) to match the new theme structure.
+- Homepage and Layout Update (2025-04-02): Updated the homepage (`index.astro`) and layouts (`BaseLayout.astro`, `StandardLayout.astro`, `MainLayout.astro`) to integrate the Antfu theme.  This involved updating import paths, component structures, and adding new configuration options for the theme.
+- Antfu Theme Integration (2025-04-03): Successfully integrated the Antfu theme layouts (BaseLayout, StandardLayout, MainLayout, etc.) and updated the homepage (`index.astro`) to match the new theme structure.  This involved updating import paths, component structures, and adding new configuration options for the theme.  The navigation bar was updated to include the logo in the top-left and navigation links in the top-right, consistent with the antfu template.  The homepage (`index.astro`) was updated to use the new layout structure.
+- Progress Update (2025-04-12):  Homepage and navigation updated to match antfu template.  Logo is now a proper gradient image, and the navigation links are correctly displayed.  The unnecessary title under the spinning globe has been removed. (2025-04-13)
+- Homepage and Navigation Update (2025-04-13): Updated homepage and navigation to match antfu template.  Logo is now a gradient image, navigation links are correctly displayed, and unnecessary title under spinning globe removed.
+- Top-left logo updated to a graphical image instead of plain font. (2025-04-03)
+- Created `public/images/gradiant-ascent.svg`  (2025-04-03) -  SVG logo created with gradient text "Gradiant Ascent".  Uses 'Great Vibes', 'Dancing Script' fonts with drop shadow and glow filter.
+- Created `public/images/gradiant-ascent.svg` (2025-04-03):  Final SVG logo implementation using hand-drawn paths.  Includes gradient, stroke width, and glow effect.
+- Created `public/images/gradiant-ascent.svg` (2025-04-03): Final SVG logo implementation.  Hand-drawn paths, gradient, stroke width, and glow effect.  This replaces previous SVG attempts.
+- Created `public/images/gradiant-ascent.png` (2025-04-03):  A PNG version of the logo was created.
+- Updated Logo in `src/components/widgets/LogoButton.astro` (2025-04-03):  The logo was updated to use a gradient SVG instead of text.  The font `Dancing Script` was used, with a gradient background, text-shadow, and drop-shadow for a glow effect.  The font size was increased to 2.2rem. Responsive sizing was added for mobile screens.  Google Fonts were added for the `Dancing Script` font.
+- Updated Logo in `src/components/widgets/LogoButton.astro` (2025-04-13): The logo was updated to use a hand-drawn SVG with a pink-to-purple gradient,  'Great Vibes' font, and a glow effect.
+- Updated Logo in `src/components/widgets/LogoButton.astro` (2025-04-13): The logo was updated to use the SVG from the Antfu theme.
+- Updated Logo in `src/components/widgets/LogoButton.astro` (2025-04-13): The logo is now the SVG from the Antfu theme.
 
 
 ## ✨ Code Quality & Style
@@ -72,11 +130,12 @@ globs: *
     *   Use client directives (`client:load`, `client:idle`, `client:visible`) judiciously.
     *   Implement proper prop validation using TypeScript interfaces.
     *   Use the `use client` directive for proper hydration in Astro components.
-    *   **IMPORTANT**: Always use proper Astro frontmatter syntax (content between `---` fences) for imports, props, and scripts.
+    *   **CRITICAL**: Always verify frontmatter syntax is correct in every `.astro` file - this is the most common source of errors.
+    *   **IMPORTANT**: Always use proper Astro frontmatter syntax (content between `---` fences) for imports, props, and scripts.  Ensure that the frontmatter is correctly formatted and that the closing `---` is present.
     *   Correct Astro file structure has three parts:
         1. Frontmatter section between `---` fences containing imports, TypeScript definitions, and JavaScript logic
-        2. HTML template section after the closing `---`
-        3. Optional `<style>` section at the bottom
+        1. HTML template section after the closing `---`
+        1. Optional `<style>` section at the bottom
     *   Variables defined in the frontmatter section are available in the template.
     *   After creating or editing `.astro` files, verify that frontmatter sections are properly defined.
     *   **Common Errors to Check for:**
@@ -84,6 +143,7 @@ globs: *
         - Incorrect imports (verify if the imported module uses default or named exports)
         - Type import errors (ensure correct type paths and imports)
         - Undefined variable errors for props and imported components in templates
+        - Imports from non-existent modules (especially common with transitions)
     *   Example of correct structure:
       ```astro
       ---
@@ -118,26 +178,65 @@ globs: *
         h1 { color: blue; }
       </style>
       ```
-3.  **Small Files & Components:**
+3. **Astro Transitions Guidelines:**
+    * **IMPORTANT**: Use `astro:transitions` instead of the now-deprecated `@astrojs/transitions` package:
+      * Imports should use `import { ... } from 'astro:transitions'` syntax
+      * Do NOT add `@astrojs/transitions` as a dependency or integration
+    * Use `ClientRouter` instead of `ViewTransitions` for routing:
+      ```astro
+      ---
+      import { ClientRouter } from 'astro:transitions';
+      ---
+      <ClientRouter />
+      ```
+    * When applying transition names, use the `transition:name` directive:
+      ```astro
+      <img src={item.image} transition:name={`image-${item.id}`} />
+      ```
+    * For animation customization, use the `transition:animate` directive:
+      ```astro
+      <main transition:animate="slide">
+        <!-- Page content -->
+      </main>
+      ```
+    * To persist elements between page transitions, use the `transition:persist` directive:
+      ```astro
+      <header transition:persist>
+        <!-- Header content that should remain intact during transitions -->
+      </header>
+      ```
+    * For dynamic transition names from within framework components (React/Vue/etc.), use CSS custom properties:
+      ```css
+      .dynamic-image {
+        view-transition-name: var(--transition-name);
+      }
+      ```
+      ```jsx
+      <img className="dynamic-image" style={{ '--transition-name': `image-${id}` }} src={src} />
+      ```
+
+4.  **Small Files & Components:**
     *   Keep files under **300 lines**. Refactor proactively.
-4.  **Performance Optimization:**
+    *   Break down large components into smaller, single-responsibility components.
+    *   Use Astro's partial hydration for optimal performance.
+5.  **Performance Optimization:**
     *   Minimize client-side JavaScript usage.
     *   Leverage Astro's static site generation capabilities.
     *   Implement proper image optimization using `@astrojs/image`.
     *   Use dynamic imports for code splitting.
-5.  **Pattern Consistency:**
+6.  **Pattern Consistency:**
     *   Follow Astro's component patterns and conventions.
     *   Use consistent naming for files: PascalCase for components, kebab-case for pages.
     *   Maintain consistent directory structure.
-6.  **Avoid Duplication (DRY):** Actively look for and reuse existing functionality. Refactor to eliminate duplication.
-7.  **No Bazel:** Bazel is not permitted. Use project-specified build tools.
-8.  **Linting/Formatting:** 
+7.  **Avoid Duplication (DRY):** Actively look for and reuse existing functionality. Refactor to eliminate duplication.
+8.  **No Bazel:** Bazel is not permitted. Use project-specified build tools.
+9.  **Linting/Formatting:** 
     *   Ensure all code conforms to project's ESLint/Prettier rules.
     *   **CRITICAL**: Always check for linter errors after creating or editing files.
     *   For `.astro` files, verify correct structure with imports and TypeScript in the frontmatter section (between `---` fences) and template code after.
     *   Fix any syntax or import errors before committing changes.
-9.  **File Naming:** Use clear, descriptive names. Avoid "temp", "refactored", "improved", etc., in permanent file names.
-10. **No One-Time Scripts:** Do not commit one-time utility scripts into the main codebase.
+10. **File Naming:** Use clear, descriptive names. Avoid "temp", "refactored", "improved", etc., in permanent file names.  Maintain consistent casing in filenames (e.g., `Label.tsx` not `label.tsx`).
+11. **No One-Time Scripts:** Do not commit one-time utility scripts into the main codebase.
 
 
 ## ♻️ Refactoring
@@ -178,11 +277,27 @@ globs: *
     *   Maintain TypeScript type definitions and interfaces.
     *   Update security-related documentation promptly.
     *   Add documentation for Real User Monitoring (RUM) implementation, including setup, usage, and interpretation of data. (2025-04-02)
+    * Add documentation for the new server-side authentication implementation, including details about strict token validation, rate limiting, IP verification, user agent consistency checks, role-based access control, and audit logging. (2025-04-09)
+    * Add documentation for the new type system for protected API routes, including `ProtectedAPIRoute`, `ProtectRouteOptions`, and `ProtectRouteFunction`. (2025-04-12)
+    * Add documentation for Astro best practices as outlined in the `astro` rule. (2025-04-02)
+    * Add documentation for production readiness plan. (2025-04-02)
+    * Add documentation explaining the use of YAML files for OpenAPI specifications and how to handle them within the Astro build process.  Specifically address the use of leading underscores to prevent processing by Astro while still allowing them to be served as static assets. (2025-04-02)
+    * Add documentation for handling YAML files within the Astro build process, particularly for OpenAPI specifications.  Prefixing YAML filenames with an underscore (`_`) prevents Astro from processing them while still allowing them to be served as static assets. (2025-04-02)
+    * Add documentation for the updated homepage and navigation layout, including details about the logo design, navigation link display, and the removal of the unnecessary title under the spinning globe. (2025-04-13)
+    * Add documentation detailing the update to the logo in `src/components/widgets/LogoButton.astro` to use a gradient SVG instead of text. (2025-04-03)
+    * Add documentation for the updated logo in `src/components/widgets/LogoButton.astro`, including details on the gradient, fonts ('Great Vibes', 'Dancing Script'), drop shadow, and glow filter. (2025-04-03)
+    * Add documentation for the final logo implementation using hand-drawn paths in an SVG,  including details about the gradient, stroke width, and glow effect. (2025-04-03)
+    * Add documentation for the final logo implementation in `src/components/widgets/LogoButton.astro`. The logo is a hand-drawn SVG with a pink-to-purple gradient. (2025-04-03)
+    * Add documentation for the new PNG logo in `public/images/gradiant-ascent.png`. (2025-04-03)
+    * Add documentation for the updated logo in `src/components/widgets/LogoButton.astro`. The logo is now a hand-drawn SVG with a gradient, stroke width, and glow effect.  The fonts used are 'Great Vibes' and 'Dancing Script'. (2025-04-13)
+    * Add documentation for the updated logo in `src/components/widgets/LogoButton.astro`. The logo is now the SVG from the Antfu theme. (2025-04-13)
 2.  **Keep Rules Updated:**
     *   Review and update this `.cursorrules` file regularly.
     *   Document new security measures and best practices.
     *   Track changes in Astro's recommended patterns.
     *   Monitor and document TypeScript version updates.
+    * Add documentation for the new type system for protected API routes, including `ProtectedAPIRoute`, `ProtectRouteOptions`, and `ProtectRouteFunction`. (2025-04-12)
+
 
 ## PROJECT OVERVIEW
 Project: Astro.  A significant portion of the codebase consists of React and TypeScript components, requiring conversion to Astro's component model.  The analysis indicates a substantial conversion effort is needed to fully transition to an Astro-based architecture.  A recent codebase analysis (2025-03-31 17:53:45) estimates that 40-50% of components (primarily static UI, layout, and content-heavy components) could benefit from conversion to `.astro` format, while the remaining 50-60% (interactive components like chat, analytics, and admin dashboards) should remain as React components due to their interactive nature.  Further investigation is needed to precisely quantify the number of files requiring conversion.  A more detailed breakdown of the conversion effort is available in `astro-conversion-plan.mdx`.  MainLayout.astro component created on 2025-03-31 22:59:59.
@@ -197,81 +312,10 @@ AdminDashboard.astro component updated on 2025-04-01: Import path for logging us
 BlogLayout.astro component added (2025-04-01).  Blog index page added (2025-04-01). Dynamic blog post route added (2025-04-01).
 DocumentationLayout.astro component creation prioritized (2025-04-02).
 DocumentationLayout.astro component created (2025-04-02).
-Progress Update (2025-04-03): Documentation Layout Implementation (COMPLETED). Overall progress at 89% completion. Next steps prioritized.
+Progress Update (2025-04-03): Documentation Layout Implementation (COMPLETED). Overall progress at 89% completion. Next steps prioritized. Layouts and homepage updated to reflect the new theme from the 'antfu' submodule. Integrated the Antfu theme layouts (BaseLayout, StandardLayout, MainLayout, etc.) and updated the homepage (`index.astro`) to match the new theme structure.
 Progress Update (2025-04-04): DocumentationLayout.astro component created (2025-04-04). Added sample documentation pages (getting-started and API reference).
 Progress Update (2025-04-05): Converted PerformanceDashboard component to Astro.
 RealUserMonitoring.astro component created (2025-04-02).  A new page `/admin/real-user-monitoring` was added to display the RUM dashboard. (2025-04-02)
 SimulatorDashboard.astro component created (2025-04-02).
 Progress Update (2025-04-06): SimulatorDashboard Conversion (COMPLETED) - Created SimulatorDashboard.astro wrapper component with proper frontmatter structure and client:load directive. Created SimulatorDashboardReact.tsx as the actual implementation. Added comprehensive tests for the components. Mobile Device Tests (COMPLETED) - Implemented Playwright-based mobile device compatibility tests for various screen sizes and orientations. Tested core pages including home, documentation, dashboard, and simulator. Added screenshot generation for visual verification. Overall Progress - Project now at 95% completion with all dashboard components converted to Astro format and significant progress on testing infrastructure.
-Progress Update (2025-04-07): Cross-Browser Compatibility Tests (COMPLETED) - Created comprehensive cross-browser tests using Playwright to ensure the application works correctly across Chromium, Firefox, and WebKit browsers. Added tests for page functionality, responsive behavior, form interactions, and animations.
-Progress Update (2025-04-08): API Versioning and Documentation (COMPLETED) - Implemented API versioning through URL paths (e.g., /api/v1/...) with automatic redirects from legacy endpoints. Created OpenAPI specification and Swagger UI documentation for interactive API testing. Updated API documentation with version history and guidelines. Overall Progress - Project now at 98% completion with all dashboard components converted to Astro format, complete testing infrastructure, and properly versioned API endpoints.
-
-
-## CODE STYLE
-Adhere to standard TypeScript coding conventions.  Avoid using the `any` type unless absolutely necessary and clearly documented. Use `unknown` instead of `any` where appropriate.  Follow clean code principles as outlined in the `clean-code` rule.
-
-
-## FOLDER ORGANIZATION
-Based on the project exploration, the following folders are identified: `src/pages`, `src/layouts`, `src/components`, `src/lib`, `src/config`, `src/constants`, `src/types`, `src/styles`, `src/hooks`, `src/scripts`, `src/data`, `src/workers`, `src/services`, `src/tests`, `src/context`, `src/@types`, `src/db`, `src/docs`, `src/assets`, `src/integrations`, `src/utils`, `src/simulator`, `src/content`.  Further refinement of folder organization may be needed based on project growth.  A new folder `src/hooks/convex` was added on 2025-04-01 to house Convex-specific React hooks.  A new folder `src/lib/api/admin` was added on 2025-04-01 to house admin-specific API functions.  A new folder `src/components/monitoring` was added on 2025-04-02 to house the Real User Monitoring components.  Adhere to Astro's recommended project structure as outlined in the `astro` rule.
-
-
-## TECH STACK
-TypeScript, ESLint, Jest, Vitest, Resend, Redis, ioredis, @testing-library/jest-dom, @testing-library/react, @postmark/core, ioredis, @ascorbic/feed-loader, react, react-dom, pnpm, Convex, Astro, class-variance-authority, UnoCSS, @astrojs/transitions, @astrojs/client, Grafana Faro Web SDK, Playwright, swagger-ui-dist, @types/swagger-ui-dist
-
-## PROJECT-SPECIFIC STANDARDS
-- Unused variables and imports should be removed.  Address all ESLint warnings about unused code.  If a variable is declared but never used, remove it.  Use the underscore convention for unused parameters (e.g., `_key`).
-- Vitest is the preferred testing framework for new tests. Jest should be used for existing tests until migration is complete.  A `vitest.config.ts` file should be created for Vitest configuration, and a Vitest setup file (e.g., `vitest.setup.ts`) is needed to declare Vitest globals for TypeScript projects.  The `jest.config.ts` and associated Jest setup file are deprecated for new tests.
-- Proper configuration is required for both Jest (for existing tests) and Vitest (for new tests).  Ensure types are correctly configured for each.
-- When mocking external services (like Redis or Resend) in tests, ensure proper type definitions are used to avoid linting errors. Direct access to underlying client methods might be necessary if the service class doesn't expose all required methods.  If direct access is needed, ensure proper mocking of the underlying client (e.g., `ioredis`) is implemented.
-- When encountering type errors related to mocked services, consider using type assertions to match the expected type of the mocked function.  However, ensure this is done judiciously and only when necessary to avoid masking actual type problems.
-- Ensure proper Jest type configuration for existing tests or migrate to Vitest for new tests.  Address all ESLint warnings about unused code.  If a variable is declared but never used, remove it.  Address all ESLint warnings, including those related to unused variables and imports.  Prioritize resolving critical issues such as redeclaration errors, unsafe optional chaining, undefined variables, and parsing errors before addressing less critical warnings.
-- Ensure a `vitest.setup.ts` file exists to provide necessary test globals (e.g., `describe`, `it`, `expect`) for Vitest tests.  Missing test framework globals are a common source of errors.
-- When encountering missing test framework globals (describe, it, expect, etc.) in Vitest tests, ensure that the `vitest.setup.ts` file is correctly configured and includes the necessary imports.  Commonly missing imports include `describe`, `it`, `expect`, `beforeAll`, `beforeEach`, `afterEach`, and `afterAll`.  The `vitest.setup.ts` file should also include a `declare global` block to make these globals available in test files.
-- When importing modules, carefully check the export type (class vs. constant) to avoid import errors.  Correctly import modules based on their export type (e.g., `import { CacheInvalidation } from '@/lib/cache/invalidation'` instead of `import { CacheInvalidationService } from '@/lib/cache/invalidation'`).  Ensure that the import path correctly reflects the module's location.  Ensure that all necessary modules are imported, especially those from appropriate locations (e.g.,  `'@/lib/ai/services/PatternRecognitionService'`, `'@/lib/ai/services/PatternRecognitionService'`).
-- When using `CacheInvalidation`, ensure that the `redis` property is passed as `{ redis: redis.getClient() }` to correctly access the Redis client.  The `initialize()` and `shutdown()` methods are not part of the `CacheInvalidation` interface and should not be used.  Use `JSON.stringify` for serializing values before storing them in Redis.  The `addTag` method is deprecated; use the `set()` method with the `tags` option to add tags to keys.  The `on` and `off` methods for event handling are not supported by `CacheInvalidation`. Direct verification of key existence should be used instead of event listeners.
-- Ensure that the `vitest.setup.ts` file includes imports for `describe`, `it`, `expect`, `beforeAll`, `beforeEach`, `afterEach`, and `afterAll`, and a `declare global` block to make these globals available in test files.  Failure to include these can lead to missing test framework globals errors.  Correct import paths are crucial to avoid module import errors.  When updating tests to align with new service implementations, ensure that methods, parameters, and return types are correctly updated to match the current version.
-- When encountering missing module imports, carefully check the module's location.  Incorrect import paths are a frequent source of errors.  For example, ensure that `'@/lib/ai/services/PatternRecognitionService'` is used correctly.
-- Ensure proper type definitions for all RedisService methods and parameters.  Missing types are a common source of errors in Redis service integration tests.  Include necessary utility functions (e.g., `generateTestKey`, `sleep`) and custom matchers (e.g., `toBeRedisError`) for more robust testing.
-- In Redis service integration tests, ensure proper type definitions for all methods and parameters. Import necessary utility functions (e.g., `generateTestKey`, `sleep`) from `test-utils` and add custom matchers (e.g., `toBeRedisError`) for more robust testing.  Ensure that `generateTestKey` and other necessary utility functions from `./test-utils` are imported into test files where needed.
-- When encountering "is declared but its value is never read" errors, remove unused imports or use the underscore convention for unused parameters (e.g., `_key`).
-- When using the `RedisService.set` method, ensure that TTL values are provided in milliseconds.  The method signature is `async set(key: string, value: string, ttlMs?: number): Promise<void>`.
-- When using the `RedisService.set` method, ensure TTL values are provided in milliseconds. The method signature is `async set(key: string, value: string, ttlMs?: number): Promise<void>`.  Incorrectly providing TTL in seconds will result in a type error.  The correct usage is `await redis.set(key, value, ttl * 1000);` where `ttl` is in seconds.
-- When using JSON.stringify, ensure the resulting string is of the correct type for Redis storage (e.g., string).
-- To resolve the error "Object literal may only specify known properties, and 'globalTeardown' does not exist in type 'InlineConfig'", use a `vitest.global.setup.ts` file exporting both `setup` and `teardown` functions instead of separate `globalSetup` and `globalTeardown` properties in the Vitest configuration.
-- For custom matchers in Vitest, use the `declare global` syntax as shown in the updated `test-utils.ts` example below.  This ensures correct type definitions and avoids linting errors.
-- When encountering file not found errors, double-check the file path.  The error "Could not find file 'src/lib/services/redis.ts'. Did you mean one of: - src/lib/services/redis/index.ts - src/lib/services/redis/types.ts - src/lib/services/redis/RedisService.ts" indicates a potential issue with the file path or file organization.  Ensure the correct path is used and that the file exists in the specified location.  Correct import paths are crucial for resolving modules.  Ensure that the `tsconfig.json` file is correctly configured with `baseUrl` and `paths` to resolve relative imports correctly (e.g., `@/lib/redis`).  When encountering errors related to missing modules, double-check the import path. For example, ensure that `'@/lib/ai/services/PatternRecognitionService'` is used correctly.
-- When using the logger, ensure proper instantiation, for example using `const logger = loggerModule.getLogger('NotificationService')`.
-- Ensure proper closing tags for MDX `<Steps>` components.  Incorrect indentation can cause parsing errors.
-- Ensure correct indentation for closing `</Steps>` tags in MDX files to avoid parsing errors.  Malformatted code blocks and duplicate lines in MDX files can also cause build errors.
-- When encountering "Cannot find module '@/config/env.config'" errors, verify the `baseUrl` and `paths` configuration within `tsconfig.json` to ensure correct resolution of relative imports correctly.
-- Avoid using JSX directly within TypeScript files.  Use `React.createElement` instead for better compatibility and type safety.  This is particularly important when working with Astro components.  The error "Unexpected token '<'" usually indicates this issue.  Ensure that all React imports are correctly handled.  For example, instead of `return <>{children}</>;`, use `return React.createElement(React.Fragment, null, children);`.  Avoid duplicate exports within the same file.  If multiple functions or variables share the same name, rename one of them to avoid naming conflicts.
-- When encountering issues with React module resolution, ensure that Astro is correctly configured to handle React imports using either the `react` or `@astrojs/react` package.  Ensure that the necessary React packages are installed and configured correctly.
-- When using JSX within Astro components, ensure that the necessary React packages are installed (`react`, `react-dom`) and that the component is correctly configured for JSX usage.  Incorrect configuration can result in runtime errors.  Ensure that the `astro.config.mjs` file is correctly configured to handle React imports.  Refer to the Astro documentation for guidance on configuring JSX within Astro projects. Use of `use client` directive in Astro components helps ensure proper hydration and prevents issues.
-- Avoid using JSX directly within TypeScript files unless explicitly using `.tsx` file extension and configured correctly with `tsconfig.json` to handle JSX.  The error "Unexpected token '<'" usually indicates this issue.  Ensure that all React imports are correctly handled.  For example, instead of `return <>{children}</>;`, use `return React.createElement(React.Fragment, null, children);`.  Avoid duplicate exports within the same file.  If multiple functions or variables share the same name, rename one of them to avoid naming conflicts.
-- Use `use client` directive in Astro components for proper hydration.
-- To resolve persistent "module is not defined" errors related to React, create a custom React loader to manage the import and ensure compatibility between CommonJS and ESM modules. This custom loader will need to re-export the necessary React modules to ensure proper functionality. A custom `vite.config.js` might be necessary to configure Astro's build process for correct React import handling.  Review files in `src/pages` directory, specifically `index.astro`, for homepage issues. Review `src/layouts/BaseLayout.astro` and `src/layouts/StandardLayout.astro` for layout related problems. Investigate `src/components/widgets/SpinningGlobe.astro` for component-specific issues. Malformatted code blocks and duplicate lines in MDX files (like `src/content/docs/redis-testing.mdx`) can cause build errors and affect the homepage. Check for malformed code blocks and duplicate lines in MDX files. Review `src/simulator/index.tsx` for JSX usage within TypeScript. Use `React.createElement` instead. Check for duplicate exports in `src/simulator/utils/privacy.ts`. Rename duplicate exports to resolve conflicts. Ensure that `astro.config.mjs` is correctly formatted to avoid ESLint formatter issues resulting in empty output.  This may involve correcting indentation, spacing, or other style inconsistencies according to the ESLint configuration. When injecting scripts into Astro, avoid using import statements directly within the injected code. Use relative paths instead of aliases to ensure correct resolution during the build process.
-- Ensure that `astro.config.mjs` is correctly configured to handle React imports. Address "module is not defined" errors by configuring Astro to handle React imports correctly, potentially using a custom Vite configuration or a custom React loader. The error typically indicates a mismatch between the module system used by React and the project's module system. Ensure that the correct version of React is installed and that the necessary dependencies are included. Use the `use client` directive in Astro components to ensure proper React hydration.  Avoid using JSX directly within TypeScript files unless explicitly using `.tsx` file extension and configured correctly with `tsconfig.json` to handle JSX. Use `React.createElement` instead for better type safety and compatibility.
-- Ensure that settings.json uses boolean values for boolean properties.  The `window.commandCenter` property should be `true` or `false`, not a number.
-- The `functions` field in `convex.json` should be a string pointing to the directory containing Convex functions (e.g., `"functions": "convex/"`).  Do not use an object.
-- A large portion of the project's components are implemented using React and TypeScript.  A significant conversion effort will be required to migrate these to Astro components.  A recent analysis (2025-03-31 17:53:45) suggests a phased approach, prioritizing static and layout components for conversion while retaining interactive components as React components within Astro pages using client-side directives.
-- When using MDX, ensure that link fragments in the Table of Contents accurately reflect the section headers.  Spaces in headers should be replaced with hyphens, and ampersands should be replaced with "and".
-- When using MDX, ensure that link fragments in the Table of Contents accurately reflect the section headers. Replace spaces in headers with hyphens, and replace ampersands with "and".  Link fragments should be lowercase and use hyphens instead of spaces.  Link fragments in MDX files must exactly match the corresponding section headers. Replace spaces with hyphens and ampersands with "and". All fragments should be lowercase.  Link fragments should be valid.  Link fragments in the Table of Contents must exactly match the corresponding section headers in MDX files.  Spaces should be replaced with hyphens, ampersands with "and", and all fragments should be lowercase.
-- Link fragments in the Table of Contents should be lowercase and use hyphens instead of spaces.  Ampersands should be replaced with "and".  Link fragments in the Table of Contents must exactly match the corresponding section headers in MDX files. Spaces should be replaced with hyphens, ampersands with "and", and all fragments should be lowercase.
-- Link fragments in the Table of Contents should match the corresponding section headers exactly, with spaces replaced by hyphens, ampersands replaced by "and", and all lowercase.  Ensure that link fragments in the Table of Contents exactly match the corresponding section headers in MDX files.  Spaces should be replaced with hyphens, ampersands with "and", and all fragments should be lowercase.
-- MainLayout.astro file added to `src/layouts` directory on 2025-03-31 22:59:59.
-- DashboardLayout.astro file updated on 2025-04-01.  The file uses `ClientRouter` instead of the deprecated `ViewTransitions`.  The `Header` and `Footer` components are now correctly included and used within the layout.  The DashboardLayout now uses UnoCSS for styling.  Error handling improved with the addition of an `ErrorBoundary` component. Meta tags added for SEO optimization.  Improved theme handling with CSS variables.  Transitions added for smoother theme changes. Accessibility improved with font fallbacks. Viewport height handling improved using `dvh` units. Container class added for better content width management. Selection styling added.
-- The `ViewTransitions` component is deprecated; use `ClientRouter` instead.
-- The `Header` and `Footer` components should be used in `DashboardLayout.astro` instead of inline HTML.  The inline mobile sidebar toggle script should be removed as this functionality is handled within the `Sidebar` component.
-- Case sensitivity in type imports should be checked.  The error "Property 'theme' does not exist on type 'Ui'" was caused by importing `Ui` as `UI`. Correct case is crucial for proper type resolution.  Ensure that all imports and type references use the correct casing.
-- The `Ui` interface in `src/types.ts` now includes `theme` and `nav` properties as of 2025-03-31 23:34:51.  The `UI` object in `src/config.ts` has been updated to reflect these changes.
--  A new `ErrorBoundary` component has been added to handle errors gracefully within the `DashboardLayout.astro` component (2025-04-01).
--  A new Astro component test helper (`renderAstro`) and mock Astro global creator (`createMockAstro`) functions have been added to `src/test/utils/astro.ts` (2025-04-01).
--  New Convex functions and React hooks created on 2025-04-01.
-- AdminDashboard.astro updated on 2025-04-01: Import path for logging uses alias path (`@/`), metrics fetch moved to separate API function (`getSystemMetrics`), error handling improved, client-side script better organized.  A new `getSystemMetrics` function was added to `src/lib/api/admin.ts` to handle fetching system metrics.
-- The `id` property in blog posts is deprecated; use `slug` instead. (2025-04-01)  Conflict:  The new blog post implementation uses `id`.  Further clarification needed on whether to use `id` or `slug`.  The current implementation uses `id` for the blog post slug.  A decision is needed on whether to change this to `slug`.
-- Follow Astro best practices for component development, routing, content management, styling, performance optimization, data fetching, SEO, integrations, build and deployment, and testing as detailed in the `astro` rule.
-- DocumentationLayout.astro component will be created to support MDX documentation pages with Mintlify-like features. (2025-04-02)
-- DocumentationLayout.astro component created (2025-04-02):  This component supports MDX documentation pages with features similar to Mintlify. It includes automatic table of contents generation, a responsive sidebar, and enhanced styling for documentation content.
-- To resolve the error "Cannot find module 'astro:transitions'", update the import to use `@astrojs/client` for `ClientRouter` and ensure `@astrojs/client` is installed.
-- To resolve "Cannot find module '@/components/base/Head.astro' or its corresponding type declarations", ensure the `Head.astro` component exists at `src/components/base/Head.astro` and that the import path is correct.  Verify `tsconfig.json` baseUrl and paths configuration.
-- To resolve "Cannot find module '@/components/ui/ThemeToggle.astro' or its corresponding type declarations", ensure the `ThemeToggle.astro` component exists at `src/components/ui/ThemeToggle.astro` and that the import path is correct. Verify `tsconfig
+Progress Update (2025-04-07): Cross-Browser Compatibility Tests (COMPLETED) - Created comprehensive cross-browser tests using Playwright

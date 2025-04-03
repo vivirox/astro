@@ -1,36 +1,32 @@
 ---
-import Header from '@/components/layout/Header.astro'
-import Footer from '@/components/layout/Footer.astro'
-import { ClientRouter } from 'astro:transitions'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import StandardLayout from '@/layouts/StandardLayout.astro'
+import type { BgType } from '@/types'
 
 interface Props {
   title: string
   description?: string
+  bgType?: BgType
+  ogImage?: string | boolean
 }
 
 const {
   title,
-  description = 'Gradiant - Advanced Healthcare Analytics Platform',
+  description = 'Gradiant Ascent - Advanced AI Platform',
+  bgType = 'plum',
+  ogImage = false
 } = Astro.props
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <ClientRouter />
-  </head>
-  <body class="h-screen-min bg-background font-sans">
-    <div class="relative flex h-screen-min flex-col">
-      <Header />
-      <main class="flex-1">
-        <slot />
-      </main>
-      <Footer />
+<BaseLayout
+  title={title}
+  description={description}
+  bgType={bgType}
+  ogImage={ogImage}
+>
+  <StandardLayout title={title}>
+    <div class="prose mx-auto">
+      <slot />
     </div>
-  </body>
-</html>
+  </StandardLayout>
+</BaseLayout>
