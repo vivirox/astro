@@ -40,7 +40,7 @@ export function createEnhancedRateLimiter(
     anonymous: 15,
   }
 
-  async function check({
+  const check = async ({
     identifier,
     role,
     path,
@@ -48,7 +48,7 @@ export function createEnhancedRateLimiter(
     userAgent,
     referer,
     customConfig,
-  }: EnhancedRateLimiterConfig): Promise<RateLimitResult> {
+  }: EnhancedRateLimiterConfig): Promise<RateLimitResult> => {
     const now = Date.now()
     const effectiveWindowMs = customConfig?.windowMs || windowMs
     const limit =
