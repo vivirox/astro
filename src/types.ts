@@ -2,6 +2,20 @@
 import type { IncomingMessage } from 'node:http'
 import type { Socket } from 'node:net'
 import type { AuthUser } from './lib/auth'
+import type { AuthRole } from './config/auth.config'
+
+export interface AstroLocals {
+  user?: {
+    id: string
+    role: AuthRole
+  }
+  requestId: string
+  userAgent: {
+    browser: string
+    os: string
+    isMobile: boolean
+  }
+}
 
 export type Url = `http://${string}` | `https://${string}`
 type Path = `/${string}`

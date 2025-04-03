@@ -147,7 +147,10 @@ export default function AnalyticsDashboard({
 
       // Get analytics data
       const results = await fheAnalytics.createAnalyticsDashboard(
-        messages,
+        messages.map((msg) => ({
+          id: crypto.randomUUID(),
+          ...msg,
+        })),
         config,
       )
 
@@ -186,7 +189,9 @@ export default function AnalyticsDashboard({
 
   // Set up refresh interval
   useEffect(() => {
-    if (!refreshInterval) return
+    if (!refreshInterval) {
+      return
+    }
 
     const intervalId = setInterval(() => {
       if (messages.length > 0 && fheInitialized) {

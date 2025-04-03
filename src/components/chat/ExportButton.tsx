@@ -44,7 +44,9 @@ export default function ExportButton({
   }
 
   const handleExport = async (format: string) => {
-    if (disabled || isExporting || !sessionId) return
+    if (disabled || isExporting || !sessionId) {
+      return
+    }
 
     try {
       setIsExporting(true)
@@ -84,10 +86,14 @@ export default function ExportButton({
       }
     } catch (error) {
       console.error('Export error:', error)
-      setExportError(error.message || 'Failed to export conversation')
+      setExportError(
+        error instanceof Error
+          ? error.message
+          : 'Failed to export conversation',
+      )
 
       if (onExportError) {
-        onExportError(error)
+        onExportError(error instanceof Error ? error : new Error(String(error)))
       }
     } finally {
       setIsExporting(false)

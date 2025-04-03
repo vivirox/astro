@@ -144,7 +144,9 @@ function startBatchTimer(): void {
  * Process a batch of logs
  */
 async function processBatch(): Promise<void> {
-  if (logQueue.length === 0) return
+  if (logQueue.length === 0) {
+    return
+  }
 
   const batch = logQueue.splice(0, config.batchSize)
 
@@ -167,7 +169,9 @@ async function processBatch(): Promise<void> {
  * Send logs to remote endpoint
  */
 async function sendLogsToRemoteEndpoint(logs: AuditLogEntry[]): Promise<void> {
-  if (!config.remoteEndpoint) return
+  if (!config.remoteEndpoint) {
+    return
+  }
 
   try {
     const response = await fetch(config.remoteEndpoint, {
@@ -253,7 +257,9 @@ function getSessionId(): string {
  * Store an audit log entry locally
  */
 function storeLocalAuditLog(entry: AuditLogEntry): void {
-  if (!config.localStorageEnabled) return
+  if (!config.localStorageEnabled) {
+    return
+  }
 
   try {
     // Get existing logs

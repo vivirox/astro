@@ -64,16 +64,20 @@ interface Window {
 // Define module for astro:transitions
 declare module 'astro:transitions' {
   import type { AstroIntegration } from 'astro'
-  export const ViewTransitions: any
+  export const ClientRouter: any
   export function fade(options?: { duration?: string | number }): any
   export function slide(options?: { duration?: string | number }): any
+  export function none(): any
 }
 
 // Fix TypeScript errors related to HTML elements in Astro files
 declare namespace astroHTML.JSX {
   interface HTMLAttributes {
-    class?: string
-    children?: any
+    'class'?: string
+    'children'?: any
+    'transition:animate'?: string
+    'transition:name'?: string
+    'transition:persist'?: boolean
   }
 
   interface HtmlHTMLAttributes extends HTMLAttributes {

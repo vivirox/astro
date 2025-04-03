@@ -34,24 +34,28 @@ AI-driven insights while maintaining the highest standards of privacy and ethics
 ## ✨ Key Features
 
 ### 🧠 Real-time Therapeutic Analytics
+
 - **Advanced Session Analysis** - Gain deeper insights into therapeutic sessions
 - **Pattern Recognition** - Identify behavioral patterns and trends
 - **Risk Assessment** - Early detection of potential concerns
 - **Smart Interventions** - AI-powered therapeutic suggestions
 
 ### 🔒 Privacy-First Architecture
+
 - **Zero-Knowledge Processing** - Your data remains truly private
 - **HIPAA Compliance** - Enterprise-grade security
 - **End-to-End Encryption** - Military-grade protection
 - **Ethical AI** - Transparent and accountable
 
 ### 📊 Comprehensive Analytics
+
 - **Interactive Dashboards** - Beautiful, intuitive visualizations
 - **Progress Tracking** - Monitor outcomes effectively
 - **Research Tools** - Evidence-based insights
 - **Custom Reports** - Professional documentation
 
 ### 🤝 Collaboration Suite
+
 - **Secure Messaging** - HIPAA-compliant communication
 - **Resource Sharing** - Efficient team collaboration
 - **Multi-disciplinary Support** - Connect with specialists
@@ -60,14 +64,17 @@ AI-driven insights while maintaining the highest standards of privacy and ethics
 ## 💡 Why Gradiant Ascent?
 
 ### For Mental Health Professionals
+
 Transform your practice with AI-powered insights while maintaining the human touch that
 makes therapy effective.
 
 ### For Healthcare Administrators
+
 Optimize resources, ensure compliance, and improve outcomes with comprehensive analytics
 and reporting.
 
 ### For Researchers
+
 Access anonymized datasets, conduct studies, and contribute to the advancement of mental
 healthcare.
 
@@ -144,12 +151,14 @@ intelligence.
 ### Getting Started
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/gradiant.git
    cd gradiant
    ```
 
 2. **Setup the environment**
+
    ```bash
    # Install dependencies
    pnpm install
@@ -159,11 +168,13 @@ intelligence.
    ```
 
 3. **Start development server**
+
    ```bash
    pnpm dev
    ```
 
 4. **Build for production**
+
    ```bash
    pnpm build
    ```
@@ -173,12 +184,14 @@ intelligence.
 If you encounter any issues during development or build:
 
 1. **Run diagnostics**
+
    ```bash
    pnpm run diagnostics
    ```
 
 2. **Node.js version issues**
    If you're using nvm, you can easily switch to the required version:
+
    ```bash
    nvm use
    ```

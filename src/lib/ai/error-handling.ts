@@ -6,7 +6,7 @@ import type {
   AIStreamChunk,
   ModelInfo,
 } from './models/ai-types'
-import { createAuditLog } from '../audit'
+import { createAuditLog } from '../audit/log'
 
 /**
  * Standard error types for AI service operations
@@ -51,6 +51,15 @@ export interface AIErrorDetails {
   stack?: string
   context?: Record<string, unknown>
   [key: string]: unknown
+}
+
+/**
+ * Context for AI error handling
+ */
+export interface AIErrorContext extends Record<string, unknown> {
+  model?: string
+  messageCount?: number
+  streaming?: boolean
 }
 
 /**
@@ -257,25 +266,30 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
         }
 
         // Create audit log for the error
-        await createAuditLog({
-          action: 'ai_error',
-          userId: 'system',
-          resourceType: 'ai_service',
-          resourceId: error.id,
-          details: {
+        await createAuditLog(
+          typeof error === 'object' && error !== null && 'id' in error
+            ? String(error.id)
+            : 'system',
+          'ai_error',
+          typeof error === 'object' && error !== null && 'id' in error
+            ? String(error.id)
+            : 'unknown',
+          {
             message: 'An unexpected error occurred with the AI service',
-            originalError: (error as Error).message || String(error),
+            originalError:
+              error instanceof Error ? error.message : String(error),
             metadata: {
               ...context,
             },
           },
-        })
+        )
 
         handleStreamError(error, context)
 
         if (error instanceof Error) {
           throw handleAIServiceError(error, context)
         }
+        throw new Error('Unknown error occurred')
       }
     },
 
@@ -293,25 +307,30 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
         }
 
         // Create audit log for the error
-        await createAuditLog({
-          action: 'ai_error',
-          userId: 'system',
-          resourceType: 'ai_service',
-          resourceId: error.id,
-          details: {
+        await createAuditLog(
+          typeof error === 'object' && error !== null && 'id' in error
+            ? String(error.id)
+            : 'system',
+          'ai_error',
+          typeof error === 'object' && error !== null && 'id' in error
+            ? String(error.id)
+            : 'unknown',
+          {
             message: 'An unexpected error occurred with the AI service',
-            originalError: (error as Error).message || String(error),
+            originalError:
+              error instanceof Error ? error.message : String(error),
             metadata: {
               ...context,
             },
           },
-        })
+        )
 
         handleStreamError(error, context)
 
         if (error instanceof Error) {
           throw handleAIServiceError(error, context)
         }
+        throw new Error('Unknown error occurred')
       }
     },
 
@@ -329,25 +348,30 @@ export function createErrorHandlingAIService(aiService: AIService): AIService {
         }
 
         // Create audit log for the error
-        await createAuditLog({
-          action: 'ai_error',
-          userId: 'system',
-          resourceType: 'ai_service',
-          resourceId: error.id,
-          details: {
+        await createAuditLog(
+          typeof error === 'object' && error !== null && 'id' in error
+            ? String(error.id)
+            : 'system',
+          'ai_error',
+          typeof error === 'object' && error !== null && 'id' in error
+            ? String(error.id)
+            : 'unknown',
+          {
             message: 'An unexpected error occurred with the AI service',
-            originalError: (error as Error).message || String(error),
+            originalError:
+              error instanceof Error ? error.message : String(error),
             metadata: {
               ...context,
             },
           },
-        })
+        )
 
         handleStreamError(error, context)
 
         if (error instanceof Error) {
           throw handleAIServiceError(error, context)
         }
+        throw new Error('Unknown error occurred')
       }
     },
 
@@ -389,8 +413,8 @@ export function safeJsonParse<T>(jsonString: string): T {
             response: jsonString,
             originalError:
               innerError instanceof Error
-                ? innerError
-                : new Error(String(innerError)),
+                ? innerError.message
+                : String(innerError),
           },
         )
       }
@@ -403,8 +427,7 @@ export function safeJsonParse<T>(jsonString: string): T {
       500,
       {
         response: jsonString,
-        originalError:
-          error instanceof Error ? error : new Error(String(error)),
+        originalError: error instanceof Error ? error.message : String(error),
       },
     )
   }
@@ -590,6 +613,9 @@ export function createAIError(
   return new AIError(message, type, status, details)
 }
 
+/**
+ * Handles errors from AI streams
+ */
 export function handleStreamError(
   error: unknown,
   context: AIErrorContext = {},

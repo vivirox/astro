@@ -17,7 +17,9 @@ const contentTypeMiddleware: MiddlewareHandler = async (
   // Process the request first
   const response = await next()
 
-  if (!response) return response
+  if (!response) {
+    return response
+  }
 
   const url = new URL(context.request.url)
   const path = url.pathname

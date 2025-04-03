@@ -9,7 +9,7 @@ import { createTogetherAIService } from '../../../lib/ai/services/together'
 import { getSession } from '../../../lib/auth/session'
 import { validateRequestBody } from '../../../lib/validation/index'
 import { CompletionRequestSchema } from '../../../lib/validation/schemas'
-import { rateLimit } from '../../../lib/middleware/rate-limit'
+import { applyRateLimit } from '../../../lib/api/rate-limit'
 import { getLogger } from '../../../lib/logging'
 
 // Initialize logger
@@ -35,42 +35,22 @@ export const POST: APIRoute = async ({ request }) => {
       })
     }
 
-    // Apply rate limiting based on user role
-    const role = session.user.role || 'user'
-    const { allowed, limit, remaining, reset } = rateLimit.check(
-      `${session.user.id}:/api/ai/completion`,
-      role,
-      {
+    // Apply enhanced rate limiting with suspicious activity tracking for AI endpoints
+    const rateLimit = await applyRateLimit(request, '/api/ai/completion', {
+      limits: {
         admin: 120, // 120 requests per minute for admins
         therapist: 80, // 80 requests per minute for therapists
         user: 40, // 40 requests per minute for regular users
         anonymous: 10, // 10 requests per minute for unauthenticated users
       },
-      60 * 1000, // 1 minute window
-    )
+      windowMs: 60 * 1000, // 1 minute window
+      trackSuspiciousActivity: true,
+    })
 
-    if (!allowed) {
-      logger.warn('Rate limit exceeded for AI completion', {
-        userId: session.user.id,
-        role: role,
-      })
-
-      return new Response(
-        JSON.stringify({
-          error: 'Too Many Requests',
-          message: 'Rate limit exceeded. Please try again later.',
-        }),
-        {
-          status: 429,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-RateLimit-Limit': limit.toString(),
-            'X-RateLimit-Remaining': '0',
-            'X-RateLimit-Reset': reset.toString(),
-            'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
-          },
-        },
-      )
+    // Check if request is rate limited
+    const errorResponse = rateLimit.createErrorResponse()
+    if (errorResponse) {
+      return errorResponse
     }
 
     // Validate request body against schema
@@ -198,9 +178,7 @@ export const POST: APIRoute = async ({ request }) => {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache, no-transform',
           'Connection': 'keep-alive',
-          'X-RateLimit-Limit': limit.toString(),
-          'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
+          ...Object.fromEntries(rateLimit.headers.entries()),
         },
       })
     }
@@ -231,9 +209,7 @@ export const POST: APIRoute = async ({ request }) => {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'private, no-cache, no-store, must-revalidate',
-        'X-RateLimit-Limit': limit.toString(),
-        'X-RateLimit-Remaining': remaining.toString(),
-        'X-RateLimit-Reset': reset.toString(),
+        ...Object.fromEntries(rateLimit.headers.entries()),
       },
     })
   } catch (error) {

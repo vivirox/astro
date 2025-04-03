@@ -1,8 +1,10 @@
 import type { Message } from '@/types/chat'
+import type { ChangeEvent, FormEvent } from 'react'
 import { cn } from '@/lib/utils'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ChatInput } from './ChatInput'
 import { ChatMessage } from './ChatMessage'
+import { IconBrain, IconChevronDown } from './icons'
 
 interface ChatContainerProps {
   messages: Message[]
@@ -26,6 +28,7 @@ export function ChatContainer({
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [showScrollButton, setShowScrollButton] = useState(false)
+  const [input, setInput] = useState('')
 
   // Auto scroll to bottom on new messages
   useEffect(() => {
@@ -37,7 +40,9 @@ export function ChatContainer({
   // Show/hide scroll button based on scroll position
   useEffect(() => {
     const container = containerRef.current
-    if (!container) return
+    if (!container) {
+      return
+    }
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container
@@ -51,6 +56,14 @@ export function ChatContainer({
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  function handleInputChange(e: ChangeEvent<HTMLTextAreaElement>): void {
+    throw new Error('Function not implemented.')
+  }
+
+  function handleSubmit(e: FormEvent<Element>): void {
+    throw new Error('Function not implemented.')
   }
 
   return (
@@ -78,25 +91,23 @@ export function ChatContainer({
         ) : (
           <>
             {messages.map((message, index) => (
-              <ChatMessage
-                key={index}
-                message={message}
-                isError={message.isError}
-              />
+              <ChatMessage key={index} message={message} />
             ))}
 
             {isLoading && (
               <ChatMessage
-                message={{ role: 'assistant', content: '' }}
-                isLoading={true}
+                message={{ role: 'assistant', content: '', name: 'Assistant' }}
+                isTyping={true}
               />
             )}
 
             {error && (
               <ChatMessage
-                message={{ role: 'assistant', content: '' }}
-                isError={true}
-                errorMessage={error}
+                message={{
+                  role: 'assistant',
+                  content: `Error: ${error}`,
+                  name: 'Assistant',
+                }}
               />
             )}
 
