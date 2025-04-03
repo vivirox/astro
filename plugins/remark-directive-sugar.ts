@@ -88,7 +88,7 @@ function remarkDirectiveSugar() {
       ) {
         const data = node.data || (node.data = {})
         const attributes = node.attributes || {}
-        const children = node.children
+        const { children } = node
 
         if (node.name === 'video') {
           /* ::video */

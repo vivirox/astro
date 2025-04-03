@@ -5,7 +5,7 @@ globs: *
 
 # Cursor Development Rules & AI Collaboration Guide for Astro/TypeScript
 
-## �� Core Philosophy
+##  Core Philosophy
 
 1.  **Simplicity:** Prioritize simple, clear, and maintainable solutions. Avoid unnecessary complexity or over-engineering.
         *   `docs/technical.md` (Technical specifications, established patterns)
@@ -235,6 +235,7 @@ globs: *
     *   **CRITICAL**: Always check for linter errors after creating or editing files.
     *   For `.astro` files, verify correct structure with imports and TypeScript in the frontmatter section (between `---` fences) and template code after.
     *   Fix any syntax or import errors before committing changes.
+    *   Address markdownlint rule MD033 (no-inline-html) conflicts. Investigate why the rule is enforced despite being disabled in the `.trunk/configs/.markdownlint.yaml` configuration file.  Check for conflicting rules or configurations in other files (e.g., `.markdownlintignore`, `package.json`, local `.markdownlint.json` or `.markdownlint.yaml`). If necessary, update the markdownlint configuration to resolve the conflict. (2025-04-03)  Use `<!-- markdownlint-disable MD033 -->` and `<!-- markdownlint-enable MD033 -->` to temporarily disable and re-enable the rule where needed in markdown files.
 10. **File Naming:** Use clear, descriptive names. Avoid "temp", "refactored", "improved", etc., in permanent file names.  Maintain consistent casing in filenames (e.g., `Label.tsx` not `label.tsx`).
 11. **No One-Time Scripts:** Do not commit one-time utility scripts into the main codebase.
 
@@ -317,5 +318,4 @@ Progress Update (2025-04-04): DocumentationLayout.astro component created (2025-
 Progress Update (2025-04-05): Converted PerformanceDashboard component to Astro.
 RealUserMonitoring.astro component created (2025-04-02).  A new page `/admin/real-user-monitoring` was added to display the RUM dashboard. (2025-04-02)
 SimulatorDashboard.astro component created (2025-04-02).
-Progress Update (2025-04-06): SimulatorDashboard Conversion (COMPLETED) - Created SimulatorDashboard.astro wrapper component with proper frontmatter structure and client:load directive. Created SimulatorDashboardReact.tsx as the actual implementation. Added comprehensive tests for the components. Mobile Device Tests (COMPLETED) - Implemented Playwright-based mobile device compatibility tests for various screen sizes and orientations. Tested core pages including home, documentation, dashboard, and simulator. Added screenshot generation for visual verification. Overall Progress - Project now at 95% completion with all dashboard components converted to Astro format and significant progress on testing infrastructure.
-Progress Update (2025-04-07): Cross-Browser Compatibility Tests (COMPLETED) - Created comprehensive cross-browser tests using Playwright
+Progress Update (2025

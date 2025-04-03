@@ -1,10 +1,8 @@
 # Gradiant Ascent
 
-<div align="center">
-
 [![Gradiant Ascent](https://gradiantascent.com/cube.png)](https://gradiantascent.com)
 
-**Elevating Emotional Intelligence through AI**
+## Elevating Emotional Intelligence through AI
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Made with Astro](https://img.shields.io/badge/Made%20with-Astro-ff5d01.svg)](https://astro.build)
@@ -15,8 +13,6 @@
 [Website](https://gradiantascent.com) •
 [Documentation](https://docs.gradiantascent.com) •
 [Blog](https://blog.gradiantascent.com)
-
-</div>
 
 ---
 
@@ -93,6 +89,7 @@ healthcare.
 Visit [gradiantascent.com](https://gradiantascent.com) to explore our interactive demo
 and see how we're transforming mental healthcare.
 
+<!-- markdownlint-disable MD033 -->
 <div align="center">
 
 ![Analytics Dashboard](https://raw.githubusercontent.com/lin-stephanie/assets/refs/heads/main/astro-antfustyle-theme/blog_2x.png)
@@ -102,6 +99,7 @@ and see how we're transforming mental healthcare.
 *Real-time session analysis and pattern recognition*
 
 </div>
+<!-- markdownlint-enable MD033 -->
 
 ## 🚀 Coming March 31, 2025
 
@@ -122,15 +120,11 @@ intelligence.
 
 ---
 
-<div align="center">
-
-**Built with ❤️ for mental health professionals worldwide**
+## Built with ❤️ for mental health professionals worldwide
 
 [Terms](https://gradiantascent.com/terms) •
 [Privacy](https://gradiantascent.com/privacy) •
 [Security](https://gradiantascent.com/security)
-
-</div>
 
 ## 🚀 Technical Stack
 
