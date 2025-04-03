@@ -6,6 +6,11 @@ const description = 'Sorry, the page you are looking for could not be found.'
 
 // Export prerender directive to ensure this page is built statically
 export const prerender = true;
+
+// Add getStaticPaths to handle the catch-all route
+export function getStaticPaths() {
+  return [{ params: { 404: undefined } }]
+}
 ---
 
 <BaseLayout {title} {description}>

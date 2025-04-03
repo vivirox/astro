@@ -219,6 +219,8 @@ export function protectRoute<
     string | undefined
   >,
 >(
+  Astro: unknown,
+  p0: string[],
   options: ProtectRouteOptions,
 ): (
   handler: (

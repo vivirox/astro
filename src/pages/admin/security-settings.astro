@@ -3,17 +3,15 @@ import AdminLayout from '../../layouts/AdminLayout.astro'
 import SecuritySettingsPanel from '../../components/admin/SecuritySettingsPanel.astro'
 import { protectRoute } from '../../lib/auth/serverAuth'
 
-// Protect this route for admin users only
-export const getStaticPaths = () => {
-  return [{ params: { slug: undefined } }]
-}
+// Mark this page for server-side rendering
+export const prerender = false;
 
 // Check permissions before rendering
-const { authorized, redirectPath } = await protectRoute(Astro, ['admin'])
+const authResult = protectRoute(Astro, ['admin'], {})
 
-// If not authorized, redirect
-if (!authorized && redirectPath) {
-  return Astro.redirect(redirectPath)
+// If protection result is a Response (redirect), return it
+if (authResult instanceof Response) {
+  return authResult
 }
 ---
 
@@ -102,7 +100,8 @@ if (!authorized && redirectPath) {
         
         alert('Security alert test sent successfully!');
       } catch (error) {
-        alert(`Error: ${error.message}`);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        alert(`Error: ${errorMessage}`);
       }
     });
     
@@ -120,7 +119,8 @@ if (!authorized && redirectPath) {
         
         alert('Security settings synced successfully!');
       } catch (error) {
-        alert(`Error: ${error.message}`);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        alert(`Error: ${errorMessage}`);
       }
     });
     
@@ -142,7 +142,8 @@ if (!authorized && redirectPath) {
         
         alert('Account lockouts cleared successfully!');
       } catch (error) {
-        alert(`Error: ${error.message}`);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        alert(`Error: ${errorMessage}`);
       }
     });
     
@@ -274,4 +275,4 @@ if (!authorized && redirectPath) {
       grid-template-columns: 1fr;
     }
   }
-</style> 
+</style>
