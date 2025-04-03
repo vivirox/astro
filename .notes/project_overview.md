@@ -15,6 +15,7 @@ considerations in healthcare technology.
 ## Technical Architecture
 
 ### Frontend Layer
+
 - **Framework**: Astro 4.x with React 18 integration
 - **UI Components**:
   - Shadcn UI components
@@ -26,6 +27,7 @@ considerations in healthcare technology.
   - Zustand for complex state scenarios
 
 ### Backend Services
+
 - **API Layer**: Astro + Node.js backend integration
 - **Database**: Supabase for primary data storage
 - **Caching**: Redis (Upstash) for performance optimization
@@ -35,11 +37,13 @@ considerations in healthcare technology.
   - Analytics processing
 
 ### AI/ML Integration
+
 - **Core Analytics**: MentalLLaMA integration for mental health analysis
 - **Privacy**: Fully Homomorphic Encryption (FHE) for sensitive data processing
 - **Real-time Processing**: WebSocket integration for live analysis
 
 ### Security & Compliance
+
 - HIPAA-compliant infrastructure
 - End-to-end encryption
 - Zero-knowledge processing capabilities
@@ -74,27 +78,33 @@ considerations in healthcare technology.
 ## Sample User Journeys
 
 ### 1. Mental Health Professional
+
 ```text
 Login → Dashboard → Patient Overview → Session Analysis → Generate Insights → Create Report
 ```
+
 - Access encrypted patient records
 - Conduct real-time session analysis
 - Generate AI-powered insights
 - Create comprehensive reports
 
 ### 2. Healthcare Administrator
+
 ```text
 Login → Analytics Dashboard → Performance Metrics → Resource Management → Compliance Reports
 ```
+
 - Monitor institutional metrics
 - Manage resource allocation
 - Ensure HIPAA compliance
 - Generate administrative reports
 
 ### 3. Researcher
+
 ```text
 Login → Data Analytics → Pattern Analysis → Research Dashboard → Export Findings
 ```
+
 - Access anonymized data
 - Conduct pattern analysis
 - Generate research insights
