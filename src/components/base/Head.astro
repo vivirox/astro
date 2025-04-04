@@ -1,5 +1,5 @@
 ---
-import { ClientRouter } from 'astro:transitions'
+
 import { basename } from 'node:path'
 import { checkFileExistsInDir, getUrl } from '~/utils/common'
 import { SITE } from '~/config'
@@ -12,14 +12,13 @@ interface Props {
   lastModDate?: string
 }
 
-const { title, description, ogImage, pubDate, lastModDate } = Astro.props
+const { title, ogImage, } = Astro.props
 
-const pageTitle =
-  title && title !== SITE.title ? `${title} - ${SITE.title}` : SITE.title
 
-const pageDescription = description || SITE.description
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+
+
+
 
 const generatedOgImage = (await checkFileExistsInDir(
   'public/og-images',
@@ -35,39 +34,13 @@ const assignedOgImage =
     ? getUrl('og-images', ogImage)
     : undefined
 
-const ogImageURL = new URL(
-  assignedOgImage || generatedOgImage || getUrl('og-images', 'og-image.png'),
-  Astro.url,
-).href
+
 
 // https://jsonld.com/blog-post/
-const blogPostingData = {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  'headline': pageTitle,
-  'image': ogImageURL,
-  'url': canonicalURL,
-  'datePublished': pubDate,
-  ...(lastModDate && { dateModified: lastModDate }),
-  ...(description && { description: description }),
-  'author': {
-    '@type': 'Person',
-    'name': SITE.author,
-    'url': SITE.website,
-  },
-}
+
 
 // https://jsonld.com/web-page/
-const webPageData = {
-  '@context': 'https://schema.org',
-  '@type': 'webPage',
-  'name': `${title || SITE.title}`,
-  ...(description && { description: description }),
-  'publisher': {
-    '@type': 'ProfilePage',
-    'name': `${SITE.author}'s Personal Website`,
-  },
-}
+
 ---
 
 <!-- Global Metadata -->
@@ -86,17 +59,37 @@ const webPageData = {
 <meta name="theme-color" content="" />
 <meta name="color-scheme" content="light dark" />
 
+<!-- Preload Critical Resources -->
+<link
+  rel="preload"
+  href="/fonts/inter-var.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+<link rel="preload" href="/css/fonts.css" as="style" />
+<link rel="preload" href="/css/index.css" as="style" />
+<link rel="modulepreload" href="/node_modules/nprogress/nprogress.js" />
+<link rel="modulepreload" href="/node_modules/medium-zoom/dist/pure.js" />
+
 <!-- Fonts and Styles -->
 <link rel="stylesheet" href={getUrl('/css/fonts.css')} />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin="anonymous"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&display=swap"
+  rel="stylesheet"
+/>
 
 <!-- Three.js is imported dynamically in components that need it -->
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={pubDate ? 'article' : 'website'} />
-<meta property="og:url" content={canonicalURL} />
+<meta property="og:url" content={canonicalURL.toString()} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={pageDescription} />
 <meta property="og:image" content={ogImageURL} />
@@ -114,13 +107,13 @@ const webPageData = {
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={canonicalURL} />
+<meta property="twitter:url" content={canonicalURL.toString()} />
 <meta property="twitter:title" content={pageTitle} />
 <meta property="twitter:description" content={pageDescription} />
 <meta property="twitter:image" content={ogImageURL} />
 
 <!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
+<link rel="canonical" href={canonicalURL.toString()} />
 
 <!-- Icon -->
 <link rel="icon" sizes="any" href={getUrl('/favicon.ico')} />
@@ -137,7 +130,7 @@ const webPageData = {
 <link
   rel="alternate"
   type="application/rss+xml"
-  title={getUrl('/rss.xml')}
+  title={SITE.title + ' RSS Feed'}
   href="/rss.xml"
 />
 

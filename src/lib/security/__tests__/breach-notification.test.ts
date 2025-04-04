@@ -1,10 +1,10 @@
 import { auth } from '@/lib/auth'
-import { sendEmail } from '@/lib/email'
-import { FHE } from '@/lib/fhe'
+import { fheService } from '@/lib/fhe'
 import { logger } from '@/lib/logger'
 import { redis } from '@/lib/redis'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { BreachNotificationSystem } from '../breach-notification'
+import { EmailService } from '~/lib/services/email/EmailService'
 
 // Mock dependencies
 vi.mock('@/lib/redis', () => ({
@@ -15,8 +15,10 @@ vi.mock('@/lib/redis', () => ({
   },
 }))
 
-vi.mock('@/lib/email', () => ({
-  sendEmail: vi.fn(),
+vi.mock('@/lib/services/email/EmailService', () => ({
+  EmailService: {
+    sendEmail: vi.fn(),
+  },
 }))
 
 vi.mock('@/lib/auth', () => ({
@@ -26,7 +28,7 @@ vi.mock('@/lib/auth', () => ({
 }))
 
 vi.mock('@/lib/fhe', () => ({
-  FHE: {
+  fheService: {
     encrypt: vi.fn(),
   },
 }))
@@ -64,8 +66,8 @@ describe('breachNotificationSystem', () => {
     ;(redis.get as any).mockResolvedValue(null)
     ;(redis.keys as any).mockResolvedValue([])
     ;(auth.getUserById as any).mockResolvedValue(mockUser)
-    ;(FHE.encrypt as any).mockResolvedValue('encrypted_data')
-    ;(sendEmail as any).mockResolvedValue(undefined)
+    ;(fheService.encrypt as any).mockResolvedValue('encrypted_data')
+    ;(EmailService.sendEmail as any).mockResolvedValue(undefined)
 
     // Setup process.env
     process.env.ORGANIZATION_NAME = 'Test Org'
@@ -91,7 +93,7 @@ describe('breachNotificationSystem', () => {
         'Security breach detected:',
         expect.any(Object),
       )
-      expect(sendEmail).toHaveBeenCalled()
+      expect(EmailService.sendEmail).toHaveBeenCalled()
     })
 
     it('should handle errors during breach reporting', async () => {
@@ -115,8 +117,8 @@ describe('breachNotificationSystem', () => {
       expect(auth.getUserById).toHaveBeenCalledTimes(
         mockBreachDetails.affectedUsers.length,
       )
-      expect(FHE.encrypt).toHaveBeenCalled()
-      expect(sendEmail).toHaveBeenCalledWith(
+      expect(fheService.encrypt).toHaveBeenCalled()
+      expect(EmailService.sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: mockUser.email,
           subject: expect.stringContaining('HIGH Security Event'),
@@ -130,11 +132,13 @@ describe('breachNotificationSystem', () => {
 
       await BreachNotificationSystem.reportBreach(mockBreachDetails)
 
-      expect(sendEmail).not.toHaveBeenCalled()
+      expect(EmailService.sendEmail).not.toHaveBeenCalled()
     })
 
     it('should handle user notification errors', async () => {
-      ;(sendEmail as any).mockRejectedValue(new Error('Email error'))
+      ;(EmailService.sendEmail as any).mockRejectedValue(
+        new Error('Email error'),
+      )
 
       await BreachNotificationSystem.reportBreach(mockBreachDetails)
 
@@ -147,14 +151,12 @@ describe('breachNotificationSystem', () => {
 
   describe('notifyAuthorities', () => {
     it('should notify authorities for large-scale breaches', async () => {
-      const largeBreachDetails = {
+      await BreachNotificationSystem.reportBreach({
         ...mockBreachDetails,
-        affectedUsers: Array.from({ length: 500 }).fill('user'),
-      }
+        affectedUsers: Array.from({ length: 500 }, (_, i) => `user_${i}`),
+      })
 
-      await BreachNotificationSystem.reportBreach(largeBreachDetails)
-
-      expect(sendEmail).toHaveBeenCalledWith(
+      expect(EmailService.sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: process.env.HHS_NOTIFICATION_EMAIL,
           subject: expect.stringContaining('HIPAA Breach Notification'),
@@ -171,7 +173,7 @@ describe('breachNotificationSystem', () => {
 
       await BreachNotificationSystem.reportBreach(criticalBreachDetails)
 
-      expect(sendEmail).toHaveBeenCalledWith(
+      expect(EmailService.sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: process.env.HHS_NOTIFICATION_EMAIL,
         }),
@@ -184,12 +186,12 @@ describe('breachNotificationSystem', () => {
       await BreachNotificationSystem.reportBreach(mockBreachDetails)
 
       const stakeholders = process.env.SECURITY_STAKEHOLDERS!.split(',')
-      expect(sendEmail).toHaveBeenCalledTimes(
+      expect(EmailService.sendEmail).toHaveBeenCalledTimes(
         stakeholders.length + mockBreachDetails.affectedUsers.length,
       )
 
       stakeholders.forEach((stakeholder) => {
-        expect(sendEmail).toHaveBeenCalledWith(
+        expect(EmailService.sendEmail).toHaveBeenCalledWith(
           expect.objectContaining({
             to: stakeholder,
             priority: 'urgent',
@@ -204,7 +206,7 @@ describe('breachNotificationSystem', () => {
       await BreachNotificationSystem.reportBreach(mockBreachDetails)
 
       // Should only send notifications to affected users
-      expect(sendEmail).toHaveBeenCalledTimes(
+      expect(EmailService.sendEmail).toHaveBeenCalledTimes(
         mockBreachDetails.affectedUsers.length,
       )
     })

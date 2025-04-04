@@ -1,0 +1,180 @@
+---
+
+
+
+
+
+// Import utility for testing API errors
+import { captureError } from '@/lib/monitoring/sentry'
+
+// Example of programmatically capturing errors
+const exampleCapture = async () => {
+  try {
+    captureError(new Error('Example captured error from server'), {
+      source: 'error-monitoring.astro',
+      serverSide: true,
+    })
+    return 'Error captured successfully'
+  } catch (error) {
+    return `Failed to capture error: ${error instanceof Error ? error.message : String(error)}`
+  }
+}
+
+const captureResult = await exampleCapture()
+---
+
+<AdminLayout title="Error Monitoring - Admin">
+  <div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Error Monitoring Dashboard</h1>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-bold mb-4">Sentry Integration Status</h2>
+      <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div class="flex items-center mb-4">
+          <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+          <p class="font-medium">Sentry is configured and active</p>
+        </div>
+        <p class="text-gray-600 dark:text-gray-300 mb-2">
+          Environment: <code
+            >{import.meta.env.PUBLIC_SENTRY_ENVIRONMENT || 'development'}</code
+          >
+        </p>
+        <p class="text-gray-600 dark:text-gray-300">
+          DSN: <code
+            >{
+              import.meta.env.PUBLIC_SENTRY_DSN ? '✓ Configured' : '✗ Missing'
+            }</code
+          >
+        </p>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          Server-side example: {captureResult}
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-bold mb-4">Error Monitoring Features</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Automatic Error Capture</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Uncaught exceptions, promise rejections, and API errors are
+            automatically captured and reported to Sentry.
+          </p>
+        </div>
+        <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Error Context</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Errors include user info, browser details, page URL, and component
+            hierarchy to help with debugging.
+          </p>
+        </div>
+        <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Source Maps</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Production builds upload source maps to Sentry for accurate stack
+            traces even in minified code.
+          </p>
+        </div>
+        <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Performance Monitoring</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Tracks page load performance, API call times, and other metrics to
+            identify bottlenecks.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-bold mb-4">Test Error Reporting</h2>
+      <ErrorBoundary>
+        <div class="mb-4">
+          <p class="mb-4">
+            The following component can be used to test error reporting. Click
+            the button to trigger a JavaScript error that will be captured by
+            Sentry.
+          </p>
+          <ErrorTest />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <div>
+            <h3 class="font-bold mb-2">Automatic Error</h3>
+            <ErrorTest
+              shouldError={true}
+              errorDelay={3000}
+              errorMessage="Scheduled test error for Sentry"
+            />
+          </div>
+
+          <div>
+            <h3 class="font-bold mb-2">API Error Simulation</h3>
+            <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <p>Test API error reporting by clicking the button below.</p>
+              <button
+                id="apiErrorBtn"
+                class="mt-4 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
+              >
+                Simulate API Error
+              </button>
+            </div>
+          </div>
+        </div>
+      </ErrorBoundary>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-bold mb-4">Next Steps</h2>
+      <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+        <ul
+          class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300"
+        >
+          <li>Set up Sentry alerts for critical errors</li>
+          <li>Configure performance thresholds and alerting</li>
+          <li>Create custom dashboards for error monitoring</li>
+          <li>
+            Add specific issue owners for different parts of the application
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</AdminLayout>
+
+<script>
+  // Handle API error simulation
+  document
+    .getElementById('apiErrorBtn')
+    ?.addEventListener('click', async () => {
+      try {
+        // Simulate API error with fetch
+        const response = await fetch('/api/v1/non-existent-endpoint')
+        if (!response.ok) {
+          throw new Error(
+            `API error: ${response.status} ${response.statusText}`,
+          )
+        }
+      } catch (error) {
+        if (typeof window.Sentry !== 'undefined') {
+          // Add context to the error
+          window.Sentry.withScope((scope) => {
+            scope.setTag('error_source', 'api_simulation')
+            scope.setLevel('error')
+            scope.setExtra('simulation', true)
+
+            // Capture with additional context
+            window.Sentry.captureException(error)
+          })
+
+          // Show feedback to the user
+          alert(
+            'API error captured and sent to Sentry!\nCheck the Sentry dashboard to see the error report.',
+          )
+        } else {
+          console.error('Sentry not available:', error)
+          alert('Error occurred, but Sentry is not available to capture it.')
+        }
+      }
+    })
+</script>

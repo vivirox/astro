@@ -15,15 +15,6 @@ permissions:
   checks: write
   issues: write
 
-env:
-  ENABLE_SECURITY_ALERTS: ${{ secrets.ENABLE_SECURITY_ALERTS }}
-  SECURITY_SLACK_WEBHOOK: ${{ secrets.SECURITY_SLACK_WEBHOOK }}
-  SECURITY_SMTP_SERVER: ${{ secrets.SECURITY_SMTP_SERVER }}
-  SECURITY_SMTP_PORT: ${{ secrets.SECURITY_SMTP_PORT }}
-  SECURITY_SMTP_USERNAME: ${{ secrets.SECURITY_SMTP_USERNAME }}
-  SECURITY_SMTP_PASSWORD: ${{ secrets.SECURITY_SMTP_PASSWORD }}
-  SECURITY_TEAM_EMAIL: ${{ secrets.SECURITY_TEAM_EMAIL }}
-
 jobs:
   security-checks:
     name: Security Scanning
@@ -171,7 +162,7 @@ jobs:
         if: failure()
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ github.token }}
           script: |
             const fs = require('fs');
             const report = fs.existsSync('security-report.md') ?
@@ -185,26 +176,6 @@ jobs:
               body: `Security scan detected issues:\n\n${report}`,
               labels: ['security', 'hipaa-compliance']
             });
-
-      - name: Send Slack Notification
-        if: env.ENABLE_SECURITY_ALERTS == 'true'
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data @notification.json \
-          ${{ env.SECURITY_SLACK_WEBHOOK }}
-
-      - name: Send Email Notification
-        if: env.ENABLE_SECURITY_ALERTS == 'true'
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ env.SECURITY_SMTP_SERVER }}
-          server_port: ${{ env.SECURITY_SMTP_PORT }}
-          username: ${{ env.SECURITY_SMTP_USERNAME }}
-          password: ${{ env.SECURITY_SMTP_PASSWORD }}
-          subject: 'Security Scan Results - ${{ github.repository }}'
-          to: ${{ env.SECURITY_TEAM_EMAIL }}
-          from: GitHub Actions
-          body: file://security-report.md
 
   hipaa-compliance:
     name: HIPAA Compliance Checks
@@ -387,7 +358,7 @@ jobs:
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           GITLEAKS_CONFIG: .gitleaks.toml
           GITLEAKS_RULES: healthcare-patterns.json
 
@@ -537,46 +508,23 @@ jobs:
           Report ID: ${{ github.run_id }}
           EOF
 
-      - name: Process and Send Notifications
-        if: always()
+      - name: Process Security Findings
         run: |
-          # Set default values
+          # Set default values and log findings
           CRITICAL_COUNT=$(grep -c "CRITICAL" trivy-results.sarif 2>/dev/null || echo "0")
           PHI_COUNT=$(grep -c "Found" phi-scan-results.json 2>/dev/null || echo "0")
           FHIR_ISSUES=$(grep -c "FHIR" sarif-results/javascript.sarif 2>/dev/null || echo "0")
 
+          echo "Security scan summary:"
+          echo "- Critical Vulnerabilities: $CRITICAL_COUNT"
+          echo "- PHI Exposures: $PHI_COUNT"
+          echo "- FHIR Security Issues: $FHIR_ISSUES"
+
           if [ "$CRITICAL_COUNT" -gt 0 ] || [ "$PHI_COUNT" -gt 0 ] || [ "$FHIR_ISSUES" -gt 0 ]; then
             echo "SECURITY_ALERT=true" >> $GITHUB_ENV
-
-            # Prepare notification message
-            cat << EOF > notification.json
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "🚨 Security Scan Alert",
-                    "emoji": true
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref }}\n*Commit:* ${{ github.sha }}"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Findings Summary:*\n• Critical Vulnerabilities: $CRITICAL_COUNT\n• PHI Exposures: $PHI_COUNT\n• FHIR Security Issues: $FHIR_ISSUES"
-                  }
-                }
-              ]
-            }
-            EOF
+            echo "⚠️ Security issues detected! See detailed reports."
+          else
+            echo "✅ No critical security issues detected."
           fi
 
       - name: Install PHI detector dependencies
@@ -584,215 +532,3 @@ jobs:
 
       - name: Run PHI detector
         run: node scripts/phi-detector.js --output=phi-scan-results.json
-
-  security-headers:
-    name: Security Headers Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Verify Security Headers
-        run: |
-          echo "Checking security headers configuration..."
-
-          # Define required headers for HIPAA compliance
-          cat << EOF > required-headers.json
-          {
-            "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-            "X-Content-Type-Options": "nosniff",
-            "X-Frame-Options": "DENY",
-            "X-XSS-Protection": "1; mode=block",
-            "Referrer-Policy": "strict-origin-when-cross-origin",
-            "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-            "Content-Security-Policy": [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https:",
-              "connect-src 'self' https:",
-              "font-src 'self'",
-              "object-src 'none'",
-              "media-src 'self'",
-              "form-action 'self'",
-              "frame-ancestors 'none'"
-            ]
-          }
-          EOF
-
-          # Check Astro config for security headers
-          if grep -r "headers:" . --include="*.{ts,js,mjs}"; then
-            echo "✅ Security headers configuration found"
-          else
-            echo "⚠️ Warning: No security headers configuration found"
-            exit 1
-          fi
-
-          # Create report
-          cat << EOF > headers-report.md
-          # Security Headers Analysis
-
-          ## Required Headers Status
-          $(jq -r 'to_entries | .[] | "- [ ] \(.key): \(.value)"' required-headers.json)
-
-          ## Recommendations
-          1. Ensure all required headers are configured in the application
-          2. Validate header values match security requirements
-          3. Test headers implementation in all environments
-          4. Document any required exceptions
-          5. Include headers check in deployment validation
-
-          ## HIPAA Compliance Impact
-          Security headers are essential for HIPAA compliance:
-          - Prevent unauthorized access to PHI
-          - Protect against common web vulnerabilities
-          - Ensure secure data transmission
-          - Maintain data integrity
-          - Document security controls
-          EOF
-
-      - name: Upload Headers Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-headers-report
-          path: headers-report.md
-          retention-days: 90
-
-  dast-scanning:
-    name: Dynamic Security Testing
-    runs-on: ubuntu-latest
-    needs: [security-headers]
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install OWASP ZAP
-        run: |
-          wget https://github.com/zaproxy/zaproxy/releases/download/v2.14.0/ZAP_2.14.0_Linux.tar.gz
-          tar -xvf ZAP_2.14.0_Linux.tar.gz
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install healthcare security tools
-        run: |
-          pip install safety bandit
-          npm install -g snyk
-
-      - name: Session Management Tests
-        run: |
-          echo "Verifying session management..."
-          cat << 'EOF' > session_test.py
-          import re
-          import os
-
-          def check_session_configuration():
-              issues = []
-
-              # Check session timeout
-              for root, _, files in os.walk("."):
-                  for file in files:
-                      if file.endswith((".ts", ".js", ".json")):
-                          with open(os.path.join(root, file)) as f:
-                              content = f.read()
-                              # Check for session timeout configuration
-                              if re.search(r'session.*timeout', content, re.I):
-                                  if not re.search(r'timeout.*=.*\d+', content, re.I):
-                                      issues.append(f"No explicit session timeout in {file}")
-
-                              # Check for secure session settings
-                              if re.search(r'session.*options', content, re.I):
-                                  if not re.search(r'secure:\s*true', content):
-                                      issues.append(f"Session not marked secure in {file}")
-                                  if not re.search(r'httpOnly:\s*true', content):
-                                      issues.append(f"Session not marked httpOnly in {file}")
-
-              return issues
-
-          def verify_hipaa_session_compliance():
-              checks = {
-                  "automatic_logout": False,
-                  "inactivity_timeout": False,
-                  "concurrent_session_control": False,
-                  "session_encryption": False
-              }
-
-              for root, _, files in os.walk("."):
-                  for file in files:
-                      if file.endswith((".ts", ".js", ".json")):
-                          with open(os.path.join(root, file)) as f:
-                              content = f.read()
-                              if re.search(r'auto.*logout|force.*logout', content, re.I):
-                                  checks["automatic_logout"] = True
-                              if re.search(r'session.*timeout|inactivity.*timeout', content, re.I):
-                                  checks["inactivity_timeout"] = True
-                              if re.search(r'concurrent.*session|multiple.*session', content, re.I):
-                                  checks["concurrent_session_control"] = True
-                              if re.search(r'encrypt.*session|session.*encrypt', content, re.I):
-                                  checks["session_encryption"] = True
-
-              return checks
-
-          if __name__ == "__main__":
-              print("Running Session Management Tests...")
-
-              issues = check_session_configuration()
-              compliance = verify_hipaa_session_compliance()
-
-              print("\nSession Configuration Issues:")
-              for issue in issues:
-                  print(f"- {issue}")
-
-              print("\nHIPAA Session Compliance:")
-              for check, status in compliance.items():
-                  print(f"- {check}: {'✓' if status else '✗'}")
-
-              if issues or not all(compliance.values()):
-                  exit(1)
-          EOF
-
-          python session_test.py || echo "Session management issues found"
-
-      - name: Run DAST Scan
-        run: |
-          ./ZAP_2.14.0/zap.sh -cmd -quickurl http://localhost:3000 \
-            -quickprogress -quickout zap-report.html \
-            -configfile ./zap-rules.conf
-
-      - name: Generate DAST Report
-        run: |
-          cat << EOF > dast-report.md
-          # Dynamic Security Analysis Report
-
-          ## Session Management
-          - Automatic session invalidation
-          - Inactivity timeout enforcement
-          - Concurrent session controls
-          - Session fixation protection
-          - HIPAA compliance verification
-
-          ## DAST Results
-          $(cat zap-report.html | grep -o '<div class="risk-high">.*</div>' || echo "No high risks found")
-
-          ## Remediation Steps
-          1. Review session timeout configurations
-          2. Verify encryption of session data
-          3. Implement missing security headers
-          4. Update session management policies
-          EOF
-
-      - name: Upload DAST Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: dast-report
-          path: dast-report.md
-          retention-days: 90

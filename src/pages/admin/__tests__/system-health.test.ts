@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 // Remove axe imports for now as they require additional setup
 // import { axe } from 'axe-core'
 // import { toHaveNoViolations } from 'jest-axe'
 import SystemHealth from '../system-health.astro'
-import { renderToStaticMarkup } from 'react-dom/server'
+
 
 // Mock fetch for health data
 vi.stubGlobal(

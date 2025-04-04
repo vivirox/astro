@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { useRouter } from 'next/router'
+
 import { cn } from '../../lib/utils'
 import { checkBrowserCompatibility } from '../utils/privacy'
-import { Scenario, ScenarioDifficulty, TherapeuticDomain } from '../types'
+import { } from '../types'
 import { useSimulator } from '../hooks/useSimulator'
 import { useRealTimeAnalysis } from '../hooks/useRealTimeAnalysis'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 
 // Components
-import FeedbackPanel from './FeedbackPanel'
+
 import ScenarioInfo from './ScenarioInfo'
-import VideoDisplay from './VideoDisplay'
-import ControlPanel from './ControlPanel'
+
+
 import RealTimeFeedbackPanel from './RealTimeFeedbackPanel'
 import EmpathyMeter from './EmpathyMeter'
 import RealTimePrompts from './RealTimePrompts'
@@ -47,27 +47,23 @@ export function EnhancedSimulationContainer({
   const [autoScroll, setAutoScroll] = useState<boolean>(true)
   const [showTechniqueHighlights, setShowTechniqueHighlights] =
     useState<boolean>(true)
-  const [currentPrompt, setCurrentPrompt] = useState<string>('')
+  const [,setCurrentPrompt] = useState<string>('')
 
   // Get scenario details and simulator functions
-  const { getScenarioById, submitResponse, endSimulation } = useSimulator()
+  const { getScenarioById, } = useSimulator()
   const scenario = getScenarioById(scenarioId)
 
   // Real-time analysis
-  const { startAnalysis, stopAnalysis, isAnalyzing, feedback } =
+  const { startAnalysis, stopAnalysis, feedback } =
     useRealTimeAnalysis(scenario)
 
   // Speech recognition
   const {
     isListening,
     isSupported,
-    transcript,
     interimTranscript,
-    finalTranscript,
     detectedKeywords,
-    detectedTechniques,
     error: speechError,
-    startListening,
     stopListening,
     resetTranscript,
     toggleListening,

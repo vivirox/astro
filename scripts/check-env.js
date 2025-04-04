@@ -6,9 +6,8 @@
  */
 
 const nodeMajorVersion = parseInt(process.versions.node.split('.')[0], 10)
-const requiredNodeVersion = 20
-const platform = process.platform
-const arch = process.arch
+const requiredNodeVersion = 22
+const {platform, arch} = process;
 
 console.log(`\n📊 Environment Check`)
 console.log(`Node.js version: ${process.versions.node}`)

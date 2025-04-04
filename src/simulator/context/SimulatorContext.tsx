@@ -84,7 +84,7 @@ export const SimulatorProvider: React.FC<SimulatorProviderProps> = ({
   )
 
   // Audio processing state
-  const [audioProcessor, setAudioProcessor] = useState<any>(null)
+  const [] = useState<any>(null)
   const [isAudioProcessing, setIsAudioProcessing] = useState<boolean>(false)
 
   /**

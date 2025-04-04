@@ -1,5 +1,5 @@
 // Patched version of ReactDOM Client for ESM compatibility
-import * as ReactDOM from 'react-dom'
+
 import * as ReactDOMClient from 'react-dom/client'
 
 export default ReactDOMClient

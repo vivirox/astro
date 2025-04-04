@@ -7,10 +7,10 @@ import SearchDemo from '../SearchDemo.astro'
 vi.mock('../SearchDemoReact', () => ({
   default: vi.fn(() => (
     <div data-testid="search-demo-react">
-      <input 
-        type="text" 
-        placeholder="Search for anything..." 
-        data-testid="search-input" 
+      <input
+        type="text"
+        placeholder="Search for anything..."
+        data-testid="search-input"
       />
       <button>Search</button>
       <div className="search-results">
@@ -42,13 +42,13 @@ describe('SearchDemo.astro', () => {
 
   it('renders with default props', async () => {
     const { container } = await renderAstroComponent(SearchDemo)
-    
+
     // Check if the title and description are rendered with default values
     expect(container.querySelector('h2')).toHaveTextContent('Search Demo')
     expect(container.querySelector('p')).toHaveTextContent(
       'Try our advanced search capabilities with this interactive demo'
     )
-    
+
     // Check if client component placeholder exists
     expect(container.innerHTML).toContain('search-demo-react')
   })
@@ -59,28 +59,28 @@ describe('SearchDemo.astro', () => {
       description: 'Custom description for search',
       className: 'custom-class'
     }
-    
+
     const { container } = await renderAstroComponent(SearchDemo, customProps)
-    
+
     // Check if the custom title and description are rendered
     expect(container.querySelector('h2')).toHaveTextContent('Custom Search')
     expect(container.querySelector('p')).toHaveTextContent('Custom description for search')
-    
+
     // Check if custom class is applied
     expect(container.querySelector('div')).toHaveClass('custom-class')
   })
 
   it('applies transition styles', async () => {
     const { container } = await renderAstroComponent(SearchDemo)
-    
+
     // Check if transition styles are applied
     const mainDiv = container.querySelector('div')
     expect(mainDiv).toHaveClass('transition-colors')
     expect(mainDiv).toHaveClass('duration-300')
-    
+
     // Check if style element is included
     const styleElement = container.querySelector('style')
     expect(styleElement).toBeTruthy()
     expect(styleElement?.textContent).toContain('--transition-duration: 300ms')
   })
-}) 
+})

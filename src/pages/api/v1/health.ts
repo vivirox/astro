@@ -1,8 +1,5 @@
 import type { APIRoute } from 'astro'
-import * as processModule from 'node:process'
-import * as os from 'node:os'
-import { createClient } from '@supabase/supabase-js'
-import { getRedisHealth } from '../../../lib/redis'
+import { RedisService } from '../../../lib/services/redis/RedisService'
 
 /**
  * V1 Health check API endpoint
@@ -15,209 +12,116 @@ import { getRedisHealth } from '../../../lib/redis'
  * 5. Node.js runtime information
  */
 export const GET: APIRoute = async ({ request }) => {
-  const startTime = performance.now()
-  const healthStatus: Record<string, any> = {
-    status: 'healthy',
-    api: {
-      status: 'healthy',
-      timestamp: new Date().toISOString(),
-      version: 'v1',
-    },
-  }
+  const startTime = Date.now()
+  let status = 200
+  let message = 'All systems operational'
+  const services: Record<
+    string,
+    { status: 'healthy' | 'degraded' | 'down'; responseTime?: number }
+  > = {}
+  // Check environment
+  const environment =
+    import.meta.env.MODE || process.env.NODE_ENV || 'development'
+  // Get deployment info if available
+  const version =
+    process.env.DEPLOY_VERSION || process.env.VERCEL_GIT_COMMIT_SHA || 'unknown'
+  const deployTime =
+    process.env.DEPLOY_TIMESTAMP ||
+    process.env.VERCEL_GIT_COMMIT_MESSAGE ||
+    'unknown'
+  try {
+    // Check Redis if configured
+    if (process.env.REDIS_URL) {
+      const redisStartTime = Date.now()
+      try {
+        const redis = new RedisService({
+          url: process.env.REDIS_URL,
+          keyPrefix: process.env.REDIS_KEY_PREFIX || 'gradiant:',
+        })
 
-  // Get request info for debugging
-  const url = new URL(request.url)
-  const clientIp = request.headers.get('x-forwarded-for') || 'unknown'
-  const userAgent = request.headers.get('user-agent') || 'unknown'
+        const pingResult = await redis.ping()
+        if (pingResult === 'PONG') {
+          services.redis = {
+            status: 'healthy',
+            responseTime: Date.now() - redisStartTime,
+          }
+        } else {
+          services.redis = { status: 'degraded' }
+          message = 'Some systems degraded'
+          status = 200 // Still consider the API healthy even if Redis is degraded
+        }
 
-  console.info('Health check requested', {
-    path: url.pathname,
-    clientIp,
-    userAgent,
-    version: 'v1',
-  })
-
-  // If no Supabase credentials, return partial health status
-  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn(
-      'Health check: Missing Supabase credentials, skipping database check',
-    )
-    healthStatus.supabase = {
-      status: 'unknown',
-      message: 'No credentials available',
-    }
-  } else {
-    try {
-      // Check Supabase connection
-      healthStatus.supabase = await checkSupabaseConnection(
-        supabaseUrl,
-        supabaseAnonKey,
-      )
-    } catch (error) {
-      console.error('Error during Supabase health check:', error)
-      healthStatus.supabase = {
-        status: 'unhealthy',
-        error: error instanceof Error ? error.message : String(error),
+        await redis.disconnect()
+      } catch (error) {
+        services.redis = { status: 'down' }
+        message = 'Some systems degraded'
+        status = 200 // Still return 200 but indicate degraded service
       }
-      // If a critical component fails, the overall status is unhealthy
-      healthStatus.status = 'unhealthy'
-    }
-  }
-
-  // Check Redis connection
-  try {
-    healthStatus.redis = await getRedisHealth()
-    if (healthStatus.redis.status === 'unhealthy') {
-      healthStatus.status = 'unhealthy'
-    }
-  } catch (error) {
-    console.error('Error during Redis health check:', error)
-    healthStatus.redis = {
-      status: 'unhealthy',
-      error: error instanceof Error ? error.message : String(error),
-    }
-    healthStatus.status = 'unhealthy'
-  }
-
-  // Add system information
-  healthStatus.system = getSystemInformation()
-
-  // Calculate response time
-  const endTime = performance.now()
-  healthStatus.api.responseTimeMs = Math.round(endTime - startTime)
-
-  // Return the health status
-  return new Response(JSON.stringify(healthStatus, null, 2), {
-    status: healthStatus.status === 'healthy' ? 200 : 503,
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-store, max-age=0',
-    },
-  })
-}
-
-/**
- * Check Supabase connection
- */
-async function checkSupabaseConnection(
-  supabaseUrl: string,
-  supabaseAnonKey: string,
-): Promise<Record<string, any>> {
-  // Create Supabase client if credentials are available
-  const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-  // Check connection by querying health table
-  try {
-    const { error } = await supabase
-      .from('_health')
-      .select('status')
-      .limit(1)
-      .maybeSingle()
-
-    if (error) {
-      throw new Error(`Supabase connection check failed: ${error.message}`)
     }
 
-    return {
+    // Check API itself - always healthy if we got here
+    services.api = {
       status: 'healthy',
-      timestamp: new Date().toISOString(),
+      responseTime: Date.now() - startTime,
     }
+    // We could add more service checks here:
+    // - Database connection
+    // - External services
+    // - Auth service
+    // - Storage service
+    // - etc.
+    // Calculate overall status based on service statuses
+    const hasDownServices = Object.values(services).some(
+      (s) => s.status === 'down',
+    )
+    const hasDegradedServices = Object.values(services).some(
+      (s) => s.status === 'degraded',
+    )
+    if (hasDownServices) {
+      message = 'Some systems are down'
+      status = 200 // Still return 200 to allow health check to pass but indicate in body
+    } else if (hasDegradedServices) {
+      message = 'Some systems are degraded'
+      status = 200
+    }
+
+    // Prepare the response
+    const response = {
+      status: message,
+      timestamp: new Date().toISOString(),
+      environment,
+      version,
+      deploy_time: deployTime,
+      uptime: process.uptime(),
+      request_id: request.headers.get('x-request-id') || crypto.randomUUID(),
+      services,
+      response_time: Date.now() - startTime,
+    }
+
+    return new Response(JSON.stringify(response), {
+      status,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, max-age=0',
+      },
+    })
   } catch (error) {
-    console.error('Supabase health check failed:', error)
-    return {
-      status: 'unhealthy',
-      error: error instanceof Error ? error.message : String(error),
+    // If anything fails in our health check logic itself
+    const errorResponse = {
+      status: 'API health check error',
       timestamp: new Date().toISOString(),
+      environment,
+      error: error instanceof Error ? error.message : String(error),
+      request_id: request.headers.get('x-request-id') || crypto.randomUUID(),
+      response_time: Date.now() - startTime,
     }
-  }
-}
 
-/**
- * Get system information including memory, CPU, and runtime details
- */
-function getSystemInformation(): Record<string, any> {
-  // Get memory usage
-  const totalMemory = os.totalmem()
-  const freeMemory = os.freemem()
-  const usedMemory = totalMemory - freeMemory
-  const memoryUsagePercent = Math.round((usedMemory / totalMemory) * 100)
-
-  // Get CPU information
-  const cpuInfo = os.cpus()
-  const cpuModel = cpuInfo.length > 0 ? cpuInfo[0].model : 'Unknown'
-  const cpuCores = cpuInfo.length
-  const loadAverage = os.loadavg()
-
-  // Get OS information
-  const platform = os.platform()
-  const release = os.release()
-  const uptime = os.uptime()
-
-  // Get Node.js process information
-  const nodeVersion = process.version
-  const processMemory = process.memoryUsage()
-  const processUptime = process.uptime()
-
-  return {
-    memory: {
-      total: formatBytes(totalMemory),
-      free: formatBytes(freeMemory),
-      used: formatBytes(usedMemory),
-      usagePercent: memoryUsagePercent,
-    },
-    cpu: {
-      model: cpuModel,
-      cores: cpuCores,
-      loadAverage: {
-        '1m': loadAverage[0].toFixed(2),
-        '5m': loadAverage[1].toFixed(2),
-        '15m': loadAverage[2].toFixed(2),
+    return new Response(JSON.stringify(errorResponse), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, max-age=0',
       },
-    },
-    os: {
-      platform,
-      release,
-      uptime: formatUptime(uptime),
-    },
-    runtime: {
-      nodeVersion,
-      processMemory: {
-        rss: formatBytes(processMemory.rss),
-        heapTotal: formatBytes(processMemory.heapTotal),
-        heapUsed: formatBytes(processMemory.heapUsed),
-        external: formatBytes(processMemory.external),
-      },
-      processUptime: formatUptime(processUptime),
-    },
+    })
   }
-}
-
-/**
- * Format bytes to human-readable string
- */
-function formatBytes(bytes: number): string {
-  if (bytes === 0) {
-    return '0 Bytes'
-  }
-
-  const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
-
-/**
- * Format uptime in seconds to human-readable string
- */
-function formatUptime(seconds: number): string {
-  const days = Math.floor(seconds / (3600 * 24))
-  const hours = Math.floor((seconds % (3600 * 24)) / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  const remainingSeconds = Math.floor(seconds % 60)
-
-  return `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`
 }

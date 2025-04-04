@@ -16,7 +16,7 @@ export function RegisterForm({
   const [fullName, setFullName] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [isSuccessful, setIsSuccessful] = useState<boolean>(false)
+  const [isSuccessful] = useState<boolean>(false)
   const [acceptTerms, setAcceptTerms] = useState<boolean>(false)
 
   const handleSubmit = async (e: React.FormEvent) => {

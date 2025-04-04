@@ -207,11 +207,11 @@ export function checkBrowserCompatibility(): {
   }
 
   // Check for localStorage (for storing consent preferences)
-  let storageAvailable = false
+  let _storageAvailable = false
   try {
     localStorage.setItem('test', 'test')
     localStorage.removeItem('test')
-    storageAvailable = true
+    _storageAvailable = true
   } catch (e) {
     missingFeatures.push('localStorage')
   }

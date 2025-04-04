@@ -1,0 +1,383 @@
+---
+/**
+ * BackgroundImage.astro
+ * A component for optimized, responsive background images with art direction
+ * and performance optimization features
+ */
+
+import type { ImageMetadata } from 'astro'
+import { imageConfig } from '../../config/images'
+
+
+export interface Props {
+  /**
+   * The main source image to use as background
+   * Can be either an imported image or a remote URL
+   */
+  src: ImageMetadata | string
+
+  /**
+   * Alternative source image for mobile devices
+   * Optional - if not provided, the main source will be used with different dimensions
+   */
+  mobileSrc?: ImageMetadata | string
+
+  /**
+   * Alternative source image for tablet devices
+   * Optional - if not provided, the main source will be used with different dimensions
+   */
+  tabletSrc?: ImageMetadata | string
+
+  /**
+   * Alternative text for accessibility
+   * Even background images should have alt text for screen readers
+   */
+  alt: string
+
+  /**
+   * Optional CSS class for the container
+   */
+  class?: string
+
+  /**
+   * Optional overlay color with transparency
+   * Example: 'rgba(0, 0, 0, 0.5)' for a semi-transparent black overlay
+   */
+  overlayColor?: string
+
+  /**
+   * Preferred image quality (1-100)
+   * Default: from config
+   */
+  quality?: number
+
+  /**
+   * Image format
+   * Default: from config
+   */
+  format?: 'webp' | 'avif' | 'jpg' | 'png'
+
+  /**
+   * Whether to use blur effect while loading
+   * Default: true
+   */
+  blurEffect?: boolean
+
+  /**
+   * Z-index for the background image
+   * Default: -1 (behind content)
+   */
+  zIndex?: number
+
+  /**
+   * Background position
+   * Default: 'center'
+   */
+  position?: string
+
+  /**
+   * Background size
+   * Default: 'cover'
+   */
+  size?: string
+
+  /**
+   * Whether to make the background fixed (parallax-like)
+   * Default: false
+   */
+  fixed?: boolean
+
+  /**
+   * Screen width breakpoint for mobile (in pixels)
+   * Default: 640
+   */
+  mobileBreakpoint?: number
+
+  /**
+   * Screen width breakpoint for tablet (in pixels)
+   * Default: 1024
+   */
+  tabletBreakpoint?: number
+
+  /**
+   * Optional width for the desktop image
+   */
+  desktopWidth?: number
+
+  /**
+   * Optional height for the desktop image
+   */
+  desktopHeight?: number
+
+  /**
+   * Optional width for the tablet image
+   */
+  tabletWidth?: number
+
+  /**
+   * Optional height for the tablet image
+   */
+  tabletHeight?: number
+
+  /**
+   * Optional width for the mobile image
+   */
+  mobileWidth?: number
+
+  /**
+   * Optional height for the mobile image
+   */
+  mobileHeight?: number
+}
+
+const {
+  format = imageConfig.defaultFormat,
+  } = Astro.props
+
+// Calculate desktop image properties
+
+
+
+// Calculate tablet image properties
+
+
+
+// Calculate mobile image properties
+
+
+
+// Determine background attachment
+
+
+// Class for the blur effect container
+
+---
+
+<div class:list={['bg-image-container', className]}>
+  {/* Desktop background image */}
+  <div class="bg-image desktop-bg">
+    {
+      typeof src === 'string' ? (
+        <div
+          class:list={['bg-image-div', blurClass]}
+          style={`background-image: url(${src}); background-position: ${position}; background-size: ${size}; background-attachment: ${attachment}; z-index: ${zIndex};`}
+          role="img"
+          aria-label={alt}
+        />
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          width={desktopWidth}
+          height={desktopHeight}
+          quality={quality}
+          format={desktopFormat}
+          class:list={['bg-image-img', blurClass]}
+          style={`object-position: ${position}; object-fit: ${size}; z-index: ${zIndex};`}
+        />
+      )
+    }
+  </div>
+
+  {/* Tablet background image (if tabletSrc is provided, or use main src) */}
+  <div class="bg-image tablet-bg">
+    {
+      tabletSrc ? (
+        typeof tabletSrc === 'string' ? (
+          <div
+            class:list={['bg-image-div', blurClass]}
+            style={`background-image: url(${tabletSrc}); background-position: ${position}; background-size: ${size}; background-attachment: ${attachment}; z-index: ${zIndex};`}
+            role="img"
+            aria-label={alt}
+          />
+        ) : (
+          <Image
+            src={tabletSrc}
+            alt={alt}
+            width={tabletWidth}
+            height={tabletHeight}
+            quality={quality}
+            format={tabletFormat}
+            class:list={['bg-image-img', blurClass]}
+            style={`object-position: ${position}; object-fit: ${size}; z-index: ${zIndex};`}
+          />
+        )
+      ) : typeof src === 'string' ? (
+        <div
+          class:list={['bg-image-div', blurClass]}
+          style={`background-image: url(${src}); background-position: ${position}; background-size: ${size}; background-attachment: ${attachment}; z-index: ${zIndex};`}
+          role="img"
+          aria-label={alt}
+        />
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          width={tabletWidth}
+          height={tabletHeight}
+          quality={quality}
+          format={tabletFormat}
+          class:list={['bg-image-img', blurClass]}
+          style={`object-position: ${position}; object-fit: ${size}; z-index: ${zIndex};`}
+        />
+      )
+    }
+  </div>
+
+  {/* Mobile background image (if mobileSrc is provided, or use main src) */}
+  <div class="bg-image mobile-bg">
+    {
+      mobileSrc ? (
+        typeof mobileSrc === 'string' ? (
+          <div
+            class:list={['bg-image-div', blurClass]}
+            style={`background-image: url(${mobileSrc}); background-position: ${position}; background-size: ${size}; background-attachment: ${attachment}; z-index: ${zIndex};`}
+            role="img"
+            aria-label={alt}
+          />
+        ) : (
+          <Image
+            src={mobileSrc}
+            alt={alt}
+            width={mobileWidth}
+            height={mobileHeight}
+            quality={quality}
+            format={mobileFormat}
+            class:list={['bg-image-img', blurClass]}
+            style={`object-position: ${position}; object-fit: ${size}; z-index: ${zIndex};`}
+          />
+        )
+      ) : typeof src === 'string' ? (
+        <div
+          class:list={['bg-image-div', blurClass]}
+          style={`background-image: url(${src}); background-position: ${position}; background-size: ${size}; background-attachment: ${attachment}; z-index: ${zIndex};`}
+          role="img"
+          aria-label={alt}
+        />
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          width={mobileWidth}
+          height={mobileHeight}
+          quality={quality}
+          format={mobileFormat}
+          class:list={['bg-image-img', blurClass]}
+          style={`object-position: ${position}; object-fit: ${size}; z-index: ${zIndex};`}
+        />
+      )
+    }
+  </div>
+
+  {/* Optional overlay */}
+  {
+    overlayColor && (
+      <div
+        class="bg-overlay"
+        style={`background-color: ${overlayColor}; z-index: ${zIndex};`}
+      />
+    )
+  }
+
+  {/* Content slot */}
+  <div class="bg-content">
+    <slot />
+  </div>
+</div>
+
+<style define:vars={{ mobileBreakpoint, tabletBreakpoint }}>
+  .bg-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+
+  /* Show desktop background on large screens */
+  .desktop-bg {
+    display: none;
+  }
+
+  /* Show tablet background on medium screens */
+  .tablet-bg {
+    display: none;
+  }
+
+  /* Show mobile background on small screens */
+  .mobile-bg {
+    display: block;
+  }
+
+  /* Media queries for responsive backgrounds */
+  @media (min-width: calc(var(--mobileBreakpoint) * 1px)) {
+    .mobile-bg {
+      display: none;
+    }
+
+    .tablet-bg {
+      display: block;
+    }
+  }
+
+  @media (min-width: calc(var(--tabletBreakpoint) * 1px)) {
+    .tablet-bg {
+      display: none;
+    }
+
+    .desktop-bg {
+      display: block;
+    }
+  }
+
+  .bg-image-div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-repeat: no-repeat;
+  }
+
+  .bg-image-img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+
+  .bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .bg-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+  }
+
+  /* Blur loading effect */
+  .blur-loading {
+    animation: blur-in 0.5s ease-out forwards;
+  }
+
+  @keyframes blur-in {
+    0% {
+      filter: blur(20px);
+      opacity: 0;
+    }
+    100% {
+      filter: blur(0);
+      opacity: 1;
+    }
+  }
+</style>

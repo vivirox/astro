@@ -1,15 +1,15 @@
-import { createClient } from '@supabase/supabase-js'
+
 import { getLogger } from '../logging'
 
 // Initialize logger
 const logger = getLogger('auth-security')
 
 // Initialize Supabase client
-const supabaseUrl = import.meta.env.SUPABASE_URL || ''
-const supabaseKey = import.meta.env.SUPABASE_SERVICE_KEY || ''
+
+
 
 // Create Supabase client with admin privileges for security configuration
-const supabase = createClient(supabaseUrl, supabaseKey)
+
 
 /**
  * Configure Supabase's built-in security alerts for suspicious authentication events
@@ -64,7 +64,7 @@ export async function enableEnhancedSecurityMonitoring(userId: string) {
         last_security_update: new Date().toISOString(),
       }
     })
-    
+
     if (error) {
       throw error
     }
@@ -117,11 +117,11 @@ export async function getUserSecuritySettings(userId: string) {
     // Example implementation:
     /*
     const { data, error } = await supabase.auth.admin.getUserById(userId)
-    
+
     if (error) {
       throw error
     }
-    
+
     return {
       enhanced_security: data.user.user_metadata?.enhanced_security_monitoring || false,
       security_level: data.user.user_metadata?.security_monitoring_level || 'standard',
@@ -182,7 +182,7 @@ export async function updateUserSecuritySettings(
         last_security_update: new Date().toISOString(),
       }
     })
-    
+
     if (error) {
       throw error
     }

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { screen } from '@testing-library/dom'
+
 import DashboardLayout from '../DashboardLayout.astro'
 import { renderAstro } from '@/test/utils/astro'
 

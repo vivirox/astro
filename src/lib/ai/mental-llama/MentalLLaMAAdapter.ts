@@ -3,8 +3,7 @@ import type { TherapyAIProvider } from '../providers/EmotionLlamaProvider'
 import type {
   TherapySession,
   EmotionAnalysis,
-  TherapyAIResponse,
-} from '../AIService'
+  } from '../AIService'
 import { getLogger } from '../../logging'
 
 // Initialize logger

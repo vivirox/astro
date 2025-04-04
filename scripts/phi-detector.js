@@ -35,9 +35,15 @@ const CONFIG = {
 // Parse command line arguments
 process.argv.slice(2).forEach((arg) => {
   const [key, value] = arg.split('=')
-  if (key === '--path') CONFIG.path = value
-  if (key === '--output') CONFIG.output = value
-  if (key === '--format') CONFIG.format = value
+  if (key === '--path') {
+    CONFIG.path = value
+  }
+  if (key === '--output') {
+    CONFIG.output = value
+  }
+  if (key === '--format') {
+    CONFIG.format = value
+  }
 })
 
 // Patterns to detect potential PHI
@@ -187,8 +193,10 @@ function getFilesToScan() {
     // First try to get all git tracked files to avoid scanning build artifacts
     const gitOutput = execSync('git ls-files', { encoding: 'utf-8' })
     files = gitOutput.split('\n').filter(Boolean)
-  } catch (e) {
+  } catch (error) {
+    console.error('Failed to get git tracked files:', error)
     // If not in a git repo or git command fails, use glob
+    console.log(`Git command failed: ${error.message}, falling back to glob pattern`)
     files = glob.sync(`${excludeDirsPattern}/**/*`, {
       cwd: CONFIG.path,
       nodir: true,
@@ -282,9 +290,15 @@ function main() {
 
       // Update severity counters
       fileFindings.forEach((finding) => {
-        if (finding.severity === 'high') results.summary.high_severity++
-        if (finding.severity === 'medium') results.summary.medium_severity++
-        if (finding.severity === 'low') results.summary.low_severity++
+        if (finding.severity === 'high') {
+          results.summary.high_severity++
+        }
+        if (finding.severity === 'medium') {
+          results.summary.medium_severity++
+        }
+        if (finding.severity === 'low') {
+          results.summary.low_severity++
+        }
       })
 
       // Add to results

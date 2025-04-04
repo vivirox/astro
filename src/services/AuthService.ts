@@ -231,7 +231,7 @@ export class AuthService {
   }
 
   /**
-   * Create a new user accoun
+   * Create a new user account
    */
   public async signUp(
     email: string,
@@ -330,7 +330,9 @@ export class AuthService {
    * Update the last login timestamp for a user
    */
   private async updateLastLogin(userId?: string): Promise<void> {
-    if (!userId) return
+    if (!userId) {
+      return
+    }
 
     try {
       await supabase
@@ -343,7 +345,7 @@ export class AuthService {
   }
 
   /**
-   * Log an authentication even
+   * Log an authentication event
    */
   private async logAuthEvent(
     action: string,
@@ -352,14 +354,11 @@ export class AuthService {
     metadata?: Record<string, unknown>,
   ): Promise<void> {
     await createAuthAuditLog({
-      userId,
+      userId: userId || identifier,
       action,
       resource: 'auth',
       resourceId: userId || identifier,
-      metadata: {
-        identifier,
-        ...metadata,
-      },
+      metadata: metadata ? { identifier, ...metadata } : { identifier },
     })
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { RealTimeFeedback, Scenario } from '../types'
-import { FeedbackType, TherapeuticTechnique } from '../types'
+import { TherapeuticTechnique } from '../types'
 import { FeedbackService } from '../services/FeedbackService'
 import { WebRTCService } from '../services/WebRTCService'
 import { getUserConsentPreference } from '../utils/privacy'

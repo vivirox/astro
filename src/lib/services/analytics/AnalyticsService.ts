@@ -60,6 +60,8 @@ export class AnalyticsService {
   private readonly retentionDays: number
   private readonly batchSize: number
   private readonly processingInterval: number
+  shutdown: any
+  initialize: any
 
   constructor(
     options: {

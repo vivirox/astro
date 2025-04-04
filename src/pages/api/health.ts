@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import * as processModule from 'node:process'
+
 import { createClient } from '@supabase/supabase-js'
 import { getRedisHealth } from '../../lib/redis'
 

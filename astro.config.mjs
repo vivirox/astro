@@ -3,49 +3,114 @@ import process from 'node:process'
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import starlight from '@astrojs/starlight'
-// import tailwind from '@astrojs/tailwind'
 import vercel from '@astrojs/vercel'
 import UnoCSS from '@unocss/astro'
 import { defineConfig } from 'astro/config'
 import flexsearchIntegration from './src/integrations/search'
+import sentry from '@sentry/astro'
+import tailwind from '@astrojs/tailwind'
+import db from '@astrojs/db';
+import suppressEvalWarnings from './src/vite-plugins/suppress-eval-warnings'
+
+// Determine if we're in build mode
+const isBuild = process.argv.includes('build');
+// Check if we have a Sentry auth token
+const hasSentryToken = process.env.SENTRY_AUTH_TOKEN?.length > 0;
+
+// Create an array of integrations and conditionally add db
+const integrations = [
+  starlight({
+    title: 'Gradiant Ascent',
+    social: {
+      github: 'https://github.com/vivi/astro',
+    },
+    sidebar: [
+      {
+        label: 'Guides',
+        items: [{ label: 'WebSocket', link: '/docs/websocket' }],
+      },
+    ],
+    // Disable Starlight's default 404 page to avoid conflicts
+    customCss: ['./src/styles/custom.css'],
+    disable404Route: true,
+    // Add explicit i18n config with default values and remove redirectToDefaultLocale
+    defaultLocale: 'en',
+    locales: {
+      en: {
+        label: 'English',
+      },
+    },
+  }),
+  sentry({
+    dsn: import.meta.env.PUBLIC_SENTRY_DSN,
+    autoInstrument: true,
+    sourceMapsUploadOptions: {
+      project: 'gradiant',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      // Only upload source maps in production builds when auth token is present
+      uploadSourceMaps: process.env.NODE_ENV === 'production' && hasSentryToken,
+      // Don't fail build if source map upload fails
+      ignoreUploadErrors: true,
+      telemetry: false,
+    },
+    clientSdkOptions: {
+      environment: import.meta.env.PUBLIC_SENTRY_ENVIRONMENT || 'development',
+      release: import.meta.env.PUBLIC_SENTRY_RELEASE,
+      tracesSampleRate: 0.1,
+      profilesSampleRate: 0.1,
+      // Enable detailed error context in development
+      debug: process.env.NODE_ENV !== 'production',
+      // Don't send certain errors that are expected
+      beforeSend(event, hint) {
+        const error = hint?.originalException
+        // Filter out known non-actionable errors
+        if (
+          error &&
+          typeof error.message === 'string' &&
+          error.message.includes('ResizeObserver loop')
+        ) {
+          return null
+        }
+
+        return event
+      },
+    },
+  }),
+  react(),
+  mdx(),
+  tailwind({
+    // Configure the tailwind integration to use the config file we created
+    config: {
+      path: './tailwind.config.ts',
+      applyBaseStyles: false,
+    },
+  }),
+  UnoCSS({
+    injectReset: true,
+    mode: 'global',
+    safelist: ['font-sans', 'font-mono', 'font-condensed'],
+    configFile: './uno.config.ts',
+  }),
+  flexsearchIntegration({
+    collections: ['blog', 'docs', 'guides'],
+    indexPath: 'search-index.js',
+    autoInclude: true,
+  })
+];
+
+// Only add db integration in development mode
+if (!isBuild) {
+  integrations.push(db());
+}
 
 export default defineConfig({
   site: 'https://gradiantascent.xyz',
-  integrations: [
-    starlight({
-      title: 'Gradiant Documentation',
-      social: {
-        github: 'https://github.com/vivi/gradiant',
-      },
-      sidebar: [
-        {
-          label: 'Guides',
-          items: [{ label: 'WebSocket', link: '/docs/websocket' }],
-        },
-      ],
-      // Disable Starlight's default 404 page to avoid conflicts
-      customCss: ['./src/styles/custom.css'],
-      disable404Route: true,
-    }),
-    react(),
-    mdx(),
-    UnoCSS({
-      injectReset: true,
-      mode: 'global',
-      safelist: ['font-sans', 'font-mono', 'font-condensed'],
-      configFile: './uno.config.ts',
-    }),
-    // tailwind(),
-    flexsearchIntegration({
-      collections: ['blog', 'docs', 'guides'],
-      indexPath: '_search-index.js',
-      autoInclude: true,
-    }),
-  ],
+  integrations,
   content: {
     collections: ['blog', 'docs', 'guides'],
   },
   vite: {
+    plugins: [suppressEvalWarnings()],
     resolve: {
       alias: {
         '~': path.resolve('./src'),
@@ -57,6 +122,8 @@ export default defineConfig({
       },
     },
     build: {
+      // Only generate source maps when auth token is present
+      sourcemap: hasSentryToken ? 'hidden' : false,
       chunkSizeWarningLimit: 1200,
       rollupOptions: {
         output: {
@@ -75,7 +142,7 @@ export default defineConfig({
   adapter: vercel({
     analytics: true,
     imageService: true,
-    runtime: 'nodejs18.x',
+    runtime: 'nodejs22.x',
     // Specify static error pages
     errorPage: 'custom-404.astro',
     // KNOWN ISSUE: The Vercel adapter tries to run pagefind during build even when using flexsearch

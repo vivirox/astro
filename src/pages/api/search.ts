@@ -21,13 +21,15 @@ async function indexPosts() {
 // Redirect to the versioned API endpoint
 export const GET: APIRoute = async ({ url, request }) => {
   const newUrl = new URL(url)
-  newUrl.pathname = '/api/v1/search' + newUrl.pathname.substring('/api/search'.length)
+  newUrl.pathname =
+    '/api/v1/search' + newUrl.pathname.substring('/api/search'.length)
 
   return new Response(null, {
     status: 307, // Temporary redirect
     headers: {
       'Location': newUrl.toString(),
-      'X-API-Deprecation-Warning': 'This endpoint is deprecated. Please use /api/v1/search instead.',
+      'X-API-Deprecation-Warning':
+        'This endpoint is deprecated. Please use /api/v1/search instead.',
     },
   })
 }

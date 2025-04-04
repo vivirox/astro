@@ -18,8 +18,8 @@ import { getLogger } from './logging'
 const logger = getLogger()
 
 // Create isomorphic process reference
-const processEnv = typeof process !== 'undefined' ? process.env : {}
-const NODE_ENV = processEnv.NODE_ENV || 'development'
+
+
 
 // Security-related atoms
 export const encryptionInitializedAtom = atom(false)

@@ -48,12 +48,16 @@ const EmailQueueItemSchema = z.object({
 type EmailQueueItem = z.infer<typeof EmailQueueItemSchema>
 
 export class EmailService {
+  static sendEmail(sendEmail: any) {
+    throw new Error('Method not implemented.')
+  }
   private resend: Resend
   private queueKey = 'email:queue'
   private processingKey = 'email:processing'
   private maxAttempts = 3
   private retryDelays = [60, 300, 900] // 1min, 5min, 15min
   private templates = new Map<string, EmailTemplate>()
+  static sendEmail: any
 
   constructor() {
     this.resend = new Resend(env.EMAIL_API_KEY)

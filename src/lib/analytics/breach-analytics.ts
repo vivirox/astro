@@ -1,13 +1,21 @@
-import { ComplianceMetrics } from '@/lib/analytics/compliance'
-import { MachineLearning } from '@/lib/analytics/ml'
-import { NotificationEffectiveness } from '@/lib/analytics/notifications'
-import { RiskScoring } from '@/lib/analytics/risk'
-import { StatisticalAnalysis } from '@/lib/analytics/statistics'
-import { SecurityTrends } from '@/lib/analytics/trends'
-import { FHE } from '@/lib/fhe'
-import { logger } from '@/lib/logger'
-import { redis } from '@/lib/redis'
-import { BreachNotificationSystem } from '@/lib/security/breach-notification'
+import { ComplianceMetrics } from '../analytics/compliance'
+import { MachineLearning } from '../analytics/ml'
+import { NotificationEffectiveness } from '../analytics/notifications'
+import { RiskScoring } from '../analytics/risk'
+import { StatisticalAnalysis } from '../analytics/statistics'
+import { SecurityTrends } from '../analytics/trends'
+import { fheService } from '../fhe'
+import { logger } from '../logger'
+import { redis } from '../redis'
+import { BreachNotificationSystem } from '../security/breach-notification'
+
+// Define the prediction interface based on what's returned by MachineLearning.predictBreaches
+interface Prediction {
+  value: number
+  confidence: number
+}
+
+// This interface is used in the predictBreaches method
 
 interface AnalyticsTimeframe {
   from: Date
@@ -56,9 +64,39 @@ interface SecurityInsight {
   relatedMetrics: string[]
 }
 
+// Define a breach interface that matches BreachDetails from BreachNotificationSystem
+interface Breach {
+  id: string
+  timestamp: number
+  type: 'unauthorized_access' | 'data_leak' | 'system_compromise' | 'other'
+  severity: 'low' | 'medium' | 'high' | 'critical'
+  description: string
+  affectedUsers: string[]
+  affectedData: string[]
+  detectionMethod: string
+  remediation: string
+  notificationStatus?: 'pending' | 'in_progress' | 'completed'
+  responseTime?: number
+  resolvedAt?: number
+  notificationDelay?: number
+  protectionMeasures?: string[]
+  reportedToAuthorities?: boolean
+  documentationComplete?: boolean
+  remediationPlan?: string
+  notifications?: {
+    total: number
+    delivered: number
+    acknowledged: number
+    averageDeliveryTime: number
+  }
+  dataSensitivity?: 'low' | 'medium' | 'high'
+  piiCompromised?: boolean
+  attackVector?: string
+}
+
 export class BreachAnalytics {
   private static readonly ANALYTICS_KEY_PREFIX = 'analytics:breach:'
-  private static readonly PREDICTION_WINDOW = 7 * 24 * 60 * 60 * 1000 // 7 days
+  // Used for future prediction window calculations
   private static readonly TREND_INTERVAL = 24 * 60 * 60 * 1000 // 1 day
 
   private static getAnalyticsKey(metric: string, timestamp: number): string {
@@ -99,11 +137,14 @@ export class BreachAnalytics {
     }
   }
 
-  private static async calculateBasicMetrics(
-    breaches: any[],
-  ): Promise<Partial<BreachMetrics>> {
-    const bySeverity = {}
-    const byType = {}
+  private static async calculateBasicMetrics(breaches: Breach[]): Promise<{
+    totalBreaches: number
+    bySeverity: Record<string, number>
+    byType: Record<string, number>
+    averageResponseTime: number
+  }> {
+    const bySeverity: Record<string, number> = {}
+    const byType: Record<string, number> = {}
     let totalResponseTime = 0
 
     for (const breach of breaches) {
@@ -128,15 +169,25 @@ export class BreachAnalytics {
     }
   }
 
-  private static async calculateResponseTime(breach: any): Promise<number> {
-    const notifications = await redis.get(
-      this.getAnalyticsKey('notifications', breach.timestamp),
-    )
+  private static async calculateResponseTime(breach: Breach): Promise<number> {
+    try {
+      const notifications = await redis.get(
+        this.getAnalyticsKey('notifications', breach.timestamp),
+      )
 
-    if (!notifications) return 0
+      if (!notifications) {
+        return breach.responseTime || 0
+      }
 
-    const notificationData = JSON.parse(notifications)
-    return notificationData.completedAt - breach.timestamp
+      const notificationData = JSON.parse(notifications)
+      return notificationData.completedAt - breach.timestamp
+    } catch (error) {
+      logger.warn(
+        `Failed to calculate response time for breach ${breach.id}:`,
+        error,
+      )
+      return breach.responseTime || 0
+    }
   }
 
   static async analyzeTrends(
@@ -194,9 +245,11 @@ export class BreachAnalytics {
   }
 
   private static async calculateAverageResponseTime(
-    breaches: any[],
+    breaches: Breach[],
   ): Promise<number> {
-    if (!breaches.length) return 0
+    if (!breaches.length) {
+      return 0
+    }
 
     const responseTimes = await Promise.all(
       breaches.map((breach) => this.calculateResponseTime(breach)),
@@ -205,7 +258,7 @@ export class BreachAnalytics {
     return responseTimes.reduce((sum, time) => sum + time, 0) / breaches.length
   }
 
-  static async predictBreaches(days: number = 7): Promise<BreachPrediction[]> {
+  static async predictBreaches(days = 7): Promise<BreachPrediction[]> {
     try {
       // Get historical data
       const endDate = new Date()
@@ -219,7 +272,7 @@ export class BreachAnalytics {
       // Analyze factors contributing to predictions
       const factors = await this.analyzeRiskFactors()
 
-      return predictions.map((prediction, index) => ({
+      return predictions.map((prediction: Prediction, index) => ({
         timestamp: endDate.getTime() + index * 24 * 60 * 60 * 1000,
         predictedBreaches: prediction.value,
         confidence: prediction.confidence,
@@ -342,7 +395,20 @@ export class BreachAnalytics {
     }
   }
 
-  static async generateReport(timeframe: AnalyticsTimeframe): Promise<any> {
+  static async generateReport(timeframe: AnalyticsTimeframe): Promise<{
+    timeframe: {
+      from: string
+      to: string
+    }
+    metrics: BreachMetrics & {
+      encryptedData: string
+    }
+    trends: TrendPoint[]
+    predictions: BreachPrediction[]
+    riskFactors: RiskFactor[]
+    insights: SecurityInsight[]
+    generatedAt: string
+  }> {
     try {
       // Gather all analytics data
       const [metrics, trends, predictions, riskFactors, insights] =
@@ -355,14 +421,22 @@ export class BreachAnalytics {
         ])
 
       // Encrypt sensitive data
-      const encryptedData = await FHE.encrypt({
-        metrics: {
-          totalBreaches: metrics.totalBreaches,
-          bySeverity: metrics.bySeverity,
-          byType: metrics.byType,
-        },
-        affectedUsers: trends.reduce((sum, t) => sum + t.affectedUsers, 0),
-      })
+      let encryptedData = ''
+      try {
+        encryptedData = await fheService.encrypt(
+          JSON.stringify({
+            metrics: {
+              totalBreaches: metrics.totalBreaches,
+              bySeverity: metrics.bySeverity,
+              byType: metrics.byType,
+            },
+            affectedUsers: trends.reduce((sum, t) => sum + t.affectedUsers, 0),
+          }),
+        )
+      } catch (encryptError) {
+        logger.error('Failed to encrypt sensitive data:', encryptError)
+        // Continue with empty encrypted data rather than failing the entire report
+      }
 
       return {
         timeframe: {

@@ -132,7 +132,9 @@ export class SecurityMonitoringService {
    * Handle failed login attempts
    */
   private async handleFailedLogin(event: SecurityEvent): Promise<void> {
-    if (!event.userId) return
+    if (!event.userId) {
+      return
+    }
 
     const key = event.userId
     const now = new Date()
@@ -214,7 +216,9 @@ export class SecurityMonitoringService {
    */
   public isAccountLocked(userId: string): boolean {
     const lockTime = this.lockedAccounts.get(userId)
-    if (!lockTime) return false
+    if (!lockTime) {
+      return false
+    }
 
     const now = new Date()
     const elapsedSeconds = (now.getTime() - lockTime.getTime()) / 1000
@@ -319,7 +323,9 @@ export class SecurityMonitoringService {
         .order('created_at', { ascending: false })
         .limit(limit)
 
-      if (error) throw error
+      if (error) {
+        throw error
+      }
 
       return (data || []).map(
         (row: Database['public']['Tables']['security_events']['Row']) => ({
@@ -356,7 +362,9 @@ export class SecurityMonitoringService {
         .order('created_at', { ascending: false })
         .limit(limit)
 
-      if (error) throw error
+      if (error) {
+        throw error
+      }
 
       return (data || []).map(
         (row: Database['public']['Tables']['security_events']['Row']) => ({

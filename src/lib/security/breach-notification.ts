@@ -1,8 +1,9 @@
 import { auth } from '@/lib/auth'
-import { sendEmail } from '@/lib/email'
-import { FHE } from '@/lib/fhe'
+import { EmailService } from '@/lib/services/email/EmailService'
+import { fheService } from '@/lib/fhe'
 import { logger } from '@/lib/logger'
 import { redis } from '@/lib/redis'
+
 
 interface BreachDetails {
   id: string
@@ -18,9 +19,9 @@ interface BreachDetails {
 }
 
 interface NotificationTemplate {
+  templateAlias: string
   subject: string
   body: string
-  priority: 'normal' | 'urgent'
 }
 
 export class BreachNotificationSystem {
@@ -116,10 +117,8 @@ export class BreachNotificationSystem {
   private static getNotificationTemplate(
     breach: BreachDetails,
   ): NotificationTemplate {
-    const isUrgent =
-      breach.severity === 'critical' || breach.severity === 'high'
-
     return {
+      templateAlias: 'security-breach-notification',
       subject: `Important Security Notice - ${breach.severity.toUpperCase()} Security Event`,
       body: `
 Dear [User],
@@ -147,7 +146,6 @@ If you notice any suspicious activity or have questions, please contact our supp
 Best regards,
 Security Team
       `.trim(),
-      priority: isUrgent ? 'urgent' : 'normal',
     }
   }
 
@@ -158,20 +156,26 @@ Security Team
     const notifications = breach.affectedUsers.map(async (userId) => {
       try {
         const user = await auth.getUserById(userId)
-        if (!user?.email) return
+        if (!user?.email) {
+          return
+        }
 
         // Encrypt notification details using FHE
-        const encryptedDetails = await FHE.encrypt({
-          breachId: breach.id,
-          timestamp: breach.timestamp,
-          type: breach.type,
-        })
+        const encryptedDetails = await fheService.encrypt(
+          JSON.stringify({
+            breachId: breach.id,
+            timestamp: breach.timestamp,
+            type: breach.type,
+          }),
+        )
 
-        await sendEmail({
+        await new EmailService().queueEmail({
           to: user.email,
-          subject: template.subject,
-          body: template.body.replace('[User]', user.name || 'Valued User'),
-          priority: template.priority,
+          templateAlias: template.templateAlias,
+          templateModel: {
+            user: user.name || 'Valued User',
+            breach: breach,
+          },
           metadata: {
             type: 'security_breach',
             breachId: breach.id,
@@ -216,11 +220,13 @@ Security Team
       }
 
       // Send to HHS (Health and Human Services)
-      await sendEmail({
-        to: process.env.HHS_NOTIFICATION_EMAIL,
-        subject: `HIPAA Breach Notification - ${breach.id}`,
-        body: JSON.stringify(notification, null, 2),
-        priority: 'urgent',
+      await new EmailService().queueEmail({
+        to: process.env.HHS_NOTIFICATION_EMAIL ?? 'hhs.breach@hhs.gov',
+        templateAlias: 'authority-notification',
+        templateModel: {
+          subject: `HIPAA Breach Notification - ${breach.id}`,
+          content: JSON.stringify(notification, null, 2),
+        },
         metadata: {
           type: 'hipaa_breach_notification',
           breachId: breach.id,
@@ -244,10 +250,13 @@ Security Team
     try {
       const stakeholders = process.env.SECURITY_STAKEHOLDERS?.split(',') || []
       const notifications = stakeholders.map((email) =>
-        sendEmail({
+        new EmailService().queueEmail({
           to: email,
-          subject: `Security Breach Alert - ${breach.severity.toUpperCase()} - ${breach.id}`,
-          body: `
+          templateAlias: 'internal-breach-alert',
+          templateModel: {
+            severity: breach.severity.toUpperCase(),
+            breachId: breach.id,
+            content: `
 Security Breach Details:
 - ID: ${breach.id}
 - Type: ${breach.type}
@@ -263,8 +272,8 @@ Timeline:
 - Notification Status: ${breach.notificationStatus}
 
 Please review the incident and take necessary actions.
-          `.trim(),
-          priority: 'urgent',
+            `.trim(),
+          },
           metadata: {
             type: 'internal_breach_notification',
             breachId: breach.id,
@@ -293,7 +302,7 @@ Please review the incident and take necessary actions.
     try {
       const keys = await redis.keys(`${this.BREACH_KEY_PREFIX}*`)
       const breaches = await Promise.all(
-        keys.map(async (key) => {
+        keys.map(async (key: any) => {
           const breach = await redis.get(key)
           return breach ? JSON.parse(breach) : null
         }),
@@ -393,7 +402,9 @@ Please review the incident and take necessary actions.
     breach: BreachDetails,
   ): Promise<number> {
     const breachData = await this.getBreachStatus(breach.id)
-    if (!breachData || breachData.notificationStatus !== 'completed') return 0
+    if (!breachData || breachData.notificationStatus !== 'completed') {
+      return 0
+    }
 
     // Calculate time from detection to completion
     return Date.now() - breach.timestamp

@@ -1,3 +1,4 @@
+import type { VNode } from 'vue'
 import type { SatoriOptions } from 'satori'
 import type { BgType } from '../src/types'
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -11,6 +12,7 @@ import { checkFileExistsInDir, unescapeHTML } from '../src/utils/common'
 
 import { getCurrentFormattedTime } from '../src/utils/datetime'
 import { ogImageMarkup } from './og-template/markup'
+import { ReactNode } from 'react'
 
 const Inter = readFileSync('plugins/og-template/Inter-Regular-24pt.ttf')
 
@@ -42,12 +44,11 @@ async function generateOgImage(
 
   try {
     const node = ogImageMarkup(authorOrBrand, title, bgType)
-
     const unescapedNode = unescapeHTML(
-      node,
-    ) as unknown as import('react').ReactNode
+      node as VNode<any, any, any>,
+    ) as unknown as ReactNode
 
-    const svg = await satori(unescapedNode, satoriOptions)
+    const svg = await satori(unescapedNode as any, satoriOptions)
 
     const compressedPngBuffer = await sharp(Buffer.from(svg))
       .png({
@@ -70,8 +71,10 @@ async function generateOgImage(
  */
 function remarkGenerateOgImage() {
   // get config
-  const ogImage = FEATURES.ogImage
-  if (!(Array.isArray(ogImage) && ogImage[0])) return
+  const { ogImage } = FEATURES
+  if (!Array.isArray(ogImage) || !ogImage[0]) {
+    return
+  }
 
   const { authorOrBrand, fallbackTitle, fallbackBgType } = ogImage[1]
 
@@ -88,33 +91,44 @@ function remarkGenerateOgImage() {
 
     // check filename
     const filename = file.basename
-    if (!filename || !(filename.endsWith('.md') || filename.endsWith('.mdx')))
+    if (!filename || !(filename.endsWith('.md') || filename.endsWith('.mdx'))) {
       return
+    }
 
     // check draft & redirect
-    const draft = file.data.astro.frontmatter.draft
-    const redirect = file.data.astro.frontmatter.redirect
-    if (draft || redirect) return
+    const { draft, redirect } = file.data.astro.frontmatter
+    if (draft || redirect) {
+      return
+    }
 
     // check if it need to be skipped
-    const title = file.data.astro.frontmatter.title
-    if (!title || !title.trim().length) return
-    const ogImage = file.data.astro.frontmatter.ogImage
-    if (ogImage === false) return
+    const { title } = file.data.astro.frontmatter
+    if (!title || !title.trim().length) {
+      return
+    }
+    const { ogImage } = file.data.astro.frontmatter
+    if (ogImage === false) {
+      return
+    }
 
     // check if it has been generated
-    const extname = file.extname
+    const { extname } = file
     const dirpath = file.dirname
     let nameWithoutExt = basename(filename, extname)
-    if (nameWithoutExt === 'index') nameWithoutExt = basename(dirpath)
-    if (checkFileExistsInDir('public/og-images', `${nameWithoutExt}.png`))
+    if (nameWithoutExt === 'index') {
+      nameWithoutExt = basename(dirpath)
+    }
+    if (
+      await checkFileExistsInDir('public/og-images', `${nameWithoutExt}.png`)
+    ) {
       return
+    }
 
     // check if it has been assigned & actually exists
     if (
       ogImage &&
       ogImage !== true &&
-      checkFileExistsInDir('public/og-images', basename(ogImage))
+      (await checkFileExistsInDir('public/og-images', basename(ogImage)))
     ) {
       return
     }

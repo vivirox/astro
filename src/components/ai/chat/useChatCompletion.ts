@@ -23,7 +23,7 @@ interface UseChatCompletionResult {
 
 /**
  * Checks if an error is retryable
- * 
+ *
  * @param error - The error to check
  * @returns true if the error is retryable (network issue, 5xx server error)
  */
@@ -32,9 +32,13 @@ function isRetryableError(error: unknown): boolean {
   if (error instanceof TypeError && error.message.includes('network')) {
     return true
   }
-  
+
   // Server errors (5xx) are retryable
-  if (error instanceof Error && 'status' in error && typeof error.status === 'number') {
+  if (
+    error instanceof Error &&
+    'status' in error &&
+    typeof error.status === 'number'
+  ) {
     return error.status >= 500 && error.status < 600
   }
 
@@ -83,9 +87,9 @@ export function useChatCompletion({
       setError(null)
 
       // Implement retry logic with exponential backoff
-      const MAX_RETRIES = 3;
-      let retries = 0;
-      let success = false;
+      const MAX_RETRIES = 3
+      let retries = 0
+      let success = false
 
       while (retries < MAX_RETRIES && !success) {
         try {
@@ -108,8 +112,8 @@ export function useChatCompletion({
 
           // Send request to API
           // Add timeout and AbortController to prevent hanging requests
-          const abortController = new AbortController();
-          const timeoutId = setTimeout(() => abortController.abort(), 30000); // 30-second timeout
+          const abortController = new AbortController()
+          const timeoutId = setTimeout(() => abortController.abort(), 30000) // 30-second timeout
 
           const response = await fetch(apiEndpoint, {
             method: 'POST',
@@ -117,15 +121,18 @@ export function useChatCompletion({
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody),
-            signal: abortController.signal
-          });
+            signal: abortController.signal,
+          })
 
           // Clear timeout after response
-          clearTimeout(timeoutId);
+          clearTimeout(timeoutId)
 
           if (!response?.ok) {
             const errorData = await response?.json()
-            throw new Error(errorData.error || `Failed to get AI response: ${response?.status}`)
+            throw new Error(
+              errorData.error ||
+                `Failed to get AI response: ${response?.status}`,
+            )
           }
 
           // Handle streaming response
@@ -139,7 +146,7 @@ export function useChatCompletion({
 
           while (true) {
             const { done, value } = await reader.read()
-            
+
             if (done) {
               break
             }
@@ -148,8 +155,8 @@ export function useChatCompletion({
             const chunk = decoder.decode(value)
             const lines = chunk
               .split('\n')
-              .filter(line => line.trim() !== '')
-              .map(line => line.replace(/^data: /, '').trim())
+              .filter((line) => line.trim() !== '')
+              .map((line) => line.replace(/^data: /, '').trim())
 
             for (const line of lines) {
               if (line === '[DONE]') {
@@ -232,7 +239,9 @@ export function useChatCompletion({
 
           retries++
           // Exponential backoff
-          await new Promise(resolve => setTimeout(resolve, 2 ** retries * 300))
+          await new Promise((resolve) =>
+            setTimeout(resolve, 2 ** retries * 300),
+          )
         } finally {
           if (success || retries === MAX_RETRIES) {
             setIsLoading(false)
@@ -249,7 +258,7 @@ export function useChatCompletion({
       apiEndpoint,
       onError,
       onComplete,
-    ]
+    ],
   )
 
   // Function to retry the last message

@@ -1,33 +1,48 @@
 ---
 // Simple, lightweight admin layout based on SimpleAdminLayout
 // This version is optimized to avoid null byte issues during build
-import { SITE } from '../../config'
+import { SITE } from '../../config';
 
 interface Props {
-  title?: string
-  description?: string
-  activeItem?: string
-  image?: string
+  title?: string;
+  description?: string;
+  activeItem?: string;
+  image?: string;
 }
 
 const {
   title = 'Admin Dashboard',
-  description = `Admin dashboard for ${SITE.title}`,
+  description = 'Admin Dashboard for Gradiant Ascent',
   activeItem = 'dashboard',
-  image = '/og-image.png',
-} = Astro.props
+  image = '/images/og-image.jpg'
+} = Astro.props;
 
 // Define navigation items
 const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '/admin' },
-  { id: 'users', label: 'Users', icon: 'users', href: '/admin/users' },
-  { id: 'ai-performance', label: 'AI Performance', icon: 'stats', href: '/admin/ai-performance' },
-  { id: 'security', label: 'Security', icon: 'shield', href: '/admin/security-dashboard' },
-  { id: 'settings', label: 'Settings', icon: 'settings', href: '/admin/settings' },
-]
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    href: '/admin/dashboard'
+  },
+  {
+    id: 'users',
+    label: 'Users',
+    href: '/admin/users'
+  },
+  {
+    id: 'analytics',
+    label: 'Analytics',
+    href: '/admin/analytics'
+  },
+  {
+    id: 'settings',
+    label: 'Settings',
+    href: '/admin/settings'
+  }
+];
 
 // Basic permissions check (simplified version)
-const hasPermission = (item: string) => true // In a real app, this would check actual permissions
+const hasPermission = (item: string) => true; // In a real app, this would check actual permissions
 ---
 
 <html lang={SITE.lang}>
@@ -119,14 +134,29 @@ const hasPermission = (item: string) => true // In a real app, this would check 
           <span class="font-semibold">{title}</span>
           <div class="flex items-center gap-4">
             <div class="relative">
-              <button class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              <button
+                class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  ></path>
                 </svg>
               </button>
             </div>
             <div class="relative">
-              <button class="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+              <button
+                class="flex items-center gap-2 text-gray-700 dark:text-gray-300"
+              >
                 <img
                   class="h-8 w-8 rounded-full object-cover"
                   src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff"
@@ -141,7 +171,9 @@ const hasPermission = (item: string) => true // In a real app, this would check 
 
       <!-- Page content -->
       <div class="p-4 md:ml-64 pt-20 w-full">
-        <div class="p-4 border-2 border-gray-200 dark:border-gray-700 border-dashed rounded-lg">
+        <div
+          class="p-4 border-2 border-gray-200 dark:border-gray-700 border-dashed rounded-lg"
+        >
           <slot />
         </div>
       </div>

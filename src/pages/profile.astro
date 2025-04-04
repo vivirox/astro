@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/MainLayout.astro'
+
 import { isAuthenticated, getCurrentUser } from '../lib/auth'
 
 // Check if user is authenticated
@@ -15,8 +15,8 @@ if (!user) {
 }
 
 // Handle form submission
-let error: string | null = null
-let success = false
+let _error: string | null = null
+let _success = false
 
 if (Astro.request.method === 'POST') {
   try {
@@ -29,11 +29,11 @@ if (Astro.request.method === 'POST') {
     if (fullName) {
       // Simulated API call
       // await _AuthService.updateProfile(user.id, { fullName });
-      success = true
+      _success = true
     }
   } catch (err: unknown) {
     console.error('Profile update error:', err)
-    error =
+    _error =
       err instanceof Error
         ? err.message
         : 'An error occurred while updating the profile'

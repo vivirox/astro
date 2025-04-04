@@ -1,5 +1,5 @@
-import nodeAdapter from './server.js'
-import v17ServerAdapter from './server-v17.js'
+
+
 
 /**
  * For integration with Astro components using React components

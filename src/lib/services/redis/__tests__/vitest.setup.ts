@@ -1,12 +1,6 @@
 import {
   expect,
-  afterEach,
-  describe,
-  it,
-  beforeAll,
-  beforeEach,
-  afterAll,
-} from 'vitest'
+  } from 'vitest'
 import { customMatchers } from './test-utils'
 
 // Extend Vitest's expect with custom matchers

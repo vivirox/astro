@@ -17,7 +17,7 @@ export function SimulationContainer({
   const [compatibilityError, setCompatibilityError] = useState<string[]>([])
   const [autoScrollEnabled, setAutoScrollEnabled] = useState<boolean>(true)
   const [isListening, setIsListening] = useState<boolean>(false)
-  const [recognizedText, setRecognizedText] = useState<string>('')
+  const [,setRecognizedText] = useState<string>('')
   const [recognitionSupported, setRecognitionSupported] =
     useState<boolean>(true)
   const [showTechniqueHighlights, setShowTechniqueHighlights] =

@@ -51,8 +51,9 @@ export const rehypePlugins: RehypePlugins = [
     {
       rel: UI.externalLink.newTab ? 'noopener noreferrer' : [],
       content: (el: Parameters<CreateProperties>[0]) => {
-        if (!UI.externalLink.newTab || !UI.externalLink.showNewTabIcon)
+        if (!UI.externalLink.newTab || !UI.externalLink.showNewTabIcon) {
           return null
+        }
 
         let hasImage = false
         visit(el, 'element', (childNode) => {
@@ -61,7 +62,9 @@ export const rehypePlugins: RehypePlugins = [
             return false
           }
         })
-        if (hasImage) return null
+        if (hasImage) {
+          return null
+        }
 
         return {
           type: 'text',
@@ -69,8 +72,9 @@ export const rehypePlugins: RehypePlugins = [
         }
       },
       contentProperties: (el: Parameters<CreateProperties>[0]) => {
-        if (!UI.externalLink.newTab || !UI.externalLink.showNewTabIcon)
+        if (!UI.externalLink.newTab || !UI.externalLink.showNewTabIcon) {
           return null
+        }
 
         let hasImage = false
         visit(el, 'element', (childNode) => {
@@ -79,7 +83,9 @@ export const rehypePlugins: RehypePlugins = [
             return false
           }
         })
-        if (hasImage) return null
+        if (hasImage) {
+          return null
+        }
 
         return {
           'u-i-carbon-arrow-up-right': true,
@@ -91,7 +97,9 @@ export const rehypePlugins: RehypePlugins = [
         const props: Record<string, unknown> = {}
         const href = el.properties?.href
 
-        if (!href || typeof href !== 'string') return props
+        if (!href || typeof href !== 'string') {
+          return props
+        }
 
         if (UI.externalLink.newTab) {
           props.target = '_blank'

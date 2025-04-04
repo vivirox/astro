@@ -1,4 +1,4 @@
-import { feedLoader } from '@ascorbic/feed-loader'
+
 import { glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
 import {

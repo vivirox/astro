@@ -4,8 +4,13 @@ import { createClient } from '@supabase/supabase-js'
 
 import { createAuditLog } from '../audit/log.js'
 
+// Extended User interface with permissions
+export interface ExtendedUser extends User {
+  permissions?: string[]
+}
+
 export interface SessionData {
-  user: User
+  user: ExtendedUser
   session: Session
 }
 
@@ -35,7 +40,7 @@ export async function getSession(
 
     // Return the session data
     return {
-      user: data?.session.user,
+      user: data?.session.user as ExtendedUser,
       session: data?.session,
     }
   } catch (error) {

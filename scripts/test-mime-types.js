@@ -6,8 +6,8 @@
  */
 
 const fetch = require('node-fetch')
-const path = require('path')
-const fs = require('fs')
+
+
 const chalk = require('chalk') // Optional, for colored output
 
 // URL to test against (when available)

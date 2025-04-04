@@ -5,8 +5,7 @@ import {
   SimulatorProvider,
   SimulationContainer,
   ScenarioSelector,
-  useAnonymizedMetrics,
-} from '@/simulator'
+  } from '@/simulator'
 import { MetricsDialog } from '../MetricsDialog'
 
 /**

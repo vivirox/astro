@@ -1,5 +1,5 @@
 ---
-import Link from '~/components/base/Link.astro'
+
 import type { ShareConfig } from '~/types'
 
 interface _ShareLink {
@@ -13,10 +13,10 @@ interface Props {
   config: ShareConfig
 }
 
-const { config } = Astro.props
+
 // Instead of directly using Astro.url, precompute the URL string
 // We'll get the full URL on the client side
-const postUrlString = Astro.url.toString()
+
 
 const SHARE_LINKS: Record<string, _ShareLink> = {
   twitter: {
@@ -85,9 +85,7 @@ const SHARE_LINKS: Record<string, _ShareLink> = {
 }
 
 // Only get the key/provider pairs
-const linkProviders = Object.entries(config)
-  .filter(([key, value]) => value && key in SHARE_LINKS)
-  .map(([key, cfg]) => ({ key, cfg }))
+
 ---
 
 <span class="font-mono op-50">&gt; </span>

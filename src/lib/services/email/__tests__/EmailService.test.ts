@@ -62,15 +62,15 @@ vi.mock('resend', () => {
 
 describe('emailService', () => {
   let emailService: EmailService
-  let mockResend: Resend
+  let _mockResend: Resend
   let mockSend: Mock
 
   beforeEach(() => {
     vi.clearAllMocks()
     emailService = new EmailService()
-    mockResend = new Resend('test')
+    _mockResend = new Resend('test')
     mockSend = vi.fn()
-    ;(mockResend.emails.send as Mock) = mockSend
+    ;(_mockResend.emails.send as Mock) = mockSend
   })
 
   afterEach(() => {

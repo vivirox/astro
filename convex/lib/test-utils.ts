@@ -1,11 +1,8 @@
 import { v } from 'convex/values'
 import {
-  DatabaseReader,
   DatabaseWriter,
-  MutationCtx,
-  QueryCtx,
-} from '../_generated/server'
-import { DataModel } from '../_generated/dataModel'
+  } from '../_generated/server'
+
 
 /**
  * Create a test user

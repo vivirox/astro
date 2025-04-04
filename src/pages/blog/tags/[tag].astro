@@ -1,10 +1,10 @@
 ---
 import { getCollection } from 'astro:content'
-import { formatDate } from '@/lib/utils'
-import type { CollectionEntry } from 'astro:content'
-import BlogLayout from '@/layouts/BlogLayout.astro'
 
-export const prerender = true;
+import type { CollectionEntry } from 'astro:content'
+
+
+export const prerender = true
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft)
@@ -24,8 +24,8 @@ interface Props {
   posts: CollectionEntry<'blog'>[]
 }
 
-const { tag } = Astro.params
-const { posts } = Astro.props as Props
+
+
 ---
 
 <BlogLayout

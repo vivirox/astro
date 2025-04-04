@@ -4,31 +4,48 @@ import '@/styles/main.css'
 import '@/styles/prose.css'
 import '@/styles/markdown.css'
 import '@/styles/page.css'
+import '../styles/global.css'
 
-import Head from '@/components/base/Head.astro'
-import Background from '@/components/backgrounds/Background.astro'
-import Link from '@/components/base/Link.astro'
-import NavBar from '@/components/base/NavBar.astro'
-import BackLink from '@/components/widgets/BackLink.astro'
-import Footer from '@/components/base/Footer.astro'
-import ToTopButton from '@/components/widgets/ToTopButton.astro'
-import Backdrop from '@/components/base/Backdrop.astro'
-
-import { SITE, UI, FEATURES } from '@/config'
+import { getSession } from '@/lib/auth/session'
+import { ClientRouter } from 'astro:transitions'
 import { getUrl } from '@/utils/common'
+import { SITE, UI, FEATURES } from '@/config'
+
+// Import components
+import Head from '@/components/base/Head.astro'
+import Background from '@/components/Background.astro'
+import SkipLink from '@/components/base/SkipLink.astro'
+import NavBar from '@/components/layout/NavBar.astro'
+import ErrorBoundary from '@/components/base/ErrorBoundary.astro'
+import BackLink from '@/components/base/BackLink.astro'
+import Footer from '@/components/layout/Footer.astro'
+import ToTopButton from '@/components/ui/ToTopButton.astro'
+import Backdrop from '@/components/layout/Backdrop.astro'
 
 import type { BgType } from '@/types'
 
-interface Props {
+export interface Props {
   title?: string
   description?: string
-  ogImage?: string | boolean
-  bgType?: BgType | false
-  pubDate?: string
-  lastModDate?: string
+  image?: string | boolean
+  canonicalURL?: URL
+  pageType?: string
+  bodyClass?: string
+  transitions?: boolean
+  includeHeader?: boolean
+  includeFooter?: boolean
+  bgType?: BgType
 }
 
-const { title, description, ogImage, bgType, pubDate, lastModDate } = Astro.props
+const {
+  title,
+  description,
+  image,
+  canonicalURL = new URL(Astro.url.pathname, Astro.site),
+  includeHeader = true,
+  includeFooter = true,
+  bgType
+} = Astro.props as Props
 
 let style: Record<string, string> = {}
 
@@ -43,12 +60,65 @@ const {
 const hasCustomCursor =
   newTab && cursorType.length > 0 && cursorType !== 'pointer'
 if (hasCustomCursor) style['--external-link-cursor'] = cursorType
+
+// Check if user is logged in for context
+const session = await getSession(Astro.request)
 ---
 
 <!doctype html>
 <html lang={SITE.lang}>
   <head>
-    <Head {title} {description} {ogImage} {pubDate} {lastModDate} />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Preload critical Third-party Libraries -->
+    <!-- Three.js is used for the spinning globe on the homepage -->
+    <link
+      rel="modulepreload"
+      href="/node_modules/three/build/three.module.js"
+    />
+    <!-- NProgress for page loading indicators -->
+    <link rel="modulepreload" href="/node_modules/nprogress/nprogress.js" />
+    <link
+      rel="preload"
+      href="/node_modules/nprogress/nprogress.css"
+      as="style"
+    />
+    <!-- Medium Zoom for image zooming -->
+    <link rel="modulepreload" href="/node_modules/medium-zoom/dist/pure.js" />
+
+    <ClientRouter />
+
+    <!-- Sentry User Context Script -->
+    <script>
+      // Set user context for Sentry if available
+      document.addEventListener('astro:page-load', () => {
+        try {
+          // Check if Sentry is available (will be injected by integration)
+          if ('Sentry' in window) {
+            const session = JSON.parse(
+              localStorage.getItem('session') || 'null',
+            )
+
+            if (session?.user) {
+              ;(window as any).Sentry.setUser({
+                id: session.user.id,
+                role: session.user.role,
+              })
+            }
+
+            // Set additional page context
+            ;(window as any).Sentry.setTag('page', window.location.pathname)
+          }
+        } catch (e) {
+          console.error('Error setting Sentry user context:', e)
+        }
+      })
+    </script>
+
+    <Head {title} {description} ogImage={image} />
   </head>
 
   <body
@@ -60,27 +130,25 @@ if (hasCustomCursor) style['--external-link-cursor'] = cursorType
     <!-- Background -->
     {bgType && <Background type={bgType} />}
 
-    <!-- Main -->
-    <Link
-      href="#main"
-      class="sr-only focus:(not-sr-only fixed start-1 top-1.5 op-20)"
-    >
-      Skip to content
-    </Link>
-    <NavBar />
+    <!-- Skip Link for Accessibility -->
+    <SkipLink target="#main" />
+    <!-- Main Content -->
+    {includeHeader && <NavBar />}
     <main id="main" class="px-7 py-10">
-      <slot />
-      {
-        Astro.url.pathname !== getUrl('/') && (
-          <footer class="slide-enter animate-delay-1000! prose mx-auto mt-8 print:hidden">
-            <slot name="share" />
-            <br />
-            <BackLink />
-          </footer>
-        )
-      }
+      <ErrorBoundary componentName="MainContentArea">
+        <slot />
+        {
+          Astro.url.pathname !== getUrl('/') && (
+            <footer class="slide-enter animate-delay-1000! prose mx-auto mt-8 print:hidden">
+              <slot name="share" />
+              <br />
+              <BackLink />
+            </footer>
+          )
+        }
+      </ErrorBoundary>
     </main>
-    <Footer />
+    {includeFooter && <Footer />}
     <ToTopButton />
 
     <!-- Panel Backdrop (on mobile) -->

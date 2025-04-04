@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss'
 
-export default {
+const config: Config = {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
@@ -35,10 +35,13 @@ export default {
     },
   },
   plugins: [
+    // @ts-expect-error - Tailwind plugin API types are not fully compatible
     function ({ addBase, theme }) {
       addBase({
         '@media print': theme('printStyles'),
       })
     },
   ],
-} satisfies Config
+}
+
+export default config

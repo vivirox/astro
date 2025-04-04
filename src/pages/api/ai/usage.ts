@@ -93,7 +93,7 @@ export const GET: APIRoute = async ({ request }) => {
           details: JSON.stringify(validationError.details),
           status: 'error',
         } as AuditMetadata,
-        request
+        request,
       )
 
       return new Response(JSON.stringify(validationError), {
@@ -132,7 +132,7 @@ export const GET: APIRoute = async ({ request }) => {
         endDate: params!.endDate,
         status: 'success',
       },
-      request
+      request,
     )
 
     // Get usage statistics
@@ -166,7 +166,7 @@ export const GET: APIRoute = async ({ request }) => {
         stack: error instanceof Error ? error.stack : undefined,
         status: 'error',
       },
-      request
+      request,
     )
 
     // Use standardized error handling

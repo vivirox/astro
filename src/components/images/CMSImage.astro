@@ -1,0 +1,285 @@
+---
+/**
+ * CMSImage.astro
+ * A specialized component for optimizing images from a CMS or external source
+ * with automatic dimension and format detection
+ */
+
+import { imageConfig } from '../../config/images'
+import {
+  isExternalImage,
+  } from '../../utils/images'
+
+export interface Props {
+  /**
+   * The source URL for the image from CMS
+   */
+  src: string
+
+  /**
+   * Alt text for the image (required for accessibility)
+   */
+  alt: string
+
+  /**
+   * Optional CSS class to apply to the image
+   */
+  class?: string
+
+  /**
+   * Optional CSS class to apply to the wrapper element
+   */
+  wrapperClass?: string
+
+  /**
+   * Optional loading strategy
+   * - 'eager': Load immediately (use for above-the-fold images)
+   * - 'lazy': Defer loading until near viewport (default)
+   */
+  loading?: 'eager' | 'lazy'
+
+  /**
+   * Optional width override
+   */
+  width?: number
+
+  /**
+   * Optional height override
+   */
+  height?: number
+
+  /**
+   * Optional aspect ratio if original dimensions are unknown
+   * Format: "16:9", "4:3", "1:1", etc.
+   */
+  aspectRatio?: string
+
+  /**
+   * Image quality (1-100)
+   */
+  quality?: number
+
+  /**
+   * Desired output format
+   */
+  format?: 'webp' | 'avif' | 'jpg' | 'png'
+
+  /**
+   * Whether to show a loading placeholder
+   */
+  placeholder?: boolean
+
+  /**
+   * Focal point for image (used for cropping)
+   * Format: "center", "top", "bottom", "left", "right",
+   * or combination like "top-left", "bottom-right"
+   */
+  focalPoint?: string
+
+  /**
+   * Custom sizes attribute for responsive images
+   * Example: "(max-width: 768px) 100vw, 50vw"
+   */
+  sizes?: string
+
+  /**
+   * Optional custom breakpoints for responsive images
+   */
+  breakpoints?: number[]
+
+  /**
+   * Additional HTML attributes to pass to the img element
+   */
+  [key: string]: any
+}
+
+const {
+  src,
+  ...rest
+} = Astro.props
+
+// Check if this is an external image
+
+
+// Validate external domain if applicable
+
+
+// Calculate focal point CSS properties
+const getFocalPointPosition = (fp: string) => {
+  const positions: Record<string, string> = {
+    'center': '50% 50%',
+    'top': '50% 0',
+    'bottom': '50% 100%',
+    'left': '0 50%',
+    'right': '100% 50%',
+    'top-left': '0 0',
+    'top-right': '100% 0',
+    'bottom-left': '0 100%',
+    'bottom-right': '100% 100%',
+  }
+
+  return positions[fp] || positions['center']
+}
+
+// Parse aspect ratio if provided
+const getAspectRatioPadding = (ar: string | undefined) => {
+  if (!ar) return undefined
+
+  const [width, height] = ar.split(':').map(Number)
+  if (width && height) {
+    return `${(height / width) * 100}%`
+  }
+
+  return undefined
+}
+
+
+
+
+// Generate responsive sizes attribute
+
+
+// Dimensions for placeholder
+
+
+
+// Filter out props we don't want to pass to the Image component
+const {
+  wrapperClass: _,
+  placeholder: __,
+  breakpoints: ___,
+  focalPoint: ____,
+  aspectRatio: _____,
+  ...imageProps
+} = rest
+---
+
+<div
+  class:list={[
+    wrapperClass,
+    'cms-image-wrapper',
+    { 'aspect-ratio-container': aspectRatioPadding },
+  ]}
+  style={aspectRatioPadding ? `padding-bottom: ${aspectRatioPadding};` : ''}
+>
+  {
+    isAllowedDomain ? (
+      <div class="cms-image-inner">
+        {isExternal ? (
+          <>
+            {placeholder && (
+              <div class="placeholder-container">
+                <div
+                  class="cms-image-placeholder"
+                  style={`background-position: ${objectPosition};`}
+                />
+              </div>
+            )}
+
+            <img
+              src={src}
+              alt={alt}
+              class:list={[className, 'cms-image']}
+              loading={loading}
+              width={width}
+              height={height}
+              style={`object-position: ${objectPosition};`}
+              sizes={sizesAttr}
+              {...imageProps}
+            />
+          </>
+        ) : (
+          <>
+            {placeholder && (
+              <div class="placeholder-container">
+                <Image
+                  src={src}
+                  alt=""
+                  width={placeholderWidth}
+                  height={placeholderHeight}
+                  quality={10}
+                  format={format}
+                  class="cms-image-placeholder"
+                  style={`object-position: ${objectPosition};`}
+                />
+              </div>
+            )}
+
+            <Image
+              src={src}
+              alt={alt}
+              width={width || 800}
+              height={height || 600}
+              quality={calculateImageQuality(format)}
+              format={format}
+              class={`cms-image ${className}`}
+              loading={loading}
+              style={`object-position: ${objectPosition};`}
+              sizes={sizesAttr}
+              {...imageProps}
+            />
+          </>
+        )}
+      </div>
+    ) : (
+      <div class="cms-image-error">
+        <p>Image domain not allowed: {new URL(src).hostname}</p>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .cms-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .aspect-ratio-container {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .cms-image-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cms-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 2;
+  }
+
+  .placeholder-container {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-color: #f1f1f1;
+    overflow: hidden;
+  }
+
+  .cms-image-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(8px);
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+
+  .cms-image-error {
+    padding: 1rem;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+</style>

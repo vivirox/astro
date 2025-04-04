@@ -768,27 +768,13 @@ export class FHEAnalyticsService {
       logger.info('Creating comprehensive analytics dashboard')
 
       // Run all analytics in parallel
-      const [
-        sentimentTrend,
-        topicClusters,
-        emotionalPatterns,
-        interventionEffectiveness,
-        riskAssessment,
-      ] = await Promise.all([
+      return await Promise.all([
         this.analyzeSentimentTrend(messages, config),
         this.analyzeTopicClusters(messages, config),
         this.analyzeEmotionalPatterns(messages, config),
         this.analyzeInterventionEffectiveness(messages, config),
         this.performRiskAssessment(messages, config),
       ])
-
-      return [
-        sentimentTrend,
-        topicClusters,
-        emotionalPatterns,
-        interventionEffectiveness,
-        riskAssessment,
-      ]
     } catch (error) {
       logger.error(
         'Failed to create analytics dashboard',

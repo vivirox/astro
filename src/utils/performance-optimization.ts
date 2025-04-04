@@ -4,6 +4,8 @@
  * This file contains utilities to optimize Core Web Vitals and other performance metrics.
  */
 
+import process from 'node:process'
+
 /**
  * Reports Core Web Vitals and other metrics to the console
  * Helps with debugging performance issues during development
@@ -16,10 +18,10 @@ export function reportWebVitals(): void {
         process.env.NODE_ENV === 'development' ||
         process.env.ENABLE_METRICS === 'true'
       ) {
-        // Report Largest Contentful Pain
+        // Report Largest Contentful Paint
         reportLCP()
 
-        // Report Cumulative Layout Shif
+        // Report Cumulative Layout Shift
         reportCLS()
 
         // Report First Input Delay
@@ -37,7 +39,7 @@ export function reportWebVitals(): void {
 
 // Define interfaces for Performance entries
 interface LargestContentfulPaintEntry extends PerformanceEntry {
-  element?: Elemen
+  element?: Element
   size: number
   renderTime?: number
   loadTime?: number
@@ -98,7 +100,7 @@ function reportCLS(): void {
 
       entries.forEach((entry) => {
         if (!(entry as LayoutShiftEntry).hadRecentInput) {
-          const value = (entry as LayoutShiftEntry).value
+          const { value } = entry as LayoutShiftEntry
           clsValue += value
           clsEntries.push(entry as LayoutShiftEntry)
         }
@@ -178,7 +180,7 @@ function reportTTFB(): void {
     if (navigationEntries.length > 0) {
       const navigationEntry =
         navigationEntries[0] as PerformanceNavigationTiming
-      const ttfb = navigationEntry.responseStar
+      const ttfb = navigationEntry.responseStart
 
       console.log('TTFB:', {
         value: Math.round(ttfb),
@@ -195,7 +197,9 @@ function reportTTFB(): void {
  * @param resources Array of resources to preload
  */
 export function optimizeLCP(resources: string[] = []): void {
-  if (typeof window === 'undefined') return
+  if (typeof window === 'undefined') {
+    return
+  }
 
   // Preload critical resources
   resources.forEach((resource) => {
@@ -241,7 +245,7 @@ export function optimizeLCP(resources: string[] = []): void {
     }
   })
 
-  // Use fetchpriority for the main LCP image if the browser supports i
+  // Use fetchpriority for the main LCP image if the browser supports it
   const lcpImages = document.querySelectorAll('[data-lcp-image]')
   lcpImages.forEach((img) => {
     if (img instanceof HTMLImageElement) {
@@ -256,9 +260,11 @@ export function optimizeLCP(resources: string[] = []): void {
  * Optimizes FID by deferring non-critical scripts and styles
  */
 export function optimizeFID(): void {
-  if (typeof document === 'undefined') return
+  if (typeof document === 'undefined') {
+    return
+  }
 
-  // Defer non-critical JavaScrip
+  // Defer non-critical JavaScript
   const scripts = document.querySelectorAll('script:not([data-critical])')
   scripts.forEach((script) => {
     if (!script.hasAttribute('defer') && !script.hasAttribute('async')) {
@@ -271,7 +277,9 @@ export function optimizeFID(): void {
  * Optimizes CLS by setting explicit dimensions for media and placeholders
  */
 export function optimizeCLS(): void {
-  if (typeof document === 'undefined') return
+  if (typeof document === 'undefined') {
+    return
+  }
 
   // Find images without dimensions and add styling to prevent layout shifts
   const images = document.querySelectorAll('img:not([width]):not([height])')
@@ -295,7 +303,9 @@ export function setupContainment(
   selector: string,
   containmentValue = 'content',
 ): void {
-  if (typeof document === 'undefined') return
+  if (typeof document === 'undefined') {
+    return
+  }
 
   const elements = document.querySelectorAll(selector)
   elements.forEach((el) => {
@@ -314,7 +324,9 @@ export function initializeOptimizations(
     containmentSelectors?: Record<string, string>
   } = {},
 ): void {
-  if (typeof window === 'undefined') return
+  if (typeof window === 'undefined') {
+    return
+  }
 
   // Report metrics
   reportWebVitals()
@@ -324,7 +336,7 @@ export function initializeOptimizations(
   optimizeFID()
   optimizeCLS()
 
-  // Setup containmen
+  // Setup containment
   if (options.containmentSelectors) {
     Object.entries(options.containmentSelectors).forEach(
       ([selector, value]) => {
@@ -362,31 +374,61 @@ function garbageCollection(): void {
 
 // Rating functions for web vitals
 function lcpRating(lcp: number): 'good' | 'needs-improvement' | 'poor' {
-  if (lcp <= 2500) return 'good'
-  if (lcp <= 4000) return 'needs-improvement'
+  if (lcp <= 2500) {
+    return 'good'
+  }
+
+  if (lcp <= 4000) {
+    return 'needs-improvement'
+  }
+
   return 'poor'
 }
 
 function clsRating(cls: number): 'good' | 'needs-improvement' | 'poor' {
-  if (cls <= 0.1) return 'good'
-  if (cls <= 0.25) return 'needs-improvement'
+  if (cls <= 0.1) {
+    return 'good'
+  }
+
+  if (cls <= 0.25) {
+    return 'needs-improvement'
+  }
+
   return 'poor'
 }
 
 function fidRating(fid: number): 'good' | 'needs-improvement' | 'poor' {
-  if (fid <= 100) return 'good'
-  if (fid <= 300) return 'needs-improvement'
+  if (fid <= 100) {
+    return 'good'
+  }
+
+  if (fid <= 300) {
+    return 'needs-improvement'
+  }
+
   return 'poor'
 }
 
 function fcpRating(fcp: number): 'good' | 'needs-improvement' | 'poor' {
-  if (fcp <= 1800) return 'good'
-  if (fcp <= 3000) return 'needs-improvement'
+  if (fcp <= 1800) {
+    return 'good'
+  }
+
+  if (fcp <= 3000) {
+    return 'needs-improvement'
+  }
+
   return 'poor'
 }
 
 function ttfbRating(ttfb: number): 'good' | 'needs-improvement' | 'poor' {
-  if (ttfb <= 800) return 'good'
-  if (ttfb <= 1800) return 'needs-improvement'
+  if (ttfb <= 800) {
+    return 'good'
+  }
+
+  if (ttfb <= 1800) {
+    return 'needs-improvement'
+  }
+
   return 'poor'
 }

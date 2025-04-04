@@ -1,9 +1,9 @@
 ---
-import { ClientRouter, slide } from 'astro:transitions'
-import BaseHead from '@/components/base/Head.astro'
-import Header from '@/components/layout/Header.astro'
-import Footer from '@/components/layout/Footer.astro'
-import ThemeToggle from '@/components/ui/ThemeToggle.astro'
+import { } from 'astro:transitions'
+
+
+
+
 
 interface Props {
   title: string
@@ -22,16 +22,11 @@ interface Props {
 
 // Use frontmatter if available, otherwise use props
 const {
-  frontmatter,
-  title: propTitle,
-  description: propDescription = 'Documentation',
-  image: propImage = '/logo/docs-image.png',
-  canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
-} = Astro.props
+  } = Astro.props
 
-const title = frontmatter?.title || propTitle
-const description = frontmatter?.description || propDescription
-const image = frontmatter?.image || propImage
+
+
+
 ---
 
 <!doctype html>
@@ -168,32 +163,27 @@ const image = frontmatter?.image || propImage
             <a
               href="/docs"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
-              transition:animate="slide"
-              >Home</a
+              transition:animate="slide">Home</a
             >
             <a
               href="/docs/api"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
-              transition:animate="slide"
-              >API Reference</a
+              transition:animate="slide">API Reference</a
             >
             <a
               href="/docs/components"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
-              transition:animate="slide"
-              >Components</a
+              transition:animate="slide">Components</a
             >
             <a
               href="/docs/security"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
-              transition:animate="slide"
-              >Security</a
+              transition:animate="slide">Security</a
             >
             <a
               href="/docs/guides"
               class="block px-3 py-2 rounded-md hover:bg-muted transition-colors"
-              transition:animate="slide"
-              >Guides</a
+              transition:animate="slide">Guides</a
             >
           </nav>
 
@@ -216,8 +206,12 @@ const image = frontmatter?.image || propImage
         >
           <!-- Documentation title and metadata -->
           <header class="mb-8">
-            <h1 class="text-4xl font-bold mb-4" transition:name="doc-title">{title}</h1>
-            <p class="text-muted-foreground" transition:name="doc-desc">{description}</p>
+            <h1 class="text-4xl font-bold mb-4" transition:name="doc-title">
+              {title}
+            </h1>
+            <p class="text-muted-foreground" transition:name="doc-desc">
+              {description}
+            </p>
           </header>
 
           <!-- Documentation content -->
@@ -226,7 +220,10 @@ const image = frontmatter?.image || propImage
           </div>
 
           <!-- Footer navigation -->
-          <div class="mt-16 pt-8 border-t flex justify-between" transition:animate="slide">
+          <div
+            class="mt-16 pt-8 border-t flex justify-between"
+            transition:animate="slide"
+          >
             <a
               href="#"
               class="text-sm flex items-center gap-1 hover:text-primary transition-colors"
@@ -314,4 +311,3 @@ const image = frontmatter?.image || propImage
     </script>
   </body>
 </html>
-

@@ -1,5 +1,5 @@
 ---
-import { ensureTrailingSlash, getUrl } from '~/utils/common'
+
 import { UI } from '~/config'
 import type { Tabs } from '~/types'
 
@@ -7,19 +7,19 @@ interface Props {
   subtitle?: string
 }
 
-const { subtitle } = Astro.props
 
-let tabs: Tabs
+
+let _tabs: Tabs
 if (
   !UI.tabbedLayoutTabs ||
   (Array.isArray(UI.tabbedLayoutTabs) && UI.tabbedLayoutTabs.length === 0)
 ) {
   throw new Error('`UI.tabbedLayoutTabs` is not configured.')
 } else {
-  tabs = UI.tabbedLayoutTabs
+  _tabs = UI.tabbedLayoutTabs
 }
 
-const currentPath = ensureTrailingSlash(Astro.url.pathname)
+
 ---
 
 <nav id="nav-tabs" class="prose mx-auto mb-8" aria-label="Page sections">

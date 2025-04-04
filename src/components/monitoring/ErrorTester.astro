@@ -1,0 +1,254 @@
+---
+/**
+ * Error Tester Component
+ *
+ * A utility component for testing error reporting to Sentry.
+ * This component provides buttons to trigger different types of errors
+ * to verify that they are properly captured and reported.
+ *
+ * Only include this component in development/testing environments.
+ */
+
+
+import sentry from '@/lib/monitoring/sentry'
+
+interface Props {
+  showInProduction?: boolean
+}
+
+const { showInProduction = false } = Astro.props
+
+// Only show in development or if explicitly enabled
+const shouldShow = import.meta.env.DEV || showInProduction
+
+// Set a custom context tag for all errors from this component
+if (shouldShow) {
+  sentry.setTag('component', 'ErrorTester')
+}
+---
+
+{
+  shouldShow && (
+    <div class="p-6 my-8 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg">
+      <h2 class="text-xl font-bold text-red-800 dark:text-red-400 mb-4">
+        Sentry Error Testing Panel
+      </h2>
+      <p class="mb-4 text-gray-700 dark:text-gray-300">
+        Use these buttons to test error reporting to Sentry. Each button
+        triggers a different type of error that should be captured and sent to
+        your Sentry dashboard.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Button id="js-error-btn" variant="destructive" className="w-full">
+          Trigger JS Error
+        </Button>
+
+        <Button id="promise-error-btn" variant="destructive" className="w-full">
+          Trigger Promise Rejection
+        </Button>
+
+        <Button id="network-error-btn" variant="destructive" className="w-full">
+          Trigger Network Error
+        </Button>
+
+        <Button id="custom-error-btn" variant="destructive" className="w-full">
+          Send Custom Error
+        </Button>
+
+        <Button id="breadcrumb-btn" variant="outline" className="w-full">
+          Add Breadcrumb + Error
+        </Button>
+
+        <Button id="message-btn" variant="outline" className="w-full">
+          Send Message
+        </Button>
+      </div>
+
+      <div
+        id="test-result"
+        class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-md hidden"
+      >
+        <span class="font-mono text-sm" />
+      </div>
+    </div>
+  )
+}
+
+<script>
+  // Client-side error testing functions
+  function showResult(message: string, isError = false): void {
+    const resultEl = document.getElementById('test-result')
+    const textEl = resultEl?.querySelector('span')
+
+    if (resultEl && textEl) {
+      textEl.textContent = message
+      resultEl.classList.remove('hidden')
+
+      if (isError) {
+        resultEl.classList.add('bg-red-100', 'dark:bg-red-900')
+        resultEl.classList.remove('bg-green-100', 'dark:bg-green-900')
+      } else {
+        resultEl.classList.add('bg-green-100', 'dark:bg-green-900')
+        resultEl.classList.remove('bg-red-100', 'dark:bg-red-900')
+      }
+
+      // Clear after 5 seconds
+      setTimeout(() => {
+        resultEl.classList.add('hidden')
+      }, 5000)
+    }
+  }
+
+  // 1. Trigger a standard JavaScript error
+  document.getElementById('js-error-btn')?.addEventListener('click', () => {
+    try {
+      // Intentional error - accessing property of undefined
+      const user = undefined
+      const username = user.name
+      console.log(username)
+    } catch (error) {
+      showResult(
+        `Error triggered: ${error instanceof Error ? error.message : String(error)}`,
+        true,
+      )
+
+      // This error should be automatically captured by Sentry
+      // But we can still throw it to verify
+      throw error
+    }
+  })
+
+  // 2. Trigger a promise rejection
+  document
+    .getElementById('promise-error-btn')
+    ?.addEventListener('click', () => {
+      new Promise<void>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('Test promise rejection'))
+        }, 100)
+      }).catch((error) => {
+        showResult(
+          `Promise rejected: ${error instanceof Error ? error.message : String(error)}`,
+          true,
+        )
+        // This should be automatically captured by Sentry
+      })
+    })
+
+  // 3. Trigger a network error
+  document
+    .getElementById('network-error-btn')
+    ?.addEventListener('click', async () => {
+      try {
+        // Intentionally try to fetch a non-existent endpoint
+        const response = await fetch('/api/non-existent-endpoint-for-testing')
+        const data = await response.json()
+        console.log(data)
+      } catch (error) {
+        showResult(
+          `Network error: ${error instanceof Error ? error.message : String(error)}`,
+          true,
+        )
+        // This should be captured by Sentry
+      }
+    })
+
+  // 4. Send a custom error with context
+  document.getElementById('custom-error-btn')?.addEventListener('click', () => {
+    try {
+      // Verify Sentry is available in window
+      if (typeof window.Sentry !== 'undefined') {
+        const customError = new Error('Test custom error with context')
+
+        // Use withScope to add context just for this error
+        window.Sentry.withScope((scope) => {
+          scope.setLevel('error')
+          scope.setTag('error_type', 'custom')
+          scope.setExtra('additional_info', {
+            time: new Date().toISOString(),
+            test: true,
+            user_triggered: true,
+          })
+
+          window.Sentry.captureException(customError)
+        })
+
+        showResult('Custom error sent to Sentry with context', false)
+      } else {
+        throw new Error('Sentry not available')
+      }
+    } catch (error) {
+      showResult(
+        `Failed to send custom error: ${error instanceof Error ? error.message : String(error)}`,
+        true,
+      )
+    }
+  })
+
+  // 5. Add breadcrumbs and then trigger an error
+  document.getElementById('breadcrumb-btn')?.addEventListener('click', () => {
+    try {
+      // Verify Sentry is available
+      if (typeof window.Sentry !== 'undefined') {
+        // Add breadcrumbs to track actions leading to the error
+        window.Sentry.addBreadcrumb({
+          category: 'ui.click',
+          message: 'User clicked the breadcrumb test button',
+          level: 'info',
+        })
+
+        window.Sentry.addBreadcrumb({
+          category: 'test',
+          message: 'Preparing to generate test error',
+          level: 'debug',
+        })
+
+        // Now trigger an error that should include the breadcrumbs
+        throw new Error('Error after breadcrumbs')
+      } else {
+        throw new Error('Sentry not available')
+      }
+    } catch (error) {
+      showResult(
+        `Error with breadcrumbs: ${error instanceof Error ? error.message : String(error)}`,
+        true,
+      )
+
+      // Re-throw to be captured by Sentry
+      throw error
+    }
+  })
+
+  // 6. Send a message to Sentry (not an error)
+  document.getElementById('message-btn')?.addEventListener('click', () => {
+    try {
+      // Verify Sentry is available
+      if (typeof window.Sentry !== 'undefined') {
+        window.Sentry.captureMessage(
+          'Test message from ErrorTester component',
+          'info',
+        )
+        showResult('Message sent to Sentry', false)
+      } else {
+        throw new Error('Sentry not available')
+      }
+    } catch (error) {
+      showResult(
+        `Failed to send message: ${error instanceof Error ? error.message : String(error)}`,
+        true,
+      )
+    }
+  })
+
+  // Add to window for debugging
+  window.testSentry = {
+    showResult,
+  }
+</script>
+
+<style>
+  #test-result {
+    transition: all 0.3s ease-in-out;
+  }
+</style>

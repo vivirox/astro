@@ -1,7 +1,7 @@
 ---
 import { getLogger } from '@/lib/logging'
 import { getSystemMetrics, type SystemMetrics } from '@/lib/api/admin'
-import { initDashboardUpdates } from '@/lib/admin/dashboard-updater'
+
 
 // Initialize logger
 const logger = getLogger()
@@ -20,27 +20,23 @@ const defaultMetrics: SystemMetrics = {
   activeSecurityLevel: 'standard',
 }
 
-let metrics: SystemMetrics = defaultMetrics
-let error: string | null = null
+let _metrics: SystemMetrics = defaultMetrics
+let _error: string | null = null
 
 try {
-  metrics = await getSystemMetrics()
+  _metrics = await getSystemMetrics()
 } catch (err) {
   logger.error('Error fetching metrics:', {
     error: err instanceof Error ? err.message : String(err),
     stack: err instanceof Error ? err.stack : undefined,
   })
-  error = 'Failed to load system metrics'
+  _error = 'Failed to load system metrics'
 }
 
 // Calculate width percentages
-const storageUsedPercent = metrics.storageUsed
-  ? Math.min(parseInt(metrics.storageUsed) / 10, 100)
-  : 0
 
-const messagesSentPercent = metrics.messagesSent
-  ? Math.min(metrics.messagesSent / 100, 100)
-  : 0
+
+
 ---
 
 <div class="p-6 space-y-8">

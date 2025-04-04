@@ -57,7 +57,9 @@ const runBuild = () => {
       }
 
       console.log(stdout)
-      if (stderr) console.error(stderr)
+      if (stderr) {
+        console.error(stderr)
+      }
       console.log('✅ Build completed successfully')
       resolve()
     })

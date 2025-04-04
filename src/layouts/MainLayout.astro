@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import StandardLayout from '@/layouts/StandardLayout.astro'
+
+
 import type { BgType } from '@/types'
 
 interface Props {
@@ -11,20 +11,11 @@ interface Props {
 }
 
 const {
-  title,
-  description = 'Gradiant Ascent - Advanced AI Platform',
-  bgType = 'plum',
-  ogImage = false
-} = Astro.props
+  } = Astro.props
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  bgType={bgType}
-  ogImage={ogImage}
->
-  <StandardLayout title={title}>
+<BaseLayout {title} {description} {bgType} {ogImage}>
+  <StandardLayout {title}>
     <div class="prose mx-auto">
       <slot />
     </div>

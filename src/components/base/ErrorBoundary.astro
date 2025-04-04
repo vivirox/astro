@@ -1,15 +1,25 @@
 ---
 interface Props {
   fallback?: string
+  showError?: boolean
+  componentName?: string
 }
 
-const { fallback = 'Something went wrong. Please try refreshing the page.' } =
-  Astro.props
+const {
+  // Only show error details in development
+  } = Astro.props
 ---
 
 <script>
+  // Import Sentry for error reporting
+  import * as Sentry from '@sentry/browser'
+
   class ErrorBoundary extends HTMLElement {
-    private state: { hasError: boolean }
+    private state: {
+      hasError: boolean
+      error?: Error
+      errorInfo?: string
+    }
 
     constructor() {
       super()
@@ -17,41 +27,113 @@ const { fallback = 'Something went wrong. Please try refreshing the page.' } =
     }
 
     static get observedAttributes() {
-      return ['data-fallback']
+      return ['data-fallback', 'data-show-error', 'data-component-name']
     }
 
     connectedCallback() {
       window.addEventListener('error', this.handleError.bind(this))
-      window.addEventListener('unhandledrejection', this.handleError.bind(this))
+      window.addEventListener(
+        'unhandledrejection',
+        this.handlePromiseError.bind(this),
+      )
     }
 
     disconnectedCallback() {
       window.removeEventListener('error', this.handleError.bind(this))
       window.removeEventListener(
         'unhandledrejection',
-        this.handleError.bind(this),
+        this.handlePromiseError.bind(this),
       )
     }
 
-    handleError(event: Event) {
+    handleError(event: ErrorEvent) {
       event.preventDefault()
-      this.state.hasError = true
+      const error = event.error || new Error(event.message)
+      this.captureAndRenderError(
+        error,
+        `${event.filename}:${event.lineno}:${event.colno}`,
+      )
+    }
+
+    handlePromiseError(event: PromiseRejectionEvent) {
+      event.preventDefault()
+      const error =
+        event.reason instanceof Error
+          ? event.reason
+          : new Error(String(event.reason))
+      this.captureAndRenderError(error, 'Unhandled Promise Rejection')
+    }
+
+    captureAndRenderError(error: Error, errorInfo: string) {
+      // Report to Sentry with component context
+      try {
+        const componentName =
+          this.getAttribute('data-component-name') || 'ErrorBoundary'
+
+        Sentry.withScope((scope) => {
+          scope.setTag('component', componentName)
+          scope.setExtra('errorInfo', errorInfo)
+          Sentry.captureException(error)
+        })
+
+        // For debugging
+        console.error(`Error in ${componentName}:`, error, errorInfo)
+      } catch (sentryError) {
+        // Fallback if Sentry fails
+        console.error('Failed to report to Sentry:', sentryError)
+        console.error('Original error:', error)
+      }
+
+      // Update state and render error UI
+      this.state = {
+        hasError: true,
+        error,
+        errorInfo,
+      }
+
       this.render()
     }
 
     render() {
       if (this.state.hasError) {
         const fallback = this.getAttribute('data-fallback')
+        const showError = this.getAttribute('data-show-error') === 'true'
+        const componentName = this.getAttribute('data-component-name')
+
+        let errorDetails = ''
+
+        if (showError && this.state.error) {
+          errorDetails = `
+            <div class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-left overflow-auto max-h-[300px]">
+              <p class="font-mono text-sm text-red-700 dark:text-red-400 mb-2">
+                ${componentName ? `Component: ${componentName}` : ''}
+              </p>
+              <p class="font-mono text-sm text-red-700 dark:text-red-400 mb-2">
+                ${this.state.error.name}: ${this.state.error.message}
+              </p>
+              <pre class="text-xs text-red-600 dark:text-red-400 overflow-auto">${this.state.error.stack || ''}</pre>
+              ${this.state.errorInfo ? `<p class="mt-2 font-mono text-xs text-red-500">${this.state.errorInfo}</p>` : ''}
+            </div>
+          `
+        }
+
         this.innerHTML = `
-          <div class="flex min-h-[50vh] flex-col items-center justify-center text-center p-4">
-            <h2 class="text-2xl font-bold mb-4">Oops!</h2>
-            <p class="text-gray-600 dark:text-gray-400 mb-6">${fallback}</p>
+          <div class="flex min-h-[200px] flex-col items-center justify-center text-center p-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500 mb-4">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h2 class="text-xl font-bold mb-2">Oops!</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">${fallback}</p>
             <button
               onclick="window.location.reload()"
-              class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
+              class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+              aria-label="Refresh page"
             >
               Refresh Page
             </button>
+            ${errorDetails}
           </div>
         `
       }
@@ -61,7 +143,11 @@ const { fallback = 'Something went wrong. Please try refreshing the page.' } =
   customElements.define('error-boundary', ErrorBoundary)
 </script>
 
-<error-boundary data-fallback={fallback}>
+<error-boundary
+  data-fallback={fallback}
+  data-show-error={String(showError)}
+  data-component-name={componentName}
+>
   <slot />
 </error-boundary>
 

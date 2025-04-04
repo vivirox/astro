@@ -1,0 +1,89 @@
+---
+/**
+ * SkipLink Component
+ *
+ * A component that provides a skip navigation link for keyboard users.
+ * This link is visually hidden until it receives focus, allowing keyboard
+ * users to skip directly to the main content without tabbing through navigation.
+ */
+
+interface Props {
+  /**
+   * The target selector to skip to (defaults to "#main-content")
+   */
+  target?: string
+
+  /**
+   * The text of the skip link (defaults to "Skip to main content")
+   */
+  text?: string
+}
+
+const { } = Astro.props
+---
+
+<a href={target} class="skip-link">
+  {text}
+</a>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: #4d5bce;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    z-index: 100;
+    transition: top 0.2s ease;
+    text-decoration: none;
+    border-radius: 0 0 0.5rem 0;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .skip-link:focus {
+    top: 0;
+    outline: 2px solid #4d5bce;
+    outline-offset: 4px;
+  }
+
+  /* High contrast mode support */
+  @media (forced-colors: active) {
+    .skip-link:focus {
+      outline: 3px solid CanvasText;
+    }
+  }
+</style>
+
+<script>
+  // Ensure skip link works properly in all browsers
+  document.addEventListener('DOMContentLoaded', () => {
+    const skipLink = document.querySelector('.skip-link')
+
+    if (skipLink) {
+      skipLink.addEventListener('click', (e) => {
+        e.preventDefault()
+
+        const href = skipLink.getAttribute('href')
+        if (!href) return
+
+        const targetElement = document.querySelector(href)
+
+        if (targetElement) {
+          // Set tabindex to make the element focusable if it isn't already
+          if (!targetElement.hasAttribute('tabindex')) {
+            targetElement.setAttribute('tabindex', '-1')
+          }
+          // Focus the target element
+          ;(targetElement as HTMLElement).focus()
+
+          // Scroll to the element
+          targetElement.scrollIntoView({ behavior: 'smooth' })
+          // Update URL hash without scrolling
+          history.pushState(null, '', href)
+        }
+      })
+    }
+  })
+</script>

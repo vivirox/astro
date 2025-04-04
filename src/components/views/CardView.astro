@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
-import CardItem from '~/components/views/CardItem.astro'
+
 import { processBlueskyPosts } from '~/utils/data'
 
 import type {
@@ -21,17 +21,13 @@ interface Props {
 
 const {
   collectionType,
-  mode = 'masonry',
-  gap = 16,
-  minCardWidth = 350,
-  maxCardWidth = 1000,
-} = Astro.props
+  } = Astro.props
 
 let highlights: CollectionEntry<'highlights'>[] = []
-let processedHighlights: CardItemData[] = []
+let _processedHighlights: CardItemData[] = []
 if (collectionType === 'highlights') {
   highlights = await getCollection(collectionType)
-  processedHighlights = processBlueskyPosts(highlights).sort(
+  _processedHighlights = processBlueskyPosts(highlights).sort(
     (a: CardItemData, b: CardItemData) =>
       !a.date || !b.date
         ? 0

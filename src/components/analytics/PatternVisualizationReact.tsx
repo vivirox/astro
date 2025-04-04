@@ -6,7 +6,7 @@ import type {
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import React from 'react'
-import type { MouseEvent } from 'react'
+
 import {
   Area,
   AreaChart,
@@ -63,20 +63,14 @@ export function PatternVisualization({
   }
 
   // Handle the activeDot click event with proper typing
-  const handleTrendDotClick = (
-    data: any,
-    index: number
-  ) => {
+  const handleTrendDotClick = (data: any, index: number) => {
     if (data && data.original) {
       onPatternSelect?.(data.original)
     }
   }
 
   // Handle the area click event with proper typing
-  const handlePatternClick = (
-    data: any,
-    index: number
-  ) => {
+  const handlePatternClick = (data: any, index: number) => {
     if (data && data.payload && data.payload.original) {
       onPatternSelect?.(data.payload.original)
     }

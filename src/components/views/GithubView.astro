@@ -1,11 +1,11 @@
 ---
 import { getCollection } from 'astro:content'
-import Link from '~/components/base/Link.astro'
-import GithubItem from '~/components/views/GithubItem.astro'
 import { UI } from '~/config'
-import { getUrl } from '~/utils/common'
 import { extractPackageName, matchLogo, processVersion } from '~/utils/data'
-import { formatDate, isDiffMonth } from '~/utils/datetime'
+import { } from '~/utils/datetime'
+
+
+
 
 import type { CollectionEntry } from 'astro:content'
 import type { Icon, RepoWithOwner, Url } from '~/types'
@@ -44,7 +44,7 @@ const { monorepos, mainLogoOverrides, subLogoMatches } = UI.githubView
 
 /* Releases */
 let releases: CollectionEntry<'releases'>[] = []
-let extendedReleases: ExtendedReleaseData[] = []
+let _extendedReleases: ExtendedReleaseData[] = []
 
 if (collectionType === 'releases') {
   try {
@@ -58,7 +58,7 @@ if (collectionType === 'releases') {
     })
 
     // Process each release
-    extendedReleases = allReleases
+    _extendedReleases = allReleases
       .map((release: ReleaseData): ExtendedReleaseData => {
         // Extract repo details from the link or generate defaults
         const repoInfo =
@@ -119,13 +119,13 @@ if (collectionType === 'releases') {
       })
   } catch (error) {
     console.error('Error processing releases:', error)
-    extendedReleases = []
+    _extendedReleases = []
   }
 }
 
 /* PRs */
 let prs: CollectionEntry<'prs'>[] = []
-let extendedPrs: ExtendedPrData[] = []
+let _extendedPrs: ExtendedPrData[] = []
 
 if (collectionType === 'prs') {
   try {
@@ -134,7 +134,7 @@ if (collectionType === 'prs') {
     // Get PRs from the nested structure
     const allPrs = prs.flatMap((item) => item.data.projects.pull_requests || [])
 
-    extendedPrs = allPrs
+    _extendedPrs = allPrs
       .filter(
         (item) =>
           item.state !== 'CLOSED' &&
@@ -158,9 +158,13 @@ if (collectionType === 'prs') {
       })
   } catch (error) {
     console.error('Error processing PRs:', error)
-    extendedPrs = []
+    _extendedPrs = []
   }
 }
+
+// Make processed data available for templates
+
+
 ---
 
 <div

@@ -1,10 +1,10 @@
 import type { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro'
 import { sequence } from 'astro:middleware'
-import { auditLoggingMiddleware } from './audit-logging'
+
 import { corsMiddleware } from './cors'
 import { csrfMiddleware } from './csrf'
 import { loggingMiddleware } from './logging'
-import { rateLimitMiddleware } from './rate-limit'
+
 
 /**
  * Content Type middleware to ensure proper MIME types

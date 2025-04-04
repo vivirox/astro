@@ -186,7 +186,7 @@ export type ProjectSchema = z.infer<typeof projectSchema>
 export type ProjectGroupsSchema = z.infer<typeof projectGroupsSchema>
 export type ProjectsSchema = z.infer<typeof projectsSchema>
 
-/* Stremas */
+/* Streams */
 const streamSchema = z.object({
   title: z.string().describe('**Required**. Sets the stream title.'),
   pubDate: z.coerce
@@ -272,7 +272,8 @@ export type PrsSchema = z.infer<typeof prsSchema>
 export type StreamGroupsSchema = z.infer<typeof streamGroupsSchema>
 export type StreamsSchema = z.infer<typeof streamsSchema>
 
-export interface ProjectGroupsSchema {
+// Define a separate interface for project groups structure
+export type ProjectGroupsInterface = {
   groups: Array<{
     projects: Array<{
       icon?: string

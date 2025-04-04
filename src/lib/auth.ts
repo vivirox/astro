@@ -222,6 +222,7 @@ export async function requireRole({
 }
 
 export class Auth {
+  [x: string]: any
   async verifySession(request: Request) {
     const cookies = this.getCookiesFromRequest(request)
     const user = await getCurrentUser(cookies)

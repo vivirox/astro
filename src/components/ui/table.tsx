@@ -26,7 +26,7 @@ function Table({
   ...props
 }: TableProps) {
   // Remove unused props from props object to avoid linter errors
-  const { striped, hoverable, compact, stickyHeader, ...restProps } = props
+  const { ...restProps } = props
 
   return (
     <div

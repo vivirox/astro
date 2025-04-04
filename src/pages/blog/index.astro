@@ -1,8 +1,8 @@
 ---
 import { getCollection } from 'astro:content'
-import BlogLayout from '@/layouts/BlogLayout.astro'
-import { formatDate } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+
+
+
 
 // Get all blog posts and sort by date
 const posts = await getCollection('blog', ({ data }) => {
@@ -16,27 +16,14 @@ const sortedPosts = posts.sort(
 // Pagination
 const postsPerPage = 9
 const currentPage = Number(Astro.url.searchParams.get('page')) || 1
-const totalPages = Math.ceil(sortedPosts.length / postsPerPage)
-const paginatedPosts = sortedPosts.slice(
-  (currentPage - 1) * postsPerPage,
-  currentPage * postsPerPage,
-)
+
+
 
 // Group posts by category
-const postsByCategory = paginatedPosts.reduce(
-  (acc, post) => {
-    const category = post.data.category || 'Uncategorized'
-    if (!acc[category]) {
-      acc[category] = []
-    }
-    acc[category].push(post)
-    return acc
-  },
-  {} as Record<string, typeof posts>,
-)
+
 
 // Get all unique tags
-const allTags = [...new Set(sortedPosts.flatMap((post) => post.data.tags))]
+
 ---
 
 <BlogLayout

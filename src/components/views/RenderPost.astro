@@ -1,6 +1,6 @@
 ---
-import type { CollectionEntry, ContentCollectionKey } from 'astro:content'
-import type { ValidContentEntrySlug } from 'astro:content'
+import type { ContentCollectionKey } from 'astro:content'
+
 
 interface Props {
   collectionType: ContentCollectionKey
@@ -11,18 +11,18 @@ interface Props {
 const { collectionType, slug, pageToc } = Astro.props
 
 // Handle content rendering at the global scope to avoid TypeScript errors
-let contentResult
-let tocComponent
+let _contentResult
+let _tocComponent
 
 try {
   // Just do direct imports here to avoid fighting with TypeScript
   if (collectionType === 'blog') {
     const component = await import('../../content/blog/' + slug + '.md')
-    contentResult = component.Content
+    _contentResult = component.Content
 
     if (pageToc) {
       const Toc = (await import('~/components/toc/Toc.astro')).default
-      tocComponent = Toc
+      _tocComponent = Toc
     }
   }
   // Add more collection types as needed

@@ -129,21 +129,21 @@ paths = [
 [[rules]]
 id = "ehr-api-key"
 description = "EHR API Key"
-regex = '''(?i)(epic|cerner|allscripts|athena)([_-]?api[_-]?key|apikey)([^a-zA-Z0-9]|$){0,1}[=:"\s'\`]{1,2}([a-zA-Z0-9=_\\-\\+/]{16,45})'''
+regex = '''(?i)(epic|cerner|allscripts|athena)([_-]?api[_-]?key|apikey)([^a-zA-Z0-9]|$){0,1}[=:"s'\`]{1,2}([a-zA-Z0-9=_\\-\\+/]{16,45})'''
 secretGroup = 4
 entropy = 3.7
 
 [[rules]]
 id = "fhir-token"
 description = "FHIR Access Token"
-regex = '''(?i)(fhir[_-]?token|fhir[_-]?access[_-]?token)([^a-zA-Z0-9]|$){0,1}[=:"\s'\`]{1,2}([a-zA-Z0-9=_\\-\\+/\\.]{32,250})'''
+regex = '''(?i)(fhir[_-]?token|fhir[_-]?access[_-]?token)([^a-zA-Z0-9]|$){0,1}[=:"s'\`]{1,2}([a-zA-Z0-9=_\\-\\+/\\.]{32,250})'''
 secretGroup = 3
 entropy = 3.7
 
 [[rules]]
 id = "patient-id"
 description = "Patient ID Pattern"
-regex = '''(?i)(patient[_-]?id|mrn|medical[_-]?record[_-]?number)([^a-zA-Z0-9]|$){0,1}[=:"\s'\`]{1,2}([A-Z0-9]{6,15})'''
+regex = '''(?i)(patient[_-]?id|mrn|medical[_-]?record[_-]?number)([^a-zA-Z0-9]|$){0,1}[=:"s'\`]{1,2}([A-Z0-9]{6,15})'''
 secretGroup = 3
 entropy = 2.5
 `

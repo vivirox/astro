@@ -1,0 +1,337 @@
+---
+
+import {
+  } from '@/components/ui/card'
+
+import { getSession } from '@/lib/auth/session'
+import { getLogger } from '@/lib/logging'
+// Get the logger
+const logger = getLogger()
+
+// Redirect if user is not logged in or doesn't have required permissions
+const session = await getSession(Astro.request)
+if (!session || !session.user || session.user.role !== 'admin') {
+  return Astro.redirect('/admin/login?next=/admin/monitoring')
+}
+
+// Logging for audit purposes
+logger.info('Admin monitoring dashboard accessed', {
+  userId: session.user.id,
+  userEmail: session.user.email,
+})
+
+// Status data
+
+
+// Get status badge classes
+function getStatusBadgeClass(status: string): string {
+  switch (status) {
+    case 'healthy':
+      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+    case 'degraded':
+      return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+    case 'outage':
+      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+    case 'disabled':
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-400'
+    default:
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+  }
+}
+---
+
+<AdminLayout title="System Monitoring" activeNav="monitoring">
+  <div class="container px-4 py-8 mx-auto">
+    <div class="flex flex-col gap-8">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold tracking-tight">System Monitoring</h1>
+          <p class="text-muted-foreground">
+            Monitor the health and performance of all system components
+          </p>
+        </div>
+        <div class="flex gap-2">
+          <Button variant="outline">Refresh</Button>
+          <Button>Configure Alerts</Button>
+        </div>
+      </div>
+
+      <!-- System Status Overview -->
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {
+          services.map((service) => (
+            <Card>
+              <CardHeader className="pb-2">
+                <div class="flex justify-between items-center">
+                  <CardTitle>{service.name}</CardTitle>
+                  <div
+                    class={`px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(service.status)}`}
+                  >
+                    {service.status}
+                  </div>
+                </div>
+                <CardDescription>Uptime: {service.uptime}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div class="text-sm space-y-2">
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Response Time:</span>
+                    <span>{service.responseTime}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Details:</span>
+                    <span>{service.details}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        }
+      </div>
+
+      <!-- Monitoring Tools -->
+      <h2 class="text-2xl font-bold tracking-tight mt-4">Monitoring Tools</h2>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Error Tracking -->
+        <Card>
+          <CardHeader>
+            <CardTitle>Error Tracking</CardTitle>
+            <CardDescription
+              >Monitor and analyze application errors</CardDescription
+            >
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-muted-foreground mb-4">
+              Track runtime errors, exceptions, and user-reported issues across
+              all platforms.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <div class="flex justify-between w-full">
+              <a href="/admin/monitoring/errors">
+                <Button variant="ghost" size="sm">View Errors</Button>
+              </a>
+              <a href="/admin/monitoring/test">
+                <Button variant="outline" size="sm">Test Integration</Button>
+              </a>
+            </div>
+          </CardFooter>
+        </Card>
+
+        <!-- Performance Monitoring -->
+        <Card>
+          <CardHeader>
+            <CardTitle>Performance</CardTitle>
+            <CardDescription>Application performance metrics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-muted-foreground mb-4">
+              Monitor response times, resource usage, and performance
+              bottlenecks.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <a href="/admin/monitoring/performance">
+              <Button variant="ghost" size="sm">View Metrics</Button>
+            </a>
+          </CardFooter>
+        </Card>
+
+        <!-- Log Management -->
+        <Card>
+          <CardHeader>
+            <CardTitle>Logs</CardTitle>
+            <CardDescription>Centralized log management</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-muted-foreground mb-4">
+              {
+                process.env.ELK_ENABLED === 'true'
+                  ? 'Search, filter, and analyze application logs from the ELK stack.'
+                  : 'Centralized logging with ELK stack is currently disabled.'
+              }
+            </p>
+          </CardContent>
+          <CardFooter>
+            <div class="flex justify-between w-full">
+              {
+                process.env.ELK_ENABLED === 'true' ? (
+                  <>
+                    <a href={process.env.ELK_KIBANA_URL || '#'} target="_blank">
+                      <Button variant="ghost" size="sm">
+                        Open Kibana
+                      </Button>
+                    </a>
+                    <a href="/admin/monitoring/logs">
+                      <Button variant="outline" size="sm">
+                        View Logs
+                      </Button>
+                    </a>
+                  </>
+                ) : (
+                  <Button variant="outline" size="sm" disabled>
+                    ELK Disabled
+                  </Button>
+                )
+              }
+            </div>
+          </CardFooter>
+        </Card>
+
+        <!-- Health Checks -->
+        <Card>
+          <CardHeader>
+            <CardTitle>Health Checks</CardTitle>
+            <CardDescription>System health monitoring</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-muted-foreground mb-4">
+              Monitor the health and availability of all system components.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <a href="/admin/monitoring/health">
+              <Button variant="ghost" size="sm">View Health</Button>
+            </a>
+          </CardFooter>
+        </Card>
+
+        <!-- User Activity -->
+        <Card>
+          <CardHeader>
+            <CardTitle>User Activity</CardTitle>
+            <CardDescription>Monitor user behavior</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-muted-foreground mb-4">
+              Track active users, sessions, and user interaction patterns.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <a href="/admin/monitoring/users">
+              <Button variant="ghost" size="sm">View Activity</Button>
+            </a>
+          </CardFooter>
+        </Card>
+
+        <!-- Alerts and Notifications -->
+        <Card>
+          <CardHeader>
+            <CardTitle>Alerts</CardTitle>
+            <CardDescription>Notification configuration</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-muted-foreground mb-4">
+              Configure alerts and notifications for system events.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <a href="/admin/monitoring/alerts">
+              <Button variant="ghost" size="sm">Configure</Button>
+            </a>
+          </CardFooter>
+        </Card>
+      </div>
+
+      <!-- Recent Events -->
+      <h2 class="text-2xl font-bold tracking-tight mt-4">Recent Events</h2>
+      <Card>
+        <CardHeader>
+          <CardTitle>System Events</CardTitle>
+          <CardDescription>Most recent system events and alerts</CardDescription
+          >
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-4">
+            <div class="border-b pb-3">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-medium">API Rate Limit Reached</h3>
+                  <p class="text-sm text-muted-foreground">
+                    IP address 203.0.113.42 exceeded rate limits
+                  </p>
+                </div>
+                <div class="flex items-center">
+                  <span
+                    class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
+                  >
+                    Warning
+                  </span>
+                  <span class="text-sm text-muted-foreground ml-4">
+                    10 min ago
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-b pb-3">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-medium">Database Backup Completed</h3>
+                  <p class="text-sm text-muted-foreground">
+                    Daily backup successfully uploaded to storage
+                  </p>
+                </div>
+                <div class="flex items-center">
+                  <span
+                    class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                  >
+                    Info
+                  </span>
+                  <span class="text-sm text-muted-foreground ml-4">
+                    1 hour ago
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-b pb-3">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-medium">Storage Service Latency</h3>
+                  <p class="text-sm text-muted-foreground">
+                    File upload operations experiencing increased latency
+                  </p>
+                </div>
+                <div class="flex items-center">
+                  <span
+                    class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
+                  >
+                    Warning
+                  </span>
+                  <span class="text-sm text-muted-foreground ml-4">
+                    3 hours ago
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-medium">Authentication Service Restarted</h3>
+                  <p class="text-sm text-muted-foreground">
+                    Scheduled maintenance completed successfully
+                  </p>
+                </div>
+                <div class="flex items-center">
+                  <span
+                    class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                  >
+                    Info
+                  </span>
+                  <span class="text-sm text-muted-foreground ml-4">
+                    6 hours ago
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button variant="outline" size="sm">View All Events</Button>
+        </CardFooter>
+      </Card>
+    </div>
+  </div>
+</AdminLayout>

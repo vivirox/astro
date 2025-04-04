@@ -2,12 +2,12 @@ import type { APIRoute } from 'astro'
 import type { AstroCookies } from 'astro'
 import type { AuthRole } from '../../config/auth.config'
 import type { AuthUser } from '../auth'
-import type { ProtectedAPIRoute, ProtectRouteOptions } from './apiRouteTypes'
+import type { ProtectRouteOptions } from './apiRouteTypes'
 import { getLogger } from '../logging'
 import { createResourceAuditLog } from '../audit/log'
 import { getCurrentUser, isAuthenticated } from '../auth'
 import { RedisService } from '../services/redis/RedisService'
-import { authConfig, hasRolePrivilege } from '../../config/auth.config'
+import { hasRolePrivilege } from '../../config/auth.config'
 
 // Initialize logger
 const logger = getLogger('serverAuth')

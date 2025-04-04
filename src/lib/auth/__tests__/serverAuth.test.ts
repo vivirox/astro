@@ -10,7 +10,7 @@ import {
 import { verifyServerAuth, protectRoute } from '../serverAuth'
 import { getCurrentUser, isAuthenticated } from '../../auth'
 import { createResourceAuditLog } from '../../audit/log'
-import { RedisService } from '../../services/redis/RedisService'
+
 import type { AuthUser } from '../../auth'
 
 // Define interface for our mock redis methods

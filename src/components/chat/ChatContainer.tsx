@@ -1,5 +1,7 @@
+'use client'
+
 import type { Message } from '@/types/chat'
-import type { ChangeEvent, FormEvent } from 'react'
+import type { FormEvent, ChangeEvent } from 'react'
 import { cn } from '@/lib/utils'
 import { useEffect, useRef, useState } from 'react'
 import { ChatInput } from './ChatInput'
@@ -8,27 +10,27 @@ import { IconBrain, IconChevronDown } from './icons'
 
 interface ChatContainerProps {
   messages: Message[]
-  onSendMessage: (message: string) => void
   isLoading?: boolean
   error?: string
   className?: string
-  inputPlaceholder?: string
   disabled?: boolean
+  inputPlaceholder?: string
+  onSendMessage?: (message: string) => void
 }
 
 export function ChatContainer({
   messages,
-  onSendMessage,
   isLoading = false,
   error,
   className = '',
-  inputPlaceholder,
   disabled = false,
+  inputPlaceholder,
+  onSendMessage,
 }: ChatContainerProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [showScrollButton, setShowScrollButton] = useState(false)
-  const [input, setInput] = useState('')
+  const [inputValue, setInputValue] = useState('')
 
   // Auto scroll to bottom on new messages
   useEffect(() => {
@@ -59,11 +61,15 @@ export function ChatContainer({
   }
 
   function handleInputChange(e: ChangeEvent<HTMLTextAreaElement>): void {
-    throw new Error('Function not implemented.')
+    setInputValue(e.target.value)
   }
 
   function handleSubmit(e: FormEvent<Element>): void {
-    throw new Error('Function not implemented.')
+    e.preventDefault()
+    if (inputValue.trim() && onSendMessage) {
+      onSendMessage(inputValue)
+      setInputValue('')
+    }
   }
 
   return (
@@ -133,11 +139,12 @@ export function ChatContainer({
       {/* Input area */}
       <div className="sticky bottom-0 bg-gradient-to-t from-black to-transparent py-4">
         <ChatInput
-          value={input}
-          onChange={handleInputChange}
-          onSubmit={handleSubmit}
           isLoading={isLoading}
           disabled={disabled}
+          value={inputValue} 
+          onChange={handleInputChange}
+          onSubmit={handleSubmit}
+          placeholder={inputPlaceholder}
         />
       </div>
     </div>

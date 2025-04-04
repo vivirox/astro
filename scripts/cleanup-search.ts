@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
-import { execSync } from 'node:child_process'
-import { existsSync, writeFileSync } from 'node:fs'
+
+import { } from 'node:fs'
 import * as path from 'node:path'
 import process from 'node:process'
 import fs from 'fs'

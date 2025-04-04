@@ -56,7 +56,9 @@ async function runTest(
       : null
 
     child.on('close', (code) => {
-      if (timer) clearTimeout(timer)
+      if (timer) {
+        clearTimeout(timer)
+      }
 
       resolve({
         suite: options.suite,

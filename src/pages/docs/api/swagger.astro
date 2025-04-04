@@ -1,5 +1,5 @@
 ---
-import DocumentationLayout from '@/layouts/DocumentationLayout.astro'
+
 ---
 
 <DocumentationLayout
@@ -9,8 +9,9 @@ import DocumentationLayout from '@/layouts/DocumentationLayout.astro'
   <h1>API Reference - Swagger UI</h1>
 
   <p>
-    This interactive documentation allows you to explore and test the Gradiant API directly from your browser.
-    You can view request parameters, response formats, and even make test API calls.
+    This interactive documentation allows you to explore and test the Gradiant
+    API directly from your browser. You can view request parameters, response
+    formats, and even make test API calls.
   </p>
 
   <div class="card mb-4">
@@ -31,9 +32,10 @@ import DocumentationLayout from '@/layouts/DocumentationLayout.astro'
       Important Note
     </div>
     <p>
-      To make API calls from this page, you'll need a valid API key. You can obtain one from the 
-      <a href="/dashboard/developer">developer dashboard</a>. Add your API key to the "Authorize" dialog 
-      to authenticate your requests.
+      To make API calls from this page, you'll need a valid API key. You can
+      obtain one from the
+      <a href="/dashboard/developer">developer dashboard</a>. Add your API key
+      to the "Authorize" dialog to authenticate your requests.
     </p>
   </div>
 
@@ -41,7 +43,10 @@ import DocumentationLayout from '@/layouts/DocumentationLayout.astro'
 </DocumentationLayout>
 
 <!-- Load Swagger UI assets via CDN to avoid TypeScript issues -->
-<link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css" />
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css"
+/>
 
 <style>
   .swagger-ui-container {
@@ -75,10 +80,10 @@ import DocumentationLayout from '@/layouts/DocumentationLayout.astro'
 
 <script is:inline>
   // Load the Swagger UI script
-  document.addEventListener('DOMContentLoaded', function() {
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js';
-    script.onload = function() {
+  document.addEventListener('DOMContentLoaded', function () {
+    const script = document.createElement('script')
+    script.src = 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js'
+    script.onload = function () {
       // Initialize Swagger UI
       const ui = window.SwaggerUIBundle({
         url: '/docs/api/_openapi.yaml',
@@ -86,19 +91,19 @@ import DocumentationLayout from '@/layouts/DocumentationLayout.astro'
         deepLinking: true,
         presets: [
           window.SwaggerUIBundle.presets.apis,
-          window.SwaggerUIBundle.SwaggerUIStandalonePreset
+          window.SwaggerUIBundle.SwaggerUIStandalonePreset,
         ],
-        layout: "BaseLayout",
+        layout: 'BaseLayout',
         persistAuthorization: true,
-        requestInterceptor: function(req) {
+        requestInterceptor: function (req) {
           // Add CSRF protection if needed
-          return req;
-        }
-      });
-      
+          return req
+        },
+      })
+
       // Store UI instance for debugging
-      window.ui = ui;
-    };
-    document.body.appendChild(script);
-  });
-</script> 
+      window.ui = ui
+    }
+    document.body.appendChild(script)
+  })
+</script>

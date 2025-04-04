@@ -1,0 +1,71 @@
+---
+
+
+export interface Props {
+  shouldError?: boolean
+  errorDelay?: number
+  errorMessage?: string
+}
+
+const {
+  } = Astro.props
+---
+
+<ErrorBoundary componentName="ErrorTest">
+  <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg mb-4">
+    <h2 class="text-xl font-bold mb-2">Error Test Component</h2>
+    {
+      shouldError ? (
+        <p>
+          This component will throw an error{' '}
+          {errorDelay > 0 ? `in ${errorDelay}ms` : 'immediately'}.
+        </p>
+      ) : (
+        <p>
+          No error will be thrown. Set <code>shouldError</code> to true to test
+          error handling.
+        </p>
+      )
+    }
+    <div class="mt-4">
+      <button
+        id="triggerError"
+        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+      >
+        Trigger Error
+      </button>
+    </div>
+  </div>
+</ErrorBoundary>
+
+<script is:inline define:vars={{ shouldError, errorDelay, errorMessage }}>
+  // Handle the automatic error trigger if shouldError is true
+  if (shouldError) {
+    if (errorDelay > 0) {
+      setTimeout(() => {
+        throw new Error(errorMessage)
+      }, errorDelay)
+    } else {
+      throw new Error(errorMessage)
+    }
+  }
+
+  // Handle manual error trigger via button click
+  document.getElementById('triggerError')?.addEventListener('click', () => {
+    try {
+      // Create a custom error with stack trace to test Sentry
+      const testObject = { property: undefined }
+      // @ts-ignore - intentional error
+      testObject.property.nonExistentMethod()
+    } catch (error) {
+      // Rethrow with custom message for testing
+      const customError = new Error(
+        'Manual test error triggered by button click',
+      )
+      customError.name = 'TestError'
+      // @ts-ignore - add custom context for Sentry
+      customError.metadata = { source: 'ErrorTest component', manual: true }
+      throw customError
+    }
+  })
+</script>

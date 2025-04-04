@@ -10,7 +10,7 @@ import path from 'path'
 
 const execAsync = promisify(exec)
 
-interface DeploymentConfig {
+export interface DeploymentConfig {
   environment: 'staging' | 'production'
   rolloutPercentage: number
   healthCheckInterval: number // in milliseconds
@@ -61,8 +61,12 @@ class DeploymentService {
       }
 
       console.log('\nDeployment completed successfully!')
-    } catch (error) {
-      console.error('\nDeployment failed:', error.message)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('\nDeployment failed:', error.message)
+      } else {
+        console.error('\nDeployment failed:', String(error))
+      }
       await this.rollback()
       throw error
     }
@@ -232,8 +236,12 @@ class DeploymentService {
           healthy = true
           break
         }
-      } catch (error) {
-        console.warn('Health check failed:', error.message)
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.warn('Health check failed:', error.message)
+        } else {
+          console.warn('Health check failed:', String(error))
+        }
       }
 
       await new Promise((resolve) =>
@@ -289,8 +297,12 @@ class DeploymentService {
       await execAsync('npm run deploy:rollback')
 
       console.log('Rollback completed successfully')
-    } catch (error) {
-      console.error('Rollback failed:', error.message)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Rollback failed:', error.message)
+      } else {
+        console.error('Rollback failed:', String(error))
+      }
       throw error
     }
   }

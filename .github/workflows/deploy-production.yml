@@ -4,14 +4,16 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: {}
 
 permissions:
   contents: read
   id-token: write
 
 env:
-  NODE_VERSION: 20.11.0
+  NODE_VERSION: 22.11.0
   PNPM_VERSION: 10.0.0
+  PROJECT_NAME: gradiant-astro
 
 jobs:
   test:
@@ -73,6 +75,11 @@ jobs:
           LOG_LEVEL: debug
           LOG_CONSOLE: true
           LOG_AUDIT: true
+          DEPLOY_VERSION: ${{ github.sha }}
+          DEPLOY_TIMESTAMP: ${{ github.event.repository.updated_at }}
+
+      - name: Run post-build optimizations
+        run: pnpm postbuild
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -88,7 +95,7 @@ jobs:
     environment: production
     concurrency:
       group: production_environment
-      cancel-in-progress: true
+      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -109,16 +116,108 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Deploy to production
-        run: |
-          npm install -g wrangler
-          wrangler pages deploy dist --project-name=gradiant-astro --branch=main
-
       - name: Create deployment tag
+        id: create_tag
         run: |
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          git tag production-$TIMESTAMP
-          git push origin production-$TIMESTAMP
+          DEPLOY_TAG="production-$TIMESTAMP"
+          echo "deploy_tag=$DEPLOY_TAG" >> $GITHUB_OUTPUT
+          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+          git tag $DEPLOY_TAG
+          git push origin $DEPLOY_TAG
+
+      # Store current deployment info for potential rollback
+      - name: Store deployment info
+        run: |
+          mkdir -p deployment-info
+          echo "${{ github.sha }}" > deployment-info/current-sha
+          echo "${{ steps.create_tag.outputs.deploy_tag }}" > deployment-info/current-tag
+          echo "${{ steps.create_tag.outputs.timestamp }}" > deployment-info/timestamp
+          echo "${{ github.run_id }}" > deployment-info/run-id
+
+      - name: Upload deployment info
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-info
+          path: deployment-info
+          retention-days: 30
+
+      # Deploy with canary if specified
+      - name: Deploy to production with canary
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.canary == 'true' }}
+        run: |
+          npm install -g wrangler
+          echo "Deploying as canary with initial traffic: ${{ github.event.inputs.percentage }}%"
+
+          # Deploy to a new environment first
+          wrangler pages deploy dist --project-name=${{ env.PROJECT_NAME }} \
+            --branch=canary-${{ steps.create_tag.outputs.timestamp }} \
+            --commit-hash=${{ github.sha }} \
+            --commit-message="Canary deployment ${{ steps.create_tag.outputs.deploy_tag }}"
+
+          # Wait for the deployment to be ready
+          echo "Waiting for canary deployment to be ready..."
+          sleep 30
+
+          # Start with specified percentage traffic to canary
+          wrangler pages deployment traffic ${{ env.PROJECT_NAME }} \
+            --branch=canary-${{ steps.create_tag.outputs.timestamp }} \
+            --percentage=${{ github.event.inputs.percentage }}
+
+          echo "Canary deployment successful with ${{ github.event.inputs.percentage }}% traffic"
+
+      # Deploy normally if not canary
+      - name: Direct deploy to production
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.canary != 'true' }}
+        run: |
+          npm install -g wrangler
+          wrangler pages deploy dist --project-name=${{ env.PROJECT_NAME }} --branch=main \
+            --commit-hash=${{ github.sha }} \
+            --commit-message="Production deployment ${{ steps.create_tag.outputs.deploy_tag }}"
+
+      # Verify deployment health
+      - name: Verify deployment health
+        id: health_check
+        run: |
+          # Wait for deployment to fully propagate
+          echo "Waiting for deployment to propagate..."
+          sleep 60
+
+          # Run health check against the production URL
+          NODE_ENV=production pnpm run diagnostics --check-health
+
+          if [ $? -ne 0 ]; then
+            echo "::error::Health check failed for new deployment"
+            echo "health_status=failed" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "health_status=success" >> $GITHUB_OUTPUT
+          fi
+
+      # Auto-rollback if health check fails
+      - name: Rollback on failure
+        if: failure() && steps.health_check.outputs.health_status == 'failed'
+        run: |
+          echo "Health check failed. Initiating automatic rollback..."
+          npm install -g wrangler
+
+          # Get previous stable deployment
+          TAGS=$(git tag -l "production-*" --sort=-committerdate | sed -n '2p')
+
+          if [ -n "$TAGS" ]; then
+            echo "Rolling back to previous stable tag: $TAGS"
+            git checkout $TAGS
+            pnpm install
+            pnpm build
+
+            # Deploy previous version
+            wrangler pages deploy dist --project-name=${{ env.PROJECT_NAME }} --branch=main
+
+            echo "Rollback complete"
+          else
+            echo "::error::No previous deployment found for rollback"
+            exit 1
+          fi
 
       - name: Notify deployment status
         if: always()
@@ -141,6 +240,18 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*Timestamp:* $(date +%Y-%m-%d %H:%M:%S)"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Deployment Tag:* ${{ steps.create_tag.outputs.deploy_tag }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:* ${{ github.sha }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Type:* ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.canary == 'true' && 'Canary' || 'Full' }}"
                     }
                   ]
                 }

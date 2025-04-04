@@ -129,7 +129,7 @@ export class TokenEncryptionService {
       )
 
       // Store the old key temporarily
-      const oldKey = this.encryptionKey
+      
 
       // Update to the new key
       this.encryptionKey = newKey

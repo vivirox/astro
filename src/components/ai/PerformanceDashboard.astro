@@ -1,20 +1,16 @@
 ---
-import PerformanceDashboardReact from './PerformanceDashboardReact'
-import type { PerformanceDashboardProps } from './PerformanceDashboardReact'
+
+import type { PerformanceDashboardProps } from './PerformanceDashboardReact';
 
 // Define Props interface that extends the React component props
 interface Props extends PerformanceDashboardProps {
-  title?: string
-  description?: string
+  title?: string;
+  description?: string;
 }
 
 // Destructure props with defaults
 const {
-  aiService,
-  refreshInterval = 10000,
-  title = 'AI Performance Dashboard',
-  description = 'Real-time metrics on AI service performance including cache, connections, response times, and token usage.',
-} = Astro.props
+  } = Astro.props;
 ---
 
 <div class="performance-dashboard w-full">
@@ -35,7 +31,11 @@ const {
   <div
     class="dashboard-container bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
   >
-    <PerformanceDashboardReact client:load {aiService} {refreshInterval} />
+    <PerformanceDashboardReact 
+      client:load 
+      aiService={aiService} 
+      refreshInterval={refreshInterval} 
+    />
   </div>
 </div>
 

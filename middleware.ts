@@ -1,6 +1,6 @@
 import { defineMiddleware } from 'astro/middleware'
-import { authConfig } from './src/config/auth.config'
-import { getCurrentUser } from './src/lib/auth'
+
+
 
 /**
  * Authentication, security headers, and asset middleware

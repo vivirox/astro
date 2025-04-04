@@ -1,10 +1,10 @@
 ---
-import { ClientRouter } from 'astro:transitions'
-import BaseHead from '@/components/base/Head.astro'
-import Header from '@/components/layout/Header.astro'
-import Footer from '@/components/layout/Footer.astro'
-import BaseLayout from './BaseLayout.astro'
-import { BlogSearch } from '@/components/BlogSearch'
+
+
+
+
+
+
 
 interface Props {
   title: string
@@ -17,21 +17,11 @@ interface Props {
 }
 
 const {
-  title,
-  description = 'A blog post',
-  image = '/blog-placeholder.jpg',
-  canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
   pubDate,
-  author,
-  tags = [],
-} = Astro.props
+  } = Astro.props;
 
 // Format date if provided
-const formattedDate = pubDate?.toLocaleDateString('en-us', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-})
+
 ---
 
 <!doctype html>
@@ -85,7 +75,7 @@ const formattedDate = pubDate?.toLocaleDateString('en-us', {
           {
             tags.length > 0 && (
               <div class="flex gap-2 mt-4">
-                {tags.map((tag) => (
+                {tags.map((tag: string) => (
                   <a
                     href={`/blog/tags/${tag}`}
                     class="text-sm px-3 py-1 bg-muted rounded-full hover:bg-muted/80 transition-colors"

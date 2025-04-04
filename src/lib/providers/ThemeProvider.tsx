@@ -34,7 +34,7 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   // Initialize state with defaults or initial values
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    initialState.systemPreference ? 'system' : initialState.theme ?? 'light',
+    initialState.systemPreference ? 'system' : (initialState.theme ?? 'light'),
   )
   const [contrastMode, setContrastMode] = useState<ContrastMode>(
     initialState.contrastMode ?? 'normal',

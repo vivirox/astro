@@ -1,7 +1,7 @@
 import type { SearchDocument } from '../lib/search'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { slug as slugify } from 'github-slugger'
+
 
 // Mock implementation instead of using astro:content
 async function getCollection(collectionName: string): Promise<any[]> {

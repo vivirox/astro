@@ -200,8 +200,7 @@ describe('interventionAnalysisService', () => {
 
       const userResponse = 'Test response'
 
-      const customPromp =
-        'Focus on analyzing the therapeutic alliance in this intervention.'
+      
 
       await interventionService.analyzeIntervention(
         conversation,

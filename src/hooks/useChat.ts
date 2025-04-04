@@ -1,4 +1,4 @@
-import type { ChatOptions, Message } from '@/types/chat'
+import type { ChatOptions, } from '@/types/chat'
 import type { ChangeEvent } from 'react'
 import { useState } from 'react'
 

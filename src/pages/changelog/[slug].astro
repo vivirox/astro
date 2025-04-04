@@ -1,11 +1,11 @@
 ---
 import { getCollection, render } from 'astro:content'
-import BaseLayout from '~/layouts/BaseLayout.astro'
-import StandardLayout from '~/layouts/StandardLayout.astro'
-import Toc from '~/components/toc/Toc.astro'
-import ShareLink from '~/components/widgets/ShareLink.astro'
-import Warning from '~/components/base/Warning.astro'
-import { formatDate } from '~/utils/datetime'
+
+
+
+
+
+
 import { FEATURES } from '~/config'
 
 // Set prerender to true to generate static pages at build time
@@ -20,23 +20,16 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props
-const { data: frontmatter } = post
+
 const { Content, headings } = await render(post)
-const { share, toc } = FEATURES
+const { } = FEATURES
 
 // Format dates
-const pubDate =
-  frontmatter.pubDate instanceof Date
-    ? frontmatter.pubDate.toISOString()
-    : undefined
-const updatedDate =
-  frontmatter.lastModDate instanceof Date
-    ? frontmatter.lastModDate.toISOString()
-    : undefined
+
+
 
 // Warning message for unpublished posts
-const UNPUBLISHED_WARNING = `This article is not yet available.
-Please check back later.`
+
 ---
 
 <BaseLayout

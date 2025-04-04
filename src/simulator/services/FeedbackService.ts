@@ -4,9 +4,6 @@ import type {
   Scenario,
 } from '../types'
 import {
-  FeedbackModelConfig,
-  FeedbackType,
-  SimulationScenario,
   TherapeuticTechnique,
 } from '../types'
 

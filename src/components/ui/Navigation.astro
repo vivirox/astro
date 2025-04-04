@@ -1,21 +1,17 @@
 ---
-import { UI, SITE } from '../../config'
-import ThemeToggle from './ThemeToggle.astro'
-import { slide } from 'astro:transitions'
+import { UI, } from '../../config'
+
+
 
 interface Props {
   class?: string
 }
 
-const { class: className = '' } = Astro.props
+
 
 type NavPosition = 'fixed' | 'sticky' | 'static'
 
-const navPositionClasses: Record<NavPosition, string> = {
-  fixed: 'fixed top-0 left-0 right-0 z-50',
-  sticky: 'sticky top-0 z-50',
-  static: 'relative',
-}
+
 
 interface MenuItem {
   link: string
@@ -23,21 +19,25 @@ interface MenuItem {
 }
 
 // Define the nav classes based on the position setting in UI config
-const position = UI.nav.position as NavPosition
-const navClasses = `${navPositionClasses[position]} ${UI.nav.glassmorphism ? 'backdrop-blur-md bg-white/80 dark:bg-gray-900/80' : 'bg-white dark:bg-gray-900'} ${className}`
 
-const menuItems = Object.entries(SITE.menu).map(
-  ([key, value]): MenuItem => ({
-    link: `/${key === 'home' ? '' : key}`,
-    text: value,
-  }),
-)
+
+
+
 ---
 
 <nav class={navClasses} transition:persist>
   <div class="container mx-auto px-4 flex justify-between items-center">
-    <a href="/" class="text-xl font-bold flex items-center gap-2" transition:animate="slide">
-      <img src="/favicon.svg" alt="Logo" class="w-8 h-8" transition:name="logo" />
+    <a
+      href="/"
+      class="text-xl font-bold flex items-center gap-2"
+      transition:animate="slide"
+    >
+      <img
+        src="/favicon.svg"
+        alt="Logo"
+        class="w-8 h-8"
+        transition:name="logo"
+      />
       <span transition:name="site-name">{SITE.name}</span>
     </a>
 

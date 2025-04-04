@@ -1,7 +1,7 @@
 ---
 import { verifyAdmin } from '../../lib/auth/middleware.js'
 import type { AuthContext, SessionData } from '../../lib/auth/types.js'
-import BaseLayout from '../../layouts/BaseLayout.astro'
+
 
 // Verify admin access
 const context: AuthContext = {
@@ -14,7 +14,7 @@ const response = await verifyAdmin(Astro.request, context)
 if (response) return response
 
 // Get FHE stats from context
-const fheStats = context.securityVerification?.details
+
 ---
 
 <BaseLayout title="FHE Dashboard">

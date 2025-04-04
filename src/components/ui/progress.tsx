@@ -135,7 +135,7 @@ export function ProgressCircular({
   const percentage = Math.min(Math.max(0, (value / max) * 100), 100)
   const radius = (size - strokeWidth) / 2
   const circumference = radius * 2 * Math.PI
-  const strokeDashoffset = circumference - (percentage / 100) * circumference
+  
 
   // Variant classes for the progress stroke
   const variantClasses = {

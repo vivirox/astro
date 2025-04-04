@@ -1,0 +1,271 @@
+---
+/**
+ * ResponsiveImage.astro
+ * A component for rendering optimized, responsive images using Astro's image service
+ */
+import { } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+
+export interface Props {
+  /**
+   * The source image to optimize and display
+   * Can be either an imported image or a remote URL
+   */
+  src: ImageMetadata | string
+
+  /**
+   * Alt text for the image (required for accessibility)
+   */
+  alt: string
+
+  /**
+   * Optional CSS class to apply to the image
+   */
+  class?: string
+
+  /**
+   * Optional CSS class to apply to the wrapper element
+   */
+  wrapperClass?: string
+
+  /**
+   * Optional loading strategy
+   * - 'eager': Load immediately (use for above-the-fold images)
+   * - 'lazy': Defer loading until near viewport (default)
+   */
+  loading?: 'eager' | 'lazy'
+
+  /**
+   * Optional decoding strategy
+   * - 'async': Decode image asynchronously (default)
+   * - 'sync': Decode synchronously
+   * - 'auto': Let browser decide
+   */
+  decoding?: 'async' | 'sync' | 'auto'
+
+  /**
+   * Optional width for the image
+   * If not provided, will use the original image width
+   */
+  width?: number
+
+  /**
+   * Optional height for the image
+   * If not provided, will use the original image height
+   */
+  height?: number
+
+  /**
+   * Quality of the output image (1-100)
+   * Default: 80
+   */
+  quality?: number
+
+  /**
+   * Format of the output image
+   * Default: 'webp' (recommended for best compression/quality ratio)
+   */
+  format?: 'webp' | 'avif' | 'png' | 'jpg'
+
+  /**
+   * Set of image widths to generate for responsive images
+   * Default: [640, 768, 1024, 1280, 1536, 1920]
+   */
+  breakpoints?: number[]
+
+  /**
+   * Whether to add a blur-up effect while the image loads
+   * Default: true
+   */
+  blurUp?: boolean
+
+  /**
+   * Additional HTML attributes to pass to the img element
+   */
+  [key: string]: any
+}
+
+const {
+  src,
+  blurUp = true,
+  ...rest
+} = Astro.props
+
+// Filter out props we don't want to pass to the Image component
+const { wrapperClass: _, blurUp: __, breakpoints: ___, ...imageProps } = rest
+
+// Sort and deduplicate breakpoints
+
+
+// Generate blur placeholder for better loading experience
+
+
+// Background style for blur-up effect - only for imported images
+
+---
+
+<div
+  class:list={[
+    wrapperClass,
+    'responsive-image-wrapper',
+    { 'blur-up-container': blurPlaceholder },
+  ]}
+>
+  {
+    typeof src === 'string' ? (
+      <img
+        src={src}
+        alt={alt}
+        class:list={[className, 'responsive-image']}
+        loading={loading}
+        decoding={decoding}
+        width={width}
+        height={height}
+        {...imageProps}
+      />
+    ) : (
+      <picture class:list={[bgStyle, 'responsive-picture']}>
+        {/* AVIF format for browsers that support it */}
+        {format === 'avif' && (
+          <source
+            type="image/avif"
+            srcset={sortedBreakpoints
+              .map((w) => {
+                const imgSrc = getImage({
+                  src,
+                  format: 'avif',
+                  width: w,
+                  height: height
+                    ? Math.round((height * w) / (width || src.width))
+                    : undefined,
+                  quality,
+                })
+                return `${imgSrc.src} ${w}w`
+              })
+              .join(', ')}
+            sizes={`(max-width: ${sortedBreakpoints[0]}px) 100vw, ${sortedBreakpoints
+              .map((bp, i, arr) => {
+                if (i === arr.length - 1) return `${bp}px`
+                return `(max-width: ${arr[i + 1]}px) ${bp}px`
+              })
+              .join(', ')}`}
+          />
+        )}
+
+        {/* WebP format for most modern browsers */}
+        {(format === 'webp' || format === 'avif') && (
+          <source
+            type="image/webp"
+            srcset={sortedBreakpoints
+              .map((w) => {
+                const imgSrc = getImage({
+                  src,
+                  format: 'webp',
+                  width: w,
+                  height: height
+                    ? Math.round((height * w) / (width || src.width))
+                    : undefined,
+                  quality,
+                })
+                return `${imgSrc.src} ${w}w`
+              })
+              .join(', ')}
+            sizes={`(max-width: ${sortedBreakpoints[0]}px) 100vw, ${sortedBreakpoints
+              .map((bp, i, arr) => {
+                if (i === arr.length - 1) return `${bp}px`
+                return `(max-width: ${arr[i + 1]}px) ${bp}px`
+              })
+              .join(', ')}`}
+          />
+        )}
+
+        {/* Fallback format (jpg/png) for older browsers */}
+        <source
+          type={format === 'png' ? 'image/png' : 'image/jpeg'}
+          srcset={sortedBreakpoints
+            .map((w) => {
+              const imgSrc = getImage({
+                src,
+                format: format === 'png' ? 'png' : 'jpg',
+                width: w,
+                height: height
+                  ? Math.round((height * w) / (width || src.width))
+                  : undefined,
+                quality,
+              })
+              return `${imgSrc.src} ${w}w`
+            })
+            .join(', ')}
+          sizes={`(max-width: ${sortedBreakpoints[0]}px) 100vw, ${sortedBreakpoints
+            .map((bp, i, arr) => {
+              if (i === arr.length - 1) return `${bp}px`
+              return `(max-width: ${arr[i + 1]}px) ${bp}px`
+            })
+            .join(', ')}`}
+        />
+
+        {/* Actual img element (lowest common denominator) */}
+        <Image
+          src={src}
+          alt={alt}
+          width={width || src.width}
+          height={height || src.height}
+          format={format}
+          quality={quality}
+          class:list={[className, 'responsive-image']}
+          loading={loading}
+          decoding={decoding}
+          {...imageProps}
+        />
+      </picture>
+    )
+  }
+</div>
+
+<style>
+  .responsive-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .responsive-picture {
+    display: block;
+    width: 100%;
+  }
+
+  .responsive-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .blur-up-container {
+    position: relative;
+  }
+
+  .blur-up-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: #f3f4f6;
+    z-index: -1;
+  }
+
+  /* Add a subtle animation for the blur-up effect */
+  @keyframes blur-up {
+    from {
+      filter: blur(10px);
+      opacity: 0;
+    }
+    to {
+      filter: blur(0);
+      opacity: 1;
+    }
+  }
+
+  .blur-up-container img {
+    animation: blur-up 0.8s ease-out;
+  }
+</style>

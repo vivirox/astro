@@ -1,6 +1,6 @@
-import { getLogger } from '@/lib/logging'
 
-const logger = getLogger()
+
+
 
 export interface SystemMetrics {
   activeUsers: number

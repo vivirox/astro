@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { TherapeuticDomain } from '../types'
+
 import type { SpeechRecognitionConfig } from '../utils/speechRecognition'
 import {
   createSpeechRecognition,
@@ -107,10 +107,7 @@ export function useSpeechRecognition({
 
     // Configure speech recognition
     recognitionRef.current.onresult = (event: any) => {
-      const currentInterimTranscript = Array.from(event.results)
-        .slice(0, event.resultIndex)
-        .map((result: any) => result[0].transcript)
-        .join(' ')
+      
 
       let finalText = ''
       let interimText = ''

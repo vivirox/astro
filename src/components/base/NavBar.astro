@@ -1,47 +1,53 @@
 ---
-import LogoButton from '@/components/widgets/LogoButton.astro'
-import ThemeSwitch from '@/components/widgets/ThemeSwitch.astro'
-import { UI, SITE } from '@/config'
+
+
+import { UI, } from '@/config'
 
 // Define navigation item types
 interface NavItemBase {
-  name: string;
-  link: string;
-  icon?: string;
+  name: string
+  link: string
+  icon?: string
 }
 
-const { internalNavs, socialLinks } = UI
+const { } = UI
 
 // Check if we're on the homepage
-const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === ''
+
 ---
 
-<header class="flex items-center justify-between p-6 w-full absolute top-0 left-0 right-0 z-10">
+<header
+  class="flex items-center justify-between p-6 w-full absolute top-0 left-0 right-0 z-10"
+>
   <div class="flex items-center">
     <LogoButton />
   </div>
 
   <nav class="flex items-center gap-6">
-    {internalNavs.map((item: any) => (
-      <a
-        href={item.link}
-        class="text-sm font-medium tracking-wide text-gray-400 hover:text-white transition-colors"
-      >
-        {item.name}
-      </a>
-    ))}
+    {
+      internalNavs.map((item: any) => (
+        <a
+          href={item.link}
+          class="text-sm font-medium tracking-wide text-gray-400 hover:text-white transition-colors"
+        >
+          {item.name}
+        </a>
+      ))
+    }
 
-    {socialLinks.map((item: any) => (
-      <a
-        href={item.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-gray-400 hover:text-white transition-colors"
-        aria-label={item.name}
-      >
-        <i class={item.icon}></i>
-      </a>
-    ))}
+    {
+      socialLinks.map((item: any) => (
+        <a
+          href={item.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-400 hover:text-white transition-colors"
+          aria-label={item.name}
+        >
+          <i class={item.icon} />
+        </a>
+      ))
+    }
 
     <ThemeSwitch />
   </nav>

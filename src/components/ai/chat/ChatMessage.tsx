@@ -56,8 +56,8 @@ export function ChatMessage({
           <div className="error-container p-4 bg-red-50 border border-red-200 rounded-md my-4">
             <p className="font-medium text-red-700">Failed to send message</p>
             <p className="text-red-600 text-sm mb-2">{error}</p>
-            <button 
-              onClick={() => retryLastMessage && retryLastMessage()} 
+            <button
+              onClick={() => retryLastMessage && retryLastMessage()}
               className="text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded"
             >
               Retry

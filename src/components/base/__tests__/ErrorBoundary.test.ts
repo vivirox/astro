@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { screen } from '@testing-library/dom'
+
 import ErrorBoundary from '../ErrorBoundary.astro'
 import { renderAstro } from '@/test/utils/astro'
 

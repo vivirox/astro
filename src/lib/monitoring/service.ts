@@ -57,7 +57,7 @@ export class MonitoringService {
     }
 
     try {
-      const { apiKey, orgId, rumApplicationName, rumSamplingRate } =
+      const { apiKey, rumApplicationName, rumSamplingRate } =
         this.config.grafana
 
       // Initialize Grafana Faro Web SDK
@@ -165,7 +165,7 @@ export class MonitoringService {
   }
 
   private checkPerformanceThresholds(metrics: any): void {
-    const { slowRequestThreshold, errorRateThreshold } = this.config.metrics
+    const { slowRequestThreshold, } = this.config.metrics
 
     // Check navigation timing
     if (

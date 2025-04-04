@@ -1,4 +1,4 @@
-import type { APIRoute } from 'astro'
+
 import { protectRoute } from '../../../../lib/auth/serverAuth'
 import { supabase } from '../../../../lib/supabase'
 import { getLogger } from '../../../../lib/logging'

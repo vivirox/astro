@@ -1,6 +1,6 @@
 import { RedisService } from '../src/lib/services/redis/RedisService'
-import { MonitoringService } from '../src/lib/monitoring/setup'
-import { BackupVerificationService } from '../src/lib/backup/verify'
+
+
 import { execSync, exec } from 'child_process'
 import { promisify } from 'util'
 import { promises as fs } from 'fs'
@@ -54,8 +54,8 @@ async function main() {
       keyPrefix: process.env.REDIS_KEY_PREFIX!,
     })
 
-    const monitoring = new MonitoringService()
-    const backup = new BackupVerificationService()
+    
+    
 
     // Stop current deployment
     await execAsync('pnpm run deploy:stop')

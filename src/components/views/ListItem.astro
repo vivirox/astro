@@ -1,76 +1,55 @@
 ---
-import Link from '~/components/base/Link.astro'
-import { getUrl } from '~/utils/common'
-import { formatDate } from '~/utils/datetime'
+// Import utilities programmatically to avoid syntax errors
+const datetimeUtils = await import('~/utils/datetime');
+const commonUtils = await import('~/utils/common');
+
+
+const getUrl = commonUtils.getUrl;
+
+// Props interface
 interface Props {
-  idx: number
-  collectionType: string
-  redirect?: string
-  postSlug?: string
-  title: string
-  video?: boolean
-  radio?: boolean
-  date: string | Date
-  minutesRead?: number
-  platform?: string
+  idx?: number;
+  collectionType?: string;
+  redirect?: string;
+  postSlug?: string;
+  title: string;
+  video?: boolean;
+  radio?: boolean;
+  date?: string | Date;
+  minutesRead?: number;
+  platform?: string;
+  href?: string;
 }
 
+// Get properties from Astro.props
 const {
-  idx,
-  redirect,
   collectionType,
+  redirect,
   postSlug,
-  title,
-  video,
-  radio,
-  date,
-  minutesRead,
-  platform,
-} = Astro.props
+  href
+} = Astro.props;
+
+// Determine the href
+
 ---
 
-<div class="slide-enter" style={{ '--enter-stage': idx }}>
-  <Link
-    u-flex="~ items-center lt-md:(col items-start) gap-2"
-    class="border-b-none! mb-6 mt-2 op-transition!"
-    href={redirect ?? getUrl(`/${collectionType}/${postSlug}/`)}
-    external={redirect ? true : false}
-    enableNewTabWarning={redirect ? true : false}
+<div class="slide-enter" style={`--enter-stage: ${idx}`}>
+  <a
+    class="border-b-none mb-6 mt-2"
+    href={linkHref}
+    target={redirect ? "_blank" : undefined}
   >
-    <div slot="title">{title}</div>
-    <span slot="end" u-flex="~ gap-2 items-center">
-      {
-        video && (
-          <span
-            u-i-ri-film-line
-            class="flex-none op-50 align-middle"
-            title="Provided in video"
-            aria-label="Provided in video"
-          />
-        )
-      }
-      {
-        radio && (
-          <span
-            u-i-ri-radio-line
-            class="flex-none op-50 align-middle"
-            title="Provided in radio"
-            aria-label="Provided in radio"
-          />
-        )
-      }
-      <time
-        class="op-50 text-sm ws-nowrap"
-        datetime={new Date(date).toISOString()}
-      >
-        {formatDate(date, false)}
-      </time>
-      {
-        typeof minutesRead === 'number' && minutesRead > 0 && (
-          <span class="op-40 text-sm ws-nowrap">· {minutesRead} min read</span>
-        )
-      }
-      {platform && <span class="op-40 text-sm ws-nowrap">· {platform}</span>}
+    <div>{title}</div>
+    <span>
+      {video && <span>🎬</span>}
+      {radio && <span>📻</span>}
+      {date && (
+        <time datetime={new Date(date).toISOString()}>
+          {formatDate(date, false)}
+        </time>
+      )}
+      {minutesRead && minutesRead > 0 && <span>· {minutesRead} min read</span>}
+      {platform && <span>· {platform}</span>}
     </span>
-  </Link>
+  </a>
 </div>

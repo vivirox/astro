@@ -1,9 +1,9 @@
 ---
-import Link from '~/components/base/Link.astro'
-import TocButton from '~/components/toc/TocButton.astro'
-import TocItem from '~/components/toc/TocItem.astro'
-import { slug } from '~/utils/common'
-import { generateToc } from '~/utils/toc'
+
+
+
+
+
 import { FEATURES } from '~/config'
 
 import type { MarkdownHeading } from 'astro'
@@ -23,7 +23,7 @@ interface Props {
   style?: string
 }
 
-const { headings = [], category = [], years = [], style } = Astro.props
+
 
 const getTocConfig = () => {
   const defaultConfig: TocConfig = {
@@ -40,10 +40,10 @@ const getTocConfig = () => {
   return { ...defaultConfig, ...FEATURES.toc[1] }
 }
 
-const isArticle = !!headings.length
-const { minHeadingLevel, maxHeadingLevel, displayPosition, displayMode } =
+
+const { } =
   getTocConfig()
-const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
+
 ---
 
 <aside>

@@ -1,7 +1,7 @@
 ---
 // Only importing what we need
 import { requireAuth } from '../../lib/auth'
-import BaseLayout from '../../layouts/BaseLayout.astro'
+
 
 // Check if user is authenticated
 const authResponse = await requireAuth({
@@ -19,17 +19,7 @@ if (authResponse) {
 // We're not using the user in this demo
 
 // Get user's current AI preferences (in a real implementation, this would come from the database)
-const defaultPreferences = {
-  defaultModel: 'gemini-2-flash',
-  preferredModels: ['gemini-2-flash', 'claude-3-sonnet'],
-  responseLength: 'medium',
-  responseStyle: 'balanced',
-  enableSentimentAnalysis: true,
-  enableCrisisDetection: true,
-  crisisDetectionSensitivity: 'medium',
-  saveAnalysisResults: true,
-  aiSuggestions: true,
-}
+
 
 // For demo purposes, we'll use the default preferences
 ---
@@ -135,7 +125,9 @@ const defaultPreferences = {
                 type="checkbox"
                 name="preferredModels"
                 value="claude-3-haiku"
-                checked={defaultPreferences.preferredModels.includes('claude-3-haiku')}
+                checked={defaultPreferences.preferredModels.includes(
+                  'claude-3-haiku',
+                )}
               />
               Claude 3 Haiku
             </label>
@@ -182,7 +174,9 @@ const defaultPreferences = {
               Detailed
             </label>
           </div>
-          <div class="form-hint">Controls how detailed AI responses will be.</div>
+          <div class="form-hint">
+            Controls how detailed AI responses will be.
+          </div>
         </div>
 
         <div class="form-group">
@@ -218,7 +212,9 @@ const defaultPreferences = {
               Direct
             </label>
           </div>
-          <div class="form-hint">Determines the tone and approach of AI responses.</div>
+          <div class="form-hint">
+            Determines the tone and approach of AI responses.
+          </div>
         </div>
       </div>
 
@@ -266,7 +262,9 @@ const defaultPreferences = {
         </div>
 
         <div class="form-group" id="crisisDetectionSensitivityGroup">
-          <label for="crisisDetectionSensitivity">Crisis Detection Sensitivity</label>
+          <label for="crisisDetectionSensitivity"
+            >Crisis Detection Sensitivity</label
+          >
           <select
             id="crisisDetectionSensitivity"
             name="crisisDetectionSensitivity"
@@ -279,13 +277,13 @@ const defaultPreferences = {
             >
             <option
               value="medium"
-              selected={defaultPreferences.crisisDetectionSensitivity === 'medium'}
-              >Medium</option
+              selected={defaultPreferences.crisisDetectionSensitivity ===
+                'medium'}>Medium</option
             >
             <option
               value="high"
-              selected={defaultPreferences.crisisDetectionSensitivity === 'high'}
-              >High</option
+              selected={defaultPreferences.crisisDetectionSensitivity ===
+                'high'}>High</option
             >
           </select>
           <div class="form-hint">

@@ -16,6 +16,11 @@ interface AIServiceProps {
 export interface PerformanceDashboardProps {
   aiService: AIServiceProps
   refreshInterval?: number // in milliseconds
+  'client:load'?: boolean // Support for Astro client directive
+  'client:idle'?: boolean // Support for other common Astro client directives
+  'client:visible'?: boolean
+  'client:media'?: string
+  'client:only'?: boolean | string
 }
 
 export function PerformanceDashboardReact({

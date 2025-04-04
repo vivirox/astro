@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { screen, fireEvent } from '@testing-library/dom'
+import { fireEvent } from '@testing-library/dom'
 import { renderAstro } from '@/test/utils/astro'
 import ThemeToggle from '../ThemeToggle.astro'
 

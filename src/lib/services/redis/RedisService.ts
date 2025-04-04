@@ -10,6 +10,7 @@ const logger = getLogger()
  * Redis service implementation with connection pooling and health checks
  */
 export class RedisService extends EventEmitter implements IRedisService {
+  ping: any
   getClient(): Redis | import('.').RedisService {
     throw new Error('Method not implemented.')
   }

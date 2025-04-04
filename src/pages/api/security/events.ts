@@ -1,13 +1,11 @@
 import type { APIRoute } from 'astro'
 import { getConvexClient } from '@/lib/convex'
 import { api } from '@/convex/_generated/api'
-import { getLogger } from '../../../lib/logging'
-import {
-  SecurityEventSeverity,
-  SecurityEventType,
-} from '../../../lib/security/monitoring.js'
 
-const logger = getLogger()
+import {
+  } from '../../../lib/security/monitoring.js'
+
+
 
 export const GET: APIRoute = async ({ request }) => {
   try {

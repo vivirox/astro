@@ -1,11 +1,13 @@
 import type { RedisService } from '@/lib/services/redis/RedisService'
 import { EventEmitter } from 'node:events'
-import { AnalyticsService } from '@/lib/analytics/service'
+import { AnalyticsService } from '@/lib/services/analytics/AnalyticsService'
+import { databaseMonitor } from './database'
 
 interface MonitoringConfig {
   enableWebVitals: boolean
   enableErrorTracking: boolean
   enableUsageAnalytics: boolean
+  enableDatabaseMonitoring: boolean
   sampleRate: number
   errorRetentionDays: number
 }
@@ -21,7 +23,6 @@ interface Metric {
   timestamp: number
   labels?: Record<string, string>
 }
-
 export class MonitoringService extends EventEmitter {
   private redis: RedisService
   private analytics: AnalyticsService
@@ -32,13 +33,18 @@ export class MonitoringService extends EventEmitter {
   constructor(redis: RedisService, config: Partial<MonitoringConfig> = {}) {
     super()
     this.redis = redis
-    this.analytics = new AnalyticsService(redis)
+    this.analytics = new AnalyticsService({
+      retentionDays: 90,
+      batchSize: 100,
+      processingInterval: 1000,
+    })
     this.config = {
-      enableWebVitals: true,
-      enableErrorTracking: true,
-      enableUsageAnalytics: true,
-      sampleRate: 0.1, // 10% sampling
-      errorRetentionDays: 30,
+      enableWebVitals: config.enableWebVitals ?? true,
+      enableErrorTracking: config.enableErrorTracking ?? true,
+      enableUsageAnalytics: config.enableUsageAnalytics ?? true,
+      enableDatabaseMonitoring: config.enableDatabaseMonitoring ?? true,
+      sampleRate: config.sampleRate ?? 0.1, // 10% sampling
+      errorRetentionDays: config.errorRetentionDays ?? 30,
       ...config,
     }
   }
@@ -61,6 +67,10 @@ export class MonitoringService extends EventEmitter {
 
       if (this.config.enableUsageAnalytics) {
         this.setupUsageAnalytics()
+      }
+
+      if (this.config.enableDatabaseMonitoring) {
+        this.setupDatabaseMonitoring()
       }
 
       this.initialized = true
@@ -147,6 +157,23 @@ export class MonitoringService extends EventEmitter {
     }
   }
 
+  private setupDatabaseMonitoring(): void {
+    // Start the database monitoring service
+    // This only runs on the server, not in browser context
+    if (typeof window === 'undefined') {
+      databaseMonitor.start()
+
+      // Register cleanup handler for graceful shutdown
+      const gracefulShutdown = () => {
+        databaseMonitor.stop()
+      }
+
+      // Handle Node.js server shutdown signals
+      process.on('SIGTERM', gracefulShutdown)
+      process.on('SIGINT', gracefulShutdown)
+    }
+  }
+
   private recordMetric(metric: Metric): void {
     this.metrics.push(metric)
     this.emit('metric', metric)
@@ -196,6 +223,11 @@ export class MonitoringService extends EventEmitter {
   }
 
   async shutdown(): Promise<void> {
+    // Stop database monitoring on service shutdown
+    if (typeof window === 'undefined' && this.config.enableDatabaseMonitoring) {
+      databaseMonitor.stop()
+    }
+
     await this.analytics.shutdown()
   }
 }

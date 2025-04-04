@@ -1,8 +1,8 @@
 ---
-import Plum from '@/components/backgrounds/Plum.astro'
-import Dot from '@/components/backgrounds/Dot.astro'
-import Rose from '@/components/backgrounds/Rose.astro'
-import Particle from '@/components/backgrounds/Particle.astro'
+
+
+
+
 
 import type { BgType } from '@/types'
 
@@ -10,13 +10,21 @@ interface Props {
   type: BgType
 }
 
-const { type } = Astro.props
+
 ---
 
-{type === 'default' as BgType && <div class="fixed inset-0 -z-10 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"></div>}
-{type === 'plum' as BgType && <Plum />}
-{type === 'gradient' as BgType && <div class="fixed inset-0 -z-10 bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 dark:from-indigo-950 dark:via-purple-900 dark:to-pink-950"></div>}
-{type === 'pulse' as BgType && <Particle />}
-{type === 'light' as BgType && <div class="fixed inset-0 -z-10 bg-white"></div>}
-{type === 'dark' as BgType && <div class="fixed inset-0 -z-10 bg-gray-900"></div>}
-{type === 'stars' as BgType && <Rose />}
+{
+  type === ('default' as BgType) && (
+    <div class="fixed inset-0 -z-10 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950" />
+  )
+}
+{type === ('plum' as BgType) && <Plum />}
+{
+  type === ('gradient' as BgType) && (
+    <div class="fixed inset-0 -z-10 bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 dark:from-indigo-950 dark:via-purple-900 dark:to-pink-950" />
+  )
+}
+{type === ('pulse' as BgType) && <Particle />}
+{type === ('light' as BgType) && <div class="fixed inset-0 -z-10 bg-white" />}
+{type === ('dark' as BgType) && <div class="fixed inset-0 -z-10 bg-gray-900" />}
+{type === ('stars' as BgType) && <Rose />}

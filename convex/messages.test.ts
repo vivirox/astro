@@ -7,7 +7,7 @@ import {
   cleanupTestData,
   testValidators,
 } from './lib/test-utils'
-import { api } from './_generated/api'
+
 import { getSessionMessages, getUserMessages, send, search } from './messages'
 
 describe('messages', () => {

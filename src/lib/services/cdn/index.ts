@@ -109,16 +109,10 @@ export class CdnService {
 
   private async initializeSecurityHeaders(): Promise<void> {
     try {
-      const { security } = this.config
+      
 
       // Configure security headers
-      const headers = {
-        'Content-Security-Policy': security.contentSecurityPolicy,
-        'Strict-Transport-Security': `max-age=${security.hstsMaxAge}; includeSubDomains; preload`,
-        'X-Content-Type-Options': security.nosniff ? 'nosniff' : null,
-        'X-Frame-Options': security.frameOptions,
-        'Referrer-Policy': security.referrerPolicy,
-      }
+      
 
       logger.info('Configuring security headers')
       // Here you would typically make API calls to your CDN provider

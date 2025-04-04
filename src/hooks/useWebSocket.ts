@@ -12,7 +12,7 @@ interface WebSocketHookOptions {
 
 interface WebSocketMessage {
   type: 'message' | 'status' | 'error'
-  data: any
+  data: unknown
   sessionId?: string
   encrypted?: boolean
 }
@@ -55,10 +55,12 @@ export function useWebSocket({
         setTimeout(connect, 3000)
       }
 
-      ws.onerror = (event) => {
+      ws.onerror = () => {
         const wsError = new Error('WebSocket error')
         setError(wsError)
-        if (onError) onError(wsError)
+        if (onError) {
+          onError(wsError)
+        }
       }
 
       ws.onmessage = (event) => {
@@ -72,26 +74,36 @@ export function useWebSocket({
               }
               break
             case 'status':
-              if (onStatusChange && message.data?.status) {
-                onStatusChange(message.data.status)
+              if (onStatusChange && message.data && typeof message.data === 'object' && message.data !== null && 'status' in message.data) {
+                onStatusChange(message.data.status as string)
               }
               break
             case 'error':
-              const wsError = new Error(
-                message.data?.message || 'Unknown error',
-              )
-              setError(wsError)
-              if (onError) onError(wsError)
-              break
+              {
+                const wsError = new Error(
+                  message.data && typeof message.data === 'object' && 'message' in message.data 
+                    ? String(message.data.message)
+                    : 'Unknown error'
+                )
+                setError(wsError)
+                if (onError) {
+                  onError(wsError)
+                }
+              }
+                  break
           }
         } catch (error) {
           console.error('Error parsing WebSocket message:', error)
-          if (onError) onError(error as Error)
+          if (onError) {
+            onError(error as Error)
+          }
         }
       }
     } catch (error) {
       setError(error as Error)
-      if (onError) onError(error as Error)
+      if (onError) {
+        onError(error as Error)
+      }
     }
   }, [url, sessionId, onMessage, onStatusChange, onError, encrypted])
 
@@ -119,7 +131,9 @@ export function useWebSocket({
       } else {
         const error = new Error('WebSocket is not connected')
         setError(error)
-        if (onError) onError(error)
+        if (onError) {
+          onError(error)
+        }
       }
     },
     [sessionId, encrypted, onError],

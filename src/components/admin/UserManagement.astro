@@ -16,48 +16,7 @@ interface User {
 
 // Mock data for initial rendering
 // In a real implementation, this would be fetched from the server
-const mockUsers: User[] = [
-  {
-    id: 'user-1',
-    name: 'Dr. Jane Smith',
-    email: 'jane.smith@example.com',
-    role: 'therapist',
-    createdAt: new Date(2024, 1, 15),
-    lastActive: new Date(2024, 2, 28),
-  },
-  {
-    id: 'user-2',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    role: 'client',
-    createdAt: new Date(2024, 2, 5),
-    lastActive: new Date(2024, 2, 29),
-  },
-  {
-    id: 'user-3',
-    name: 'Admin User',
-    email: 'admin@example.com',
-    role: 'admin',
-    createdAt: new Date(2023, 11, 10),
-    lastActive: new Date(2024, 2, 30),
-  },
-  {
-    id: 'user-4',
-    name: 'Dr. Michael Johnson',
-    email: 'michael.johnson@example.com',
-    role: 'therapist',
-    createdAt: new Date(2024, 0, 20),
-    lastActive: new Date(2024, 2, 25),
-  },
-  {
-    id: 'user-5',
-    name: 'Sarah Williams',
-    email: 'sarah.williams@example.com',
-    role: 'client',
-    createdAt: new Date(2024, 2, 10),
-    lastActive: new Date(2024, 2, 27),
-  },
-]
+
 
 // Format date for display
 const formatDate = (date: Date) => {
@@ -69,15 +28,10 @@ const formatDate = (date: Date) => {
 }
 
 // Mock pagination data
-const pagination = {
-  total: 45,
-  limit: 10,
-  offset: 0,
-  hasMore: true,
-}
+
 
 // Attempt to fetch real users - in a real implementation, this would call an API
-let users = mockUsers
+
 let error: Error | null = null
 
 try {
@@ -640,16 +594,16 @@ try {
         }
 
         const userId = userIdInput.value
-        let result
+        let _result
 
         if (userId) {
           // Update existing user
           userData.id = userId
-          result = await apiOperations.updateUser(userData)
+          _result = await apiOperations.updateUser(userData)
           // In a real app, we would update the table row here
         } else {
           // Create new user
-          result = await apiOperations.createUser(userData)
+          _result = await apiOperations.createUser(userData)
           // In a real app, we would add a new row to the table
         }
 

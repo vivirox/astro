@@ -1,45 +1,11 @@
 ---
-import ChatLayout from '../../layouts/ChatLayout.astro'
-import { BrowserCompatibilityTester } from '../../components/testing/BrowserCompatibilityTester'
-import AIChat from '../../components/AIChat.astro'
-import { LOADING_SIZES, SEVERITY_STYLES } from '../../constants/testing'
-import type { CompatibilityIssue, TestSections } from '../../types/testing'
 
-const TEST_SECTIONS: TestSections = {
-  browserInfo: {
-    title: 'Browser Information',
-    component: BrowserCompatibilityTester,
-  },
-  aiChat: {
-    title: 'AI Chat Component Test',
-    component: AIChat,
-    props: {
-      title: 'AI Chat Test',
-      description:
-        'This is a test of the AI Chat component for browser compatibility.',
-      showModelSelector: true,
-    },
-    instructions: [
-      'Verify that the chat interface loads correctly',
-      'Test keyboard navigation (Tab, Enter, Arrow keys)',
-      'Test screen reader compatibility',
-      'Verify that messages display correctly',
-      'Test sending and receiving messages',
-      'Verify loading states and animations',
-      'Test with reduced motion preference if available',
-      'Test with high contrast mode if available',
-    ],
-  },
-  loadingIndicator: {
-    title: 'Loading Indicator Test',
-    instructions: [
-      'Verify that loading indicators display correctly',
-      'Test with screen readers to verify announcements',
-      'Test with reduced motion preference if available',
-      'Verify that animations work correctly',
-    ],
-  },
-}
+
+
+import { } from '../../constants/testing'
+
+
+
 ---
 
 <ChatLayout title="Browser Compatibility Testing">
@@ -372,7 +338,6 @@ const TEST_SECTIONS: TestSections = {
 <script>
   import {
     addIssue,
-    removeIssue,
     displayIssues,
   } from '../../utils/compatibility-testing'
   import type { CompatibilityIssue } from '../../types/testing'

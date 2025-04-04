@@ -1,6 +1,5 @@
 import type {
   AICompletionResponse,
-  AIError,
   AIMessage,
   AIProvider,
   AIStreamChunk,

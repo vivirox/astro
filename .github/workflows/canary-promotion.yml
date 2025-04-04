@@ -1,0 +1,189 @@
+name: Canary Deployment Promotion
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  NODE_VERSION: 22.11.0
+  PNPM_VERSION: 10.0.0
+  PROJECT_NAME: gradiant-astro
+
+jobs:
+  promote:
+    name: Promote Canary
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: production_environment
+      cancel-in-progress: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Check current traffic distribution
+        id: check_traffic
+        run: |
+          npm install -g wrangler
+
+          # Get current traffic distribution
+          TRAFFIC_INFO=$(wrangler pages deployment list ${{ env.PROJECT_NAME }} --json | jq '.[] | select(.branch == "${{ github.event.inputs.canary_branch }}") | .traffic')
+
+          if [ -z "$TRAFFIC_INFO" ]; then
+            echo "::error::Canary branch not found or has no traffic allocation"
+            exit 1
+          fi
+
+          echo "current_traffic=$TRAFFIC_INFO" >> $GITHUB_OUTPUT
+          echo "Current canary traffic: $TRAFFIC_INFO%"
+
+      - name: Calculate new traffic percentage
+        id: calculate_traffic
+        run: |
+          CURRENT_TRAFFIC="${{ steps.check_traffic.outputs.current_traffic }}"
+
+          if [[ "${{ github.event.inputs.promotion_type }}" == "full" ]]; then
+            NEW_TRAFFIC=100
+            echo "Promoting to 100% traffic (full promotion)"
+          else
+            # Gradual promotion
+            INCREMENT="${{ github.event.inputs.increment }}"
+            NEW_TRAFFIC=$((CURRENT_TRAFFIC + INCREMENT))
+            
+            # Cap at 100%
+            if [ $NEW_TRAFFIC -gt 100 ]; then
+              NEW_TRAFFIC=100
+            fi
+            
+            echo "Increasing traffic from $CURRENT_TRAFFIC% to $NEW_TRAFFIC% (gradual promotion)"
+          fi
+
+          echo "new_traffic=$NEW_TRAFFIC" >> $GITHUB_OUTPUT
+
+      - name: Update traffic allocation
+        run: |
+          npm install -g wrangler
+
+          echo "Updating traffic allocation for ${{ github.event.inputs.canary_branch }} to ${{ steps.calculate_traffic.outputs.new_traffic }}%"
+
+          wrangler pages deployment traffic ${{ env.PROJECT_NAME }} \
+            --branch=${{ github.event.inputs.canary_branch }} \
+            --percentage=${{ steps.calculate_traffic.outputs.new_traffic }}
+
+      - name: Run health checks
+        id: health_check
+        run: |
+          # Wait for traffic reallocation to propagate
+          echo "Waiting for traffic reallocation to propagate..."
+          sleep 30
+
+          # Run health checks
+          NODE_ENV=production pnpm run diagnostics --check-health --check-performance
+
+          if [ $? -ne 0 ]; then
+            echo "::error::Health check failed after traffic reallocation"
+            echo "health_status=failed" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "health_status=success" >> $GITHUB_OUTPUT
+          fi
+
+      # Rollback if health checks fail
+      - name: Rollback on failure
+        if: failure() && steps.health_check.outputs.health_status == 'failed'
+        run: |
+          echo "Health check failed. Rolling back traffic allocation..."
+          npm install -g wrangler
+
+          wrangler pages deployment traffic ${{ env.PROJECT_NAME }} \
+            --branch=${{ github.event.inputs.canary_branch }} \
+            --percentage=${{ steps.check_traffic.outputs.current_traffic }}
+
+          echo "Traffic allocation rolled back to ${{ steps.check_traffic.outputs.current_traffic }}%"
+
+      # Promote to full deployment if requested and all checks passed
+      - name: Promote to full deployment
+        if: |
+          success() && 
+          github.event.inputs.auto_promote == 'true' && 
+          (steps.calculate_traffic.outputs.new_traffic == '100' || github.event.inputs.promotion_type == 'full')
+        run: |
+          npm install -g wrangler
+
+          echo "Promoting canary deployment to main branch"
+
+          # Get the canary deployment files 
+          CANARY_DEPLOYMENT_ID=$(wrangler pages deployment list ${{ env.PROJECT_NAME }} --json | 
+            jq -r '.[] | select(.branch == "${{ github.event.inputs.canary_branch }}") | .deployment_id')
+
+          if [ -z "$CANARY_DEPLOYMENT_ID" ]; then
+            echo "::error::Could not find canary deployment ID"
+            exit 1
+          fi
+
+          # Promote the canary deployment to main
+          wrangler pages deployment promote ${{ env.PROJECT_NAME }} $CANARY_DEPLOYMENT_ID --branch=main
+
+          echo "Canary deployment promoted to main branch successfully"
+
+          # Create deployment tag
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          DEPLOY_TAG="production-$TIMESTAMP"
+          git tag $DEPLOY_TAG
+          git push origin $DEPLOY_TAG
+
+          echo "Created deployment tag: $DEPLOY_TAG"
+
+      - name: Notify promotion status
+        if: always()
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "${{ job.status == 'success' && '✅' || '❌' }} Canary Promotion Status",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Status:* ${{ job.status == 'success' && '✅ Success' || '❌ Failure' }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Canary Branch:* ${{ github.event.inputs.canary_branch }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Traffic Allocation:* ${{ steps.check_traffic.outputs.current_traffic }}% → ${{ steps.calculate_traffic.outputs.new_traffic }}%"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Promotion Type:* ${{ github.event.inputs.promotion_type }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Auto-Promote:* ${{ github.event.inputs.auto_promote == 'true' && 'Yes' || 'No' }}"
+                    }
+                  ]
+                }
+              ]
+            }

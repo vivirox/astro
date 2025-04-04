@@ -52,13 +52,13 @@ describe('AIChat.astro', () => {
 
   it('renders with default props', async () => {
     const { container } = await renderAstroComponent(AIChat)
-    
+
     // Check if the title and description are rendered with default values
     expect(container.querySelector('h2')).toHaveTextContent('AI Chat')
     expect(container.querySelector('p')).toHaveTextContent(
       'Interact with our AI assistant powered by TogetherAI.'
     )
-    
+
     // Check if client component placeholder exists
     expect(container.innerHTML).toContain('ai-chat-react')
   })
@@ -73,13 +73,13 @@ describe('AIChat.astro', () => {
       title: 'Custom AI Assistant',
       description: 'Specialized AI chat for technical support'
     }
-    
+
     const { container } = await renderAstroComponent(AIChat, customProps)
-    
+
     // Check if the custom title and description are rendered
     expect(container.querySelector('h2')).toHaveTextContent('Custom AI Assistant')
     expect(container.querySelector('p')).toHaveTextContent('Specialized AI chat for technical support')
-    
+
     // Verify client:load component would receive the right props
     // In a real test environment, we could check the actual props passed
     const htmlContent = container.innerHTML
@@ -90,12 +90,12 @@ describe('AIChat.astro', () => {
 
   it('applies transition styles', async () => {
     const { container } = await renderAstroComponent(AIChat)
-    
+
     // Check if transition styles are applied
     const mainDiv = container.querySelector('div')
     expect(mainDiv).toHaveClass('transition-colors')
     expect(mainDiv).toHaveClass('duration-300')
-    
+
     // Check if style element is included
     const styleElement = container.querySelector('style')
     expect(styleElement).toBeTruthy()
@@ -104,10 +104,10 @@ describe('AIChat.astro', () => {
 
   it('has responsive layout classes', async () => {
     const { container } = await renderAstroComponent(AIChat)
-    
+
     const mainDiv = container.querySelector('div')
     expect(mainDiv).toHaveClass('w-full')
     expect(mainDiv).toHaveClass('max-w-2xl')
     expect(mainDiv).toHaveClass('mx-auto')
   })
-}) 
+})

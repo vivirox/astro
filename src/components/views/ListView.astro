@@ -1,13 +1,11 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content'
+import { getCollection, getEntry, } from 'astro:content'
 
-import Categorizer from '~/components/base/Categorizer.astro'
-import ListItem from '~/components/views/ListItem.astro'
-import Toc from '~/components/toc/Toc.astro'
-import Warning from '~/components/base/Warning.astro'
+
+
 
 import { FEATURES } from '~/config'
-import { isSameYear, getYear } from '~/utils/datetime'
+import { getYear, } from '~/utils/datetime'
 
 import type {
   CollectionEntry,
@@ -27,7 +25,8 @@ const { collectionType, pageToc } = Astro.props
 /* Toc */
 const { toc } = FEATURES
 const tocEnabled = Array.isArray(toc) && toc[0] && pageToc
-let years: string[] = []
+let _years: string[] = []
+
 
 /* Posts */
 let blogItems: CollectionEntry<PostCollectionType>[] = []
@@ -48,7 +47,7 @@ if (collectionType === 'blog' || collectionType === 'changelog') {
       yearsSet.add(year)
     })
 
-    years = Array.from(yearsSet)
+    _years = Array.from(yearsSet)
       .sort((a, b) => b - a)
       .map((year) => year.toString())
   }
@@ -74,7 +73,7 @@ if (collectionType === 'streams') {
         yearsSet.add(year)
       })
 
-      years = Array.from(yearsSet)
+      _years = Array.from(yearsSet)
         .sort((a, b) => b - a)
         .map((year) => year.toString())
     }
@@ -116,17 +115,14 @@ if (collectionType === 'feeds') {
       yearsSet.add(year)
     })
 
-    years = Array.from(yearsSet)
+    _years = Array.from(yearsSet)
       .sort((a, b) => b - a)
       .map((year) => year.toString())
   }
 }
 
 /* Exception */
-const warningHTML = `The '${collectionType}' collection type does no
-  belong to the built-in types 'blog', 'feeds', or 'streams'. You may
-  need to modify the <code>ListView.astro</code> logic for your defined
-  collection types to render the list.`
+
 ---
 
 {tocEnabled && <Toc {years} />}
@@ -264,6 +260,6 @@ const warningHTML = `The '${collectionType}' collection type does no
 }
 {
   !['blog', 'changelog', 'feeds', 'streams'].includes(collectionType) && (
-    <Warning rawHTMLString={warningHTML} />
+    <Alert variant="warning" description={warningHTML} />
   )
 }

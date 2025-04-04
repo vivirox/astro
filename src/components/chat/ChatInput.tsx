@@ -8,6 +8,7 @@ interface ChatInputProps {
   onSubmit: (e: React.FormEvent) => void
   isLoading: boolean
   disabled?: boolean
+  placeholder?: string
 }
 
 export function ChatInput({
@@ -16,6 +17,7 @@ export function ChatInput({
   onSubmit,
   isLoading,
   disabled = false,
+  placeholder,
 }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -44,7 +46,7 @@ export function ChatInput({
         value={value}
         onChange={onChange}
         onKeyDown={handleKeyDown}
-        placeholder={isLoading ? 'AI is responding...' : 'Type your message...'}
+        placeholder={placeholder || (isLoading ? 'AI is responding...' : 'Type your message...')}
         disabled={isLoading || disabled}
         className={cn(
           'flex-1 resize-none bg-transparent p-2 placeholder-gray-500',

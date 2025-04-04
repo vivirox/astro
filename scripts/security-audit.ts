@@ -1,7 +1,7 @@
 import type { RedisService } from '../src/lib/services/redis/RedisService'
 import type { MonitoringService } from '../src/lib/monitoring/setup'
 import type { BackupVerificationService } from '../src/lib/backup/verify'
-import { createHash } from 'crypto'
+
 import { promises as fs } from 'fs'
 import path from 'path'
 
@@ -67,9 +67,13 @@ class SecurityAuditService {
   private async checkSecurityHeaders(): Promise<
     Array<{ status: string; message: string }>
   > {
-    if (!this.config.enableHeaderCheck) return []
+    if (!this.config.enableHeaderCheck) {
+      return []
+    }
 
-    const results = []
+    const results:
+      | { status: string; message: string }[]
+      | PromiseLike<{ status: string; message: string }[]> = []
     const requiredHeaders = {
       'Strict-Transport-Security':
         'max-age=31536000; includeSubDomains; preload',
@@ -99,9 +103,13 @@ class SecurityAuditService {
   private async checkDependencies(): Promise<
     Array<{ status: string; message: string }>
   > {
-    if (!this.config.enableDependencyCheck) return []
+    if (!this.config.enableDependencyCheck) {
+      return []
+    }
 
-    const results = []
+    const results:
+      | { status: string; message: string }[]
+      | PromiseLike<{ status: string; message: string }[]> = []
     const packageLockPath = path.join(process.cwd(), 'package-lock.json')
     const packageLock = JSON.parse(await fs.readFile(packageLockPath, 'utf-8'))
 
@@ -135,9 +143,13 @@ class SecurityAuditService {
   private async checkConfigurations(): Promise<
     Array<{ status: string; message: string }>
   > {
-    if (!this.config.enableConfigCheck) return []
+    if (!this.config.enableConfigCheck) {
+      return []
+    }
 
-    const results = []
+    const results:
+      | { status: string; message: string }[]
+      | PromiseLike<{ status: string; message: string }[]> = []
 
     // Check environment variables
     const requiredEnvVars = [
@@ -164,7 +176,9 @@ class SecurityAuditService {
   private async checkRedisConfig(): Promise<
     Array<{ status: string; message: string }>
   > {
-    const results = []
+    const results:
+      | { status: string; message: string }[]
+      | PromiseLike<{ status: string; message: string }[]> = []
 
     try {
       // Check Redis connection
@@ -183,7 +197,7 @@ class SecurityAuditService {
     } catch (error) {
       results.push({
         status: 'fail',
-        message: `Redis connection failed: ${error.message}`,
+        message: `Redis connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       })
     }
 
@@ -193,9 +207,13 @@ class SecurityAuditService {
   private async checkBackupSecurity(): Promise<
     Array<{ status: string; message: string }>
   > {
-    if (!this.config.enableBackupCheck) return []
+    if (!this.config.enableBackupCheck) {
+      return []
+    }
 
-    const results = []
+    const results:
+      | { status: string; message: string }[]
+      | PromiseLike<{ status: string; message: string }[]> = []
 
     // Check backup encryption
     const backupDir = process.env.BACKUP_DIR || './backups'
@@ -217,7 +235,7 @@ class SecurityAuditService {
     } catch (error) {
       results.push({
         status: 'fail',
-        message: `Backup integrity check failed: ${error.message}`,
+        message: `Backup integrity check failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       })
     }
 
@@ -227,9 +245,13 @@ class SecurityAuditService {
   private async checkMonitoringSecurity(): Promise<
     Array<{ status: string; message: string }>
   > {
-    if (!this.config.enableMonitoringCheck) return []
+    if (!this.config.enableMonitoringCheck) {
+      return []
+    }
 
-    const results = []
+    const results:
+      | { status: string; message: string }[]
+      | PromiseLike<{ status: string; message: string }[]> = []
 
     // Check monitoring configuration
     const monitoringConfig = {
@@ -251,9 +273,13 @@ class SecurityAuditService {
   private async checkAccessControls(): Promise<
     Array<{ status: string; message: string }>
   > {
-    if (!this.config.enableAccessCheck) return []
+    if (!this.config.enableAccessCheck) {
+      return []
+    }
 
-    const results = []
+    const results:
+      | { status: string; message: string }[]
+      | PromiseLike<{ status: string; message: string }[]> = []
 
     // Check file permissions
     const criticalFiles = ['.env', 'package.json', 'astro.config.mjs']
@@ -271,7 +297,7 @@ class SecurityAuditService {
       } catch (error) {
         results.push({
           status: 'fail',
-          message: `Could not check permissions for ${file}: ${error.message}`,
+          message: `Could not check permissions for ${file}: ${error instanceof Error ? error.message : 'Unknown error'}`,
         })
       }
     }

@@ -7,7 +7,7 @@
  */
 
 import process from 'node:process'
-import { getLogger } from './logging'
+import { getLogger } from '@/lib/logging'
 
 // Initialize logger
 const logger = getLogger({ prefix: 'analytics' })
@@ -131,7 +131,9 @@ export class AnalyticsService {
 
     // Try to get from storage first
     const storedId = sessionStorage.getItem('analytics_session_id')
-    if (storedId) return storedId
+    if (storedId) {
+      return storedId
+    }
 
     // Generate a new one if not found
     const newId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
@@ -149,7 +151,9 @@ export class AnalyticsService {
 
     // Try to get from storage first
     const storedId = localStorage.getItem('analytics_anonymous_id')
-    if (storedId) return storedId
+    if (storedId) {
+      return storedId
+    }
 
     // Generate a new one if not found
     const newId = `anon-${Math.random().toString(36).substring(2, 16)}`
@@ -253,7 +257,9 @@ export class AnalyticsService {
    * Send events to the analytics endpoint
    */
   private async sendToEndpoint(events: AnalyticsEvent[]): Promise<void> {
-    if (!this.config.endpointUrl) return
+    if (!this.config.endpointUrl) {
+      return
+    }
 
     try {
       const response = await fetch(this.config.endpointUrl, {

@@ -1,5 +1,5 @@
 import { expect, test, vi } from 'vitest'
-import { render } from '@testing-library/react'
+
 import { renderToString } from 'react-dom/server'
 
 // Create a mock function for the Astro global

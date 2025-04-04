@@ -289,7 +289,7 @@ export function useAuth(): UseAuthReturn {
             profile.avatarUrl ?? (prev.avatarUrl as string | undefined),
           metadata: {
             ...((prev.metadata as Record<string, unknown>) || {}),
-            ...(profile.metadata || {}),
+            ...profile.metadata,
           },
         }
       })

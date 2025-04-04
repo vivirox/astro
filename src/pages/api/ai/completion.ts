@@ -8,18 +8,20 @@ import { getSession } from '../../../lib/auth/session'
 import { validateRequestBody } from '../../../lib/validation/index'
 import { CompletionRequestSchema } from '../../../lib/validation/schemas'
 import { applyRateLimit } from '../../../lib/api/rate-limit'
-import { getLogger } from '../../../lib/logging'
+
 
 // Initialize logger
-const logger = getLogger()
+
 
 export interface AstroAPIContext {
-  request: Request;
-  params: Record<string, string>;
-  props: Record<string, unknown>;
+  request: Request
+  params: Record<string, string>
+  props: Record<string, unknown>
 }
 
-export type APIRoute = (context: AstroAPIContext) => Promise<Response> | Response;
+export type APIRoute = (
+  context: AstroAPIContext,
+) => Promise<Response> | Response
 
 /**
  * API route for AI chat completions
@@ -157,7 +159,7 @@ export const POST: APIRoute = async ({ request }) => {
                 model: data?.model,
                 temperature: data?.temperature,
                 maxTokens: data?.max_tokens,
-              }
+              },
             )
 
             // Handle the async generator stream
@@ -167,11 +169,11 @@ export const POST: APIRoute = async ({ request }) => {
                   new TextEncoder().encode(
                     `data: ${JSON.stringify({
                       choices: [{ delta: { content: chunk.content } }],
-                    })}\n\n`
-                  )
+                    })}\n\n`,
+                  ),
                 )
               }
-              
+
               // Stream completed successfully
               controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'))
               controller.close()
@@ -187,7 +189,10 @@ export const POST: APIRoute = async ({ request }) => {
                 action: 'ai.completion.stream_error',
                 resource: { id: 'ai-completion', type: 'ai' },
                 metadata: {
-                  error: streamError instanceof Error ? streamError.message : String(streamError),
+                  error:
+                    streamError instanceof Error
+                      ? streamError.message
+                      : String(streamError),
                   status: 'error',
                 },
               })
@@ -214,7 +219,7 @@ export const POST: APIRoute = async ({ request }) => {
         cancel() {
           // Handle stream cancellation
           console.log('Stream cancelled by client')
-        }
+        },
       })
 
       return new Response(readableStream as unknown as BodyInit, {

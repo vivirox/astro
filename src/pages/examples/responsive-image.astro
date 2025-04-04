@@ -1,0 +1,269 @@
+---
+
+
+
+
+
+// Sample image imports (simulate imported images)
+// In a real project, you would use real image imports like:
+// import heroImage from '../../assets/images/hero.jpg';
+
+
+---
+
+<Layout title="Responsive Image Examples">
+  <main>
+    <section class="container mx-auto px-4 py-10">
+      <h1 class="text-3xl font-bold mb-8">Responsive Image Components</h1>
+
+      <div class="mb-16">
+        <h2 class="text-2xl font-semibold mb-4">Basic ResponsiveImage</h2>
+        <p class="mb-4">
+          This component automatically creates responsive images with multiple
+          formats and sizes
+        </p>
+
+        <div class="border border-gray-300 p-4 rounded-lg">
+          <ResponsiveImage
+            src={sampleImagePath}
+            alt="Sample landscape image"
+            width={1200}
+            height={800}
+            loading="eager"
+            format="webp"
+            breakpoints={[640, 768, 1024, 1280]}
+          />
+        </div>
+
+        <p class="mt-4 text-sm text-gray-600">
+          The ResponsiveImage component above generates optimized versions at
+          different breakpoints (640px, 768px, 1024px, 1280px) and serves them
+          with appropriate srcset and sizes attributes.
+        </p>
+      </div>
+
+      <div class="mb-16">
+        <h2 class="text-2xl font-semibold mb-4">
+          CMSImage with Aspect Ratio Control
+        </h2>
+        <p class="mb-4">
+          This component is specialized for CMS-sourced images with aspect ratio
+          control and focal point
+        </p>
+
+        <div class="border border-gray-300 p-4 rounded-lg">
+          <CMSImage
+            src={sampleImagePath}
+            alt="Image from CMS with aspect ratio control"
+            aspectRatio="16:9"
+            focalPoint="center"
+            placeholder={true}
+            wrapperClass="max-w-2xl mx-auto"
+          />
+        </div>
+
+        <p class="mt-4 text-sm text-gray-600">
+          The CMSImage component maintains a 16:9 aspect ratio regardless of
+          screen size and optimizes loading with placeholder images for better
+          user experience.
+        </p>
+      </div>
+
+      <div class="mb-16">
+        <h2 class="text-2xl font-semibold mb-4">
+          Background Image with Art Direction
+        </h2>
+        <p class="mb-4">
+          The BackgroundImage component supports different image sources for
+          different screen sizes
+        </p>
+
+        <div class="border border-gray-300 rounded-lg overflow-hidden">
+          <BackgroundImage
+            src={sampleImagePath}
+            mobileSrc={sampleMobileImagePath}
+            alt="Background image example"
+            overlayColor="rgba(0, 0, 0, 0.4)"
+            fixed={false}
+            height={400}
+          >
+            <div
+              class="flex items-center justify-center h-full text-center p-6"
+            >
+              <div class="text-white">
+                <h3 class="text-3xl font-bold mb-3">Responsive Background</h3>
+                <p class="max-w-lg mx-auto">
+                  This background image automatically adapts to different screen
+                  sizes, with art direction for optimal display across devices.
+                </p>
+              </div>
+            </div>
+          </BackgroundImage>
+        </div>
+
+        <p class="mt-4 text-sm text-gray-600">
+          The BackgroundImage component above uses different images for mobile
+          and desktop views, and includes a semi-transparent overlay with
+          centered content.
+        </p>
+      </div>
+
+      <div class="mb-16">
+        <h2 class="text-2xl font-semibold mb-4">Image Optimization Features</h2>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>
+            Automatic WebP and AVIF format generation with fallbacks for older
+            browsers
+          </li>
+          <li>Responsive sizing with appropriate dimensions for each device</li>
+          <li>Lazy loading for images below the fold</li>
+          <li>Blur-up loading effect for better perceived performance</li>
+          <li>LQIP (Low-Quality Image Placeholders) during loading</li>
+          <li>Art direction support for different screen sizes</li>
+          <li>Aspect ratio maintenance to prevent layout shifts</li>
+          <li>Focal point control for better cropping</li>
+          <li>Domain allowlisting for security</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  /* Additional styles for the example page */
+  .container {
+    max-width: 1200px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: #2c3e50;
+  }
+
+  .border {
+    border-width: 1px;
+  }
+
+  .border-gray-300 {
+    border-color: #e2e8f0;
+  }
+
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+
+  .p-4 {
+    padding: 1rem;
+  }
+
+  .p-6 {
+    padding: 1.5rem;
+  }
+
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+
+  .mb-8 {
+    margin-bottom: 2rem;
+  }
+
+  .mb-16 {
+    margin-bottom: 4rem;
+  }
+
+  .mt-4 {
+    margin-top: 1rem;
+  }
+
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .font-bold {
+    font-weight: 700;
+  }
+
+  .font-semibold {
+    font-weight: 600;
+  }
+
+  .text-gray-600 {
+    color: #718096;
+  }
+
+  .text-white {
+    color: white;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+
+  .h-full {
+    height: 100%;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .max-w-lg {
+    max-width: 32rem;
+  }
+
+  .max-w-2xl {
+    max-width: 42rem;
+  }
+
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .py-10 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .space-y-2 > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .list-disc {
+    list-style-type: disc;
+  }
+
+  .pl-6 {
+    padding-left: 1.5rem;
+  }
+
+  .overflow-hidden {
+    overflow: hidden;
+  }
+</style>

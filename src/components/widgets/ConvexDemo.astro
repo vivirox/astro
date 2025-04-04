@@ -1,5 +1,5 @@
 ---
-import { withConvex } from '@/lib/providers/ConvexProvider'
+
 
 // Define TypeScript interfaces for clarity
 interface Message {
@@ -18,35 +18,9 @@ interface User {
 
 // In a real implementation, we would fetch initial data from the Convex database
 // For the server-side render, use mock data as placeholders
-const mockMessages: Message[] = [
-  {
-    _id: 'message-1',
-    text: 'Hello, this is a sample message',
-    author: 'Demo User',
-    timestamp: Date.now() - 30000,
-  },
-  {
-    _id: 'message-2',
-    text: 'This is an example of Convex real-time updates',
-    author: 'System',
-    timestamp: Date.now() - 60000,
-  },
-]
 
-const mockUsers: User[] = [
-  {
-    _id: 'user-1',
-    name: 'Demo User',
-    email: 'demo@example.com',
-    avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=random',
-  },
-  {
-    _id: 'user-2',
-    name: 'System',
-    email: 'system@example.com',
-    avatar: 'https://ui-avatars.com/api/?name=System&background=random',
-  },
-]
+
+
 
 // Export component with Convex wrapper for client-side functionality
 // This will be used in the client script part
@@ -146,12 +120,11 @@ const mockUsers: User[] = [
 <script>
   // Import the ConvexProvider and hooks
   import {
-    ConvexProvider,
     ConvexReactClient,
   } from '@/lib/providers/ConvexProvider'
 
   // Initialize Convex client
-  let convex = null
+  let _convex = null
 
   // We'll add real-time functionality once the component is loaded in the browser
   document.addEventListener('DOMContentLoaded', async () => {
@@ -160,7 +133,7 @@ const mockUsers: User[] = [
       const { useMessages, useUsers } = await import('@/lib/hooks/useConvex')
 
       // Initialize Convex client
-      convex = new ConvexReactClient(import.meta.env.PUBLIC_CONVEX_URL || '')
+      _convex = new ConvexReactClient(import.meta.env.PUBLIC_CONVEX_URL || '')
 
       // DOM elements
       const userNameInput = document.getElementById(
@@ -174,8 +147,8 @@ const mockUsers: User[] = [
         'message-text-input',
       ) as HTMLInputElement
       const sendMessageBtn = document.getElementById('send-message-btn')
-      const usersContainer = document.getElementById('users-container')
-      const messagesContainer = document.getElementById('messages-container')
+      
+      
 
       // Setup event listeners
       if (addUserBtn) {
@@ -231,8 +204,8 @@ const mockUsers: User[] = [
       // Setup real-time data subscription
       // In a real implementation, this would update the DOM with real-time data from Convex
       const setupRealTimeData = async () => {
-        const { messages, deleteMessage } = useMessages()
-        const { users } = useUsers()
+        const { deleteMessage } = useMessages()
+        
 
         // Setup delete message handlers
         document.querySelectorAll('.delete-message-btn').forEach((btn) => {

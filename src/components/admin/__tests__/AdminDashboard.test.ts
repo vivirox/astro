@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen } from '@testing-library/dom'
+
 import AdminDashboard from '../AdminDashboard.astro'
 import { renderAstro } from '@/test/utils/astro'
 import { getSystemMetrics } from '@/lib/api/admin'

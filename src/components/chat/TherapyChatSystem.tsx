@@ -3,11 +3,11 @@
 import type { Message } from '@/types/chat'
 import type { Scenario } from '@/types/scenarios'
 import type { MentalHealthAnalysis as MentalHealthChatAnalysis } from '@/lib/chat/mentalHealthChat'
-import type { MentalHealthAnalysis as MentalHealthInsightsAnalysis } from '@/lib/chat'
+
 import { clientScenarios } from '@/data/scenarios'
 import { useStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AnalyticsDashboardReact from './AnalyticsDashboardReact'
 import { ChatContainer } from './ChatContainer'
 import { MentalHealthInsights } from '@/components/MentalHealthInsights'
@@ -54,8 +54,8 @@ export default function TherapyChatSystem() {
   }, [storeState.fheService, storeState.mentalHealthChat])
 
   // Refs
-  const chatContainerRef = useRef<HTMLDivElement>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  
+  
 
   // Handle scenario change
   const changeScenario = (scenario: Scenario) => {
@@ -190,9 +190,7 @@ export default function TherapyChatSystem() {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value)
-  }
+  
 
   // Get the most recent message with mental health analysis
   const getLatestMentalHealthAnalysis = ():
@@ -403,9 +401,9 @@ export default function TherapyChatSystem() {
       {/* Chat interface */}
       <ChatContainer
         messages={messages}
-        onSendMessage={(input) => {
+        onSendMessage={(message: string) => {
           const fakeEvent = { preventDefault: () => {} } as React.FormEvent
-          setInput(input)
+          setInput(message)
           handleSubmit(fakeEvent)
         }}
         isLoading={isLoading}
