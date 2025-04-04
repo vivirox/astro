@@ -1,11 +1,18 @@
 import type { APIRoute } from 'astro'
 import { supabase } from '../../../lib/supabase'
+import { validateCsrfToken } from '../../../lib/security/csrf'
 
-export const POST: APIRoute = async ({ request, redirect }) => {
+export const POST: APIRoute = async ({ request, redirect, cookies }) => {
   const formData = await request.formData()
   const email = formData.get('email')?.toString()
   const password = formData.get('password')?.toString()
   const fullName = formData.get('fullName')?.toString()
+  const csrfToken = formData.get('csrfToken')?.toString()
+
+  // Validate CSRF token
+  if (!validateCsrfToken(cookies, csrfToken)) {
+    return new Response('Invalid security token', { status: 403 });
+  }
 
   if (!email || !password) {
     return new Response('Email and password are required', { status: 400 })

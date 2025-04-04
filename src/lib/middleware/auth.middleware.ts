@@ -177,7 +177,7 @@ export async function apiAuthGuard(
   // Extract token and verify
   const token = authHeader.split(' ')[1]
   const { data, error } = await fetch(
-    `${authConfig.redirects.authRequired}/verify`,
+    `/api/auth/verify`,
     {
       method: 'POST',
       headers: {

@@ -95,8 +95,19 @@ export async function isAuthenticated(cookies: AstroCookies): Promise<boolean> {
   }
 
   try {
-    // For now, just having valid tokens is enough
-    // In production, you'd validate the tokens
+    // Validate the tokens by attempting to set the session
+    const { data, error } = await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    })
+
+    // If there's an error or no user data, the tokens are invalid
+    if (error || !data?.user) {
+      console.error('Authentication validation error:', error)
+      return false
+    }
+
+    // Tokens are valid and user is authenticated
     return true
   } catch (error) {
     console.error('Error checking authentication:', error)
