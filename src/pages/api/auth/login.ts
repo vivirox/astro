@@ -1,8 +1,10 @@
 // Import necessary libraries and types
+import type { APIRoute } from 'astro';
 import { fheService } from '../../../lib/fhe'
 import { EncryptionMode } from '../../../lib/fhe/types'
 import { getLogger } from '../../../lib/logging'
 import { createVerificationToken } from '../../../lib/security'
+import { validateCsrfToken } from '../../../lib/security/csrf'
 
 // Initialize logger
 const logger = getLogger()
@@ -11,6 +13,7 @@ interface LoginRequest {
   email: string
   password: string
   securityLevel?: string
+  csrfToken?: string
 }
 
 interface User {
@@ -18,9 +21,32 @@ interface User {
   email: string
 }
 
-export async function POST(request: Request) {
+export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const body = (await request.json()) as LoginRequest
+
+    // Validate CSRF token
+    if (!validateCsrfToken(cookies, body.csrfToken)) {
+      logger.warn('CSRF validation failed during login attempt', {
+        email: body.email,
+        ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
+        userAgent: request.headers.get('user-agent') || 'unknown',
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Invalid security token',
+          error: 'CSRF validation failed',
+        }),
+        {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    }
 
     // Authenticate user (replace with your actual auth logic)
     const user: User = {
