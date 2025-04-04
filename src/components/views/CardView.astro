@@ -31,10 +31,11 @@ let highlights: CollectionEntry<'highlights'>[] = []
 let processedHighlights: CardItemData[] = []
 if (collectionType === 'highlights') {
   highlights = await getCollection(collectionType)
-  processedHighlights = processBlueskyPosts(highlights).sort((a: CardItemData, b: CardItemData) =>
-    !a.date || !b.date
-      ? 0
-      : new Date(b.date).valueOf() - new Date(a.date).valueOf(),
+  processedHighlights = processBlueskyPosts(highlights).sort(
+    (a: CardItemData, b: CardItemData) =>
+      !a.date || !b.date
+        ? 0
+        : new Date(b.date).valueOf() - new Date(a.date).valueOf(),
   )
 }
 ---

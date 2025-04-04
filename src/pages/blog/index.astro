@@ -10,7 +10,7 @@ const posts = await getCollection('blog', ({ data }) => {
 })
 
 const sortedPosts = posts.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 )
 
 // Pagination
@@ -19,21 +19,24 @@ const currentPage = Number(Astro.url.searchParams.get('page')) || 1
 const totalPages = Math.ceil(sortedPosts.length / postsPerPage)
 const paginatedPosts = sortedPosts.slice(
   (currentPage - 1) * postsPerPage,
-  currentPage * postsPerPage
+  currentPage * postsPerPage,
 )
 
 // Group posts by category
-const postsByCategory = paginatedPosts.reduce((acc, post) => {
-  const category = post.data.category || 'Uncategorized'
-  if (!acc[category]) {
-    acc[category] = []
-  }
-  acc[category].push(post)
-  return acc
-}, {} as Record<string, typeof posts>)
+const postsByCategory = paginatedPosts.reduce(
+  (acc, post) => {
+    const category = post.data.category || 'Uncategorized'
+    if (!acc[category]) {
+      acc[category] = []
+    }
+    acc[category].push(post)
+    return acc
+  },
+  {} as Record<string, typeof posts>,
+)
 
 // Get all unique tags
-const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags))]
+const allTags = [...new Set(sortedPosts.flatMap((post) => post.data.tags))]
 ---
 
 <BlogLayout
@@ -42,25 +45,61 @@ const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags))]
 >
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Featured Posts -->
-    {currentPage === 1 && sortedPosts.filter(post => post.data.featured).length > 0 && (
-      <section class="mb-16">
-        <h2 class="text-3xl font-bold mb-8">Featured Posts</h2>
-        <div class="grid gap-8 md:grid-cols-2">
-          {sortedPosts
-            .filter(post => post.data.featured)
-            .map(post => (
-              <article class="relative group">
-                {post.data.image && (
-                  <img
-                    src={post.data.image.url}
-                    alt={post.data.image.alt}
-                    class="w-full h-48 object-cover rounded-lg mb-4"
-                  />
-                )}
+    {
+      currentPage === 1 &&
+        sortedPosts.filter((post) => post.data.featured).length > 0 && (
+          <section class="mb-16">
+            <h2 class="text-3xl font-bold mb-8">Featured Posts</h2>
+            <div class="grid gap-8 md:grid-cols-2">
+              {sortedPosts
+                .filter((post) => post.data.featured)
+                .map((post) => (
+                  <article class="relative group">
+                    {post.data.image && (
+                      <img
+                        src={post.data.image.url}
+                        alt={post.data.image.alt}
+                        class="w-full h-48 object-cover rounded-lg mb-4"
+                      />
+                    )}
+                    <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">
+                      <a href={`/blog/${post.data.slug}`}>{post.data.title}</a>
+                    </h3>
+                    <p class="text-muted-foreground mb-2">
+                      {post.data.description}
+                    </p>
+                    <div class="flex items-center text-sm text-muted-foreground">
+                      <time datetime={post.data.pubDate.toISOString()}>
+                        {formatDate(post.data.pubDate)}
+                      </time>
+                      {post.data.readingTime && (
+                        <>
+                          <span class="mx-2">•</span>
+                          <span>{post.data.readingTime} min read</span>
+                        </>
+                      )}
+                    </div>
+                  </article>
+                ))}
+            </div>
+          </section>
+        )
+    }
+
+    <!-- Posts by Category -->
+    {
+      Object.entries(postsByCategory).map(([category, categoryPosts]) => (
+        <section class="mb-16">
+          <h2 class="text-3xl font-bold mb-8">{category}</h2>
+          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {categoryPosts.map((post) => (
+              <article class="group">
                 <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">
                   <a href={`/blog/${post.data.slug}`}>{post.data.title}</a>
                 </h3>
-                <p class="text-muted-foreground mb-2">{post.data.description}</p>
+                <p class="text-muted-foreground mb-2">
+                  {post.data.description}
+                </p>
                 <div class="flex items-center text-sm text-muted-foreground">
                   <time datetime={post.data.pubDate.toISOString()}>
                     {formatDate(post.data.pubDate)}
@@ -72,100 +111,77 @@ const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags))]
                     </>
                   )}
                 </div>
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-2 mt-3">
+                    {post.data.tags.map((tag) => (
+                      <a
+                        href={`/blog/tags/${tag}`}
+                        class="text-xs px-2 py-1 bg-muted rounded-full hover:bg-muted/80 transition-colors"
+                      >
+                        {tag}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </article>
             ))}
-        </div>
-      </section>
-    )}
-
-    <!-- Posts by Category -->
-    {Object.entries(postsByCategory).map(([category, categoryPosts]) => (
-      <section class="mb-16">
-        <h2 class="text-3xl font-bold mb-8">{category}</h2>
-        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {categoryPosts.map((post) => (
-            <article class="group">
-              <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">
-                <a href={`/blog/${post.data.slug}`}>{post.data.title}</a>
-              </h3>
-              <p class="text-muted-foreground mb-2">{post.data.description}</p>
-              <div class="flex items-center text-sm text-muted-foreground">
-                <time datetime={post.data.pubDate.toISOString()}>
-                  {formatDate(post.data.pubDate)}
-                </time>
-                {post.data.readingTime && (
-                  <>
-                    <span class="mx-2">•</span>
-                    <span>{post.data.readingTime} min read</span>
-                  </>
-                )}
-              </div>
-              {post.data.tags && post.data.tags.length > 0 && (
-                <div class="flex flex-wrap gap-2 mt-3">
-                  {post.data.tags.map((tag) => (
-                    <a
-                      href={`/blog/tags/${tag}`}
-                      class="text-xs px-2 py-1 bg-muted rounded-full hover:bg-muted/80 transition-colors"
-                    >
-                      {tag}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </article>
-          ))}
-        </div>
-      </section>
-    ))}
+          </div>
+        </section>
+      ))
+    }
 
     <!-- Pagination -->
-    {totalPages > 1 && (
-      <nav class="flex justify-center space-x-2 mb-16">
-        {currentPage > 1 && (
-          <a href={`/blog?page=${currentPage - 1}`}>
-            <Button variant="outline">Previous</Button>
-          </a>
-        )}
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-          <a href={`/blog?page=${page}`}>
-            <Button
-              variant={page === currentPage ? 'default' : 'outline'}
-            >
-              {page}
-            </Button>
-          </a>
-        ))}
-        {currentPage < totalPages && (
-          <a href={`/blog?page=${currentPage + 1}`}>
-            <Button variant="outline">Next</Button>
-          </a>
-        )}
-      </nav>
-    )}
-
-    <!-- Tags Cloud -->
-    {allTags.length > 0 && (
-      <section class="mb-16">
-        <h2 class="text-2xl font-bold mb-4">Browse by Topic</h2>
-        <div class="flex flex-wrap gap-2">
-          {allTags.map(tag => (
-            <a
-              href={`/blog/tags/${tag}`}
-              class="text-sm px-3 py-1 bg-muted rounded-full hover:bg-muted/80 transition-colors"
-            >
-              {tag}
+    {
+      totalPages > 1 && (
+        <nav class="flex justify-center space-x-2 mb-16">
+          {currentPage > 1 && (
+            <a href={`/blog?page=${currentPage - 1}`}>
+              <Button variant="outline">Previous</Button>
+            </a>
+          )}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <a href={`/blog?page=${page}`}>
+              <Button variant={page === currentPage ? 'default' : 'outline'}>
+                {page}
+              </Button>
             </a>
           ))}
-        </div>
-      </section>
-    )}
+          {currentPage < totalPages && (
+            <a href={`/blog?page=${currentPage + 1}`}>
+              <Button variant="outline">Next</Button>
+            </a>
+          )}
+        </nav>
+      )
+    }
+
+    <!-- Tags Cloud -->
+    {
+      allTags.length > 0 && (
+        <section class="mb-16">
+          <h2 class="text-2xl font-bold mb-4">Browse by Topic</h2>
+          <div class="flex flex-wrap gap-2">
+            {allTags.map((tag) => (
+              <a
+                href={`/blog/tags/${tag}`}
+                class="text-sm px-3 py-1 bg-muted rounded-full hover:bg-muted/80 transition-colors"
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
   </div>
 </BlogLayout>
 
 <style>
   /* Add hover transition to post cards */
   article {
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease;
   }
 
   article:hover {

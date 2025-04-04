@@ -45,21 +45,32 @@ export function Navigation({
   // Filter navigation items based on authentication state and user roles
   const filteredItems = items.filter((item) => {
     // Skip items that require auth when user is not authenticated
-    if (item.requiresAuth && !isAuthenticated) return false
+    if (item.requiresAuth && !isAuthenticated) {
+      return false
+    }
 
     // Skip items that require guest when user is authenticated
-    if (item.requiresGuest && isAuthenticated) return false
+    if (item.requiresGuest && isAuthenticated) {
+      return false
+    }
 
-    // Skip items that require specific roles if user doesn't have them
+    if (!user || !user.roles) {
+      return false
+    }
+
+    // Check if the user has any of the required roles
     if (item.roles && item.roles.length > 0) {
-      if (!user || !user.roles) return false
+      if (!user || !user.roles) {
+        return false
+      }
 
-      // Check if the user has any of the required roles
       const hasRequiredRole = user.roles.some((role) =>
         item.roles?.includes(role),
       )
 
-      if (!hasRequiredRole) return false
+      if (!hasRequiredRole) {
+        return false
+      }
     }
 
     return true

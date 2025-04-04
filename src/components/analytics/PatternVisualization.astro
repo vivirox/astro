@@ -1,0 +1,66 @@
+---
+import PatternVisualizationReact from './PatternVisualizationReact'
+import type { PatternVisualizationProps } from './PatternVisualizationReact'
+import type {
+  CrossSessionPattern,
+  RiskCorrelation,
+  TrendPattern,
+} from '@/lib/ai/services/PatternRecognitionService'
+
+export interface Props extends PatternVisualizationProps {
+  title?: string
+  description?: string
+}
+
+const {
+  trends,
+  crossSessionPatterns,
+  riskCorrelations,
+  isLoading = false,
+  onPatternSelect,
+  title = 'Pattern Analysis',
+  description = 'Visualization of detected behavioral and emotional patterns across therapy sessions.',
+} = Astro.props
+---
+
+<div class="pattern-visualization w-full transition-colors duration-300">
+  {
+    title && (
+      <h2 class="text-lg font-medium mb-2 text-gray-700 dark:text-gray-300">
+        {title}
+      </h2>
+    )
+  }
+  {
+    description && (
+      <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">{description}</p>
+    )
+  }
+
+  <PatternVisualizationReact
+    client:load
+    {trends}
+    {crossSessionPatterns}
+    {riskCorrelations}
+    {isLoading}
+    {onPatternSelect}
+  />
+</div>
+
+<style>
+  /* Ensure smooth dark mode transitions */
+  :root {
+    --transition-duration: 300ms;
+  }
+
+  .transition-colors {
+    transition:
+      background-color var(--transition-duration) ease-in-out,
+      color var(--transition-duration) ease-in-out,
+      border-color var(--transition-duration) ease-in-out;
+  }
+
+  .pattern-visualization :global(.recharts-surface) {
+    overflow: visible;
+  }
+</style>

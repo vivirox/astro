@@ -26,7 +26,9 @@ const HEADING_REGEX = /^(#{1,6})\s+(.+)$/gm
  * @returns Rendered HTML
  */
 export async function renderMarkdown(content: string): Promise<string> {
-  if (!content) return ''
+  if (!content) {
+    return ''
+  }
 
   const result = await remark()
     .use(remarkParse)
@@ -52,7 +54,9 @@ export async function renderMarkdown(content: string): Promise<string> {
  * @returns HTML with basic formatting
  */
 export function simpleMarkdownToHtml(text: string): string {
-  if (!text) return ''
+  if (!text) {
+    return ''
+  }
 
   // Replace Markdown formatting with HTML
   return text
@@ -78,7 +82,9 @@ export function simpleMarkdownToHtml(text: string): string {
  * @returns Plain text without Markdown formatting
  */
 export function stripMarkdown(text: string): string {
-  if (!text) return ''
+  if (!text) {
+    return ''
+  }
 
   return text
     .replace(BOLD_REGEX, '$1')
@@ -96,7 +102,9 @@ export function stripMarkdown(text: string): string {
 export function extractHeadings(
   content: string,
 ): Array<{ level: number; text: string }> {
-  if (!content) return []
+  if (!content) {
+    return []
+  }
 
   const headings: Array<{ level: number; text: string }> = []
   const matches = content.matchAll(HEADING_REGEX)
@@ -119,7 +127,9 @@ export function extractHeadings(
 export function extractLinks(
   content: string,
 ): Array<{ text: string; url: string }> {
-  if (!content) return []
+  if (!content) {
+    return []
+  }
 
   const links: Array<{ text: string; url: string }> = []
   const matches = content.matchAll(LINK_REGEX)
@@ -140,7 +150,9 @@ export function extractLinks(
  * @returns Word count
  */
 export function countWords(content: string): number {
-  if (!content) return 0
+  if (!content) {
+    return 0
+  }
 
   // Strip Markdown formatting first
   const plainText = stripMarkdown(content)
@@ -162,7 +174,9 @@ export function estimateReadingTime(
   content: string,
   wordsPerMinute = 200,
 ): number {
-  if (!content) return 0
+  if (!content) {
+    return 0
+  }
 
   const wordCount = countWords(content)
   return Math.max(1, Math.ceil(wordCount / wordsPerMinute))

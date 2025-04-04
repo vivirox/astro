@@ -50,7 +50,9 @@ export function useResponseGeneration({
   // Generate response from messages
   const generateResponse = useCallback(
     async (messages: AIMessage[]) => {
-      if (messages.length === 0 || isLoading) return null
+      if (messages.length === 0 || isLoading) {
+        return null
+      }
 
       setIsLoading(true)
       setError(null)
@@ -119,7 +121,9 @@ export function useResponseGeneration({
   // Generate response with context from current message
   const generateResponseWithContext = useCallback(
     async (currentMessage: string) => {
-      if (!currentMessage.trim() || isLoading) return null
+      if (!currentMessage.trim() || isLoading) {
+        return null
+      }
 
       setIsLoading(true)
       setError(null)
@@ -190,8 +194,9 @@ export function useResponseGeneration({
   // Generate response with additional instructions
   const generateResponseWithInstructions = useCallback(
     async (messages: AIMessage[], instructions: string) => {
-      if (messages.length === 0 || !instructions.trim() || isLoading)
+      if (messages.length === 0 || !instructions.trim() || isLoading) {
         return null
+      }
 
       setIsLoading(true)
       setError(null)

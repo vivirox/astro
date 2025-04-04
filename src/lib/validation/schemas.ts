@@ -13,17 +13,17 @@ export const ChatMessageSchema = z.object({
       (value) => {
         // Block common XSS patterns
         const xssPatterns = [
-          /<script\b[^<]*(?:<[^<]*)*<\/script>/i,  // Script tags
-          /javascript:/i,                           // JavaScript protocol
-          /data:[^,]*base64/i,                      // Data URIs with base64
-          /on\w+=/i,                                // Event handlers
-          /eval\(/i,                                // Eval calls
-        ];
-        return !xssPatterns.some(pattern => pattern.test(value));
+          /<script\b[^<]*(?:<[^<]*)*<\/script>/i, // Script tags
+          /javascript:/i, // JavaScript protocol
+          /data:[^,]*base64/i, // Data URIs with base64
+          /on\w+=/i, // Event handlers
+          /eval\(/i, // Eval calls
+        ]
+        return !xssPatterns.some((pattern) => pattern.test(value))
       },
       {
-        message: "Potential security issue detected in content",
-      }
+        message: 'Potential security issue detected in content',
+      },
     )
     .refine(
       (value) => {
@@ -33,13 +33,13 @@ export const ChatMessageSchema = z.object({
           /\bunion\b.*\bselect\b/i,
           /--.*$/m,
           /;$/,
-          /\/\*.*\*\//
-        ];
-        return !sqlPatterns.some(pattern => pattern.test(value));
+          /\/\*.*\*\//,
+        ]
+        return !sqlPatterns.some((pattern) => pattern.test(value))
       },
       {
-        message: "Potential injection attack detected in content",
-      }
+        message: 'Potential injection attack detected in content',
+      },
     ),
   name: z.string().optional(),
 })

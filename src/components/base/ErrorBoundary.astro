@@ -3,7 +3,8 @@ interface Props {
   fallback?: string
 }
 
-const { fallback = 'Something went wrong. Please try refreshing the page.' } = Astro.props
+const { fallback = 'Something went wrong. Please try refreshing the page.' } =
+  Astro.props
 ---
 
 <script>
@@ -26,7 +27,10 @@ const { fallback = 'Something went wrong. Please try refreshing the page.' } = A
 
     disconnectedCallback() {
       window.removeEventListener('error', this.handleError.bind(this))
-      window.removeEventListener('unhandledrejection', this.handleError.bind(this))
+      window.removeEventListener(
+        'unhandledrejection',
+        this.handleError.bind(this),
+      )
     }
 
     handleError(event: Event) {

@@ -32,7 +32,9 @@ export function useChat(options: ChatOptions) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!input.trim()) return
+    if (!input.trim()) {
+      return
+    }
 
     // Add user message
     const userMessage: LocalMessage = {

@@ -123,7 +123,9 @@ export async function hasRole(
   requiredRole: AuthRole,
 ): Promise<boolean> {
   const user = await getCurrentUser(cookies)
-  if (!user) return false
+  if (!user) {
+    return false
+  }
 
   return hasRolePrivilege(user.role, requiredRole)
 }

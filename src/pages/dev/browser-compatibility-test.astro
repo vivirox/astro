@@ -14,9 +14,10 @@ const TEST_SECTIONS: TestSections = {
     title: 'AI Chat Component Test',
     component: AIChat,
     props: {
-      title: "AI Chat Test",
-      description: "This is a test of the AI Chat component for browser compatibility.",
-      showModelSelector: true
+      title: 'AI Chat Test',
+      description:
+        'This is a test of the AI Chat component for browser compatibility.',
+      showModelSelector: true,
     },
     instructions: [
       'Verify that the chat interface loads correctly',
@@ -66,18 +67,26 @@ const TEST_SECTIONS: TestSections = {
               </>
             )}
             <div class="component-container">
-              {key === 'browserInfo' && <BrowserCompatibilityTester client:load />}
-              {key === 'aiChat' && <AIChat
-                title={section.props?.title}
-                description={section.props?.description}
-                showModelSelector={section.props?.showModelSelector}
-              />}
+              {key === 'browserInfo' && (
+                <BrowserCompatibilityTester client:load />
+              )}
+              {key === 'aiChat' && (
+                <AIChat
+                  title={section.props?.title}
+                  description={section.props?.description}
+                  showModelSelector={section.props?.showModelSelector}
+                />
+              )}
               {key === 'loadingIndicator' && (
                 <div class="loading-indicators-test">
                   {Object.entries(LOADING_SIZES).map(([size, dimensions]) => (
                     <div>
                       <h4>{size}</h4>
-                      <div class="loading-indicator" role="status" aria-live="polite">
+                      <div
+                        class="loading-indicator"
+                        role="status"
+                        aria-live="polite"
+                      >
                         <div
                           class="loading-skeleton"
                           style={`width: ${dimensions.width}px; height: ${dimensions.height}px;`}
@@ -85,7 +94,9 @@ const TEST_SECTIONS: TestSections = {
                         <p class="loading-message">
                           Loading {size.toLowerCase()}...
                         </p>
-                        <span class="sr-only">Loading {size.toLowerCase()} content, please wait.</span>
+                        <span class="sr-only">
+                          Loading {size.toLowerCase()} content, please wait.
+                        </span>
                       </div>
                     </div>
                   ))}

@@ -2,12 +2,16 @@
 import { getCollection, type CollectionEntry, render } from 'astro:content'
 import BlogPostLayout from '@/layouts/BlogPostLayout.astro'
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const posts = await getCollection('blog')
-  return posts.map((entry) => ({
-    params: { slug: entry.data.slug },
-    props: { entry },
-  }))
+  return posts
+    .filter(post => !post.data.draft)
+    .map((post) => ({
+      params: { slug: post.data.slug || post.slug },
+      props: { entry: post },
+    }))
 }
 
 interface Props {
@@ -18,22 +22,19 @@ const { entry } = Astro.props
 const { Content } = await render(entry)
 
 // Get related posts (same category or tags)
-const allPosts = await getCollection('blog', ({ data }) => {
-  return import.meta.env.PROD ? !data.draft : true
-})
+const allPosts = await getCollection('blog', ({ data }) => !data.draft)
 
 const relatedPosts = allPosts
-  .filter(p =>
-    p.id !== entry.id && // Not the current post
-    (
-      p.data.category === entry.data.category || // Same category
-      p.data.tags?.some(tag => entry.data.tags?.includes(tag)) // Shared tags
-    )
+  .filter(
+    (p) =>
+      p.id !== entry.id && // Not the current post
+      (p.data.category === entry.data.category || // Same category
+        p.data.tags?.some((tag) => entry.data.tags?.includes(tag))), // Shared tags
   )
   .sort(() => Math.random() - 0.5) // Randomize
   .slice(0, 3) // Get up to 3 related posts
 ---
 
-<BlogPostLayout entry={entry}>
+<BlogPostLayout {entry}>
   <Content />
 </BlogPostLayout>

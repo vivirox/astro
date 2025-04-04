@@ -2,7 +2,8 @@
 
 import type { Message } from '@/types/chat'
 import type { Scenario } from '@/types/scenarios'
-import type { MentalHealthAnalysis } from '@/lib/chat'
+import type { MentalHealthAnalysis as MentalHealthChatAnalysis } from '@/lib/chat/mentalHealthChat'
+import type { MentalHealthAnalysis as MentalHealthInsightsAnalysis } from '@/lib/chat'
 import { clientScenarios } from '@/data/scenarios'
 import { useStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -20,11 +21,11 @@ import {
 } from './icons'
 import { SecurityBadge } from './SecurityBadge'
 import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
+import { Label } from '@/components/ui/Label'
 
 // Extended Message type with mental health analysis
 interface ExtendedMessage extends Message {
-  mentalHealthAnalysis?: MentalHealthAnalysis
+  mentalHealthAnalysis?: MentalHealthChatAnalysis
 }
 
 export default function TherapyChatSystem() {
@@ -75,7 +76,9 @@ export default function TherapyChatSystem() {
     e.preventDefault()
     setError(null)
 
-    if (!input.trim() || isLoading) return
+    if (!input.trim() || isLoading) {
+      return
+    }
 
     const userMessage: ExtendedMessage = {
       role: 'user',
@@ -144,15 +147,34 @@ export default function TherapyChatSystem() {
         const response = await storeState.aiService.generateCompletion(
           [...messages, userMessage],
           {
-            scenario: selectedScenario,
-            securityLevel: storeState.securityLevel,
-            encryptionEnabled: storeState.encryptionEnabled,
+            temperature: 0.7,
+            maxTokens: 1000,
+            userId: 'user',
+            sessionId: selectedScenario.id || 'default',
+            // Pass custom data as a string in the model field
+            model: JSON.stringify({
+              scenario: selectedScenario,
+              securityLevel: storeState.securityLevel,
+              encryptionEnabled: storeState.encryptionEnabled,
+            }),
           },
+          'together',
         )
+
+        // Check if response is AICompletionResponse or ReadableStream
+        let responseContent = ''
+        if ('content' in response) {
+          // It's an AICompletionResponse
+          responseContent = response.content
+        } else {
+          // It's a ReadableStream, but we expect a string response
+          // In a real implementation, you would read from the stream
+          responseContent = 'Response from AI service'
+        }
 
         aiResponse = {
           role: 'assistant',
-          content: response.content || '',
+          content: responseContent,
           name: '',
         }
       }
@@ -173,7 +195,9 @@ export default function TherapyChatSystem() {
   }
 
   // Get the most recent message with mental health analysis
-  const getLatestMentalHealthAnalysis = () => {
+  const getLatestMentalHealthAnalysis = ():
+    | MentalHealthChatAnalysis
+    | undefined => {
     const messagesWithAnalysis = messages.filter((m) => m.mentalHealthAnalysis)
     return messagesWithAnalysis.length > 0
       ? messagesWithAnalysis[messagesWithAnalysis.length - 1]

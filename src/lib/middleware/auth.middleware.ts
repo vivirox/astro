@@ -242,7 +242,7 @@ export function apiRoleGuard(role: AuthRole) {
 
     // At this point we know context.user exists
     const apiContext = context as ApiContextWithUser
-    const user = apiContext.user
+    const { user } = apiContext
 
     // Check if the user has the required role
     if (!hasRolePrivilege(user.role, role)) {

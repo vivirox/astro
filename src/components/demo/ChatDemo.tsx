@@ -23,7 +23,7 @@ export function ChatDemo() {
   ]
 
   // Chat completion hook
-  const { messages, isLoading, error, sendMessage } = useChatCompletion({
+  const { messages, isLoading, error, sendMessage, retryLastMessage } = useChatCompletion({
     initialMessages,
     model: 'gpt-4o',
     temperature: 0.7,
@@ -76,6 +76,7 @@ export function ChatDemo() {
           isLoading={isLoading}
           error={error?.toString()}
           inputPlaceholder="Type a message..."
+          onRetry={retryLastMessage}
         />
       </div>
 
@@ -96,7 +97,7 @@ export function ChatDemo() {
               {sentimentResult ? (
                 <div>
                   <p>
-                    Sentiment:
+                    Sentiment:{' '}
                     {String(sentimentResult.sentiment)}
                   </p>
                   <p>
@@ -106,13 +107,11 @@ export function ChatDemo() {
                     <div className="mt-2">
                       <p className="font-semibold">Emotions:</p>
                       <ul className="pl-4">
-                        {Object.entries(sentimentResult.emotions).map(
-                          ([emotion, score]) => (
-                            <li key={emotion}>
-                              {emotion}:{(Number(score) * 100).toFixed(0)}%
-                            </li>
-                          ),
-                        )}
+                        {Object.entries(sentimentResult.emotions).map(([emotion, score]) => (
+                          <li key={emotion}>
+                            {emotion}: {(Number(score) * 100).toFixed(0)}%
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   )}
@@ -130,7 +129,7 @@ export function ChatDemo() {
               {crisisResult ? (
                 <div>
                   <p>
-                    Crisis Detected:
+                    Crisis Detected:{' '}
                     {crisisResult.isCrisis ? 'Yes' : 'No'}
                   </p>
                   <p>
@@ -138,19 +137,19 @@ export function ChatDemo() {
                   </p>
                   {crisisResult.category && (
                     <p>
-                      Crisis Type:
+                      Crisis Type:{' '}
                       {crisisResult.category}
                     </p>
                   )}
                   {crisisResult.severity && (
                     <p>
-                      Risk Level:
+                      Risk Level:{' '}
                       {crisisResult.severity}
                     </p>
                   )}
                   {crisisResult.recommendedAction && (
                     <p>
-                      Reasoning:
+                      Reasoning:{' '}
                       {crisisResult.recommendedAction}
                     </p>
                   )}
